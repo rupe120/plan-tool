@@ -1,6 +1,17 @@
 # plan-tool
 
-Use the **plan-tool skill** with your coding assistant to turn an idea into a reviewed implementation plan, execute it step by step, or export it as Jira stories. The assistant drives the CLI, reads saved audit findings, and helps you resolve scope and design decisions. Plans and step details stay in your repository as reviewable files.
+**plan-tool helps you plan, carry out, and verify substantial work with a coding
+assistant.** It keeps the agreed intent, implementation steps, audit findings,
+and progress in your repository so the work is easier to review, resume, and
+hand off.
+
+Use the **plan-tool skill** to guide your assistant through the workflow:
+ground the plan in your codebase, surface missing decisions before
+implementation, execute reviewed steps or export Jira stories, and check the
+resulting code against the plan.
+
+It is most useful when work spans dependent changes, multiple sessions, or team
+handoffs. Small, straightforward edits can stay lightweight.
 
 The mission and the grounding principles the codebase is built to obey live in [`MISSION.md`](MISSION.md). New here, or unsure whether your work is a good fit? [`docs/how-to/use-cases.md`](docs/how-to/use-cases.md) is the situation-first guide — when to use the tool and which path to take.
 

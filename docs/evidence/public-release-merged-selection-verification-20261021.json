@@ -1,0 +1,67 @@
+{
+  "source_commit": "08607a7dbd2de3ad31c849dcc34d175c8b514e06",
+  "selection_baseline": "16e945fb550299f044022b2fdb95fbafc08e5d0b",
+  "root_commit": "9c10d74ca970e97c98a4ce6895ebdc0836b668d9",
+  "selected_paths": 2610,
+  "path_inventory_sha256": "1935c600c05e227de12a95928c5e2362ccdea28f083e01ddde60c96c1a21bc93",
+  "content_sha256": "ad584845b7a9e0c3df7fa07397f716fe0ddea1c406276b43c84ffc5984490160",
+  "git_storage": "one parentless commit; no remotes or alternates; fsck passes; source historical commits absent; exact blobs/modes match",
+  "frozen_install_rc": 0,
+  "focused_tests_rc": 0,
+  "focused_tests_tail": [
+    "........................................................................ [ 12%]",
+    "........................................................................ [ 25%]",
+    "........................................................................ [ 37%]",
+    "........................................................................ [ 50%]",
+    "........................................................................ [ 62%]",
+    "........................................................................ [ 75%]",
+    "........................................................................ [ 87%]",
+    ".....................................................................    [100%]",
+    "573 passed in 3.88s"
+  ],
+  "full_tests_rc": 0,
+  "full_tests_tail": [
+    "........................................................................ [ 99%]",
+    "....                                                                     [100%]",
+    "=========================== short test summary info ============================",
+    "SKIPPED [1] tests/test_cli.py:3259: git diff failed: fatal: bad revision 'main'",
+    "SKIPPED [1] tests/test_review.py:15459: plan 'Feature Health Declaration And Smell Checks' not resolvable by title",
+    "SKIPPED [47] tests/test_roadmap.py: the bounded feedback route replaces whole-artifact re-entry",
+    "SKIPPED [13] tests/test_roadmap.py:2670: the bounded feedback route replaces whole-artifact re-entry",
+    "SKIPPED [3] tests/test_roadmap.py:2680: the bounded feedback route replaces whole-artifact re-entry",
+    "SKIPPED [2] tests/test_roadmap.py:2686: the bounded feedback route replaces whole-artifact re-entry",
+    "14697 passed, 67 skipped in 69.25s (0:01:09)"
+  ],
+  "selected_bytes_unchanged_after_tests": true,
+  "repaired_owners_missing_file_targets": [],
+  "policy_pdf_sha256": "225bc6e791d6676a69ce23f754fe793d09e2ec4245dc2aa13d685162084ff872",
+  "selection_basis": {
+    "frozen_baseline_receipt": "docs/evidence/public-release-final-selection-verification-20261021.json",
+    "baseline_paths": 2601,
+    "added_paths": [
+      "docs/evidence/public-release-final-selection-verification-20261021.json",
+      "docs/concepts/README.md",
+      "docs/design-plans/README.md",
+      "docs/implementation-plans/README.md",
+      "docs/presentations/README.md",
+      "handoffs/2026-10-21-demo-refresh.md",
+      "handoffs/2026-10-21-documentation-placement-review.md",
+      "docs/demos/README.md",
+      "docs/demos/planning-demo.md",
+      "docs/demos/roadmap-demo.md"
+    ],
+    "removed_paths": [
+      "docs/how-to/demo-baking.md"
+    ]
+  },
+  "inventory_encoding": "SHA-256 of sorted UTF-8 repository-relative paths, each terminated by NUL",
+  "content_encoding": "SHA-256 of compact JSON [path, git mode, SHA-256(blob)] records in sorted path order",
+  "local_artifacts": {
+    "bundle": ".tmp/public-release-post-pr129.bundle",
+    "bundle_sha256": "f90bacd497bf04fc3da84a67c2dd389a0369d0135821fea60000d5eda47a7ff9",
+    "inventory": ".tmp/public-release-post-pr129.inventory.json",
+    "verification": ".tmp/public-release-post-pr129.verification.json"
+  },
+  "scope": "Frozen selected bytes from merged PR #129. This receipt and later handoff edits are outside the candidate. No remote history, tags or visibility changes.",
+  "demo_status": "Refresh deferred; the demo docs expose the update-needed notice. No live demo model run is required for this verification."
+}

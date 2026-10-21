@@ -11,6 +11,11 @@ dark-mode-toggle example. This handoff owns the local preparation and remaining
 verification; the [release handoff](2026-10-19-public-onboarding-and-release.md)
 owns remote publication.
 
+The [sanitized publication record](2026-10-21-sanitized-publication.md) confirms
+that all four remote demo names point to a shared needs-updating notice on the
+new history. Their previous staged contents remain in private recovery bundles.
+The fixture tips below remain local preparation material for a future refresh.
+
 ## Local candidate
 
 The local review repository is `.tmp/public-release-demo-refresh-v2`. Its bundle
