@@ -55,6 +55,9 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Demo and example refresh](2026-10-21-demo-refresh.md) — skill-driven pickup,
+  current demo placement, earlier task-list preparation and verification/publication boundaries.
+
 Each records a next action or an open decision. Parked backlog routes (#216,
 #242, #322, #355, #359, #361) carry their pickup and fence in `BACKLOG.md` and
 its arc documents, not here; the successor-slug rule lives in
