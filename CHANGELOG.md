@@ -6,6 +6,13 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.0.0'></a>
+## 1.0.0 — 2026-10-21
+
+### Changed
+
+- Promote the current release to version 1.0.0.
+
 <a id='changelog-0.2.0'></a>
 ## 0.2.0 — 2026-10-21
 
