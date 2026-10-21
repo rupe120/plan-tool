@@ -10,7 +10,7 @@ Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
 then clone the selected source:
 
 ```bash
-git clone https://github.com/rupe120/plan-tool.git
+git clone git@bitbucket.org:protagona/plan-tool.git
 cd plan-tool
 uv tool install --editable .
 plan-tool --version
@@ -81,7 +81,7 @@ switching versions; a failed fast-forward requires inspection.
    repeat the original integration/root/copy options with `--force`. Review local
    skill edits before replacing them. Keep `SKILL.md` and `DIRECTIVES.md` together.
    Symlink installations follow their source clone; repair the links if it moves.
-   See [skill installation](../../README.md#optional-the-agent-skill).
+   See [skill installation](../../README.md#install-the-assistant-skill).
 4. Restart or reload the assistant session so it reads the refreshed guidance.
 
 To return to a prior release, select its tag, reinstall the tool environment and

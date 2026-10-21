@@ -17,7 +17,7 @@ For source installation, version selection and dependency/skill refresh, use
 ## Author and run a plan
 
 1. Choose a starting input in [Choose a starting point](choose-a-starting-point.md).
-2. Follow the normal commands in [Your first plan](../../README.md#your-first-plan).
+2. Follow the assistant-guided workflow in [Your first plan](../../README.md#your-first-plan).
 3. Use [Common workflows](common-workflows.md) when a stage needs its options or
    exception path.
 
