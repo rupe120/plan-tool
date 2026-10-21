@@ -85,6 +85,7 @@ steps:
       full regeneration.
     3: Provides the complete learning journey for link, monitoring and resumption
       review.
+  detail: docs/implementation-plans/plan-details/skill-led-demo-examples/04-verify-reading-journey-local-planning.md
 ---
 # Teach demos and examples through the plan-tool skill
 
