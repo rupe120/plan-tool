@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "plan_slug": "skill-led-demo-examples",
+  "plan_path": "docs/implementation-plans/2-skill-led-demo-examples.md",
+  "created_at": "2026-10-21T23:38:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3094d6865d10a276d3ad1349eb1dc829f9b5832a9c437c1e1df3aa1baa008b6b",
+  "code_fingerprint": {
+    "README.md": "5eb7172cffc434d5c529ee057751593aff27e6662b4f5285afccfc0432b47e80",
+    "RUNBOOK.md": "3cd86138707bfb45953d863de2c614afc577a70c35e524393bb8d3aaa10d68e9",
+    "docs/demos/README.md": "ea3bd807f37829bff19bc2c1a28eb4d766f9b93b8d64f0956a4a1eda7a4ddb30",
+    "docs/demos/planning-demo.md": "c6c12f1bb41163da65092f19205a5057440327d60f7442432f28505fb0a8d341",
+    "docs/demos/roadmap-demo.md": "f56145b502f19792a1bca936f22195fa7d8608582284f71a7cf0ab18c1c1a04f",
+    "docs/how-to/choose-a-starting-point.md": "a960964186da74a33ffd1a3cabc8b4c0793fb5e09a29bf2a25b93321f1f7ba7d",
+    "docs/how-to/common-workflows.md": "8bfa5230578ca1ae22ace28bfebdeaf63f514e9d2a915a1dee5a9eba122fa566",
+    "docs/how-to/use-cases.md": "043be5b1b30880fc7863f32b12d479f78eda5d889372824f27b820ce42e8e02a",
+    "handoffs/2026-10-21-demo-refresh.md": "e2d75edeba4e029eb067cc2347dae38c5ba6cf1d07147d78ccc9db6d7ba9924b",
+    "plans/2-demo.md": "861a7e738fa629ff2c134eef992beb13b89532c24262cb954f13cdb1b455b4aa"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/skill-led-demo-examples/01-teach-dark-mode-planning-demo-through.md": "81e8a3685443b82c695a687e84d6a633155fac3cdfd153b6a01a825b66561f54",
+    "docs/implementation-plans/plan-details/skill-led-demo-examples/02-convert-ttrpg-demo-assistant-requests.md": "659f419e1b73eeefbc2849c77ccdd51297f270233528dac46de7dc1146662385",
+    "docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md": "bac3a02e68c3efdcd205b54697ff4fa4f400a9b1a416d411e0bb4a596ca2459a",
+    "docs/implementation-plans/plan-details/skill-led-demo-examples/04-verify-reading-journey-local-planning.md": "bdb89e9dd5fac08435cea5e9855b9877c2f00de98df8f4fa07aa66b13186c029"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Teach demos and examples through the plan-tool skill\n\n`skill-led-demo-examples` \u00b7 generated 2026-10-21T23:38:33Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit skill-led-demo-examples --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Teach demos and examples through the plan-tool skill\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- `plan-tool completeness-audit skill-led-demo-examples --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "3094d6865d10a276d3ad1349eb1dc829f9b5832a9c437c1e1df3aa1baa008b6b",
+    "detail_bundle_digest": "ac855ec820bce3ff78aa5dd930e6cd1674b4c29377cfa5f8b9bc177fa93d0fc9",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-led-demo-examples/01-teach-dark-mode-planning-demo-through.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-led-demo-examples/02-convert-ttrpg-demo-assistant-requests.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-led-demo-examples/04-verify-reading-journey-local-planning.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "bb6c6c10000cbfa0a0b1a219fc8fd162cde484042f32664720fec821b374d598",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}
