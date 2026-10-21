@@ -25,6 +25,7 @@ steps:
   - docs/demos/dark-mode-example.md
   complexity: medium
   change_type: non-code
+  detail: docs/implementation-plans/plan-details/skill-led-demo-examples/01-teach-dark-mode-planning-demo-through.md
   status: current
 - id: 2
   title: Convert the TTRPG demo to assistant requests while preserving roadmap review
