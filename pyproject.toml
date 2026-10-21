@@ -1,6 +1,6 @@
 [project]
 name = "plan-tool"
-version = "0.2.0"
+version = "1.0.0"
 description = "Typed driver for implementation plans with YAML frontmatter"
 readme = "README.md"
 license = "Apache-2.0"
