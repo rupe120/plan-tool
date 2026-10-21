@@ -16,105 +16,102 @@ that all four remote demo names point to a shared needs-updating notice on the
 new history. Their previous staged contents remain in private recovery bundles.
 The fixture tips below remain local preparation material for a future refresh.
 
-## Next-session instruction: use the plan-tool skill
+## Current plan pickup: use the plan-tool skill
 
-The owner requests this pickup on 2026-10-21 for demo and example updates. This
-handoff prepares the next session; it does not start model-driven authoring or
-authorize remote branch replacement. Use the **plan-tool skill** to plan, audit
-and execute the update. Start by reading the installed skill and the tracked
-[shared directives](../integrations/shared/DIRECTIVES.md); the tracked
-[Codex router](../integrations/codex/SKILL.md) is the fallback if the installed
-skill is unavailable. Use the backend integration appropriate to the session.
+The current authoring result is
+[Teach demos and examples through the plan-tool skill](../docs/implementation-plans/2-skill-led-demo-examples.md)
+(`skill-led-demo-examples`), with four run-grade detail files. Resume that plan;
+do not create a second seed or re-author the same effort. Its source seed is
+[the archived brief](../plan-seeds/archive/skill-led-demo-examples.replaced.md).
+The local plan branch is `plan/skill-led-demo-examples`; its base is
+`5c38aa9da`. The plan remains `planning`, and all implementation steps remain
+unexecuted. Neither a plan pull request nor remote demo publication is part of
+this authoring result.
 
 Suggested pickup prompt:
 
-> Use the plan-tool skill to resume `handoffs/2026-10-21-demo-refresh.md`.
-> Ground the demo and example refresh in the current README and `docs/demos/`.
-> Recover and assess the earlier task-list example as preparation material, then
-> author a scope-fenced seed and drive create, both audit gates, detail and run
-> through the skill. Preserve remote demo refs and the release boundary. Keep
-> authored examples distinct from captured model results and report actual
-> verification and remaining publication decisions.
+> Use the plan-tool skill to review the completed `skill-led-demo-examples`
+> plan and its four detail files with me. Keep user review of created seeds,
+> bare plans and details explicit in the demos, and respect any explicit
+> delegation to continue. After I authorize execution and the reviewed plan
+> bundle meets the merge prerequisite, run the plan, monitor each command to
+> confirmed completion, read its results, and finish reconciliation and code
+> review. Preserve remote demo refs and publication boundaries.
 
-### Current checkout and earlier task-list work
+Read the installed skill and tracked
+[shared directives](../integrations/shared/DIRECTIVES.md); the tracked
+[Codex router](../integrations/codex/SKILL.md) is the fallback. Use the integration
+appropriate to the session. The skill's plan-PR/merge prerequisite still applies
+before implementation; this handoff does not authorize a merge or publication.
 
-At pickup baseline `5c38aa9da`, the README routes demo readers to
-[`docs/demos/README.md`](../docs/demos/README.md). The planning guide is
-[`docs/demos/planning-demo.md`](../docs/demos/planning-demo.md); the roadmap guide
-is [`docs/demos/roadmap-demo.md`](../docs/demos/roadmap-demo.md). Preserve this
-placement rather than restoring the former how-to locations.
+### Plan scope and user review
 
-**Preparation provenance, 2026-10-21:** the earlier session records commit
-`0b8f96427` (`docs: rebuild the demo around a runnable task-list example`). Its
-Git object is available in this checkout, but its task-list files are absent
-from the current tree. Inspect it with `git show 0b8f96427 --stat` and targeted
-`git show 0b8f96427:<path>` reads. Do not assume it is merged or cherry-pick its
-old documentation paths over the current structure.
+The plan retains the dark-mode planning scenario and the advanced TTRPG roadmap
+scenario. It converts the guides under `docs/demos/` and the named learning
+entry points to assistant requests for grounded seed creation, monitored work,
+judged result review and resumption. Commands remain supporting operator
+references. No CLI, skill, schema or monitoring implementation changes belong
+to the effort.
 
-That preparation supplies a Python standard-library task-list starter, a scoped
-`--pending` seed, authored reference plan/detail/story material, and a walkthrough
-with local execution and Jira-export routes. The session's reported checks are
-14,698 passed and 66 skipped, starter test/mutation checks, parser checks and
-local links. These are historical checks of that snapshot, not evidence that
-the current checkout or a live model-driven demo passes. The references do not
-claim saved model provenance or qualified audit convergence.
+The owner asks on 2026-10-21 whether the examples have users review created
+seeds, plans and details. The plan and every detail now explicitly require:
 
-### Outcome and scope for the new plan
+- Seed review before `create`: outcome, scope, constraints, non-goals and grounding.
+- Bare-plan and audit review before `detail`: steps, dependencies and acceptance.
+- Detail-bundle and grounded-audit review before execution or local export:
+  implementation guidance, verification and unresolved decisions.
 
-Deliver a coherent first-use example that matches the current README, with
-runnable starter code, a scoped input brief, inspectable outputs and commands
-that work in an isolated consuming repository. Keep the TTRPG demo as the
-advanced architecture/feedback route. Review the task-list example as the
-candidate primary example; the generic dark-mode fixture chain is preparation
-material, not an approved replacement. Surface any decision to change the
-scenario presented by the four remote demo checkpoints before preparing their
-replacement tips.
+At each point the assistant presents artifact links, summarizes changes, asks
+for corrections or continuation, and waits unless explicit prior delegation
+covers the transition. Silence is not approval. These are conversational review
+points using existing behavior, not new tool-enforced gates.
 
-Include demo navigation, presenter guidance, source seeds, reference artifacts,
-current-format metadata, both audit gates, story export plus paired developer
-handoff, and accurate preparation status. Preserve accepted-head and candidate
-semantics in the roadmap guide. Remove stale embedded-skill/application claims
-from any retained demo fixture. Keep illustrative artifacts explicitly labeled;
-only actual captured runs supply audit results, counts and provenance.
+### Authoring evidence and audit trajectory
 
-Exclude changes to CLI behavior, new demo infrastructure, unrelated refactors,
-release tags, visibility changes, organization transfers and remote publication.
-No model run, transcript, completed presentation or published Artifact page is
-implied by this handoff. Preserve the four remote demo branch names and the
-private recovery material described below.
+Provenance, 2026-10-21: all commands use `--backend codex --model gpt-6.1-sol`.
+`create skill-led-demo-examples --from-existing
+plan-seeds/skill-led-demo-examples.md --iterate -y` selects the direct route,
+publishes four steps and archives the seed. `detail skill-led-demo-examples
+--commit -y` writes four files and performs its default completeness check.
+Both commands use closed stdin and finish before the next invocation starts.
+The explicit audit invocations use `completeness-audit skill-led-demo-examples
+--iterate --commit --audit-passes 1 -y` with closed stdin.
 
-### Skill-driven sequence and verification
+| Snapshot | Detail coverage | Result and qualification | Report |
+| --- | --- | --- | --- |
+| Bare-plan gate | 0 of 4 | clean; confirmed; current at snapshot; no conceptual findings; completeness/detail apply routes withheld | [23:38 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-233834-completeness.md) |
+| Initial detail-grounded gate | 4 of 4 | clean; confirmed; no conceptual findings; superseded by the user-review amendment | [23:44 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234419-completeness.md) |
+| Amended detail-grounded gate | 4 of 4 | clean; confirmed; current; zero blocking or deferred findings | [23:47 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234705-completeness.md) |
 
-1. Read current README navigation, both demo guides, the earlier task-list diff,
-   the local-candidate record below, `SEED_FORMAT.md`, and the current plan,
-   detail and Jira contracts. Verify local preparation paths before relying on
-   them; `.tmp/` material may be unavailable in another clone.
-2. Author one bounded seed under `plan-seeds/` with an explicit scope contract.
-   Ground its References in real current files. Review it at seed altitude,
-   then commit a clean baseline before `create --from-existing`.
-3. Follow the skill's explicit backend/model selection and convergence rules.
-   Run the bare-plan completeness audit with `--iterate --commit` before
-   `detail`; judge conceptual findings in the session, commit bounded fixes,
-   and re-audit. Author details with `--commit` and no opt-in iteration, then
-   complete the detail-grounded audit. Retain coverage, qualification, report
-   paths and the required trajectory evidence. Never use a zero exit code as
-   proof of a clean audit.
-4. Execute the documentation/example update with `run --commit` as prescribed
-   by the skill. Finish with the plan-canonical `reconcile-code --all` sweep
-   and code-review convergence. Do not run `reconcile-plan` after execution.
-   Do not add unsupported iteration or commit flags to `reconcile-code`.
-5. Exercise the example's live authoring pipeline separately in a disposable
-   consuming repository with working tests and an authenticated backend. Save
-   actual bare/detail audit reports and the paired story/handoff outputs.
-   Lint exported stories without another model call. Keep the captured results
-   separate from authored reading samples. An optional example execution must
-   also complete its own reconciliation and review tail.
-6. Check navigation and file links, parse retained reference artifacts, run
-   starter tests, verify changed test assertions by mutation, and run the
-   appropriate repository checks including the full suite. Review identifiers
-   and vocabulary for the replaced scenario across guides and presenter cards.
-   Commit bounded results and update this handoff with exact evidence and any
-   remaining blockers; leave publication to its separately authorized workflow.
+The amendment adds the owner's user-review requirement across the archived seed,
+plan and all four details. It is not an audit finding or a change to the step
+graph. The three snapshots contain no recurring conceptual finding; the final
+clean result closes authoring. No extra unchanged resampling is needed.
+
+The plan and all four amended detail files parse with current readers.
+`uv run pytest tests/ -q -n auto` reports **14,698 passed, 66 skipped in
+62.83 seconds**. Local handoff links and whitespace checks pass. These checks
+cover plan authoring; they do not certify a converted demo or live consuming-repo
+rehearsal. Detail's automatic audit warns that its model-call usage has no
+run-log sink; its saved report is retained, but usage/cost is not inferred.
+
+Named local logs: `.tmp/skill-led-demo-examples.create.log`,
+`.tmp/skill-led-demo-examples.detail.log`,
+`.tmp/skill-led-demo-examples.audit-bare-1.log`, and
+`.tmp/skill-led-demo-examples.audit-detail-final.log`. They are transient;
+the committed reports above own the retained conclusions.
+
+### Earlier example preparation
+
+Preparation provenance, 2026-10-21: Git object `0b8f96427` contains the earlier
+task-list demo attempt; those files are absent from this plan's baseline.
+Inspect with `git show 0b8f96427 --stat` and targeted file reads if useful.
+The new plan uses it as design input, keeps the current documentation placement
+and scenarios, and does not cherry-pick it over `docs/demos/`.
+
+The local dark-mode fixture preparation below remains separate from the plan
+and from verified live model output. Confirm any `.tmp/` path exists before
+relying on it in another clone.
 
 ## Local candidate
 
@@ -163,7 +160,10 @@ executable; the focused fallback test passes with the executables on PATH. The
 final isolated run on `demo/4-jira` passes: **14,698 passed, 66 skipped in
 58.00 seconds**, using locked dependencies and the local Python 3.14 interpreter.
 
-## Work to resume when the demo is needed
+## Remaining demo verification and publication
+
+Resume the reviewed plan above for local conversion and live-rehearsal evidence.
+The following checks continue to constrain any later checkpoint publication.
 
 1. Review the exact local refs, stage differences, bundle and old remote tips.
 2. Exercise live `create` → bare audit → `detail` → detail audit → Jira in a
