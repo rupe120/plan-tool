@@ -61,6 +61,7 @@ steps:
   depends_on_notes:
     1: Supplies the concrete planning example and artifact review points.
     2: Supplies the advanced roadmap request path and its owner decisions.
+  detail: docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md
 - id: 4
   title: Verify the reading journey and local planning-to-Jira rehearsal, then reconcile
     demo preparation status
