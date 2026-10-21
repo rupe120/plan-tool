@@ -1,143 +1,91 @@
 # Public onboarding and release pickup
 
-Continue with review of the local 2,608-path sanitized release before any remote
-publication. The demo refresh is deferred by owner decision on 2026-10-21 and
-does not block cleanup or release preparation. Content preparation is accepted
-through merged [PR #123](https://bitbucket.org/protagona/plan-tool/pull-requests/123),
-and #513 is complete. Keep subsequent release work separate from the completed
-content-preparation plan.
+The sanitized history is published on Bitbucket and GitHub. Internal work uses
+Bitbucket. Version 1.0.0 and the skill-focused README are merged into Bitbucket
+main; the internal CLI is current. Finish mirror synchronization and release
+tagging before treating the 1.0.0 release as fully distributed. Demo refresh is
+deferred and does not block that work.
 
-## Session pickup
+## Current pickup
 
-- Working clone: `/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2`.
-- Accepted baseline: main `506b61dca`, including merged PR #128's cleanup records
-  and PR #127's retro. Current preparation branch: `docs/public-release-final-selection`.
-- Owner-approved content selection: 2,601 paths, extending the prior 2,590 with
-  11 experiment/evidence records. The [selection record](../docs/evidence/public-release-content-snapshot.md#file-set-accounting)
-  enumerates all 17 additions to the original non-report baseline. Verified source:
-  `d0eb93c263e18dee192bac1b450a861d514a6f31`; independent root:
-  `06774684566f7ff93482f075836724e467217ce8`. The
-  [final-selection receipt](../docs/evidence/public-release-final-selection-verification-20261021.json)
-  owns its inventory, hashes and checks. This receipt and later pickup edits are
-  outside the frozen candidate; do not claim they are part of its tested bytes.
-  Preserve `.tmp/public-release-final-selection.bundle` as the local root artifact.
-- The current local release base selects 2,608 paths from source `256f466380`:
-  the 2,601-path verified set plus the final-selection receipt, four primary
-  documentation-folder READMEs, the demo refresh handoff and the documentation
-  placement review handoff. Independent root `949e6dd5e8c093e7c073e004d468eb022a15484c`
-  has one parentless commit and exact selected modes/blobs; its inventory and
-  digests are in `.tmp/public-release-demo-base.verification.json`. The older
-  final-selection receipt is a frozen baseline, not a claim about these bytes.
-- Remote cleanup is complete for the approved branches. Preserve the four demo
-  stages on each host for separate updates. The [triage record](../docs/evidence/public-release-outside-commit-triage-20261021.md)
-  and [correctness comparison](../docs/evidence/public-release-audit-next-steps-comparison-20261021.md)
-  retain the evidence; no implementation replay is needed for retired branches.
-- Private recovery bundle: `.tmp/public-release-pre-snapshot-refs-20261021.bundle`.
-  Copy it to durable private storage before destructive operations; `.tmp/` is transient.
-- Use this clone's `.venv/bin/plan-tool`; the global CLI targets the main
-  integration clone `/Users/joshrusso/bitbucket/protagona/plan-tool`.
-  That clone owns dual-host sync. This clone pushes only Bitbucket.
-- Preserve ignored `.local/reconcile-remotes.py` and `REPO_SYNC.local.md`.
-  Keep publication, tag decisions and history replacement separately authorized.
-
-## Current decisions
-
-| Concern | Direction |
+| Item | Verified state on 2026-10-21 |
 | --- | --- |
-| License | Apache-2.0; keep package metadata, LICENSE and documentation aligned |
-| Policy | Include the owner-authored Markdown and PDF; keep their content aligned |
-| Public source | `https://github.com/rupe120/plan-tool`; a later Protagona organization transfer is possible |
-| Publication | Prepare one verified sanitized root for both hosts; retain shared ancestry and synchronize through one designated clone |
-| Installation | Clone plus `uv tool install --editable .`; explain clone retention and dependency/skill refresh |
-| Onboarding | Recommend the assistant skill as the primary route, with direct CLI guidance available |
-| Review | Select reviewers per PR; retain architect-tier review for contracts and policy |
-| Examples | Use generic organization/client identities while preserving technical behavior and meaningful third-party references |
+| Internal source | `git@bitbucket.org:protagona/plan-tool.git` |
+| Bitbucket main | `d90b84ef2f7f0eb4e7222f2cc7cecfea9f7f0aa5` — PR #131 merged |
+| Version | 1.0.0 in package metadata and lockfile; changelog entry present; PR #130 merged |
+| GitHub mirror main | `03cbb6882696edd5114b3d739517a56919400025` — sanitized v0.2.0 release; behind Bitbucket |
+| Release tags | `v0.2.0` exists on both hosts; `v1.0.0` is not present in the checked refs |
+| CLI/sync clone | `/Users/joshrusso/bitbucket/protagona/plan-tool`, clean on Bitbucket main `d90b84ef2`; global `plan-tool --version` reports 1.0.0 |
+| Working clone | `/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2`; current handoff branch `docs/release-handoff-current`, based on merged Bitbucket main |
+| Bitbucket protection | Restored according to the owner; independent branch-restriction reads return 403 for missing token scopes |
+| Demo branches | All four names on both hosts point to the shared needs-updating notice; content refresh remains deferred |
 
-Git hosting does not select a Jira provider or an approval policy. #509 must name
-its configuration reader and runtime behavior. Keep backend choice, model choice,
-authentication and cost guidance distinct.
+The [publication record](2026-10-21-sanitized-publication.md) owns the exact
+sanitized release refs, successful readback, recovery paths and clone cutover.
+Its v0.2.0 measurements describe that frozen release, not later main commits.
+The [demo handoff](2026-10-21-demo-refresh.md) owns the deferred update work.
 
-## Preparation result
+## Completed release and onboarding work
 
-- Package and repository declarations use Apache-2.0.
-- Organization targets and contributor mappings use ignored local configuration;
-  tracked examples use generic values and portable paths.
-- Fixture identities are synthetic, with event correlations and test behavior
-  preserved. Approved TypeSafe, System One, Jev and research-product references stay.
-- The selection record defines exact report exclusions and preserves the decisions
-  and useful conclusions that support current guidance.
-- Live navigation points to current guides and contracts. Review ledgers preserve
-  finding explanations, dispositions and their distinct closure outcomes.
-- The policy PDF matches its Markdown source and includes the current convergence
-  and reconciliation guidance. PDF checks cover all five A4 pages, title metadata,
-  text completeness and link annotations.
-
-Use the [selection record](../docs/evidence/public-release-content-snapshot.md)
-for the file boundary and the
-[prose verification receipt](../docs/evidence/public-release-prose-verification-20261020.json)
-for exact tested bytes and results. The 2026-10-20 candidate passes normal locked
-installation, 573 focused tests and 14,697 full-suite tests, with 67 documented
-existing skips. These measurements apply to the candidate named in the receipt;
-verify a new candidate whenever selected files change. The receipt names source
-`b73141d99fc5c4983c33d534ce5d6ac3dce673d4` and independent root
-`80dba090cc2f2251dcd6d5ea0558225199ddf85a`; it does not certify the subsequent
-distribution-guidance edits.
-
-The [demo refresh handoff](2026-10-21-demo-refresh.md) retains the exact local
-release and demo refs and test results. Demo updating and its live model run are
-deferred until the demo is needed; preserve the existing remote demo branches.
+- PR #129 merges the final content-selection records, primary-folder READMEs,
+  durable how-to guidance and the dedicated `docs/demos/` entry point.
+- The owner-approved sanitized publication replaces both hosts' main and tag
+  histories. Its root is `9c10d74ca970e97c98a4ce6895ebdc0836b668d9`; the initial
+  v0.2.0 release commit is `03cbb6882696edd5114b3d739517a56919400025`. The old
+  v0.1.0 tag is retired, and recovery bundles are preserved privately.
+- PR #130 merges the 1.0.0 version, matching lockfile entry and release notes.
+  Its version-bump commit is `e6e9a8e84218`; 57 release tests and the mandatory
+  full pre-push suite pass. Dependency pins stay unchanged.
+- PR #131 merges skill-focused onboarding. The README leads with assistant
+  setup and conversational planning/execution requests, names both audit gates,
+  and places direct CLI guidance below. Internal installation uses Bitbucket.
+  Changed link targets and compatibility anchors pass; 42 installer/reference
+  tests and the mandatory full pre-push suite pass.
+- Owner authorship of the policy Markdown/PDF and Apache-2.0 inclusion are
+  settled. The policy PDF digest and exact selected-content checks remain in
+  the [merged-selection receipt](../docs/evidence/public-release-merged-selection-verification-20261021.json).
 
 ## Next actions
 
-1. Review the current local bundle and exact refs in the demo refresh handoff.
-   `main` is a local Release 0.2.0 commit above the sanitized root, `v0.2.0`
-   is an annotated local tag, and the four demo stages form one direct chain.
-   Locked installation, full suite (14,698 passed, 66 skipped), Jira lint,
-   bundle verification and `git fsck` pass. The three Jira lint warnings are
-   advisory estimates below the 4h soft floor. The earlier 2,601-path receipt
-   remains available for its own tested snapshot.
-2. Inspect a fresh remote ref inventory and the private recovery bundle before
-   any main or tag replacement. Keep all four demo branch names on both hosts;
-   any ancestry accommodation needed for the sanitized history is separate from
-   refreshing their demonstration content. A live demo run is not a release gate.
-3. Continue #508–#512 and #377, then exercise #515 in a fresh consuming repository.
-   #510 owns the walkthrough; #511 owns skill installation and refresh guidance.
+1. Use the designated CLI/sync clone to compare both hosts and fast-forward the
+   GitHub mirror to reviewed Bitbucket main. Re-read current refs before acting;
+   the recorded mirror state is a pickup measurement. Keep one shared root and
+   preserve the clone's dual push URLs and ignored sync configuration.
+2. Prepare the `v1.0.0` tag from the merged release history and obtain explicit
+   authorization before pushing that tag. The earlier history-replacement
+   approval covers v0.2.0 publication, not this new tag. Keep the existing
+   v0.2.0 release tag. Public visibility and any organization transfer are
+   separate actions.
+3. Continue onboarding follow-ups #508–#512 and #377, then exercise #515 in a
+   fresh consuming repository. #510 owns the walkthrough; #511 owns skill
+   installation/refresh guidance. Recheck their tracking state before taking
+   work; this handoff does not certify those items complete.
 
-Owner authorship of the policy Markdown/PDF and Apache-2.0 inclusion are settled.
-No completed plan step needs restarting. Public visibility, remote replacement
-and transfers require approval for the concrete operations and destinations.
+The Slack announcement draft uses the internal Bitbucket URL. No Slack message
+is sent. Demo regeneration, a live demo model run, and both demo audit gates
+remain outside the current release route.
 
-## Distribution guidance verification
+## Recovery and local conventions
 
-The #514 documentation checkpoint has two reviewed passes covering installation,
-update environments, copied-skill scope, shared ancestry and partial-push recovery.
-The first pass adds the missing PATH recovery instruction; the second finds no
-remaining material documentation issue. Verification on 2026-10-20 covers:
-
-- Isolated `uv tool` editable installation and reinstallation, executable version
-  and installed-tool listing, without changing the machine's installed CLI.
-- Codex user-skill installation and forced refresh in a temporary home; both
-  installed files match the bundled router and canonical directives.
-- Relative document targets and whitespace checks; 87 focused tests pass.
-- Full suite: 14,697 pass and 67 skip in 57.78 seconds.
-
-The 2026-10-21 frozen candidate additionally passes locked installation, 573
-focused tests and 14,697 full-suite tests (67 skips, 66.59 seconds). Exact modes,
-blobs, one parentless root, independent storage, live targets and the PDF digest
-are verified. Both hosts permit authenticated read-only ref enumeration. Write
-permissions, ref disposition, release tags and fresh-consumer onboarding retain
-their separate requirements; #514 remains open.
-
-## Follow-ups and maintenance
-
-- The binary-PDF prompt transport failure and the false PDF Files-coherence
-  diagnostic are tool follow-ups, separate from the content cleanup.
-- The onboarding/workflow-consistency bug and #511 own alignment between installed
-  skills and canonical driving instructions.
-- #516 owns the non-feature repository-cleanup example; its local tracking work
-  remains on the original planning branch until separately reviewed.
+- Private recovery directory:
+  `/Users/joshrusso/.local/share/plan-tool/release-backups/2026-10-21-pr129`.
+  It contains verified host and local-ref bundles, the published candidate,
+  exact operation plan, successful results and previous installed skill copies.
+- `archive/pre-sanitization-main-20261021` branches and other former-history
+  local refs are private recovery material. Do not push or merge them into the
+  sanitized history. For additional clones, preserve local work and refs before
+  realigning main with the remote.
+- Preserve ignored `.local/reconcile-remotes.py` and `REPO_SYNC.local.md`.
+  The designated clone owns dual-host synchronization; this working clone's
+  origin pushes only to Bitbucket.
+- The earlier publication-confirmation branch holds local pickup records that
+  are not merged into main. This handoff branch carries their useful records
+  forward; do not merge former source-history branches to recover documentation.
 - Preserve the unrelated untracked
   `handoffs/2026-10-16-token-ledger-logging-gaps-reverted-attempt.md`.
+- The binary-PDF prompt transport issue, false PDF Files-coherence diagnostic,
+  onboarding/workflow-consistency issue and #516 cleanup-use-case example are
+  follow-ups. Verify their backlog/tracker state before implementation.
 
-When this release route closes, move durable decisions into their canonical
-owners and retire this pickup record under [the retention rules](README.md#retention).
+When this release route closes, move durable decisions to their canonical
+owners and retire pickup records under [the retention rules](README.md#retention).
