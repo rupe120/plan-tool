@@ -1,0 +1,19 @@
+{
+  "plan_slug": "precise-directive-staleness",
+  "grounded_at": "2026-07-08T21:52:30Z",
+  "plan_fingerprint": "ab12f67a8c80066ee34ec870d7f75eac0c98f1c90352e7d3a398be88e4008baf",
+  "code_fingerprint": {
+    "BACKLOG.md": "3543e5b26f94082defb518092d4aa6e7765e90fb75226e36dc349f0e597a17c9",
+    "DATA_CONTRACT.md": "4b3a4d74c5d1580942f6a3de11e3e84bf0a0596b4fb1002d8682ae573f845a8e",
+    "plan_tool/auto_reconcile.py": "d3921dfdea1059070807c2cfe654c2d4183f0fef7cbfeb579ee669994baa1d4c",
+    "plan_tool/cli/reconcile.py": "5124eafdc833bea2bd87919d866308c7d749c22b6d85fd7f6eeefc8cedf50841",
+    "plan_tool/cli/review_actions.py": "58470f170cae5191bd84b52e1eadb94acc450f4b8ea22cf9a402208ba1edfd59",
+    "plan_tool/cli/review_cmd.py": "9e978b480967c75433867a06c055b600e38d3589c8ba7c11dbedc776abbacf2c",
+    "plan_tool/completeness_report.py": "c57e67131ec92e4553ae0f320c8bd08c3ff45d16b854bcde04d43e735c394885",
+    "plan_tool/review.py": "ce9d6f91ef563c57390d59b30659c590c1a5bdb18ad338395ee4c74512aa8829",
+    "plan_tool/review_walk.py": "b0930874b5748f3734544f6eaef09da10310a3bdddbaa2d0760fdf5335a3d194",
+    "tests/cli/test_review_actions.py": "fc07d15735abcc07e080d57f06220295432c0feed97cad30422090781796ba49",
+    "tests/test_review_walk.py": "aaaa878e669130954bffef5a33aaf08239d25082c58a044f8291253459d46003"
+  },
+  "schema_version": 1
+}

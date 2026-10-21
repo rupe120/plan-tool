@@ -1,0 +1,15 @@
+{
+  "plan_slug": "detail-authoring-quality",
+  "grounded_at": "2026-06-27T17:27:10Z",
+  "plan_fingerprint": "93e7cacfb9e699cb02e72123e6063c360df6981249bb96660f51d30d297bcdc8",
+  "code_fingerprint": {
+    "DETAIL_FORMAT.md": "dbc9e844d6a5180a33e35b8b3518ebc19d6af250c240b793f4acc4106819c496",
+    "plan_tool/detail.py": "142ad3460139a8034cc50d8c32c58fbd6296e0e6f11611fd6973c09c1d0ef7b8",
+    "plan_tool/prompts/detail-quality.md": "7ba50093dc138ebc374472b070fe4134a34f721d1ecd2757234519439492d40c",
+    "plan_tool/prompts/plan-audit.md": "452fdd9b2f70229bf14d1ee6b078098e1ea4fe2a16dce4f4c69d5898adfb8fdc",
+    "plan_tool/review.py": "c3b5bd2d764e192ac05498427dc0350ffe09d38c40890d6b957ef2141d81c882",
+    "tests/test_detail.py": "ff1a436c6a8459f52effa06c37ba29ee72683954c51e9634ff65a97a7253278e",
+    "tests/test_review.py": "9a3c8d56f1ac9b247df669e3b6a030d81c8ae7819828d385601dcbabf34c16e1"
+  },
+  "schema_version": 1
+}

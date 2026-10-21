@@ -1,0 +1,17 @@
+{
+  "plan_slug": "telemetry-linkage-schema",
+  "grounded_at": "2026-07-10T12:23:47Z",
+  "plan_fingerprint": "6bfcc069709934d5af6d2f6641790a590999e78956995abd2650b3d50de10cad",
+  "code_fingerprint": {
+    "BACKLOG.md": "d054e25654685ff77edcdf0bff03758bfb893f382d547c1f7625a8dcac02190e",
+    "DATA_CONTRACT.md": "8fe3b68b98b6c669bf68f342e018c80a26a9c413754f7d3f7e5385012353b064",
+    "plan_tool/cli/run_cmd.py": "f3e3e48b6b6b9d6c82fcfdb38245d2d109aeac9a46be5ccb66b07e8edddaea07",
+    "plan_tool/data_contract.py": "11f5f587e5b8576c9c3ae65d43c51ca88e65ae2bb3ed56d14bd7687740335849",
+    "plan_tool/run_log.py": "38392c783e65fa249569e3ed238b8cc6cccc28c66b6d9a39e5dad9bd4635faef",
+    "plan_tool/telemetry.py": "cef037b495caab09c199c337f79c06f1b80091085750d14e69a1e61bc0f0566c",
+    "tests/test_data_contract.py": "646d9ff11575586b77e13555f7f442cac903de8a9a5f390a4fabffee5fd5cfd8",
+    "tests/test_run_log.py": "06e107d8f8b728bacc65d3bd191d1ccbf5727142abdcb9dec60770e721b5a576",
+    "tests/test_telemetry.py": "0ab1b2b10a5a5d167fb28b7c21fdfee9974fb27f356edc834f282340d28661d0"
+  },
+  "schema_version": 1
+}

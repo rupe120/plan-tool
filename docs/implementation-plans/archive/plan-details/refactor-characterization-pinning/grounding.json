@@ -1,0 +1,25 @@
+{
+  "plan_slug": "refactor-characterization-pinning",
+  "grounded_at": "2026-07-30T15:00:44Z",
+  "plan_fingerprint": "f4488fd0e9249913409aa17810ebbe85b2c271070833763f2bbc5c4ec753981e",
+  "code_fingerprint": {
+    "BACKLOG.md": "3c684cd45588bd6d6aa3c67bce58178483a730d2b030411f102355eccae6efa7",
+    "CAPABILITIES.md": "a3c5ebdcd021aec361640508b38063b2fe0cabb2a47912fc77c27d379fa7cef7",
+    "CLAUDE.md": "172fad025ea0f25b896bd7979610b4e0c9cd17964bc46dcca665fc825ed1293b",
+    "PLAN_FORMAT.md": "74ea5ae3734a8b02d0ce115ba73d8592cee918f044ccfde29b883a370ac2adca",
+    "TESTING.md": "c7b3f34e018d37e3f4887ddeb3a0637310a002b532770ea2673ae94c158e62a1",
+    "docs/RUN_FLOW.md": "a0f6d9421d490d9e0d278f15009d6ba005b5f4778b16e8b2a458a6313f5d6f07",
+    "docs/cli/run.md": "ecc0f26200a463e933cc93831c6658b79e6cb3e0d26974f38534a6a5644ef2fc",
+    "plan_tool/cli/gitcommit.py": "ff37bff4b65e1b74520e72ef839bf6f18fc21d7ba8968c42b6f0293f34157e60",
+    "plan_tool/cli/run_cmd.py": "3033b3e0d833bc8f56c23d95c28b886818bc17301365d6167a0fdda6ec9fd7b3",
+    "plan_tool/launcher.py": "deb004be0274cc3035fe063dd70b802d70e0b9cf0403e93e504d7cebcd8bcf34",
+    "plan_tool/review.py": "5d655afc21388c14f4b7595cc4b97b11331096525f2c2eb2b70b8c4caec5fa4f",
+    "plan_tool/schema.py": "b1686b8949b200e622f3db1e3046fc5ff89230367366d66d11ce0b6979f886e4",
+    "tests/cli/test_gitcommit.py": "25357313046e75a284335a1642ad2d283058afcb1dedb8ba1cc7c347739c93da",
+    "tests/cli/test_run_cmd.py": "fa57825a90c944db6dcf31d1140ab12bd4ac9de410186825077df0040d561f62",
+    "tests/test_launcher.py": "7d4b567f850cfd89d179246cc3282f55870fceaca3b4f4c0076fa8ff2c474a1a",
+    "tests/test_parser.py": "1cdcb017d268bafd723d9df1e219db056b2ab1ef83ca86763d40ec0343a6bd30",
+    "tests/test_review.py": "746fe96fb1e0534a9f8502060538e1aa09c7765bef58c4b86f722a5421797d0b"
+  },
+  "schema_version": 1
+}

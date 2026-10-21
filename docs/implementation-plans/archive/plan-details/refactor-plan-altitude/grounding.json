@@ -1,0 +1,15 @@
+{
+  "plan_slug": "refactor-plan-altitude",
+  "grounded_at": "2026-08-17T23:14:26Z",
+  "plan_fingerprint": "f9acf5fc4ca97612cfa446379c30b9f843729cfe8f6721489d022da7c808ff36",
+  "code_fingerprint": {
+    "BACKLOG.md": "a52b0f24bf33da54b9454f00557513e5c23d0b5391c1b0ca5a929d15e624bab3",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "plan_tool/foundational_logic.py": "6392f8de51b92ca84bf243fe18d10570c74b035daace017fe5c6e08179536710",
+    "plan_tool/prompts/foundational-logic-sweep.md": "c3d90909d075d8f0460a0a590a6d6cb9b364140b9bd38b5f25bda178e9e8c993",
+    "plan_tool/prompts/synthesize-body.md": "be635d0b60f0229aa38b153e04f4504cf779849c21dca6c313f47185a1fae14a",
+    "tests/test_create.py": "621f29e0fadd14ad21270459ea9f179c69204415805608caecd161d48ee42de5",
+    "tests/test_detail.py": "f9c2d87394518b42c7d80482c94eb347b471d3cc78015ae0129e24050079a95e"
+  },
+  "schema_version": 1
+}

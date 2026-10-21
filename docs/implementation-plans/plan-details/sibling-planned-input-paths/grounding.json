@@ -1,0 +1,18 @@
+{
+  "plan_slug": "sibling-planned-input-paths",
+  "grounded_at": "2026-10-16T01:37:54Z",
+  "plan_fingerprint": "2ef30988449f1f02f3a6665bdf073eb28bd2d07ee416d0b88f245f6ec748eaa6",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b0f8304dd7db8fdad15b6242ac1acda6e177ae9cfee234e79da4c0f2f5ace537",
+    "DATA_CONTRACT.md": "8082bf0a32a8bff21042c9df661d4beb3e12e629e998f95306a7feacd455100c",
+    "plan_tool/review.py": "26166cf6aba00878009070bcbad0fb55e0dfc91b2086e84a2e65df1d3e9d6913",
+    "tests/test_data_contract.py": "1983879000307d7c45696fe65059f050760e70f9398f4b057f9bb55f3ce6d2d3",
+    "tests/test_review.py": "08ea07a73c384ec18a7d9e339087b76b7b433c9fa7206da6f73296e7ae5b4637"
+  },
+  "step_authoring_fingerprints": {
+    "1": "19f0c0d56d8069f280130e31df5bfaf9b9d99f64a3984310d243a8b133acc3c1",
+    "2": "d23912bcb816c3de395279160697c20a3267ca05a4d866d4eca18167e042c14f",
+    "3": "aec5de7ddc35e31c68a10272dbdf8c60be179f37249ef268db032c255cb9afe9"
+  },
+  "schema_version": 1
+}

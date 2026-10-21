@@ -1,0 +1,19 @@
+{
+  "plan_slug": "direct-pipeline-commands",
+  "grounded_at": "2026-07-16T20:37:01Z",
+  "plan_fingerprint": "57833c4b9c64b0e6f905d7186c79a24a13362d525ed7e59f4384d0b60f600f6e",
+  "code_fingerprint": {
+    "BACKLOG.md": "94c4920af966f91f05f06e96a972ae87789a02ab690cffd5d968667eaa5e6687",
+    "CAPABILITIES.md": "ac9f50088dde36e0f67a893e808a3fe0636ee4ad214084ae838a7a083d07b6b6",
+    "README.md": "ea0ae774294bd8a61a7e8bab5b4c68650b4c99598992053ac5427f18e30e0f20",
+    "USE_CASES.md": "5aa1eb92e4c3c632804ad1c0371c94d9ee02286dc8fcda89b9077a691da27b38",
+    "docs/cli/README.md": "f3d953b09c1059df7f473b960ceec1e7a6ff8dd9c2e774429b4c41b9f9b4eeeb",
+    "plan_tool/cli/app.py": "0c6fadbc05211c722a16b3432e09d2fd9476e66435f0148b1f2e0b7132dcae26",
+    "plan_tool/cli/authoring.py": "a302c47205f6026640d372cbc861a9fc8a72e61727853294e569564bed644633",
+    "plan_tool/cli/parser.py": "74013b1acbac36273f0c5df1fade37b9cff5bccd1ba1caf80384ab33c093b778",
+    "tests/cli/test_authoring_cmds.py": "101428752ba386326d3dd168aa304f7a0bf09a1b4d4b9ca6890d115d91c05836",
+    "tests/cli/test_cli_reference.py": "41bcdca0803bde7e8f742e8d32b87d6e559ccee9bc3b38d8aab2163c7dab6a59",
+    "tests/test_create.py": "5e137cde43489fe61fa5375a56c16870e3504d52119646ab5300ad1a3b7ce7b7"
+  },
+  "schema_version": 1
+}

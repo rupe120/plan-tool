@@ -1,0 +1,31 @@
+{
+  "plan_slug": "roadmap-brief-rebind-confirmation",
+  "grounded_at": "2026-09-15T22:39:36Z",
+  "plan_fingerprint": "e59c9f727417cd636a6f866614a0907c10289d1a8661e3a367a010a6e8a2b12e",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "c14e38ab6631204ea96f8967a1607a0c71830b1c32ee648e93f04f995f472e5d",
+    "DATA_CONTRACT.md": "5bee95fb5ace30fa42bf52599c49d0ceaf60625933f27b4d868324f6905f1d7f",
+    "README.md": "ad1650e13e09150da1ad6a60d281dcee39258dcb8513288b6f49719089dee05b",
+    "ROADMAP_FORMAT.md": "b754e3c3cb074a1995370332cbc9c44743ac22e8426be6e7448f8d4bc7149bb4",
+    "RUNBOOK.md": "0a0ca9937d907a5e7d99c3b496dd9f2b7349e67aea2c70da84c545a96c4c2638",
+    "USE_CASES.md": "871a87c66b3e85944c54710ff4415379b12e90fc68e803792ba3b8e68492dfca",
+    "docs/ARCHITECTURE.md": "5ba0f0291bab9ba06982ecef95488d1b901df7fe549cf5a5646d4bd4f85c970b",
+    "docs/ROADMAP_WALKTHROUGH.md": "3212cbe2881924a2bdc12d66dedb8f23fdd292e268935772107e45f873901447",
+    "docs/cli/roadmap.md": "aa9a8e42b5c9db882a0473b9908970b286d81156a5a766233c88c540018b633e",
+    "integrations/claude/SKILL.md": "d8a8d76bc0a200087f153e22e62d9d758e582cd73e39b830cfc19ebfe8ff8ec1",
+    "plan_tool/cli/__init__.py": "1af01cbb3e42ac02112e69836c002a577ca1f9c0be092933c157bc8fe01c0698",
+    "plan_tool/cli/roadmap_cmd.py": "d550176659f4990f1620574839180ff01116feccb23e52d3e6cbfa94f6213d1e",
+    "plan_tool/roadmap.py": "9f3b779ed1525c38be1fdeb8c53bd3840f526b01f8bec4be672641c475fbedaf",
+    "tests/cli/package_surface_help.golden.txt": "95a304b944e1b1145f482bcca6c5724546b1db976ed5c70243e5cb0c4f032316",
+    "tests/cli/test_roadmap_cmd.py": "aab6d52a97e2d8e9d5b4bf39f70e2fc22e73da0c647a5112d955ab0e4f5fdd73",
+    "tests/test_data_contract.py": "6faf1351f5ef0537db7924c7e406eaf0d1ec0d6e7986322d4593322ef29c7532",
+    "tests/test_roadmap.py": "3bd3b2d130b123f1de6e1cd18a5969228bdaaf388df7c6519b278fb313bb33d6",
+    "tests/test_roadmap_format.py": "85209bffb04ef445a4cd69644c330924bd20b89e5d45603313cf7c981a3755f1"
+  },
+  "step_authoring_fingerprints": {
+    "1": "bcc76f1d044ed55b0e1502c826636b31fe6dd62b9f5de48c71baf296922ea4d1",
+    "2": "b187fd6356693cd65129d76adb89863ffcf26dee002e95828aa4ae019bfc432e",
+    "3": "fa26a50b01edc0e5db3f7bc0508f98866fbe12b7381852b59b3132dab268ed5f"
+  },
+  "schema_version": 1
+}

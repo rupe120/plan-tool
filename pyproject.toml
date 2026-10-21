@@ -1,0 +1,96 @@
+[project]
+name = "plan-tool"
+version = "0.1.0"
+description = "Typed driver for implementation plans with YAML frontmatter"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2.9.0",
+    "pyyaml>=6.0.2",
+]
+
+# Optional: enables the advisory slug/title spell check in `create`
+# (see plan_tool.create.find_misspellings). Token-free, pure-Python,
+# no native deps. Absent => the check degrades to a silent no-op, so
+# the feature is opt-in without ever breaking a base install.
+#   pip install "plan-tool[spell]"  /  uv sync --extra spell
+[project.optional-dependencies]
+spell = ["pyspellchecker>=0.8.0"]
+
+[project.scripts]
+plan-tool = "plan_tool.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
+    "pytest-timeout>=2.3.1",
+    "pytest-xdist>=3.6.1",
+    "ruff>=0.16.3",
+]
+
+[tool.uv]
+python-preference = "system"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+# Per-test wall-clock cap. Anything above 30s must opt in with
+# `@pytest.mark.timeout(<seconds>)`. Catches the "test silently shells
+# out to real claude" regression class.
+timeout = 30
+timeout_method = "thread"
+markers = [
+    "integration: tests that exercise multiple modules together through their real public API — typically driving `main()` or the orchestrator entry points (create_plan, generate_detail, cmd_completeness, _iterate_reconcile_loop). Run with `pytest -m integration` to target them; run `pytest -m \"not integration\"` for the unit-test fast loop. See TESTING.md for the convention.",
+    "allow_real_claude: opt out of the conftest subprocess gate. Use ONLY for tests that intentionally exercise the real-claude subprocess plumbing with their own mocks (e.g. test_shell, test_launcher).",
+    "allow_real_network: opt out of the conftest network gate (which blocks `plan_tool.fetch.urlopen`). Use ONLY for tests that intentionally exercise real HTTP fetching.",
+]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+# Deliberately starts at pyflakes + syntax-error rules only (real bugs: unused
+# vars, undefined names, broken f-strings) rather than a broad style ruleset —
+# this repo has never been linted, so turning on pycodestyle/pyupgrade/bugbear
+# etc. now would drown a first pass in reformatting noise instead of the
+# actual-bug signal this baseline is for. Expand `select` deliberately, rule
+# group by rule group, rather than widening it wholesale.
+select = ["F", "E9"]
+# F401 (unused import) is OFF, not just unenforced-by-omission: this codebase
+# imports names purely so a downstream module can re-export them (e.g.
+# plan_tool/__init__.py re-imports names — like detail.py's derive_step_slug —
+# that detail.py itself never references, only carries for that re-export).
+# Vanilla pyflakes/ruff has no cross-file visibility into that chain, so a
+# blanket `ruff --fix` deletes the "unused" import and breaks the re-export
+# (confirmed: it did, 1477 test-collection failures on a trial run). Enabling
+# F401 safely needs `__all__` (or `import x as x`) on every re-exporting
+# module first — a separate, larger effort — not a flag flip.
+ignore = ["F401"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["plan_tool"]
+
+# Remap the repo-root integrations/ tree under the plan_tool package in the
+# wheel so importlib.resources.files("plan_tool") / "integrations" can read the
+# bundled backend manifests from an installed wheel. Source stays at repo root
+# (preserves the symlink-install workflow); this is a build-time remap only and
+# does not apply to editable installs.
+[tool.hatch.build.targets.wheel.force-include]
+"integrations" = "plan_tool/integrations"
+
+# Changelog fragments; see docs/RELEASING.md. The release version comes from
+# [project].version above.
+[tool.scriv]
+format = "md"
+fragment_directory = "changelog.d"
+categories = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
+md_header_level = "2"
+version = "literal: pyproject.toml: project.version"

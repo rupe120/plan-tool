@@ -1,0 +1,31 @@
+{
+  "batch_argv": [
+    "exec",
+    "--json",
+    "-s",
+    "workspace-write",
+    "--skip-git-repo-check",
+    "--ephemeral"
+  ],
+  "batch_output": "json",
+  "binary": "codex",
+  "classification": {
+    "auth": "(not logged in|not authenticated|unauthorized|\\b401\\b|auth\\.json|codex login|please (re-?)?login|invalid api key|authentication (failed|required))",
+    "context_overflow": "(prompt is too long|input too long|too many tokens|maximum[ \\t]+(context|tokens)|context[ \\t]+(length|window|size).*(exceed|limit)|exceed(ed)?[ \\t]+(the[ \\t]+)?max(imum)?[ \\t]+(context|tokens)|reduc(e|ing).*token)",
+    "provider_limit": "hit your (?:\\w+\\s+)?limit",
+    "rate_limit": "(rate[- ]?limit|too many requests|usage limit|session limit|try again at|Retry-After|resets?\\s+\\d)",
+    "transient": "(timed out|timeout|ECONNRESET|EAI_AGAIN|network error|temporarily unavailable|connection reset|connection was closed|socket hang ?up|\\b429\\b|overloaded|internal server error|bad gateway|service unavailable|\\b5(0[023]|29)\\b|response above may be incomplete)"
+  },
+  "default_model": null,
+  "model_flag": "-m",
+  "name": "codex",
+  "parser": "codex",
+  "streaming_argv": [
+    "exec",
+    "--json",
+    "-s",
+    "workspace-write",
+    "--skip-git-repo-check",
+    "--ephemeral"
+  ]
+}

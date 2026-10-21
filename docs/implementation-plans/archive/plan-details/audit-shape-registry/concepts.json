@@ -1,0 +1,23 @@
+{
+  "plan_slug": "audit-shape-registry",
+  "plan_fingerprint": "ae0166686de675c5a3b1bd5d40e92006055a3a21f9df87588e1973e7812e7bfd",
+  "concepts": [
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "approved",
+      "source_metadata": {
+        "signoff_decision": "defer",
+        "signoff_source_state": "673b6c9308cbb08ba37f3b69bbdb5960b29ab3898b94bd2f0b2107cf529ff617"
+      },
+      "bucket": "architecture"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

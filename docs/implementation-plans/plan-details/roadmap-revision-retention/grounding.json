@@ -1,0 +1,26 @@
+{
+  "plan_slug": "roadmap-revision-retention",
+  "grounded_at": "2026-08-19T12:26:04Z",
+  "plan_fingerprint": "2dce7ccce967ffec639e1f9364466c7ca6bbfece542fc7a97bc3550c15d043ab",
+  "code_fingerprint": {
+    "BACKLOG.md": "701c54c9ab019ee6a87011e8c1a76133cf0728158820a090e28e3e1891bacdad",
+    "README.md": "2ce65273752d3ef08302dc7acc9984935e97606d3227ff605a949522e0dc3ae9",
+    "ROADMAP_FORMAT.md": "c1f7b7bafabd24bad54483cb764cac76d3d3d505ed6fe023d2ce06fef5616266",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/ROADMAP_WALKTHROUGH.md": "8c5ffad859b39576ac380ba72325abeaac7798d83009592e0d564d47072bc0e8",
+    "docs/cli/roadmap.md": "a35a30f067478aa5a13db3bc98bd33cc2119052baf32f7531ad922dadebae539",
+    "integrations/claude/SKILL.md": "8beaeabd51318829d4960f421a073db73e0636fbd2d1cb864c5605a37c1c4d7a",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_gates.py": "05773d5d38e0cc014a3f20a68769844d9b6e7d265fefd9ee4db600a40ca45c20",
+    "plan_tool/roadmap_view.py": "5d4ec04e29bf47779ec171cc0ff6ce6249362ec0d6f410fac57e77cef3add03f",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_roadmap.py": "74fd35d9d764863b501887fa3e3271ea012f0eef39b1b820caf414082c5fb110",
+    "tests/test_roadmap_artifacts.py": "7ea6ff0017abcd833e3028696ba875218b4d85927c74d567d64eb8fcb245b2dc",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_gates.py": "3589a6765b4597d49246ba595bcb30c100300d71ee240ae4607e14b7e47543e1",
+    "tests/test_roadmap_view.py": "95fb5697690fe3e98201b66ec801846ed89326e343f43c6b8e935798dd75eff6"
+  },
+  "schema_version": 1
+}

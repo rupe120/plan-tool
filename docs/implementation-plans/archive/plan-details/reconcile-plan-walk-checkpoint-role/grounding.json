@@ -1,0 +1,16 @@
+{
+  "plan_slug": "reconcile-plan-walk-checkpoint-role",
+  "grounded_at": "2026-08-05T23:36:33Z",
+  "plan_fingerprint": "1eedf76eb4ca7d4d36eec96b9a126ae313acdeaf194b443b0cf4f650b700c580",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b27f0b19110b52ef0125e9eed563330b2445e4ceadf4396ab669a87912c82739",
+    "docs/AUDIT_FLOW.md": "66074eee014722e60c2e2f5416137e71e46167e1c3f3fb5c5e5f7437fd4ba9f4",
+    "docs/cli/README.md": "96d117372599cf5ee438712732d989e15726f9ef868226d9e74844baa17339be",
+    "docs/cli/reconcile-plan-walk.md": "d650a7fcef0339805d7498e55400651010314e8dfce31e76adf9a4b6758ef73a",
+    "plan_tool/cli/review_cmd.py": "e9a8c9c2f974379039b5003bf8d08d7d6af35fece85ad41be5cb16bdf8c9724d",
+    "tests/cli/test_review_cmds.py": "8d8eec401462e0a716878d7e8497b5e15fff9af00498af682983e6e791e1818a",
+    "tests/test_review_persistence.py": "557d954e805b1d0b24836abc1494b34291858c70cede14b5d300ec335b1ddb39",
+    "tests/test_review_walk.py": "a8d021e901f7cb76e827cdd54af04b195f3b55adfd9a0eac7544c52707669548"
+  },
+  "schema_version": 1
+}

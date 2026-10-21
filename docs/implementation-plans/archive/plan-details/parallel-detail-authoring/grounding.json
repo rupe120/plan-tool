@@ -1,0 +1,14 @@
+{
+  "plan_slug": "parallel-detail-authoring",
+  "grounded_at": "2026-06-26T18:33:09Z",
+  "plan_fingerprint": "30cace6e0c4a362b2bb3378256b2ff936aeaa0c1976f831a09f65710eda36595",
+  "code_fingerprint": {
+    "TESTING.md": "1bf0c9ec32e90aa4f97b3ecaad5aa71f5a91a729901fa3e3262e02e9236e5745",
+    "docs/cli/detail.md": "35be3462d05ed9e845dfc1893a367b35ed33cb1017dcd4b153cf3d53b8ae87cb",
+    "plan_tool/cli/authoring.py": "bb06e4eec5ed459046c7bbc9774b3f8dc40e3abbdf669c617a95759a66a568a6",
+    "plan_tool/detail.py": "142ad3460139a8034cc50d8c32c58fbd6296e0e6f11611fd6973c09c1d0ef7b8",
+    "tests/cli/test_authoring_cmds.py": "013d785496316665b48d134293c8b182cce6582bd35e6e804ef8a0ca25322049",
+    "tests/test_detail.py": "ff1a436c6a8459f52effa06c37ba29ee72683954c51e9634ff65a97a7253278e"
+  },
+  "schema_version": 1
+}

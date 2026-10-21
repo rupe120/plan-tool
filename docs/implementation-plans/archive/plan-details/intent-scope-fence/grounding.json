@@ -1,0 +1,24 @@
+{
+  "plan_slug": "intent-scope-fence",
+  "grounded_at": "2026-08-01T03:04:10Z",
+  "plan_fingerprint": "bea5035d27ef026cb007dfb3019a2fc03e421e86f8294aadfda17c0a736822b7",
+  "code_fingerprint": {
+    "plan_tool/create.py": "788ddc5426c5841bb18b67f24fbd5bbfab030345bb55610ed339afa57f559d30",
+    "plan_tool/detail.py": "bd6f0c22959ee3b81a7a17e27eecc1381334dbc74c45b8e7747dfd06262afe3c",
+    "plan_tool/prompts/detail-jira.md": "f61c69f1b9830e86314fb5125d0cd8e1f85a335d9becd8adde4a9d71d5d0eca7",
+    "plan_tool/prompts/detail.md": "98fe033ebffa712dcbc2400ed164fde28fa07fc9f594feb86f579d003a83db76",
+    "plan_tool/prompts/run-jira.md": "7cc8eff9aedfeccaf32369a8cc5b00db15c132110e53b77fa9e5bd4985655f64",
+    "plan_tool/prompts/run.md": "c6a045d0486d4a319adf871f7586cdbb056136be80bbe54b3b2de1ee3ca3a1c0",
+    "plan_tool/renderer.py": "45aa4e371364bcba8587c5cb9210701dd31459671e7215d1cd26acac4cd6d969",
+    "plan_tool/review.py": "752ec207568676991cf83fcff27de2e1426dafbd66c4ef9883afcff4ff7a6e6d",
+    "plan_tool/schema.py": "afbadfa51dbc0faa7298b34c0de938d02f743754aa7aeeb56280042e78d1892d",
+    "tests/cli/test_completeness_cmd.py": "22ba58d5bb972e4c092c473d08c2d91ca0fce74dfd2ab432322e8df96b098194",
+    "tests/test_create.py": "db5d7eed06e47703e2436fe6fc84893ab5639b13b7cdff6bea68c8c6a508e953",
+    "tests/test_detail.py": "feb255ef6f8933ef69045ceaeafd1c530606595167ff26dbf35fa6850b084ec0",
+    "tests/test_launcher.py": "4f8c526a9984e794e425511fe83d2433ee962996bf75b5b0cb292feb97222f9c",
+    "tests/test_parser.py": "1cdcb017d268bafd723d9df1e219db056b2ab1ef83ca86763d40ec0343a6bd30",
+    "tests/test_renderer.py": "d4f0ae3457a2a5c8c718c2c51b84f16f8132f533c1a65aae07e3550cd731eb87",
+    "tests/test_review.py": "847c73f073c4107c490fe3c73d6da1dea18982e99fa8ac0efe9467325bc19e1a"
+  },
+  "schema_version": 1
+}

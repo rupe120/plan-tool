@@ -1,0 +1,15 @@
+{
+  "plan_slug": "structural-remedy-vocabulary",
+  "grounded_at": "2026-06-23T02:26:38Z",
+  "plan_fingerprint": "5e4c06d2c881caf19c4637b3b835a9857ada451335b33b879a60f0a7e48e2996",
+  "code_fingerprint": {
+    "BACKLOG.md": "9af831d179dc7ba60bd14cb8cd6c1ca6553532e6eb3300fb096c74e35c561c85",
+    "CLAUDE.md": "a8725333e1528edb9403717f03bc4064a7f4054db3fdb4f5b3f6beff6910ee0a",
+    "RUNBOOK.md": "34b31f899da37f1f0624dddf429985aebab4b170d45e5366915b43f049fb8ed1",
+    "plan_tool/convergence_diagnosis.py": "0291aadecb5422e7b4f9bd7e78b1aa9cecad2b3f2252faa6013e4f21fb1118b1",
+    "plan_tool/review.py": "5693f36fabab560e8e1f770ab5c0c58122e00ff5f7f66589a9c4d91580f13e87",
+    "tests/test_convergence_diagnosis.py": "830d4e878f62d1c9f60cd7c911cc3d53c8a12a0fbbeb704cb61a4344bf71a26a",
+    "tests/test_review.py": "db8122ad6fbd9e16a439fc782eb4be0915e5b0d4c4b32f45dec7c09294be5198"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,26 @@
+{
+  "plan_slug": "roadmap-terminal-error-contract",
+  "grounded_at": "2026-09-21T19:49:35Z",
+  "plan_fingerprint": "a3463699ff0a09d6ca94cda3814186c10daf413e37906c52fdad4e7a813b83d3",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786"
+  },
+  "step_authoring_fingerprints": {
+    "1": "d036a741c987c97eeeabb3d364f07d6721d7166ed82c4d87c9ad2bc90273e1c0",
+    "2": "4685840357db509676818deba3b0052b3169f653627b7de23a9b3f8ba4ee9ef5",
+    "3": "24ad5f6d0cf0befd1fbf57b5919b72951464e238b5baad7074f0c786625f3aaa",
+    "4": "bff2bb45204011b4f387f8fd187621ed203e4ccac5ea97da4021d2bb867d330d",
+    "5": "55aca8a4abaed78dc06fc4940a2273f78dbf101da7b6a771307d83d6ded49aa4",
+    "6": "990a47aa0ed76c2cb5e1c93f5812cc0cef1849f99368ae2a5addcb58caa1143e"
+  },
+  "schema_version": 1
+}

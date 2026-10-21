@@ -1,0 +1,22 @@
+{
+  "plan_slug": "roadmap-view",
+  "grounded_at": "2026-08-07T15:18:29Z",
+  "plan_fingerprint": "37a9e651d7e30eae6254df8aafaeb2d22c27d3ed2812a32efac2129f0ccbc815",
+  "code_fingerprint": {
+    "BACKLOG.md": "05aee8f21cf4a4fac9bdfb41b6037f388d5baadfb7f58c63cbf620b062195147",
+    "CAPABILITIES.md": "006165c78f5ced359a979b24e9eb3179c9e04e9b5254dc7c59ce679683b176b3",
+    "CLAUDE.md": "37b052d01a7fe1976d5e19b5db10e56e0172bc0e8bc846b8d44b8538ce073d06",
+    "README.md": "685fdcea665828bb3427797b4af657ecd239a917ef83ef3369fa1dc753519cbd",
+    "ROADMAP_FORMAT.md": "9e7b34432a7f2a2e94cca065c042dc139f8b66bd1c44fe6ec74374b93dedf78a",
+    "USE_CASES.md": "1ca22059465f9ea44da86d7a94ec76ef8efaa0a2e9ddfda4982c7fd5e2a83f17",
+    "docs/ARCHITECTURE.md": "30409a480594452448418ec539f3e78456feb34ee352b9ec85af76ee1c6f0e13",
+    "docs/cli/README.md": "ebd91681fc8aef986bd6105fed4078819340294e93702bf3897562f9112f3421",
+    "docs/cli/roadmap.md": "8255c8157ef0d587ffbc844b7fd0491dba887ff3aaee9c4f30c0f8effa3430a0",
+    "integrations/claude/SKILL.md": "951126da393c69d08cdfac7e284784a630344f8e46456615facb78c84a61bcbd",
+    "plan_tool/cli/__init__.py": "de496ab385d23ac5d9f9801d992c5ffc0e0ebcc66eeaaf55cb9f329c3b7fe29c",
+    "plan_tool/cli/roadmap_cmd.py": "ce6ee3c304cb4d04914482a66bc868a50c8996ab721c287aecc7817a53228a0b",
+    "tests/cli/package_surface_help.golden.txt": "af325bf5395700b039875dda712c516b5a9dbe2c3b97651a7c04e38601270dac",
+    "tests/cli/test_roadmap_cmd.py": "423b8b9a804707f2fb63c67cdeace4bd176f62d7f4e3b9c11a73e4242d979997"
+  },
+  "schema_version": 1
+}

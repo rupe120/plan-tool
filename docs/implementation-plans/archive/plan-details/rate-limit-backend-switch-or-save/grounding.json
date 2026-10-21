@@ -1,0 +1,27 @@
+{
+  "plan_slug": "rate-limit-backend-switch-or-save",
+  "grounded_at": "2026-06-24T13:09:25Z",
+  "plan_fingerprint": "7ed8ff2af54c4ae255a6be0be81be91b34f553bcf87e2f66e418251571509d67",
+  "code_fingerprint": {
+    "CLAUDE.md": "ed890990e96b8d9baf3b2bd470f12e99382ea000ab639fd45c65c6d3e814a0f8",
+    "README.md": "67c3e008d32d9f0b9b1160538631dfc6a92cdda7fd46a1d5328e36f4855988c9",
+    "RUNBOOK.md": "b08a1bd686b08122ee2e5f8368d7370b5a5b6f48bda09bd1764548d7a6545897",
+    "integrations/claude/SKILL.md": "b69c9ecdc1840bd1c62412ac8f5958ef94253f5363f055f6a83e1df9b865e0d3",
+    "integrations/codex/SKILL.md": "c4a6c125cefd2044e3a2509b73b6950a2e969cfdd5447b282ff895c1d1810720",
+    "plan_tool/backend.py": "a734581c38b92993c55d4f30f6c303a4d5021374a2dd43ca8b6f216cbc8df05f",
+    "plan_tool/claude_errors.py": "dec9d03a1e6d234c2ba7b25302b91840ac8a8c349c86046d98525248a77bd927",
+    "plan_tool/cli/app.py": "20606e04f70d8cfb7491e46399a12dcd3203338f3bb65207998ccf3597891674",
+    "plan_tool/cli/parser.py": "8e8e70728cb63b28dbb8328ba6c2e6cb99887a0ce792acaacdc75f407729738a",
+    "plan_tool/cli/run_cmd.py": "2ab9586ba75ee4a34e82cdcaa4a3d2d56bebd9e7a97fe69647611dcf7e51b520",
+    "plan_tool/launcher.py": "18e21922e3dac952cf1cf0096c4ea6b9128c376e1bda7ee3d94c920142b68b80",
+    "plan_tool/shell.py": "e0643d9d596fa1e20104fc0613842ed0aee58fad1dab6cc425997091afbf2818",
+    "tests/cli/package_surface_help.golden.txt": "c394be4652c304ace92a9da770b4edd2b85f9096d1012538341c2ece4ed352b6",
+    "tests/cli/test_package_surface.py": "a6b93f83ff09fceed03d1a01ce57b92b9f43d873f5a974f0ccf12f076a4218df",
+    "tests/cli/test_run_cmd.py": "4cf43254299eb411856a7d4a21c46fce95781c4adb679f803bd5ab08da406f72",
+    "tests/test_backend.py": "66fd6661e8df88a625174289177b5f8860a6ae66f702eb5841729eccbb732f2f",
+    "tests/test_claude_errors.py": "0292db736ca18ea0305bac03cd6ead0a355534cfe8149f80fdffeb7ee30b6a37",
+    "tests/test_launcher.py": "3c59bf35c6fb13ae3b232b0fa888e661a0e909629d99e288901d32cd41043000",
+    "tests/test_shell.py": "08f89afda2aa584f465287b11c5b3f304881ea0301baed7cbff25629e0aad4f4"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,26 @@
+{
+  "plan_slug": "research-chosen-technology",
+  "grounded_at": "2026-08-25T15:38:39Z",
+  "plan_fingerprint": "d9432cfc5e3d0f84ddc12408d7635dfd6f6f6caebd7d4a8462a4a407048cbf44",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "d109674ca46194c62fdf4dc72e5e68b9601d7cb184a5199952815aa7c846ec5e",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/roadmap_artifacts.py": "587921875ae328966e3a048f1a150f0d7a09b87d7a84ef57ccf93eb845d03981",
+    "plan_tool/roadmap_revision.py": "e2c4b01ac90425a9323d80d8ab128ec6c994be3cb892c04cfb8102f8c86eeb81",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_direct_cmd.py": "e54333d82d6ce9510cc95c48f1fd6a5a869d9eef564142635efe7728b42fab36",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap_artifacts.py": "2a59d556433f5e1b3de3d0aa8ba4c8c2b2b65b03c870731c632dc5311c4f7af8",
+    "tests/test_roadmap_format.py": "7bd70cb888afb75bed535439d4f736c0800021badc3ebabfa8624b7bb253d5ce",
+    "tests/test_roadmap_revision.py": "aec40dad8f0cd2efe9e53137e968011dfa8baaae5e093c89ee57647ae9380631"
+  },
+  "step_authoring_fingerprints": {
+    "1": "f3454c7ac9bb8b682192ae53f38614de2d8ef6c01543a3c28aaf8360d5ebfe66",
+    "2": "489793727c9797874406a1f9f59a24f61b1a35e8890a83b52ff6dafc8e9a2262",
+    "3": "16c835af9652c09eabf3d356bdbc11490d34bfd37e85b96517216573fc1ee3c4",
+    "4": "cb0520224d409c24d275aee26a76f442d1fea1f57158ba38c39b9a240e102ed3"
+  },
+  "schema_version": 1
+}

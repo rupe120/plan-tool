@@ -1,0 +1,21 @@
+{
+  "plan_slug": "parallel-plan-worktrees",
+  "grounded_at": "2026-06-22T12:23:01Z",
+  "plan_fingerprint": "a111c0bdd7f6a099911dceda66e6fa9c88365f3b7cf81e4df3ad0e56b9bdfa84",
+  "code_fingerprint": {
+    "BACKLOG.md": "c14e728322009d6173ebe33b7bd41d5abc340b0ad036339465451fe5e1061938",
+    "CLAUDE.md": "d45792c61bc866fb68a923e73cbc198f5a93e818049049e0b39ab24d57668d45",
+    "README.md": "7c424d25a855a86a76cb401cfb5d29f51ef7a1be3d6310eea4415805736ece9a",
+    "RUNBOOK.md": "dab6bae1acfe111a2513a74aa6e114d9d80258ff542f735c336070f51b84fee1",
+    "docs/cli/README.md": "649d9eb1550459d90b6ee57f19323d30f1dea409961e3d43464888ddeb3120e5",
+    "integrations/claude/SKILL.md": "b69c9ecdc1840bd1c62412ac8f5958ef94253f5363f055f6a83e1df9b865e0d3",
+    "integrations/codex/SKILL.md": "c4a6c125cefd2044e3a2509b73b6950a2e969cfdd5447b282ff895c1d1810720",
+    "plan_tool/cli/__init__.py": "b8d82640c16132ffcbeaab8e5f5294987d06a9c02ce4163a477768d5b61ae289",
+    "plan_tool/cli/app.py": "20606e04f70d8cfb7491e46399a12dcd3203338f3bb65207998ccf3597891674",
+    "plan_tool/cli/gitcommit.py": "234c96b2363908ecb5b0326980f30432141c3014473bd9e9daf5ee2b03ad08e8",
+    "plan_tool/cli/parser.py": "3c4a5db330f00276b4680e81e1d1505e11f17eb0248a9e148bcc6a2e0c26f906",
+    "tests/cli/package_surface_help.golden.txt": "dc7d85c8ca2cb00c437be5e77d4b1dacb1e9c2bdd19fde150ab1cf9e8f8a8965",
+    "tests/cli/test_gitcommit.py": "b2b5ccf4689dc9724a062d753f2df6b898d1d949e5d96ab7197aae9aa98790cf"
+  },
+  "schema_version": 1
+}

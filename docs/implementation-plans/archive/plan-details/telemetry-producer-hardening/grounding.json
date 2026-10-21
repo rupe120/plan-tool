@@ -1,0 +1,31 @@
+{
+  "plan_slug": "telemetry-producer-hardening",
+  "grounded_at": "2026-07-13T10:32:01Z",
+  "plan_fingerprint": "7aa59651e4a36b1add23e7dcfc0ca9208124bd3f5eec2c70e5be68331d0b1c8d",
+  "code_fingerprint": {
+    "BACKLOG.md": "68d82e253f7438d6159862220fd424aac9290d26902648f9e7d98282e4739aa6",
+    "CLAUDE.md": "7e83bd4c49550b109644fa6ec3919f149bdf6d14ff9cee84f163f5b161d83254",
+    "DATA_CONTRACT.md": "b287be2851857fd8bac43653364e70696a2c035fa7e9e9b2f02ba3d8c8320937",
+    "RUNBOOK.md": "8eea88000376f74300873a4f761cc9f0104af03becd0418412a050cd8a77d0c5",
+    "plan_tool/cli/completeness_apply_parallel.py": "f776b8337286db500afe4f6373a55843b8efd20b074baad5ecb67d686998af21",
+    "plan_tool/cli/completeness_cmd.py": "4c4fd256a107352971a4b295e7a62ef432d8f5f492e9b5a6f658f932f52d5309",
+    "plan_tool/cli/completeness_phases.py": "73dadce537a652845bbad99d47ddff683a770dd77bdad4b5601862ca58598989",
+    "plan_tool/create.py": "9bb998219c21ab856b994345c8d949012c0e52e843539c55555f588c6bd55bc7",
+    "plan_tool/launcher.py": "54188e74f85ae2711ac3c2590031d62b763f48a11a09f1ed4c8d59aa74a0efbc",
+    "plan_tool/refresh.py": "6a0e05f4cc9b7b8507d97dc4a68665738e53690db1f42dd3286016abbce543cc",
+    "plan_tool/review.py": "cc4d207d96eb97e958a6086521f4ce4f41e84936bfd0d872579d0d98d0ce4070",
+    "plan_tool/telemetry.py": "2cf571dd97079bc29a26a4e2932bc92913522ce7b7ead5c2f075926ef8f88f84",
+    "plan_tool/telemetry_analysis.py": "95c90c0f71d7ec4e8b7f020f0986eee003f1c98031ca72360f7f5e59df975fae",
+    "tests/cli/test_completeness_apply_parallel.py": "c9ee87acfde0d3084d7593e3cf29bb43d53764e092c0793c1bcd8c11d3178f3e",
+    "tests/cli/test_completeness_cmd.py": "b64fb85c87f295f8728382e701cc2e5da4df7dca08f16a2b411c1905cfee70ca",
+    "tests/cli/test_review_actions.py": "6eb3a9546afa72164b73ee009b3a2fc6094de651b6129b90652825a42032d1bc",
+    "tests/test_create.py": "20b6f7fcea0bf79841c701e09b8bac4deedfef078369ec33cb1c09850231cd20",
+    "tests/test_data_contract.py": "ff58e1909ac06f55619ab8a6bc29ac273c7e12f77bfa2828eb3dd6ed9c6793a5",
+    "tests/test_detail.py": "6b05ca94ec1e663a92e914e71389443b6834a95178aa04738c49143682012047",
+    "tests/test_launcher.py": "d9fc8a6ae111b2eac259e04971ada9a7b85c002b6a3f1beed5d5deb6b14197eb",
+    "tests/test_review.py": "79a49cb68f56998f0ba8c93eaf60f4b089212682b084fa4cddef61c74d56d58b",
+    "tests/test_telemetry.py": "f8c13403520ca5e339285b27039dee294c97ee13f38c1f9808c0aa276c303c8b",
+    "tests/test_telemetry_analysis.py": "d508f7c44c322d20f481f4903864bffcde2d464963a6ab030c5ee2b6fed2c0ba"
+  },
+  "schema_version": 1
+}

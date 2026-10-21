@@ -1,0 +1,17 @@
+{
+  "plan_slug": "step-granularity-advisor",
+  "grounded_at": "2026-06-19T13:35:43Z",
+  "plan_fingerprint": "8270c21a1a0791d63a0863a496835c159efd904e0c7410a7514c6d04288a04c8",
+  "code_fingerprint": {
+    "CLAUDE.md": "de1c16a580b8a9fb380d63bf79a406bec63ff265f2ae2f9e44370e691b0dcaa7",
+    "RUNBOOK.md": "306d1c0bf3e658edefa0f6bc2e330415038401c91e8d776ddcc38e7188be4974",
+    "plan_tool/cli/completeness_phases.py": "883b6a9c8d704613fe2e51f95cfa17d9d101d9a561612b4e5b1678800cd4666c",
+    "plan_tool/completeness_report.py": "68a0400dddd05d3b8cd266fbbd3f79ccc654f649dd5537e97130faa5beb8aa2e",
+    "plan_tool/create.py": "79dda5c9b3bdb0ae37f6007657275aa67991946786f1b7713f2a0ad729b2ef21",
+    "plan_tool/detail.py": "7a16e4515c904b61987f3ddb35fc395f655e6676abd6a1506651b3b47f977032",
+    "tests/test_completeness_report.py": "1e30ea664912eb9f63123d7afb0f9d47964948796732b53fddfdcb15d20c337c",
+    "tests/test_create.py": "5276fc40f67683819e6eeaeed4f6163dfab34532050355fb760c9aaa5739b38c",
+    "tests/test_detail.py": "74cabbe96e84ac1f57c2bfd729e40a5045c30d21ad302985e349e4a0ca4686c3"
+  },
+  "schema_version": 1
+}

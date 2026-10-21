@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When the Plan Caught Itself — visual</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css" id="theme">
+
+  <style>
+    :root {
+      --accent: #4fd1c5;
+      --warn:   #f6ad55;
+      --bad:    #fc8181;
+      --good:   #68d391;
+      --muted:  #8aa0bd;
+      --ink:    #0b1120;
+    }
+    .reveal { font-size: 30px; }
+    .reveal section { text-align: center; }
+    .reveal h1 { font-size: 2.0em; line-height: 1.05; }
+    .reveal h2 { color: #e8eef7; font-size: 1.15em; text-transform: none; font-weight: 600; }
+    .reveal .cap { color: var(--muted); font-size: 0.66em; margin-top: 10px; }
+    .reveal .cap b { color: var(--accent); font-weight: 600; }
+    .reveal .tag {
+      display: inline-block; font-size: 0.46em; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+      border-radius: 4px; padding: 3px 12px; margin-bottom: 8px;
+    }
+    .reveal svg { width: 100%; height: auto; max-height: 62vh; display: block; margin: 0 auto; }
+    .reveal .stage { width: 86%; margin: 0 auto; }
+    /* shared svg type */
+    .lbl  { font: 600 19px ui-sans-serif, system-ui, sans-serif; fill: #e8eef7; }
+    .lbl-s{ font: 600 15px ui-sans-serif, system-ui, sans-serif; fill: #cbd6e6; }
+    .lbl-mono { font: 600 17px ui-monospace, SFMono-Regular, monospace; fill: #e8eef7; }
+    .lbl-muted { font: 500 15px ui-sans-serif, system-ui, sans-serif; fill: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <!-- 1 · TITLE -->
+  <section data-background-color="#0b1120">
+    <span class="tag">plan-tool</span>
+    <div class="stage">
+      <svg viewBox="0 0 420 230" role="img" aria-label="self-loop">
+        <defs>
+          <marker id="ah-acc" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#4fd1c5"/>
+          </marker>
+        </defs>
+        <!-- circular self-pointing arrow -->
+        <path d="M300,115 A95,95 0 1 1 205,20" fill="none" stroke="#4fd1c5"
+              stroke-width="9" stroke-linecap="round" marker-end="url(#ah-acc)"/>
+        <circle cx="210" cy="115" r="42" fill="#10233022" stroke="#274056" stroke-width="2"/>
+        <text x="210" y="110" text-anchor="middle" class="lbl-s">the</text>
+        <text x="210" y="130" text-anchor="middle" class="lbl-s" fill="#4fd1c5">plan</text>
+      </svg>
+    </div>
+    <h1>When the Plan<br><span style="color:var(--accent)">Caught Itself</span></h1>
+    <p class="cap">a true story from one authoring session</p>
+  </section>
+
+  <!-- 2 · TRIGGER: claim vs reality -->
+  <section>
+    <h2>The audit caught a contradiction</h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 300" role="img" aria-label="claim contradicted by validation error blocking three commands">
+        <defs>
+          <marker id="ah-bad" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#fc8181"/>
+          </marker>
+        </defs>
+        <!-- claim badge -->
+        <rect x="250" y="14" rx="14" width="260" height="58" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+        <text x="380" y="40" text-anchor="middle" class="lbl-mono" fill="#68d391">features:</text>
+        <text x="380" y="60" text-anchor="middle" class="lbl-s" fill="#9fe3b6">“inert · declarative ✓”</text>
+
+        <!-- error bolt -->
+        <path d="M372,86 L356,150 L378,150 L364,210" fill="none" stroke="#fc8181" stroke-width="7"
+              stroke-linejoin="round" stroke-linecap="round" marker-end="url(#ah-bad)"/>
+        <rect x="430" y="120" rx="9" width="210" height="40" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+        <text x="535" y="146" text-anchor="middle" class="lbl-mono" fill="#fc8181">ValidationError</text>
+
+        <!-- three blocked commands -->
+        <g>
+          <rect x="170" y="232" rx="10" width="130" height="50" fill="#161e2e" stroke="#fc8181" stroke-width="2"/>
+          <text x="235" y="263" text-anchor="middle" class="lbl-mono">run</text>
+          <rect x="315" y="232" rx="10" width="130" height="50" fill="#161e2e" stroke="#fc8181" stroke-width="2"/>
+          <text x="380" y="263" text-anchor="middle" class="lbl-mono">jira</text>
+          <rect x="460" y="232" rx="10" width="130" height="50" fill="#161e2e" stroke="#fc8181" stroke-width="2"/>
+          <text x="525" y="263" text-anchor="middle" class="lbl-mono">detail</text>
+        </g>
+      </svg>
+    </div>
+    <p class="cap">A claim — <b>“changes nothing downstream”</b> — that the design would actually break.</p>
+  </section>
+
+  <!-- 3 · THE PAUSE: fork -->
+  <section data-background-color="#0e1626">
+    <h2>The author didn’t hit <span style="color:var(--good)">apply</span></h2>
+    <div class="stage">
+      <svg viewBox="0 0 700 280" role="img" aria-label="a fork: auto-apply path faded, question path chosen">
+        <defs>
+          <marker id="ah-acc2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#4fd1c5"/>
+          </marker>
+        </defs>
+        <!-- node -->
+        <circle cx="120" cy="140" r="20" fill="#4fd1c5"/>
+        <!-- faded apply path -->
+        <path d="M140,140 C260,140 300,70 470,70" fill="none" stroke="#3a4a5e" stroke-width="6" stroke-dasharray="3 10" stroke-linecap="round"/>
+        <rect x="470" y="46" rx="10" width="190" height="48" fill="#11161f" stroke="#3a4a5e" stroke-width="2"/>
+        <text x="565" y="76" text-anchor="middle" class="lbl-muted">apply · “document it”</text>
+        <!-- chosen question path -->
+        <path d="M140,140 C260,140 300,215 460,215" fill="none" stroke="#4fd1c5" stroke-width="7" stroke-linecap="round" marker-end="url(#ah-acc2)"/>
+        <circle cx="565" cy="215" r="46" fill="#0c2b2b" stroke="#4fd1c5" stroke-width="3"/>
+        <text x="565" y="232" text-anchor="middle" style="font:700 46px ui-sans-serif" fill="#4fd1c5">?</text>
+      </svg>
+    </div>
+    <p class="cap">The tool didn’t fix anything here — it <b>started the right conversation.</b></p>
+  </section>
+
+  <!-- 4 · DIAGNOSIS: fragile ownership -->
+  <section>
+    <h2><span style="color:var(--bad)">Before:</span> a category that owned step numbers</h2>
+    <div class="stage">
+      <svg viewBox="0 0 720 300" role="img" aria-label="feature points to step numbers; a renumber dangles one link">
+        <defs>
+          <marker id="ah-w" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+            <path d="M0,0 L6.5,3 L0,6 Z" fill="#f6ad55"/>
+          </marker>
+          <marker id="ah-b2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+            <path d="M0,0 L6.5,3 L0,6 Z" fill="#fc8181"/>
+          </marker>
+        </defs>
+        <!-- feature -->
+        <rect x="250" y="16" rx="12" width="220" height="56" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+        <text x="360" y="40" text-anchor="middle" class="lbl-mono" fill="#f6ad55">feature</text>
+        <text x="360" y="60" text-anchor="middle" class="lbl-s" fill="#e7c79a">steps: [2, 4, 5]</text>
+        <!-- arrows down to numbers -->
+        <path d="M320,74 L210,150" fill="none" stroke="#f6ad55" stroke-width="4" marker-end="url(#ah-w)"/>
+        <path d="M360,74 L360,150" fill="none" stroke="#f6ad55" stroke-width="4" marker-end="url(#ah-w)"/>
+        <path d="M400,74 L520,150" fill="none" stroke="#fc8181" stroke-width="4" stroke-dasharray="7 7" marker-end="url(#ah-b2)"/>
+        <!-- step number chips -->
+        <circle cx="200" cy="172" r="26" fill="#161e2e" stroke="#cbd6e6" stroke-width="2"/>
+        <text x="200" y="180" text-anchor="middle" class="lbl">2</text>
+        <circle cx="360" cy="172" r="26" fill="#161e2e" stroke="#cbd6e6" stroke-width="2"/>
+        <text x="360" y="180" text-anchor="middle" class="lbl">4</text>
+        <circle cx="540" cy="172" r="26" fill="#161e2e" stroke="#3a4a5e" stroke-width="2" stroke-dasharray="4 5"/>
+        <text x="540" y="180" text-anchor="middle" class="lbl-muted">∅</text>
+        <!-- renumber callout -->
+        <rect x="430" y="232" rx="9" width="250" height="46" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+        <text x="555" y="261" text-anchor="middle" class="lbl-s" fill="#fc8181">renumber → dangling ref</text>
+      </svg>
+    </div>
+    <p class="cap">Owning step <b>numbers</b> means a <b>split/merge</b> shifts them out from under it.</p>
+  </section>
+
+  <!-- 5 · THE FIX: reversed ownership -->
+  <section>
+    <h2><span style="color:var(--good)">After:</span> steps carry the tag</h2>
+    <div class="stage">
+      <svg viewBox="0 0 720 300" role="img" aria-label="steps each carry a feature tag and point up to the feature; renumber-safe">
+        <defs>
+          <marker id="ah-g" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+            <path d="M0,0 L6.5,3 L0,6 Z" fill="#68d391"/>
+          </marker>
+        </defs>
+        <!-- feature registry -->
+        <rect x="270" y="16" rx="12" width="180" height="50" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+        <text x="360" y="47" text-anchor="middle" class="lbl-mono" fill="#68d391">type-impurity</text>
+        <!-- step chips carrying tag -->
+        <g>
+          <rect x="60"  y="184" rx="10" width="170" height="64" fill="#161e2e" stroke="#68d391" stroke-width="2"/>
+          <text x="145" y="210" text-anchor="middle" class="lbl">step 2</text>
+          <text x="145" y="234" text-anchor="middle" class="lbl-s" fill="#9fe3b6">🏷 type-impurity</text>
+          <rect x="275" y="184" rx="10" width="170" height="64" fill="#161e2e" stroke="#68d391" stroke-width="2"/>
+          <text x="360" y="210" text-anchor="middle" class="lbl">step 4</text>
+          <text x="360" y="234" text-anchor="middle" class="lbl-s" fill="#9fe3b6">🏷 type-impurity</text>
+          <rect x="490" y="184" rx="10" width="170" height="64" fill="#161e2e" stroke="#68d391" stroke-width="2"/>
+          <text x="575" y="210" text-anchor="middle" class="lbl">step 5</text>
+          <text x="575" y="234" text-anchor="middle" class="lbl-s" fill="#9fe3b6">🏷 type-impurity</text>
+        </g>
+        <!-- arrows up -->
+        <path d="M145,184 C145,120 280,90 300,66" fill="none" stroke="#68d391" stroke-width="4" marker-end="url(#ah-g)"/>
+        <path d="M360,184 L360,70" fill="none" stroke="#68d391" stroke-width="4" marker-end="url(#ah-g)"/>
+        <path d="M575,184 C575,120 440,90 420,66" fill="none" stroke="#68d391" stroke-width="4" marker-end="url(#ah-g)"/>
+      </svg>
+    </div>
+    <p class="cap">The tag rides <b>with the step</b> — a renumber can’t dangle it. Validation goes advisory.</p>
+  </section>
+
+  <!-- 6 · THE KICKER: caught itself -->
+  <section data-background-color="#1a1206">
+    <h2 style="color:var(--warn)">The feature caught itself</h2>
+    <div class="stage">
+      <svg viewBox="0 0 720 300" role="img" aria-label="feature-health detector loops back onto its own plan; three plus six churn rounds">
+        <defs>
+          <marker id="ah-warn" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#f6ad55"/>
+          </marker>
+        </defs>
+        <!-- loop back -->
+        <rect x="60"  y="120" rx="12" width="220" height="60" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+        <text x="170" y="148" text-anchor="middle" class="lbl-s" fill="#f6ad55">feature-health</text>
+        <text x="170" y="168" text-anchor="middle" class="lbl-muted">brittleness detector</text>
+        <rect x="440" y="120" rx="12" width="220" height="60" fill="#161e2e" stroke="#f6ad55" stroke-width="2"/>
+        <text x="550" y="155" text-anchor="middle" class="lbl-s">…its own plan</text>
+        <path d="M280,140 C350,110 380,110 440,140" fill="none" stroke="#f6ad55" stroke-width="5" marker-end="url(#ah-warn)"/>
+        <path d="M440,162 C380,196 350,196 280,166" fill="none" stroke="#f6ad55" stroke-width="5" marker-end="url(#ah-warn)"/>
+        <!-- churn dots -->
+        <text x="360" y="240" text-anchor="middle" class="lbl-muted">it churned through</text>
+        <g fill="#f6ad55">
+          <circle cx="250" cy="272" r="9"/><circle cx="280" cy="272" r="9"/><circle cx="310" cy="272" r="9"/>
+        </g>
+        <text x="338" y="278" class="lbl-s" fill="#f6ad55">3 audits</text>
+        <g fill="#f6ad55" opacity="0.8">
+          <circle cx="448" cy="272" r="7"/><circle cx="470" cy="272" r="7"/><circle cx="492" cy="272" r="7"/>
+          <circle cx="514" cy="272" r="7"/><circle cx="536" cy="272" r="7"/><circle cx="558" cy="272" r="7"/>
+        </g>
+        <text x="586" y="278" class="lbl-s" fill="#f6ad55">6 reconciles</text>
+      </svg>
+    </div>
+    <p class="cap">The brittleness detector’s own plan was the brittle one. The fix was <b>this conversation.</b></p>
+  </section>
+
+  <!-- 7 · CLOSE: lessons as tiles -->
+  <section data-background-color="#0b1120">
+    <h2>What plan-tool bought us</h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 230" role="img" aria-label="four value tiles">
+        <g>
+          <rect x="20"  y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="105" y="78" text-anchor="middle" style="font-size:42px">🔎</text>
+          <text x="105" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">design reviewer</text>
+          <text x="105" y="142" text-anchor="middle" class="lbl-muted">not a linter</text>
+
+          <rect x="205" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="290" y="78" text-anchor="middle" style="font-size:42px">✋</text>
+          <text x="290" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">human-gated</text>
+          <text x="290" y="142" text-anchor="middle" class="lbl-muted">advisory findings</text>
+
+          <rect x="390" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="475" y="78" text-anchor="middle" style="font-size:42px">⌨️</text>
+          <text x="475" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">truth is cheap</text>
+          <text x="475" y="142" text-anchor="middle" class="lbl-muted">machine-readable</text>
+
+          <rect x="575" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="660" y="78" text-anchor="middle" style="font-size:42px">♻️</text>
+          <text x="660" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">seed → regenerate</text>
+          <text x="660" y="142" text-anchor="middle" class="lbl-muted">not plan surgery</text>
+        </g>
+      </svg>
+    </div>
+    <p class="cap" style="font-size:0.78em; margin-top:18px;">It doesn’t just write the plan —
+       <b>it makes you ask if the plan is right.</b></p>
+  </section>
+
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 760,
+    margin: 0.04,
+    plugins: [ RevealNotes ],
+  });
+</script>
+</body>
+</html>

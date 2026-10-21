@@ -1,0 +1,23 @@
+{
+  "plan_slug": "calibrate-impact-drift",
+  "grounded_at": "2026-07-20T11:29:59Z",
+  "plan_fingerprint": "69b14799293c2c9919d7a544d05cedbeb293bb237819f8662490c44d0210dd6e",
+  "code_fingerprint": {
+    "BACKLOG.md": "9384b19b61a084406011517f70f8f5303b67ab0fb223e71aecc3a3389838dc66",
+    "DATA_CONTRACT.md": "268185b5735dfcb7324e75e6e3372f315a5b9b1d6fb339b05b32cb836aba98c0",
+    "docs/implementation-plans/2-gate-convergence-by-impact.md": "936b58dfe97a64b929c4eb230976be793f43b2ed46eb1b9cd35366eb86990538",
+    "plan_tool/cli/completeness_phases.py": "8ab3ff73e540ece77b0f9c7d57527b7d19c1f3bf690b902e16114fcd67b6bc83",
+    "plan_tool/cli/telemetry_cmd.py": "f2ccc73fa0f6d50115eff22c434a5aa12f9ea429d7ee97941b66192f94a64c28",
+    "plan_tool/convergence_diagnosis.py": "7b0c8a5e0c14f61892e25cc1a98cf020c8b4a3979e98c184bbfb6e8b22d0b841",
+    "plan_tool/detail.py": "1696f3f06126fb9ebc5061ad5db15790f6be4e56d396467796ba63d4245ea168",
+    "plan_tool/review.py": "3159ed4594f35f8f9071d8d851a07be6ef665f7cab44b7e92d39f42ef3718215",
+    "plan_tool/telemetry_analysis.py": "8def73a68c43c2e594efb627443cce788c6f3c1ce801b75d3cd6061b8ce9521a",
+    "tests/cli/test_completeness_cmd.py": "3eee024878ff59b6fa1901ad94f8691b39cc01f9031e5d35592ffd109a4d45cf",
+    "tests/cli/test_telemetry_cmd.py": "8f60288b59d5c9036bdc41085ceef7af8b1a6ed9a75f5d90e7fbdce540e54405",
+    "tests/test_convergence_diagnosis.py": "e12559f4efa18298fdabb38ba694e4524335c9df9f01b5b1b7aa7bcd2fda7dc5",
+    "tests/test_detail.py": "9c618a8baa5a2ba759f0657835bbfa70296d27e8d6ea3ef4f867c192ff195982",
+    "tests/test_review_persistence.py": "7e1ee54e55f9d80ead298616a4ae5fc66bc10c743059ec4b61f9753527797c22",
+    "tests/test_telemetry_analysis.py": "91bb9dbe6479f692edaeac6824d654a67ce9831121d970da51ebf05e239f5ccb"
+  },
+  "schema_version": 1
+}

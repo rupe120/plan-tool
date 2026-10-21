@@ -1,0 +1,16 @@
+{
+  "plan_slug": "per-call-timeout-budgets",
+  "grounded_at": "2026-08-04T15:36:05Z",
+  "plan_fingerprint": "031cafc48e014a368a8171877ba8e67311adf3ffc003e268514fc7e55485953f",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "e08994d9b67d8a7a52befc7750e3f1fe04815326f6c11ae49132e9667dcbd242",
+    "docs/AUDIT_FLOW.md": "884f030081c24274002198ea523b36041276b00628850fb82e33e1aea59cd757",
+    "docs/cli/completeness-audit.md": "40b39a9e1136db8eb1f2320aa0f4171af3255ee05057bdc40d48cb7eaf615cfa",
+    "plan_tool/cli/completeness_phases.py": "988fe32188bd0eb11d1733d04e3dd4d4d531128ed673276d6cfee1bfe07d842b",
+    "plan_tool/shell.py": "3cb46c2ce6ba56216fa799b67e9d89c20ddcaeb636c5a0867a5c40482bbaf980",
+    "tests/cli/test_completeness_cmd.py": "98e79939baeec49b63ce2d72462213b014d693406dce77302d76c43678649a98",
+    "tests/test_cli.py": "931848a60ff3aebf62aa65c6cb023e08e1ec64c5daff5222b71297fbb4191b0f",
+    "tests/test_shell.py": "8343b539c93b05e42d77189f23e24bad7ed1aa844f976728ab0bb85e8dfe2d5e"
+  },
+  "schema_version": 1
+}

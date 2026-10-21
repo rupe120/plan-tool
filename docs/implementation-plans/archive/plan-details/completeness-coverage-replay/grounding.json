@@ -1,0 +1,22 @@
+{
+  "plan_slug": "completeness-coverage-replay",
+  "grounded_at": "2026-08-20T12:47:49Z",
+  "plan_fingerprint": "309e77654180f1a1cd7f90dfdcae846a0763e6ae52d50c65abad6645613d4bc7",
+  "code_fingerprint": {
+    "BACKLOG.md": "ea66d47f21dbfc212740d00e1440507df8a6ba1ccf2df205b66a3c66669fdb5e",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "step_authoring_fingerprints": {
+    "1": "f06d9b2ac8be837a9e26dde584749b203ccdf9a9b2137331adfc44708d4d81a4",
+    "2": "1fdaaca4a544be36321951e16245dc4ffd573cc82f576716ce982d3ec4694bca",
+    "3": "50c687952e69d86915b732d65df55fef3864c24e892ec0395e6a7b9205d2fcbc",
+    "4": "7ac62fc4cfa3018f4851bf0500c23375f1c80bd6df14bfd22e61f7ef6471964c"
+  },
+  "schema_version": 1
+}

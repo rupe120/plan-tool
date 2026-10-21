@@ -1,0 +1,13 @@
+{
+  "plan_slug": "reconcile-code-later-step-context",
+  "grounded_at": "2026-08-04T16:16:34Z",
+  "plan_fingerprint": "3317c407f118cc3894b97e5f4a0fa4ba700798e53ae7200ddba23bbe47607b5d",
+  "code_fingerprint": {
+    "plan_tool/cli/reconcile.py": "068a102733c4871afe7b280e51093bce8cd656f90687e9431a5a846790d4631f",
+    "plan_tool/launcher.py": "bf39c3618193fa122dd2bf0c6fbf80b0629fd85a80bcabaee6808259bf342080",
+    "plan_tool/prompts/run-reconcile.md": "8f05549a021899316559e2866349e313e3f82fa42f1e3870387fb269963580a0",
+    "tests/test_cli.py": "931848a60ff3aebf62aa65c6cb023e08e1ec64c5daff5222b71297fbb4191b0f",
+    "tests/test_launcher.py": "7733fe13b56dc203da98e4cd3148bd8024b2e382d237b0403fa34b4f4b254b1d"
+  },
+  "schema_version": 1
+}

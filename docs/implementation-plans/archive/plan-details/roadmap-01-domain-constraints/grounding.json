@@ -1,0 +1,20 @@
+{
+  "plan_slug": "roadmap-01-domain-constraints",
+  "grounded_at": "2026-07-31T14:47:40Z",
+  "plan_fingerprint": "2e90e17e99eb3941659575880cc849ec51e06fa2d8efa162c103117b3927a8ed",
+  "code_fingerprint": {
+    "BACKLOG.md": "d334c81fdef273b148dc1ea084553ff2b1069358efa23a3c80d9b37f4c1e3087",
+    "CAPABILITIES.md": "510f22d349c02b11a0e92e67cce3fa38235d1144d7025c366693ec62da9840d0",
+    "CLAUDE.md": "3a8b63197d5c4799bf26b1825f8e02afd78010efe5f61309a3acb267d56d567a",
+    "RUNBOOK.md": "dc376bc2e31dfd4fe294fd8f049becfbaa66e61daa61d0626c9e4fc7f8a11e6f",
+    "TESTING.md": "c7b3f34e018d37e3f4887ddeb3a0637310a002b532770ea2673ae94c158e62a1",
+    "USE_CASES.md": "6a46d3e4659a085e03282f99c8ae5de16f8585653e949abf21a0ba42c35e7275",
+    "docs/cli/README.md": "3e8a26a5f20c4de636ceef66b589220567307bd368f4139e93bfff39b0582bec",
+    "integrations/claude/SKILL.md": "596bb1297892f17b9fbd418e6e50fed89d13d7471d596384cb0bb18106a5c78a",
+    "plan_tool/cli/__init__.py": "4b65dd4948a8bf703fecefa3a628c2ad79a5bf8542e9fb59ed6fd02b1bc71469",
+    "plan_tool/cli/app.py": "21a3f53057367734ff0a16be22b41a42f2a3198711da1e266657a3c9690d687f",
+    "plan_tool/cli/parser.py": "387ec944cd7b49c14d6905c7ea050df96b7204c622dd8d61cba6677de87d858d",
+    "tests/cli/package_surface_help.golden.txt": "41cfc9fe0c37a9d4218379358ac84a370d436175ff01c4923aae335c27dd71e8"
+  },
+  "schema_version": 1
+}

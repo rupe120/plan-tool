@@ -1,0 +1,29 @@
+{
+  "plan_slug": "concept-decision-record-core",
+  "grounded_at": "2026-07-13T02:12:46Z",
+  "plan_fingerprint": "dd6cf9d063ccaa7b85a3e89f059e917e4979b5e4ee98e0b4fc8086508270cde8",
+  "code_fingerprint": {
+    "BACKLOG.md": "18673cba7cf0d5ddda8a29d000a651cc943bd0b86d31ffc22011826565c1fe5f",
+    "CAPABILITIES.md": "8577e7ad0edfe8673dac37df88eebd07241662c9b42381df9f6f059f01a722df",
+    "CLAUDE.md": "8548257ec1695a1ea0319d7be3f2ea58625696d3ce3335ca2d2515d04a8a9cdb",
+    "DATA_CONTRACT.md": "b287be2851857fd8bac43653364e70696a2c035fa7e9e9b2f02ba3d8c8320937",
+    "RUNBOOK.md": "8eea88000376f74300873a4f761cc9f0104af03becd0418412a050cd8a77d0c5",
+    "TESTING.md": "7bcb03abec79f6f6b66eee3141cd63e1a505b9627c5e3d39cad6af6361ef53c9",
+    "docs/cli/README.md": "dc8a70efb57f3880bea42dc13b3b6c6260f963c4e897619df53a7f82391afe10",
+    "plan_tool/cli/__init__.py": "c441849d6d8c3ce2a895e8cfb1912966cbdc84f03b45cd317e5001dc4635df09",
+    "plan_tool/cli/app.py": "7c97be0b721fbe64f01c924082d7a134389e3090572ec7253318b765c7081361",
+    "plan_tool/cli/parser.py": "c0d0548e055fd067d5dbe43cd366f745eab7675eb222aa201ea470af82e64bed",
+    "plan_tool/data_contract.py": "c10ca90f92e20b10fb78a9c5f5b60e01d08f332bc3bb67fc37eb66cc85f697e0",
+    "plan_tool/parser.py": "e273add48f4ccb0d96fedb559f91b91485a708e2b50b5b7b7bf77aba330699b0",
+    "plan_tool/review.py": "cc4d207d96eb97e958a6086521f4ce4f41e84936bfd0d872579d0d98d0ce4070",
+    "plan_tool/schema.py": "eec6de6cc86c282ee7ff32ae366472f71d3022dcea75f422ee53294a662eb6fc",
+    "tests/cli/package_surface_help.golden.txt": "3d6c2e6eb6ece94eafa0c301ca87395cf68e513e250563736dc2c6f6eb1d62a5",
+    "tests/cli/test_app_lock.py": "3b92cb49a0e9eac886b243b3ae213e58da9a7392da2738b24b0851b1eb4dcc77",
+    "tests/cli/test_cli_reference.py": "13128323665c31e03e93dfde18348d2378c5c49e97a3ff4411e93214597abcb7",
+    "tests/cli/test_package_surface.py": "500658c1bcc559b4aa0d07b181298f0a4f6614e921284a2a64dea877170dd322",
+    "tests/test_data_contract.py": "ff58e1909ac06f55619ab8a6bc29ac273c7e12f77bfa2828eb3dd6ed9c6793a5",
+    "tests/test_parser.py": "0d5d77f04ecb364018f816f1b6e947f8afc7e72b58972909b5feac733a79bd6f",
+    "tests/test_review.py": "79a49cb68f56998f0ba8c93eaf60f4b089212682b084fa4cddef61c74d56d58b"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,31 @@
+{
+  "plan_slug": "concept-remediation-3b-lifecycle-publication",
+  "grounded_at": "2026-07-13T18:58:44Z",
+  "plan_fingerprint": "000c0d93fbc1cfd7223e1104908ab4bcec6069fa9c8fd5303e9ecede0adf20a5",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "8f209e7cf8cf890125589130bc4e49cf28a4f5bac78e9382e4d9a5aae2e9e035",
+    "plan_tool/cli/authoring.py": "8635bd5cf26feac6c7a8ccc5ac530629c62c20b4ca3a669e4705c450b7d5cc8c",
+    "plan_tool/cli/convergence_cmd.py": "fc5bca6d8ab5a0285e1b80a235276f12cb0d3d9afb405fdd67412051b16b0bc2",
+    "plan_tool/cli/review_actions.py": "f649e995cfd13dcbbef110369fdc4a231658495c768a5a1d0268a5e6f2dfac27",
+    "plan_tool/cli/scope_out_cmd.py": "db74c3b75893ad9a412ba24bd2753aa516db1f3bfae802e9cb9c0aedcca25bfa",
+    "plan_tool/concept_tree.py": "fb63c4f467fba65cf009df583b8ac601916a274c4cc0e1913c867033b5609389",
+    "plan_tool/create.py": "44af6126261992dc41c93b622367a42a129b570b4ddba678c756438f784d44ae",
+    "plan_tool/data_contract.py": "1cd07f55b5f9437c16e592fcbe1287c86e86519301c8e873134dc50c64f37e32",
+    "plan_tool/detail.py": "860c279458f99aca415391c99880b3f4abe1221e81160752e72cba89ea9166fc",
+    "plan_tool/launcher.py": "54188e74f85ae2711ac3c2590031d62b763f48a11a09f1ed4c8d59aa74a0efbc",
+    "plan_tool/reground.py": "9c387480fdc358a7076729cb8d2b76d2c842cc5d8d30e2322466ea161572b8b0",
+    "plan_tool/scope_out.py": "8364477c5709f474cd7be9ca1c7c34fce4be9ea0df065e05dc3291d340e75196",
+    "tests/cli/test_authoring_cmds.py": "752756027d7456fe4af56302c86b6b106efefb94d8ffc6c1d62a4b2be21733f1",
+    "tests/cli/test_convergence_cmd.py": "c7bb8179cfadf8e6b213248e1020938cc7ac95cf3a1a841963f3f72d0870df9b",
+    "tests/cli/test_review_actions.py": "6eb3a9546afa72164b73ee009b3a2fc6094de651b6129b90652825a42032d1bc",
+    "tests/cli/test_scope_out_cmd.py": "721bc1ea5b84faf1f0fa5da44e84f5e2a278694c70476f9bd010a57d7a29cda6",
+    "tests/test_concept_tree.py": "4734eb9849d3afa9605c24511f1660f8ab8cec722428724a556bc7928a81170c",
+    "tests/test_create.py": "13919074a9741c18d1949cda5606aadbaed15bf4f750df9ab7a7002b558d2a66",
+    "tests/test_data_contract.py": "c5f5c14d437cfa88b86eccb43b2b4a49e24819d120a1677e012da1796fca8f67",
+    "tests/test_detail.py": "97066f6478fc1ec7a6a60924b732ed63cd90dcfd41bb8a381e2b8bb39965bfa2",
+    "tests/test_launcher.py": "9504cdd33be962dae5f98ebffe3e8f10b1af7bfa6be2605424f97569b14448a0",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_scope_out.py": "45d1a886086232ba7c917e7d275366dda1c8fc2f864111ba323621c47296934c"
+  },
+  "schema_version": 1
+}

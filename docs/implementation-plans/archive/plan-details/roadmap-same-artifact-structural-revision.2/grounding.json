@@ -1,0 +1,31 @@
+{
+  "plan_slug": "roadmap-same-artifact-structural-revision",
+  "grounded_at": "2026-08-17T16:39:37Z",
+  "plan_fingerprint": "1433c0c1a7c5210b506c9e824f80a2fea9a34c716559e65d5dd5a275c84c6d08",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "b69bf3ec51f7a1dc67b0339fcab8b10de0bc04bde8fd2d4b058d60eb33cc623b",
+    "CLAUDE.md": "aebebbede273c40797dd6c7d169038d99e35ff23fcbff2a3a9f28dfae109da71",
+    "DATA_CONTRACT.md": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+    "README.md": "67fb222622436522d49b454a34d0ee89ee01655d36555abf3e7c9a1cfaab57ad",
+    "ROADMAP_FORMAT.md": "0bcb4d70c84c1deeabe6b46f49a9e06334b40186fe935502d89971d4dbac409e",
+    "RUNBOOK.md": "57186b0f35d93dd436cc97a809423b74d15b55c1c0e6789901dbed683ea74f98",
+    "TESTING.md": "02f05707d91bcf6897f91f0cb7e52d810ad1d6bb938f64b842174a83e4c0950e",
+    "docs/ARCHITECTURE.md": "30fdc9991808d9f5112562a356083fed4824f1be30603f110cd6b7a52fe082af",
+    "docs/ROADMAP_WALKTHROUGH.md": "12ae521b5635743354218b6b1b143ef8b1a53c440fc8f52c2e14cd216231b639",
+    "docs/cli/roadmap.md": "c7763825e52ea86c215700fa4fdde59ace5c3acdbe71a15f28233fda873cdedb",
+    "integrations/claude/SKILL.md": "1c9fd91690bfc37d51fdecd26d7d09f2bad4625cb0b4e27994b70b58bff7e78c",
+    "plan_tool/cli/__init__.py": "4ac19a89dc4100d8509e2e762eb5330a0f15dcb81188dedf6927d1edee0e87bc",
+    "plan_tool/cli/roadmap_cmd.py": "ebbd188c13104ac0dc3cf573f1ecf1295398c1a8ab3ee8c29f6e5c853f8a0d36",
+    "plan_tool/roadmap_impact_snapshot.py": "90f3d30f8e2fed898423700e185b1c949ab8d0a0ecdcc9d9471df2addabd0cf4",
+    "plan_tool/roadmap_revision_publish.py": "9878ae12c98c6e49f405e83215eb376cb716ffea46a7c38b1cbb2f3701387d21",
+    "plan_tool/run_log.py": "376d6fa809602f9aa4b285e5339775827dff3cb747196d3ebcfff8733424cdf2",
+    "tests/cli/package_surface_help.golden.txt": "58d58016f7e12cfd58d60ed897e5c94d6ecb2ea3e7306bb367177f2170937e2b",
+    "tests/cli/test_roadmap_cmd.py": "f562f3f6235fe812f7f275c6824900cab2b359ddea72e5e0b030222e230de9a8",
+    "tests/test_data_contract.py": "625606af410be5e44ad95cb9c328a0a8954bf5de6f2d8645d50cba9e36fa8112",
+    "tests/test_roadmap_format.py": "9d181b537f824526c51716b83b16628b44de8d074a5b6d2c1dc2ba42a659bd11",
+    "tests/test_roadmap_impact_snapshot.py": "565908db81b4df7a78ca0ff13686cff3a862b4831ed50b6c2ecdae5055248f99",
+    "tests/test_roadmap_revision_publish.py": "159a21f8851959917715f6721cf5627c02871afe50f2e99197f19b5c149d9e58",
+    "tests/test_run_log.py": "aa7f97d94e93c2ee70689a15cc9a7eaa27808ba9e5212a783a945cba4f9e514a"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,17 @@
+{
+  "plan_slug": "symbol-aware-prompt-excerpts",
+  "grounded_at": "2026-07-07T00:21:37Z",
+  "plan_fingerprint": "2cbe5b946586fbf34636a7f66c908c5fee4cb1cd7e6df1e2637534d030d2c9a5",
+  "code_fingerprint": {
+    "RUNBOOK.md": "2369b2e59740cb07bc727a282b5e86f881a0c1e615af9cce8d1615831f9ce68d",
+    "plan_tool/annotate.py": "8e3006681884d6da432960e70c26454005fb003ba68cbc7369f4d93d46e1fc0f",
+    "plan_tool/detail.py": "cc03642eae557a51cd3bff253c532081b075cd6f2eaa6aacd15ae34ccd85ae33",
+    "plan_tool/jira.py": "0b8955d322c455fc89b1380757253c1f59a279254eb5872e796d030026b4fcaf",
+    "plan_tool/review.py": "4ec5d2a54f6bd720c082300e4e68284ad0f85265ad2db3b9e9dd19c031980ce4",
+    "tests/test_annotate.py": "808fdd918cf2e20b2d736ca47fdc1351fa460260b905685dcbc1fabf00790f7c",
+    "tests/test_detail.py": "4e116a55088c371254e2d265b8a608a4f6fee45e6bed1eae10929009ebc6a499",
+    "tests/test_jira.py": "b58dffa0138998dcf31c68f2092afb9951587e4da5c7feaade533448eb81a990",
+    "tests/test_review.py": "da98ec83820738a5fa68ccb1af10670bd37b163ae7b3436bd73d36e7f6cc1aa6"
+  },
+  "schema_version": 1
+}

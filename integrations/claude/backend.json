@@ -1,0 +1,31 @@
+{
+  "batch_argv": [
+    "-p",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "acceptEdits"
+  ],
+  "batch_output": "json",
+  "binary": "claude",
+  "classification": {
+    "auth": null,
+    "context_overflow": "(prompt is too long|input too long|too many tokens|maximum[ \\t]+(context|tokens)|context[ \\t]+(length|window|size).*(exceed|limit)|exceed(ed)?[ \\t]+(the[ \\t]+)?max(imum)?[ \\t]+(context|tokens)|reduc(e|ing).*token)",
+    "provider_limit": "hit your (?:\\w+\\s+)?limit",
+    "rate_limit": "(rate[- ]?limit|too many requests|usage limit|session limit|try again at|Retry-After|resets?\\s+\\d)",
+    "transient": "(timed out|timeout|ECONNRESET|EAI_AGAIN|network error|temporarily unavailable|connection reset|connection was closed|socket hang ?up|\\b429\\b|overloaded|internal server error|bad gateway|service unavailable|\\b5(0[023]|29)\\b|response above may be incomplete)"
+  },
+  "default_model": null,
+  "model_flag": "--model",
+  "name": "claude",
+  "parser": "claude",
+  "streaming_argv": [
+    "-p",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "acceptEdits"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "plan_slug": "roadmap-same-artifact-structural-revision",
+  "plan_fingerprint": "1433c0c1a7c5210b506c9e824f80a2fea9a34c716559e65d5dd5a275c84c6d08",
+  "concepts": [
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "out of scope"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

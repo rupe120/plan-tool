@@ -1,0 +1,105 @@
+{
+  "plan_slug": "lazy-deferral-confirmation",
+  "plan_fingerprint": "89982b36be2aa7842f4f2e45a93f2640f68fd0a6261ec6847e897f2589915cf8",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Make concept materialization **lazy** so `create` stops decomposing every plan into a full concept tree up front, and instead surfaces \u2014 for operator confirmation \u2014 only the concepts the tool proposes to **defer** or mark **won't-do**. This is the MVP of the original desire (\"confirm the list of deferred concepts\"): materialize a concept record entry only at a deferral decision, surface those (and only those) for confirmation, and leave un-deferred plans with no concept record at all. The shipped hierarchical machinery (the tree, `Step.concept_ids`, `synchronize_concepts`) stays in place but dormant-by-default \u2014 this does not rip it out. Expected decomposition ~5\u20137 steps; if convergence pressure grows it past that, defer to the backlog (BACKLOG #129) rather than growing the plan.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Make concept materialization **lazy** so `create` stops decomposing every plan into a full concept tree up front, and instead surfaces \\u2014 for operator confirmation \\u2014 only the concepts the tool proposes to **defer** or mark **won't-do**. This is the MVP of the original desire (\\\"confirm the list of deferred concepts\\\"): materialize a concept record entry only at a deferral decision, surface those (and only those) for confirmation, and leave un-deferred plans with no concept record at all. The shipped hierarchical machinery (the tree, `Step.concept_ids`, `synchronize_concepts`) stays in place but dormant-by-default \\u2014 this does not rip it out. Expected decomposition ~5\\u20137 steps; if convergence pressure grows it past that, defer to the backlog (BACKLOG #129) rather than growing the plan.\",\"title\":\"overview\"}"
+      }
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "Today `create` **eagerly** builds a concept tree for every plan whether or not anything is deferred. `bootstrap_concepts` (`plan_tool/concept_bootstrap.py:55`, called unconditionally at `plan_tool/create.py:5932`) emits one node per body section (~8), and `emit_concept_tree` (`plan_tool/concept_tree.py:330`, invoked at `plan_tool/create.py:5956` when no saved tree exists) enriches that to ~20 more speculative sub-concepts \u2014 28 nodes in the shipped `concept-write-integrity` example, all `review_state=\"unreviewed\"`, `decision=\"include\"`. Almost none are ever deferred; they are the plan's prose re-encoded as a second structure that must be kept in sync \u2014 the coupling that produced the write-integrity bugs and the whole-bundle-fingerprint staleness that broke that plan's audit twice during authoring. Three specific problems, grounded: (1) **Eager over-decomposition** \u2014 `emit_concept_tree` at `create.py:5956` adds ~20 speculative sub-concepts nobody signs off on; that enrichment is the bloat, the sync surface, and (via the whole-bundle `compute_plan_fingerprint` on `load_concepts`, `plan_tool/concept_tree.py:234`) the staleness coupling, so any plan/detail edit invalidates the record even when no deferral decision changed. (2) **The confirm gate reviews the wrong thing and is silent under `-y`** \u2014 `_review_create_concepts` (`plan_tool/create.py:4506-4537`) walks the whole tree (include/defer/wont_do per node) and is skipped non-interactively (`create.py:4516-4517`), silently accepting the tool's suggestions \u2014 the exact founding-incident failure (BACKLOG #121), since these plans are authored with `-y`. (3) **The deferral producers already exist but don't gate** \u2014 the three defer points (create-synthesis, already record-driven and told to abstain at `prompts/synthesize-body.md:88-94`; the decomposition \"a branch with no namable live scenario is NOT a step \u2014 defer it\" instruction at `create.py:1983-1984`, which silently omits from the step array; and detail's shared-find routing, `detail.py:399-427`, bounded to a pre-approved `decision=\"defer\"` node by `detail.py:1683-1691`) none stop to confirm a *new* deferral.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"Today `create` **eagerly** builds a concept tree for every plan whether or not anything is deferred. `bootstrap_concepts` (`plan_tool/concept_bootstrap.py:55`, called unconditionally at `plan_tool/create.py:5932`) emits one node per body section (~8), and `emit_concept_tree` (`plan_tool/concept_tree.py:330`, invoked at `plan_tool/create.py:5956` when no saved tree exists) enriches that to ~20 more speculative sub-concepts \\u2014 28 nodes in the shipped `concept-write-integrity` example, all `review_state=\\\"unreviewed\\\"`, `decision=\\\"include\\\"`. Almost none are ever deferred; they are the plan's prose re-encoded as a second structure that must be kept in sync \\u2014 the coupling that produced the write-integrity bugs and the whole-bundle-fingerprint staleness that broke that plan's audit twice during authoring. Three specific problems, grounded: (1) **Eager over-decomposition** \\u2014 `emit_concept_tree` at `create.py:5956` adds ~20 speculative sub-concepts nobody signs off on; that enrichment is the bloat, the sync surface, and (via the whole-bundle `compute_plan_fingerprint` on `load_concepts`, `plan_tool/concept_tree.py:234`) the staleness coupling, so any plan/detail edit invalidates the record even when no deferral decision changed. (2) **The confirm gate reviews the wrong thing and is silent under `-y`** \\u2014 `_review_create_concepts` (`plan_tool/create.py:4506-4537`) walks the whole tree (include/defer/wont_do per node) and is skipped non-interactively (`create.py:4516-4517`), silently accepting the tool's suggestions \\u2014 the exact founding-incident failure (BACKLOG #121), since these plans are authored with `-y`. (3) **The deferral producers already exist but don't gate** \\u2014 the three defer points (create-synthesis, already record-driven and told to abstain at `prompts/synthesize-body.md:88-94`; the decomposition \\\"a branch with no namable live scenario is NOT a step \\u2014 defer it\\\" instruction at `create.py:1983-1984`, which silently omits from the step array; and detail's shared-find routing, `detail.py:399-427`, bounded to a pre-approved `decision=\\\"defer\\\"` node by `detail.py:1683-1691`) none stop to confirm a *new* deferral.\",\"title\":\"problem statement\"}"
+      }
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "Keep the shipped record format and its writer; change *when and how much* gets materialized. Most of the lazy behavior is already latent: `scope-review` (`plan_tool/cli/scope_review_cmd.py:41-119`) already re-derives the tree from live plan text every run and tolerates an absent record (`original_tree is None` \u2192 bootstrap directly, `scope_review_cmd.py:57-64`), making it the natural materialize+sign-off hook; and the coverage findings (`check_concept_coverage`, `plan_tool/review.py:2290-2380`) are already inert on an absent/`None`/all-unreviewed tree (`review.py:2312, 2317`), firing only on `review_state==\"approved\"` nodes \u2014 so an empty-until-deferred record produces zero findings until an operator signs off. Five changes: **A. Stop eager enrichment** \u2014 do not call `emit_concept_tree` at create; the record is either absent (preferred for the common case) or a thin section-only bootstrap, deciding during detailing which is cleaner given the `create`-writes-a-tree test coupling (`create.py:5932-5974`; tests assert `concepts.json` exists post-create \u2014 the main breakage surface). Enrichment becomes dead code for the create path; leave the function for possible reuse but stop invoking it eagerly. **B. Deferral-focused confirmation** \u2014 replace the whole-tree walk with a gate that surfaces only proposed `defer` / `wont_do` decisions; an included concept needs no confirmation and no record (a committed step is its own proof; coverage is already inert on unreviewed). **C. Safe under `-y`** (closes the founding incident) \u2014 non-interactively, a proposed deferral is recorded **unconfirmed**, never silently accepted; make an unconfirmed proposed deferral a blocking signal so it cannot ship unseen. The `concept-unsigned-deferral` source exists (`review.py:2235`, today info-only); this plan's decision is whether to promote a proposed-but-unconfirmed defer to blocking or surface it in the run summary + `list --status`. The operator confirms later via `scope-review` (already lazy). **D. Materialize at the defer points, via the existing hook** \u2014 at each defer decision (B/C above, and detail's shared-find routing), materialize the one concept + its proposed decision through `scope-review`'s derive+sign-off path, which already runs on an absent tree. Preserve detail's precondition that a deferral references a signed-off `decision=\"defer\"` node (`detail.py:1683-1691`) \u2014 lazy means \"materialize+sign off as part of the defer action,\" not \"reference nothing.\" **E. Record stays small and decision-keyed** \u2014 only defer/wont_do decisions and their confirmation state; this breaks the whole-bundle-fingerprint staleness coupling for the common case, since an un-deferred plan has no record and thus no fingerprint to go stale.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"Keep the shipped record format and its writer; change *when and how much* gets materialized. Most of the lazy behavior is already latent: `scope-review` (`plan_tool/cli/scope_review_cmd.py:41-119`) already re-derives the tree from live plan text every run and tolerates an absent record (`original_tree is None` \\u2192 bootstrap directly, `scope_review_cmd.py:57-64`), making it the natural materialize+sign-off hook; and the coverage findings (`check_concept_coverage`, `plan_tool/review.py:2290-2380`) are already inert on an absent/`None`/all-unreviewed tree (`review.py:2312, 2317`), firing only on `review_state==\\\"approved\\\"` nodes \\u2014 so an empty-until-deferred record produces zero findings until an operator signs off. Five changes: **A. Stop eager enrichment** \\u2014 do not call `emit_concept_tree` at create; the record is either absent (preferred for the common case) or a thin section-only bootstrap, deciding during detailing which is cleaner given the `create`-writes-a-tree test coupling (`create.py:5932-5974`; tests assert `concepts.json` exists post-create \\u2014 the main breakage surface). Enrichment becomes dead code for the create path; leave the function for possible reuse but stop invoking it eagerly. **B. Deferral-focused confirmation** \\u2014 replace the whole-tree walk with a gate that surfaces only proposed `defer` / `wont_do` decisions; an included concept needs no confirmation and no record (a committed step is its own proof; coverage is already inert on unreviewed). **C. Safe under `-y`** (closes the founding incident) \\u2014 non-interactively, a proposed deferral is recorded **unconfirmed**, never silently accepted; make an unconfirmed proposed deferral a blocking signal so it cannot ship unseen. The `concept-unsigned-deferral` source exists (`review.py:2235`, today info-only); this plan's decision is whether to promote a proposed-but-unconfirmed defer to blocking or surface it in the run summary + `list --status`. The operator confirms later via `scope-review` (already lazy). **D. Materialize at the defer points, via the existing hook** \\u2014 at each defer decision (B/C above, and detail's shared-find routing), materialize the one concept + its proposed decision through `scope-review`'s derive+sign-off path, which already runs on an absent tree. Preserve detail's precondition that a deferral references a signed-off `decision=\\\"defer\\\"` node (`detail.py:1683-1691`) \\u2014 lazy means \\\"materialize+sign off as part of the defer action,\\\" not \\\"reference nothing.\\\" **E. Record stays small and decision-keyed** \\u2014 only defer/wont_do decisions and their confirmation state; this breaks the whole-bundle-fingerprint staleness coupling for the common case, since an un-deferred plan has no record and thus no fingerprint to go stale.\",\"title\":\"architecture\"}"
+      }
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- Removing the hierarchical tree, `parent_path`/`depth`, or `Step.concept_ids` \u2014 leave the shipped machinery in place but dormant; migration/deletion is a separate decision. `split` / `merge` / `reground` / `scope-out` conservation of `concept_ids` keeps working on whatever ids exist (empty is the valid default).\n- The `concept-write-integrity` transactional hardening and BACKLOG #126\u2013#128 \u2014 largely moot for the lazy path (fewer/smaller writers, no big record to diverge from prose); this seed supersedes that path for the common flow rather than completing it.\n- New schema, commands, or a rewrite of `concept_sync` \u2014 reuse `scope-review`'s derive+sign-off.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- Removing the hierarchical tree, `parent_path`/`depth`, or `Step.concept_ids` \\u2014 leave the shipped machinery in place but dormant; migration/deletion is a separate decision. `split` / `merge` / `reground` / `scope-out` conservation of `concept_ids` keeps working on whatever ids exist (empty is the valid default).\\n- The `concept-write-integrity` transactional hardening and BACKLOG #126\\u2013#128 \\u2014 largely moot for the lazy path (fewer/smaller writers, no big record to diverge from prose); this seed supersedes that path for the common flow rather than completing it.\\n- New schema, commands, or a rewrite of `concept_sync` \\u2014 reuse `scope-review`'s derive+sign-off.\",\"title\":\"out of scope\"}"
+      }
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- The `create`-writes-a-tree test coupling is the main breakage surface (change A); budget a step to reconcile those tests to \"absent record is valid.\"\n- Promoting unconfirmed deferrals to blocking (change C) could block legitimate `-y` batch authoring; gate the decision behind evidence and offer a surface-not-block fallback.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- The `create`-writes-a-tree test coupling is the main breakage surface (change A); budget a step to reconcile those tests to \\\"absent record is valid.\\\"\\n- Promoting unconfirmed deferrals to blocking (change C) could block legitimate `-y` batch authoring; gate the decision behind evidence and offer a surface-not-block fallback.\",\"title\":\"risks\"}"
+      }
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "- **Un-deferred plan:** `create -y` produces no blocking findings and (per A's decision) either no `concepts.json` or a thin section-only one; no `emit_concept_tree` call.\n- **Founding-incident regression:** a `create -y` whose decomposition proposes a deferral leaves an **unconfirmed** deferral that the completeness/run summary surfaces (or blocks on), never a silently-accepted one.\n- **Lazy materialization:** a `scope-review` defer on a plan with no prior record creates exactly the one deferred concept, signed off, and renders it into `## Deferred` (reuses the existing `render_scope_decisions` path).\n- **Staleness:** editing an un-deferred plan's prose does not raise `StaleConceptTreeError` anywhere (there is no record to invalidate).",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"- **Un-deferred plan:** `create -y` produces no blocking findings and (per A's decision) either no `concepts.json` or a thin section-only one; no `emit_concept_tree` call.\\n- **Founding-incident regression:** a `create -y` whose decomposition proposes a deferral leaves an **unconfirmed** deferral that the completeness/run summary surfaces (or blocks on), never a silently-accepted one.\\n- **Lazy materialization:** a `scope-review` defer on a plan with no prior record creates exactly the one deferred concept, signed off, and renders it into `## Deferred` (reuses the existing `render_scope_decisions` path).\\n- **Staleness:** editing an un-deferred plan's prose does not raise `StaleConceptTreeError` anywhere (there is no record to invalidate).\",\"title\":\"testing\"}"
+      }
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 6,
+      "source": "- Whether to keep a thin section bootstrap or go fully record-absent at create (change A) \u2014 decide from the test-coupling cost during detailing.\n- Enforcing a seed-declared step ceiling and the program-scale monitoring that would have caught the original blowup \u2014 BACKLOG #129.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- Whether to keep a thin section bootstrap or go fully record-absent at create (change A) \\u2014 decide from the test-coupling cost during detailing.\\n- Enforcing a seed-declared step ceiling and the program-scale monitoring that would have caught the original blowup \\u2014 BACKLOG #129.\",\"title\":\"deferred\"}"
+      }
+    }
+  ],
+  "schema_version": 1
+}

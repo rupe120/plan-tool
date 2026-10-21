@@ -1,0 +1,26 @@
+{
+  "plan_slug": "roadmap-render-canonical-tolerance",
+  "grounded_at": "2026-08-19T16:25:57Z",
+  "plan_fingerprint": "b8e17aa2a7fa689fedc8e14d2dd50654537768b26ce233207b8bf5b5852d6906",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "8508d4f010be1293f3380f089db1c950b48359976ad5ccf68c68118731fc1e75",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_impact_snapshot.py": "54c1a584d99dfe402441efbd498ccfa92e598028893bd89d80f7ec73f10a1f9c",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_structural_revision_patch.py": "aef6d0249d9ee416a196ed515802894078e93ad58f152ca95946a392ade9f84c",
+    "plan_tool/roadmap_structural_revision_proof.py": "2b0d3ffab4a7d0a23cf623e6b33620ea83016b4b4c95f79841c2df46009afc5b",
+    "plan_tool/roadmap_structural_revision_run.py": "6871aab3e199919b7209d20cff38d8d19e63b1b5cb2c987bae8e771874d8778b",
+    "tests/test_roadmap_artifacts.py": "e65a9b6a791f9ea6428a8913a5818d311ba1f2b3c411ecf6391546d8dd5c90e9",
+    "tests/test_roadmap_escalation_selection.py": "185eae397905f04345fec7c70607b5267faacdfbd8d72ff1eff0c7c308c81004",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_impact_snapshot.py": "d48a12c074215dde4a9bfe6e0cc6afaf22f12af142bb4e89f55ec252921b640f",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9",
+    "tests/test_roadmap_structural_revision_patch.py": "596fa7562ff2dfef8e6943963bd1c5d0609078c88b1957dfd286071a8eeda968",
+    "tests/test_roadmap_structural_revision_proof.py": "d90f18f74e42d505b3c4edc148b2391fd0d3df90091e83644c5f14eecdb8401e",
+    "tests/test_roadmap_structural_revision_run.py": "01f10c46cf76cacd8331f96a6290ad07c062bde43af2b8dcb5468306abedf24e"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

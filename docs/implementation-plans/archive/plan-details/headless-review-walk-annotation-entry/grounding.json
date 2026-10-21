@@ -1,0 +1,15 @@
+{
+  "plan_slug": "headless-review-walk-annotation-entry",
+  "grounded_at": "2026-08-28T15:08:39Z",
+  "plan_fingerprint": "27f8f7344ab9665bda4a8356a8395a11e69ce8d8c07360e5770af8fc8e7be940",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "76f1cd662a25ccb44fa8a114c221ad37300493ef372b33fe75b42024ceac7507",
+    "plan_tool/cli/review_cmd.py": "6dc8ae12beae2b65ab6ffb54f7f14ba9f2a7b7a75c0d7065a586631034a6be1a",
+    "tests/test_review_walk.py": "e26d2fc98e3ca625c37027e4d2fa09704ea1b5c49ec114b3a1bc63c34478de2f"
+  },
+  "step_authoring_fingerprints": {
+    "1": "7dcfd693ee0cb7f62d88fc210de303122ac6dd9f8c6c920e3b34632bab5e0ee5",
+    "2": "2f1a5c934f70f3c8189ae5b1af735c22b4fc8702e32660ce0e46390da468e60f"
+  },
+  "schema_version": 1
+}

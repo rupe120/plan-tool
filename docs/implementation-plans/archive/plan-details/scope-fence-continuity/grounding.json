@@ -1,0 +1,12 @@
+{
+  "plan_slug": "scope-fence-continuity",
+  "grounded_at": "2026-07-21T16:59:19Z",
+  "plan_fingerprint": "2f49350d66ed9419763c62235f8f38962e6374e18e498e165ad7e869211819cd",
+  "code_fingerprint": {
+    "plan_tool/create.py": "874257f33bd25aae569e623937340eb8f58dc1ec806513c97a926e68538d947e",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "plan_tool/prompts/synthesize-body.md": "82ef307bce49a5fdc45638229f5ad4753e2e33698869ff53f27faf5c3f029b0c",
+    "tests/test_create.py": "05187de05b578539c4e98bb507c6d2e0ef3da805fdb33aef76f911ff414238f9"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,17 @@
+{
+  "plan_slug": "human-input-seam",
+  "grounded_at": "2026-08-27T20:07:46Z",
+  "plan_fingerprint": "6d42fcce084143d47b7197a8daf53304f7c421d5778e6fafb816f109095aae07",
+  "code_fingerprint": {
+    "BACKLOG.md": "ebdab3f41ef26da050fd56536cb4dd17a5f3404df79476a0146ad8a27c414537",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/review_walk.py": "3659f569bcb0fb475cbd59fd0f7d81c85bb3bcf7818f4ddc3737e33ff523ce40",
+    "tests/test_review_walk.py": "239c74b675ef878f46ab2001b0071cb32d9c867e2cf605d957f2c3618b7d1d9e"
+  },
+  "step_authoring_fingerprints": {
+    "1": "eccc389eadba2a5caa2f5b781d341f5beb970344bca9e8328d2526e20851e881",
+    "2": "6d02c69c900fdb60ed0b0fe3a06fa8953f7ea1446b5d5ed89dd7acaa8b97ecd7",
+    "3": "e541182449c2b591139855a170ae5cda8856a3a606a039b2269e29d70ba6e678"
+  },
+  "schema_version": 1
+}

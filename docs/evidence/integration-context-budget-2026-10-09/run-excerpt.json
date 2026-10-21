@@ -1,0 +1,51 @@
+{
+  "source_log": ".plan-tool/runs/integration-aidlc-mvp/2026-10-09T18-03-42+00-00-653bc7.jsonl",
+  "model_calls": 0,
+  "events": [
+    {
+      "ts": "2026-10-09T18:03:42+00:00",
+      "run_id": "2026-10-09T18-03-42+00-00-653bc7",
+      "event": "run_start",
+      "schema_version": 2,
+      "command": "roadmap",
+      "plan_slug": "integration-aidlc-mvp",
+      "argv": [
+        "plan-tool",
+        "roadmap",
+        "integration-aidlc-mvp",
+        "--propose-candidate"
+      ],
+      "flags": {
+        "mode": "candidate-proposal"
+      }
+    },
+    {
+      "ts": "2026-10-09T18:03:42+00:00",
+      "run_id": "2026-10-09T18-03-42+00-00-653bc7",
+      "event": "phase_start",
+      "phase": "roadmap-candidate-proposal"
+    },
+    {
+      "ts": "2026-10-09T18:03:42+00:00",
+      "run_id": "2026-10-09T18-03-42+00-00-653bc7",
+      "event": "phase_end",
+      "phase": "roadmap-candidate-proposal",
+      "duration_ms": 328,
+      "outcome": "refused",
+      "call_count": 0,
+      "expansion_used": false,
+      "failure_detail": "full canonical batch payload exceeds the fixed context ceiling",
+      "failure_attempt": null,
+      "failure_call_count": 0,
+      "response_capture": "not-applicable"
+    },
+    {
+      "ts": "2026-10-09T18:03:42+00:00",
+      "run_id": "2026-10-09T18-03-42+00-00-653bc7",
+      "event": "run_end",
+      "duration_ms": 329,
+      "outcome": "refused",
+      "rc": 2
+    }
+  ]
+}

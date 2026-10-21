@@ -1,0 +1,22 @@
+{
+  "plan_slug": "arm-clustering-cross-round-consensus",
+  "grounded_at": "2026-08-12T21:33:43Z",
+  "plan_fingerprint": "6db7ba39c79a5cf1aceb6962497b285c65da02a2c581ff64bf09fadd49f576ed",
+  "code_fingerprint": {
+    "BACKLOG.md": "a675fe865bacc022ac5ad581c010346870bfada362e63c059c45d4c8746ed0b9",
+    "CLAUDE.md": "0883d41170d361418779028982abdad8f80fea553ba027469bbfd0b1920387e1",
+    "DATA_CONTRACT.md": "a03cd736d4ec71f7985b802d91c10163fdb498db1c9d8c092ef76230ecdb3436",
+    "docs/ARCHITECTURE.md": "2d876c211e77bb38f9ac248771b134f63bda4b03d0fbd770b39d58f43da63904",
+    "docs/AUDIT_FLOW.md": "edb67835667dae23132eccfa6dfc1dec4fbbbbfcf5d3c2004ac755975dea8328",
+    "plan_tool/cli/completeness_cmd.py": "1a4da56d9724ebc11ac63d2e479c0b02400f84facdf140f067243a309a9fe486",
+    "plan_tool/cli/convergence_cmd.py": "8cf45c753e8df23ae8f59b2fb44d752084033107f48e186128b7ef59c35a376b",
+    "plan_tool/convergence_diagnosis.py": "951b517a0a513c3c0731972c8c5e7aba79fe13ec2db926089376ce44fa75aecf",
+    "plan_tool/review.py": "5996a6a0741fbdeb66bad22f2dfe9f2e3289f236e422bc43d50f37e6a24f3ee1",
+    "tests/cli/test_completeness_cmd.py": "4b3a7d635de8b37d14e612ecb2f27c9b91e990465321e4ed7bf5c21f0f940246",
+    "tests/cli/test_convergence_cmd.py": "5d84c78d1025b9ef99e05ca20dca460ac30f33a74343ff9709dbf3057dc5fcf5",
+    "tests/test_convergence_diagnosis.py": "e1eac61cf7e519615b7b566d022a09678aa649a4ce3bc8cede99b8761ee62b16",
+    "tests/test_data_contract.py": "1484a66eddf238b3a4b24e0a5529eab841eca34b77c9c4e35b735198abd1ee4e",
+    "tests/test_review.py": "dc6ce10e59a1c475f745a587e7ed10b7d72f554b7f75a8a2cb73c328c7fb1bf3"
+  },
+  "schema_version": 1
+}

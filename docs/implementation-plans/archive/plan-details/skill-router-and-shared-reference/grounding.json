@@ -1,0 +1,30 @@
+{
+  "plan_slug": "skill-router-and-shared-reference",
+  "grounded_at": "2026-09-16T22:07:49Z",
+  "plan_fingerprint": "1b356356a6794bb8c8de4eca94992d0b70452c7a7a00de47c446ca41379f0adc",
+  "code_fingerprint": {
+    "BACKLOG.md": "6c14c89aef7f4167918dac5e373575b961f0e3a08847705ecade9f59aa9d1980",
+    "README.md": "8fbea936d77daf00c75408abe9de4e7f90307cbc21b6ae1640a9dc0998154336",
+    "docs/ARCHITECTURE.md": "87589ff6f9b3a58618a1a1321fba6ed318714661ce242e5be7b36bfbb9a25e81",
+    "docs/cli/README.md": "e61dd086e6e5be9f8ff9ee3197a7891c001fc4e84c159fbfa3326f21f4188ec7",
+    "docs/cli/install-skill.md": "1c8eca129c46f1d1039aaba6a9ad452efae9b1237d0d2b9c4d1864e6c57fcc24",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "98977129198fa68a01c8142e17aff0c27a193b6a4f4cf35c664add52b38cffd9",
+    "handoffs/2026-09-16-roadmap-orchestration-primer.md": "10c0bf950b360c555364af3604583bc1b450c41eb043f5457725ff7a0755e46d",
+    "integrations/claude/SKILL.md": "e4457f4e0a6d2c4b58b602a670ddfbae46a24ecaaccacbf91d3dea4b0fccc055",
+    "integrations/codex/SKILL.md": "00abf3a0f0745d8787e82728ce32a3c5c578b009b497a49e43d60cb9db89e4ef",
+    "integrations/shared/DIRECTIVES.md": "d49f6f00ef4937602cfb780c44a20f8f5dd0df7ffc38a5d64ccd6ab8082c1d49",
+    "plan_tool/cli/__init__.py": "3c8ab5eafcb706ddc4812588e1f7a6bc9fb0c9c3896e87509743d82f0e967bb6",
+    "plan_tool/cli/inspect.py": "a9d0f1d287f0853e88d24b1ce1027a63820acd7b9aea4755e1f7bfb47c1db291",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "plan_tool/cli/review_cmd.py": "82732f5ef96a0a22c1983db363985a979c7876a96d89e923aee650dbd9e2409e",
+    "plan_tool/cli/skill_cmd.py": "8574b907e41240f7358888f88606989cdf610153a636325e2a18cb43707fde5c",
+    "tests/cli/test_skill_cmd.py": "2a6f9a421f1fbe02853d91488366eb10a88861f2e4ecfed617ab16e158dda8d7",
+    "tests/test_backend.py": "7973c99a92cbafc90d57da45448edbdf358ec263214214d74a29a5da31266aed",
+    "tests/test_model_specs.py": "d2ba21b320ca154bace6df64407d5912b0704992df794b908107ed0bed255f2c",
+    "tests/test_roadmap_format.py": "a85d3538e62114c2c5a647da418c17db9c21ef21edc9a6eed28e2f4df939cf5e"
+  },
+  "step_authoring_fingerprints": {
+    "5": "e9ec7c05615e9140dd8d3d8404318cb3c4c98b895a8c9d99a780e1e5e41ca435"
+  },
+  "schema_version": 1
+}

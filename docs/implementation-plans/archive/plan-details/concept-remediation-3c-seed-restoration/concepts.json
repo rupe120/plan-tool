@@ -1,0 +1,515 @@
+{
+  "plan_slug": "concept-remediation-3c-seed-restoration",
+  "plan_fingerprint": "ab3dd9ebcf345b29121974f7fe0a3732e58d6567a9ac9ba17f9e7028a45bd9ee",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Add deterministic restoration of reviewed concept accounting when `plan-tool create` consumes modern re-baseline or carved seeds. The create flow parses and validates the versioned seed-accounting envelope before model synthesis, requires interactive review of destination ownership, and publishes matching `Step.concept_ids` and `ConceptTree` accounting through the existing synchronization/publication tail. Legacy seeds without an envelope keep the existing flow, while malformed or unsupported modern metadata and unattended restoration attempts fail before mutation.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Add deterministic restoration of reviewed concept accounting when `plan-tool create` consumes modern re-baseline or carved seeds. The create flow parses and validates the versioned seed-accounting envelope before model synthesis, requires interactive review of destination ownership, and publishes matching `Step.concept_ids` and `ConceptTree` accounting through the existing synchronization/publication tail. Legacy seeds without an envelope keep the existing flow, while malformed or unsupported modern metadata and unattended restoration attempts fail before mutation.\",\"title\":\"overview\"}"
+      }
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "Create cannot yet restore exact reviewed accounting from modern re-baseline and carved seeds without relying on model or prose inference. That can lose, invent, or contradict concept identities and ownership, especially when mappings are ambiguous or a concept transitions between required delivery and approved non-delivery. The missing restoration path also leaves the owner-or-valid-non-delivery conservation invariant unproven across create, split, merge, re-ground/mark-done, re-baseline, scope-out, include regeneration, completeness, and reconcile operations.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"Create cannot yet restore exact reviewed accounting from modern re-baseline and carved seeds without relying on model or prose inference. That can lose, invent, or contradict concept identities and ownership, especially when mappings are ambiguous or a concept transitions between required delivery and approved non-delivery. The missing restoration path also leaves the owner-or-valid-non-delivery conservation invariant unproven across create, split, merge, re-ground/mark-done, re-baseline, scope-out, include regeneration, completeness, and reconcile operations.\",\"title\":\"problem statement\"}"
+      }
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "This plan depends on shipped `concept-remediation-3a-accounting-core` and `concept-remediation-3b-lifecycle-publication` contracts. It consumes their record types, exact validation helpers, transition semantics, and shared versioned seed-accounting envelope without redefining producer formats.\n\nAdd one strict, write-free parser in `plan_tool/concept_tree.py` and run it on the original raw seed before distillation or any other model pass. A seed without an envelope follows the legacy flow; a present envelope must reject duplicate JSON keys, unknown fields, invalid types or actions, malformed source references, duplicate identities, mismatched fingerprints, and concept IDs whose canonical node projections do not recompute from required fields including `title` and `parent_path`. Producer-defined ordering is preserved, and a malformed, stale, or unsupported envelope never falls back to headings, bullets, or title matching.\n\nUpdate `plan_tool/prompts/distill-seed.md` so the envelope is treated as opaque control metadata already consumed by the caller. The model must not copy, paraphrase, reinterpret, or invent its identifiers or decisions.\n\nRestoration applicability is determined only by the validated producer action. `context_only` may supply provenance and bounded prompt context but is excluded from destination conservation; `require_delivery` enters the conservation set and needs at least one explicitly selected committed destination owner; `preserve_non_delivery` retains its exact approved record unless the operator reviews a semantic transition. Re-baseline `done_context` is excluded, `replan` requires delivery, `parked` preserves non-delivery, and carved destination concepts require delivery. A carved source defer is retired only after its matching `require_delivery` concept receives durable reviewed ownership.\n\nBuild restoration candidates from complete canonical concept-node projections and preserve exact IDs and reviewed record state. Run review only after destination change types, gates, splits, dependencies, and step IDs are settled. The operator must select ordered, non-duplicate committed owners for every `require_delivery` concept, confirm or transition every `preserve_non_delivery` record, and resolve ambiguity explicitly; ownership cannot be inferred from titles, paths, source step numbers, model-proposed `concept_ids`, or a lone apparent candidate.\n\n`--yes` and non-TTY create cannot approve restoration choices. They refuse before archive, plan, sidecar, manifest, or other mutation and print an exact interactive resume instruction. After approval, the existing create synchronization/publication tail writes matching `Step.concept_ids` and `ConceptTree` accounting while preserving create-owned cleanup and manifest ordering on publication failure.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"This plan depends on shipped `concept-remediation-3a-accounting-core` and `concept-remediation-3b-lifecycle-publication` contracts. It consumes their record types, exact validation helpers, transition semantics, and shared versioned seed-accounting envelope without redefining producer formats.\\n\\nAdd one strict, write-free parser in `plan_tool/concept_tree.py` and run it on the original raw seed before distillation or any other model pass. A seed without an envelope follows the legacy flow; a present envelope must reject duplicate JSON keys, unknown fields, invalid types or actions, malformed source references, duplicate identities, mismatched fingerprints, and concept IDs whose canonical node projections do not recompute from required fields including `title` and `parent_path`. Producer-defined ordering is preserved, and a malformed, stale, or unsupported envelope never falls back to headings, bullets, or title matching.\\n\\nUpdate `plan_tool/prompts/distill-seed.md` so the envelope is treated as opaque control metadata already consumed by the caller. The model must not copy, paraphrase, reinterpret, or invent its identifiers or decisions.\\n\\nRestoration applicability is determined only by the validated producer action. `context_only` may supply provenance and bounded prompt context but is excluded from destination conservation; `require_delivery` enters the conservation set and needs at least one explicitly selected committed destination owner; `preserve_non_delivery` retains its exact approved record unless the operator reviews a semantic transition. Re-baseline `done_context` is excluded, `replan` requires delivery, `parked` preserves non-delivery, and carved destination concepts require delivery. A carved source defer is retired only after its matching `require_delivery` concept receives durable reviewed ownership.\\n\\nBuild restoration candidates from complete canonical concept-node projections and preserve exact IDs and reviewed record state. Run review only after destination change types, gates, splits, dependencies, and step IDs are settled. The operator must select ordered, non-duplicate committed owners for every `require_delivery` concept, confirm or transition every `preserve_non_delivery` record, and resolve ambiguity explicitly; ownership cannot be inferred from titles, paths, source step numbers, model-proposed `concept_ids`, or a lone apparent candidate.\\n\\n`--yes` and non-TTY create cannot approve restoration choices. They refuse before archive, plan, sidecar, manifest, or other mutation and print an exact interactive resume instruction. After approval, the existing create synchronization/publication tail writes matching `Step.concept_ids` and `ConceptTree` accounting while preserving create-owned cleanup and manifest ordering on publication failure.\",\"title\":\"architecture\"}"
+      }
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- Producer serialization and split/merge/scope-out transforms; these belong to part 2.\n- Core record schema, transition review, and completeness finding semantics; these belong to part 1.\n- Automatic covering-step generation, heuristic restoration, and automatic division of one envelope among multiple new plans; these remain prohibited.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- Producer serialization and split/merge/scope-out transforms; these belong to part 2.\\n- Core record schema, transition review, and completeness finding semantics; these belong to part 1.\\n- Automatic covering-step generation, heuristic restoration, and automatic division of one envelope among multiple new plans; these remain prohibited.\",\"title\":\"out of scope\"}"
+      }
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- Invalid modern metadata could be mistaken for a legacy seed, allowing model or prose inference to replace reviewed accounting. The parser mitigates this by treating any present malformed, stale, or unsupported envelope as a pre-model, pre-mutation failure.\n- Textual similarity or model-proposed `concept_ids` could assign ownership to the wrong destination step. Restoration mitigates this by preserving opaque source IDs and requiring explicit operator selection after destination steps are settled.\n- Ambiguous mappings could be silently accepted, leaving dropped, invented, contradictory, or stale identities. Review must leave ambiguous mappings unresolved until the operator chooses, and unattended execution must write nothing.\n- Plan ownership and concept-sidecar accounting could diverge during publication failure. The existing synchronization/publication tail must preserve create-owned cleanup and manifest ordering and prevent partial committed generations.\n- A weakened `check_concept_coverage()` could make the lifecycle matrix pass despite corrupt persisted state. Integration tests pair the production policy oracle with direct persisted-state assertions.\n- Recoverable publication failure and rollback-failed uncertainty can interrupt lifecycle transitions. The integration matrix explicitly exercises both failure classes and interrupted then resumed include regeneration.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- Invalid modern metadata could be mistaken for a legacy seed, allowing model or prose inference to replace reviewed accounting. The parser mitigates this by treating any present malformed, stale, or unsupported envelope as a pre-model, pre-mutation failure.\\n- Textual similarity or model-proposed `concept_ids` could assign ownership to the wrong destination step. Restoration mitigates this by preserving opaque source IDs and requiring explicit operator selection after destination steps are settled.\\n- Ambiguous mappings could be silently accepted, leaving dropped, invented, contradictory, or stale identities. Review must leave ambiguous mappings unresolved until the operator chooses, and unattended execution must write nothing.\\n- Plan ownership and concept-sidecar accounting could diverge during publication failure. The existing synchronization/publication tail must preserve create-owned cleanup and manifest ordering and prevent partial committed generations.\\n- A weakened `check_concept_coverage()` could make the lifecycle matrix pass despite corrupt persisted state. Integration tests pair the production policy oracle with direct persisted-state assertions.\\n- Recoverable publication failure and rollback-failed uncertainty can interrupt lifecycle transitions. The integration matrix explicitly exercises both failure classes and interrupted then resumed include regeneration.\",\"title\":\"risks\"}"
+      }
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "Add focused coverage in `tests/test_create.py` for parsing before model invocation, legacy seeds without an envelope, rejection of malformed or unsupported modern envelopes, exact identity and fingerprint restoration, action-table applicability, explicit mapping review, ambiguous mappings, unattended refusal, synchronized publication, and failure cleanup.\n\nAdd production-level lifecycle integration tests spanning create, detail, re-ground, scope-out, completeness, and CLI behavior. Start with multiple concepts, shared and sole owners, `defer`, `wont_do`, unsigned proposals, and reviewed records, then exercise in dependency order: create restoration from re-baseline and carved envelopes; split with one-to-many routing; merge with deterministic deduplication; re-ground/mark-done and re-baseline publication; scope-out with surviving-owner and final-owner cases; interrupted and resumed include regeneration; and completeness/reconcile after every successful transition.\n\nUse `check_concept_coverage()` as the production policy oracle and pair it with direct persisted-state assertions. Verify exact IDs, routing, approval, fingerprints, absence of title inference, and absence of partial committed generations, including recoverable publication failure and rollback-failed uncertainty.\n\nRun focused tests, the lifecycle integration tests, the full suite, generated-documentation drift checks, the completeness audit, and `reconcile-code`. Documentation verification covers `RUNBOOK.md`, `CLAUDE.md`, `BACKLOG.md`, and generated CLI documentation after parser or help sources are changed.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"Add focused coverage in `tests/test_create.py` for parsing before model invocation, legacy seeds without an envelope, rejection of malformed or unsupported modern envelopes, exact identity and fingerprint restoration, action-table applicability, explicit mapping review, ambiguous mappings, unattended refusal, synchronized publication, and failure cleanup.\\n\\nAdd production-level lifecycle integration tests spanning create, detail, re-ground, scope-out, completeness, and CLI behavior. Start with multiple concepts, shared and sole owners, `defer`, `wont_do`, unsigned proposals, and reviewed records, then exercise in dependency order: create restoration from re-baseline and carved envelopes; split with one-to-many routing; merge with deterministic deduplication; re-ground/mark-done and re-baseline publication; scope-out with surviving-owner and final-owner cases; interrupted and resumed include regeneration; and completeness/reconcile after every successful transition.\\n\\nUse `check_concept_coverage()` as the production policy oracle and pair it with direct persisted-state assertions. Verify exact IDs, routing, approval, fingerprints, absence of title inference, and absence of partial committed generations, including recoverable publication failure and rollback-failed uncertainty.\\n\\nRun focused tests, the lifecycle integration tests, the full suite, generated-documentation drift checks, the completeness audit, and `reconcile-code`. Documentation verification covers `RUNBOOK.md`, `CLAUDE.md`, `BACKLOG.md`, and generated CLI documentation after parser or help sources are changed.\",\"title\":\"testing\"}"
+      }
+    },
+    {
+      "id": "62c5ad026e319cb492c516a319e2ecb9354e2dc133ce9949667b12e3d31ca665",
+      "title": "acceptance criteria",
+      "parent_path": [],
+      "order": 6,
+      "source": "- Modern seed accounting is parsed and provenance-validated before any model call; malformed modern metadata never falls back to prose.\n- Exact canonical `ConceptNode` state is reconstructable and independently fingerprinted; opaque IDs are never treated as reversible.\n- Restoration scope follows the closed action table, including exclusion of contextual done concepts and reviewed transition of carved concepts to delivery.\n- Every required mapping is explicit, ambiguous cases remain unresolved, and unattended `--yes` or non-TTY execution writes no archive, plan, sidecar, manifest, or other mutation.\n- Successful create publishes matching `Step.concept_ids` and `ConceptTree` accounting; publication failure leaves no create-owned partial generation or manifest entry.\n- The lifecycle integration matrix proves exact owner-or-valid-non-delivery conservation after every supported operation and exercised failure class.\n- `RUNBOOK.md`, `CLAUDE.md`, `BACKLOG.md`, and generated CLI documentation match shipped command behavior, and generated rows are produced from parser or help sources rather than hand-edited.\n- Focused tests, lifecycle integration tests, the full suite, generated-documentation drift checks, the completeness audit, and `reconcile-code` pass.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "19:acceptance criteria",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- Modern seed accounting is parsed and provenance-validated before any model call; malformed modern metadata never falls back to prose.\\n- Exact canonical `ConceptNode` state is reconstructable and independently fingerprinted; opaque IDs are never treated as reversible.\\n- Restoration scope follows the closed action table, including exclusion of contextual done concepts and reviewed transition of carved concepts to delivery.\\n- Every required mapping is explicit, ambiguous cases remain unresolved, and unattended `--yes` or non-TTY execution writes no archive, plan, sidecar, manifest, or other mutation.\\n- Successful create publishes matching `Step.concept_ids` and `ConceptTree` accounting; publication failure leaves no create-owned partial generation or manifest entry.\\n- The lifecycle integration matrix proves exact owner-or-valid-non-delivery conservation after every supported operation and exercised failure class.\\n- `RUNBOOK.md`, `CLAUDE.md`, `BACKLOG.md`, and generated CLI documentation match shipped command behavior, and generated rows are produced from parser or help sources rather than hand-edited.\\n- Focused tests, lifecycle integration tests, the full suite, generated-documentation drift checks, the completeness audit, and `reconcile-code` pass.\",\"title\":\"acceptance criteria\"}"
+      }
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 7,
+      "source": "- No work within the seed-restoration and lifecycle-proof boundary is intentionally deferred.\n- Producer serialization and accounting-core behavior remain prerequisites owned by `concept-remediation-3b-lifecycle-publication` and `concept-remediation-3a-accounting-core`, respectively.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":7,\"parent_path\":[],\"source\":\"- No work within the seed-restoration and lifecycle-proof boundary is intentionally deferred.\\n- Producer serialization and accounting-core behavior remain prerequisites owned by `concept-remediation-3b-lifecycle-publication` and `concept-remediation-3a-accounting-core`, respectively.\",\"title\":\"deferred\"}"
+      }
+    },
+    {
+      "id": "61ec229a1918cad1584aab9873f80f5f431c934ce78a91b90a0bbe5706223e65",
+      "title": "Strict pre-synthesis seed-accounting parsing",
+      "parent_path": [],
+      "order": 8,
+      "source": "run it on the original raw seed before distillation or any other model pass",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "4118d279b2557b6fd87e409ef8c5c73fd895b8f09431937aec3db93abe9743e0",
+      "title": "Modern envelope structural and provenance validation",
+      "parent_path": [
+        "Strict pre-synthesis seed-accounting parsing"
+      ],
+      "order": 9,
+      "source": "must reject duplicate JSON keys, unknown fields, invalid types or actions, malformed source references, duplicate identities, mismatched fingerprints",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7dd86126b9fd0c83a5f2dc53c7abd07bfa09a455993f6028d104d80df02cf3be",
+      "title": "Malformed modern metadata cannot use legacy fallback",
+      "parent_path": [
+        "Strict pre-synthesis seed-accounting parsing"
+      ],
+      "order": 10,
+      "source": "a malformed, stale, or unsupported envelope never falls back to headings, bullets, or title matching",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8adf5d36a10778caef5019dc9e7a48427205e082aea8890acdea7935dc7711df",
+      "title": "Legacy seed compatibility",
+      "parent_path": [
+        "Strict pre-synthesis seed-accounting parsing"
+      ],
+      "order": 11,
+      "source": "A seed without an envelope follows the legacy flow",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "072ce117b4753b9dd3bb22cff300da87d5edb65a0cb7b793009194b94fbacd15",
+      "title": "Seed-accounting metadata isolation from model synthesis",
+      "parent_path": [],
+      "order": 12,
+      "source": "The model must not copy, paraphrase, reinterpret, or invent its identifiers or decisions.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "1a57034dc29932c628ce4b1e3dedc52096bdc9882b23a501227ba8d6a167e673",
+      "title": "Action-driven restoration scope",
+      "parent_path": [],
+      "order": 13,
+      "source": "Restoration applicability is determined only by the validated producer action.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "d8926381931624c43e30553e3618fadd5fc22b10f7c85567fb8f08c0f6a5cc7d",
+      "title": "Context-only concepts excluded from conservation",
+      "parent_path": [
+        "Action-driven restoration scope"
+      ],
+      "order": 14,
+      "source": "`context_only` may supply provenance and bounded prompt context but is excluded from destination conservation",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "ef909df286ab99d353574c676d7cbf22819914b019e7ea02f54dcedb316466fb",
+      "title": "Required-delivery concepts need explicit committed destinations",
+      "parent_path": [
+        "Action-driven restoration scope"
+      ],
+      "order": 15,
+      "source": "`require_delivery` enters the conservation set and needs at least one explicitly selected committed destination owner",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "9c978114e7a4dea4acb0e39c8d26d0ffedb99369eaa5a5c115d445d4f0455a3f",
+      "title": "Approved non-delivery records preserved or transitioned",
+      "parent_path": [
+        "Action-driven restoration scope"
+      ],
+      "order": 16,
+      "source": "`preserve_non_delivery` retains its exact approved record unless the operator reviews a semantic transition",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8db4bef8eda5ffaf5d17fa3d02d544dc31dd90f08dd8f48ee2028d5807650dfd",
+      "title": "Carved defer retirement after durable restoration",
+      "parent_path": [
+        "Action-driven restoration scope"
+      ],
+      "order": 17,
+      "source": "A carved source defer is retired only after its matching `require_delivery` concept receives durable reviewed ownership.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "780903881dcbc539ed324fee9de9baaaebe78a839f99d6ea6b3faf7653b6ea80",
+      "title": "Exact canonical identity restoration",
+      "parent_path": [],
+      "order": 18,
+      "source": "Build restoration candidates from complete canonical concept-node projections and preserve exact IDs and reviewed record state.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a9f7eaecd017972e7cb8d982e536478e80c0ed4d3d2c6c043dc7a649e2678b24",
+      "title": "Independent canonical fingerprint reconstruction",
+      "parent_path": [
+        "Exact canonical identity restoration"
+      ],
+      "order": 19,
+      "source": "Exact canonical `ConceptNode` state is reconstructable and independently fingerprinted",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "9c5c79643702378577678b87df90dafc677e938bff4f84600ae24feda18b4233",
+      "title": "Opaque concept identifiers",
+      "parent_path": [
+        "Exact canonical identity restoration"
+      ],
+      "order": 20,
+      "source": "opaque IDs are never treated as reversible",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "3ff391b7ef84ebca112f26581be40e43e4851fec696e41e969233b1abc86135c",
+      "title": "Explicit post-structure destination review",
+      "parent_path": [],
+      "order": 21,
+      "source": "Run review only after destination change types, gates, splits, dependencies, and step IDs are settled.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8f7a10fe2da7e5d91fcf9b4b179e9d85a23d4022b495e7bcdfcef2d61f6b7427",
+      "title": "Ordered non-duplicate committed mappings",
+      "parent_path": [
+        "Explicit post-structure destination review"
+      ],
+      "order": 22,
+      "source": "select ordered, non-duplicate committed owners for every `require_delivery` concept",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "ff885ad7197a0a4d8ddd1ea844457abb8ec2664263ec107842ef46edf3bb0976",
+      "title": "Explicit ambiguity resolution",
+      "parent_path": [
+        "Explicit post-structure destination review"
+      ],
+      "order": 23,
+      "source": "resolve ambiguity explicitly",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "c34cebc98921b8b07c17e3c452399cee1390df805498b6630132a11cc41b9cba",
+      "title": "No inferred destination mapping",
+      "parent_path": [
+        "Explicit post-structure destination review"
+      ],
+      "order": 24,
+      "source": "ownership cannot be inferred from titles, paths, source step numbers, model-proposed `concept_ids`, or a lone apparent candidate",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "305cb8cca7e7c0355d0051d5c56920a2a47bda93368c849ece63170c9c2022a8",
+      "title": "Unattended restoration refusal before mutation",
+      "parent_path": [],
+      "order": 25,
+      "source": "`--yes` and non-TTY create cannot approve restoration choices.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "679938b2421b4158f2ea441ae905a9eed60a737d39a0db9c41240667f8adc9da",
+      "title": "No artifacts written on unattended refusal",
+      "parent_path": [
+        "Unattended restoration refusal before mutation"
+      ],
+      "order": 26,
+      "source": "They refuse before archive, plan, sidecar, manifest, or other mutation",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "43d4de7c450babcc6943bc2eb56cca1741b8f796f9009f227c83b742c1b5ed2f",
+      "title": "Interactive resume guidance",
+      "parent_path": [
+        "Unattended restoration refusal before mutation"
+      ],
+      "order": 27,
+      "source": "print an exact interactive resume instruction",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "e2ad454e245007c791c269be65789a0f5445476c14b91523f99c2df6ff6ccf25",
+      "title": "Synchronized accounting publication",
+      "parent_path": [],
+      "order": 28,
+      "source": "writes matching `Step.concept_ids` and `ConceptTree` accounting",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "d437846c21cf6ac7cad839373bb475bdfebd8ec02025772cb3116f4e210f44a9",
+      "title": "Atomic cleanup on publication failure",
+      "parent_path": [
+        "Synchronized accounting publication"
+      ],
+      "order": 29,
+      "source": "publication failure leaves no create-owned partial generation or manifest entry",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8c2aaa23c49767f10b2effcf43273e79721931245d75d9bd16c83e2a3da80f75",
+      "title": "Manifest ordering preservation",
+      "parent_path": [
+        "Synchronized accounting publication"
+      ],
+      "order": 30,
+      "source": "preserving create-owned cleanup and manifest ordering on publication failure",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "151d2517f4fa072d1ef675aaecb542f73d8433e527911a2dc9e65ff32df81541",
+      "title": "Lifecycle concept conservation proof",
+      "parent_path": [],
+      "order": 31,
+      "source": "proves exact owner-or-valid-non-delivery conservation after every supported operation and exercised failure class",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "f53a424574532a2420149c17d6a45da90ace41fbfd4c3a7e21c908e7adfae412",
+      "title": "Production policy oracle with persisted-state assertions",
+      "parent_path": [
+        "Lifecycle concept conservation proof"
+      ],
+      "order": 32,
+      "source": "Use `check_concept_coverage()` as the production policy oracle and pair it with direct persisted-state assertions.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a53556346e5ae8bbf0fde0ff222d40ee1201355fb64f0d511630e569518abeeb",
+      "title": "Lifecycle transition integration matrix",
+      "parent_path": [
+        "Lifecycle concept conservation proof"
+      ],
+      "order": 33,
+      "source": "exercise in dependency order: create restoration from re-baseline and carved envelopes; split with one-to-many routing; merge with deterministic deduplication; re-ground/mark-done and re-baseline publication; scope-out with surviving-owner and final-owner cases",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "2fb58c2d3f2bcce406c158f6b081d95e21016011cc9eef4fe7e18f66113e5fa9",
+      "title": "Publication and regeneration failure coverage",
+      "parent_path": [
+        "Lifecycle concept conservation proof"
+      ],
+      "order": 34,
+      "source": "including recoverable publication failure and rollback-failed uncertainty",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "67f12d22e38ab0446360c1eecc84b424350ea4540c41d5002d2ef6822e4b0ecb",
+      "title": "Restoration behavior verification",
+      "parent_path": [],
+      "order": 35,
+      "source": "Verify exact IDs, routing, approval, fingerprints, absence of title inference, and absence of partial committed generations",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "77baa5c28085df8a9fb8af0313b98284cf8897905f90f793e55b1c72122586f0",
+      "title": "Focused and full test coverage",
+      "parent_path": [
+        "Restoration behavior verification"
+      ],
+      "order": 36,
+      "source": "Run focused tests, the lifecycle integration tests, the full suite",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7877d4cdb891de7657b319f42bc801d06f236ddb833e42982675ad94bcd3320e",
+      "title": "Completeness and reconciliation verification",
+      "parent_path": [
+        "Restoration behavior verification"
+      ],
+      "order": 37,
+      "source": "the completeness audit, and `reconcile-code` pass",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a0068975a5e0856304b84b0b9193c6bf0b3bf3a12f962f27ba4e791725cff8c1",
+      "title": "Documentation synchronization",
+      "parent_path": [],
+      "order": 38,
+      "source": "`RUNBOOK.md`, `CLAUDE.md`, `BACKLOG.md`, and generated CLI documentation match shipped command behavior",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8e4d92151da3eb31cc14700a717596447b2c586dc1f6f8bcb0a430d02ec5d5bd",
+      "title": "Generated CLI rows derived from sources",
+      "parent_path": [
+        "Documentation synchronization"
+      ],
+      "order": 39,
+      "source": "generated rows are produced from parser or help sources rather than hand-edited",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    }
+  ],
+  "schema_version": 1
+}

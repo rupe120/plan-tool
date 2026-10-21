@@ -1,0 +1,18 @@
+{
+  "plan_slug": "purity-findings-cache",
+  "grounded_at": "2026-07-18T19:11:22Z",
+  "plan_fingerprint": "b6c6eef797ad7c6ad951d81ed00ffd7b92f7f90bdaa803f5a69fbe98b74c42e7",
+  "code_fingerprint": {
+    "BACKLOG.md": "9bb08f4b3f137fd232285cf908b59cef57bc3cdb432da3c244ed183f48fa5e44",
+    "DATA_CONTRACT.md": "b15094b0300c407967143fc989573b6411c00cf3be559376f89933ad78b12332",
+    "plan_tool/cli/completeness_phases.py": "04a6a579f5746dc996e1ae1610c78c3d477aed794c8aa244897e462077624e5f",
+    "plan_tool/data_contract.py": "1cd07f55b5f9437c16e592fcbe1287c86e86519301c8e873134dc50c64f37e32",
+    "plan_tool/detail.py": "ec701cf10473ee72c531d10b6ebe71cf39904d22d93d66219e86b1ab332a032e",
+    "plan_tool/fingerprint.py": "18670ffb5d484bef74c774378ded23fe18a14b636d22a1facc814a547590bc0b",
+    "tests/cli/test_completeness_cmd.py": "f91c8a7b0eaa0fec6ec7537c6c8f9fabe8bc5b946c7bd83d6e1476cdb9a5832f",
+    "tests/test_data_contract.py": "fe5daa874658df3f72697205842a2e4abdc2e4fb255e4ff2b847adb45d61bea8",
+    "tests/test_detail.py": "b63cfac1d3fd5d337f8ab8c76ec43710798ca8584b07c761e65d09f44909b04a",
+    "tests/test_fingerprint.py": "0b1fa79e1fd14880f4df4f0df9d0d3e577b64e4c2798e9d282e08a295a81b774"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,116 @@
+{
+  "candidate": "c886d0f2ddad3042b5a6d9caf1422b683ab598a62a94126b5df59d9b4ca1fb72",
+  "canonical_payload_bytes": 211712,
+  "ceiling_bytes": 196608,
+  "overflow_bytes": 15104,
+  "sections": {
+    "brief": 5649,
+    "ceiling_bytes": 6,
+    "derived_context": 2,
+    "full_members": 115374,
+    "inventory": 2,
+    "ledger_digest": 66,
+    "relation_evidence": 58841,
+    "reviewer_items": 2374,
+    "root": 625,
+    "schema_version": 1,
+    "shared_source_spans": 27957,
+    "source": 625
+  },
+  "counts": {
+    "full_members": 98,
+    "inventory": 0,
+    "relation_evidence": 262,
+    "shared_source_spans": 25,
+    "reviewer_items": 1,
+    "derived_context": 0
+  },
+  "lossless_graph_node_table_simulation": {
+    "unique_nodes": 93,
+    "original_graph_bytes": 58841,
+    "packed_graph_bytes": 33423,
+    "saved_bytes": 25418,
+    "total_payload_bytes": 186294,
+    "exact_fact_roundtrip": true,
+    "note": "Analysis-only serialization estimate. Native schema, receipts, source code and guard remain unchanged. No model call or publication."
+  },
+  "existing_valid_capsule_bytes": 175269,
+  "existing_valid_full_prompt_bytes": 311815,
+  "options": {
+    "default_256_kib": {
+      "ceiling_bytes": 262144,
+      "headroom_bytes": 50432,
+      "compatibility": "Keep 64 KiB and 192 KiB supported; preserve existing receipt bytes and use recorded ceilings for legacy lineage."
+    },
+    "configurable_policy": "Resolve policy for new capsules, record it in receipts, and preserve historic values; current API deliberately exposes no override.",
+    "prose_only_context": "Require exact span owners, settled-decision grounding, and an enforced prose-only operation capability; a narrower row target alone still measures 208472 bytes.",
+    "model_token_preflight": "Separate full rendered prompt budget with output/reasoning reserve; raw capsule byte ceiling does not bound complete prompt tokens."
+  },
+  "default_256_kib_simulation": {
+    "new_capsule_bytes": 211712,
+    "new_ceiling_bytes": 262144,
+    "full_rendered_prompt_bytes": 360960,
+    "before_existing_capsules": [
+      {
+        "version": "57e2912e6f4b9d1f111690054ad216b87ac1294455fcfb9feeed5040c4bd5bcf",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      },
+      {
+        "version": "ee358175b709ea6c10f4659c0258b6fed137434e909f837bb33d38d2a02ed955",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      },
+      {
+        "version": "c886d0f2ddad3042b5a6d9caf1422b683ab598a62a94126b5df59d9b4ca1fb72",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      }
+    ],
+    "after_existing_capsules": [
+      {
+        "version": "57e2912e6f4b9d1f111690054ad216b87ac1294455fcfb9feeed5040c4bd5bcf",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      },
+      {
+        "version": "ee358175b709ea6c10f4659c0258b6fed137434e909f837bb33d38d2a02ed955",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      },
+      {
+        "version": "c886d0f2ddad3042b5a6d9caf1422b683ab598a62a94126b5df59d9b4ca1fb72",
+        "ceiling": 196608,
+        "intact": true,
+        "payload_hash_unchanged": true
+      }
+    ],
+    "note": "Transient policy simulation inside this analysis process only. No source/config edits, model calls, publication, or persisted candidate/receipt changes."
+  },
+  "compatibility_correction": "A default increase follows the existing ceiling-increase compatibility design when old supported ceilings remain accepted. Three actual stored 192 KiB capsules remained intact and byte-identical in the transient 256 KiB simulation. Existing repository tests separately cover the legacy 64 KiB ceiling. No persisted receipt or source code was modified.",
+  "model_capacity_input": {
+    "source": "Owner reports the base models in use have a 1,000,000-token context window",
+    "tokens": 1000000,
+    "note": "Owner-provided capacity; this investigation does not equate byte counts with token counts or independently benchmark provider limits."
+  },
+  "recommendation": {
+    "primary": "Replace the low fixed canonical byte ceiling with an explicit larger configurable budget for new contexts, plus a separate check of the full rendered prompt against the selected model token window with output/reasoning/harness reserve. Preserve all historical recorded ceilings and exact receipts.",
+    "short_term": "A compatible 256 KiB default clears the current refusal, but it is an interim unblock rather than a long-term sizing policy for 1M-token models.",
+    "efficiency": "Lossless relation-node interning saves 25418 bytes in this case and clears the current cap, but requires a versioned representation and readability/replay tests. Shared prose is already deduplicated.",
+    "prose_scope": "A narrower feedback row still exceeds the cap. A dedicated prose-only context could improve efficiency, but requires an enforced operation capability and exact owner/span coverage; it is more work than a budget policy change."
+  },
+  "backlog_transfer": {
+    "id": 469,
+    "clone": "<repo-root>",
+    "file": "BACKLOG.md",
+    "title": "Let roadmap context budgets use larger model windows without dropping evidence or breaking saved candidates",
+    "scope": "Comprehensive budget configuration, full prompt token capacity, lossless representation, historical receipt compatibility, diagnostics and tests.",
+    "owner_request": "Yes, create a backlog item in the plan tool for a comprehensive update",
+    "status": "Filed; implementation not started."
+  }
+}

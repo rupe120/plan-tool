@@ -1,0 +1,21 @@
+{
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "grounded_at": "2026-08-27T01:49:37Z",
+  "plan_fingerprint": "382a0b5fc17a12c232c035deec7c5ee457121e2bc35eb1d9f4fe5f1721d85e54",
+  "code_fingerprint": {
+    "BACKLOG.md": "73ec11e4c19fc6a4752f7fdc9f8e18a5b5f6c6e13493dd88a7f9025364d81dad",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "CLAUDE.md": "b8be9d2774d8ea8cb57a2513ce1fbbd0c194038630ea6552f3dbaf2c3e3f3ad9",
+    "README.md": "3e02fe1e80a559fe5865089f468af97690f0f5255f344ce83dbd63766368445f",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "docs/cli/README.md": "5a28d53e3340cf1ed48a7bc296d69b38405aa556b8df089c6d02a41613826299",
+    "integrations/claude/SKILL.md": "9fd26478045faf3272d5c95548b1d10872b7ae24296b27ed151e1161b770c869",
+    "integrations/codex/SKILL.md": "a52794337a79b68f16f0f9c964bdf97891b03e089b7f1d7582b5ccb70c680e97",
+    "plan_tool/cli/__init__.py": "edea8e16779f4c5cf1bbefb7b107b17373bd840651d2d420b2c501043becc602",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "tests/cli/package_surface_help.golden.txt": "64ac994b6554a59825248f6121173a5a46b2d4e76f12752506afeadb83f7b754"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

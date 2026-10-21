@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When the Plan Wouldn't Converge — visual</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css" id="theme">
+
+  <style>
+    :root {
+      --accent: #4fd1c5;
+      --warn:   #f6ad55;
+      --bad:    #fc8181;
+      --good:   #68d391;
+      --muted:  #8aa0bd;
+      --ink:    #0b1120;
+    }
+    .reveal { font-size: 30px; }
+    .reveal section { text-align: center; }
+    .reveal h1 { font-size: 2.0em; line-height: 1.05; }
+    .reveal h2 { color: #e8eef7; font-size: 1.15em; text-transform: none; font-weight: 600; }
+    .reveal .cap { color: var(--muted); font-size: 0.66em; margin-top: 10px; }
+    .reveal .cap b { color: var(--accent); font-weight: 600; }
+    .reveal .cap .bad  { color: var(--bad); font-weight: 600; }
+    .reveal .cap .good { color: var(--good); font-weight: 600; }
+    .reveal .cap .warn { color: var(--warn); font-weight: 600; }
+    .reveal .tag {
+      display: inline-block; font-size: 0.46em; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+      border-radius: 4px; padding: 3px 12px; margin-bottom: 8px;
+    }
+    .reveal svg { width: 100%; height: auto; max-height: 62vh; display: block; margin: 0 auto; }
+    .reveal .stage { width: 88%; margin: 0 auto; }
+    .lbl  { font: 600 19px ui-sans-serif, system-ui, sans-serif; fill: #e8eef7; }
+    .lbl-s{ font: 600 15px ui-sans-serif, system-ui, sans-serif; fill: #cbd6e6; }
+    .lbl-mono { font: 600 17px ui-monospace, SFMono-Regular, monospace; fill: #e8eef7; }
+    .lbl-muted { font: 500 15px ui-sans-serif, system-ui, sans-serif; fill: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <!-- 1 · TITLE -->
+  <section data-background-color="#0b1120">
+    <span class="tag">plan-tool</span>
+    <div class="stage">
+      <svg viewBox="0 0 460 240" role="img" aria-label="a loop arrow that never closes, spiralling open">
+        <defs>
+          <marker id="ah-bad" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#fc8181"/>
+          </marker>
+        </defs>
+        <!-- open spiral: a loop that won't close -->
+        <path d="M300,120 A90,90 0 1 1 215,32" fill="none" stroke="#fc8181"
+              stroke-width="9" stroke-linecap="round"/>
+        <path d="M215,32 A116,116 0 0 0 196,40" fill="none" stroke="#fc8181"
+              stroke-width="9" stroke-linecap="round" marker-end="url(#ah-bad)" opacity="0.55"/>
+        <circle cx="230" cy="124" r="42" fill="#10233022" stroke="#274056" stroke-width="2"/>
+        <text x="230" y="119" text-anchor="middle" class="lbl-s">the</text>
+        <text x="230" y="139" text-anchor="middle" class="lbl-s" fill="#fc8181">plan</text>
+      </svg>
+    </div>
+    <h1>When the Plan<br><span style="color:var(--bad)">Wouldn't Converge</span></h1>
+    <p class="cap">a true story from one authoring session</p>
+  </section>
+
+  <!-- 2 · SYMPTOM: eight audits, findings keep returning -->
+  <section>
+    <h2>Eight audits. <span style="color:var(--good)">“Converged”</span> every time.</h2>
+    <div class="stage">
+      <svg viewBox="0 0 780 300" role="img" aria-label="eight audit runs, each emitting fresh high and medium findings; count never drops">
+        <!-- baseline -->
+        <line x1="40" y1="250" x2="740" y2="250" stroke="#274056" stroke-width="2"/>
+        <!-- 8 audit bars, all roughly same height = no shrinkage -->
+        <g>
+          <!-- x positions for 8 runs -->
+          <g fill="#fc8181">
+            <rect x="70"  y="120" width="46" height="130" rx="5" opacity="0.92"/>
+            <rect x="155" y="132" width="46" height="118" rx="5" opacity="0.92"/>
+            <rect x="240" y="110" width="46" height="140" rx="5" opacity="0.92"/>
+            <rect x="325" y="126" width="46" height="124" rx="5" opacity="0.92"/>
+            <rect x="410" y="118" width="46" height="132" rx="5" opacity="0.92"/>
+            <rect x="495" y="130" width="46" height="120" rx="5" opacity="0.92"/>
+            <rect x="580" y="116" width="46" height="134" rx="5" opacity="0.92"/>
+            <rect x="665" y="124" width="46" height="126" rx="5" opacity="0.92"/>
+          </g>
+          <!-- "converged" ticks under each -->
+          <g fill="#68d391" font-size="13" font-family="ui-sans-serif">
+            <text x="93"  y="272" text-anchor="middle">✓</text>
+            <text x="178" y="272" text-anchor="middle">✓</text>
+            <text x="263" y="272" text-anchor="middle">✓</text>
+            <text x="348" y="272" text-anchor="middle">✓</text>
+            <text x="433" y="272" text-anchor="middle">✓</text>
+            <text x="518" y="272" text-anchor="middle">✓</text>
+            <text x="603" y="272" text-anchor="middle">✓</text>
+            <text x="688" y="272" text-anchor="middle">✓</text>
+          </g>
+        </g>
+        <!-- flat trend line over the bar tops -->
+        <path d="M93,118 L178,128 L263,108 L348,122 L433,114 L518,126 L603,112 L688,120"
+              fill="none" stroke="#f6ad55" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/>
+        <text x="400" y="40" text-anchor="middle" class="lbl" fill="#fc8181">new HIGH / MEDIUM findings — each run</text>
+        <text x="400" y="66" text-anchor="middle" class="lbl-muted">count never trends down</text>
+      </svg>
+    </div>
+    <p class="cap">The loop reported <span class="good">no-blocking-findings</span> — and surfaced <span class="bad">fresh correctness bugs</span> anyway.</p>
+  </section>
+
+  <!-- 3 · THE TELL: whack-a-mole in one region -->
+  <section data-background-color="#0e1626">
+    <h2>Every fix spawned the <span style="color:var(--bad)">next</span> finding</h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 290" role="img" aria-label="a patch that grows clauses; plugging one hole opens the next, all on the same step">
+        <defs>
+          <marker id="ah-w2" markerWidth="9" markerHeight="9" refX="6.5" refY="3" orient="auto">
+            <path d="M0,0 L6.5,3 L0,6 Z" fill="#f6ad55"/>
+          </marker>
+        </defs>
+        <!-- the one hot region -->
+        <rect x="270" y="20" rx="12" width="220" height="50" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+        <text x="380" y="42" text-anchor="middle" class="lbl-mono" fill="#f6ad55">step 5</text>
+        <text x="380" y="60" text-anchor="middle" class="lbl-muted">one over-packed step</text>
+        <!-- chain of findings, each pointing to the next -->
+        <g>
+          <rect x="40"  y="120" rx="9" width="200" height="46" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+          <text x="140" y="148" text-anchor="middle" class="lbl-s" fill="#fc8181">rec not surfaced</text>
+          <rect x="285" y="120" rx="9" width="200" height="46" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+          <text x="385" y="148" text-anchor="middle" class="lbl-s" fill="#fc8181">null-rec dropped</text>
+          <rect x="530" y="120" rx="9" width="200" height="46" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+          <text x="630" y="148" text-anchor="middle" class="lbl-s" fill="#fc8181">re-emits every pass</text>
+          <path d="M240,143 L283,143" fill="none" stroke="#f6ad55" stroke-width="4" marker-end="url(#ah-w2)"/>
+          <path d="M485,143 L528,143" fill="none" stroke="#f6ad55" stroke-width="4" marker-end="url(#ah-w2)"/>
+        </g>
+        <!-- all dangle from step 5 -->
+        <path d="M330,70 C300,92 200,100 140,118" fill="none" stroke="#3a4a5e" stroke-width="2" stroke-dasharray="4 5"/>
+        <path d="M380,70 L385,118" fill="none" stroke="#3a4a5e" stroke-width="2" stroke-dasharray="4 5"/>
+        <path d="M430,70 C470,92 560,100 630,118" fill="none" stroke="#3a4a5e" stroke-width="2" stroke-dasharray="4 5"/>
+        <text x="380" y="240" text-anchor="middle" class="lbl-muted">not three bugs —</text>
+        <text x="380" y="266" text-anchor="middle" class="lbl-s" fill="#f6ad55">one bug refracted through a growing patch</text>
+      </svg>
+    </div>
+    <p class="cap">Whack-a-mole is the signature of fighting a plan's <b>shape</b>, not its prose.</p>
+  </section>
+
+  <!-- 4 · DIAGNOSIS: structure through a prose loop -->
+  <section>
+    <h2>A structural edit jammed into a <span style="color:var(--bad)">prose loop</span></h2>
+    <div class="stage">
+      <svg viewBox="0 0 740 300" role="img" aria-label="a collect-apply-recollect prose loop with a renumbering split jammed in, shattering captured step ids">
+        <defs>
+          <marker id="ah-acc" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#4fd1c5"/>
+          </marker>
+          <marker id="ah-b3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#fc8181"/>
+          </marker>
+        </defs>
+        <!-- the loop: three nodes in a cycle -->
+        <circle cx="200" cy="90"  r="34" fill="#10233022" stroke="#4fd1c5" stroke-width="2"/>
+        <text x="200" y="95" text-anchor="middle" class="lbl-s" fill="#4fd1c5">collect</text>
+        <circle cx="330" cy="190" r="34" fill="#10233022" stroke="#4fd1c5" stroke-width="2"/>
+        <text x="330" y="195" text-anchor="middle" class="lbl-s" fill="#4fd1c5">apply</text>
+        <circle cx="120" cy="190" r="34" fill="#10233022" stroke="#4fd1c5" stroke-width="2"/>
+        <text x="120" y="195" text-anchor="middle" class="lbl-s" fill="#4fd1c5">re-collect</text>
+        <path d="M222,116 C275,140 300,158 318,164" fill="none" stroke="#4fd1c5" stroke-width="4" marker-end="url(#ah-acc)"/>
+        <path d="M300,212 C250,232 198,232 152,214" fill="none" stroke="#4fd1c5" stroke-width="4" marker-end="url(#ah-acc)"/>
+        <path d="M132,158 C150,134 168,120 180,112" fill="none" stroke="#4fd1c5" stroke-width="4" marker-end="url(#ah-acc)"/>
+        <text x="225" y="160" text-anchor="middle" class="lbl-muted">iterates by step id</text>
+        <!-- the split bolt jammed into apply -->
+        <path d="M470,60 L452,140 L478,140 L460,220" fill="none" stroke="#fc8181" stroke-width="7"
+              stroke-linejoin="round" stroke-linecap="round" marker-end="url(#ah-b3)"/>
+        <rect x="500" y="86" rx="9" width="220" height="44" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+        <text x="610" y="113" text-anchor="middle" class="lbl-mono" fill="#fc8181">split → renumber</text>
+        <text x="610" y="168" text-anchor="middle" class="lbl-s" fill="#fc8181">1 → 2,  ids shift</text>
+        <text x="610" y="194" text-anchor="middle" class="lbl-muted">captured ids now stale</text>
+      </svg>
+    </div>
+    <p class="cap">The loop assumes apply <b>never changes step identity.</b> A split renumbers it mid-iteration.</p>
+  </section>
+
+  <!-- 5 · THE DEEPER FLAW: apply is monotone-additive -->
+  <section data-background-color="#1a1206">
+    <h2 style="color:var(--warn)">apply can only <em>add</em> prose</h2>
+    <div class="stage">
+      <svg viewBox="0 0 740 280" role="img" aria-label="the plan body growing taller each pass, never shrinking, feeding the next audit more surface">
+        <!-- growing stack of prose blocks -->
+        <g>
+          <rect x="120" y="210" width="120" height="40" rx="5" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+          <rect x="270" y="170" width="120" height="80" rx="5" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+          <rect x="420" y="120" width="120" height="130" rx="5" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+          <rect x="570" y="60"  width="120" height="190" rx="5" fill="#241c0e" stroke="#f6ad55" stroke-width="2"/>
+          <text x="180" y="234" text-anchor="middle" class="lbl-muted">pass 1</text>
+          <text x="330" y="234" text-anchor="middle" class="lbl-muted">pass 3</text>
+          <text x="480" y="234" text-anchor="middle" class="lbl-muted">pass 5</text>
+          <text x="630" y="234" text-anchor="middle" class="lbl-muted">pass 8</text>
+        </g>
+        <!-- rising arrow -->
+        <path d="M150,200 C300,150 470,110 660,55" fill="none" stroke="#f6ad55" stroke-width="3" stroke-dasharray="3 7"/>
+        <text x="370" y="36" text-anchor="middle" class="lbl" fill="#f6ad55">more prose → more surface to find holes in</text>
+      </svg>
+    </div>
+    <p class="cap">It fixes <b>under-specification</b> — never <span class="warn">over-complexity</span>. So the plan grew, and the audit kept biting.</p>
+  </section>
+
+  <!-- 6 · THE FIX: re-decompose, don't patch -->
+  <section>
+    <h2><span style="color:var(--good)">Seed → regenerate</span>, not plan surgery</h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 290" role="img" aria-label="one fat over-packed step regenerated into a clean spine of small single-concern steps">
+        <defs>
+          <marker id="ah-g2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#68d391"/>
+          </marker>
+        </defs>
+        <!-- before: one fat step -->
+        <rect x="40" y="90" rx="12" width="190" height="120" fill="#2a1414" stroke="#fc8181" stroke-width="2"/>
+        <text x="135" y="130" text-anchor="middle" class="lbl" fill="#fc8181">step 5</text>
+        <text x="135" y="156" text-anchor="middle" class="lbl-s" fill="#fca5a5">2 triggers · 2 files</text>
+        <text x="135" y="178" text-anchor="middle" class="lbl-s" fill="#fca5a5">refactor + feature</text>
+        <text x="135" y="200" text-anchor="middle" class="lbl-s" fill="#fca5a5">+ dead wiring</text>
+        <!-- arrow -->
+        <path d="M236,150 L300,150" fill="none" stroke="#68d391" stroke-width="5" marker-end="url(#ah-g2)"/>
+        <text x="268" y="138" text-anchor="middle" class="lbl-muted">seed</text>
+        <!-- after: clean spine -->
+        <g>
+          <rect x="320" y="36"  rx="8" width="200" height="34" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+          <text x="420" y="59" text-anchor="middle" class="lbl-s" fill="#9fe3b6">1 · refactor predicate</text>
+          <rect x="320" y="78"  rx="8" width="200" height="34" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+          <text x="420" y="101" text-anchor="middle" class="lbl-s" fill="#9fe3b6">2 · render recs</text>
+          <rect x="320" y="120" rx="8" width="200" height="34" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+          <text x="420" y="143" text-anchor="middle" class="lbl-s" fill="#9fe3b6">6 · trigger-1 surface</text>
+          <rect x="320" y="162" rx="8" width="200" height="34" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+          <text x="420" y="185" text-anchor="middle" class="lbl-s" fill="#9fe3b6">7 · in-loop contract</text>
+          <rect x="320" y="204" rx="8" width="200" height="34" fill="#12251b" stroke="#68d391" stroke-width="2"/>
+          <text x="420" y="227" text-anchor="middle" class="lbl-s" fill="#9fe3b6">8 · review-walk</text>
+        </g>
+        <!-- deferred dead-wiring chip -->
+        <rect x="560" y="120" rx="9" width="170" height="54" fill="#11161f" stroke="#3a4a5e" stroke-width="2" stroke-dasharray="4 5"/>
+        <text x="645" y="143" text-anchor="middle" class="lbl-muted">create-side</text>
+        <text x="645" y="163" text-anchor="middle" class="lbl-muted">trigger → deferred</text>
+      </svg>
+    </div>
+    <p class="cap">One over-packed step became a <b>clean 9-step spine</b> — each step one concern, one change-type.</p>
+  </section>
+
+  <!-- 7 · THE META-WIN: the gap became the next feature -->
+  <section data-background-color="#0e1626">
+    <h2>The blind spot became the <span style="color:var(--accent)">next feature</span></h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 280" role="img" aria-label="content converges via loops but boundaries never did; the missing edge captured as backlog item 57">
+        <defs>
+          <marker id="ah-acc3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 Z" fill="#4fd1c5"/>
+          </marker>
+        </defs>
+        <!-- content loops (exist) -->
+        <g>
+          <rect x="60" y="40" rx="10" width="240" height="44" fill="#10233022" stroke="#68d391" stroke-width="2"/>
+          <text x="180" y="68" text-anchor="middle" class="lbl-s" fill="#9fe3b6">content → converges ✓</text>
+          <text x="180" y="104" text-anchor="middle" class="lbl-muted">create / detail / completeness</text>
+        </g>
+        <!-- boundaries (missing) -->
+        <g>
+          <rect x="60" y="150" rx="10" width="240" height="44" fill="#11161f" stroke="#fc8181" stroke-width="2" stroke-dasharray="5 5"/>
+          <text x="180" y="178" text-anchor="middle" class="lbl-s" fill="#fc8181">boundaries → never ✗</text>
+          <text x="180" y="214" text-anchor="middle" class="lbl-muted">decided once, frozen</text>
+        </g>
+        <!-- the new edge -->
+        <path d="M310,172 C400,172 430,150 470,140" fill="none" stroke="#4fd1c5" stroke-width="5" marker-end="url(#ah-acc3)"/>
+        <rect x="478" y="96" rx="12" width="240" height="92" fill="#0c2b2b" stroke="#4fd1c5" stroke-width="2"/>
+        <text x="598" y="128" text-anchor="middle" class="lbl-mono" fill="#4fd1c5">BACKLOG #57</text>
+        <text x="598" y="152" text-anchor="middle" class="lbl-s">decomposition</text>
+        <text x="598" y="172" text-anchor="middle" class="lbl-s">convergence loop</text>
+      </svg>
+    </div>
+    <p class="cap">Diagnosing the failure produced a <b>seed for the capability that would catch it next time.</b></p>
+  </section>
+
+  <!-- 8 · CLOSE: value tiles -->
+  <section data-background-color="#0b1120">
+    <h2>What plan-tool bought us</h2>
+    <div class="stage">
+      <svg viewBox="0 0 760 230" role="img" aria-label="four value tiles">
+        <g>
+          <rect x="20"  y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="105" y="78" text-anchor="middle" style="font-size:42px">🧭</text>
+          <text x="105" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">surfaced the flaw</text>
+          <text x="105" y="142" text-anchor="middle" class="lbl-muted">non-convergence = signal</text>
+
+          <rect x="205" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="290" y="78" text-anchor="middle" style="font-size:42px">🧩</text>
+          <text x="290" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">coherent spine</text>
+          <text x="290" y="142" text-anchor="middle" class="lbl-muted">one concern per step</text>
+
+          <rect x="390" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="475" y="78" text-anchor="middle" style="font-size:42px">⚡</text>
+          <text x="475" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">efficient to build</text>
+          <text x="475" y="142" text-anchor="middle" class="lbl-muted">small steps converge</text>
+
+          <rect x="575" y="20" rx="12" width="170" height="150" fill="#10233022" stroke="#274056" stroke-width="2"/>
+          <text x="660" y="78" text-anchor="middle" style="font-size:42px">♻️</text>
+          <text x="660" y="120" text-anchor="middle" class="lbl-s" fill="#4fd1c5">seed → regenerate</text>
+          <text x="660" y="142" text-anchor="middle" class="lbl-muted">not plan surgery</text>
+        </g>
+      </svg>
+    </div>
+    <p class="cap" style="font-size:0.78em; margin-top:18px;">A plan you can <b>implement without fighting it</b> —
+       because the tool made us fix its <b>shape</b>, not just its words.</p>
+  </section>
+
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'fade',
+    width: 1280,
+    height: 760,
+    margin: 0.04,
+    plugins: [ RevealNotes ],
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "plan_slug": "jira-sweep-integration",
+  "grounded_at": "2026-07-10T18:05:41Z",
+  "plan_fingerprint": "197760ba0e16d93f21dde01e2f54ed822f50937c4baba930e74830ca34dc9833",
+  "code_fingerprint": {
+    ".gitignore": "6a8962ebb31633c14cb93c5f9a575e76b80df343f41bca004cecbb22ff10069f",
+    "CAPABILITIES.md": "8577e7ad0edfe8673dac37df88eebd07241662c9b42381df9f6f059f01a722df",
+    "CLAUDE.md": "228f01bb1387c48928367ea67016d29e0d3dd45866baa7e04ce3b6052f741e71",
+    "RUNBOOK.md": "5dd8d3ae62ddc30e5e67e6447a0fb1358346083dd2a9c31e1615ac2739259892",
+    "TESTING.md": "7bcb03abec79f6f6b66eee3141cd63e1a505b9627c5e3d39cad6af6361ef53c9",
+    "docs/cli/README.md": "dc8a70efb57f3880bea42dc13b3b6c6260f963c4e897619df53a7f82391afe10",
+    "plan_tool/cli/app.py": "7c97be0b721fbe64f01c924082d7a134389e3090572ec7253318b765c7081361",
+    "plan_tool/cli/parser.py": "c0d0548e055fd067d5dbe43cd366f745eab7675eb222aa201ea470af82e64bed",
+    "plan_tool/jira.py": "515d8cf9af516ef6c3448b4e320ccd2d2a1a1153bb0b3f35cf957109360ed1ca",
+    "plan_tool/jira_config.py": "60e47030b97f2966db9c7e101e337ef951a0c6898f935c999415ba5b4678aebd",
+    "plan_tool/locator.py": "a39482b190235fda7d5d32dcab44feaac5f945af8fe456455ece640a7cfc7496"
+  },
+  "schema_version": 1
+}

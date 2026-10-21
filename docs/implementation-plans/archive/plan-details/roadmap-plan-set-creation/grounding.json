@@ -1,0 +1,27 @@
+{
+  "plan_slug": "roadmap-plan-set-creation",
+  "grounded_at": "2026-10-16T15:51:43Z",
+  "plan_fingerprint": "20bb6942f4fad0b026881d66937eba906fa9df2748c4a7afc7611516a169a7ac",
+  "code_fingerprint": {
+    "BACKLOG.md": "b8b9f545f25589d2904ffce7ebdd6b7e1d64e14682e9b4b79cc90ea5d47a068b",
+    "CAPABILITIES.md": "08427aecec829eb93d1ca4c05418179cc8951029746c49d3e068be339a5f14e4",
+    "ROADMAP_FORMAT.md": "f599681a6e047e79fed865bd4ae211de9356e7692884f7e4be7254a08a34cc62",
+    "TESTING.md": "aed085deceba3c1892b096af95359ff2f7939b5d9ff69525f192a61f11f11987",
+    "docs/ARCHITECTURE.md": "663005e9b70b35670104a61523521ca3975b3103ad39c3059657c80aca0bb43d",
+    "docs/cli/create.md": "9f8460b7415bae47fed691ae7ec4f1bb9833d2f740c4e0d7fbdf71ab30bba2bb",
+    "docs/evidence/roadmap-plan-set-benchmark.md": "ae19133ef6dd62ab5a2388ddf0d8f483d5f2aad9145ec854947689e0c50c5d2e",
+    "docs/how-to/roadmap.md": "538060aa8fc62cc73f9d011deaf5ac3739cb606f0fa0936567992413834cc393",
+    "plan_tool/cli/authoring.py": "55b31879049c705108debdcf10f8493afd5b39cf34a79ea49db8b930e98e47b5",
+    "tests/cli/test_authoring_cmds.py": "112613ae2c5a865f3508bbaa53cab6a29544c8df7c4bc075a93543464cfc44cd",
+    "tests/cli/test_cli_parser.py": "264e3806a4a5a39f4da0b5d28e129963ebc56b6a3d1dba8ada7814b5556241a9"
+  },
+  "step_authoring_fingerprints": {
+    "1": "108dd98d80452c34acfd4c9f2773a60122852ed9bd05e932fdb48a41470b0479",
+    "2": "e9bc95f9119550e310584bf6304d5dd7baf6144bad08f3beee8499e89d023ad2",
+    "3": "3eeeb33a2d7204105e21087df3e97c323cca3c5ff26adc5500ba7eb149839ed1",
+    "4": "e03b627a4ce654605c65171ff677dc6719e670b6443b086d415ac88c9681e533",
+    "5": "b7ab285b9ac9a08961351000c6f87f4ce83ca8cdae9f45c7f81282ea186d0ad3",
+    "6": "88aa7a7c2bbb8d6ffec209738b5bb0d883621d223c00c2c55df03665cc9a6817"
+  },
+  "schema_version": 1
+}

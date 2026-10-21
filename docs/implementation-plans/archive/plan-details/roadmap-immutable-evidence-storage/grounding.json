@@ -1,0 +1,9 @@
+{
+  "plan_slug": "roadmap-immutable-evidence-storage",
+  "grounded_at": "2026-08-14T22:44:05Z",
+  "plan_fingerprint": "7ceccb28b8b10abedbff5eaa2d8e0ebcd75562c2ccc1132b0c551e5f5ee12151",
+  "code_fingerprint": {
+    "docs/ARCHITECTURE.md": "1c79af5cde890c510ee07b6003cdf3274c91a085ea5b8aa19a7e1db6ab78479f"
+  },
+  "schema_version": 1
+}

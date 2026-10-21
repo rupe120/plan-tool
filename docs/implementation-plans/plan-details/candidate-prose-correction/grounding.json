@@ -1,0 +1,36 @@
+{
+  "plan_slug": "candidate-prose-correction",
+  "grounded_at": "2026-10-02T17:01:03Z",
+  "plan_fingerprint": "6130536f2023619193cb89516e83d4754cbe594fb6a2e0169929fa79a7c8650d",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "11a36ca8344dd704e30e2f57616523321489df1f5f8ba600b30151608b691fbb",
+    "plan_tool/roadmap_candidate.py": "935bb51d5e61f75a830a538462d03df5a96e011dd76f27a3cf0ef02983b2b8d6",
+    "plan_tool/roadmap_candidate_context.py": "9f162b8136ba4b65c4a227b78060c372c35a432f0a56156e376057fdb9b70818",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_candidate_run.py": "3919a5da38a5d5087d1e0b97d75f24291d43ebac27573ddf384e09f284905b71",
+    "plan_tool/roadmap_revision.py": "941e651f7eb2be3f426d0026b3b6c75de1d9815930f37f7ee85415aba9e6aa06",
+    "plan_tool/roadmap_revision_patch.py": "f579998564a2012ea3ff28e02765d4c38c14aa7c5df0253752eaaed4c7dfadf1",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate.py": "1632254c78f96f7c2ffc410523cd04d6a4681fbd32d3f11590ddcac2bf1e9124",
+    "tests/test_roadmap_candidate_context.py": "8a9340a0a50cbed29e2d72ae2632685ba2ff0c1529585685ffe23ed2bf40b2f6",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_candidate_run.py": "a63f0f704e02f84664e5714b6dc729c1873e604c1dd85e9358073c27f06b222f",
+    "tests/test_roadmap_revision.py": "1d1cc7dfd2bfdb212bc0b4a6b7c51fc50adfa01ed70e258c8fc4e34ad0cf5048",
+    "tests/test_roadmap_revision_patch.py": "786dad25c23c07d30bcda0e4531f9336eed49442ac178d713b9d66b52dd89e02"
+  },
+  "step_authoring_fingerprints": {
+    "1": "bcdbfb96108c0fc6f513ee2f9f4030f04d5e9338777edeea62372013ce7fad73",
+    "2": "70406b3cf9e0c0116151f1bfbaa526f3417b7a7ac924698fea6240595a9e7b84",
+    "3": "9094cdd20b746769d645a8bb541159caf8f5b077b85441ba196f200d39b31c38",
+    "4": "61624a2151c39c16335b06a7c2db5a688ad6da9c40ee75da065b98fe06ba1789",
+    "5": "695fa90f29c7901869e2ae7ca1fa0d8feec62b80b8b7960b473ee61d177a8f91",
+    "6": "2acdb1b482b543ef8309257ef803cc7708d5a74d5234cec7c96aba0c6f6556e2",
+    "7": "bec55473219232bbcff87a75942a66b92f688682ee7e50cd4ec8ffc5e25e3e80",
+    "8": "5f9ada4656b4975136f24c9eef972d75a2262ee6d0e068ae8be8f426c62dd53b",
+    "9": "c2c9b4b0ee480d9b3952eb9e2f22ae87400abdd872a876b611b7d0a7257021d2"
+  },
+  "schema_version": 1
+}

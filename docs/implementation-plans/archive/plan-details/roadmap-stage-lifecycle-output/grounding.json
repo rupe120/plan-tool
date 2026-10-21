@@ -1,0 +1,27 @@
+{
+  "plan_slug": "roadmap-stage-lifecycle-output",
+  "grounded_at": "2026-09-02T01:42:17Z",
+  "plan_fingerprint": "ec964beeb065bdcb03319a79be3266a6cc83be07a274709b6ef7e806ca509e5a",
+  "code_fingerprint": {
+    "BACKLOG.md": "51fe0af45f14a00efc3251a518552e045c1c7be7869187b441f8b07771497e61",
+    "README.md": "22c30086ead0aa168e624a6f32d9aeb3b8965770e5bb15d73f9f7f187593b247",
+    "RUNBOOK.md": "2ce9b013faef10020d3594008da88985d480b8820e78a7940c38a091e9ac8af6",
+    "docs/ARCHITECTURE.md": "f61d35c4463db0efeda91c665ab24fb3c1534326417ccb85aa17adb4f736df94",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "ef7b542a4d52ed0015d261187a4c682b2631e32ebf333706c4a650c351477d5f",
+    "docs/ROADMAP_WALKTHROUGH.md": "215235bb1845e4e684157a39908407098a1fc41bb6bcacfd2b33caf6cc1d034a",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "f840287e952ece51b7592da564a094aebc537335cd536ae05af59b33fb749c1c",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "27a0f31f40e759143d125fb07a7bf5a659de71c1e3f74eb44dcce423a4afaafa",
+    "plan_tool/cli/roadmap_cmd.py": "dc460cf1af1c88d43145260f27474a5d9c27449bcaaacb37c3b5440b03f077c6",
+    "plan_tool/roadmap.py": "5801c3b91a4209a64f39081d944659b2fd9ca09d7d8922e9e565b27988ab1023",
+    "tests/cli/test_roadmap_cmd.py": "5cc973e539611eb990c8d443cc2e734bf3c4af28bd871934e2a5f9474186359e",
+    "tests/test_roadmap.py": "94be312078d266600e5bdf77fbf5f2bf72c3cffe41af4464b2fd6309c7b7f214"
+  },
+  "step_authoring_fingerprints": {
+    "1": "d4f20d94dc31cd0bd3ffedfa55ee8a097ddff5891e4b8bef6ba9e031cba0459c",
+    "2": "48828c04eafc6dd64570c7ce77cc0fb8eb59abf7b1ad4f4fce16f023bda6164f",
+    "3": "ea18070cbd5a8ed2cfb8caa37cccffd5112a7dda8aabf45c03b278cb7bda4c3f",
+    "4": "77abcf645945890aa964c0b139d213c1f8d3713bb2fe7bc846d0a04f59e8d25e",
+    "5": "2a3fe53a24a21ac1898a5827dd46bec5c2c5a4537ec96364d60c7dd4f5ff866f"
+  },
+  "schema_version": 1
+}

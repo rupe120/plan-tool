@@ -1,0 +1,14 @@
+{
+  "plan_slug": "code-reveals-a-split-detector",
+  "grounded_at": "2026-07-10T05:14:50Z",
+  "plan_fingerprint": "25e8ea7468ac3b36a54beaa5387e822c6f18df5fa800ba0ca0ae7a4571b4d96e",
+  "code_fingerprint": {
+    "BACKLOG.md": "7e7e74f10d7b329a6e8d127879c981f6b26c51c3804c65c57f0b87e5ae2fffce",
+    "CLAUDE.md": "c7f61f46a9f97cd93e80dfc34a2d40e43b2c63b3cceeb33f35f091dbeb6c2b4f",
+    "RUNBOOK.md": "c61ae0df27c3a4d1ab24b7bab238a2c1219b583b5d0b8e61538fbc168ed77be2",
+    "plan_tool/review.py": "deb03e0e472f8f89365221807f368b8e8ce7d9f5a48e1437464628dd09f61b84",
+    "tests/test_review.py": "18c6e9e378e2116794a8fe7f37e1c4f5042f8f144165b833140b8f14e1f98092",
+    "tests/test_review_walk.py": "2164653e58218a6efcad071d1dcce281cc67cf40d12d4e7da10e88c5c0ac585d"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,25 @@
+{
+  "plan_slug": "feature-health-declaration-and-smell-checks",
+  "grounded_at": "2026-06-18T13:43:58Z",
+  "plan_fingerprint": "5236daf9d9f5a6ed9410cf1fbd4f704da497a80da0d5f0eb7ed357d494c010e8",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "d9527ec89128d88e1ffb7cc32813ce8b5f2055dada562f6784d03a86ba496bbe",
+    "plan_tool/cli/completeness_cmd.py": "786adbae01695556dcd45f6be1c849cfbf07bca788ada96873d2663cb9a2f65a",
+    "plan_tool/cli/completeness_phases.py": "61a544b4214ff2755a45ded661b8d4b638c5afbeb64ffec3712ba0a98a8f54d2",
+    "plan_tool/cli/inspect.py": "2b1acb83890db11be18d258c9d04a053d981dbfd13235dfd7de088964c0f4c3d",
+    "plan_tool/completeness_report.py": "7578305e9f6adad77753a19094ad9b40987636331681909f0225e5ceaec696ae",
+    "plan_tool/create.py": "d0f830c9e39bbc44085ed0eb1f5159f17d797350d70612b387782280dc9b3f8d",
+    "plan_tool/detail.py": "e64da0759cc0f562545e1dbd97c0aeb71f9d50a92d8d7cc9c43380a2811fe8e8",
+    "plan_tool/project_config.py": "044e0bd678644d9de9e984f828a7ca042bc728f6f9e8119f71db6d3ecff258ed",
+    "plan_tool/review.py": "c881ae1ca89c9fce5b0d77eb8e19f9254bb136610a03b3f6e00826486f5f2dca",
+    "plan_tool/schema.py": "6decaaec9074956bc971242373bb94246fe98cf3184446f0f6664db8bcee9f9e",
+    "tests/cli/test_completeness_cmd.py": "142a038f2983f7f8e31b310851c4ca5b940056258675f08c14cbc86d824b8ceb",
+    "tests/cli/test_inspect_cmds.py": "02ff0d726716d75465b407b19a3c19d50ddd8560fadfc6b22c9b08c23dc97f5f",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "0387f3fea5e91e46ee2d629678272b16976bdaf7d8584257710f42e815eb93d2",
+    "tests/test_parser.py": "d0fa77f54b951a0005b045bc13b5ba17ba9ba3ceff2d487e04c2d13bebf950d3",
+    "tests/test_project_config.py": "679dfbcf9622212a1bb9583a39a600005f6d7d52e924f8b775b238559dd1d3f3",
+    "tests/test_review.py": "1e23eb74e6335217fe654143f2d1bb052e08154a7d9288d0740baa91a0c85d31"
+  },
+  "schema_version": 1
+}

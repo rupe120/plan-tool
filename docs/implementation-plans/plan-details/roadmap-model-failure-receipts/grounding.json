@@ -1,0 +1,31 @@
+{
+  "plan_slug": "roadmap-model-failure-receipts",
+  "grounded_at": "2026-09-21T17:08:59Z",
+  "plan_fingerprint": "04b4f1dfe609a505e7fe129e7f057cdee2af688d804d7d1e41d64a5ba7a21c77",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "DATA_CONTRACT.md": "f0ffffbc0844eea047a98db2a61c76bc5edd04143a48b834d75e0440480be4e1",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/OPERATIONS.md": "9cc429edb60dcdef171329a098bfc8e1f1264c5759b858bc1d0785caca0113f7",
+    "plan_tool/data_contract.py": "d5d22b11b4937a2b6f52e1ea3a86371ed66287518e9ce7d2e765777fd919a5f4",
+    "plan_tool/detail.py": "fb424e1957aaa1c1e2bc6d1805499c5f01dbbae9c651535b1c73a3f1ab6a1a7b",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "plan_tool/run_log.py": "b1ded25bc0648537817c28f2525ac41af199ab832cb76007b3258b899e5b830a",
+    "tests/test_detail.py": "7b85aed971b798b33398234a157cf1162f63f99b74972bcd2a82e1c514582edc",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786",
+    "tests/test_run_log.py": "52a7714304152758ce143b14f70f4aa1341541f9e4e1867c3b1c1a3d83d442c6"
+  },
+  "step_authoring_fingerprints": {
+    "1": "f92a16ee4f3aa0be316bb0a70f8620d98875dd7788f8c08a6e603db9a0d2ee04",
+    "2": "2a633a97ab2c1582ec66138a0e5313e5df2ac798d1e553e55815663c40c83bcf",
+    "3": "add7c7f6faa9b5d2f17fc8dabfe1e59635d662b28367e16166d547e50e7750d8",
+    "4": "b6da9ac89f78233af823ae263151253430bd2f61350c77f97d3a3fbdc65a30ca",
+    "5": "5ed2b6c988cf37c2a657e26def957db0e8d0eb466336ca90bcd1ed840e9f008d",
+    "6": "a9cd9f0dd445f7fa46754d907b9df60e9c4d79ddfb60742d47a0ae705d234713"
+  },
+  "schema_version": 1
+}

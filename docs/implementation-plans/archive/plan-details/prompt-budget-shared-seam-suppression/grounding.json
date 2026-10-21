@@ -1,0 +1,18 @@
+{
+  "plan_slug": "prompt-budget-shared-seam-suppression",
+  "grounded_at": "2026-07-07T21:59:21Z",
+  "plan_fingerprint": "65b16df1d55fc8caa052a0ece0fb0268022b5864b7819f3cbef15b3a5a4f48c3",
+  "code_fingerprint": {
+    "BACKLOG.md": "ea7e6c583a8ab1581d5913ac4f5595e11a2a960f442049cfb75362dbf0cb377d",
+    "plan_tool/create.py": "1256ef3c17fc8b1530e5e60324d93bfbf9febc5682100e4808210d279533a991",
+    "plan_tool/detail.py": "1f4eade7d9380f2994e9c1f99fe7c381267ec42a1d4a0b06411ce2cad4de8545",
+    "plan_tool/review.py": "cdb78c3eadc3e2237ed917f7ab443f318a49c4f93ab03212e4dd75843fd91418",
+    "plan_tool/shell.py": "b51d06a7edace3e7d6e045eb5080093a890785d43fc36fca04a290643fae43de",
+    "tests/test_create.py": "6539888cf6fbc26986e829a1aa72afbf63cf5b9be1e0ff50ca10412a2d7ba43b",
+    "tests/test_detail.py": "001d1e160b1c168fb026de3d006f266ba0d3a422e04086fae4fb79b45d64deba",
+    "tests/test_review.py": "e6aa46f64e24d0cf366dd020f4ee684a16b450ef28342e66f8aa7d1d881d1590",
+    "tests/test_shell.py": "123fd94176339218ce1e82a63d2ddb11dd5e5fe06cdeec513d4d58129ded1827",
+    "tests/test_telemetry.py": "c9c320e198298716e27a1b84746a4345031bc28f6a33655010da1ffc9711f870"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,18 @@
+{
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "grounded_at": "2026-08-14T10:20:38Z",
+  "plan_fingerprint": "dccb5defd4387937244049ec9386dd3019f09b6f4d357e42a62408fe59896a14",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "plan_tool/run_log.py": "44c6a86917436bf15b84735a21775c13493628f0e8b17b749f65ed1fd2f69382",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb",
+    "tests/test_run_log.py": "ba02e630709aac5ea3a0e18846dcfbc3a745cc948395e74806b7f2d1e728816a"
+  },
+  "schema_version": 1
+}

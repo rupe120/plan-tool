@@ -1,0 +1,26 @@
+{
+  "plan_slug": "roadmap-revision-rollback",
+  "grounded_at": "2026-09-18T17:33:34Z",
+  "plan_fingerprint": "5f0ba1cc1ed90eccfdb18e9c10c34bc461f853e390cb3e3dc4c79ecc9ea12722",
+  "code_fingerprint": {
+    "BACKLOG.md": "c45daf5cf5b89b5575539e23a814a6b7207ee99c7e32fa6d1279577cdc87ae84",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap.py": "a58515b8bcbc81e2dc2f4cc2fc32778e8c20d5f22f311c447b40651b426cc085",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap.py": "bf46be48d327efc56d15ffb532759a1aa0f8425da0db85dbbe922c4039d969a9"
+  },
+  "step_authoring_fingerprints": {
+    "2": "1bf18696d1416410adca600af70a6fa9380d0429c4969c4bfc9ad31b475a8bef",
+    "3": "b9822b7c87ee78f7a1d504eea6d02b05e09667f30bf94e889321ab2c7674e6f7",
+    "4": "a2e17cea4842a2e0b6dc4c5023ac24c134b89c0ad3f2e18a2cecea0485908e4d",
+    "5": "8ee0796de8bca27bd73db2279d7163e0b7d2d48dabb6ef8297d5a9bc926421df",
+    "6": "14b273972bcc30dfaeb80334917990bd1973d65b498731c4b512d8fc2626da42"
+  },
+  "schema_version": 1
+}

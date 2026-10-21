@@ -1,0 +1,20 @@
+{
+  "plan_slug": "mechanism-reach-01-authoring",
+  "grounded_at": "2026-09-01T18:36:01Z",
+  "plan_fingerprint": "0d4e2278866d0e2b9c4c675d2cbc6b950c8b9baf07e1ae9d87eccd99a8012e79",
+  "code_fingerprint": {
+    "plan_tool/create.py": "b3a688bb07cae29b0914266cef0068df745916f9c518f5fd23dafea7a15779b9",
+    "plan_tool/detail.py": "1df9efb551e8adc7fc008655c4dcd69324fc7fa360ed7e5f77c839ba1f5ea69d",
+    "plan_tool/prompts/detail.md": "93951b1e17952e6278f2c9f02d86225590c22b280a3e06443c488ecc51764221",
+    "plan_tool/prompts/foundational-logic-sweep.md": "729f4a7f5e7d4d8bf0c8e8a393ffb7af3e2e0655a0975009663e173fa1496acd",
+    "plan_tool/prompts/synthesize-body.md": "afad452ea48fbf70eb87b74d184fced1f8b93ae8867d2ffeaed848831fc8868c",
+    "tests/test_create.py": "57ea8ad322d3b8d0da90e42b6f5f46e93c094568356df65fafa4eab4191c0296",
+    "tests/test_detail.py": "163215ca6bd86a0afd020d7cecb8223e54d3c2fd22c04a15b5d64a1bbaa5233d",
+    "tests/test_foundational_logic.py": "08b7a980e452fd744640edd97ff037ff5116e7c043200e0b3b00c5c9bb74ce6d"
+  },
+  "step_authoring_fingerprints": {
+    "1": "7ec8d1077e620ea050457e7c362def149682da7d3de1ba584ba2059bd3e4cf6c",
+    "2": "39a2a67e86bad4675248caf483b1bdb65766444e230a7b239b80af9c2b6d1b0a"
+  },
+  "schema_version": 1
+}

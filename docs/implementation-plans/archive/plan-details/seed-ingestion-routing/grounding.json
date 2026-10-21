@@ -1,0 +1,35 @@
+{
+  "plan_slug": "seed-ingestion-routing",
+  "grounded_at": "2026-09-03T18:14:03Z",
+  "plan_fingerprint": "de7ae82e15f81f5d22bd6272028e442c8513f3659e2f7e8dc35f1bfcd393305f",
+  "code_fingerprint": {
+    "BACKLOG.md": "f09e8058a4c0571a1b6cea9e6796e320f2520dac8ac55688fe5afe4a713872e1",
+    "README.md": "036dd2a41f27a6fe61aae339c55070f5e9b81584765f55516474ee53e8bd3b1a",
+    "SEED_FORMAT.md": "20a100da5071ceef20e8b8aa568bd813681fe7173f981246324f42fb05f24994",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "c96841fa7648a05062769f8313f2394d3f78bc9f53ec1f541545d3f658277aad",
+    "docs/CREATE_RESUME_FLOW.md": "7da66370ff9c6a9feff3b0b7d5bde6806dd60975bf4c58193ea917d4f6e0ce4f",
+    "docs/CREATE_SEED_INGESTION_CONTRACT.md": "554aa49f8b528b5deb14cee338b19aa1a51b7bd245ae3ecf8fdb9c4be0936c23",
+    "docs/RESUME_FLOW.md": "59829f000d4d5ab1b2525c8c5a52ab86036aad6e0b02662a8fadd8b770c9c70c",
+    "docs/cli/create.md": "faecd3d78a1d85f5e7a2620eb90fb000b1ae46d4a6048cace0e9cef3080fc19b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "9c561209da07870498ddc634b7e65787760af551990d94176e1d060bc9c8c8fb",
+    "plan_tool/cli/authoring.py": "2d13b989e2afe5bfb1fd9dca20ed7c1c9017a823ea077fd8bc967042d9efb25d",
+    "plan_tool/create.py": "76d97a7cd9583b021b166c1ceba0bcbec0f037c880202f28a67644ca3d44352f",
+    "plan_tool/distill_thresholds.py": "2088c7a36c57d6d7c51fbc8a6dbd688fe40cc57d2412f3070319005c8a02c054",
+    "plan_tool/prompts/distill-seed.md": "b7ca52ecc292d8e093d74bb2fcdce98c5bc34a5862a2ad3c5e061491119da2bb",
+    "plan_tool/split_criteria.py": "9953efa97e5e457a3ed7619bf39cffbb9d38d230551e6e79244017fd25e762b6",
+    "tests/cli/test_authoring_cmds.py": "7832c51c359d90b56a268f70cd3ee2b83c334574a9299603f2ea9a7158e6a509",
+    "tests/test_create.py": "8fad4f0c25e4df7e96b7a89ef0f00acbd5ba7d2da35232b3ee3618a97d8f725d",
+    "tests/test_distill.py": "6a617944886e2d7b0660ab5998f5665e55e9940ae12572c77ce64176ebb94e72",
+    "tests/test_split_criteria.py": "ea2c48bcd490e3aac05d4fe2c1bac22f48b5467e7618863aa3d87da693dadf99"
+  },
+  "step_authoring_fingerprints": {
+    "1": "dbcdcfef1e696035b2239d0f5cf22180d8725623ae168a0ea1cc3c1061905594",
+    "2": "961305e6b10c89d7f3674ecbac342c4e5e19a56b1a02abf4cca252b7ff9c593c",
+    "3": "9b95f7eaeb9fea2c3798b16aebcc7ba4145a9382782e26a5c047625cc7b7bea6",
+    "4": "b73690f3f758769aa3ab5d6661e77868d0b565ea2122b7db84ac2ea9bd6e4007",
+    "5": "a121abb4845652e2c94a50977fa50a5b35d1de99192a902df3aee8b2a1efcb0f",
+    "6": "6d1eef1d322763547b3416f8e57a109228e8c0da83e80aaf31412b8656309d9c",
+    "7": "966c6c19eacdfbdae6f65af4a909b0042d67a788ca1da47bfe44c1a2e6001a28"
+  },
+  "schema_version": 1
+}

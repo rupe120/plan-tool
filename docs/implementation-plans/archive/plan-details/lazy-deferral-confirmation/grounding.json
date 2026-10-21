@@ -1,0 +1,19 @@
+{
+  "plan_slug": "lazy-deferral-confirmation",
+  "grounded_at": "2026-07-15T13:24:43Z",
+  "plan_fingerprint": "4e4f82f551d6ac8f1907bfc7a2f85c1e97ec15c6a93d7d099deeef301f85f896",
+  "code_fingerprint": {
+    "BACKLOG.md": "2a23d2e704a73ef7c9f987a6997dbaf632898ddbe6f12dc317fc8afc38b58947",
+    "CLAUDE.md": "4d094b43e265485c6c5be2f7a383b003ba0d5fad94702f03be8b77dd3081ac93",
+    "plan_tool/cli/inspect.py": "5a902b77531300e8e93fd908aa8fe824c7e9a46a51ba3ed30ec76a6d70183c30",
+    "plan_tool/completeness_report.py": "5a7629758232a4a5d6166de44b37bc7559170a3d247f248971868c4bedc3a385",
+    "plan_tool/create.py": "44af6126261992dc41c93b622367a42a129b570b4ddba678c756438f784d44ae",
+    "plan_tool/detail.py": "860c279458f99aca415391c99880b3f4abe1221e81160752e72cba89ea9166fc",
+    "plan_tool/review.py": "a9db8d75cfcff1bb955182f42caca43d21cef7deac6a7fb9835c9506538aac29",
+    "tests/test_concept_emit.py": "8a0a76bd54d468ed916e1f5e9cb3b20cada1d30d05cf4302c92dc1dd06460ca2",
+    "tests/test_create.py": "13919074a9741c18d1949cda5606aadbaed15bf4f750df9ab7a7002b558d2a66",
+    "tests/test_detail.py": "97066f6478fc1ec7a6a60924b732ed63cd90dcfd41bb8a381e2b8bb39965bfa2",
+    "tests/test_review.py": "4b3790640697c286d95f397ce59e6ad4bd596006c0e64b21af7949de84204c19"
+  },
+  "schema_version": 1
+}

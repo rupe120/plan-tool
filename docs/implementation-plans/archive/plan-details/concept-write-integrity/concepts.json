@@ -1,0 +1,361 @@
+{
+  "plan_slug": "concept-write-integrity",
+  "plan_fingerprint": "38219e79e57fa11d58cf81e4f5c73e4d57010ed0c1eb6717de362975201dff70",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Fix the four concrete write-integrity gaps in the shipped concept sign-off machinery (the `concepts.json` record, three-state sign-off, `scope-review`, `Step.concept_ids` ownership, and `concept-coverage` enforcement), plus the docs/backlog reconciliation that closes them out. The machinery is functionally complete, but its write paths can lose data or let the plan prose and the concept record diverge. All fixes are deterministic write-path changes inside existing modules \u2014 no new modules, commands, schemas, or Claude calls \u2014 and the expected decomposition is ~6\u20138 steps. This plan is the deliberate distillation of the six archived concept-remediation plans (2026-07-13), cut from a ~46-step hardening program to the handful of findings whose failure modes are real today (source: reconcile audit `0129c29` on the shipped BACKLOG #121 integrations, distilled from archived plans `2-concept-remediation-1-publication-transactions.md` findings 1\u20132 and `2-concept-remediation-2-authoring-boundary-hardening.md` findings 3\u20134).",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Fix the four concrete write-integrity gaps in the shipped concept sign-off machinery (the `concepts.json` record, three-state sign-off, `scope-review`, `Step.concept_ids` ownership, and `concept-coverage` enforcement), plus the docs/backlog reconciliation that closes them out. The machinery is functionally complete, but its write paths can lose data or let the plan prose and the concept record diverge. All fixes are deterministic write-path changes inside existing modules \\u2014 no new modules, commands, schemas, or Claude calls \\u2014 and the expected decomposition is ~6\\u20138 steps. This plan is the deliberate distillation of the six archived concept-remediation plans (2026-07-13), cut from a ~46-step hardening program to the handful of findings whose failure modes are real today (source: reconcile audit `0129c29` on the shipped BACKLOG #121 integrations, distilled from archived plans `2-concept-remediation-1-publication-transactions.md` findings 1\\u20132 and `2-concept-remediation-2-authoring-boundary-hardening.md` findings 3\\u20134).\",\"title\":\"overview\"}"
+      }
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "The shipped concept machinery's write paths have four integrity gaps:\n\n1. **Create collision-archive ordering.** `create_plan()` archives a colliding plan (collision replacement, `plan_tool/create.py:5393` `_decide_replace_collisions` and the archival path near `create.py:4498`/`:5369`) *before* concept synchronization succeeds, and a later failure deletes the new plan without restoring the archived original \u2014 a failed create can strand an archived collision plan.\n\n2. **Three writers bypass the canonical synchronizer.** `concept_sync.synchronize_concepts()` is the designed single writer keeping plan prose, rendered scope, and the concept record aligned, but three production call sites write the concept sidecar directly, letting plan prose and the concept record diverge: unsigned create falls back to a direct `save_concepts` (`plan_tool/create.py:6276`, `:7021`) because the synchronizer erases unsigned scope prose; `detail` persists deferral updates directly (`plan_tool/detail.py:4234`); and `apply_narrow` saves its carved sidecar directly (`plan_tool/scope_out.py:896-901`).\n\n3. **Detail replacement safety.** `_archive_existing_detail()` (`plan_tool/detail.py:5335`, called at `:4402`/`:4745`/`:5047` and `:2156`) moves the active detail file away before the replacement body is known-good, so an interrupted or rejected regeneration can leave a step with no detail.\n\n4. **Fail-soft concept parse.** `_parse_emitted_concepts()` (`plan_tool/concept_tree.py:281`) accepts a concept whose `evidence_rationale` merely contains a literal excerpt without provenance-checking the cited evidence, and an unpaired surrogate in emitted output can crash ID derivation outside the fail-soft boundary \u2014 invalid model-emitted concept output can mutate the tree instead of failing soft.\n\nA fifth work item follows from these: update the concept-workflow docs the fixes touch (`RUNBOOK.md` / `DATA_CONTRACT.md` as applicable \u2014 the single-writer invariant belongs in `DATA_CONTRACT.md`'s concepts section) and perform the `BACKLOG.md` bookkeeping: note under #121's follow-up disposition that the write-integrity fixes shipped, and adjust #126/#127/#128 if any of their residue was absorbed here.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"The shipped concept machinery's write paths have four integrity gaps:\\n\\n1. **Create collision-archive ordering.** `create_plan()` archives a colliding plan (collision replacement, `plan_tool/create.py:5393` `_decide_replace_collisions` and the archival path near `create.py:4498`/`:5369`) *before* concept synchronization succeeds, and a later failure deletes the new plan without restoring the archived original \\u2014 a failed create can strand an archived collision plan.\\n\\n2. **Three writers bypass the canonical synchronizer.** `concept_sync.synchronize_concepts()` is the designed single writer keeping plan prose, rendered scope, and the concept record aligned, but three production call sites write the concept sidecar directly, letting plan prose and the concept record diverge: unsigned create falls back to a direct `save_concepts` (`plan_tool/create.py:6276`, `:7021`) because the synchronizer erases unsigned scope prose; `detail` persists deferral updates directly (`plan_tool/detail.py:4234`); and `apply_narrow` saves its carved sidecar directly (`plan_tool/scope_out.py:896-901`).\\n\\n3. **Detail replacement safety.** `_archive_existing_detail()` (`plan_tool/detail.py:5335`, called at `:4402`/`:4745`/`:5047` and `:2156`) moves the active detail file away before the replacement body is known-good, so an interrupted or rejected regeneration can leave a step with no detail.\\n\\n4. **Fail-soft concept parse.** `_parse_emitted_concepts()` (`plan_tool/concept_tree.py:281`) accepts a concept whose `evidence_rationale` merely contains a literal excerpt without provenance-checking the cited evidence, and an unpaired surrogate in emitted output can crash ID derivation outside the fail-soft boundary \\u2014 invalid model-emitted concept output can mutate the tree instead of failing soft.\\n\\nA fifth work item follows from these: update the concept-workflow docs the fixes touch (`RUNBOOK.md` / `DATA_CONTRACT.md` as applicable \\u2014 the single-writer invariant belongs in `DATA_CONTRACT.md`'s concepts section) and perform the `BACKLOG.md` bookkeeping: note under #121's follow-up disposition that the write-integrity fixes shipped, and adjust #126/#127/#128 if any of their residue was absorbed here.\",\"title\":\"problem statement\"}"
+      }
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "No new components are introduced; every fix lands inside the existing `concept_sync.py` / `concept_tree.py` / `create.py` / `detail.py` / `scope_out.py` surfaces \u2014 if a fix appears to need new machinery, that is the signal it belongs to BACKLOG #126/#127/#128 instead.\n\n- **Ordering over journaling for create collisions:** the archive move of a colliding plan happens only after publication succeeds \u2014 or the archived original is restored on failure. The recovery model stays git + fingerprint: a stale `plan_fingerprint` reads as \"re-derive\"; no journals or locks are added.\n- **Single-writer consolidation:** extend `synchronize_concepts()` to handle unsigned scope state (the reason the unsigned-create path currently bypasses it), then route all three direct writers (`create.py`'s unsigned fallback, `detail`'s deferral persistence, `apply_narrow`'s carved sidecar) through it, so no production code path outside `concept_sync` writes `concepts.json`. The invariant is guarded by a test asserting no production `save_concepts` caller outside `concept_sync.py`.\n- **Validate-before-replace for detail files:** validate the replacement body first (the existing seven-section gate) and restore the prior body when the write fails, so `_archive_existing_detail()` never destroys the active detail before the replacement is known-good.\n- **Fail-soft parse boundary:** invalid or mismatched emitted concept output (provenance mismatch, unpaired surrogate, malformed text) leaves the input tree byte-for-byte unchanged and reports the rejection; malformed text never escapes as an exception mid-mutation.\n- **Invoker seam discipline:** none of these fixes adds a Claude call; all are deterministic write-path changes.\n\nThe plan consumes the shipped BACKLOG #121 contracts as-is: the validated `concepts.json` sidecar record and its `save_concepts` persistence, `synchronize_concepts()` as the designed single writer, the existing seven-section detail gate, the `_parse_emitted_concepts()` fail-soft boundary (including `evidence_rationale`), and the git + `plan_fingerprint` recovery model. The cited line anchors date from reconcile audit `0129c29` and should be re-verified against current code during detailing.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"No new components are introduced; every fix lands inside the existing `concept_sync.py` / `concept_tree.py` / `create.py` / `detail.py` / `scope_out.py` surfaces \\u2014 if a fix appears to need new machinery, that is the signal it belongs to BACKLOG #126/#127/#128 instead.\\n\\n- **Ordering over journaling for create collisions:** the archive move of a colliding plan happens only after publication succeeds \\u2014 or the archived original is restored on failure. The recovery model stays git + fingerprint: a stale `plan_fingerprint` reads as \\\"re-derive\\\"; no journals or locks are added.\\n- **Single-writer consolidation:** extend `synchronize_concepts()` to handle unsigned scope state (the reason the unsigned-create path currently bypasses it), then route all three direct writers (`create.py`'s unsigned fallback, `detail`'s deferral persistence, `apply_narrow`'s carved sidecar) through it, so no production code path outside `concept_sync` writes `concepts.json`. The invariant is guarded by a test asserting no production `save_concepts` caller outside `concept_sync.py`.\\n- **Validate-before-replace for detail files:** validate the replacement body first (the existing seven-section gate) and restore the prior body when the write fails, so `_archive_existing_detail()` never destroys the active detail before the replacement is known-good.\\n- **Fail-soft parse boundary:** invalid or mismatched emitted concept output (provenance mismatch, unpaired surrogate, malformed text) leaves the input tree byte-for-byte unchanged and reports the rejection; malformed text never escapes as an exception mid-mutation.\\n- **Invoker seam discipline:** none of these fixes adds a Claude call; all are deterministic write-path changes.\\n\\nThe plan consumes the shipped BACKLOG #121 contracts as-is: the validated `concepts.json` sidecar record and its `save_concepts` persistence, `synchronize_concepts()` as the designed single writer, the existing seven-section detail gate, the `_parse_emitted_concepts()` fail-soft boundary (including `evidence_rationale`), and the git + `plan_fingerprint` recovery model. The cited line anchors date from reconcile audit `0129c29` and should be re-verified against current code during detailing.\",\"title\":\"architecture\"}"
+      }
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- Publication-transaction authority, rollback journal, recovery command, repo lock, non-delivery ledger, and seed accounting envelope \u2014 those designs are preserved under `docs/implementation-plans/archive/` and tracked as BACKLOG **#126**, **#127**, and **#128**; this seed fixes the concrete data-loss and divergence bugs in the shipped concept sign-off machinery, nothing more.\n- New modules, commands, or schemas \u2014 every fix lands inside the existing `concept_sync.py` / `concept_tree.py` / `create.py` / `detail.py` / `scope_out.py` surfaces; a fix that appears to need new machinery belongs to #126/#127/#128 instead.\n- Journals or locks \u2014 the recovery model stays git + fingerprint.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- Publication-transaction authority, rollback journal, recovery command, repo lock, non-delivery ledger, and seed accounting envelope \\u2014 those designs are preserved under `docs/implementation-plans/archive/` and tracked as BACKLOG **#126**, **#127**, and **#128**; this seed fixes the concrete data-loss and divergence bugs in the shipped concept sign-off machinery, nothing more.\\n- New modules, commands, or schemas \\u2014 every fix lands inside the existing `concept_sync.py` / `concept_tree.py` / `create.py` / `detail.py` / `scope_out.py` surfaces; a fix that appears to need new machinery belongs to #126/#127/#128 instead.\\n- Journals or locks \\u2014 the recovery model stays git + fingerprint.\",\"title\":\"out of scope\"}"
+      }
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- Convergence pressure could grow the plan past its intended ~6\u20138 steps; the seed's mitigation is to defer to the backlog entries (BACKLOG #126/#127/#128) rather than growing this plan.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- Convergence pressure could grow the plan past its intended ~6\\u20138 steps; the seed's mitigation is to defer to the backlog entries (BACKLOG #126/#127/#128) rather than growing this plan.\",\"title\":\"risks\"}"
+      }
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "Per TESTING.md, tests must not spawn a real backend (see the invoker neutralization table); all fixes are deterministic write-path changes, so unit-level tests with seams stubbed are the default tier.\n\n- Restore-on-failure tests: create collision archival (plan restored when publication fails) and detail replacement (prior body restored when the new envelope is rejected or the write fails).\n- Single-writer test: no production `save_concepts` call outside `concept_sync.py` (source scan or import-hook style, mirroring existing architectural guards).\n- Byte-identical-tree tests: rejected emitted-concept output (provenance mismatch, unpaired surrogate, malformed JSON) leaves `concepts.json` unchanged on disk.\n- Divergence regression: after routing detail/scope-out through the synchronizer, plan scope prose and the concept record agree after each mutating flow (unit-level, seams stubbed).",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"Per TESTING.md, tests must not spawn a real backend (see the invoker neutralization table); all fixes are deterministic write-path changes, so unit-level tests with seams stubbed are the default tier.\\n\\n- Restore-on-failure tests: create collision archival (plan restored when publication fails) and detail replacement (prior body restored when the new envelope is rejected or the write fails).\\n- Single-writer test: no production `save_concepts` call outside `concept_sync.py` (source scan or import-hook style, mirroring existing architectural guards).\\n- Byte-identical-tree tests: rejected emitted-concept output (provenance mismatch, unpaired surrogate, malformed JSON) leaves `concepts.json` unchanged on disk.\\n- Divergence regression: after routing detail/scope-out through the synchronizer, plan scope prose and the concept record agree after each mutating flow (unit-level, seams stubbed).\",\"title\":\"testing\"}"
+      }
+    },
+    {
+      "id": "62c5ad026e319cb492c516a319e2ecb9354e2dc133ce9949667b12e3d31ca665",
+      "title": "acceptance criteria",
+      "parent_path": [],
+      "order": 6,
+      "source": "- A create whose concept publication fails restores the archived colliding plan: the archive move happens only after publication succeeds, or the original is restored on failure (`plan_tool/create.py` collision-replacement path).\n- No production code path outside `concept_sync` writes `concepts.json`: the direct `save_concepts` writers at `plan_tool/create.py:6276`/`:7021`, `plan_tool/detail.py:4234`, and `plan_tool/scope_out.py:896-901` are routed through `synchronize_concepts()`, and a guard test asserts no production `save_concepts` caller outside `concept_sync.py`.\n- An interrupted or rejected detail regeneration never leaves a step with no detail: the replacement is validated by the existing seven-section gate before `_archive_existing_detail()` moves the active file, and the prior body is restored when the write fails.\n- Invalid or mismatched emitted concept output (provenance mismatch, unpaired surrogate, malformed JSON) leaves `concepts.json` byte-for-byte unchanged on disk and reports the rejection; malformed text never escapes as an exception mid-mutation (`_parse_emitted_concepts()`, `plan_tool/concept_tree.py:281`).\n- No fix adds a Claude call, and no new modules, commands, or schemas are introduced.\n- The final docs/status step updates `BACKLOG.md`: #121's follow-up disposition notes the write-integrity fixes shipped, #126/#127/#128 are adjusted if any residue was absorbed here, and the single-writer invariant is documented in `DATA_CONTRACT.md`'s concepts section (with `RUNBOOK.md` updated as applicable).",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "19:acceptance criteria",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- A create whose concept publication fails restores the archived colliding plan: the archive move happens only after publication succeeds, or the original is restored on failure (`plan_tool/create.py` collision-replacement path).\\n- No production code path outside `concept_sync` writes `concepts.json`: the direct `save_concepts` writers at `plan_tool/create.py:6276`/`:7021`, `plan_tool/detail.py:4234`, and `plan_tool/scope_out.py:896-901` are routed through `synchronize_concepts()`, and a guard test asserts no production `save_concepts` caller outside `concept_sync.py`.\\n- An interrupted or rejected detail regeneration never leaves a step with no detail: the replacement is validated by the existing seven-section gate before `_archive_existing_detail()` moves the active file, and the prior body is restored when the write fails.\\n- Invalid or mismatched emitted concept output (provenance mismatch, unpaired surrogate, malformed JSON) leaves `concepts.json` byte-for-byte unchanged on disk and reports the rejection; malformed text never escapes as an exception mid-mutation (`_parse_emitted_concepts()`, `plan_tool/concept_tree.py:281`).\\n- No fix adds a Claude call, and no new modules, commands, or schemas are introduced.\\n- The final docs/status step updates `BACKLOG.md`: #121's follow-up disposition notes the write-integrity fixes shipped, #126/#127/#128 are adjusted if any residue was absorbed here, and the single-writer invariant is documented in `DATA_CONTRACT.md`'s concepts section (with `RUNBOOK.md` updated as applicable).\",\"title\":\"acceptance criteria\"}"
+      }
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 7,
+      "source": "- Publication-transaction authority, typed intents, rollback journal, recovery CLI, resumable create review \u2014 BACKLOG **#126** / archived remediation-1.\n- Detail-envelope tightening, legacy-Markdown fallback removal, include-regeneration bounding \u2014 BACKLOG **#127** / archived remediation-2 steps 3, 4, 6.\n- Non-delivery ledger, lifecycle candidate-generation prep, seed accounting envelope and create-side restoration \u2014 BACKLOG **#128** / archived remediation-3a/3b/3c.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":7,\"parent_path\":[],\"source\":\"- Publication-transaction authority, typed intents, rollback journal, recovery CLI, resumable create review \\u2014 BACKLOG **#126** / archived remediation-1.\\n- Detail-envelope tightening, legacy-Markdown fallback removal, include-regeneration bounding \\u2014 BACKLOG **#127** / archived remediation-2 steps 3, 4, 6.\\n- Non-delivery ledger, lifecycle candidate-generation prep, seed accounting envelope and create-side restoration \\u2014 BACKLOG **#128** / archived remediation-3a/3b/3c.\",\"title\":\"deferred\"}"
+      }
+    },
+    {
+      "id": "70c9d551500df8eda8cfcd7180c7fd6d87b3887ef2860fd79548301ebee31b1d",
+      "title": "Restore archived colliding plan when create fails after archiving",
+      "parent_path": [],
+      "order": 8,
+      "source": "a later failure deletes the new plan without restoring the archived original \u2014 a failed create can strand an archived collision plan",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "49676d686e395df69f831dbf56145e1c3f5cbe0b8a10e3efaa3e1d1794f20a9a",
+      "title": "Archive move ordered after successful publication",
+      "parent_path": [
+        "Restore archived colliding plan when create fails after archiving"
+      ],
+      "order": 9,
+      "source": "the archive move of a colliding plan happens only after publication succeeds \u2014 or the archived original is restored on failure",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "9241e0595512e0eb9a423b1c76622c878c8747c8033ceea5762f9df7de3f2b38",
+      "title": "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts",
+      "parent_path": [],
+      "order": 10,
+      "source": "three production call sites write the concept sidecar directly, letting plan prose and the concept record diverge",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7f4aa3ee9925f4543aa201182ded991ad56c52af206866c27363a1390d80614d",
+      "title": "Extend synchronize_concepts to handle unsigned scope state without erasing scope prose",
+      "parent_path": [
+        "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts"
+      ],
+      "order": 11,
+      "source": "extend `synchronize_concepts()` to handle unsigned scope state (the reason the unsigned-create path currently bypasses it)",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "893d4caf85d4f8801653dd51b9095bb12c531c1675ae10c77a4192ce9f7f56e7",
+      "title": "Route create's unsigned save_concepts fallback through the synchronizer",
+      "parent_path": [
+        "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts"
+      ],
+      "order": 12,
+      "source": "unsigned create falls back to a direct `save_concepts` (`plan_tool/create.py:6276`, `:7021`) because the synchronizer erases unsigned scope prose",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "369cd84385590ba6c078ec40dc3adfe72ba52013fc696022ad4422d9498364c4",
+      "title": "Route detail's deferral persistence through the synchronizer",
+      "parent_path": [
+        "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts"
+      ],
+      "order": 13,
+      "source": "`detail` persists deferral updates directly (`plan_tool/detail.py:4234`)",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "97232f513e99abb5d35968fb1aedab834a718da192fb506ecc69d61179c0dacf",
+      "title": "Route scope-out's carved sidecar save through the synchronizer",
+      "parent_path": [
+        "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts"
+      ],
+      "order": 14,
+      "source": "`apply_narrow` saves its carved sidecar directly (`plan_tool/scope_out.py:896-901`)",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "2a90a02b068f0db4b60d841735991e497e11a0d101c4c312476b910687aaf92b",
+      "title": "Guard test asserting no production save_concepts caller outside concept_sync.py",
+      "parent_path": [
+        "Single-writer consolidation: all concept sidecar writes route through synchronize_concepts"
+      ],
+      "order": 15,
+      "source": "a guard test asserts no production `save_concepts` caller outside `concept_sync.py`",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "05abf6074f3de864cf35399503185d7839d81cecf3f25ed99bcef4af76799055",
+      "title": "Validate-before-replace for detail regeneration",
+      "parent_path": [],
+      "order": 16,
+      "source": "moves the active detail file away before the replacement body is known-good, so an interrupted or rejected regeneration can leave a step with no detail",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "f698838b6df201bce568899cee43c1c20a26c7c0468fc4438b60ee4103df14b7",
+      "title": "Replacement body validated by the existing seven-section gate before archiving",
+      "parent_path": [
+        "Validate-before-replace for detail regeneration"
+      ],
+      "order": 17,
+      "source": "validate the replacement body first (the existing seven-section gate) and restore the prior body when the write fails",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "6421eb9dea73372f827829d9d1d09971ff1c784448efcb97cbba32d20fc5214e",
+      "title": "Fail-soft boundary hardening for _parse_emitted_concepts",
+      "parent_path": [],
+      "order": 18,
+      "source": "invalid model-emitted concept output can mutate the tree instead of failing soft",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "d270c28a01dbc6524dff4ca2690b2ee79debe71a2e940f3648a2f57f55fc1a8e",
+      "title": "Provenance-check cited evidence_rationale excerpts",
+      "parent_path": [
+        "Fail-soft boundary hardening for _parse_emitted_concepts"
+      ],
+      "order": 19,
+      "source": "accepts a concept whose `evidence_rationale` merely contains a literal excerpt without provenance-checking the cited evidence",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "5d502f322633bdf605b52255b4ee43166be24894ab72be74f52f72056cd4b790",
+      "title": "Keep unpaired-surrogate crashes inside the fail-soft boundary",
+      "parent_path": [
+        "Fail-soft boundary hardening for _parse_emitted_concepts"
+      ],
+      "order": 20,
+      "source": "an unpaired surrogate in emitted output can crash ID derivation outside the fail-soft boundary",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "be0038245fe9e364b5e5c1d41867b4bf2bec3965e3003f0141c5aacc04014eeb",
+      "title": "Rejected output leaves concepts.json byte-for-byte unchanged",
+      "parent_path": [
+        "Fail-soft boundary hardening for _parse_emitted_concepts"
+      ],
+      "order": 21,
+      "source": "leaves `concepts.json` byte-for-byte unchanged on disk and reports the rejection; malformed text never escapes as an exception mid-mutation",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "677d7b74ee30492bc8ff67a4e35f835c0b70c75948d234aac89932f87943501f",
+      "title": "Deterministic write-path-only scope constraint",
+      "parent_path": [],
+      "order": 22,
+      "source": "No fix adds a Claude call, and no new modules, commands, or schemas are introduced",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a122ef859c5bcf8052c5b99a96205522f1489e945e79447b940440147c572590",
+      "title": "Docs and backlog reconciliation for the shipped fixes",
+      "parent_path": [],
+      "order": 23,
+      "source": "the single-writer invariant is documented in `DATA_CONTRACT.md`'s concepts section (with `RUNBOOK.md` updated as applicable)",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "3cce8fd07cb83da8593c84c85a1ed49bdbe475550c6638e70a4f83331da8acd7",
+      "title": "BACKLOG #121 follow-up disposition and #126/#127/#128 adjustment",
+      "parent_path": [
+        "Docs and backlog reconciliation for the shipped fixes"
+      ],
+      "order": 24,
+      "source": "note under #121's follow-up disposition that the write-integrity fixes shipped, and adjust #126/#127/#128 if any of their residue was absorbed here",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "ecf964a8e513be967e5a55f1135f8385dd31543d69958c22161f0025bc9829e9",
+      "title": "Publication-transaction authority, rollback journal, and recovery CLI",
+      "parent_path": [],
+      "order": 25,
+      "source": "Publication-transaction authority, typed intents, rollback journal, recovery CLI, resumable create review \u2014 BACKLOG **#126** / archived remediation-1",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "0f535e9fb3f439ee6a6e70bc86d817dece75588f722de701d7738037ea362363",
+      "title": "Detail-envelope tightening and legacy-Markdown fallback removal",
+      "parent_path": [],
+      "order": 26,
+      "source": "Detail-envelope tightening, legacy-Markdown fallback removal, include-regeneration bounding \u2014 BACKLOG **#127** / archived remediation-2 steps 3, 4, 6",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "cf9e7084e256d985c59436522d8a20a42188658278f7ab778cec28e411038954",
+      "title": "Non-delivery ledger and seed accounting envelope",
+      "parent_path": [],
+      "order": 27,
+      "source": "Non-delivery ledger, lifecycle candidate-generation prep, seed accounting envelope and create-side restoration \u2014 BACKLOG **#128** / archived remediation-3a/3b/3c",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    }
+  ],
+  "schema_version": 1
+}

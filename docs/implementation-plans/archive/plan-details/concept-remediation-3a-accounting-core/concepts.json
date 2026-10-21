@@ -1,0 +1,346 @@
+{
+  "plan_slug": "concept-remediation-3a-accounting-core",
+  "plan_fingerprint": "7cd5088d68a4996b63e03f00866361c5fe5fd5620572a82e59739ee9ba332df4",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Establish one durable conservation rule for reviewed concepts: every active reviewed concept must have one or more exact committed owners or one valid approved structured non-delivery record. Replace scattered `ConceptNode.source_metadata[\"detail_deferral_step_ids\"]` handling with a first-class `ConceptTree` contract, explicit review transitions, resumable `defer|wont_do -> include` regeneration, and read-only completeness enforcement through `plan_tool/review.py:check_concept_coverage()`. This plan runs first in the three-part remediation sequence and consumes the publication transaction API from `concept-remediation-1-publication-transactions`, the authoring boundary from `concept-remediation-2-authoring-boundary-hardening`, and the exact concept ownership rules from `concept-signoff-integrations`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Establish one durable conservation rule for reviewed concepts: every active reviewed concept must have one or more exact committed owners or one valid approved structured non-delivery record. Replace scattered `ConceptNode.source_metadata[\\\"detail_deferral_step_ids\\\"]` handling with a first-class `ConceptTree` contract, explicit review transitions, resumable `defer|wont_do -> include` regeneration, and read-only completeness enforcement through `plan_tool/review.py:check_concept_coverage()`. This plan runs first in the three-part remediation sequence and consumes the publication transaction API from `concept-remediation-1-publication-transactions`, the authoring boundary from `concept-remediation-2-authoring-boundary-hardening`, and the exact concept ownership rules from `concept-signoff-integrations`.\",\"title\":\"overview\"}"
+      }
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "Concept accounting is currently scattered through `ConceptNode.source_metadata[\"detail_deferral_step_ids\"]` and can treat weak signals such as a `wont_do` token, unsigned proposal, title match, or prose reference as if they established coverage. The system lacks a durable, explicitly reviewed representation of non-delivery and a safe transition from parked accounting to replacement delivery. As a result, malformed, stale, contradictory, or dangling ownership information can obscure whether every active reviewed concept is actually delivered or validly parked.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"Concept accounting is currently scattered through `ConceptNode.source_metadata[\\\"detail_deferral_step_ids\\\"]` and can treat weak signals such as a `wont_do` token, unsigned proposal, title match, or prose reference as if they established coverage. The system lacks a durable, explicitly reviewed representation of non-delivery and a safe transition from parked accounting to replacement delivery. As a result, malformed, stale, contradictory, or dangling ownership information can obscure whether every active reviewed concept is actually delivered or validly parked.\",\"title\":\"problem statement\"}"
+      }
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "Add one persisted record type, such as `NonDeliveryRecord`, containing a stable `record_id`, exact `concept_id`, `defer` or `wont_do` disposition, rationale/evidence, explicit review/approval state, immutable `origin_ref`, relocatable `artifact_ref`, an ordered unique tuple of positive `linked_step_ids`, and bounded provenance. Derive `record_id` from a domain-tagged, length-prefixed SHA-256 encoding of `concept_id`, disposition, and immutable `origin_ref`, in that order. Exclude `artifact_ref`, `linked_step_ids`, rationale, and review state so artifact renames and routing changes do not create a new occurrence. Document the exact bytes and pin a golden vector.\n\nSeparate structural decoding from semantic publication validation. Strict decoding rejects malformed shape, duplicate keys and IDs, unknown fields, invalid enum values, and a `record_id` that does not match its identity inputs, while still permitting structurally valid records with unknown concepts or dangling routes to load for completeness diagnostics. A stricter candidate-publication validator rejects those semantic defects before new generation is written. Migrate valid legacy detail-deferral metadata deterministically, reject ambiguous or malformed legacy values, remove the legacy key from newly persisted sidecars, and register every persisted shape in `plan_tool/data_contract.py` and `DATA_CONTRACT.md`.\n\nExtend scoped concept review so new or changed `defer` and `wont_do` records are reviewed with their disposition, evidence, origin, and artifact link. Semantic changes invalidate approval; routing-only changes to `artifact_ref` or `linked_step_ids` do not. Unattended or non-TTY execution cannot create approval.\n\nRepresent `defer|wont_do -> include` as a durable pending transition. Retain the approved non-delivery record and parked plan effect while persisting an exact `IncludeRegenerationRequest` for the concept, retained record, destination step, and intended detail artifact. Resume from that request, then publish regenerated detail, plan accounting, request removal, and record removal in one prerequisite transaction. Recoverable failure retains the parked accounting and request; rollback failure reports every uncertain path and requires recovery. Completeness treats the retained record as the effective parked decision while separately validating the reviewed include intent and regeneration request.\n\nMake `plan_tool/review.py:check_concept_coverage()` the single read-only completeness boundary. It remains inert when no current concept record exists; otherwise it reports stable findings for missing exact accounting, unknown concept IDs, dangling routing, unsigned or stale records, semantic contradictions, simultaneous whole-concept delivery and non-delivery, and malformed pending-include combinations. Many-owner delivery remains valid, invalid links never count as coverage, unsigned parked proposals remain a separate nonblocking advisory, and accounting findings are not prose-apply eligible. Keep self-consistency, Markdown/JSON reports, saved audit replay, CLI help, and generated CLI references aligned.\n\nImplementation surfaces include `plan_tool/concept_tree.py`, `plan_tool/concept_sync.py`, `plan_tool/detail.py`, `plan_tool/review.py`, `plan_tool/completeness_report.py`, `plan_tool/data_contract.py`, `plan_tool/cli/scope_review_cmd.py`, `plan_tool/cli/completeness_cmd.py`, `plan_tool/cli/completeness_phases.py`, `DATA_CONTRACT.md`, generated completeness CLI documentation, and focused concept-tree, concept-sync, detail, review, data-contract, and CLI tests. `concept-remediation-3b-lifecycle-publication` consumes the persisted records, transition policy, and validation helpers delivered here; `concept-remediation-3c-seed-restoration` depends on both earlier parts.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"Add one persisted record type, such as `NonDeliveryRecord`, containing a stable `record_id`, exact `concept_id`, `defer` or `wont_do` disposition, rationale/evidence, explicit review/approval state, immutable `origin_ref`, relocatable `artifact_ref`, an ordered unique tuple of positive `linked_step_ids`, and bounded provenance. Derive `record_id` from a domain-tagged, length-prefixed SHA-256 encoding of `concept_id`, disposition, and immutable `origin_ref`, in that order. Exclude `artifact_ref`, `linked_step_ids`, rationale, and review state so artifact renames and routing changes do not create a new occurrence. Document the exact bytes and pin a golden vector.\\n\\nSeparate structural decoding from semantic publication validation. Strict decoding rejects malformed shape, duplicate keys and IDs, unknown fields, invalid enum values, and a `record_id` that does not match its identity inputs, while still permitting structurally valid records with unknown concepts or dangling routes to load for completeness diagnostics. A stricter candidate-publication validator rejects those semantic defects before new generation is written. Migrate valid legacy detail-deferral metadata deterministically, reject ambiguous or malformed legacy values, remove the legacy key from newly persisted sidecars, and register every persisted shape in `plan_tool/data_contract.py` and `DATA_CONTRACT.md`.\\n\\nExtend scoped concept review so new or changed `defer` and `wont_do` records are reviewed with their disposition, evidence, origin, and artifact link. Semantic changes invalidate approval; routing-only changes to `artifact_ref` or `linked_step_ids` do not. Unattended or non-TTY execution cannot create approval.\\n\\nRepresent `defer|wont_do -> include` as a durable pending transition. Retain the approved non-delivery record and parked plan effect while persisting an exact `IncludeRegenerationRequest` for the concept, retained record, destination step, and intended detail artifact. Resume from that request, then publish regenerated detail, plan accounting, request removal, and record removal in one prerequisite transaction. Recoverable failure retains the parked accounting and request; rollback failure reports every uncertain path and requires recovery. Completeness treats the retained record as the effective parked decision while separately validating the reviewed include intent and regeneration request.\\n\\nMake `plan_tool/review.py:check_concept_coverage()` the single read-only completeness boundary. It remains inert when no current concept record exists; otherwise it reports stable findings for missing exact accounting, unknown concept IDs, dangling routing, unsigned or stale records, semantic contradictions, simultaneous whole-concept delivery and non-delivery, and malformed pending-include combinations. Many-owner delivery remains valid, invalid links never count as coverage, unsigned parked proposals remain a separate nonblocking advisory, and accounting findings are not prose-apply eligible. Keep self-consistency, Markdown/JSON reports, saved audit replay, CLI help, and generated CLI references aligned.\\n\\nImplementation surfaces include `plan_tool/concept_tree.py`, `plan_tool/concept_sync.py`, `plan_tool/detail.py`, `plan_tool/review.py`, `plan_tool/completeness_report.py`, `plan_tool/data_contract.py`, `plan_tool/cli/scope_review_cmd.py`, `plan_tool/cli/completeness_cmd.py`, `plan_tool/cli/completeness_phases.py`, `DATA_CONTRACT.md`, generated completeness CLI documentation, and focused concept-tree, concept-sync, detail, review, data-contract, and CLI tests. `concept-remediation-3b-lifecycle-publication` consumes the persisted records, transition policy, and validation helpers delivered here; `concept-remediation-3c-seed-restoration` depends on both earlier parts.\",\"title\":\"architecture\"}"
+      }
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- Split/merge routing transforms, scope-out publication, and seed-envelope production belong to `concept-remediation-3b-lifecycle-publication`.\n- Create-time seed restoration and the end-to-end lifecycle matrix belong to `concept-remediation-3c-seed-restoration`.\n- Publisher internals and model-output hardening remain owned by the prerequisite remediation plans.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- Split/merge routing transforms, scope-out publication, and seed-envelope production belong to `concept-remediation-3b-lifecycle-publication`.\\n- Create-time seed restoration and the end-to-end lifecycle matrix belong to `concept-remediation-3c-seed-restoration`.\\n- Publisher internals and model-output hardening remain owned by the prerequisite remediation plans.\",\"title\":\"out of scope\"}"
+      }
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- **Identity instability \u2014 high severity:** including relocatable routing or mutable review fields in `record_id` would mint a new occurrence after artifact renames or structural routing changes. Mitigation: derive identity only from the domain-tagged, length-prefixed encoding of `concept_id`, disposition, and immutable `origin_ref`, and pin the exact bytes with a golden vector.\n- **Invalid records accepted as new accounting \u2014 high severity:** unknown concepts or dangling routes could be mistaken for coverage. Mitigation: load structurally valid records for diagnostics but reject semantic defects in the stricter candidate-publication validator; invalid links never count as coverage.\n- **Ambiguous legacy migration \u2014 high severity:** guessing at malformed `ConceptNode.source_metadata[\"detail_deferral_step_ids\"]` values could create false accounting. Mitigation: migrate only valid values deterministically and reject ambiguous or malformed values.\n- **Forged or stale approval \u2014 high severity:** unattended execution or semantic edits could leave an invalid record approved. Mitigation: unattended or non-TTY execution cannot create approval, and semantic changes invalidate approval.\n- **Premature removal during `defer|wont_do -> include` \u2014 high severity:** interruption could leave a concept with neither parked accounting nor durable replacement delivery. Mitigation: retain the approved record and request until regenerated detail and plan accounting are published atomically with their removal; recoverable failures retain both.\n- **Rollback uncertainty \u2014 high severity:** a failed rollback can leave multi-file state uncertain. Mitigation: report all uncertain paths and require recovery; every durable multi-file update uses the prerequisite transaction API.\n- **Contradictory pending state \u2014 high severity:** a bare include plus a non-delivery record, a request without its retained record, or mismatched concept/origin/target fields could be accepted. Mitigation: validate the reviewed include intent and exact regeneration request separately from the retained effective parked decision.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- **Identity instability \\u2014 high severity:** including relocatable routing or mutable review fields in `record_id` would mint a new occurrence after artifact renames or structural routing changes. Mitigation: derive identity only from the domain-tagged, length-prefixed encoding of `concept_id`, disposition, and immutable `origin_ref`, and pin the exact bytes with a golden vector.\\n- **Invalid records accepted as new accounting \\u2014 high severity:** unknown concepts or dangling routes could be mistaken for coverage. Mitigation: load structurally valid records for diagnostics but reject semantic defects in the stricter candidate-publication validator; invalid links never count as coverage.\\n- **Ambiguous legacy migration \\u2014 high severity:** guessing at malformed `ConceptNode.source_metadata[\\\"detail_deferral_step_ids\\\"]` values could create false accounting. Mitigation: migrate only valid values deterministically and reject ambiguous or malformed values.\\n- **Forged or stale approval \\u2014 high severity:** unattended execution or semantic edits could leave an invalid record approved. Mitigation: unattended or non-TTY execution cannot create approval, and semantic changes invalidate approval.\\n- **Premature removal during `defer|wont_do -> include` \\u2014 high severity:** interruption could leave a concept with neither parked accounting nor durable replacement delivery. Mitigation: retain the approved record and request until regenerated detail and plan accounting are published atomically with their removal; recoverable failures retain both.\\n- **Rollback uncertainty \\u2014 high severity:** a failed rollback can leave multi-file state uncertain. Mitigation: report all uncertain paths and require recovery; every durable multi-file update uses the prerequisite transaction API.\\n- **Contradictory pending state \\u2014 high severity:** a bare include plus a non-delivery record, a request without its retained record, or mismatched concept/origin/target fields could be accepted. Mitigation: validate the reviewed include intent and exact regeneration request separately from the retained effective parked decision.\",\"title\":\"risks\"}"
+      }
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "Add focused concept-tree, concept-sync, detail, review, data-contract, and CLI tests covering persisted record identity, the golden identity vector, ordered unique `linked_step_ids`, strict structural decoding, semantic candidate-publication rejection, deterministic legacy migration, approval invalidation, unattended approval prevention, pending-include interruption and recovery, atomic publication, completeness findings, reporting, audit replay, and CLI documentation alignment. Run data-contract checks, CLI reference drift checks, the full suite, and `reconcile-code`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"Add focused concept-tree, concept-sync, detail, review, data-contract, and CLI tests covering persisted record identity, the golden identity vector, ordered unique `linked_step_ids`, strict structural decoding, semantic candidate-publication rejection, deterministic legacy migration, approval invalidation, unattended approval prevention, pending-include interruption and recovery, atomic publication, completeness findings, reporting, audit replay, and CLI documentation alignment. Run data-contract checks, CLI reference drift checks, the full suite, and `reconcile-code`.\",\"title\":\"testing\"}"
+      }
+    },
+    {
+      "id": "62c5ad026e319cb492c516a319e2ecb9354e2dc133ce9949667b12e3d31ca665",
+      "title": "acceptance criteria",
+      "parent_path": [],
+      "order": 6,
+      "source": "- Structured non-delivery records have one documented, golden-tested identity derived from immutable `origin_ref`; relocatable routing fields are excluded.\n- One record can represent split fan-out through ordered, unique `linked_step_ids`.\n- Structurally valid dangling records load for diagnostics but cannot be newly published.\n- Explicit review authors and approves non-delivery records; unattended runs cannot create approval.\n- Pending include regeneration survives interruption and removes parked accounting only after replacement delivery is durable.\n- Completeness recognizes the valid pending state without accepting a bare decision/record mismatch.\n- Every durable multi-file update uses the prerequisite transaction API.\n- Focused tests, data-contract checks, CLI reference drift checks, the full suite, and `reconcile-code` pass.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "19:acceptance criteria",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- Structured non-delivery records have one documented, golden-tested identity derived from immutable `origin_ref`; relocatable routing fields are excluded.\\n- One record can represent split fan-out through ordered, unique `linked_step_ids`.\\n- Structurally valid dangling records load for diagnostics but cannot be newly published.\\n- Explicit review authors and approves non-delivery records; unattended runs cannot create approval.\\n- Pending include regeneration survives interruption and removes parked accounting only after replacement delivery is durable.\\n- Completeness recognizes the valid pending state without accepting a bare decision/record mismatch.\\n- Every durable multi-file update uses the prerequisite transaction API.\\n- Focused tests, data-contract checks, CLI reference drift checks, the full suite, and `reconcile-code` pass.\",\"title\":\"acceptance criteria\"}"
+      }
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 7,
+      "source": "- Lifecycle transforms and seed-envelope publication are assigned to `concept-remediation-3b-lifecycle-publication` because they depend on this plan's accounting core.\n- Create-time restoration and the end-to-end lifecycle proof are assigned to `concept-remediation-3c-seed-restoration` because they depend on both earlier parts.\n- No work inside the accounting-core boundary is intentionally deferred.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":7,\"parent_path\":[],\"source\":\"- Lifecycle transforms and seed-envelope publication are assigned to `concept-remediation-3b-lifecycle-publication` because they depend on this plan's accounting core.\\n- Create-time restoration and the end-to-end lifecycle proof are assigned to `concept-remediation-3c-seed-restoration` because they depend on both earlier parts.\\n- No work inside the accounting-core boundary is intentionally deferred.\",\"title\":\"deferred\"}"
+      }
+    },
+    {
+      "id": "903405411c43647c4e17125aecfc64268794c3ec5caeb5307f32f178524cf2ab",
+      "title": "Durable concept conservation rule",
+      "parent_path": [],
+      "order": 8,
+      "source": "every active reviewed concept must have one or more exact committed owners or one valid approved structured non-delivery record.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "d8b11be56cbda526c686ebfb56c712376e2f5ccf15ed52beb872e4195eff3f71",
+      "title": "Structured non-delivery records",
+      "parent_path": [],
+      "order": 9,
+      "source": "Add one persisted record type, such as `NonDeliveryRecord`, containing a stable `record_id`, exact `concept_id`, `defer` or `wont_do` disposition, rationale/evidence, explicit review/approval state, immutable `origin_ref`, relocatable `artifact_ref`, an ordered unique tuple of positive `linked_step_ids`, and bounded provenance.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "d515e0836da92c0d9a295776f6fa0862a623c996d6458281510477718f3b2372",
+      "title": "Stable non-delivery record identity",
+      "parent_path": [
+        "Structured non-delivery records"
+      ],
+      "order": 10,
+      "source": "Derive `record_id` from a domain-tagged, length-prefixed SHA-256 encoding of `concept_id`, disposition, and immutable `origin_ref`, in that order.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "ef9c29d9b77229e4727de820935168214a90dce184bb500ef9d34d9853c5d1e6",
+      "title": "Split fan-out routing",
+      "parent_path": [
+        "Structured non-delivery records"
+      ],
+      "order": 11,
+      "source": "One record can represent split fan-out through ordered, unique `linked_step_ids`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "299a4bb9f61f4e239d1ec69c2db286c5becc57b4e6b5f406b982289ff7ca13f2",
+      "title": "Structural decoding and publication validation",
+      "parent_path": [],
+      "order": 12,
+      "source": "Separate structural decoding from semantic publication validation.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a975467da6baf53e99be8609cf81248b6dac94e095afeaf96c9773f55011d327",
+      "title": "Strict structural decoding",
+      "parent_path": [
+        "Structural decoding and publication validation"
+      ],
+      "order": 13,
+      "source": "Strict decoding rejects malformed shape, duplicate keys and IDs, unknown fields, invalid enum values, and a `record_id` that does not match its identity inputs",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "cbcfd33fb6dd7299a5467412f4069caffbcd11e2023cf62209498b4cd01c154e",
+      "title": "Semantic candidate-publication rejection",
+      "parent_path": [
+        "Structural decoding and publication validation"
+      ],
+      "order": 14,
+      "source": "A stricter candidate-publication validator rejects those semantic defects before new generation is written.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "80a00e6ba846fa05db03d71a76032b27c053796d5db31e19dace41f257f6960c",
+      "title": "Deterministic legacy deferral migration",
+      "parent_path": [],
+      "order": 15,
+      "source": "Migrate valid legacy detail-deferral metadata deterministically, reject ambiguous or malformed legacy values, remove the legacy key from newly persisted sidecars",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8ee3d9ba32747cd9b9b5ba8e50e6e26610377d45bbdb3993e8eb622abc41c67d",
+      "title": "Explicit non-delivery review transitions",
+      "parent_path": [],
+      "order": 16,
+      "source": "Extend scoped concept review so new or changed `defer` and `wont_do` records are reviewed with their disposition, evidence, origin, and artifact link.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a205e1869cd2170d6e9f24274072f5543ab405ce3d3f38ff6957a250c9dfc94b",
+      "title": "Approval invalidation and unattended approval prevention",
+      "parent_path": [
+        "Explicit non-delivery review transitions"
+      ],
+      "order": 17,
+      "source": "Semantic changes invalidate approval; routing-only changes to `artifact_ref` or `linked_step_ids` do not. Unattended or non-TTY execution cannot create approval.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "9d9905a3f37c6f39e59a0927ad5cc922fed13f94c2f08147f8ddd6bae9fd7ec6",
+      "title": "Durable include regeneration requests",
+      "parent_path": [],
+      "order": 18,
+      "source": "Represent `defer|wont_do -> include` as a durable pending transition.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "c5b2de9eba298ab32ad76fa7ab7eb03168a1ade50a7ec9103a547c588bed4c6e",
+      "title": "Atomic regeneration publication",
+      "parent_path": [
+        "Durable include regeneration requests"
+      ],
+      "order": 19,
+      "source": "publish regenerated detail, plan accounting, request removal, and record removal in one prerequisite transaction.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "19856049b59f74f045c40a03d9cb62e7149281771faaafc8dcd4e0cebef1b67b",
+      "title": "Recoverable pending-state retention",
+      "parent_path": [
+        "Durable include regeneration requests"
+      ],
+      "order": 20,
+      "source": "Recoverable failure retains the parked accounting and request; rollback failure reports every uncertain path and requires recovery.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "5e568b434d2d939f37ee5235d88ab46910eb748dfc5c46995933adaf277670c5",
+      "title": "Read-only concept completeness boundary",
+      "parent_path": [],
+      "order": 21,
+      "source": "Make `plan_tool/review.py:check_concept_coverage()` the single read-only completeness boundary.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "e34497d8eff631ae053c20b3a238866866b54ba6b28e90995f7ce93db1b51600",
+      "title": "Stable accounting findings",
+      "parent_path": [
+        "Read-only concept completeness boundary"
+      ],
+      "order": 22,
+      "source": "it reports stable findings for missing exact accounting, unknown concept IDs, dangling routing, unsigned or stale records, semantic contradictions, simultaneous whole-concept delivery and non-delivery, and malformed pending-include combinations.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "8c5dd93636b5048fcf6384d58f8840afa1aee901abe749b0c2d66e63f0129391",
+      "title": "Coverage validity rules",
+      "parent_path": [
+        "Read-only concept completeness boundary"
+      ],
+      "order": 23,
+      "source": "Many-owner delivery remains valid, invalid links never count as coverage, unsigned parked proposals remain a separate nonblocking advisory, and accounting findings are not prose-apply eligible.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "82fc3bcf669464ae4b1df8887b993fb2d3efe54127110919e64dd2d87b8816a7",
+      "title": "Persisted data-contract registration",
+      "parent_path": [],
+      "order": 24,
+      "source": "register every persisted shape in `plan_tool/data_contract.py` and `DATA_CONTRACT.md`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "fd70558ceb0e4fef2e4ecbc6d892786eb6b8c24525c4109e452de0d13d3d53a2",
+      "title": "Transactional durable updates",
+      "parent_path": [],
+      "order": 25,
+      "source": "Every durable multi-file update uses the prerequisite transaction API.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "60dacacb920cbcb6160a1907704d0a9fc11e7470e562b366b62bc39e716420c3",
+      "title": "Accounting-core verification",
+      "parent_path": [],
+      "order": 26,
+      "source": "Run data-contract checks, CLI reference drift checks, the full suite, and `reconcile-code`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    }
+  ],
+  "schema_version": 1
+}

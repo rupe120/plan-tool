@@ -1,0 +1,21 @@
+{
+  "plan_slug": "capabilities-principles-map",
+  "grounded_at": "2026-06-19T13:46:10Z",
+  "plan_fingerprint": "4ff3a3f8849897f2816f7ef02b917bbc62eec1372c88bbb9f7434e8f8deb8592",
+  "code_fingerprint": {
+    "CLAUDE.md": "de1c16a580b8a9fb380d63bf79a406bec63ff265f2ae2f9e44370e691b0dcaa7",
+    "MISSION.md": "72c27a0cdccf2905c1b44ce4a124455f61ec8992a1b71cb67f86d6d6175f8e34",
+    "PLAN_FORMAT.md": "0677495a3ded94e8fb50130aaaca5e33ed914104f2f032a957509bd86220d3db",
+    "TESTING.md": "b3efe9f42c9cf07758b188f0b5a5d2f298ce8bdc00db494768303ebaf7d78f1d",
+    "docs/cli/README.md": "7fb9087470e95b16d93f3677bd73f3999673a0095518c005701e7dc23b411781",
+    "plan_tool/cli/__init__.py": "d868f6cccb8843cefd5a7cc4c3747dc59bdec550edf1d53cd3c9bb6d7795b804",
+    "plan_tool/cli/app.py": "14a6c529e0018be03b5d1930b3622974c57eb6a15b13e6f895085caecee14943",
+    "plan_tool/cli/parser.py": "460891b93e6b66db86bcdf942c14f731e4bb901428410a6d8dfee0915400e45c",
+    "plan_tool/review.py": "6f172ef0f0126c80a9a553edc992b9fdd3758bb8bec78d08dbbc6fd40f69d554",
+    "tests/cli/package_surface_help.golden.txt": "8fd04c7c99fa9b9f5ac8ccefc0f3fc9997a9b90635ed189b32e9a018004bf828",
+    "tests/cli/test_completeness_cmd.py": "3617df76b1fbbba8c8c6514ae854cfa496c6105e562302f4a16d98a376195723",
+    "tests/cli/test_inspect_cmds.py": "5789738de1efa15db0c50aef8e578a7e80817af84958d8d2de6adfa1f3f53f2e",
+    "tests/test_review.py": "04d2b358f0bc92e8fbc52771bad394abd37584234a4352ad8a1fcebffd251d79"
+  },
+  "schema_version": 1
+}

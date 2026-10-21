@@ -1,0 +1,18 @@
+{
+  "plan_slug": "depends-on-consumes-note",
+  "grounded_at": "2026-08-08T18:47:59Z",
+  "plan_fingerprint": "eb2d30ffd73853d6d2cc9de758e2fadb3e18809483919f4a093b6fc0a9da0d99",
+  "code_fingerprint": {
+    "BACKLOG.md": "1243201d751cb348af5ba16695dd0c81acf6a93a564f68fbcc23c39246caf21c",
+    "PLAN_FORMAT.md": "82f07265c4a5ea82a9ee2a77528d8ccf0d9f67583a303f2ae44f4116980514ba",
+    "plan_tool/create.py": "dbf52a421274b2af9dd480edf9a59357867616b5d6714e57749836ed877f2ece",
+    "plan_tool/schema.py": "7623b313dbcad4438afe93e00063937aa7694ec8ea6b07ac279f3c5e2dbcfa26",
+    "plan_tool/scope_out.py": "135a41e407084423915ea9cf6bae0f9433f6df41d9f765504a3232d558607ec1",
+    "tests/test_create.py": "e9570b9beb6cf072f1b80139cb919c0ac1aae8f5396d12c149e8e809b475f0de",
+    "tests/test_detail.py": "006cbc02962c99c4c543e2e21444ce8d0c6e862dff0f94db43ce7f5db83dc323",
+    "tests/test_fingerprint.py": "e8c96c12a15d10fb721cb3f705a41e098fed3a60856e3506aa7340bad32fc427",
+    "tests/test_parser.py": "851a36960a7ca401327d286ba9df3432494ca8ef32ecd7d230e48394e35c79c2",
+    "tests/test_scope_out.py": "f15a3353dff0dcef31125740bb0fb4f82150af11f125d8ebc82bff9c4ea4b098"
+  },
+  "schema_version": 1
+}

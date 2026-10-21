@@ -1,0 +1,82 @@
+{
+  "_note": "Draft v0 wording for Part 1 and dev tuning. Frozen to questions.frozen.json before any test-split call (DESIGN.md \u00a7 Integrity rules). Key w0 is the base wording; w1/w2 are the P1d paraphrases.",
+  "domain": {
+    "type": "choice",
+    "criteria": {
+      "code-logic": "The finding is about production application code: its behavior, control flow, call sites, data handling, or a code-level contract in a non-test source file.",
+      "unit-test": "The finding is about automated test code: missing, wrong, or insufficient tests, fixtures, or test coverage.",
+      "docs": "The finding is about supporting documentation only: reference docs, READMEs, format docs, guides, or other prose that describes the software. A plan file or a step detail .md file is plan content, NOT documentation.",
+      "unknown": "The finding is about the plan itself (step soundness, ordering, scope, acceptance criteria, contracts stated in the plan) or does not fit the other options."
+    },
+    "wordings": {
+      "w0": "Which domain does this audit finding's required fix belong to?",
+      "w1": "Classify the area of the project that would have to change to resolve this finding.",
+      "w2": "If someone fixed this finding, what kind of artifact would they mainly be editing?"
+    }
+  },
+  "self_seeded": {
+    "type": "noul",
+    "criteria": {
+      "true": "The problem the finding describes exists only because of text added or changed by the prior edit shown in `prior_edit`.",
+      "false": "The problem the finding describes was already present before the prior edit, or the prior edit is empty or unrelated to it."
+    },
+    "wordings": {
+      "w0": "Does this finding describe a problem that the prior edit introduced?",
+      "w1": "Was the defect named in this finding created by the most recent edit to the plan?",
+      "w2": "Is this finding a reaction to the prior edit rather than to the plan as it stood before that edit?"
+    }
+  },
+  "materiality": {
+    "type": "score",
+    "criteria": [
+      "Advisory: wording, polish, or clarity; the plan would still produce the right result without the fix.",
+      "Local gap: one step's contract, test, or detail is incomplete or ambiguous, but the plan's overall result is still right.",
+      "Blocking: as written, the plan would build the wrong thing, contradict itself, or fail its own acceptance criteria."
+    ],
+    "wordings": {
+      "w0": "How material is this finding to the plan's correctness?",
+      "w1": "How serious is the defect this finding describes for the plan's outcome?",
+      "w2": "How much would ignoring this finding harm the result of executing the plan?"
+    }
+  },
+  "t2_adds_cited_text": {
+    "type": "noul",
+    "criteria": {
+      "true": "The plan text the finding cites or discusses appears in the added lines of `prior_edit`.",
+      "false": "The cited text does not appear among the added lines of `prior_edit`, or `prior_edit` is empty."
+    },
+    "wordings": {
+      "w0": "Does the prior edit add the plan text this finding cites?"
+    }
+  },
+  "t2_names_edit_contract": {
+    "type": "noul",
+    "criteria": {
+      "true": "The finding names a rule, contract, field, or requirement that the prior edit introduced.",
+      "false": "The rule or requirement the finding names existed before the prior edit."
+    },
+    "wordings": {
+      "w0": "Does this finding name a contract or requirement that the prior edit created?"
+    }
+  },
+  "t2_false_before_edit": {
+    "type": "noul",
+    "criteria": {
+      "true": "Applied to the plan as it was before `prior_edit`, the finding would be false or would not apply.",
+      "false": "The finding would also have been true of the plan before `prior_edit`."
+    },
+    "wordings": {
+      "w0": "Would this finding have been false before the prior edit was made?"
+    }
+  },
+  "t3_preserves_interface": {
+    "type": "noul",
+    "criteria": {
+      "true": "The tests this step adds or changes would import, collect, and pass unmodified against the code as it was before the step: the step keeps every symbol, module path, signature, and observable behavior those tests rely on.",
+      "false": "Those tests depend on something the step creates, renames, moves, or changes (a new symbol, module, signature, or behavior), so they would fail or not collect against the pre-step code."
+    },
+    "wordings": {
+      "w0": "Would this refactor step's post-change tests pass, unmodified, against the code as it was before the step?"
+    }
+  }
+}

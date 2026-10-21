@@ -1,0 +1,21 @@
+{
+  "plan_slug": "completeness-apply-split-bridge",
+  "grounded_at": "2026-07-08T16:16:42Z",
+  "plan_fingerprint": "0cb04095c07beae37b5b9104ff5e52fac99df4677980c3565c66880ba2ea1cd7",
+  "code_fingerprint": {
+    "BACKLOG.md": "a88a24d5217ef665cba48668a4f89cf8c0f909dcb974efe46ca551e1d1835291",
+    "CLAUDE.md": "962dc1e8faeb30b0e05ba6ba18d2bf727bcb8eeb5c996b092597226cccf98437",
+    "DATA_CONTRACT.md": "a0051a6a70c5d810faec5bec2d9760619958951cf0a5aeecc2d11a7a7dc0fa6c",
+    "RUNBOOK.md": "92ba541b2a2898ca666e7814ae989b53bd5cd00f909f200373ff2b9be8aad729",
+    "docs/cli/completeness-apply.md": "0ee34721e69a9deb474234513d4df1dfd6310bd3a2a3aacd0ce9652181238d71",
+    "plan_tool/cli/completeness_cmd.py": "9d12e95168ded73c7cbcdd7eadff1c03ed9fc3d5ed357a29f396c04926c0ef55",
+    "plan_tool/cli/completeness_phases.py": "6c32980d9a10f26cb0d2fc2dda71217aa71ddbea6049d6f27706c6613ab61aea",
+    "plan_tool/cli/review_actions.py": "d3d9a0999a03d6caff0689a49328cd8581961be23d2b96a7c213c49085452b7d",
+    "plan_tool/review_walk.py": "28d68a04e4ab8cae70223ab787b23fa61435535abd177d50969ff411ff89727f",
+    "tests/cli/test_completeness_cmd.py": "cdc44ce5197fa99a244a0de1f5aa2adaa907e0e95d923a4d5434b96f669e6ece",
+    "tests/cli/test_review_actions.py": "51a0de1859c25d20f43eafe5bb3acda3fcdd3368c8e7fc1bb3a9e7130ac9eadc",
+    "tests/test_data_contract.py": "f308ec361508e48ae49e3a92644f778abfd3c0d10a8a19414563907ab44cbb38",
+    "tests/test_review_walk.py": "fa7f986aa8e434a459f9cf87b4f7c1c2ac346f0bcf0d4dbe0df1dea5f4dbe525"
+  },
+  "schema_version": 1
+}

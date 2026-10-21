@@ -1,0 +1,19 @@
+{
+  "plan_slug": "direct-pipeline-repo-root-resolution",
+  "grounded_at": "2026-07-18T01:39:57Z",
+  "plan_fingerprint": "778f8bbd68a125d83243caf0aa8c2a35a743ad9dbe01265bc9df51dbf950f12c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "d20bd412ba3fef039468cd73def9f0adf29a1095d0f8bd52bbb531278249a509",
+    "plan_tool/cli/direct_cmd.py": "538ccbfdd19aefa83ae3376224f16f4c573fc52ec10d1c13d49d01432e1057be",
+    "plan_tool/cli/gitcommit.py": "9d83e53c2f217bcfb331293c9631bbd9b6b99eebaf2054ae650ef7a1f1bbf8ac",
+    "plan_tool/cli/inspect.py": "06fd4d36598ed3f328494db80d085b65d70cc9333dfdab095ddfe2b78afda5e0",
+    "plan_tool/cli/manifest.py": "ce4759166cdac2cd9c51e6a378582484d829c6ec2cfb4c339a7412c9d5f143ce",
+    "plan_tool/create.py": "3b21890bc55f2ad0056e6678dd6b3163a9535e9e55fcc9c89cc000157d90a5f5",
+    "tests/cli/test_direct_cmd.py": "6e312f78b6fc4c71e38479b3985cf25b48cf90479b500fd1804d2fc1c00ab6f9",
+    "tests/cli/test_gitcommit.py": "9c86103719a926d4f411cf082fb84e9a47e198cb91b1b8a217f3b5e7b1082b95",
+    "tests/cli/test_inspect_cmds.py": "e11dbd1dc9c603e657ea99051c50fb52feb1906e4fbf64860cb27de26d3c1bef",
+    "tests/cli/test_manifest_cmds.py": "153197aa6c1428ce2b828610022a0d5de7b2ca18d987de32c635b82d856a4b21",
+    "tests/test_create.py": "7c770713714d5ade0e1f9cf894bd628275b16b6db0f0a17a1716cbfa08522cef"
+  },
+  "schema_version": 1
+}

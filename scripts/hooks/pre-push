@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Tracked pre-push hook: fail the push if the test suite does not pass.
+# Verify-only — it never edits files; on failure it points you at the log
+# so the fix stays explicit and reviewable.
+#
+# Runs the whole parallel suite, not a subset: a step can author
+# its own tests, pass them, and still break a module it never touched, which
+# is exactly how two assertions in tests/test_review.py stayed red on main
+# across four commits (see BACKLOG #234).
+#
+# Installed by `scripts/hooks/install.sh` (sets core.hooksPath). Bypass a
+# single push with `git push --no-verify` when you know the tree is fine.
+set -euo pipefail
+
+# Locate the repo root so the hook works regardless of cwd.
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+# A push from a secondary worktree exports GIT_DIR (the worktree's gitdir) to
+# this hook. The suite's `git init`/`git config` calls in tmp dirs would then
+# act on the shared repository, so drop every repo-local variable first.
+unset $(git rev-parse --local-env-vars)
+
+log=/tmp/plan-tool-prepush.log
+
+echo "pre-push: running the full parallel test suite…" >&2
+
+if ! uv run pytest tests/ -q -n auto >"$log" 2>&1; then
+    tail -40 "$log" >&2
+    echo >&2
+    echo "pre-push: the test suite failed — push blocked." >&2
+    echo "          Full output: $log" >&2
+    # The CLI reference is generated, so its failure has a specific remedy
+    # the generic "go fix the test" message would lose.
+    if grep -q "test_cli_reference" "$log"; then
+        echo >&2
+        echo "          A tests/cli/test_cli_reference.py failure usually means" >&2
+        echo "          docs/cli/ drifted from the argparse parser." >&2
+        echo "          Regenerate with: python -m plan_tool.cli_reference --write" >&2
+        echo "          then commit docs/cli/ and push again." >&2
+    fi
+    echo >&2
+    echo "          (bypass once with: git push --no-verify)" >&2
+    exit 1
+fi
+
+echo "pre-push: test suite passed." >&2

@@ -1,0 +1,329 @@
+usage: plan-tool [-h] [--version] [--plans-dir PLANS_DIR]
+                 [--manifest MANIFEST] [--repo-root REPO_ROOT]
+                 [--no-wait-on-rate-limit]
+                 [--on-rate-limit {wait,switch,stop,ask}]
+                 [--fallback-backend BACKEND] [--backend BACKEND]
+                 [--model MODEL] [--prompt-mode {combined,split}]
+                 [--experiment-arm NAME=ARM] [-v | --debug]
+                 {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,completeness-apply,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,direct-jira,direct-run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill} ...
+
+plan-tool command-line entry point.
+
+Subcommands are organized by **intent** — what user problem each one
+solves. New subcommands add a per-intent command module exposing
+register(subparsers) and append it to COMMAND_MODULES in
+plan_tool/cli/app.py; keep this catalog and the SKILL.md "Subcommands
+at a glance" section in sync.
+
+Discovery & inspection — read plan state; never call claude.
+  plan-tool list                           Enumerate plan-tool-compatible plans.
+  plan-tool status <name>                  Show step-by-step status for one plan.
+  plan-tool validate <name>                Schema-check a plan's frontmatter.
+
+Project setup — capture repo-owned metadata; never infer it or call claude.
+  plan-tool init --intent "..." [--non-goal "..."] [--decision "..."]  Initialize a tracked project profile once; requires operator-supplied content and refuses to overwrite it.
+
+Roadmap — turn a concept brief into staged architecture artifacts, one rung above `create`.
+  plan-tool roadmap <slug> [--from-existing <concept.md>] Non-interactively stage a concept brief into the four gated architecture artifacts (domain, constraints, components, roadmap), plus draft seeds, and publish them as one immutable version under docs/implementation-plans/roadmaps/<slug>/; the accepted head is written last. A failed run holds its gate-clean stages and the next run with the same brief resumes from them; a changed brief is refused with its remedy, and a roadmap that already has an accepted head refuses a stage run. Deterministic gates retry each stage's claude call before writing; exits non-zero only when a stage exhausts its retry budget.
+  plan-tool roadmap <slug> --apply [-y]    Apply-only: promote the draft seeds named by 04-roadmap.md into plan-seeds/ after a preview and confirm (-y skips the confirm). Runs no stage and invokes no backend.
+  plan-tool roadmap <slug> --refresh-seeds  Reprocess invalidated derived seeds against the current codebase, restoring archived copies and writing a before/after difference report without rewriting roadmap artifacts.
+  plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html} [--mode {current,review}] [--id ROW_ID] [--output PATH]   Inspect: render a compact review summary, traceability walk, decision ledger, reverse citation index, draft-seed state report, or a self-contained, print-formatted HTML page of every artifact row with its resolvable references linked and dangling or ambiguous ones marked, over the accepted roadmap version. --mode selects design-state (current, default) or the review channel (review); --id scopes --view index to one row's citers. Every view but html prints; html writes <roadmap-dir>/review.html by default (--output PATH chooses the destination, --output - prints instead). Runs no stage or backend and changes no canonical roadmap state.
+
+Authoring — produce or restructure plan files on disk.
+  plan-tool create [slug] [--no-iterate] [--no-synthesize-body] [--no-fetch-docs] [--no-distill]   Interactively author a new plan (slug optional: suggested from --from/--from-existing when omitted); resumable; a distill first-pass reorganizes a free-form seed (or proposes a multi-plan split); runs post-write convergence by default (--no-iterate to opt out); runs body-section synthesis by default (--no-synthesize-body to opt out), grounding it in fetched reference-doc content (--no-fetch-docs to opt out).
+  plan-tool detail <name> [--iterate]   Draft developer-actionable per-step detail markdown; resumable; emits a one-shot write by default (--iterate to opt into the per-step convergence loop).
+  plan-tool split <name> --step N --into "..." --into "..."   Split one step into named sub-steps on demand (renumbers + rewires the plan), author their detail files, then loop on the completeness audit; resolves a completeness BLOCKED finding end-to-end.
+  plan-tool merge <name> --steps N --steps M [--title "..."]   Fold a contiguous set of steps into one on demand (renumbers + renames downstream detail files), re-author the merged step's detail file, then loop on the completeness audit; confirmed at the TTY (bypassed under --yes / non-TTY).
+  plan-tool scope-out <name> --step N [--apply] [-y]   Carve an over-packed step out of a plan into a create --from-existing forward-seed and narrow the plan; recommend-only by default, --apply plus confirm or -y to mutate.
+  plan-tool scope-review <name> --concept ID --decision ID=STATE   Review and sign off an explicit concept scope, then synchronize accepted decisions to the plan.
+
+Plan decisions — record an explicit operator/session decomposition decision.
+  plan-tool decide <name> --outcome {single,split,scope-out,reframe,withdraw,defer} --anchor {plan|step:N} --rationale "..."  Append one explicit decision record for a real plan or step. It never changes the plan, asks no model, and reports a failed telemetry append rather than claiming success.
+
+Annotate — judge an existing plan against the code and emit a forward seed.
+  plan-tool annotate <plan-file>           Classify each section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED against the repo; write <name>.annotated.md (verbatim + status blocks) and a carryover <name>.seed.md for `create --from-existing`. --archive moves the original.
+
+Audit — check the plan and code agree, or judge the plan's design; never advances step status.
+  Reconcile (mutating) — bring the plan and code into agreement:
+    plan-tool reconcile-plan <name> [--step N | --all]  Edit the PLAN to match the code — plan-wide drift audit (one claude call + deterministic checks) (aliases: reconcile, review).
+    plan-tool detail <name> --reconcile [--step N | --all]  Per-step plan-side reconcile — edit a step's detail to match code; --all sweeps not-yet-done steps.
+    plan-tool reconcile-code <name> [--step N | --all]  Edit the CODE to match the plan — lands edits inline (legacy form: run --reconcile).
+    plan-tool reconcile-plan-walk <name>     Apply a saved reconcile's findings interactively, no claude call (aliases: reconcile-walk, review-walk).
+  Verify (read-only) — judge finished (done) steps:
+    plan-tool verify-all <name> --rollup     Per-step pass/warn/fail reconcile verdict over done steps (alias: verify; add --deep for per-criterion).
+    plan-tool verify-all <name> --mode <m>   Sweep a read-only review mode across every done step (aliases: reconcile-all, review-all).
+    plan-tool run <name> --mode <review>     Read-only review mode on a single step (check/optimize/document/test/security/lint).
+  Completeness — judge the plan's own design (concepts, coverage):
+    plan-tool completeness-audit <name>      Are the plan's concepts correct + complete + unambiguous? Deterministic checks + sampled claude audit, grounded in the detail bundle.
+    plan-tool completeness-apply <name>      DEPRECATED, going away (BACKLOG #367) — close conceptual gaps with a session-directed edit instead. Still clears files-coherence drift deterministically (adds cited real-file paths to allowed_mentions:, no claude).
+    plan-tool data-contract-apply <name>     Walk saved DATA_CONTRACT.md drift findings from the most recent completeness audit; verifies saved payload freshness before editing.
+    plan-tool gate-status <name> --json      Read saved audit gate verdicts without running an audit.
+    plan-tool convergence <name>             Is the audit/apply loop converging? Reads saved report history; no claude, exits 0.
+    plan-tool split-criteria [<plan>]        Show the split-criteria legend, or (with a plan) why that plan is shaped the way it is; no claude; criterion results exit 0.
+
+Execution — drive code edits by running plan steps.
+  plan-tool run <name> [--iterate]         Execute a step via a fresh claude subprocess; default --mode advances plan state; --iterate loops reconcile.
+  plan-tool run <name> --all [--max-steps N]  Sweep every runnable step in one invocation; halts on first failure; implies -y.
+
+Integration — emit artifacts for external systems.
+  plan-tool jira <name>                    Emit copy-paste-ready JIRA stories (writes under plan-details/).
+  plan-tool jira config                    Manage epics + plan→epic assignments (interactive wizard).
+
+State management — inspect or clear plan-tool's own caches.
+  plan-tool checkpoint {list|show|clear}   Manage on-disk resume checkpoints under <repo>/.plan-tool/checkpoints/.
+  plan-tool runs {list|show|diff|profile|clear}  Inspect / profile / manage on-disk run logs under .plan-tool/runs/.
+  plan-tool lessons consolidate            Dedup/conflict reconciliation across lessons files; recurrence-aware ordering reads .plan-tool/lessons-warnings.jsonl (diff by default; --apply to rewrite).
+  plan-tool register <path-or-slug>        Adopt an on-disk plan file into the structured-plans manifest.
+  plan-tool deregister <path-or-slug>      Remove a plan from the manifest (leaves the file on disk).
+  plan-tool sweep [--dry-run|--report-only] Archive completed plans (deregister + move), report on partial and unregistered plans.
+  plan-tool withdraw <path-or-slug> --reason "..."  Archive a plan being abandoned (as distinct from completed/superseded): move to archive/<stem>.withdrawn.md, move its plan-details, prepend a dated reason header, deregister. --reason is required.
+  plan-tool attach-branch <plan> <branch>  Attach a plan to an ad-hoc branch (untracked local git config; off unless branch awareness is enabled); re-homes the plan onto its own branch on a convention-name collision.
+  plan-tool detach-branch <plan>           Clear a plan's ad-hoc branch override (leaves the branch on disk in place; off unless branch awareness is enabled).
+
+Workspaces — provision and inspect isolated per-plan git worktrees / clones.
+  plan-tool worktree add <plan> [--branch B] [--clone]   Provision (or reuse) the plan's isolated workspace at its deterministic per-slug path, on the plan's branch (born inside the add); prints a cd hint. No claude call.
+  plan-tool worktree list                  Report every registered plan's workspace: kind (worktree/clone), branch, path, dirty/clean. No claude call.
+
+Setup — opt-in integration wiring (the CLI is standalone; never required).
+  plan-tool install-skill [--user|--copy]  Install the bundled Claude Code / Codex / Cursor skill so an agent can drive plan-tool; symlinks into <root>/skills/plan-tool/ by default (--root .claude|.agents, --user for ~/, --copy to commit); --integration codex defaults to .agents and copies. No claude call.
+
+positional arguments:
+  {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,completeness-apply,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,direct-jira,direct-run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill}
+    list                list plan-tool-compatible plans
+    status              show step-by-step status for a plan
+    init                capture one confirmed project intent in a tracked
+                        profile
+    validate            validate a plan's frontmatter
+    register            adopt an on-disk plan file into the structured-plans
+                        manifest (path or slug accepted)
+    deregister          remove a plan from the structured-plans manifest (path
+                        or slug accepted; leaves the file on disk)
+    sweep               archive completed plans (top-level status: completed
+                        AND all steps done), report on partially implemented
+                        plans, offer to prune manifest entries whose files no
+                        longer exist, and report unregistered plan files found
+                        beside registered plans
+    withdraw            archive a plan being abandoned, as distinct from one
+                        that completed (sweep) or was superseded (create):
+                        moves the file to archive/<stem>.withdrawn.md, moves
+                        its plan-details alongside it, prepends a dated reason
+                        header, and deregisters it
+    checkpoint          inspect / manage on-disk resume checkpoints under
+                        <repo>/.plan-tool/checkpoints/. Subactions: list /
+                        show / clear.
+    runs                inspect / manage on-disk run logs under <repo>/.plan-
+                        tool/runs/. Subactions: list / show / diff / profile /
+                        clear.
+    lessons             maintenance verbs over plan-tool's lessons files
+                        (general.md / project.md / per-plan lessons.md).
+                        Subactions: consolidate.
+    roadmap             stage a concept brief into gated architecture
+                        artifacts under docs/implementation-
+                        plans/roadmaps/<slug>/ (one rung above create); use
+                        --apply to promote draft seeds into plan-seeds/ or
+                        --refresh-seeds to regenerate invalidated seeds
+    create              interactively author a new plan
+    reconcile-plan (reconcile, review)
+                        reconcile the plan against the current codebase (edits
+                        the plan)
+    reconcile-code      audit the code against the plan (plan is canonical)
+                        and land code edits inline; plan-rooted findings
+                        redirect to 'detail --reconcile' (legacy form: 'run
+                        --reconcile')
+    reconcile-plan-walk (reconcile-walk, review-walk)
+                        walk and apply the findings from a saved reconcile
+                        (any kind: reconcile-plan / reconcile-code / detail
+                        --reconcile), no claude call; loads the newest
+                        eligible final save for <name> by default
+    verify-all (reconcile-all, review-all, verify)
+                        audit every done step (read-only): --mode sweeps a
+                        review mode and dumps reports; --rollup prints a per-
+                        step pass/warn/fail verdict
+    completeness-audit  conceptual audit of a plan: deterministic authoring-
+                        gap checks (body sections, detail files, lessons) plus
+                        a claude call judging whether the plan's own concepts
+                        are correct, complete, and unambiguous (grounded in
+                        the per-step detail bundle where present + code at
+                        HEAD; a bare plan with no detail yet is audited at the
+                        plan/concept level). Conceptual gaps are reported for
+                        a session-directed edit, not applied by a tool
+                        command. A completed audit exits 0; findings are in
+                        the report (and --json exposes stage-aware
+                        has_blocking_findings, conceptual_bar_blocking_ids,
+                        and audit_incomplete), or use --fail-on-findings to
+                        gate CI on bar-aware blockers and incomplete audit
+                        samples. With --iterate, applies the deterministic
+                        well-formedness findings and converges on them;
+                        conceptual ambiguity is reported with correctness, and
+                        both it and completeness gaps are persisted unapplied
+                        for a session-directed edit (#85).
+    completeness-apply  DEPRECATED, going away (BACKLOG #376) — walking
+                        findings one gap at a time is slow and obscures the
+                        convergence signal; read the saved report and make a
+                        session-directed edit to the plan/detail files
+                        instead. walk the conceptual gaps from the most recent
+                        saved `completeness-audit` and apply gap-closing edits
+                        via claude, one finding at a time, AND
+                        deterministically clear files-coherence drift (no
+                        claude: add cited real-file paths to the step's
+                        allowed_mentions). Walks BOTH conceptual sources —
+                        plan-correctness (including material ambiguity) first,
+                        then plan-completeness — which the audit persists
+                        unapplied (read-only-audit split, #85). Pairs with
+                        completeness-audit; does NOT re-run the audit. A
+                        current saved arm-clustering advisory prints once as a
+                        non-blocking keep-or-carve prompt before serial work
+                        or parallel worker provisioning; a stale advisory is
+                        hidden without changing the saved walk. Always
+                        interactive: one per-gap confirm so you review each
+                        conceptual issue in context (no blanket auto-apply).
+                        On a bare plan only plan-correctness gaps are walked;
+                        other saved sources are reported as withheld until
+                        detail exists. The deterministic files-coherence fix
+                        runs only when a complete detail bundle exists. On a
+                        non-interactive stdin the walk is skipped and the gaps
+                        are reported. `--anchor <slug>` (repeatable) restricts
+                        to specific gaps.
+    data-contract-apply
+                        walk saved DATA_CONTRACT.md drift findings from a
+                        completeness audit
+    gate-status         report saved audit gate verdicts as versioned JSON
+    convergence         diagnose whether a plan's audit/apply loop is
+                        converging
+    telemetry           analyze recorded heuristic decisions and their
+                        outcomes
+    decide              record an explicit plan decomposition decision
+    jira                emit copy-paste-ready JIRA story titles and
+                        descriptions; `jira config` opens the configuration
+                        wizard
+    detail              draft developer-actionable per-step detail markdown
+                        files
+    run                 execute a step via claude subprocess
+    direct-jira         DEPRECATED, going away (BACKLOG #376) — exists only to
+                        chain completeness-apply's gap-by-gap apply, retiring
+                        for the same reason (slow, and obscures the
+                        convergence signal); drive create / detail / jira as
+                        separate, hand-reviewed steps instead. chain create →
+                        detail → completeness-apply → jira in one process and
+                        publish paired Jira stories plus a developer handoff
+                        (small plans only)
+    direct-run          DEPRECATED, going away (BACKLOG #376) — exists only to
+                        chain completeness-apply's gap-by-gap apply, retiring
+                        for the same reason (slow, and obscures the
+                        convergence signal); drive create / detail / run /
+                        reconcile-code as separate, hand-reviewed steps
+                        instead. chain create → detail → completeness-apply →
+                        run → reconcile-code in one process (small plans only)
+    suggest-gates       propose gate: commands for a plan's remaining steps,
+                        grounded in its already-built (done) steps
+    bench               run the backend-quality benchmark matrix and report
+                        raw results. Subactions: run / report.
+    annotate            judge an existing plan/notes file against the current
+                        code and emit two artifacts — an additive
+                        `<name>.annotated.md` (verbatim original + per-section
+                        IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED status) and a
+                        carryover `<name>.seed.md` for `create --from-
+                        existing`; read-only except the opt-in `--archive`.
+    attach-branch       attach a registered plan to an ad-hoc branch
+                        (untracked local git-config override; refuses unless
+                        branch awareness is enabled; re-homes the plan onto
+                        its own branch on a convention-name collision)
+    detach-branch       clear a registered plan's ad-hoc branch override
+                        (refuses unless branch awareness is enabled; leaves
+                        the branch on disk in place)
+    scope-out           carve an over-packed step out of a plan into a create
+                        --from-existing seed (recommend-only; --apply to
+                        mutate)
+    scope-review        review and sign off scoped concept decisions, then
+                        synchronize them to the plan
+    split-criteria      show the split-criteria legend, or (with a plan) why
+                        that plan is shaped the way it is (read-only; no
+                        claude; criteria exit 0)
+    worktree            provision and inspect isolated per-plan workspaces
+                        (worktrees / clones)
+    root                report the repo root plan-tool discovers from here
+    split               split a step into named sub-steps on demand, author
+                        their detail files, then loop on the completeness
+                        audit
+    merge               merge a contiguous set of steps into one on demand,
+                        combine + re-author their detail file, then loop on
+                        the completeness audit
+    install-skill       install the bundled Claude Code / Codex / Cursor skill
+                        into a project (opt-in; the CLI is standalone and
+                        needs no skill)
+
+options:
+  -h, --help            show this help message and exit
+  --version             print the plan-tool version and exit.
+  --plans-dir PLANS_DIR
+                        scan this directory for *.md plans (overrides
+                        PLAN_TOOL_PLANS_DIR). If omitted and
+                        PLAN_TOOL_PLANS_DIR is unset, use
+                        structured_plans.json in the plan_tool package plus
+                        repo root from .git.
+  --manifest MANIFEST   override path to structured_plans.json (default:
+                        beside plan_tool locator). Only used when neither
+                        --plans-dir nor PLAN_TOOL_PLANS_DIR is set.
+  --repo-root REPO_ROOT
+                        pin the repo root explicitly (overrides
+                        PLAN_TOOL_REPO_ROOT and the walk-up `.git` heuristic).
+                        Use this when plan-tool's own folder is a nested git
+                        repo, when the skill is installed somewhere other than
+                        `.agents/`, or when the checkout has no `.git` (CI
+                        sparse checkouts).
+  --no-wait-on-rate-limit
+                        legacy alias for --on-rate-limit stop. Cannot be
+                        combined with --on-rate-limit.
+  --on-rate-limit {wait,switch,stop,ask}
+                        choose the default response for an ordinary
+                        recoverable rate limit. 'wait' sleeps until reset and
+                        retries; 'switch' retries the current call with
+                        --fallback-backend; 'stop' returns immediately; 'ask'
+                        prompts when interactive. A confirmed terminal plan
+                        quota bypasses these actions. Overrides
+                        PLAN_TOOL_ON_RATE_LIMIT. Precedence: this flag > --no-
+                        wait-on-rate-limit > PLAN_TOOL_ON_RATE_LIMIT > wait.
+  --fallback-backend BACKEND
+                        backend to retry the current ordinary rate-limited
+                        call with when --on-rate-limit switch is active. A
+                        terminal plan quota does not use a fallback backend.
+                        Overrides PLAN_TOOL_FALLBACK_BACKEND.
+  --backend BACKEND     select the CLI backend that runs steps. Registered
+                        backends (claude, codex, cursor) run with their
+                        shipped integration; an unregistered name is
+                        synthesized into a provisional backend (generic argv,
+                        models.dev-sourced default model) so a new CLI is
+                        batch-invocable before an integration manifest exists.
+                        Overrides model-family inference and the
+                        PLAN_TOOL_BACKEND env var; default claude. Precedence:
+                        this flag > inferred --model family >
+                        PLAN_TOOL_BACKEND > claude.
+  --model MODEL         model the selected backend runs steps with, passed via
+                        its model_flag (--model for claude and cursor, -m for
+                        codex). When --backend is absent, gpt-* / chatgpt-* /
+                        o1 / o3 / o4 / codex-* select codex, claude-* selects
+                        claude, and gemini-* selects gemini. Other names stay
+                        on the configured backend. Free-form model names
+                        remain backend-specific and open-ended, so this takes
+                        no choices. Precedence: this flag > .plan-
+                        tool/backends.json backends.<name>.model > the
+                        backend's default_model > omit.
+  --prompt-mode {combined,split}
+                        A/B prompt mode for create/detail authoring.
+                        'combined' (default) is the legacy single-call prompt;
+                        'split' runs the lifted-out foundational-logic call.
+                        Overrides PLAN_TOOL_PROMPT_MODE. Precedence: this flag
+                        > --experiment-arm prompt-mode=… >
+                        PLAN_TOOL_PROMPT_MODE > combined.
+  --experiment-arm NAME=ARM
+                        Select an A/B experiment's arm generically, e.g.
+                        --experiment-arm prompt-mode=split. Repeatable for
+                        multiple experiments. A dedicated flag (--prompt-mode)
+                        takes precedence.
+  -v, --verbose         show one indented line per claude tool_use event (Edit
+                        path, Bash command, etc.) in addition to the default
+                        step-level progress.
+  --debug               print the path of the raw backend stream log, which is
+                        written live to <run_id>.streams/ beside the run log
+                        (tail -f it). Falls back to stdout only when no log
+                        can be opened.

@@ -1,0 +1,10 @@
+{
+  "plan_slug": "decompose-create-plan-phases",
+  "grounded_at": "2026-08-17T14:31:09Z",
+  "plan_fingerprint": "ef652c54a4b9e409128fcdda8bc847e62f2383ea68982f50df3ba52b94886740",
+  "code_fingerprint": {
+    "plan_tool/create.py": "339edec2cfdac4de6c4b715372d827888e5b2bde4eb256215d5ca246697f7afa",
+    "tests/test_create.py": "de390fb51025f16f536dd4a7e89768b66e71c1c0327f7e8fb958936c34cf6522"
+  },
+  "schema_version": 1
+}

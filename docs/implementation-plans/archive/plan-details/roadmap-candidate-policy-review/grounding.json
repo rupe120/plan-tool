@@ -1,0 +1,30 @@
+{
+  "plan_slug": "roadmap-candidate-policy-review",
+  "grounded_at": "2026-09-04T19:30:42Z",
+  "plan_fingerprint": "ebf7672de5c48f071672d29815145e9323d75ed92f29ac6f4e62a463d1a1e604",
+  "code_fingerprint": {
+    "BACKLOG.md": "959a19e0f666bcdcb4d638245dcbfac69ed51c1b68fe7804a9ff409f57333f17",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "7429196874201f70057dee425c5c3a073e88da40c458fa4d41aa377775f33959",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "51a186407997aa9227766da7ebdf03b00782ca2234e2dbabbd804f589ca614ce",
+    "plan_tool/cli/roadmap_cmd.py": "5a7888a74cd673741a2f5ec2640285fabfcb02df872ba17a152cf17af681d73d",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/cli/test_roadmap_cmd.py": "544e4c3ef9fee430ca5a615f7b147606570e14043faef98b4a9f390cc4c4c898",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "step_authoring_fingerprints": {
+    "1": "8a54183c9dea85f5416e63a4b014494aec882ec7f15b7b009fe84823664a866e",
+    "2": "66c770578c7b2ce7f75aa6f5d002ced5d0d245d36ede6682fee6942838387c15",
+    "3": "454622aa1e0ac94d38d52a2d0cf1a9fa050a8230aae079f9151923e72fe330fc",
+    "4": "fddc98ba253fc81379be68e8e4c1979b8fed05f5e2e3fd11cfbd2f66e238f69a",
+    "5": "b8a075b2bb5155a103f0002798e6811ddc0d832c84f78518f90bb8a9ee0e922c"
+  },
+  "schema_version": 1
+}

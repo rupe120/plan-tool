@@ -1,0 +1,24 @@
+{
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "grounded_at": "2026-08-26T22:00:11Z",
+  "plan_fingerprint": "a633e69775cc2fd99d09574d08366c95dfd306398252458838e3c1ed7a94bf1b",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "4cfeee2b10a3812e10cf8e0f10e786314fe4c091bbdda1a304f7f4b0978e2d8c",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787"
+  },
+  "step_authoring_fingerprints": {
+    "1": "cbc67e488ff0b6c8b14c8eeb74845608920f7659f2c7f60ebdb79743a2ded9a4",
+    "2": "189bd5f2780a3306f0add941f44104fd12e876e8d37de0143d71a9816cf44434",
+    "3": "0bc95cfc247ab7e46604de0fd02447902e823ba28f8425686b008f20ba0f147d",
+    "4": "4d506ecdba4bd5de19dacbffc898c3c9b82814ca569b47a0ac6146fc23d45a0c",
+    "5": "95a208bd7f96a364d806ab1f5548fff9d02725fe2eab3e95265518a61ba1c0db",
+    "6": "d4cce89c7e116f0d9ac62de53f3dde9841081ea651cc400658349b5c5382b4b0",
+    "7": "54b182cfd9c95213cfff9f88d4b5c1b0af4d80a6db1875c606dbf7fdf2c5bf5c"
+  },
+  "schema_version": 1
+}

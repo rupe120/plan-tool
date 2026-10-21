@@ -1,0 +1,18 @@
+{
+  "plan_slug": "transient-retry-partial-mutation-guard",
+  "grounded_at": "2026-07-10T11:30:42Z",
+  "plan_fingerprint": "252f01d28574f6700c8f5ce171b7989712c6ed725779548a9df7a3b9419bc02f",
+  "code_fingerprint": {
+    "BACKLOG.md": "79b4a42f344ed8a5bc85c639f9f3d2934dc44edbe6f7884b0768f2210f65c2f6",
+    "BUG_BACKLOG.md": "99dd1f32be12bafaf3b5fff44255d8d5bf1f18958318cd21e9644f6fa5e9e8db",
+    "RUNBOOK.md": "5dd8d3ae62ddc30e5e67e6447a0fb1358346083dd2a9c31e1615ac2739259892",
+    "docs/RUN_FLOW.md": "568200e3eb65ab96802de2173365baaa125ec8878f7471ac13a16569b6d0ba01",
+    "plan_tool/launcher.py": "14e039fa476214e97c68537ddee1e7d1039bad990d1e19969f6ffea2dc29a756",
+    "plan_tool/rate_limit_loop.py": "a160b60b58d8a4fc42a3b7acdab5a766e7b590127adf0f4037d824faa1ffbb84",
+    "plan_tool/shell.py": "d3ad88ad90d0cd6daa924d7bd0052e571c98b8c3d24d213aaa5c703fc78c8a29",
+    "tests/test_launcher.py": "915ce899ec0fb62c8150aebbeb97eccc70b265f96874b2e4ba5bddd4d488881c",
+    "tests/test_rate_limit_loop.py": "673d80881bac84fdf8235b95a9491a886233b0a7b5b8d3a36df64ed388d421d6",
+    "tests/test_shell.py": "64e16aca3567aff8c18049f758fcaf6874ba29cb425150fbf8bc3fb7e21d4bdb"
+  },
+  "schema_version": 1
+}

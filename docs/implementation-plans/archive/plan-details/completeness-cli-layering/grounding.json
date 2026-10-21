@@ -1,0 +1,18 @@
+{
+  "plan_slug": "completeness-cli-layering",
+  "grounded_at": "2026-08-14T22:26:09Z",
+  "plan_fingerprint": "169d137d4585a528f3010f17de675188867f9e25e5a213ae699c77199e7a41f3",
+  "code_fingerprint": {
+    "BACKLOG.md": "4738aeda61bc80511d2d8746d666086595a6f43c678af4d3af10c3263568a446",
+    "BUG_BACKLOG.md": "989fbecd4b1d5b1341b86738367d3253cf0315e5073979878da16463b17e88e0",
+    "docs/AUDIT_FLOW.md": "4dcb9d808e7dc636bffea9eac67abe882d1da4757390a5c6b7abd242d090380e",
+    "docs/implementation-plans/plan-details/per-call-timeout-budgets/02-give-purity-scans-conceptual-audits.md": "81869d34bb099ca7a24ee5d7a24e9e1a7ab594170511e4781acf54ef792c415f",
+    "docs/implementation-plans/plan-details/security-check-command/08-iterate-apply-convergence-loop-security.md": "53ec3bba6534291782fdf44df6dbdcd9e1f3a0c9d697ba9a5a342e1d34442ada",
+    "plan_tool/cli/app.py": "89f5913209278b43844b74f346d99bfeba45139d203789e4af7e5a350756c6a3",
+    "plan_tool/cli/completeness_cmd.py": "23a58b4ac69c8a794c110643f0582c3e89cae6458e380cf3ad84fb6265245947",
+    "plan_tool/cli/completeness_phases.py": "cdb7db714501551a20f4c801bfb81d136d992b2e829623a2a751a502474438de",
+    "tests/cli/test_completeness_cmd.py": "1a073c3071992eac963f26821f96255947237777fa03f8120788117b72158bbf",
+    "tests/test_convergence.py": "ea5bb91397840ca41dfa2b35b3515c717576dd5efbe3a134b14c92abc4ea8424"
+  },
+  "schema_version": 1
+}

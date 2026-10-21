@@ -1,0 +1,20 @@
+{
+  "plan_slug": "accumulate-audit-finding-knowledge",
+  "grounded_at": "2026-06-24T10:30:55Z",
+  "plan_fingerprint": "168b97912e05945215b16eb5fe0366f92b5ab0dcd263d042b13ab9f8aeb7e6f4",
+  "code_fingerprint": {
+    "plan_tool/cli/completeness_cmd.py": "8ce6868e333cdb15052b90b5efa873a6701226a22b8bb27cdc9a410cc83c34e8",
+    "plan_tool/cli/review_actions.py": "e3786ee43d278f76f9edc76bc38e5248244e31c9029200c56a56e1d36b6a5a96",
+    "plan_tool/launcher.py": "f35e3479f8c25f0d437d5d8bdfb12308c63adcef3c199bc65b77e910603747ea",
+    "plan_tool/prompts/apply-finding.md": "3e9d3f4314189d8c72b0b3c455760dcba28c984924f37f6c78b6abffb50104f2",
+    "plan_tool/prompts/plan-audit.md": "88276bd5e2ae75714ceb2d4f026ef7e760cc0d7908c0178c00387832eea01d58",
+    "plan_tool/review.py": "e375ff50aa924ab99a3261ce390c13f1402ec6e319bbdaa79b5702c79077b3ee",
+    "plan_tool/review_persistence.py": "86cf249f5a1cf1b6e0e90ef602b53a6f78d2bc9a7456aeda08965a6205416b16",
+    "tests/cli/test_completeness_cmd.py": "0908e52a679e218082bc6f7c0b6a25c0b7435c57c8622eccfba761f6a10b823a",
+    "tests/cli/test_review_actions.py": "b6a369001058013d35657cd6709250a58b3a8824cb5418936681af75471eb8fe",
+    "tests/test_launcher.py": "3acf753a115817b53d23b7c037d3b206b5bd382c3f9b9f6af63845ad5d091563",
+    "tests/test_review.py": "ca70d3106180bf5a082ab01f7265df329a033118dae78549b3510c970751c655",
+    "tests/test_review_persistence.py": "0f3862400175bb2da4f88e6ef4229a7c3a699cf19110d897b001fa5ea1f4e2f8"
+  },
+  "schema_version": 1
+}

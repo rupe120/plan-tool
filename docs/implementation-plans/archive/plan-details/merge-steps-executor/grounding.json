@@ -1,0 +1,21 @@
+{
+  "plan_slug": "merge-steps-executor",
+  "grounded_at": "2026-06-17T21:49:51Z",
+  "plan_fingerprint": "faab3dbf7261ae8436456b4d7c2ade6ed8a2bf4c586674968d1fccc12d94760f",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "d9527ec89128d88e1ffb7cc32813ce8b5f2055dada562f6784d03a86ba496bbe",
+    "RUNBOOK.md": "c2f9bac4d5fa456fceaa228d1a8654671d1d388e5051901a2e66de4c204ef06d",
+    "docs/cli/README.md": "4b3d58b6ca65b8bb4eb9abd1524aa3024672c244e6c009cb731de3265a405bd9",
+    "integrations/claude/SKILL.md": "5c2b494b9aa8ad75a15117046d26032a7fb6528249d4ea26db944705a036b709",
+    "integrations/codex/SKILL.md": "3837ec61a9dd2dabbd3bdd5baf313a3f74953eddf3def74c8884f73425261051",
+    "plan_tool/cli/__init__.py": "f4d6e96729c9f34ce4db5e609844bef8c046581606be4142702738862e079776",
+    "plan_tool/cli/app.py": "82e9d5e9e77f93218a989059c7a5b91c796b3b06ed393460ef62f96e802ad7d9",
+    "plan_tool/cli/authoring.py": "99d7544e270df2a4dd86110234887ee8d7bc768dfc7abcc8298725285d4db844",
+    "plan_tool/create.py": "60b4edec0ec506bc40fb3bb3d8e82c2e50cb9e4991c5190d9644ec3c3937a08c",
+    "plan_tool/detail.py": "e64da0759cc0f562545e1dbd97c0aeb71f9d50a92d8d7cc9c43380a2811fe8e8",
+    "tests/cli/test_authoring_cmds.py": "3222a1aac0fcddfbd4bf6441530921d819d7f7765eaf19f46cb5a0aa499133e0",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "0387f3fea5e91e46ee2d629678272b16976bdaf7d8584257710f42e815eb93d2"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,19 @@
+{
+  "plan_slug": "jira-sweep-deterministic",
+  "grounded_at": "2026-07-31T13:45:42Z",
+  "plan_fingerprint": "881c79c078d800d1a6ae7bceb996df96b964a8221085cb46e02feef9f3db2289",
+  "code_fingerprint": {
+    ".plan-tool/plans.json": "2aac212aca80dda67353e30f24f83a267663408f4b8a3e90d9c63bbad5cbc647",
+    "BACKLOG.md": "a5319697cb00c50ba6e37f363da4691eee005e0fed833ef84079bc11403fa79c",
+    "CAPABILITIES.md": "510f22d349c02b11a0e92e67cce3fa38235d1144d7025c366693ec62da9840d0",
+    "CLAUDE.md": "2bff6c1402045342c82e3efae911d637835cab01f3bd7e91c1ac410124672f7d",
+    "TESTING.md": "c7b3f34e018d37e3f4887ddeb3a0637310a002b532770ea2673ae94c158e62a1",
+    "docs/cli/README.md": "3e8a26a5f20c4de636ceef66b589220567307bd368f4139e93bfff39b0582bec",
+    "docs/implementation-plans/2-jira-sweep-integration.md": "197760ba0e16d93f21dde01e2f54ed822f50937c4baba930e74830ca34dc9833",
+    "plan_tool/cli/app.py": "21a3f53057367734ff0a16be22b41a42f2a3198711da1e266657a3c9690d687f",
+    "plan_tool/cli/parser.py": "387ec944cd7b49c14d6905c7ea050df96b7204c622dd8d61cba6677de87d858d",
+    "tests/cli/package_surface_help.golden.txt": "41cfc9fe0c37a9d4218379358ac84a370d436175ff01c4923aae335c27dd71e8",
+    "tests/conftest.py": "0bd7318668d2493ec43b7c89010ceeb1e2d8824f468b5073f612fee852a7e690"
+  },
+  "schema_version": 1
+}

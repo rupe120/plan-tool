@@ -1,0 +1,18 @@
+{
+  "plan_slug": "deferred-select-promote",
+  "grounded_at": "2026-07-17T15:38:16Z",
+  "plan_fingerprint": "826fb775ca120ab6982a753189a2cc10b72e6f1580b3f1e1028774eb5f32b2d3",
+  "code_fingerprint": {
+    "BACKLOG.md": "c79094c1d13d7a19d0fac7bdd6ac9232c8b237988be5bbaf87b07fc8702018e7",
+    "CAPABILITIES.md": "a3c5ebdcd021aec361640508b38063b2fe0cabb2a47912fc77c27d379fa7cef7",
+    "README.md": "5b3319781e1fcbb281da02e77b881d836c21d9029c6c0a4696d6e3a0fcdde5ee",
+    "USE_CASES.md": "5b5851635bef7e0cf9eb3530b1b271a1b3725cedca085f32da9fcfaa13b8ba2c",
+    "docs/cli/README.md": "3e8a26a5f20c4de636ceef66b589220567307bd368f4139e93bfff39b0582bec",
+    "plan_tool/cli/app.py": "ef079f42e5b4df93f964ff0a7472b6c06b5a414d511defdb67b6ceefa010f2ee",
+    "plan_tool/reground.py": "9c387480fdc358a7076729cb8d2b76d2c842cc5d8d30e2322466ea161572b8b0",
+    "plan_tool/scope_out.py": "8364477c5709f474cd7be9ca1c7c34fce4be9ea0df065e05dc3291d340e75196",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_scope_out.py": "45d1a886086232ba7c917e7d275366dda1c8fc2f864111ba323621c47296934c"
+  },
+  "schema_version": 1
+}

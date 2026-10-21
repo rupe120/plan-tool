@@ -1,0 +1,16 @@
+{
+  "plan_slug": "roadmap-candidate-same-batch-relations",
+  "grounded_at": "2026-09-28T12:27:10Z",
+  "plan_fingerprint": "ad5851b1466566385a89a1e028d36d2e8d44aa9e5b2de403a5aa58dc26e9cef7",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "e24b6eb1eec1be9fc871943a5548dcd70e34b37cc3437be3ee833df55991eee5",
+    "plan_tool/roadmap_candidate.py": "2a71c75a98552cfb7fc50694b09915cd25a21fd9a5f41aa4b9436f5fc30b2abe",
+    "tests/test_roadmap_candidate.py": "9c2fa6ea7cc9316e696cd42d4ac70995c0e979c032649c82c806232b1b341436",
+    "tests/test_roadmap_candidate_run.py": "6ae8e6c4bdc9163993709fe8ec7444f301c2e31b3440703b4249f6245a0ae040"
+  },
+  "step_authoring_fingerprints": {
+    "1": "ab7c8e0a7d22dcafae9729917121214e8570c6fabdec2dc0380a28062dc42855",
+    "2": "fa250a5a670da9dac2cde93fa79565aea12e66bd73b3938926b66d5202765d2e"
+  },
+  "schema_version": 1
+}

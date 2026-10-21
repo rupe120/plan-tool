@@ -1,0 +1,16 @@
+{
+  "plan_slug": "deferred-scan-digest",
+  "grounded_at": "2026-07-17T15:30:03Z",
+  "plan_fingerprint": "1cd8d080f78c87e0c9f649e0cf7e968f2083d7e1d5a64a96e3714a22f03931a4",
+  "code_fingerprint": {
+    "BACKLOG.md": "c79094c1d13d7a19d0fac7bdd6ac9232c8b237988be5bbaf87b07fc8702018e7",
+    "CAPABILITIES.md": "a3c5ebdcd021aec361640508b38063b2fe0cabb2a47912fc77c27d379fa7cef7",
+    "README.md": "5b3319781e1fcbb281da02e77b881d836c21d9029c6c0a4696d6e3a0fcdde5ee",
+    "USE_CASES.md": "5b5851635bef7e0cf9eb3530b1b271a1b3725cedca085f32da9fcfaa13b8ba2c",
+    "docs/cli/README.md": "3e8a26a5f20c4de636ceef66b589220567307bd368f4139e93bfff39b0582bec",
+    "plan-seeds/deferred-findings-digest.md": "7587ae7e511efc98aacae9e7a79ea9c746e50813324a527e7ff9a72953c9e4dd",
+    "plan_tool/cli/app.py": "ef079f42e5b4df93f964ff0a7472b6c06b5a414d511defdb67b6ceefa010f2ee",
+    "plan_tool/cli/parser.py": "387ec944cd7b49c14d6905c7ea050df96b7204c622dd8d61cba6677de87d858d"
+  },
+  "schema_version": 1
+}

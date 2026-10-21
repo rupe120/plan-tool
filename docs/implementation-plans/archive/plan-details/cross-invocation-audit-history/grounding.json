@@ -1,0 +1,25 @@
+{
+  "plan_slug": "cross-invocation-audit-history",
+  "grounded_at": "2026-08-21T13:07:03Z",
+  "plan_fingerprint": "9dbd78e48382d51e37c46bee12d141fc262574d0398f3a8cfb43e8c5d090b94a",
+  "code_fingerprint": {
+    "BACKLOG.md": "d551256a49299f4d352b8ee42aea95387c5c1934373390cb9fe834e97f59f2f9",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "65c7105760386d84e1459d090d81322a130513a62ffebe4353b990bb2d75ec8b",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "plan_tool/review_persistence.py": "cbc0915c1db58334a87e71ef189f7b01ad75b90c1bdd5b2148dc0e40c84fa93c",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275",
+    "tests/test_review_persistence.py": "17c89e515e0e1f182a337b2f20eb26cfd0a0389c243648d0b1f1abe45e9134cb"
+  },
+  "step_authoring_fingerprints": {
+    "1": "433fba2038ceb8e929e7953d1d47aa44a2719317e6fbcc77c0e8bf3e7c2b3a15",
+    "2": "6a1d52c6dfcff3e6de33b97d56f08dfa3d969f47e200a276836d1c983dd1e6a0",
+    "3": "21f5c5041ce4a1df9437c4d5dee41be734de49f9826ebf2f05972d68e7a11e73",
+    "4": "b566339681bfd24a5e48e6029429e0516332e7b0b2c87ce943d11fac4a09d6ed"
+  },
+  "schema_version": 1
+}

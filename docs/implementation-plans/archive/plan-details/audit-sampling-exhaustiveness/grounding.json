@@ -1,0 +1,12 @@
+{
+  "plan_slug": "audit-sampling-exhaustiveness",
+  "grounded_at": "2026-06-20T16:21:42Z",
+  "plan_fingerprint": "38419dc43a8ae9d75cc7cf31ed90497ad3ad4147cff2f7bbd625964acee59750",
+  "code_fingerprint": {
+    "docs/cli/completeness-audit.md": "3de2b0ff4bcdd22f287e254a5c44903026cdc8787f3a4d82bce76d50fb2e24a9",
+    "plan_tool/cli/completeness_cmd.py": "be6409188a5895ea55c2f263e4d7f922086e13fee5d0682692960f4a2b355099",
+    "plan_tool/review.py": "6f172ef0f0126c80a9a553edc992b9fdd3758bb8bec78d08dbbc6fd40f69d554",
+    "tests/test_review.py": "f2dc2997acb47ae6cfc0b1cecfb85a3cf7a1f3a82e6d40241760e3bab075dd8e"
+  },
+  "schema_version": 1
+}

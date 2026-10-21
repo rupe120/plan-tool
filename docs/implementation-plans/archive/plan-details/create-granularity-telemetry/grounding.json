@@ -1,0 +1,16 @@
+{
+  "plan_slug": "create-granularity-telemetry",
+  "grounded_at": "2026-06-27T21:42:58Z",
+  "plan_fingerprint": "60de53a6a78d849faaba90b14e79a2297084287103ae93af9e3d719c10fd411d",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "483a33b15d20f04c26694b60a2e6641bb342417de94291ac3bceaeac507a54c6",
+    "plan_tool/create.py": "2d617fd25ac579c45d2c23c999e6b0698ca66d08a71c3aa73b2cb93746aaad40",
+    "plan_tool/granularity.py": "76dd3dfd0370805fa455ccfb8f87a55809ce8716e4ee2f288221b7123d239c5a",
+    "plan_tool/telemetry.py": "0c7a116a909cd9b672f5e8c6d909bf5631818d2c1c3cb35f60f81ef5b49ec902",
+    "tests/test_create.py": "c08fc9104da27a515feee3215c30449853aedb28888c37564d79a52d8ca02446",
+    "tests/test_data_contract.py": "1a48a87e4195b0dcb3a1506968e2a943f9543f2f20f3360b799f62814816db86",
+    "tests/test_granularity.py": "2aa37b790486eb39101fd1d0be5fa8ab263d4488f6845a992bd0113157b93dc1",
+    "tests/test_telemetry.py": "8a00ac009a5f167c7e3408263183eb352be32661f5c78e5bf895ca2920489549"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,18 @@
+{
+  "plan_slug": "roadmap-candidate-vocabulary-retry",
+  "grounded_at": "2026-09-25T17:38:55Z",
+  "plan_fingerprint": "b9bec7a5d24cc8fc3cc0db5f7b77d9eae7df46818d785e0b5f390a1e2aea4dd4",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "c3740d565b03ab0cf84a0e70bda125195045357e9094c63b497175df7334109b",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "16318b8b7603c6910d1d607fe69647fff27688ccdd8f57de47344482534734de",
+    "plan_tool/roadmap_candidate_context.py": "f1dfc225b217b5a50cd2b6a7b96bb3ac681007cd68a2d7a2bb0d0962fdf2f164",
+    "plan_tool/roadmap_candidate_run.py": "581c7bf1b585939688839f47169ddf03eafa4151c224ebeb6b5af6018ddab71f",
+    "tests/test_roadmap_candidate_run.py": "bcc39ec078d2710326c882c1bc869cbf1c17ef2e9b6e3c2b3933374e763676de"
+  },
+  "step_authoring_fingerprints": {
+    "1": "30ae5ed3bb820fec8b52cbe8187970cccc62c464eff68fe56a82a1c4198dd2d9",
+    "2": "2ec495b0ee1247b419c46724495f083975c9fde5f1760c6c5247962d22a17698",
+    "3": "6f62728bd95a06b794ed66125a22b335485205bfe6fa1d0aecce2ae35b681c89"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,26 @@
+{
+  "plan_slug": "structural-remedy-convenience-arms",
+  "grounded_at": "2026-07-09T17:22:32Z",
+  "plan_fingerprint": "30eb6f1d4ad5e42403ac1d5d8c3207d82dc461cc29487ecd630f0bff445c3ad4",
+  "code_fingerprint": {
+    "BACKLOG.md": "611cffd3646bf7a58b291b8eec245799c73ca1edad0af4f06198c9cbd6419d11",
+    "CLAUDE.md": "be4288b83311d91117ae39b67e5f77c419a29d4536c12c6102d4d8446f25d20c",
+    "RUNBOOK.md": "752e2c710887913c234a0571c71cbeacbd02d5d18ae989534e58a2fe0224dd6d",
+    "docs/cli/reconcile-plan-walk.md": "bf647467c7f3cfe1c473983669d666de6d18f5faa579e8e40f143e130e5f443b",
+    "docs/cli/reconcile-plan.md": "97af13462aa38e7c45783d3d20fcdd571b186f11191022be51f2fc58ba2df833",
+    "docs/cli/scope-out.md": "01373516ed4a8d5886268634cf8e2020cf9d72a8ca856eb6ac6b0102aee19fb1",
+    "plan_tool/cli/convergence_cmd.py": "7cdba124a1dc92a41011b8fa63c399a8e35685c6b2b4cedaf1c4e54f7a1376e9",
+    "plan_tool/cli/review_actions.py": "4d7c2523591ed3b9398a5d1d122f6de2b04441b7c8ccf58441fdbe8061c5fcf0",
+    "plan_tool/cli/review_cmd.py": "9625b60d3f472cc580fefcd4cbc23121ab599b9124662b30220692d5ad7db073",
+    "plan_tool/cli/scope_out_cmd.py": "198c220aca77c899d22040bb1291e6a274ae572f058324f16f6cd513226fc966",
+    "plan_tool/convergence_diagnosis.py": "857a0f956771f647e842edeb021fe005fae67968d86ee20b1cb7eec5f85cf878",
+    "plan_tool/reground.py": "65fddf7ca35e28321def7696394e9d4b120d76e684d49d85103ab089e6ffd635",
+    "plan_tool/scope_out.py": "6583fd045f54b583676684548481e09071085a85f5400c32ba7d074ccd5736db",
+    "tests/cli/test_convergence_cmd.py": "af42ee69bb9b6834abc57564284102e267919c6390fa00f7d9561240f21f4337",
+    "tests/cli/test_review_actions.py": "5096548765e0d34de1737dcdbfae4d717aef338daf9e98176d603b38ed593ca8",
+    "tests/test_convergence_diagnosis.py": "6173d1e7084bc6a03c45afcf31ed76a094d47d406fe27e43057a6f84ad074228",
+    "tests/test_reground.py": "99088d0d9b0e3436ae5c9d1d237576dac3e14e7367e523795ecb4aa9d3fb22e7",
+    "tests/test_scope_out.py": "dceff9e87225874f05b423465917bf574b71983c9842a9a0f92884fea5b6003a"
+  },
+  "schema_version": 1
+}

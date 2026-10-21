@@ -1,0 +1,26 @@
+{
+  "plan_slug": "stage-differentiated-blocking",
+  "grounded_at": "2026-08-10T15:10:58Z",
+  "plan_fingerprint": "b0b97a4d29b8142cbac29eac9caa9b712c4e60acc6f6b98b18d3be1703834a8b",
+  "code_fingerprint": {
+    "BACKLOG.md": "48814a094aa2dfe6cb3d51806997385d3c5dba20b0a848fdcca2413d072d1818",
+    "CLAUDE.md": "a085ed4df74a1958398f0b333e4faa9593b0fef22539cb7cacbdb5f55b568b04",
+    "DATA_CONTRACT.md": "f93788e6a8550a1cd94f549651f5773294f21691491e6c834fc96bd5bd18b658",
+    "RUNBOOK.md": "6a657838ba7a5c247fffd89351452ec57dafcf18cc42b848b29608d6a41eb9ae",
+    "docs/AUDIT_FLOW.md": "3a882268f301172fcd440ba4d25a37a4b47e834de3361b6cd6bdcd2fc3e08b96",
+    "docs/cli/README.md": "9bd93a87b1b4c187d67328c854bcecec6a2cfc286ee01ce3f30301f2a31561a3",
+    "docs/cli/completeness-audit.md": "81520616888d79e5e4724ae1b759de701c905f4a56511d1eee14d097ad478816",
+    "integrations/shared/DIRECTIVES.md": "2d8f2a8bc88f952133612b79bf149ef1d08cd1110bf4bd3bf18e2ad0e5de60bb",
+    "plan_tool/cli/completeness_cmd.py": "89a66501ce2b2bbdf46e7b7184aff63bd325bb961045f57526fbbdd472b389d0",
+    "plan_tool/cli/completeness_phases.py": "7c68e8559d80883f30bdad08976f71f690f8eeee892e870f3033b6a745992d0d",
+    "plan_tool/convergence.py": "39269d0800dee839ad36ccd753e7ac274eaf059510aa32ed385205639fa73986",
+    "plan_tool/review.py": "01d4a4c9049a00706370ca24024ec90f2de6a6d00522883d511d5548fb1658e3",
+    "plan_tool/review_persistence.py": "4f5720e16bed7cf0d38488e6e7d5198943b76cf5cc9d6f9b0eb9eb1b38b5b17a",
+    "tests/cli/test_cli_reference.py": "ee848179f21e3703c9d8669729be3a00181d7352ee89428b887819581bdcba25",
+    "tests/cli/test_completeness_cmd.py": "237ef02ae353dea637645c8cf280c11af7029155c71000f8fea0f44a9968bad7",
+    "tests/test_convergence.py": "1fb23863b19bbff21d606b3fad6797567ee1c59e028cf2bd6ad2aeede7d4e70c",
+    "tests/test_data_contract.py": "f358aa23acd1690730c5a299b572b10a6865589320d2f9376702c6aa4bef954b",
+    "tests/test_review.py": "644b8a0fba1fc765e0574b3a0204f346e6b4838c42db429a2dd26fbff5354849"
+  },
+  "schema_version": 1
+}

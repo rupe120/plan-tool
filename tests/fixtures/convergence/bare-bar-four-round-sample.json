@@ -1,0 +1,82 @@
+{
+  "_comment": "Synthetic per-round source/severity counts mirroring BACKLOG #248's four-round measurement table (findings, correctness, HIGH, MEDIUM columns). Prose is not from the original example app audit run.",
+  "rounds": [
+    {
+      "round": 1,
+      "totals": {
+        "findings": 6,
+        "correctness": 1,
+        "high": 5,
+        "medium": 1
+      },
+      "legacy_is_blocking_count": 6,
+      "counts": {
+        "plan-correctness": {
+          "medium": 1
+        },
+        "plan-completeness": {
+          "high": 5
+        }
+      }
+    },
+    {
+      "round": 2,
+      "totals": {
+        "findings": 6,
+        "correctness": 2,
+        "high": 2,
+        "medium": 4
+      },
+      "legacy_is_blocking_count": 6,
+      "counts": {
+        "plan-correctness": {
+          "high": 1,
+          "medium": 1
+        },
+        "plan-completeness": {
+          "high": 1,
+          "medium": 3
+        }
+      }
+    },
+    {
+      "round": 3,
+      "totals": {
+        "findings": 8,
+        "correctness": 2,
+        "high": 2,
+        "medium": 6
+      },
+      "legacy_is_blocking_count": 8,
+      "counts": {
+        "plan-correctness": {
+          "high": 1,
+          "medium": 1
+        },
+        "plan-completeness": {
+          "high": 1,
+          "medium": 5
+        }
+      }
+    },
+    {
+      "round": 4,
+      "totals": {
+        "findings": 7,
+        "correctness": 4,
+        "high": 3,
+        "medium": 4
+      },
+      "legacy_is_blocking_count": 7,
+      "counts": {
+        "plan-correctness": {
+          "high": 3,
+          "medium": 1
+        },
+        "plan-completeness": {
+          "medium": 3
+        }
+      }
+    }
+  ]
+}

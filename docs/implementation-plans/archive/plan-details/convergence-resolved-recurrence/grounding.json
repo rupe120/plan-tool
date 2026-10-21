@@ -1,0 +1,16 @@
+{
+  "plan_slug": "convergence-resolved-recurrence",
+  "grounded_at": "2026-08-04T20:36:06Z",
+  "plan_fingerprint": "38432a7d8378930eefec53440a77dc0778c6e2e13c1769b82acf15a1c626df19",
+  "code_fingerprint": {
+    "BACKLOG.md": "483ad595f2ec15e55c8cd968de725579bc6edb71b0204f7ab4228ce60601909a",
+    "BUG_BACKLOG.md": "cda1a9263c7e2c421adf356d6da119520f7925a265b76ea8966227bc58f3f0a2",
+    "docs/ARCHITECTURE.md": "f6b1c63bc6387320cd2cb3fdad30afd0efbec05387adcdb666f9628b05971866",
+    "plan_tool/convergence_diagnosis.py": "18f9d8590f68109dd7ff1abe7aaa687ca1b59b636ca7c28e9fb3d83e94f7a786",
+    "plan_tool/split_criteria.py": "57644c865a4a7a67dd571afec4d0b10c86a7fcd286c10ce2c737e4dfaa6761b9",
+    "tests/cli/test_convergence_cmd.py": "43da3d7b6d3955ad94b653f079ed0e96b694946c0fb03f45a0246dd5decd5451",
+    "tests/test_convergence_diagnosis.py": "a9c475051cda8643c0aff2ba8051a50c0c3e1e0a0468aebcd4e2e927ca2514a3",
+    "tests/test_split_criteria.py": "f0708bd07e0008103f3e762415b3a4855f2c716a9d70204e6cfd3c037dfe5448"
+  },
+  "schema_version": 1
+}

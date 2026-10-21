@@ -1,0 +1,28 @@
+{
+  "plan_slug": "roadmap-incremental-revision",
+  "grounded_at": "2026-08-14T12:51:25Z",
+  "plan_fingerprint": "03eb8c234c0bb54842543787edd64b88fbf2e6566e38e0c5dcdf743f46026da9",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "ROADMAP_FORMAT.md": "ab920b33474876e8f7f61534e316180fe1f70e1b0076d519a965d2f42bab9215",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "docs/ARCHITECTURE.md": "9b8db0e2ca98def8e4fe8bd9283419782976e0ce0f973d59adb4a5bdf9ec6559",
+    "docs/ROADMAP_WALKTHROUGH.md": "4c9a6f4ad04ee2c6c8123a751e1373797891ad7f9e78ad5217b6804fec12f6f7",
+    "docs/cli/roadmap.md": "5390820929acffad9f1ec87f22f8d21978b0a5ece2cf51d004e31d9f13b0d8a3",
+    "plan_tool/cli/authoring.py": "23ad7a56932e11e74115a86b2eecf9e91a7e621732b7aae810ce31b123facbac",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "plan_tool/roadmap_artifacts.py": "90eceab79eeb9e4d3569f7b1c75173d3ab95d2126b7c20c45d2da78766bfa5eb",
+    "plan_tool/roadmap_seed_state.py": "36634f92999774b9ab8dbc7205a144454df152aea64063471a5783d017af63ea",
+    "plan_tool/run_log.py": "44c6a86917436bf15b84735a21775c13493628f0e8b17b749f65ed1fd2f69382",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb",
+    "tests/test_roadmap_artifacts.py": "70681fd5f183d94ec7ce69e8c2addeb4d37ad64b0eefe79ba4ab89be36f15fc0",
+    "tests/test_roadmap_format.py": "3423eb1f1761dd84ca4ac7ab5bd858a9e191e1330595c623b76b0c8e69ffe85d",
+    "tests/test_roadmap_seed_state.py": "baff4675b1de8e2576fc657f1ac24738ca7c677d159072bcd64dc619eba740ee",
+    "tests/test_run_log.py": "ba02e630709aac5ea3a0e18846dcfbc3a745cc948395e74806b7f2d1e728816a"
+  },
+  "schema_version": 1
+}

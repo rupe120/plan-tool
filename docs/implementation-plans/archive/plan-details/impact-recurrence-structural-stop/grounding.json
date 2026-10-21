@@ -1,0 +1,22 @@
+{
+  "plan_slug": "impact-recurrence-structural-stop",
+  "grounded_at": "2026-07-20T18:04:49Z",
+  "plan_fingerprint": "b8c19d92c3f8b7ae7eeb44d82489b53362b8650e19c8d39e6df8248d8748c761",
+  "code_fingerprint": {
+    "BACKLOG.md": "6d2f98bfc8a0b667627e5e5a6addb07e23acce103884e5010c6f6c0c50bf859a",
+    "CLAUDE.md": "24ec7b073c2d2c1658c9471aa62fee4e0ded23a3c50dd3d60fd0af254a2697c0",
+    "DATA_CONTRACT.md": "c065c142dfeae940d66751d6e4a8639f21126ed14e5e5e846f48231489ebe2a7",
+    "docs/AUDIT_FLOW.md": "336e7e3063cce771d52a29c15cd069ed30b7e35608a49cf14356050c8ac4f85f",
+    "plan_tool/cli/completeness_cmd.py": "2d877540eccd8d9c93cc177ea62bc8d12ae3c1d29cbac959f63c9abebeedd3a5",
+    "plan_tool/cli/completeness_phases.py": "300808dda35ceb50bca83eb9b59f82f8b2e25534dd7998f09efe116077c6cb01",
+    "plan_tool/cli/reconcile.py": "965dd587a94e6b2e10dd5d5c110e68f0308530b9d9b7dd01f545904391d1f6ad",
+    "plan_tool/convergence.py": "39269d0800dee839ad36ccd753e7ac274eaf059510aa32ed385205639fa73986",
+    "plan_tool/convergence_diagnosis.py": "18f9d8590f68109dd7ff1abe7aaa687ca1b59b636ca7c28e9fb3d83e94f7a786",
+    "tests/cli/test_completeness_cmd.py": "1f8630540b0777cd81ceb0c2af7eddd556855f151c6a5e4e4f319068a1aa0ba0",
+    "tests/test_cli.py": "e0d7f0019d3804736f6a15a36236025fc24069bfcf2a6d2333729fd3972224d3",
+    "tests/test_convergence.py": "1fb23863b19bbff21d606b3fad6797567ee1c59e028cf2bd6ad2aeede7d4e70c",
+    "tests/test_convergence_diagnosis.py": "a9c475051cda8643c0aff2ba8051a50c0c3e1e0a0468aebcd4e2e927ca2514a3",
+    "tests/test_review_persistence.py": "ffaf4ae7d2cd75dd05e58d4af64eace2bed1a7a7182b13f668eda715f2fc5ca9"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,23 @@
+{
+  "stamp": "2026-06-07T00-23-38+00-00-4376bf",
+  "backends": [
+    {
+      "name": "claude",
+      "version": "2.1.163 (Claude Code)"
+    },
+    {
+      "name": "codex",
+      "version": "codex-cli 0.137.0"
+    }
+  ],
+  "corpus_hash": "e9305fc3",
+  "corpus_cell_count": 11,
+  "trials": 3,
+  "families": [
+    "proposal",
+    "detail",
+    "reconcile",
+    "implementation",
+    "apply"
+  ]
+}

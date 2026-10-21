@@ -1,0 +1,14 @@
+{
+  "plan_slug": "rate-limit-loop-extraction",
+  "grounded_at": "2026-07-09T18:30:58Z",
+  "plan_fingerprint": "f9d63cc9345e95a7c35ae57995d6809ae6f9f3c10f146ca813834ebb338a9d77",
+  "code_fingerprint": {
+    "BACKLOG.md": "6e660303068ad37fb71670033f7c42eefd8dcf4c2b26194d648f541899864fca",
+    "CLAUDE.md": "a86235409f2951a5cc33b25da7d54924e022b40e15402cf1a76a35f2fa15d9de",
+    "plan_tool/launcher.py": "b583fa6aa368bda9f422d232ece3214f714d6d726afae911ffae2c6af28e4b53",
+    "plan_tool/shell.py": "b27c52bdf5b78800d7a6996a7ed579d0c37c06f2719cb17d07dbe1d3388d22eb",
+    "tests/test_launcher.py": "18f1ac5cb979d467a3f405c05fe7a0ad58f10a70a5c6f0d21fe5902568ca8e6c",
+    "tests/test_shell.py": "b6f96e93b1f473fba4f47dcb00adfa33ad9008f519e0169fdf5ef6c054199985"
+  },
+  "schema_version": 1
+}

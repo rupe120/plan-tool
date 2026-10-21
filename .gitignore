@@ -1,0 +1,51 @@
+.DS_Store
+.venv
+*.pyc
+__pycache__
+.pytest_cache
+.plan-tool/runs
+.plan-tool/checkpoints
+.plan-tool/reviews
+.plan-tool/parse-failures
+.plan-tool/crashes
+.plan-tool/scenarios
+.plan-tool/telemetry
+.plan-tool/purity-cache
+
+# bench: ignore ad-hoc local runs, but keep pinned fixtures
+.plan-tool/bench/runs/
+!.plan-tool/bench/runs/2026-06-07T00-23-38+00-00-4376bf/
+
+# plan-tool lessons warning log (runtime state)
+.plan-tool/lessons-warnings.jsonl
+.plan-tool/lessons-warnings.jsonl.*
+
+# plan-tool `run` picker prefs: last plan + per-plan all/next scope (runtime state)
+.plan-tool/run-prefs.json
+
+# harness logs/reports (runtime state)
+.plan-tool/harness
+
+# Roadmap impact analyses remain local runtime evidence. Escalation receipts
+# stay available for their scoped shared-evidence commit.
+**/.plan-tool/evidence/impact-analyses/
+
+# Transient scratch (session handoffs, notes) — never committed
+.tmp/
+
+# In-progress completeness-audit sampler checkpoint: transient mid-audit
+# recovery state, not durable evidence — kept out of the reports directory
+# it otherwise shares (plan-details/<slug>/reports/).
+**/reports/in-progress-sampler-checkpoint.json
+
+# Third-party standards kept locally for reference only. Copyrighted and not
+# ours to redistribute; `run --commit`'s `git add -A` would otherwise sweep
+# them into a commit. Repo-authored notes in docs/standards/ stay tracked.
+docs/standards/*.pdf
+
+# Roadmap revision checkpoint: transient per-run recovery state, discarded
+# automatically once a run completes -- not durable roadmap output.
+**/roadmaps/*/.roadmap-revision-checkpoint.json
+
+# Machine-local organization context and contributor identity mappings.
+.claude/local/

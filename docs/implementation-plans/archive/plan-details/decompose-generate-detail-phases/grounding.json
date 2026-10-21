@@ -1,0 +1,10 @@
+{
+  "plan_slug": "decompose-generate-detail-phases",
+  "grounded_at": "2026-08-17T16:07:47Z",
+  "plan_fingerprint": "18970878a57821c16c75b47cc2f7aec7a89523634a4e95f2234f8551ee4e3608",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "2fc5b90a678602adf36677c9b022f14b734d2a11115bcb108dfc2a74e202d2af",
+    "tests/test_detail.py": "603c905fa827a06c5c7954e3e81e1111cdb20ff3efc8278eb006c9645f7761a0"
+  },
+  "schema_version": 1
+}

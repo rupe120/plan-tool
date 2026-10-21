@@ -1,0 +1,33 @@
+{
+  "plan_slug": "bad-fix-provenance",
+  "grounded_at": "2026-08-11T20:47:54Z",
+  "plan_fingerprint": "c70cc2a747cf524817b8677dd152d24f0083236cf68bbe18a3ba8f36165db6d4",
+  "code_fingerprint": {
+    "BACKLOG.md": "07f56a97d1e44d189bc27c6d853057c13e4ae23826a45dd8ddd3c9eecfeed13a",
+    "CAPABILITIES.md": "c41cd92604b0e610db65c70ecd0a6a2831ffb460e9307edfc6c34695f95aa8dc",
+    "CLAUDE.md": "ce58d9a470f70816dee7b2537b0418d12af6df8029b7e38365023adb2bc0ae9c",
+    "DATA_CONTRACT.md": "a0d3ed10c04495f3cb490dfd674c4ce8696f0be2b5134a612147e073cf20a1da",
+    "docs/cli/README.md": "95bda94ee95537ba4de464e7e315adb655e9b9bec89de2220bfc2b4c98cafe8b",
+    "integrations/shared/DIRECTIVES.md": "9baf5f1a9b7e0efd2c7ff46b8073f8f68ca05a7f66f0451e6daf4a823eaf902a",
+    "plan_tool/cli/__init__.py": "23e325d60d893a867212bcac6503ea6a73c913fd889bf70066e5293646c04725",
+    "plan_tool/cli/app.py": "89f5913209278b43844b74f346d99bfeba45139d203789e4af7e5a350756c6a3",
+    "plan_tool/cli/completeness_apply_parallel.py": "aecb0cf107003a9108bfbc1b11643260c0516bf7fa6bc31ce06f01eb3a18226b",
+    "plan_tool/cli/completeness_cmd.py": "8284bba5a3834406c25c0e1eac47a4a318e9dce9c87c22d59b99487dad65bffa",
+    "plan_tool/cli/parser.py": "8284bbeca84c5150a393fc8308cf9e0af691702ae9b206e6faff7ff77db803a6",
+    "plan_tool/convergence_diagnosis.py": "951b517a0a513c3c0731972c8c5e7aba79fe13ec2db926089376ce44fa75aecf",
+    "plan_tool/repo_lock.py": "7938f8191073d06f60f15c1371a33573863b69467eb0a7ad37678f5e0754b55a",
+    "plan_tool/review_persistence.py": "63b5901f156ac98ef7316bd941361be8feddd39fde1274da91cb06a1ed5d799e",
+    "plan_tool/review_walk.py": "a8eba2e25c1eba2514c45d9bfbed21eb06bef32c55e31ad21614ac1afd571284",
+    "tests/cli/package_surface_help.golden.txt": "1b178c5cdee5a2959b63a9fefb55c88e33ed07e53f8c08e0e76d4baa72dc7661",
+    "tests/cli/test_completeness_apply_parallel.py": "edd882899cd6812c126e7fe882b3763e98dd73c9c70a9a5b164a7179a0956b73",
+    "tests/cli/test_completeness_cmd.py": "4b3a7d635de8b37d14e612ecb2f27c9b91e990465321e4ed7bf5c21f0f940246",
+    "tests/cli/test_convergence_cmd.py": "5d84c78d1025b9ef99e05ca20dca460ac30f33a74343ff9709dbf3057dc5fcf5",
+    "tests/test_audit_shapes.py": "b4cc85f12f4ad03d999dfc32a860d92ef12c8c79ac4e10b8989772e654560da1",
+    "tests/test_convergence_diagnosis.py": "e1eac61cf7e519615b7b566d022a09678aa649a4ce3bc8cede99b8761ee62b16",
+    "tests/test_data_contract.py": "1484a66eddf238b3a4b24e0a5529eab841eca34b77c9c4e35b735198abd1ee4e",
+    "tests/test_repo_lock.py": "504983226e0cd44b034f8a2e63acc881c60157294e73f6bffd423e7557157634",
+    "tests/test_review_persistence.py": "ba8f906f0a4bc121ce12a107118acd91099090e3f3b0826b6ffe00b85975bfec",
+    "tests/test_review_walk.py": "2b65b6fcbf20ffafbc1df8f241c790d34fb4b79eaaad415a56058fda82814dec"
+  },
+  "schema_version": 1
+}

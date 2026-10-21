@@ -1,0 +1,75 @@
+{
+  "_comment": "A committed 3-run SPINNING completeness series for one plan: a single medium region (anchor step5-over-pack) recurs without shrinking across all three runs. Already normalized to the convergence_diagnosis model (ReportHistory -> RunSnapshot -> RunFinding); tests hand-map this directly rather than via load_report_history (which reads sidecars off a reports dir). Authored for step 2's detector tests to consume verbatim.",
+  "plan_slug": "spinning-feature",
+  "plan_path": "docs/implementation-plans/1-spinning-feature.md",
+  "runs": [
+    {
+      "kind": "completeness",
+      "step_id": null,
+      "created_at": "2026-06-01T09:00:00Z",
+      "plan_fingerprint": "fp-run-1",
+      "code_fingerprint": {},
+      "code_fingerprint_present": true,
+      "report_bytes": 1840,
+      "annotations": {},
+      "findings": [
+        {
+          "id": "step5-over-pack-a1b2c3d4",
+          "source": "plan-completeness",
+          "severity": "medium",
+          "step_id": null,
+          "anchor": "step5-over-pack",
+          "title": "Step 5 packs schema, migration, and API changes into one step"
+        },
+        {
+          "id": "step2-naming-0f0f0f0f",
+          "source": "plan-correctness",
+          "severity": "nit",
+          "step_id": null,
+          "anchor": "step2-naming",
+          "title": "Step 2 helper name is ambiguous"
+        }
+      ]
+    },
+    {
+      "kind": "completeness",
+      "step_id": null,
+      "created_at": "2026-06-02T09:00:00Z",
+      "plan_fingerprint": "fp-run-2",
+      "code_fingerprint": {},
+      "code_fingerprint_present": true,
+      "report_bytes": 1875,
+      "annotations": {},
+      "findings": [
+        {
+          "id": "step5-over-pack-e5f6a7b8",
+          "source": "plan-completeness",
+          "severity": "medium",
+          "step_id": null,
+          "anchor": "step5-over-pack",
+          "title": "Step 5 still mixes schema, migration, and API surface"
+        }
+      ]
+    },
+    {
+      "kind": "completeness",
+      "step_id": null,
+      "created_at": "2026-06-03T09:00:00Z",
+      "plan_fingerprint": "fp-run-3",
+      "code_fingerprint": {},
+      "code_fingerprint_present": true,
+      "report_bytes": 1902,
+      "annotations": {},
+      "findings": [
+        {
+          "id": "step5-over-pack-c9d0e1f2",
+          "source": "plan-completeness",
+          "severity": "medium",
+          "step_id": null,
+          "anchor": "step5-over-pack",
+          "title": "Step 5 remains over-packed; audit keeps re-flagging it"
+        }
+      ]
+    }
+  ]
+}

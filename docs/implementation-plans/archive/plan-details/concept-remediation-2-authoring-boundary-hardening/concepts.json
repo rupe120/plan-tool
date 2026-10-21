@@ -1,0 +1,285 @@
+{
+  "plan_slug": "concept-remediation-2-authoring-boundary-hardening",
+  "plan_fingerprint": "29ae6ad547cff1a23ffde65b2036544c0890d8a460519e9355e8a70bece9e840",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Harden the two model-authored boundaries in the concept workflow so untrusted output either becomes a validated, recoverably published artifact or causes no artifact change. Concept enrichment accepts only claims grounded in supplied evidence and fails softly for all invalid model output, while fresh detail generation always requires the structured response envelope and preserves the prior body if replacement fails. Deferral persistence must consume the public publication contract from `concept-remediation-1-publication-transactions`; this plan owns validation, parsing, bounded regeneration, and local detail replacement, but not multi-artifact concept publication, coverage policy, or structural ownership transformations.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Harden the two model-authored boundaries in the concept workflow so untrusted output either becomes a validated, recoverably published artifact or causes no artifact change. Concept enrichment accepts only claims grounded in supplied evidence and fails softly for all invalid model output, while fresh detail generation always requires the structured response envelope and preserves the prior body if replacement fails. Deferral persistence must consume the public publication contract from `concept-remediation-1-publication-transactions`; this plan owns validation, parsing, bounded regeneration, and local detail replacement, but not multi-artifact concept publication, coverage policy, or structural ownership transformations.\",\"title\":\"overview\"}"
+      }
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "The completed integration validates response shape without consistently validating meaning or preserving artifacts. `_parse_emitted_concepts()` accepts an unrelated title when `evidence_rationale` merely contains a literal excerpt, and an unpaired surrogate can pass parsing before ID derivation raises `UnicodeEncodeError` outside the fail-soft boundary. `_author_step_detail()` permits legacy Markdown when no concept tree is loaded, and `_archive_existing_detail()` removes the active detail before the replacement is known to be safe. The serial/concurrent regeneration contract also lacks coverage for sibling preservation, deduplication, bounded retries, persistence failure, dry-run, and command failure.\n\nThe reconciliation evidence is recorded in `docs/implementation-plans/plan-details/concept-signoff-integrations/convergence-evidence-and-split-recommendation.md`: `step2-run-reconcile-ce244a8e`, `step2-run-reconcile-84957c73`, `step4-run-reconcile-8ae6c687`, `step4-run-reconcile-04ac0dba`, `step4-run-reconcile-28491d51`, and `step4-run-reconcile-a6c41ba8`. The publication API gap identified by `step4-run-reconcile-5830b0ac` belongs to `concept-remediation-1-publication-transactions`, so closing it with another local schema or direct save would violate the intended ownership boundary.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"The completed integration validates response shape without consistently validating meaning or preserving artifacts. `_parse_emitted_concepts()` accepts an unrelated title when `evidence_rationale` merely contains a literal excerpt, and an unpaired surrogate can pass parsing before ID derivation raises `UnicodeEncodeError` outside the fail-soft boundary. `_author_step_detail()` permits legacy Markdown when no concept tree is loaded, and `_archive_existing_detail()` removes the active detail before the replacement is known to be safe. The serial/concurrent regeneration contract also lacks coverage for sibling preservation, deduplication, bounded retries, persistence failure, dry-run, and command failure.\\n\\nThe reconciliation evidence is recorded in `docs/implementation-plans/plan-details/concept-signoff-integrations/convergence-evidence-and-split-recommendation.md`: `step2-run-reconcile-ce244a8e`, `step2-run-reconcile-84957c73`, `step4-run-reconcile-8ae6c687`, `step4-run-reconcile-04ac0dba`, `step4-run-reconcile-28491d51`, and `step4-run-reconcile-a6c41ba8`. The publication API gap identified by `step4-run-reconcile-5830b0ac` belongs to `concept-remediation-1-publication-transactions`, so closing it with another local schema or direct save would violate the intended ownership boundary.\",\"title\":\"problem statement\"}"
+      }
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "Concept enrichment uses a conservative, deterministic grounding rule shared by `plan_tool/prompts/concept-emit.md` and `plan_tool/concept_tree.py`. A response must provide a bounded evidence span and a claim/title whose normalized meaningful tokens are demonstrably present in or tied to that span; candidates are rejected when lexical validation cannot establish support. Parsing also bounds title, rationale/span, hierarchy depth, breadth, and total output size and rejects duplicate keys, unknown fields, invalid suggested states, empty or whitespace-only claims, control characters, invalid Unicode, and unsafe hierarchy outcomes. If every enriched candidate is rejected, deterministic concepts remain.\n\nThe fail-soft producer boundary begins before backend invocation and extends through normalization, encoding, ID/source-key derivation, candidate construction, and merge into a deep copy. Backend-output failures return the documented no-enrichment result without changing the input tree, while programmer and filesystem errors outside that narrow untrusted-output path remain visible.\n\nEvery fresh response handled by `plan_tool/detail.py` follows the structured protocol defined by `plan_tool/prompts/detail.md`, regardless of sidecar presence, serial or parallel execution, resume, or reprompt. The envelope separates the detail body from structured deferral candidates and permits prose/candidate parity validation. Any legacy parsing retained must be selected through explicit checkpoint version/provenance; absence of a sidecar cannot enable it, and malformed fresh output exhausts the bounded reprompt policy without replacing an artifact.\n\nDetail replacement is a recoverable local operation. The new body is rendered and validated before the old file moves, and a journal records the old active path and archive destination. Failure during the new write or post-write validation restores the prior active bytes; restoration failure produces a distinct error containing the recoverable archive path. The canonical active filename used by plan pointers and downstream tools remains unchanged.\n\nInclude-triggered regeneration is deduplicated by affected step and bounded. Workers return bodies and candidates without mutating shared concept state; the serial parent validates all required bodies, merges candidates, and publishes through the public authority supplied by `concept-remediation-1-publication-transactions`. Contradictory output stops with an actionable unresolved-candidate report and retains the last known-good artifacts. Relevant implementation locations are `plan_tool/concept_tree.py`, `plan_tool/detail.py`, `plan_tool/cli/authoring.py`, and checkpoint metadata if explicit legacy recognition is required.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"Concept enrichment uses a conservative, deterministic grounding rule shared by `plan_tool/prompts/concept-emit.md` and `plan_tool/concept_tree.py`. A response must provide a bounded evidence span and a claim/title whose normalized meaningful tokens are demonstrably present in or tied to that span; candidates are rejected when lexical validation cannot establish support. Parsing also bounds title, rationale/span, hierarchy depth, breadth, and total output size and rejects duplicate keys, unknown fields, invalid suggested states, empty or whitespace-only claims, control characters, invalid Unicode, and unsafe hierarchy outcomes. If every enriched candidate is rejected, deterministic concepts remain.\\n\\nThe fail-soft producer boundary begins before backend invocation and extends through normalization, encoding, ID/source-key derivation, candidate construction, and merge into a deep copy. Backend-output failures return the documented no-enrichment result without changing the input tree, while programmer and filesystem errors outside that narrow untrusted-output path remain visible.\\n\\nEvery fresh response handled by `plan_tool/detail.py` follows the structured protocol defined by `plan_tool/prompts/detail.md`, regardless of sidecar presence, serial or parallel execution, resume, or reprompt. The envelope separates the detail body from structured deferral candidates and permits prose/candidate parity validation. Any legacy parsing retained must be selected through explicit checkpoint version/provenance; absence of a sidecar cannot enable it, and malformed fresh output exhausts the bounded reprompt policy without replacing an artifact.\\n\\nDetail replacement is a recoverable local operation. The new body is rendered and validated before the old file moves, and a journal records the old active path and archive destination. Failure during the new write or post-write validation restores the prior active bytes; restoration failure produces a distinct error containing the recoverable archive path. The canonical active filename used by plan pointers and downstream tools remains unchanged.\\n\\nInclude-triggered regeneration is deduplicated by affected step and bounded. Workers return bodies and candidates without mutating shared concept state; the serial parent validates all required bodies, merges candidates, and publishes through the public authority supplied by `concept-remediation-1-publication-transactions`. Contradictory output stops with an actionable unresolved-candidate report and retains the last known-good artifacts. Relevant implementation locations are `plan_tool/concept_tree.py`, `plan_tool/detail.py`, `plan_tool/cli/authoring.py`, and checkpoint metadata if explicit legacy recognition is required.\",\"title\":\"architecture\"}"
+      }
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- Create collision transactions, sidecar-only resume, manifest recovery, and scope-out publication are excluded because they are separate publication concerns.\n- Defining or implementing the canonical concept publisher is excluded; this plan consumes the public contract from `concept-remediation-1-publication-transactions`.\n- `wont_do` completeness semantics and structural deferral-link remapping are excluded as ownership and lifecycle concerns.\n- A second model call to judge whether the first model's claim is grounded is excluded in favor of deterministic validation.\n- Rewriting old detail files solely to add envelopes is excluded; compatibility, if retained, is provenance-gated.\n- General-purpose filesystem transactions are excluded beyond detail artifact replacement.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- Create collision transactions, sidecar-only resume, manifest recovery, and scope-out publication are excluded because they are separate publication concerns.\\n- Defining or implementing the canonical concept publisher is excluded; this plan consumes the public contract from `concept-remediation-1-publication-transactions`.\\n- `wont_do` completeness semantics and structural deferral-link remapping are excluded as ownership and lifecycle concerns.\\n- A second model call to judge whether the first model's claim is grounded is excluded in favor of deterministic validation.\\n- Rewriting old detail files solely to add envelopes is excluded; compatibility, if retained, is provenance-gated.\\n- General-purpose filesystem transactions are excluded beyond detail artifact replacement.\",\"title\":\"out of scope\"}"
+      }
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- Grounding can be too strict and reject useful enrichment. The control is to prefer false negatives because deterministic seeds remain, document normalization, and test real evidence phrases.\n- Grounding can be too permissive through weak overlap such as stop words. The control is to require a claim-to-span relationship rather than any shared stop word or literal rationale.\n- Compatibility fallback can reopen permissive parsing. The control is to gate legacy parsing on explicit persisted provenance and never on sidecar absence.\n- A broad fail-soft catch can hide programmer defects. The control is to catch only errors attributable to invocation or model-output processing and verify that unrelated errors surface.\n- Regeneration can loop on contradictory output. The control is to cap attempts, deduplicate by step, report unresolved candidates, and retain known-good artifacts on exhaustion.\n- Parallel workers can race while updating shared concept state. The control is for workers to return immutable outcomes while only the serial parent merges and publishes.\n- Detail restoration can itself fail. The operation must surface a distinct error and retain the recoverable archive path rather than describing archival as successful recovery.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- Grounding can be too strict and reject useful enrichment. The control is to prefer false negatives because deterministic seeds remain, document normalization, and test real evidence phrases.\\n- Grounding can be too permissive through weak overlap such as stop words. The control is to require a claim-to-span relationship rather than any shared stop word or literal rationale.\\n- Compatibility fallback can reopen permissive parsing. The control is to gate legacy parsing on explicit persisted provenance and never on sidecar absence.\\n- A broad fail-soft catch can hide programmer defects. The control is to catch only errors attributable to invocation or model-output processing and verify that unrelated errors surface.\\n- Regeneration can loop on contradictory output. The control is to cap attempts, deduplicate by step, report unresolved candidates, and retain known-good artifacts on exhaustion.\\n- Parallel workers can race while updating shared concept state. The control is for workers to return immutable outcomes while only the serial parent merges and publishes.\\n- Detail restoration can itself fail. The operation must surface a distinct error and retain the recoverable archive path rather than describing archival as successful recovery.\",\"title\":\"risks\"}"
+      }
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "Unit coverage belongs primarily in `tests/test_concept_emit.py` and `tests/test_detail.py`; cross-module CLI behavior belongs in `tests/cli/test_authoring_cmds.py`, following the conventions documented by `TESTING.md`.\n\nIn `tests/test_concept_emit.py`, exercise `_parse_emitted_concepts()` and enrichment for grounded and ungrounded titles sharing the same rationale excerpt; stop-word-only overlap; punctuation and case normalization; repeated terms; nested candidates and rejected parents; duplicate siblings and duplicate keys; unknown fields; invalid suggested states; empty claims; bounds; mixed valid and invalid candidates; unpaired surrogates in titles, evidence spans, rationale, and parent paths; backend failures; and byte-for-byte input-tree immutability.\n\nIn `tests/test_detail.py`, exercise `_author_step_detail()` with and without a concept record, resumed fresh-format checkpoints, explicitly recognized legacy checkpoints, malformed envelopes, empty candidates, prose/candidate mismatch, and bounded reprompt exhaustion. Exercise `_archive_existing_detail()` and its replacement operation with injected failures at archive creation, move, new write, post-write validation, and restoration, asserting exact active and archived paths and bytes. Cover serial and parallel candidate collection, sibling preservation, multi-concept deduplication, bounded include regeneration, repeated contradiction, shared-record publication failure, and the rule that workers never persist shared concept state.\n\nIn `tests/cli/test_authoring_cmds.py`, cover dry-run and command-failure concept-state behavior, including the case where a failed sibling must not allow successful siblings to publish inconsistent shared state. Run the focused suites, the full suite, prompt/data-contract drift checks, and `reconcile-code`; the seed does not name existing test function or class identifiers beyond the implementation symbols above.\n\nPer-step test strategy: contract tightening, fail-soft handling, structured detail parsing, recoverable replacement, and regeneration/CLI behavior are implemented with their focused tests; any refactoring needed to expose these seams receives characterization coverage first; checkpoint metadata or documentation-only changes receive artifact-appropriate validation.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"Unit coverage belongs primarily in `tests/test_concept_emit.py` and `tests/test_detail.py`; cross-module CLI behavior belongs in `tests/cli/test_authoring_cmds.py`, following the conventions documented by `TESTING.md`.\\n\\nIn `tests/test_concept_emit.py`, exercise `_parse_emitted_concepts()` and enrichment for grounded and ungrounded titles sharing the same rationale excerpt; stop-word-only overlap; punctuation and case normalization; repeated terms; nested candidates and rejected parents; duplicate siblings and duplicate keys; unknown fields; invalid suggested states; empty claims; bounds; mixed valid and invalid candidates; unpaired surrogates in titles, evidence spans, rationale, and parent paths; backend failures; and byte-for-byte input-tree immutability.\\n\\nIn `tests/test_detail.py`, exercise `_author_step_detail()` with and without a concept record, resumed fresh-format checkpoints, explicitly recognized legacy checkpoints, malformed envelopes, empty candidates, prose/candidate mismatch, and bounded reprompt exhaustion. Exercise `_archive_existing_detail()` and its replacement operation with injected failures at archive creation, move, new write, post-write validation, and restoration, asserting exact active and archived paths and bytes. Cover serial and parallel candidate collection, sibling preservation, multi-concept deduplication, bounded include regeneration, repeated contradiction, shared-record publication failure, and the rule that workers never persist shared concept state.\\n\\nIn `tests/cli/test_authoring_cmds.py`, cover dry-run and command-failure concept-state behavior, including the case where a failed sibling must not allow successful siblings to publish inconsistent shared state. Run the focused suites, the full suite, prompt/data-contract drift checks, and `reconcile-code`; the seed does not name existing test function or class identifiers beyond the implementation symbols above.\\n\\nPer-step test strategy: contract tightening, fail-soft handling, structured detail parsing, recoverable replacement, and regeneration/CLI behavior are implemented with their focused tests; any refactoring needed to expose these seams receives characterization coverage first; checkpoint metadata or documentation-only changes receive artifact-appropriate validation.\",\"title\":\"testing\"}"
+      }
+    },
+    {
+      "id": "62c5ad026e319cb492c516a319e2ecb9354e2dc133ce9949667b12e3d31ca665",
+      "title": "acceptance criteria",
+      "parent_path": [],
+      "order": 6,
+      "source": "- A concept title or claim unsupported by its cited evidence span is rejected even when its rationale contains a literal excerpt, as verified through `_parse_emitted_concepts()` coverage in `tests/test_concept_emit.py`.\n- Every invalid model-controlled Unicode value fails softly, and `tests/test_concept_emit.py` proves that the input tree remains byte-for-byte unchanged.\n- Fresh detail authoring through `_author_step_detail()` always requires the structured response envelope, independent of sidecar presence and job count, as verified in `tests/test_detail.py`.\n- If legacy parsing is retained, `tests/test_detail.py` proves that it is reachable only through explicit persisted provenance and cannot accept malformed fresh output.\n- A failed detail replacement leaves the prior body active byte-for-byte; if restoration fails, the error is distinct and reports the recoverable archive location.\n- Include-triggered regeneration is deduplicated and bounded, and tests prove workers never write shared concept state.\n- Deferral persistence calls the publication contract from `concept-remediation-1-publication-transactions` and does not introduce a local schema or direct save path.\n- Concurrent sibling candidates are preserved, while publisher failure or a failed sibling causes no inconsistent shared-state publication.\n- Dry-run and CLI command failures leave concept state unchanged, as verified in `tests/cli/test_authoring_cmds.py`.\n- Focused tests, the full suite, prompt/data-contract drift checks, and `reconcile-code` pass without an authoring-boundary finding.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "19:acceptance criteria",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- A concept title or claim unsupported by its cited evidence span is rejected even when its rationale contains a literal excerpt, as verified through `_parse_emitted_concepts()` coverage in `tests/test_concept_emit.py`.\\n- Every invalid model-controlled Unicode value fails softly, and `tests/test_concept_emit.py` proves that the input tree remains byte-for-byte unchanged.\\n- Fresh detail authoring through `_author_step_detail()` always requires the structured response envelope, independent of sidecar presence and job count, as verified in `tests/test_detail.py`.\\n- If legacy parsing is retained, `tests/test_detail.py` proves that it is reachable only through explicit persisted provenance and cannot accept malformed fresh output.\\n- A failed detail replacement leaves the prior body active byte-for-byte; if restoration fails, the error is distinct and reports the recoverable archive location.\\n- Include-triggered regeneration is deduplicated and bounded, and tests prove workers never write shared concept state.\\n- Deferral persistence calls the publication contract from `concept-remediation-1-publication-transactions` and does not introduce a local schema or direct save path.\\n- Concurrent sibling candidates are preserved, while publisher failure or a failed sibling causes no inconsistent shared-state publication.\\n- Dry-run and CLI command failures leave concept state unchanged, as verified in `tests/cli/test_authoring_cmds.py`.\\n- Focused tests, the full suite, prompt/data-contract drift checks, and `reconcile-code` pass without an authoring-boundary finding.\",\"title\":\"acceptance criteria\"}"
+      }
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 7,
+      "source": "- Publication transaction mechanics remain with `concept-remediation-1-publication-transactions` because that plan owns the canonical publication API.\n- Coverage and lifecycle conservation remain with `concept-remediation-3-ownership-lifecycle-accounting` because they are separate ownership-accounting concerns.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":7,\"parent_path\":[],\"source\":\"- Publication transaction mechanics remain with `concept-remediation-1-publication-transactions` because that plan owns the canonical publication API.\\n- Coverage and lifecycle conservation remain with `concept-remediation-3-ownership-lifecycle-accounting` because they are separate ownership-accounting concerns.\",\"title\":\"deferred\"}"
+      }
+    },
+    {
+      "id": "dade46eda5605a8d482c863df9df8fdcffd94020f94fb4f43dc77116d573f735",
+      "title": "Deterministic concept grounding",
+      "parent_path": [],
+      "order": 8,
+      "source": "Concept enrichment uses a conservative, deterministic grounding rule shared by `plan_tool/prompts/concept-emit.md` and `plan_tool/concept_tree.py`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "ed3cb2ddff2b203e27b7b8764acde94015c6c8730d06bcc2148c978908eb8058",
+      "title": "Claim-to-evidence span validation",
+      "parent_path": [
+        "Deterministic concept grounding"
+      ],
+      "order": 9,
+      "source": "A response must provide a bounded evidence span and a claim/title whose normalized meaningful tokens are demonstrably present in or tied to that span",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "5fe88426623f75591cd2c307ad662e052d6c341abd6e7589fe7264b9113416f9",
+      "title": "Concept output bounds",
+      "parent_path": [
+        "Deterministic concept grounding"
+      ],
+      "order": 10,
+      "source": "Parsing also bounds title, rationale/span, hierarchy depth, breadth, and total output size",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "1244650651374f58585c2973c2241bab9847ea3d9380bcc43414c0fd1ddc964e",
+      "title": "Unsafe concept candidate rejection",
+      "parent_path": [
+        "Deterministic concept grounding"
+      ],
+      "order": 11,
+      "source": "rejects duplicate keys, unknown fields, invalid suggested states, empty or whitespace-only claims, control characters, invalid Unicode, and unsafe hierarchy outcomes",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7a686ae9ad8192f630ea2f44b7e88143a768ec28999e05bcc171edb86e2bf04c",
+      "title": "Fail-soft concept enrichment",
+      "parent_path": [],
+      "order": 12,
+      "source": "Backend-output failures return the documented no-enrichment result without changing the input tree",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "6840a0081a04ad158ba6ee7954244048d644a3c6a7ed988b9add9f454f62fa30",
+      "title": "Structured detail response protocol",
+      "parent_path": [],
+      "order": 13,
+      "source": "Every fresh response handled by `plan_tool/detail.py` follows the structured protocol defined by `plan_tool/prompts/detail.md`",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "394c873c6182ecfc27a4c7f8d981c098d828d76ea10f92c883efed5f13843187",
+      "title": "Provenance-gated legacy parsing",
+      "parent_path": [],
+      "order": 14,
+      "source": "Any legacy parsing retained must be selected through explicit checkpoint version/provenance",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "a4a4f936c1ed3073d11f2fb911e72eb65de388c126bb2a5ddb4c287470dc90a2",
+      "title": "Recoverable detail replacement",
+      "parent_path": [],
+      "order": 15,
+      "source": "Detail replacement is a recoverable local operation.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "1f51af80b18db28b855c045d27dbccbb863357e70accffa7634f4f2897bb1726",
+      "title": "Pre-move body validation",
+      "parent_path": [
+        "Recoverable detail replacement"
+      ],
+      "order": 16,
+      "source": "The new body is rendered and validated before the old file moves",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "b8c073e829f582fdd62c2ae39640fa0277ac8e01af5fb2cb74d5bedfa39cfd21",
+      "title": "Prior active body restoration",
+      "parent_path": [
+        "Recoverable detail replacement"
+      ],
+      "order": 17,
+      "source": "Failure during the new write or post-write validation restores the prior active bytes",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "15be885e8f005c4a7be6b1c7b3791c0e730b4d9fdd11436a2b5961ea36ab4c47",
+      "title": "Distinct restoration failure error",
+      "parent_path": [
+        "Recoverable detail replacement"
+      ],
+      "order": 18,
+      "source": "restoration failure produces a distinct error containing the recoverable archive path",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7cb9a58ab3a17d9570b1c7a3db34b2b1216b6727a3f8133a859ccb970b970269",
+      "title": "Bounded include-triggered regeneration",
+      "parent_path": [],
+      "order": 19,
+      "source": "Include-triggered regeneration is deduplicated by affected step and bounded.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "7e3d1f56253e246f09f6f736d6d9a3db6b74a3ec9e0a1f54845026e83de208d6",
+      "title": "Immutable detail worker outcomes",
+      "parent_path": [],
+      "order": 20,
+      "source": "Workers return bodies and candidates without mutating shared concept state",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    },
+    {
+      "id": "9dcc8dc73287e6ae7751040e7d4720641e276023d02cb9e52444f6129669d122",
+      "title": "Concurrent sibling candidate preservation",
+      "parent_path": [],
+      "order": 21,
+      "source": "Concurrent sibling candidates are preserved, while publisher failure or a failed sibling causes no inconsistent shared-state publication.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {}
+    }
+  ],
+  "schema_version": 1
+}

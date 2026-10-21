@@ -1,0 +1,19 @@
+{
+  "plan_slug": "convergence-actuation-and-surfacing",
+  "grounded_at": "2026-07-07T20:49:49Z",
+  "plan_fingerprint": "fffa0bc003625c146254281483701ca125e74c722979db1f59cc9b3e89ba9f51",
+  "code_fingerprint": {
+    "BACKLOG.md": "bccf710ccb77e867d3da9a9883c40f006921ab93c057cdfc7bfe3aa6e137dc5f",
+    "CLAUDE.md": "b0c6b8fe84ae28f06a56f88f7598963be2379fb71d9d23760cbf9f6d68c1c574",
+    "RUNBOOK.md": "966b7e7e54630e1e66fa11ff745beb3948b9c3cf3835eec4f00acbc8b0f3c55c",
+    "docs/AUDIT_FLOW.md": "686aefb4a3126a945342be5acd2eb904be6406a024bb587e442854d827bd08c6",
+    "docs/cli/convergence.md": "5331acb02e9d7c6cb666ad422e1551c1e8f04f3e98ec58dbbd2974e99802b28f",
+    "plan_tool/cli/completeness_phases.py": "eba29500d461cdfc764b426f62c6b4e1bbefbbaf85010df1e65f29e974bc3573",
+    "plan_tool/cli/convergence_cmd.py": "e58bd28e48f2d8424d62b3c3276fcb71ad8e4895bd711d9f8b4ccf2fcf249305",
+    "plan_tool/completeness_report.py": "3c12ba14d94b2aedd2bd673b4f833419a41285dc41e6a479b42fa3e84712bc55",
+    "tests/cli/test_completeness_cmd.py": "fe6a48bbbc1ee9a42f356dc51c2a025853644bae1623ac351370806939bd9aec",
+    "tests/cli/test_convergence_cmd.py": "a2920c5bf1526c00e824febe4e3369394433442f26e0707728b6f10c0fb85c0c",
+    "tests/test_completeness_report.py": "4d14a1ba6ceca5f73a5d3d93ee123ce2ed9beb37e249f2cd4f1b81b94025ba60"
+  },
+  "schema_version": 1
+}

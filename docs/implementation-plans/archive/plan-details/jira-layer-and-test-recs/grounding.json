@@ -1,0 +1,15 @@
+{
+  "plan_slug": "jira-layer-and-test-recs",
+  "grounded_at": "2026-07-08T21:17:27Z",
+  "plan_fingerprint": "c4c67bf1ca9c7a494e13d6122e4019c040b1030da9fd6bf1752798b7e2d442e0",
+  "code_fingerprint": {
+    "BACKLOG.md": "0189d7e8e6bd7ac6c736a7b3b0d78a2e5165454be556069cf3da7b264dab4b83",
+    "JIRA_FORMAT.md": "a389e57c7b2770bcace661d8d69bcb6c5a3209c1a17ff11beec322dd8508b311",
+    "plan_tool/cli/jira_cmd.py": "06875d0fbb2de5a2e14295eb1a1f3a07b4b0d89c5e0ac3757483419848e4cad3",
+    "plan_tool/jira.py": "0b94024f1765107c3f3ed1d2b4ffc9569d97a721d876d4f0a413b69cdb56f8b0",
+    "plan_tool/prompts/jira.md": "fbf75d9d06b8317c26d81b929b4d65d477a9fa6507ecd7657f7f501dcbbac786",
+    "tests/cli/test_jira_cmds.py": "a9873cfbca43725ee86e5daa6718e8fb2aedd738167ed8dc8f1ce543beb1fb4c",
+    "tests/test_jira.py": "ecc157b6a5c9fddacce0c5ef578fef2d3f4212c86f2c651d5c09b1163659f5e3"
+  },
+  "schema_version": 1
+}

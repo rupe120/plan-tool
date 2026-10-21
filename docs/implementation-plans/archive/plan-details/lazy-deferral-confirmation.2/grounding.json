@@ -1,0 +1,24 @@
+{
+  "plan_slug": "lazy-deferral-confirmation",
+  "grounded_at": "2026-07-15T23:42:44Z",
+  "plan_fingerprint": "fb3922015e6218b0ddabfa869c7e06e5c1a37692da2d3fd303114137cb4622d4",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "8f209e7cf8cf890125589130bc4e49cf28a4f5bac78e9382e4d9a5aae2e9e035",
+    "plan_tool/cli/inspect.py": "5a902b77531300e8e93fd908aa8fe824c7e9a46a51ba3ed30ec76a6d70183c30",
+    "plan_tool/cli/scope_review_cmd.py": "9437df6442c08f9742a4c93b91d4f6c6f52d4cb60ba382209747f150ebfb88f5",
+    "plan_tool/completeness_report.py": "5a7629758232a4a5d6166de44b37bc7559170a3d247f248971868c4bedc3a385",
+    "plan_tool/concept_tree.py": "fb63c4f467fba65cf009df583b8ac601916a274c4cc0e1913c867033b5609389",
+    "plan_tool/create.py": "44af6126261992dc41c93b622367a42a129b570b4ddba678c756438f784d44ae",
+    "plan_tool/detail.py": "860c279458f99aca415391c99880b3f4abe1221e81160752e72cba89ea9166fc",
+    "plan_tool/review.py": "a9db8d75cfcff1bb955182f42caca43d21cef7deac6a7fb9835c9506538aac29",
+    "tests/cli/test_inspect_cmds.py": "5ec848d08351d2c01f5b3712c14d4b07ce9a1aa9a52f6876dfca77b8e296f3f4",
+    "tests/cli/test_scope_review_cmd.py": "353c9ae31f42681093f496d8c2a0f68d830f85377144c70ce056f5b40eddb03c",
+    "tests/test_completeness_report.py": "faf9daa68ce6a104b499f48ff39896ef584d38912b0afdb7e76373f3dbdd87e1",
+    "tests/test_concept_tree.py": "4734eb9849d3afa9605c24511f1660f8ab8cec722428724a556bc7928a81170c",
+    "tests/test_create.py": "13919074a9741c18d1949cda5606aadbaed15bf4f750df9ab7a7002b558d2a66",
+    "tests/test_data_contract.py": "c5f5c14d437cfa88b86eccb43b2b4a49e24819d120a1677e012da1796fca8f67",
+    "tests/test_detail.py": "97066f6478fc1ec7a6a60924b732ed63cd90dcfd41bb8a381e2b8bb39965bfa2",
+    "tests/test_review.py": "4b3790640697c286d95f397ce59e6ad4bd596006c0e64b21af7949de84204c19"
+  },
+  "schema_version": 1
+}

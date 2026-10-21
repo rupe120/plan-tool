@@ -1,0 +1,21 @@
+{
+  "plan_slug": "lessons-reuse-instrumentation",
+  "grounded_at": "2026-07-17T18:19:05Z",
+  "plan_fingerprint": "989308d2f0e2e712bb4ac732f46a16941746597c9358c6c097b9a198552b3bd3",
+  "code_fingerprint": {
+    ".gitignore": "6a8962ebb31633c14cb93c5f9a575e76b80df343f41bca004cecbb22ff10069f",
+    "experiments/lessons-utility/LESSONS.md": "55c19a828a278799f209029e7f5f99dc0d6d3b3ec2280ff84813672be16b4b8f",
+    "experiments/lessons-utility/salience_select.py": "a78684e9ebe1c38cd7f2775c1182d6a9a403d33a69300e90a199ade4a195df83",
+    "plan_tool/create.py": "0eb233a5b4c15e213d0b0cda2312f86ab2ec6609aea346ee0d8eabcc37bb279b",
+    "plan_tool/detail.py": "ec701cf10473ee72c531d10b6ebe71cf39904d22d93d66219e86b1ab332a032e",
+    "plan_tool/lessons.py": "557975e5e03d939a45bc3e7df8ccae808bb2cf364c5192c358c9bc2d34274f7a",
+    "plan_tool/prompts/extract-lessons-detail.md": "d9244ffa96df73cca8c525e58451b014d1a2f74a0bffd4ce84959435b2a11f01",
+    "plan_tool/prompts/extract-lessons-review.md": "1d769c883b7a79bfa5d9659530ba111dd5a44f648b2d0b3ec1217ea9c03631ad",
+    "plan_tool/review.py": "e8fedf7b260e1013fd381e352db84faab3e670d26e343f58011c337496f7a71e",
+    "tests/test_create.py": "c5a7967488996b9c7efc75cc08ba5063130c9024090a68fcf8e0d9feb25b704d",
+    "tests/test_detail.py": "b63cfac1d3fd5d337f8ab8c76ec43710798ca8584b07c761e65d09f44909b04a",
+    "tests/test_lessons.py": "2620752f16401de5330e303b5beb31e475be341a897dc096c8c99b46853c1fbe",
+    "tests/test_review.py": "647de538e0fc5664e2353b88631aad64a6d0f7e1111ec920d81a73ada2c7e7dc"
+  },
+  "schema_version": 1
+}

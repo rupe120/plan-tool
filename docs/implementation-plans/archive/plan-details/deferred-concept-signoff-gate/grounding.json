@@ -1,0 +1,32 @@
+{
+  "plan_slug": "deferred-concept-signoff-gate",
+  "grounded_at": "2026-07-11T20:36:11Z",
+  "plan_fingerprint": "460f47699cb3fe90b2fd1f7a56cdde750adcd848b05f2a6c3f0985ddbeba6142",
+  "code_fingerprint": {
+    "BACKLOG.md": "b1c87ad483184765d7149c531f366a714a8d6b66eaf3cfc513e76040f0ad3152",
+    "CAPABILITIES.md": "8577e7ad0edfe8673dac37df88eebd07241662c9b42381df9f6f059f01a722df",
+    "CLAUDE.md": "228f01bb1387c48928367ea67016d29e0d3dd45866baa7e04ce3b6052f741e71",
+    "DATA_CONTRACT.md": "5a463df79c401d704b9082c604b9c8bac8ec39ef12185ccedce24898495440a2",
+    "RUNBOOK.md": "8eea88000376f74300873a4f761cc9f0104af03becd0418412a050cd8a77d0c5",
+    "TESTING.md": "7bcb03abec79f6f6b66eee3141cd63e1a505b9627c5e3d39cad6af6361ef53c9",
+    "docs/cli/README.md": "dc8a70efb57f3880bea42dc13b3b6c6260f963c4e897619df53a7f82391afe10",
+    "plan_tool/cli/__init__.py": "c441849d6d8c3ce2a895e8cfb1912966cbdc84f03b45cd317e5001dc4635df09",
+    "plan_tool/cli/app.py": "7c97be0b721fbe64f01c924082d7a134389e3090572ec7253318b765c7081361",
+    "plan_tool/cli/parser.py": "c0d0548e055fd067d5dbe43cd366f745eab7675eb222aa201ea470af82e64bed",
+    "plan_tool/completeness_report.py": "edbf60e6da194b8727c69620736349d7fd42515dd481aace4c060a1cf1779a57",
+    "plan_tool/create.py": "42ec6181485aeb9af689a98a46f42e2d7a40415e5ab47dd9545d15773ccbf23e",
+    "plan_tool/data_contract.py": "c10ca90f92e20b10fb78a9c5f5b60e01d08f332bc3bb67fc37eb66cc85f697e0",
+    "plan_tool/detail.py": "36af4d1539086a7320f922bf0847bfc00a9668a692447e3feb94472008788a29",
+    "plan_tool/prompts/detail.md": "2eec8fd942cb160d59a2ebc17f44252d326780e1907b505dec32d37720d709fe",
+    "plan_tool/prompts/distill-seed.md": "52a3d610eabded063ce745c6a4ad81e6619e6e1a4177eb62b68640b3cae0e687",
+    "plan_tool/review.py": "f6b70c6a99b52362b5df35cbecfb2fc13954caf237c53005baa7b1ff4363bb47",
+    "plan_tool/scope_out.py": "251614e8f28262eb828d5a4e4bb666eb84737f45831380fbe7c2967caf4401d5",
+    "tests/cli/package_surface_help.golden.txt": "3d6c2e6eb6ece94eafa0c301ca87395cf68e513e250563736dc2c6f6eb1d62a5",
+    "tests/cli/test_completeness_apply_parallel.py": "c9ee87acfde0d3084d7593e3cf29bb43d53764e092c0793c1bcd8c11d3178f3e",
+    "tests/test_completeness_report.py": "dbd392559986b0c8e4a8d4d588b87088fc1cb207e6416f2c14ce137b7d1d84d0",
+    "tests/test_create.py": "e1ba840ec6d3d97fc991ce2802d63a8f294a8dc65bf6ae10f40bfa6a3d807674",
+    "tests/test_detail.py": "143c0468d90888f21de74a96967d6fb715919919b9c992a3b42a44a95579d6c8",
+    "tests/test_scope_out.py": "7f5cb7c4bd22ab1e194bc07d3825180eea2dbd980833bd5e0ae49bcc94a9988f"
+  },
+  "schema_version": 1
+}

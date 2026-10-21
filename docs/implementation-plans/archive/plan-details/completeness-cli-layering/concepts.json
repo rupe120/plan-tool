@@ -1,0 +1,128 @@
+{
+  "plan_slug": "completeness-cli-layering",
+  "plan_fingerprint": "169d137d4585a528f3010f17de675188867f9e25e5a213ae699c77199e7a41f3",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "overview"
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "problem statement"
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "architecture"
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 3,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "risks"
+    },
+    {
+      "id": "e466d1d8f95285e23e97261ab7abd97ab96cce3efabc6d644048f28408f2d8e6",
+      "title": "steps",
+      "parent_path": [],
+      "order": 4,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "steps"
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "testing"
+    },
+    {
+      "id": "62c5ad026e319cb492c516a319e2ecb9354e2dc133ce9949667b12e3d31ca665",
+      "title": "acceptance criteria",
+      "parent_path": [],
+      "order": 6,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "acceptance criteria"
+    },
+    {
+      "id": "10e39018ee270585a0a462209a0dc33bb3a9b23c1c290219a91237462d9cdb42",
+      "title": "references",
+      "parent_path": [],
+      "order": 7,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "references"
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 8,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "out of scope"
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 9,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "deferred"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

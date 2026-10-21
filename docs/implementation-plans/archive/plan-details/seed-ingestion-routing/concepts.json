@@ -1,0 +1,32 @@
+{
+  "plan_slug": "seed-ingestion-routing",
+  "plan_fingerprint": "4d571d664a9785af36918dd5bbfe88cc57b312d410de204f19613f8dc7069dea",
+  "concepts": [
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "architecture"
+    },
+    {
+      "id": "22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc",
+      "title": "terminal route lifecycle",
+      "parent_path": [],
+      "order": 1,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "terminal route lifecycle"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

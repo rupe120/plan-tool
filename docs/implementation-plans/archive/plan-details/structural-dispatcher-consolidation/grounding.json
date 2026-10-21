@@ -1,0 +1,14 @@
+{
+  "plan_slug": "structural-dispatcher-consolidation",
+  "grounded_at": "2026-07-08T19:20:27Z",
+  "plan_fingerprint": "401a3a8de1968e3b72f4bf49054fb7b7c8077aef6201cf6f15f89f8e97f944a3",
+  "code_fingerprint": {
+    "BACKLOG.md": "586a9d7f444564c1cdfb2b5aa2e34b84d5cfa8de654db63cdc8e60928b587cfa",
+    "CLAUDE.md": "51a9d78f8c0815fc8f4ccc552b09ca33f3f9b442681c06bfdd6e6e1e624a02d9",
+    "plan_tool/cli/review_actions.py": "20f9959fc29611cc0f8212e5db0b24bb5c9cb3462503140be9b7cb8da90c40d6",
+    "plan_tool/review_walk.py": "e6811fedcb636a13e587eeb48bd6a0bae6681216322c64c054c895340dc0d199",
+    "tests/cli/test_review_actions.py": "22439a8ff5f3ce41cc66d1415bb4aab7f1945d7c4c26f54c60362988dfee04cd",
+    "tests/test_review_walk.py": "de2050edd09bdfc37736d54d0212f40421937f658893a69111991a9a4a8d840f"
+  },
+  "schema_version": 1
+}

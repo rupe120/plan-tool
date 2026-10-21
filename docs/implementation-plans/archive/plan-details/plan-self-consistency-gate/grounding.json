@@ -1,0 +1,14 @@
+{
+  "plan_slug": "plan-self-consistency-gate",
+  "grounded_at": "2026-07-09T01:20:30Z",
+  "plan_fingerprint": "a4304d414381d5a10e5f32e5b7f73c7b9f5517ce68f0ada7afd04e96fb38e536",
+  "code_fingerprint": {
+    "BACKLOG.md": "b25816c03d9d6a3bc407eb7adaf2b2a5ad7c15223934e7f1f8b15cff4cb9cb6a",
+    "plan_tool/cli/completeness_cmd.py": "573b48261ef74655e5c626929a198749b86f62683406c6f23758df7a378a1bd9",
+    "plan_tool/cli/completeness_phases.py": "d09b515497976372c1dd51e86fddf8dadd93dc25fb872e6f4a36df65e465e920",
+    "plan_tool/review.py": "15651c6829d3b353ab169095e9ed2bd04e04ea1786210ef30b81f89eac53b899",
+    "tests/cli/test_completeness_cmd.py": "257eea2e1c48a530c887ebdf0fa4c8289bb7749d7816b3acfca748449fc7822f",
+    "tests/test_review.py": "a26bb33a5608148eaba6295485d5c3c848b7d1a9988a580e2357fcc79e60a5e5"
+  },
+  "schema_version": 1
+}

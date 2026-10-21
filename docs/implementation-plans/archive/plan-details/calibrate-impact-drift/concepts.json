@@ -1,0 +1,32 @@
+{
+  "plan_slug": "calibrate-impact-drift",
+  "plan_fingerprint": "69b14799293c2c9919d7a544d05cedbeb293bb237819f8662490c44d0210dd6e",
+  "concepts": [
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "architecture"
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 1,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "out of scope"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

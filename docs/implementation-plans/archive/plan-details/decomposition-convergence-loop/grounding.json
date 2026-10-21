@@ -1,0 +1,15 @@
+{
+  "plan_slug": "decomposition-convergence-loop",
+  "grounded_at": "2026-06-20T23:59:17Z",
+  "plan_fingerprint": "64a9e7ade65086a43df8563193d4b672f9c7ffba293781ce60e0fa189a4eb733",
+  "code_fingerprint": {
+    "BACKLOG.md": "472aa90d3bfadeb214859ca42324fce207aedeac8db2ca752484b7068e0337b3",
+    "CLAUDE.md": "3d67096d5fb31612eae60de4f3bea163434617d0d01039cb3afd030dfaf8242a",
+    "RUNBOOK.md": "553884ec1a78432ec020f96a31f3b040ace35eb3281e2e335fe462ee09d5b1a4",
+    "docs/cli/README.md": "d1f8d0bb7f9a32a627806ce0f3cfd7608dbe54240adcf0da436444e98eeac309",
+    "plan_tool/cli/__init__.py": "d868f6cccb8843cefd5a7cc4c3747dc59bdec550edf1d53cd3c9bb6d7795b804",
+    "plan_tool/cli/app.py": "14a6c529e0018be03b5d1930b3622974c57eb6a15b13e6f895085caecee14943",
+    "plan_tool/cli/parser.py": "460891b93e6b66db86bcdf942c14f731e4bb901428410a6d8dfee0915400e45c"
+  },
+  "schema_version": 1
+}

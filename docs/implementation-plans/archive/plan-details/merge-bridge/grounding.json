@@ -1,0 +1,24 @@
+{
+  "plan_slug": "merge-bridge",
+  "grounded_at": "2026-07-06T18:12:11Z",
+  "plan_fingerprint": "a521ed2bc03d765e73f66d7980bc662087b23038d4a9673b5753c3ffd77a0436",
+  "code_fingerprint": {
+    "BACKLOG.md": "3c557b50f12b23590e44ebe11ae17bf73b1104e4c3643ae6a4511a6ebc0e1dbe",
+    "CLAUDE.md": "a184fba04a37a511c910beb2de216dc98496a6ecadea306e211122970fcb1b4c",
+    "RUNBOOK.md": "7de780ed0238d19fe4e8cd630d06f5672a7560638580667ee0336435cf1b190d",
+    "docs/cli/reconcile-plan-walk.md": "ac3c235c33d374993e4c903c5966cc78beca93fa982c21875eeca09c29b4bc34",
+    "docs/cli/reconcile-plan.md": "ce0b885bae038b69f98638f8fd71969b7ba7f93b930d2bf95979f65376a6d3e2",
+    "plan_tool/cli/review_actions.py": "0060e34d1575628beb164500a0a835fc721ece76da8a6e5ccc0870939daef209",
+    "plan_tool/cli/review_cmd.py": "db372f13a9bd9b106309a63ed5d353950f6d71e367bf6e3de11a7a0af338a90f",
+    "plan_tool/detail.py": "cc03642eae557a51cd3bff253c532081b075cd6f2eaa6aacd15ae34ccd85ae33",
+    "plan_tool/granularity.py": "8e04383f636bdd91200a3ebf26f0fd5890126aca9d73488e14490e7a5f5e32c8",
+    "plan_tool/review.py": "4ec5d2a54f6bd720c082300e4e68284ad0f85265ad2db3b9e9dd19c031980ce4",
+    "plan_tool/review_walk.py": "6796c6ab5a9a5c309f83ff961d12267e6b3d5e21e41f327a9cce0033475af62f",
+    "tests/cli/test_review_actions.py": "2dcec962140f162068b6eacd0e72f5a808f39be14ce10c50e88326d6cb45b31b",
+    "tests/test_detail.py": "4e116a55088c371254e2d265b8a608a4f6fee45e6bed1eae10929009ebc6a499",
+    "tests/test_granularity.py": "556f11043f27842a22690fab79b6dbe623238807e43ccd7b1ac9f5e78ae92435",
+    "tests/test_review.py": "25f81be2e90cce186c8920820df391e35f2c4aaee08d3e8031a270267d67b09f",
+    "tests/test_review_walk.py": "f87d1b3d4910a42c008bfbe3895882da02373bb2a9f0468cf77d5735862fcabd"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,19 @@
+{
+  "plan_slug": "escalate-structural-findings-to-split",
+  "grounded_at": "2026-06-20T05:31:41Z",
+  "plan_fingerprint": "cbdd9495ec56a61289054c4eff4d974116adbed7cc7034d89f4e465f19705c5b",
+  "code_fingerprint": {
+    "CLAUDE.md": "de1c16a580b8a9fb380d63bf79a406bec63ff265f2ae2f9e44370e691b0dcaa7",
+    "RUNBOOK.md": "7ac1bf1ebfd7e41880bcbac097d5947ba42b41d1168418facdeea7c2192fd1db",
+    "plan_tool/cli/review_actions.py": "2cf36304f0508e5a1a15d547cfcfbe67c99a4340232806f46c1b100cbf78c7d9",
+    "plan_tool/detail.py": "594cdc2144e74ad0defe18e309189a8025e90ff52e867898274b4c6124226f8a",
+    "plan_tool/launcher.py": "643167658df522dc04b626b13aad37aeec6f94100e28719ee0465a7e31a070e8",
+    "plan_tool/prompts/apply-finding.md": "485b47294819146fbf33b1106f58f7c929de4d85133826a9f1776601c2176696",
+    "plan_tool/review.py": "6f172ef0f0126c80a9a553edc992b9fdd3758bb8bec78d08dbbc6fd40f69d554",
+    "tests/cli/test_review_actions.py": "720996ec35d035d1216731dae1c1fff4d42ae5f2f1f99e8a19560fbd2d826bab",
+    "tests/test_detail.py": "db41044099060e7a0649e471b5d7bd171d2018b0086cea16b6f144477581ec5b",
+    "tests/test_launcher.py": "147511d8de4cd81ad7306874f382b0a09b6ffc55352697c728026d0afa31872b",
+    "tests/test_review.py": "f2dc2997acb47ae6cfc0b1cecfb85a3cf7a1f3a82e6d40241760e3bab075dd8e"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,538 @@
+[
+ {
+  "sha": "3e776d12a20f9a763ff59993518a067075e19501",
+  "slug": "jira-grade-01-detail-instrument",
+  "step": 8,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-jira-grade-01-detail-instrument.md",
+  "test_files": [
+   "tests/cli/test_completeness_cmd.py",
+   "tests/test_review.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 1.48s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/cli/test_completeness_cmd.py",
+   "tests/test_review.py"
+  ]
+ },
+ {
+  "sha": "19e12554cc8ec0bce48d90620d335a003eaef5f5",
+  "slug": "impact-convergence-03-calibrated-demote",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-impact-convergence-03-calibrated-demote.md",
+  "test_files": [
+   "tests/test_convergence.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "PASS (check stays silent)",
+  "rc": 0,
+  "note": "\u001b[32m\u001b[32m\u001b[1m77 passed\u001b[0m\u001b[32m in 0.71s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_convergence.py"
+  ]
+ },
+ {
+  "sha": "272758b4239fd3562b00b448f2befa6fa13df8a7",
+  "slug": "concept-decision-record-core",
+  "step": 2,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-concept-decision-record-core.md",
+  "test_files": [
+   "tests/test_parser.py",
+   "tests/test_review.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 1.14s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_parser.py",
+   "tests/test_review.py"
+  ]
+ },
+ {
+  "sha": "44ebbbd221121d4b3edf7e630b6db0f20b6f9e02",
+  "slug": "structural-remedy-convenience-arms",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-structural-remedy-convenience-arms.md",
+  "test_files": [
+   "tests/test_scope_out.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m20 failed\u001b[0m, \u001b[32m64 passed\u001b[0m\u001b[31m in 1.21s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_scope_out.py"
+  ]
+ },
+ {
+  "sha": "b60e8f8bb25fb387fc623e89e6e26481da01e32c",
+  "slug": "structural-dispatcher-consolidation",
+  "step": 3,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-structural-dispatcher-consolidation.md",
+  "test_files": [
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.73s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_review_walk.py"
+  ]
+ },
+ {
+  "sha": "3bea84b962dee5b783a0f0e419fb32aeacc51b77",
+  "slug": "structural-dispatcher-consolidation",
+  "step": 2,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-structural-dispatcher-consolidation.md",
+  "test_files": [
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.74s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_review_walk.py"
+  ]
+ },
+ {
+  "sha": "03f443447e1732aa7b5290966b9397ad8fad261e",
+  "slug": "convergence-actuation-and-surfacing",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-convergence-actuation-and-surfacing.md",
+  "test_files": [
+   "tests/cli/test_convergence_cmd.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.80s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/cli/test_convergence_cmd.py"
+  ]
+ },
+ {
+  "sha": "4276cac27084b8d9440fbf497a48fa97e4fcd559",
+  "slug": "symbol-aware-prompt-excerpts",
+  "step": 7,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-symbol-aware-prompt-excerpts.md",
+  "test_files": [
+   "tests/test_annotate.py",
+   "tests/test_detail.py",
+   "tests/test_jira.py",
+   "tests/test_review.py"
+  ],
+  "n_test_files": 4,
+  "verdict": "PASS (check stays silent)",
+  "rc": 0,
+  "note": "\u001b[32m\u001b[32m\u001b[1m1039 passed\u001b[0m, \u001b[33m1 skipped\u001b[0m\u001b[32m in 4.93s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_annotate.py",
+   "tests/test_detail.py",
+   "tests/test_jira.py",
+   "tests/test_review.py"
+  ]
+ },
+ {
+  "sha": "da15c4657ba32879565801156a7258460c7b489c",
+  "slug": "plan-tool-annotate-feedback",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-plan-tool-annotate-feedback.md",
+  "test_files": [
+   "tests/test_backend.py",
+   "tests/test_launcher.py",
+   "tests/test_shell.py"
+  ],
+  "n_test_files": 3,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 1.00s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_backend.py",
+   "tests/test_launcher.py",
+   "tests/test_shell.py"
+  ]
+ },
+ {
+  "sha": "efc44eba4d4f22ec29d62975d6b53ff890e11891",
+  "slug": "escalate-structural-findings-to-split",
+  "step": 5,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-escalate-structural-findings-to-split.md",
+  "test_files": [
+   "tests/test_detail.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m2 failed\u001b[0m, \u001b[32m312 passed\u001b[0m\u001b[31m in 1.98s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_detail.py"
+  ]
+ },
+ {
+  "sha": "baaa55934a10771ad7cf6808675a993e09aea73c",
+  "slug": "escalate-structural-findings-to-split",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-escalate-structural-findings-to-split.md",
+  "test_files": [
+   "tests/test_review.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m3 failed\u001b[0m, \u001b[32m376 passed\u001b[0m, \u001b[33m1 skipped\u001b[0m\u001b[31m in 1.73s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_review.py"
+  ]
+ },
+ {
+  "sha": "cb2126fb78e735a3ebe6f93f8a86da0eb8e6271f",
+  "slug": "step-granularity-advisor",
+  "step": 2,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-step-granularity-advisor.md",
+  "test_files": [
+   "tests/test_detail.py",
+   "tests/test_granularity.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.86s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_detail.py",
+   "tests/test_granularity.py"
+  ]
+ },
+ {
+  "sha": "4e15f9c18bd4c9bbafdf989a165286ab75d7b3c4",
+  "slug": "plan-refresh-against-code",
+  "step": 1,
+  "change_type": "refactor",
+  "plan": "docs/implementation-plans/2-plan-refresh-against-code.md",
+  "test_files": [
+   "tests/test_fingerprint.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.65s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_fingerprint.py"
+  ]
+ },
+ {
+  "sha": "8fc696d34131f01033bbf40f02f32dec141577f8",
+  "slug": "remove-iteration-lock",
+  "step": 5,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-remove-iteration-lock.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_drift_detection.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.92s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_drift_detection.py"
+  ]
+ },
+ {
+  "sha": "d722a8bb812ed22aa5026c7842497570485ea061",
+  "slug": "remove-iteration-lock",
+  "step": 3,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-remove-iteration-lock.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py",
+   "tests/test_iteration_lock.py"
+  ],
+  "n_test_files": 4,
+  "verdict": "PASS (check stays silent)",
+  "rc": 0,
+  "note": "\u001b[32m\u001b[32m\u001b[1m945 passed\u001b[0m, \u001b[33m13 skipped\u001b[0m\u001b[32m in 5.01s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py",
+   "tests/test_iteration_lock.py"
+  ]
+ },
+ {
+  "sha": "78cb17913ea84dde4e987b3b3ae8664c049a025b",
+  "slug": "codex-cli-backend",
+  "step": 2,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-codex-cli-backend.md",
+  "test_files": [
+   "tests/conftest.py",
+   "tests/test_backend.py",
+   "tests/test_launcher.py",
+   "tests/test_shell.py"
+  ],
+  "n_test_files": 4,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.82s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/conftest.py",
+   "tests/test_backend.py",
+   "tests/test_launcher.py",
+   "tests/test_shell.py"
+  ]
+ },
+ {
+  "sha": "066bdd75358e372f7b622fa195a53bc4605c5354",
+  "slug": "cli-package-split",
+  "step": 19,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/cli/test_package_surface.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 failed\u001b[0m, \u001b[32m9 passed\u001b[0m\u001b[31m in 0.67s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/cli/test_package_surface.py"
+  ]
+ },
+ {
+  "sha": "0c5f8ef34d61c11942ed930d8f9943f7a4699a8c",
+  "slug": "cli-package-split",
+  "step": 18,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m5 failed\u001b[0m, \u001b[32m85 passed\u001b[0m, \u001b[33m4 skipped\u001b[0m\u001b[31m in 1.03s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_review_walk.py"
+  ]
+ },
+ {
+  "sha": "e0570fd85edd9131129d0af851bec821d328b425",
+  "slug": "cli-package-split",
+  "step": 17,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_launcher.py",
+   "tests/test_review.py",
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 3,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m35 failed\u001b[0m, \u001b[32m621 passed\u001b[0m, \u001b[33m4 skipped\u001b[0m\u001b[31m in 4.32s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_launcher.py",
+   "tests/test_review.py",
+   "tests/test_review_walk.py"
+  ]
+ },
+ {
+  "sha": "b466fd7671a97b6a4bae1dbeac516d3cc31ef93f",
+  "slug": "cli-package-split",
+  "step": 16,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_launcher.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m22 failed\u001b[0m, \u001b[32m530 passed\u001b[0m, \u001b[33m13 skipped\u001b[0m\u001b[31m in 5.26s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_launcher.py"
+  ]
+ },
+ {
+  "sha": "89c316e2a10d508c85b901e96bec2b5a24bc1784",
+  "slug": "cli-package-split",
+  "step": 15,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_launcher.py",
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 3,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 1.14s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_launcher.py",
+   "tests/test_review_walk.py"
+  ]
+ },
+ {
+  "sha": "1ede28c9e64702aadd59ce319f6f43ada1cb0f41",
+  "slug": "cli-package-split",
+  "step": 14,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_jira.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m7 failed\u001b[0m, \u001b[32m117 passed\u001b[0m\u001b[31m in 1.04s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_jira.py"
+  ]
+ },
+ {
+  "sha": "0903fd16e67205152d627aa15eed288ef32637c4",
+  "slug": "cli-package-split",
+  "step": 13,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py"
+  ],
+  "n_test_files": 3,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m58 failed\u001b[0m, \u001b[32m846 passed\u001b[0m, \u001b[33m13 skipped\u001b[0m\u001b[31m in 7.92s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py"
+  ]
+ },
+ {
+  "sha": "cf2b5e6eaed2297bfde06bcbf228277676052e83",
+  "slug": "cli-package-split",
+  "step": 12,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m20 failed\u001b[0m, \u001b[32m281 passed\u001b[0m, \u001b[33m13 skipped\u001b[0m\u001b[31m in 3.65s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py"
+  ]
+ },
+ {
+  "sha": "3d28accd3ba18e67fd5f9baa9a0a7fdb14214673",
+  "slug": "cli-package-split",
+  "step": 11,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/cli/test_package_surface.py",
+   "tests/test_cli.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m3 failed\u001b[0m, \u001b[32m308 passed\u001b[0m, \u001b[33m13 skipped\u001b[0m\u001b[31m in 2.57s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/cli/test_package_surface.py",
+   "tests/test_cli.py"
+  ]
+ },
+ {
+  "sha": "b33d89d4f5899b480b8905abdf69b47cc2233608",
+  "slug": "cli-package-split",
+  "step": 10,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/cli/test_package_surface.py"
+  ],
+  "n_test_files": 1,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m3 failed\u001b[0m, \u001b[32m7 passed\u001b[0m\u001b[31m in 0.68s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/cli/test_package_surface.py"
+  ]
+ },
+ {
+  "sha": "33dfe9e7b8fb04339d914fe54d36d0e5e34bd14d",
+  "slug": "cli-package-split",
+  "step": 9,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_create.py"
+  ],
+  "n_test_files": 2,
+  "verdict": "UNCOLLECTABLE (import/collection error)",
+  "rc": 2,
+  "note": "\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 1.17s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_create.py"
+  ]
+ },
+ {
+  "sha": "a8a8a79520dbc7c4a54616a56942d02f12bacc37",
+  "slug": "cli-package-split",
+  "step": 8,
+  "change_type": "refactor",
+  "plan": "implementation-plans/2-cli-package-split.md",
+  "test_files": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py",
+   "tests/test_jira.py",
+   "tests/test_launcher.py",
+   "tests/test_review.py",
+   "tests/test_review_walk.py"
+  ],
+  "n_test_files": 7,
+  "verdict": "FAIL (tests red pre-change)",
+  "rc": 1,
+  "note": "\u001b[31m\u001b[31m\u001b[1m248 failed\u001b[0m, \u001b[32m1436 passed\u001b[0m, \u001b[33m17 skipped\u001b[0m\u001b[31m in 18.82s\u001b[0m\u001b[0m",
+  "copied": [
+   "tests/test_cli.py",
+   "tests/test_create.py",
+   "tests/test_detail.py",
+   "tests/test_jira.py",
+   "tests/test_launcher.py",
+   "tests/test_review.py",
+   "tests/test_review_walk.py"
+  ]
+ }
+]

@@ -1,0 +1,38 @@
+{
+  "plan_slug": "audit-pass-persistence",
+  "grounded_at": "2026-08-31T21:14:26Z",
+  "plan_fingerprint": "0581f37ff5b1825d2bd86f0ca61a863a2762d55e75eb60bf691e79aa7d1bb391",
+  "code_fingerprint": {
+    "BACKLOG.md": "9656ae57a92eb2b01fc49a0d02133429467f222443cf2f2e124ea063e1eb6b35",
+    "DATA_CONTRACT.md": "f61cb2ec0154bfdde6ecd2148e344de111ca8f09984ca17fee8a2c59261216ee",
+    "docs/AUDIT_FLOW.md": "3226b66ac93154285746c62186b078bc8a546212796ac21c9e52064b4f49575c",
+    "docs/AUDIT_RESUME_FLOW.md": "3ba62e6fc769d711c89366ecba762a9c285f506de34742f72b56d764f1662f37",
+    "plan_tool/backend.py": "8a4db670e2a40222fdd68926dfd90abaebe6691d13d0734536a4f3d1fc1fd912",
+    "plan_tool/cli/completeness_cmd.py": "fdbf0c46ddbb7bd93ab4d14a711904457ec24bf94dbcf934b76610fd7ec87542",
+    "plan_tool/cli/completeness_phases.py": "af6300a3344149d6d2429bbd2c2a2b2e3b402565aaaf675b93e5148f9bc7e550",
+    "plan_tool/cli/data_contract_cmd.py": "6d0d056c9e42feacf68fd8a8709fb5416334b897932c766533e77b1c00b9628f",
+    "plan_tool/cli/review_cmd.py": "8abbab65a0d9cec35e4399e7e61b05cd3cc26a8f6720c39ca49b1d2c676d4973",
+    "plan_tool/completeness_report.py": "67d407b72c875c1bf2388c47db26055ac9c48ab28ef644f61b79d8785dce2620",
+    "plan_tool/convergence_diagnosis.py": "bb72d106c27083c02b1801d962340985fadd9f567317c95e20bd0cbfea06856c",
+    "plan_tool/data_contract.py": "dc9944892c89e0d4afe723c24306b08b6cffafa392db428b18ce6c36c87efe00",
+    "plan_tool/prompts/plan-audit.md": "5f323241f17cfaac314ff81e47fcae9b799a46c25c02b230098a0ce6389aee99",
+    "plan_tool/review.py": "3aabbd042574e4076e436656ad940e50bfe82df0d3f615fc7978157b6a34332e",
+    "plan_tool/review_persistence.py": "211ab2cac376869e1937ce07faf49b51abbf959963c515125c8e794d2b57e5f7",
+    "tests/cli/test_completeness_cmd.py": "e59e11ae9299e006343d2d65b7650b1e7d84fce983c76055a35cd9fe773702a3",
+    "tests/test_backend.py": "b76fe5c4679c59853297a112614b893baf8b0a952fa79e812b76448f82db0d2d",
+    "tests/test_completeness_report.py": "e40cd2092072ff8f8aebfb36abbfeb0ceeafdbfa6a340a8b31076b5114f56667",
+    "tests/test_convergence_diagnosis.py": "b04b6ed4803b981ae29f88761fb1b17bf23ced1e2b89bd2e07949ef45efdae52",
+    "tests/test_data_contract.py": "9101fdd460e823315fb1ea6dfe3795e52a869512a3eb96b517528b3fcacda897",
+    "tests/test_review.py": "12a73e4316005597f3bcac6508972921976f5cdb029c0ea12929433e084d4978",
+    "tests/test_review_persistence.py": "c84058998b6b7c8c84069f7915c3c5cc44162ea5fbb8648a90a8cf92f91a1ae2"
+  },
+  "step_authoring_fingerprints": {
+    "1": "86c1fdbe97159998c26baab34b7f0df9f2cbeb04d9e1971b87d45b14c9a2b331",
+    "2": "76778d5bbcd23abdb3485c91185aa306baf3908553d925f08d51a03e34dec62b",
+    "3": "6b6aa20582c2c94c7f2a6aa20580061780819939537a2a372900f2cc8bce4501",
+    "4": "cbd1ea08883c676c8c83e6db4bd4264cb460f2fb38460f44448c4f0e6dee487b",
+    "5": "e8a7e613a55611a3fa18be73dca347dada4e1eb2bda932a5f4c710b7da6f1982",
+    "6": "2df7b965b34ac9ff2528e8219f82000f6352935474456b5a2aaca946c9075733"
+  },
+  "schema_version": 1
+}

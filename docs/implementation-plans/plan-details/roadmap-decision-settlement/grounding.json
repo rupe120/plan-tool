@@ -1,0 +1,40 @@
+{
+  "plan_slug": "roadmap-decision-settlement",
+  "grounded_at": "2026-09-18T14:43:52Z",
+  "plan_fingerprint": "b4bb3d45f7d44f1ed0dff0de0ca59191bd0abf9e213801fa0151bfdc0c8f5b84",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "d1683d9553230442d02d2b79c3cb349b3dbb6aa4d0db1e8b2361276e1af6f9b2",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "CLAUDE.md": "1141af3b4ab1974c5b3afdbda1e9b4b0fd1a9957a08f3ad920b9c1abf0a3ff49",
+    "README.md": "b797ae131dc11ccbef01789e9b30c629a0f86e1a49f54a7a25aa3eac24ff7afa",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/common-workflows.md": "f35736593273c970c4f2d3a88d4f01b8af5e60adcb43633cf65dd57a07dbe256",
+    "docs/how-to/roadmap-demo.md": "e8ef400cc63a8b337f4bdbeb4144b9cb4e5db0fa8a29570540f282dbc1ceed9a",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "docs/how-to/use-cases.md": "3688d519916f9a90bae2f9d2ca419c299d39cacd57018f2db050e50e6a3cb5c2",
+    "integrations/shared/DIRECTIVES.md": "7192d800437e52964ac265bb02046284bbd3a9db29721c6d5e362b06c8411fb8",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_artifacts.py": "1928d1f1fbba7733d39a0fc57c2383d9a5f0b0fb1a83467ac129ddefa69d3e5a",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "plan_tool/roadmap_revision_publish.py": "1503a6839e5c7abc3543cc3373c1a43c90f6a031c7608eae00d837233d0a8afa",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_artifacts.py": "999e009cec8d866fa7dce50ec1a0bb277bc8a1e7c2299b62c7d3cce7da4ba171",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072",
+    "tests/test_roadmap_format.py": "08f145e6de37da6e2fa1a1a08ac0d80d11cd10bb3b8cec95b2e07e7ea1853417",
+    "tests/test_roadmap_gates.py": "4b52ed512a58f8c04b12b681ebcd586b4a2904e485b3c32d9e3df0f63488a856",
+    "tests/test_roadmap_revision_publish.py": "04732b48fd13bf91a093750462e986df30f80e37bd9a730568c9cbb56734cff8"
+  },
+  "step_authoring_fingerprints": {
+    "1": "e8ffe66436173df0b293d6f7942dae91a61c5b55ceadd3e79919280bba240f63",
+    "2": "e930d50cb1fd4b83a215735b6319b9d9ec5b90cc66172dffc1dbde6c375d8bab",
+    "3": "37ec23246e4e4de82ba3bed8b105f24e82d1f0ab676b9c804c7f734ffc28a76f",
+    "4": "7ab0b9c6875b02f673b835b8b801b0790d475607bad550f2b5bb037db9bf8134",
+    "5": "5155c5be65aca79542ac651368a049400679522f711215887b97c4a7eecf65d8",
+    "6": "ba8d29f44b53d65c822a2cf44f47fb8a968898d8f9a35d69431857930cf7d651",
+    "7": "ea40314490a6c3b4760517a2a38875b97884ee9c7f92f9525dbe9b8826d1ca5a"
+  },
+  "schema_version": 1
+}

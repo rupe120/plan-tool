@@ -1,0 +1,33 @@
+# Runs the test suite on every pull request and on pushes to main.
+# CONTRIBUTING.md's "Remote of record: Bitbucket" section names this file.
+#
+# No secrets or credentials: the suite is hermetic (tests/conftest.py raises
+# if a test spawns a real backend binary or reaches the real network), so this
+# pipeline needs nothing beyond what `uv sync` installs.
+#
+# Required approvals and the merge-queue setting are branch restrictions in
+# the Bitbucket repository, not something this file can hold — see
+# CONTRIBUTING.md.
+
+image: python:3.13
+
+definitions:
+  caches:
+    uv: ~/.cache/uv
+  steps:
+    - step: &test
+        name: Test suite
+        caches:
+          - uv
+        script:
+          - pip install uv
+          - uv sync
+          - uv run pytest tests/ -q -n auto
+
+pipelines:
+  pull-requests:
+    '**':
+      - step: *test
+  branches:
+    main:
+      - step: *test

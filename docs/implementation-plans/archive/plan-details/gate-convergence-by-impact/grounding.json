@@ -1,0 +1,19 @@
+{
+  "plan_slug": "gate-convergence-by-impact",
+  "grounded_at": "2026-07-19T18:55:09Z",
+  "plan_fingerprint": "0ac7ded01ab9d5c43dbef7ce9219bec7f73e77203630a0b25bd163caf9d55af0",
+  "code_fingerprint": {
+    "BACKLOG.md": "66c3890f7ff6df2d5ff032f1f938c69531e68fbd069a2cdfb9a58c1554e765be",
+    "CLAUDE.md": "99169c9b8e49ae75f1a7b5945917703514670eb4e7358c4948ff21c206ce74eb",
+    "docs/AUDIT_FLOW.md": "d8a44dd3a8ce2e4adf97f11101ae2150ad3f5d8a9eee76129c47af0112f2662e",
+    "plan_tool/cli/completeness_cmd.py": "2d877540eccd8d9c93cc177ea62bc8d12ae3c1d29cbac959f63c9abebeedd3a5",
+    "plan_tool/cli/reconcile.py": "051f8c3c91940158a61fc1b61a733087b1eef87c30dbd246153beabae6663c73",
+    "plan_tool/convergence.py": "7c71cd4dc46bc20e2ca994bcc211220ce2b51fd43761a0d826ebceba88e4fee4",
+    "plan_tool/review.py": "21bbf87e134cb7d8b4884809be6f58b4847c66b96ca1e40388bec8dd94cc604d",
+    "tests/cli/test_completeness_cmd.py": "08f592097d1967d1977028c8cbc07d090aad9969cb92e4fa6b3ae1822462a255",
+    "tests/test_cli.py": "5c69f7b0bf269203ec861a9cbd4b5e1ef211244091fce39680a3a34e8fb003b4",
+    "tests/test_convergence.py": "85ce7b724e929240ce5e1534368f117f96f1fba61ac2e7092edef7435caf048e",
+    "tests/test_review.py": "1cd84782e9779e7ce3876949278c47764d2b945e5d256372810cb60709c1ade7"
+  },
+  "schema_version": 1
+}

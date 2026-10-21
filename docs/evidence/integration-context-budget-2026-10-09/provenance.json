@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-10-09",
+  "installed_plan_tool_head": "2cb38e9f81ed860cb0c5f3968d268f5c2401fa92",
+  "accepted_root": "57e2912e6f4b9d1f111690054ad216b87ac1294455fcfb9feeed5040c4bd5bcf",
+  "active_candidate": "c886d0f2ddad3042b5a6d9caf1422b683ab598a62a94126b5df59d9b4ca1fb72",
+  "feedback_item": "fb-environment-prose-consistency",
+  "feedback_target": "constraints:artifact",
+  "ledger_sha256": "4234617c5f8fe9c36d539386359c4d3a0b9d162e956d44c329741b8acd82b863",
+  "artifact_hashes": {
+    "57e2912e6f4b9d1f111690054ad216b87ac1294455fcfb9feeed5040c4bd5bcf": {
+      "brief.md": "0086ebf87fc582aab38a42611bff5389966b9faff687a055fe6f3942d510a852",
+      "01-domain.md": "0c9d0fef6dc8871be0a0b65866b44e3abd38cc20d08f933945c4930009230bf5",
+      "02-constraints.md": "af90cbd145586dd5f3f789b41fa260e6d322371f48a0792acbce6ee7b53ddece",
+      "03-components.md": "42b1d231f5d59bbce35fcea78c5bd1bddb16e788af58336c6352c6d03eddbe09",
+      "04-roadmap.md": "6279b81cee8229c9380d77fe3283e5c7ec79c48df3d6a815697cab9cf2c0e713"
+    },
+    "c886d0f2ddad3042b5a6d9caf1422b683ab598a62a94126b5df59d9b4ca1fb72": {
+      "brief.md": "0086ebf87fc582aab38a42611bff5389966b9faff687a055fe6f3942d510a852",
+      "01-domain.md": "a4592773a1dc958f4f3e5480e6eba9e7209a594a4bd6683a7cacfdfde608736e",
+      "02-constraints.md": "212355738f2837dcfa8496da7e32633eefb8866f308de7a245e857eef861f72a",
+      "03-components.md": "011954dbfdd1c8ece323ac32e11fedd1618c0d3e1c8e4c4c40299f17f6c26cd6",
+      "04-roadmap.md": "62f566242dee1ee418c509883587737e42887bfe1864dc68dcaa6bfe5a273c19"
+    }
+  },
+  "capture_method": "Native context renderer returned unchanged bytes; native fixed-budget refusal retained. No policy change, model call, or publication.",
+  "original_checkout": "<integration-consumer-root>",
+  "simulation_limits": "256 KiB and relation packing results are in-memory analysis only; three real 192 KiB capsules tested, legacy 64 KiB covered by existing repo tests; no token count/provider capacity benchmark.",
+  "invocation": {
+    "command": "plan-tool --backend codex --model gpt-6.1-sol roadmap integration-aidlc-mvp --propose-candidate",
+    "backend": "codex",
+    "model": "gpt-6.1-sol",
+    "source": "owner-reported; the run log's argv is synthesized by plan_tool/roadmap_candidate_run.py without global flags, so backend and model are not log-derived",
+    "model_context_window_tokens": 1000000,
+    "model_context_window_source": "owner-supplied deployment fact, not a provider benchmark"
+  },
+  "committed_raw_payload": "canonical-payload.json is a sanitized structural example. sanitized_payload_sha256 identifies this file; historical_payload_sha256 identifies the original measurement input. Historical byte/token counts cannot be reproduced from this sanitized copy alone.",
+  "historical_payload_sha256": "d0a742fa4c70f6403a7066eacfedbb621744a530c20093634169cec3824ceb5e",
+  "sanitized_payload_sha256": "89120e6b6bb05829600b2dc7f15fa6b0983d7e94a5a52916aca8e3b607764af6",
+  "sanitized_payload_bytes": 211999,
+  "sanitization": "2026-10-20: integration names replace project identity. Historical measurements and artifact/receipt hashes describe the original input; the sanitized payload preserves example structure, not exact-byte replay evidence."
+}

@@ -1,0 +1,20 @@
+{
+  "plan_slug": "scope-out-executor",
+  "grounded_at": "2026-06-23T04:27:02Z",
+  "plan_fingerprint": "d7af2cc4370f4bf38e7002cd02f36d9e8ad10b4e0f24bf4fb1c649611bdfa3cb",
+  "code_fingerprint": {
+    "BACKLOG.md": "9af831d179dc7ba60bd14cb8cd6c1ca6553532e6eb3300fb096c74e35c561c85",
+    "CLAUDE.md": "a8725333e1528edb9403717f03bc4064a7f4054db3fdb4f5b3f6beff6910ee0a",
+    "README.md": "7c424d25a855a86a76cb401cfb5d29f51ef7a1be3d6310eea4415805736ece9a",
+    "RUNBOOK.md": "34b31f899da37f1f0624dddf429985aebab4b170d45e5366915b43f049fb8ed1",
+    "integrations/claude/SKILL.md": "b69c9ecdc1840bd1c62412ac8f5958ef94253f5363f055f6a83e1df9b865e0d3",
+    "integrations/codex/SKILL.md": "c4a6c125cefd2044e3a2509b73b6950a2e969cfdd5447b282ff895c1d1810720",
+    "plan_tool/cli/__init__.py": "b8d82640c16132ffcbeaab8e5f5294987d06a9c02ce4163a477768d5b61ae289",
+    "plan_tool/cli/app.py": "20606e04f70d8cfb7491e46399a12dcd3203338f3bb65207998ccf3597891674",
+    "plan_tool/cli/parser.py": "3c4a5db330f00276b4680e81e1d1505e11f17eb0248a9e148bcc6a2e0c26f906",
+    "plan_tool/convergence_diagnosis.py": "0291aadecb5422e7b4f9bd7e78b1aa9cecad2b3f2252faa6013e4f21fb1118b1",
+    "tests/cli/package_surface_help.golden.txt": "dc7d85c8ca2cb00c437be5e77d4b1dacb1e9c2bdd19fde150ab1cf9e8f8a8965",
+    "tests/test_convergence_diagnosis.py": "830d4e878f62d1c9f60cd7c911cc3d53c8a12a0fbbeb704cb61a4344bf71a26a"
+  },
+  "schema_version": 1
+}

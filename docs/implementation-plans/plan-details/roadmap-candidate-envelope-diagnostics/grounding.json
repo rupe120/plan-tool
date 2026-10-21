@@ -1,0 +1,25 @@
+{
+  "plan_slug": "roadmap-candidate-envelope-diagnostics",
+  "grounded_at": "2026-09-25T21:32:38Z",
+  "plan_fingerprint": "4a416ea8697da46d60efa3fe7e125eff528557a7ba8037cec146f800c5dbc010",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "f1540c184c045d37076d3f728970586354a2eb8cbd89de1b8cb5616bc69c0cf8",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "0403b8525bc5aa68d5da0e7964297f258ff1028c002ef895a97217e448ed31b0",
+    "plan_tool/roadmap_candidate.py": "7cda55d7fb941821f35cc86e80cd5b87e4719229e2ce9ca5e2766c4fc35e3d18",
+    "plan_tool/roadmap_candidate_context.py": "61c4182c55d485861a4705c85cf585a256e11ab53368861b98e9da40660734a7",
+    "plan_tool/roadmap_candidate_run.py": "0c1f79ee7d21c1a1ed95b743cbb0658f165f25ab50e0fcf33d9601ae1f5ff885",
+    "tests/test_roadmap_candidate.py": "dc38d5c33dd491cd6e91b472aee6ae0dc6d0c583d89be42021434eec395835e2",
+    "tests/test_roadmap_candidate_context.py": "ef7ac24e85af43097e555c6e41e686a3179ca630eb0119b9dcb060b0b1724336",
+    "tests/test_roadmap_candidate_run.py": "94e22121e0eb9fd83109ffe94b5df212399fd849cbc08d68bbf31fe72b3a7e0f"
+  },
+  "step_authoring_fingerprints": {
+    "1": "edd68c5cc3ffa15de37a8d58f8cdd0bddbb4599ffccd4a6637d7131201f35053",
+    "2": "6dbd4152f2dc74ce9d5a895352e9df6e198c6f3eaf77b55d489315d1b9e5ffa4",
+    "3": "b6774d0ac4ea640a0592a059bae36b59500342b81fe0519845e71b2b57e4bfcf",
+    "4": "60d0bb21a094c76deb3c749c5964647baa372437a32829bbba4189609660c905",
+    "5": "ab4fdc0959d5e8fe763b65c5f4ea4a0f08fbe956f6d68ea84a383c1258baa29b",
+    "6": "8348b34a635afa48975fefe997cf4a2dffc5c18ce5925d1163f0501f637544bf",
+    "7": "4199fab49d2f54c352c02f85afa3a944d43971df3f707ef86cadcd73f056f4a3"
+  },
+  "schema_version": 1
+}

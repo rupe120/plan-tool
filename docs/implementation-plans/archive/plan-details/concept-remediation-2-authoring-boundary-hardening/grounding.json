@@ -1,0 +1,14 @@
+{
+  "plan_slug": "concept-remediation-2-authoring-boundary-hardening",
+  "grounded_at": "2026-07-13T12:15:54Z",
+  "plan_fingerprint": "0bebc68d6b330a7c32f7a05ab8874160c5cb89aa2cd6f6d7364dfb0ec9f09ab2",
+  "code_fingerprint": {
+    "plan_tool/concept_tree.py": "fb63c4f467fba65cf009df583b8ac601916a274c4cc0e1913c867033b5609389",
+    "plan_tool/detail.py": "860c279458f99aca415391c99880b3f4abe1221e81160752e72cba89ea9166fc",
+    "plan_tool/prompts/concept-emit.md": "0c3e70e69ae9a947bd886ad1c60e840f4990f82bd14b7ddb159b98e3bff3134f",
+    "tests/cli/test_authoring_cmds.py": "752756027d7456fe4af56302c86b6b106efefb94d8ffc6c1d62a4b2be21733f1",
+    "tests/test_concept_emit.py": "8a0a76bd54d468ed916e1f5e9cb3b20cada1d30d05cf4302c92dc1dd06460ca2",
+    "tests/test_detail.py": "97066f6478fc1ec7a6a60924b732ed63cd90dcfd41bb8a381e2b8bb39965bfa2"
+  },
+  "schema_version": 1
+}

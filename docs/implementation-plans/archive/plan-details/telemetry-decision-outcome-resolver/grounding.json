@@ -1,0 +1,16 @@
+{
+  "plan_slug": "telemetry-decision-outcome-resolver",
+  "grounded_at": "2026-07-12T14:08:48Z",
+  "plan_fingerprint": "2e110a259597fc3d24605ede9eac1c080f84da27d286050bdf1929ed1aa2d14b",
+  "code_fingerprint": {
+    "BACKLOG.md": "69d3346df12a3d8dfbded0996b6a904ccf3d0990f8e7ff5d43d07b2bff69b7cd",
+    "CAPABILITIES.md": "8577e7ad0edfe8673dac37df88eebd07241662c9b42381df9f6f059f01a722df",
+    "CLAUDE.md": "8548257ec1695a1ea0319d7be3f2ea58625696d3ce3335ca2d2515d04a8a9cdb",
+    "USE_CASES.md": "eec24a3acd191bbc7488380be19635ea392aa20eb049557100535f9d4cd0aad2",
+    "plan_tool/cli/app.py": "7c97be0b721fbe64f01c924082d7a134389e3090572ec7253318b765c7081361",
+    "plan_tool/cli/parser.py": "c0d0548e055fd067d5dbe43cd366f745eab7675eb222aa201ea470af82e64bed",
+    "plan_tool/run_log.py": "7fa15acfe7a6c9c84e45ef6084e53c2f7d157e0115466da3086b893fa5b086dc",
+    "tests/test_run_log.py": "9dee20fad017a58a21abcf8171983234814e8e58b6ece4cdbfe43e1d2365d231"
+  },
+  "schema_version": 1
+}

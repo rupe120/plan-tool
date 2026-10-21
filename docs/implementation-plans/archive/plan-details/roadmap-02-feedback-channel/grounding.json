@@ -1,0 +1,25 @@
+{
+  "plan_slug": "roadmap-02-feedback-channel",
+  "grounded_at": "2026-08-04T04:44:56Z",
+  "plan_fingerprint": "24466aef090f14c1afdbcaabeaa91b708a6e39377f9fc8606e9a66611de3ae1c",
+  "code_fingerprint": {
+    "BACKLOG.md": "073b3d0c478370e18d315657c4b761aa64d1cee33fc27e803826a6fdf6dc9249",
+    "CAPABILITIES.md": "d36e0717c613b069b255ff2d0bddcbd1da20fee108a866b6e456f268b0ba5634",
+    "CLAUDE.md": "3289762099274618ba64d0a081af65ce5cb670ce44b28cb6ce86be2b5ffc96ac",
+    "DATA_CONTRACT.md": "47885824b6c9d3f84a4e3d83373b4adc3acf45dfbc3f3268ae67e4e6b348cc5b",
+    "ROADMAP_FORMAT.md": "545ea2ffd32663c1622278008e78b5f01b5d46dddb18567fdd6ae92653db527e",
+    "RUNBOOK.md": "93681193b1253a94a13f413a05a7f7df80c708567dc1667fae12e739a503f211",
+    "USE_CASES.md": "cc842306bfdaf0fd4ef64886423adc915e974bf8a6e4ec69fe066cbe18f33693",
+    "plan_tool/cli/roadmap_cmd.py": "9efd91f2e949a868be70f2b302fb386b1aab1afdc0e27283ae2110d2c7234123",
+    "plan_tool/roadmap.py": "73bf536aa98d9b3577a4b9f37b8b0d7178bbef1290e02053cceaa8ae340cbf95",
+    "plan_tool/roadmap_artifacts.py": "4412346cc258c2931ee0d79f079cee487e2a72834787b2d696379b46331f0a87",
+    "plan_tool/roadmap_gates.py": "c29e35c8e0597881de406fd760e9defdd50142865da9505e9ee0aec81a04395c",
+    "plan_tool/run_log.py": "b7f68866032cf0691ff0e95d047bbec88810fca5c8cc3a98ab21def58780864f",
+    "tests/cli/test_roadmap_cmd.py": "a1d44c3e0eaa50dc6b96ef73155d5a170c745904662b4536797560e776363f35",
+    "tests/test_roadmap.py": "30b482b62eb642a4408f4f8bfbc1798c0f49945cc181527cc016fb04c21b8a76",
+    "tests/test_roadmap_artifacts.py": "e261991a5db525f4b60aa4aef049ccdeb0102eb03e3f4f0d4b654a9173ae9693",
+    "tests/test_roadmap_gates.py": "601e8e8487a847349a21dd53bcc16a1dd64ab0411d9235c139a548b569f056d0",
+    "tests/test_run_log.py": "8bf1695c91b2a0be65f025e40787f331f933cc912ce6fccc8e577cbc7592036a"
+  },
+  "schema_version": 1
+}

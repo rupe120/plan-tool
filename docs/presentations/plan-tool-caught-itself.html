@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When the Plan Caught Itself — plan-tool</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css" id="theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+  <style>
+    :root {
+      --accent: #4fd1c5;
+      --warn:   #f6ad55;
+      --bad:    #fc8181;
+      --good:   #68d391;
+      --muted:  #94a3b8;
+    }
+    .reveal { font-size: 30px; }
+    .reveal h1 { font-size: 1.85em; line-height: 1.1; }
+    .reveal h2 { color: var(--accent); font-size: 1.35em; text-transform: none; }
+    .reveal h3 { color: var(--warn); text-transform: none; }
+    .reveal section { text-align: left; }
+    .reveal .center { text-align: center; }
+    .reveal pre { width: 100%; box-shadow: none; font-size: 0.58em; }
+    .reveal pre code { padding: 16px 20px; border-radius: 8px; max-height: 460px; }
+    .reveal .muted { color: var(--muted); }
+    .reveal .accent { color: var(--accent); }
+    .reveal .warn { color: var(--warn); }
+    .reveal .bad { color: var(--bad); }
+    .reveal .good { color: var(--good); }
+    .reveal .tag {
+      display: inline-block; font-size: 0.5em; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+      border-radius: 4px; padding: 2px 10px; margin-bottom: 18px;
+    }
+    .reveal blockquote.finding {
+      width: 100%; font-size: 0.62em; line-height: 1.45; background: #1a2233;
+      border-left: 4px solid var(--warn); padding: 18px 22px; border-radius: 6px;
+      box-shadow: none; font-style: normal;
+    }
+    .reveal .lead { font-size: 1.25em; }
+    .reveal .small { font-size: 0.7em; }
+    .reveal .cols { display: flex; gap: 28px; align-items: flex-start; }
+    .reveal .cols > div { flex: 1; min-width: 0; }
+    .reveal .kicker { color: var(--muted); font-size: 0.6em; letter-spacing: 0.2em; text-transform: uppercase; }
+    .reveal .panel {
+      background: #161e2e; border: 1px solid #2a3550; border-radius: 8px;
+      padding: 14px 20px; font-size: 0.74em;
+    }
+    .reveal .panel.bad  { border-color: var(--bad); }
+    .reveal .panel.good { border-color: var(--good); }
+    .reveal ul { margin-left: 0.4em; }
+    .reveal li { margin-bottom: 10px; }
+    .reveal .big-num { font-size: 2.4em; color: var(--warn); font-weight: 700; }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <!-- 1. Title -->
+  <section data-background-color="#0b1120" class="center">
+    <span class="tag">plan-tool · value walkthrough</span>
+    <h1>When the Plan<br><span class="accent">Caught Itself</span></h1>
+    <p class="muted">A completeness-audit finding stopped us from shipping an
+      over-engineered feature — and the feature in question was the exact thing
+      built to catch it.</p>
+    <p class="small muted">A real session · the <code>feature-health</code> plan</p>
+    <aside class="notes">plan-tool turns an idea into a plan, audits it for gaps before any code,
+      then runs or exports it. This is a true story from one authoring session.</aside>
+  </section>
+
+  <!-- 2. The trigger -->
+  <section>
+    <span class="kicker">the trigger</span>
+    <h2>Mid-audit, the tool spoke up</h2>
+    <p class="small muted">We were authoring <span class="accent">feature-health</span> — a feature meant to
+      group correctness findings across runs and flag a capability that keeps churning.
+      The completeness audit emitted:</p>
+    <blockquote class="finding">
+      <span class="warn">[MEDIUM] · plan-completeness</span><br><br>
+      The plan claims <code>features:</code> <em>"changes no existing run/detail/jira behavior,"</em>
+      but its validation runs on <strong>every</strong> <code>parse_plan</code> — which
+      <code>run</code>, <code>jira</code>, and <code>detail</code> all call. So a drifted
+      <code>features:</code> block becomes a hard <code class="bad">ValidationError</code> that blocks
+      all three — a new failure mode the "inert/declarative" framing denies.
+    </blockquote>
+    <p class="small muted">Not a typo. An <span class="accent">architectural contradiction</span> between what the
+      plan claimed and what its design would do.</p>
+  </section>
+
+  <!-- 3. The pause -->
+  <section data-background-color="#10172a">
+    <span class="kicker">the value moment</span>
+    <h2>The author didn't hit <span class="good">apply</span></h2>
+    <blockquote class="finding" style="border-left-color: var(--accent);">
+      "Does it actually make sense to make this a hard stop? What exactly does the
+      features block drive that would cause the application to fail if the feature
+      list was changed?"
+    </blockquote>
+    <p style="margin-top:24px;">The finding's own fix was <em>"document the tradeoff."</em>
+      The author asked whether there should <span class="warn">be</span> one.</p>
+    <p class="small muted center">The tool didn't fix anything here. It
+      <strong>started the right conversation.</strong></p>
+    <aside class="notes">This is the thesis of the whole deck. An advisory, human-gated finding
+      provoked a design conversation instead of silently mutating the plan.</aside>
+  </section>
+
+  <!-- 4. Diagnosis -->
+  <section>
+    <span class="kicker">the diagnosis</span>
+    <h2>A <span class="good">category</span> had been built as a <span class="bad">functional unit</span></h2>
+    <p class="small">One grep settled what <code>features:</code> actually drives — because the frontmatter is machine-readable:</p>
+    <pre><code class="language-bash">$ grep -rn "\.features" plan_tool/launcher.py plan_tool/jira.py plan_tool/detail.py
+# (nothing) — run / jira / detail never read it</code></pre>
+    <p class="small">The hard failure was manufactured by <span class="warn">where the check lived</span>, not by
+      the data. Root cause: the feature owned a validated list of step <em>numbers</em> —</p>
+    <pre><code class="language-yaml">features:
+  - id: type-impurity
+    steps: [2, 4, 5]   # ← parse-fatal validation + a renumber dangles it</code></pre>
+    <aside class="notes">Correct to fail-fast for the step graph, which run/jira consume. Wrong for
+      features, which nothing consumes. Same mechanism, but the reason that makes it fatal doesn't carry over.</aside>
+  </section>
+
+  <!-- 5. The fix -->
+  <section>
+    <span class="kicker">the fix</span>
+    <h2>Reverse the ownership</h2>
+    <div class="cols">
+      <div>
+        <p class="small bad center">before — feature owns steps</p>
+        <pre><code class="language-yaml">features:
+  - id: type-impurity
+    steps: [2, 4, 5]
+    # renumber-fragile
+    # parse-fatal</code></pre>
+      </div>
+      <div>
+        <p class="small good center">after — step owns features</p>
+        <pre><code class="language-yaml">steps:
+  - id: 2
+    features: [type-impurity]
+    # tag rides with the step
+    # validation advisory</code></pre>
+      </div>
+    </div>
+    <p class="small" style="margin-top:14px;">Tags reference <span class="accent">stable slugs</span>, not step numbers — a renumber
+      can't dangle them. Semantic checks move <span class="good">out of the parse-time validator</span>, so
+      <code>run</code>/<code>jira</code>/<code>detail</code> stay inert. The contradiction is gone — not footnoted.</p>
+  </section>
+
+  <!-- 6. The kicker -->
+  <section data-background-color="#1a1206">
+    <span class="kicker">the kicker</span>
+    <h2 class="warn">The feature caught itself</h2>
+    <p class="lead">This conversation <em>is</em> the signature <code>feature-health</code> was built to detect:
+      <span class="muted">a sub-concept spawning escalating findings and pulling in cross-cutting machinery</span> —
+      <span class="warn">one level up.</span></p>
+    <div class="panel" style="margin-top:18px;">
+      <div class="center">The plan that <em>introduces</em> brittleness-detection had itself churned:</div>
+      <div class="center" style="margin-top:14px;">
+        <span class="big-num">3</span> <span class="muted">completeness audits</span>
+        &nbsp;&nbsp;+&nbsp;&nbsp;
+        <span class="big-num">6</span> <span class="muted">detail-reconcile rounds</span>
+      </div>
+    </div>
+    <p class="small center muted" style="margin-top:16px;">The right response to that signal was never another gate.
+      It was <span class="accent">this conversation.</span></p>
+  </section>
+
+  <!-- 7. Close / why it's the demo -->
+  <section data-background-color="#0b1120">
+    <span class="kicker">why this is the demo</span>
+    <h2>What plan-tool actually bought us</h2>
+    <ul class="small">
+      <li><span class="accent">A design reviewer, not a linter</span> — it caught validation living on the wrong seam.</li>
+      <li><span class="accent">Advisory, human-gated findings</span> — the apply prompt triggered a conversation, not a silent edit.</li>
+      <li><span class="accent">Machine-readable frontmatter</span> — "what does <code>features</code> drive?" was a 2-second grep.</li>
+      <li><span class="accent">Seed / plan separation</span> — the fix was a seed rewrite + regenerate, not plan surgery.</li>
+    </ul>
+    <p class="lead center accent" style="margin-top:30px;">The best plan-tool moment isn't when it writes the plan —<br>it's when it makes you ask if the plan is right.</p>
+  </section>
+
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    width: 1280,
+    height: 760,
+    margin: 0.06,
+    plugins: [ RevealHighlight, RevealNotes ],
+  });
+</script>
+</body>
+</html>

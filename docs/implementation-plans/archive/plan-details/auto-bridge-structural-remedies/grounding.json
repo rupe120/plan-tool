@@ -1,0 +1,23 @@
+{
+  "plan_slug": "auto-bridge-structural-remedies",
+  "grounded_at": "2026-07-05T19:34:37Z",
+  "plan_fingerprint": "dbb5341aa4855d83d3acdedca9ae8fff281c3547c801c9bb52cb42f8e5a5e390",
+  "code_fingerprint": {
+    "CLAUDE.md": "4273fcb4c452ef213c6ff1c221e33c2ed7c7beb86f196614b17125adb08507d7",
+    "RUNBOOK.md": "5ca3a5b3a8b853b688591c1c1ecabb82599e5931edb8389bcb376a0d7857ec0a",
+    "docs/cli/README.md": "c9ad409e3236ead3115bd5551f23081a8252c2cf5c8738418258af079395d409",
+    "docs/cli/convergence.md": "811fe396e8ece1afac6fa8232e8f6932fddc266f789cddd50fbb7a55b65968f2",
+    "plan_tool/cli/convergence_cmd.py": "7c52056744a04f78ac91a44ad99fcaf623a708f0fb85fd7d863964a7093791a4",
+    "plan_tool/cli/review_actions.py": "150a9d6c07933c0fe68adfa43cb28d81768fc7cb484bdb8296ecd184efcd329c",
+    "plan_tool/detail.py": "cc03642eae557a51cd3bff253c532081b075cd6f2eaa6aacd15ae34ccd85ae33",
+    "plan_tool/granularity.py": "8e04383f636bdd91200a3ebf26f0fd5890126aca9d73488e14490e7a5f5e32c8",
+    "plan_tool/review.py": "d1da85e82f8abc40b5b8735ee865178515db3b00425a34e1e4dc3117cd5114e2",
+    "plan_tool/review_walk.py": "ce6a5bfb1c417830e8c771b67937d935f21e83847e2deda68c8b4d0f27827f71",
+    "tests/cli/test_convergence_cmd.py": "92bc119a78cde20c78247ccb9bdf8a44ff097b444519313d0de772d156b83e50",
+    "tests/cli/test_review_actions.py": "c65dbc478a7f4c27fc201b4aab0fc87af801ddc98661766d867191f169104f26",
+    "tests/test_detail.py": "4e116a55088c371254e2d265b8a608a4f6fee45e6bed1eae10929009ebc6a499",
+    "tests/test_granularity.py": "556f11043f27842a22690fab79b6dbe623238807e43ccd7b1ac9f5e78ae92435",
+    "tests/test_review.py": "d867d098c87d0442c328447bd3e245ca3b7666da1522023d6d465c5b48290803"
+  },
+  "schema_version": 1
+}

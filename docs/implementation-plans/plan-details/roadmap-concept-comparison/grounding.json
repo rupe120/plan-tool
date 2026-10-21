@@ -1,0 +1,33 @@
+{
+  "plan_slug": "roadmap-concept-comparison",
+  "grounded_at": "2026-09-21T14:46:59Z",
+  "plan_fingerprint": "2f9dc2ec165056623bf026fd926836f5c3eed4444387f190ae79434ce7c37a50",
+  "code_fingerprint": {
+    "BACKLOG.md": "a7c8568d0b1d2f52c6f4c0e059ce343fba6b14cc660a99dcbf02b697c3c40944",
+    "CAPABILITIES.md": "7ea4e0da3a2ce66917d755b564dee35e33edaeecda7a28219b7096d18f4a5206",
+    "CLAUDE.md": "3d350ea4550fd068aac06112c4eb8f803dd0648126f7ee6757d929522c95c7be",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/cli/roadmap.md": "30d505ee75bef5f4ac81df533a47905526e529046e4bb28ffc2346a32e391471",
+    "docs/how-to/roadmap.md": "8b9991202338b787b123445dd7df55bf885655609639c0384459edfb7b96f497",
+    "docs/reference/commands.md": "8147bd006d72c89409144957c30ff73652383a1164aa0cfc627aa3c12d98db80",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap_candidate.py": "1dbe9abb634bc8872c644f780670df691ffae90b40fc3c7ece87de18e8ded602",
+    "plan_tool/roadmap_versions.py": "35528bbea5b455b4b7f234bb4895f9f98bd334dc1e33d451d40fc3395d242c08",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap_candidate.py": "e5ca9a562ad194c501ebebed264120bbb2e5e97dada454b4047c8a4f6f88f969",
+    "tests/test_roadmap_format.py": "983c1b957113833eb0f9dc579dcbd6315360f9175e95b3c559758c0da7cd6b61",
+    "tests/test_roadmap_versions.py": "25af58c31ba449755c27c0c1aea62d4eda31fcd1e6fe20a71608417019a8a40a"
+  },
+  "step_authoring_fingerprints": {
+    "1": "f1f291d36b3e511115b11d418b0bb23bf6d7e6ca42c8166748ef00bf20b468a2",
+    "2": "55af7f2b45c42d575e850e17593ec58e18baabceda72fdbeebf92fdd81f9b415",
+    "3": "02142960f71b3fae783a5bfdca5f9004c5fe829a0cd7132d2e56a2c7535199f0",
+    "4": "3741a8a96871e64c8fc6412ab4ca9cb0a93af83ef4476d8a22aa9cfc2f0d3bbf",
+    "5": "63cb390dfb4c30a76e06c446dd5065e914eca2ec6afda4af18fb3ab5d9727897",
+    "6": "6d3c8d3511d219eeecfc762e56c14eef19dee0ada71e5f87b4cb0ae6febefc0e",
+    "7": "009866b23bff5eef1e7cf01895a05f08e80149a2623708967d7573153c8f84f1"
+  },
+  "schema_version": 1
+}

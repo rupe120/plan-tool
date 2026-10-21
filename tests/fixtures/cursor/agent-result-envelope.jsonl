@@ -1,0 +1,4 @@
+{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/scratch/cursor-probe","session_id":"00000000-0000-4000-8000-000000000009","model":"Composer 2.5 Fast","permissionMode":"default"}
+{"type":"user","message":{"role":"user","content":[{"type":"text","text":"Reply with exactly: backend probe ok"}]},"session_id":"00000000-0000-4000-8000-000000000009"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"backend probe ok"}]},"session_id":"00000000-0000-4000-8000-000000000009"}
+{"type":"result","subtype":"success","duration_ms":4022,"duration_api_ms":4022,"is_error":false,"result":"backend probe ok","session_id":"00000000-0000-4000-8000-000000000009","request_id":"00000000-0000-4000-8000-00000000000a","usage":{"inputTokens":48299,"outputTokens":40,"cacheReadTokens":1152,"cacheWriteTokens":0}}

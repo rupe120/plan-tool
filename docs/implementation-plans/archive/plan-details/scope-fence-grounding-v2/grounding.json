@@ -1,0 +1,27 @@
+{
+  "plan_slug": "scope-fence-grounding-v2",
+  "grounded_at": "2026-07-21T16:20:40Z",
+  "plan_fingerprint": "4dbfe2503277bbbd9189c9ef46f53c8cd44d9f9baedcf0f81a7d38b50d66f487",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "74ea5ae3734a8b02d0ce115ba73d8592cee918f044ccfde29b883a370ac2adca",
+    "docs/AUDIT_FLOW.md": "336e7e3063cce771d52a29c15cd069ed30b7e35608a49cf14356050c8ac4f85f",
+    "docs/cli/completeness-audit.md": "df800021d7e21f75de85f3ab8d1fb6e4cfbbd3a34063bd99d93ef926b35cf497",
+    "plan_tool/cli/authoring.py": "893dd6687f8650733bfa972be295837e9fb5b9d875be11eb27fe3c16a2027c56",
+    "plan_tool/cli/completeness_cmd.py": "12363d8216e53bc851b2a43f701ea218fdc2b291316c5dcac5d91520a9fdff75",
+    "plan_tool/create.py": "874257f33bd25aae569e623937340eb8f58dc1ec806513c97a926e68538d947e",
+    "plan_tool/detail.py": "11493c7d2d6ad703c3db72a002b339a4431a107e282965a92b8391c72b426ca9",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "plan_tool/prompts/plan-audit.md": "b930d25ef2a7c4198ae0fa13715850b83a08e03760b10493c459258a2eba49cb",
+    "plan_tool/prompts/synthesize-body.md": "82ef307bce49a5fdc45638229f5ad4753e2e33698869ff53f27faf5c3f029b0c",
+    "plan_tool/review.py": "47442b6f4ccc32321cd1c692bd8d17dc32c309b630257bc8e73dcbe7158a296a",
+    "plan_tool/schema.py": "b1686b8949b200e622f3db1e3046fc5ff89230367366d66d11ce0b6979f886e4",
+    "tests/cli/test_authoring_cmds.py": "e5125af66b969bde1488c0b7932f30e18d3656da9848ecdafc273c5615624936",
+    "tests/cli/test_cli_reference.py": "322f09dbaf0a33c6ae02fbf3d62255cf6f37c123ba791ac1d228f4b396d95c40",
+    "tests/cli/test_completeness_cmd.py": "1f8630540b0777cd81ceb0c2af7eddd556855f151c6a5e4e4f319068a1aa0ba0",
+    "tests/test_create.py": "05187de05b578539c4e98bb507c6d2e0ef3da805fdb33aef76f911ff414238f9",
+    "tests/test_detail.py": "2fe2e3e478a35f6971fcf1da7ec9f1567447a53e6336af42e3b02bd215e3a310",
+    "tests/test_parser.py": "1cdcb017d268bafd723d9df1e219db056b2ab1ef83ca86763d40ec0343a6bd30",
+    "tests/test_review.py": "a230068038305a2847b216e005e0556e4101f3eb4161c88bcb3b2f0c7814034f"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,16 @@
+{
+  "plan_slug": "decomposition-convergence-loop",
+  "grounded_at": "2026-06-21T13:30:51Z",
+  "plan_fingerprint": "6160e4927977820b61004a6abf02c94e69bb3fbfb3c068d37e32c18fb4807229",
+  "code_fingerprint": {
+    "BACKLOG.md": "50420121056ac21e748aaa9d9f98f09e372cfae37ae99a66bac12bdd728aa003",
+    "CLAUDE.md": "9e0cb271294b46217a7b260d586eccfe036445797796cd0a3f41b9cd2f661706",
+    "RUNBOOK.md": "553884ec1a78432ec020f96a31f3b040ace35eb3281e2e335fe462ee09d5b1a4",
+    "docs/cli/README.md": "d1f8d0bb7f9a32a627806ce0f3cfd7608dbe54240adcf0da436444e98eeac309",
+    "plan_tool/cli/__init__.py": "d868f6cccb8843cefd5a7cc4c3747dc59bdec550edf1d53cd3c9bb6d7795b804",
+    "plan_tool/cli/app.py": "14a6c529e0018be03b5d1930b3622974c57eb6a15b13e6f895085caecee14943",
+    "plan_tool/cli/parser.py": "460891b93e6b66db86bcdf942c14f731e4bb901428410a6d8dfee0915400e45c",
+    "tests/cli/package_surface_help.golden.txt": "f0aeb60ef7f4dacbebe107b7ac43c05b5458d1784c7cd45449b25f43012af695"
+  },
+  "schema_version": 1
+}

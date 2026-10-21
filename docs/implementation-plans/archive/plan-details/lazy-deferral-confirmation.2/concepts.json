@@ -1,0 +1,113 @@
+{
+  "plan_slug": "lazy-deferral-confirmation",
+  "plan_fingerprint": "30a1a46d10197b93813a3ff9b636352aa6b2fa530dda8ded729bcfa1cea452f4",
+  "concepts": [
+    {
+      "id": "13f827ff8629927d3a6a0073f8ae5459c920f29fa9b0d4f9b62b7b225cff48fb",
+      "title": "overview",
+      "parent_path": [],
+      "order": 0,
+      "source": "Ship the leanest MVP of \"confirm the deferred concepts\": a deferred concept becomes a **flat decision record** `{bucket, title, rationale, decision, review_state}` \u2014 an operator/tool decision, not a derived cache. The key move is that a decision record is **not fingerprint-validated against plan text at all**, so a recorded decision no longer goes stale when unrelated prose changes (the real staleness fix); its only validity check is whether its `bucket` still exists. There is **no concept hierarchy and no drill** in this MVP \u2014 the `bucket` (a coarse section-level tag) is the leaf, and the pending list is grouped by bucket. This supersedes the two prior lazy attempts (v1's whole-bundle fingerprint dead-ended the confirm loop; v2's per-bucket content hash was decorative and had no sub-concepts to drill into) and stops using the shipped hierarchical machinery without ripping it out. Expected ~5\u20137 steps.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:overview",
+        "derived_baseline": "{\"order\":0,\"parent_path\":[],\"source\":\"Ship the leanest MVP of \\\"confirm the deferred concepts\\\": a deferred concept becomes a **flat decision record** `{bucket, title, rationale, decision, review_state}` \\u2014 an operator/tool decision, not a derived cache. The key move is that a decision record is **not fingerprint-validated against plan text at all**, so a recorded decision no longer goes stale when unrelated prose changes (the real staleness fix); its only validity check is whether its `bucket` still exists. There is **no concept hierarchy and no drill** in this MVP \\u2014 the `bucket` (a coarse section-level tag) is the leaf, and the pending list is grouped by bucket. This supersedes the two prior lazy attempts (v1's whole-bundle fingerprint dead-ended the confirm loop; v2's per-bucket content hash was decorative and had no sub-concepts to drill into) and stops using the shipped hierarchical machinery without ripping it out. Expected ~5\\u20137 steps.\",\"title\":\"overview\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "4b4dcef2a7b9e8a282249afea4c39824f19247e7ea3e9623fdfd2b838992c25e",
+      "title": "problem statement",
+      "parent_path": [],
+      "order": 1,
+      "source": "BACKLOG #121's goal was to **confirm the concepts the tool defers** so none is silently dropped, but the shipped machinery over-solved it. `create` eagerly decomposes every plan into a ~28-node concept tree kept in sync with prose via a whole-bundle fingerprint (`compute_plan_fingerprint` on `load_concepts`, `concept_tree.py:234`). A pending deferral must survive until the operator confirms it *later* \u2014 after more edits \u2014 so any whole-bundle fingerprint on that record is stale by confirm time, and `scope-review` (`scope_review_cmd.py:cmd_scope_review`, which returns `SCOPE_REVIEW_INVALID_STATE_EXIT` on `StaleConceptTreeError`) then refuses to confirm it. Specifically: (1) `load_concepts` raises `StaleConceptTreeError` on a `plan_fingerprint` mismatch (`concept_tree.py:234`), cascading through `scope-review` (dead-ends confirm) and `check_concept_coverage` \u2192 `load_concepts` (crashes `status`, the completeness audit, and the `--iterate` gate via `collect_smell_findings` / `collect_self_consistency_findings`) \u2014 but a pending deferral is confirmed after edits by design, so the guard is simply wrong for this record. (2) Eager decomposition plus a hierarchy is unneeded: `bootstrap_concepts` (`concept_bootstrap.py:55`, `create.py:5932`) emits a node per body section and `emit_concept_tree` (`concept_tree.py:330`, `create.py:5956`) enriches ~20 more that nobody signs off on, when a deferral only needs its coarse bucket. (3) The confirm gate `_review_create_concepts` (`create.py:4506-4537`) walks every node and is skipped non-interactively (`create.py:4516`), silently accepting the tool's suggestions \u2014 the founding incident.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "17:problem statement",
+        "derived_baseline": "{\"order\":1,\"parent_path\":[],\"source\":\"BACKLOG #121's goal was to **confirm the concepts the tool defers** so none is silently dropped, but the shipped machinery over-solved it. `create` eagerly decomposes every plan into a ~28-node concept tree kept in sync with prose via a whole-bundle fingerprint (`compute_plan_fingerprint` on `load_concepts`, `concept_tree.py:234`). A pending deferral must survive until the operator confirms it *later* \\u2014 after more edits \\u2014 so any whole-bundle fingerprint on that record is stale by confirm time, and `scope-review` (`scope_review_cmd.py:cmd_scope_review`, which returns `SCOPE_REVIEW_INVALID_STATE_EXIT` on `StaleConceptTreeError`) then refuses to confirm it. Specifically: (1) `load_concepts` raises `StaleConceptTreeError` on a `plan_fingerprint` mismatch (`concept_tree.py:234`), cascading through `scope-review` (dead-ends confirm) and `check_concept_coverage` \\u2192 `load_concepts` (crashes `status`, the completeness audit, and the `--iterate` gate via `collect_smell_findings` / `collect_self_consistency_findings`) \\u2014 but a pending deferral is confirmed after edits by design, so the guard is simply wrong for this record. (2) Eager decomposition plus a hierarchy is unneeded: `bootstrap_concepts` (`concept_bootstrap.py:55`, `create.py:5932`) emits a node per body section and `emit_concept_tree` (`concept_tree.py:330`, `create.py:5956`) enriches ~20 more that nobody signs off on, when a deferral only needs its coarse bucket. (3) The confirm gate `_review_create_concepts` (`create.py:4506-4537`) walks every node and is skipped non-interactively (`create.py:4516`), silently accepting the tool's suggestions \\u2014 the founding incident.\",\"title\":\"problem statement\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06",
+      "title": "architecture",
+      "parent_path": [],
+      "order": 2,
+      "source": "Keep what is already lazy; remove the fingerprint guard and the pre-computed tree.\n\n- **A. Flat decision record.** A deferred concept is `{bucket, title, rationale, decision (defer|wont_do), review_state}`. `bucket` is a coarse section-level tag. No `parent_path`/`depth`, no hierarchy, no per-record hash. An un-deferred plan has **no record at all**.\n- **B. Not fingerprint-validated (the staleness fix \u2014 the whole point).** These records skip the whole-bundle `plan_fingerprint` guard on load: a decision record is not a cache of plan text, so it does not go stale when the plan is edited. Every read/confirm path (`scope-review`, `status`, `check_concept_coverage` and its `collect_*` callers) loads and acts on the record **without** a `StaleConceptTreeError` gate. The only validity question is C.\n- **C. Bucket-existence check, not a content hash.** The one thing that can invalidate a deferral is its `bucket` no longer existing (the section it referred to was deleted/renamed). Read/confirm paths check whether the record's `bucket` still resolves to a current body section (a **name lookup**, no hash). A missing bucket **surfaces the record for operator re-review** (not a silent stand, not a hard crash) \u2014 the dismiss/re-home action is the operator's `scope-review`, not automatic.\n- **D. Deferral-only confirm gate, safe under `-y`.** Replace the whole-tree walk with a gate that records only proposed `defer`/`wont_do` decisions. Under `-y` a proposal is recorded **pending** (never auto-signed); interactively the operator may confirm (`defer`/`wont_do`) or **decline** (the declined proposal is dropped \u2014 no record). Included concepts get nothing (a committed step is proof).\n- **E. Surface as a flat, bucket-grouped list.** Surface pending decisions (grouped by bucket; each with title + the bare `node.id` token `scope-review --concept` consumes) in `status`, the completeness report, and a `create` run-summary line \u2014 **non-blocking** (only an operator `scope-review` decision resolves it; blocking would wedge the `--iterate` loop). No drilling \u2014 the bucket grouping *is* the navigation. Confirming signs it off and renders it into `## Deferred` via the existing `render_scope_decisions` path.\n- **F. Detail records a flat pending decision.** Detail's shared-find routing records a new deferral as a flat pending decision (bucket-tagged), with no dependency on a pre-materialized tree \u2014 so it works on any plan. Never auto-signed under `-y`.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:architecture",
+        "derived_baseline": "{\"order\":2,\"parent_path\":[],\"source\":\"Keep what is already lazy; remove the fingerprint guard and the pre-computed tree.\\n\\n- **A. Flat decision record.** A deferred concept is `{bucket, title, rationale, decision (defer|wont_do), review_state}`. `bucket` is a coarse section-level tag. No `parent_path`/`depth`, no hierarchy, no per-record hash. An un-deferred plan has **no record at all**.\\n- **B. Not fingerprint-validated (the staleness fix \\u2014 the whole point).** These records skip the whole-bundle `plan_fingerprint` guard on load: a decision record is not a cache of plan text, so it does not go stale when the plan is edited. Every read/confirm path (`scope-review`, `status`, `check_concept_coverage` and its `collect_*` callers) loads and acts on the record **without** a `StaleConceptTreeError` gate. The only validity question is C.\\n- **C. Bucket-existence check, not a content hash.** The one thing that can invalidate a deferral is its `bucket` no longer existing (the section it referred to was deleted/renamed). Read/confirm paths check whether the record's `bucket` still resolves to a current body section (a **name lookup**, no hash). A missing bucket **surfaces the record for operator re-review** (not a silent stand, not a hard crash) \\u2014 the dismiss/re-home action is the operator's `scope-review`, not automatic.\\n- **D. Deferral-only confirm gate, safe under `-y`.** Replace the whole-tree walk with a gate that records only proposed `defer`/`wont_do` decisions. Under `-y` a proposal is recorded **pending** (never auto-signed); interactively the operator may confirm (`defer`/`wont_do`) or **decline** (the declined proposal is dropped \\u2014 no record). Included concepts get nothing (a committed step is proof).\\n- **E. Surface as a flat, bucket-grouped list.** Surface pending decisions (grouped by bucket; each with title + the bare `node.id` token `scope-review --concept` consumes) in `status`, the completeness report, and a `create` run-summary line \\u2014 **non-blocking** (only an operator `scope-review` decision resolves it; blocking would wedge the `--iterate` loop). No drilling \\u2014 the bucket grouping *is* the navigation. Confirming signs it off and renders it into `## Deferred` via the existing `render_scope_decisions` path.\\n- **F. Detail records a flat pending decision.** Detail's shared-find routing records a new deferral as a flat pending decision (bucket-tagged), with no dependency on a pre-materialized tree \\u2014 so it works on any plan. Never auto-signed under `-y`.\",\"title\":\"architecture\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252",
+      "title": "out of scope",
+      "parent_path": [],
+      "order": 3,
+      "source": "- **Any concept hierarchy / drill / sub-concepts** \u2014 the bucket is the leaf. On-demand sub-concept derivation (the drill vision) is a deliberate non-goal here; if wanted it is a separate feature that re-introduces a scoped producer. Flat bucket-level deferrals fully solve the founding incident.\n- **Per-record content fingerprints** \u2014 decisions are not caches; validity is bucket-existence only.\n- Removing the shipped hierarchical tree / `Step.concept_ids` \u2014 left dormant, not deleted.\n- The `concept-write-integrity` transactional hardening / #126\u2013#128 \u2014 moot for the lazy path.\n- A dismiss/remove verb for a wrong pending decision \u2014 inert until confirmed; active dismissal deferred.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "12:out of scope",
+        "derived_baseline": "{\"order\":3,\"parent_path\":[],\"source\":\"- **Any concept hierarchy / drill / sub-concepts** \\u2014 the bucket is the leaf. On-demand sub-concept derivation (the drill vision) is a deliberate non-goal here; if wanted it is a separate feature that re-introduces a scoped producer. Flat bucket-level deferrals fully solve the founding incident.\\n- **Per-record content fingerprints** \\u2014 decisions are not caches; validity is bucket-existence only.\\n- Removing the shipped hierarchical tree / `Step.concept_ids` \\u2014 left dormant, not deleted.\\n- The `concept-write-integrity` transactional hardening / #126\\u2013#128 \\u2014 moot for the lazy path.\\n- A dismiss/remove verb for a wrong pending decision \\u2014 inert until confirmed; active dismissal deferred.\",\"title\":\"out of scope\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "72dda8dc73e851118ec2b57fd1e28be9e7d6f49be6b5c0a9a2e437e275d6f220",
+      "title": "risks",
+      "parent_path": [],
+      "order": 4,
+      "source": "- The record must coexist with legacy full-tree `concepts.json`: a flat decision record and a legacy record must both remain loadable, or legacy is explicitly migrated. The load path gains a record-kind branch \u2014 keep it minimal.\n- \"Bucket still exists\" needs a stable notion of a body-section name; a renamed section reads as a missing bucket and surfaces the record for re-review \u2014 intended, but validate it isn't noisy on ordinary section edits (an edit to a section's *body* must not read as a missing bucket).",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "5:risks",
+        "derived_baseline": "{\"order\":4,\"parent_path\":[],\"source\":\"- The record must coexist with legacy full-tree `concepts.json`: a flat decision record and a legacy record must both remain loadable, or legacy is explicitly migrated. The load path gains a record-kind branch \\u2014 keep it minimal.\\n- \\\"Bucket still exists\\\" needs a stable notion of a body-section name; a renamed section reads as a missing bucket and surfaces the record for re-review \\u2014 intended, but validate it isn't noisy on ordinary section edits (an edit to a section's *body* must not read as a missing bucket).\",\"title\":\"risks\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "ae9498b434b81c33da8d95ace0435bde26c3d0bd30666b5abafc922433320955",
+      "title": "testing",
+      "parent_path": [],
+      "order": 5,
+      "source": "- **Staleness (the root):** a plan with a pending decision, then any unrelated edit, leaves the decision fully usable \u2014 `scope-review defer` confirms it, `status`/`check_concept_coverage` act on it, no `StaleConceptTreeError` anywhere.\n- **Bucket gone:** deleting/renaming the decision's bucket surfaces it for re-review (not a silent stand, not a crash).\n- **Founding incident:** `create -y` proposing a deferral leaves a pending decision surfaced with its bare id in all three surfaces, never silently signed; interactive **decline** drops it.\n- **Confirm loop end-to-end:** surface \u2192 `scope-review defer` \u2192 rendered in `## Deferred`, on a plan edited since the deferral was recorded.\n- **Detail:** shared-find records a flat pending decision on any plan (record-absent or legacy).\n- **Un-deferred plan:** no `concepts.json`, no `emit_concept_tree` call, no staleness anywhere.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "7:testing",
+        "derived_baseline": "{\"order\":5,\"parent_path\":[],\"source\":\"- **Staleness (the root):** a plan with a pending decision, then any unrelated edit, leaves the decision fully usable \\u2014 `scope-review defer` confirms it, `status`/`check_concept_coverage` act on it, no `StaleConceptTreeError` anywhere.\\n- **Bucket gone:** deleting/renaming the decision's bucket surfaces it for re-review (not a silent stand, not a crash).\\n- **Founding incident:** `create -y` proposing a deferral leaves a pending decision surfaced with its bare id in all three surfaces, never silently signed; interactive **decline** drops it.\\n- **Confirm loop end-to-end:** surface \\u2192 `scope-review defer` \\u2192 rendered in `## Deferred`, on a plan edited since the deferral was recorded.\\n- **Detail:** shared-find records a flat pending decision on any plan (record-absent or legacy).\\n- **Un-deferred plan:** no `concepts.json`, no `emit_concept_tree` call, no staleness anywhere.\",\"title\":\"testing\"}"
+      },
+      "bucket": ""
+    },
+    {
+      "id": "4fe0e8e39d6eebcd154f82f1a8950f81d32bc14792eef42ffcd530c52665cc6d",
+      "title": "deferred",
+      "parent_path": [],
+      "order": 6,
+      "source": "- Sub-concept drill / on-demand per-bucket derivation \u2014 a separate feature; the MVP is flat.\n- Migrating existing eager full-tree records to the flat shape \u2014 legacy stays loadable; migration is separate.\n- Program-scale / authoring-time decomposition monitoring \u2014 BACKLOG #129.",
+      "decision": "include",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {
+        "source_key": "8:deferred",
+        "derived_baseline": "{\"order\":6,\"parent_path\":[],\"source\":\"- Sub-concept drill / on-demand per-bucket derivation \\u2014 a separate feature; the MVP is flat.\\n- Migrating existing eager full-tree records to the flat shape \\u2014 legacy stays loadable; migration is separate.\\n- Program-scale / authoring-time decomposition monitoring \\u2014 BACKLOG #129.\",\"title\":\"deferred\"}"
+      },
+      "bucket": ""
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "full-tree"
+}

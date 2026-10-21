@@ -1,0 +1,18 @@
+{
+  "plan_slug": "headless-review-annotation-entry",
+  "grounded_at": "2026-08-28T03:49:50Z",
+  "plan_fingerprint": "d0e068f74f1ceaa763712063a4c9bc748d2f3067e0ce924fccc982ccfc7c0459",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review.py": "7d0ee59cba958c291f5e933ca6557a7f9fba9b4c9b0d077c8273f274a1870d55",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "step_authoring_fingerprints": {
+    "1": "846fd02dcce73363c03cdb735db3b9f66aff9b5187288611f3812520f8d3ca3c",
+    "2": "624c8e5c1024b27a8f722a0bc2aa3697f052738f6c811047fad415d6e5efc838",
+    "3": "5e0e2e4848059863ddd0b9e8a4111c569502a3b9c1d3f5b4a485c55de776397b"
+  },
+  "schema_version": 1
+}

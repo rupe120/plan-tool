@@ -1,0 +1,21 @@
+{
+  "plan_slug": "convergence-non-severity-advisories",
+  "grounded_at": "2026-08-11T10:49:45Z",
+  "plan_fingerprint": "be94ee61c451980c022764f7633b6033f229dd95bea42cffd7e0e3d10e30b66f",
+  "code_fingerprint": {
+    "BACKLOG.md": "99c893cbe2cf05937eaae7c194cb02b086b4875fc21570ab175ab4aba0974586",
+    "CLAUDE.md": "732d789e6ad76fae2ce99290713468af9d7bb9ff8b687a3817a813567bc69ef9",
+    "DATA_CONTRACT.md": "1e1064e292a3c70b1c4fd6087e976c331eff68cca7c279c72200bf56af1e85e3",
+    "docs/implementation-plans/plan-seeds/impact-recurrence-01-classifier.md": "96d2cb3721ee9405ca90c88c5cfae6293dc75139e017f79b088a6faf795c62dc",
+    "docs/implementation-plans/plan-seeds/impact-recurrence-02-loop-stop.md": "9b5e76742a8d2f5251bd47e05fb5eb30b27965819ceabcdc145de7fecd7ed727",
+    "plan_tool/cli/completeness_cmd.py": "006e0cb3f1f2a334b81878be836a215dfb371a3683014acd3dd9611e49f06236",
+    "plan_tool/completeness_report.py": "89bccca1ee9355af8655d7e3962405d60021a83d5e119d22c4fe256ff00e55a9",
+    "plan_tool/convergence_diagnosis.py": "f76c75f96077245172ebbe53870a194a60b84eb6408a302b9922752986b7603b",
+    "plan_tool/review_persistence.py": "c229ae78511d407b64a21f196e450ba51a545a0bf53be45f573fc8246f74b82e",
+    "tests/cli/test_completeness_cmd.py": "1e173dfcdf364a0724c1f02fd6bc1f9617be7eb0f1f6066d05f389c6931e0252",
+    "tests/cli/test_convergence_cmd.py": "35f6ce07fbc55f9e6032321a2da0e2747b4d0326078dc96d71aa3dc8b4fa41d7",
+    "tests/test_convergence_diagnosis.py": "153f8e8317d8fcc109c20b41a59b469301a8d2b4a542d78444f19637ccf53b08",
+    "tests/test_review_persistence.py": "173f80389d7058559551aed1ba01b15667ca38767d49f3c05da9e0e0573d355f"
+  },
+  "schema_version": 1
+}

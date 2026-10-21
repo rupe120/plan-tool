@@ -1,0 +1,20 @@
+{
+  "plan_slug": "research-chosen-technology",
+  "plan_fingerprint": "d9432cfc5e3d0f84ddc12408d7635dfd6f6f6caebd7d4a8462a4a407048cbf44",
+  "concepts": [
+    {
+      "id": "7f957293972de2d3834443890f509fe3f08b6a184c3402a69940a78522fa7beb",
+      "title": "stop/defer",
+      "parent_path": [],
+      "order": 0,
+      "source": "",
+      "decision": "defer",
+      "rationale": "",
+      "review_state": "unreviewed",
+      "source_metadata": {},
+      "bucket": "stop/defer"
+    }
+  ],
+  "schema_version": 1,
+  "record_kind": "decision-record"
+}

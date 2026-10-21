@@ -1,0 +1,18 @@
+{
+  "jira": {
+    "site_url": "https://your-site.atlassian.net",
+    "project_key": "PROJECT",
+    "project_id": "",
+    "board_id": "",
+    "board_url": ""
+  },
+  "bitbucket": {
+    "workspace": "your-workspace",
+    "repository": "your-repository",
+    "api_url": "https://api.bitbucket.org/2.0",
+    "clone_url": ""
+  },
+  "integration_consumer": {
+    "checkout": "/path/to/integration-consumer"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "plan_slug": "intent-required",
+  "grounded_at": "2026-08-03T00:33:01Z",
+  "plan_fingerprint": "167c7ea7a3d7036c10c6307f3de4b826b80189aeb98c358326282ed4a0f3a1b8",
+  "code_fingerprint": {
+    "BACKLOG.md": "5182d4d5afce634d34ef7e48ee6b4dfa68511794fe596632b5203bff95da1a8f",
+    "CLAUDE.md": "1677ec6624608fa57e3d6df811cd5def83572d85c05890d43aa97ebb94ee7c40",
+    "PLAN_FORMAT.md": "4c160f2e688a4c0606333b09aed76c498cc2c10683cfa45a5e4ea657a2c3f983",
+    "SEED_FORMAT.md": "56f621465d27998dc4f99011e933d9d57a5b2c8a758ba3bb47a6e5ed30a5616a",
+    "docs/AUDIT_FLOW.md": "a10ad79a2ec7e7069ce06f4b72ed4daa8b6f070efdfd165f362cdfc8c7d6cbea",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "f7f62b628c154a22c0f4903cdbe84b8e8e0e17a9122ac0b2245b31b46cd237f7",
+    "plan_tool/cli/completeness_phases.py": "6927df073c617c10e8a326425d3524ed0c4ec48fd60a098196fb35cb53c96b76",
+    "plan_tool/cli/review_actions.py": "907034d0a1a1b11cd4a98c8eb620b6cc20dd41f6418410219ebb2a6378d890a6",
+    "plan_tool/create.py": "2f19f89e6fbb9c7ab6867ca37c04486b64ea4670d375bb569a30a25e1cb370b9",
+    "plan_tool/review.py": "76049ddd9b9ae2f2e86bcc6bd7c3530ed886a421f8bf88bd00b298241ee2791b",
+    "plan_tool/review_walk.py": "a8eba2e25c1eba2514c45d9bfbed21eb06bef32c55e31ad21614ac1afd571284",
+    "tests/cli/test_completeness_cmd.py": "20bfbf901d241e52a2d6e21eba9325c822700683615edc349645086726385055",
+    "tests/cli/test_review_actions.py": "474a87ff34b2d6518e18a1c81cfc8491d04cb34cbcc1debbcee1aae3f09a35dd",
+    "tests/test_create.py": "48e4a9e0d10e0c197a6bc84fbfe10a8eabf5cf0a0314f496e2d26e16debfe1bf",
+    "tests/test_review.py": "6f08dea9cca7be9493dff49c241c2726414991186b04c72d327fc56e52d59c7a",
+    "tests/test_review_walk.py": "215c04478af764bd9bb29b70b3ab091fe54df13e7f20934615971d35bc306c61"
+  },
+  "schema_version": 1
+}

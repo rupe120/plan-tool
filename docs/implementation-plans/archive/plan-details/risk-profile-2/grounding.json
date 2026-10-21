@@ -1,0 +1,19 @@
+{
+  "plan_slug": "risk-profile-2",
+  "grounded_at": "2026-08-25T19:54:44Z",
+  "plan_fingerprint": "ca27d0ba8ecd8c13ef526d1c78e1268b8b15835383bed31610cbeec76fd91e7d",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960"
+  },
+  "step_authoring_fingerprints": {
+    "1": "5be3e0b8cb82586fd804c7bbce73ae89c047ff59ff36b61b18d86a68d03f38f0",
+    "2": "a1c49058ef5ddc077fc91b492d9dd77caa4f764808fdf658cfdfd692ef9c37ef"
+  },
+  "schema_version": 1
+}

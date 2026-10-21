@@ -1,0 +1,31 @@
+{
+  "_doc": "Apply-finding benchmark corpus. Each entry under 'findings' is a saved audit finding plus its known target edit. The step-2 engine materializes the 'repo' map (path -> contents) into a tempdir + git init, then calls plan_tool/launcher.py:apply_finding(finding_body=..., step_id=target_step_id) against the embedded plan. Scoring is judge-free: the returned ApplyFindingResult.diff_text must contain 'expected_edit' (the landed-hunk marker) and apply_finding's diff is scoped to the plan file + the step's detail file only, so target_file/expected_edit always describe a plan or detail edit, never a source-file edit. Finding bodies follow plan_tool/launcher.py:FindingBullet shape (a severity token + body). Shape and scoring are documented in docs/BENCHMARK_DESIGN.md.",
+  "findings": [
+    {
+      "id": "add-empty-cart-acceptance-bullet",
+      "plan_path": "plan.md",
+      "target_step_id": 1,
+      "target_file": "detail/01-discounts.md",
+      "finding_body": "HIGH: Step 1's acceptance criteria never assert the empty-cart edge case. Add a bullet to the `## Acceptance criteria` section reading `- Empty cart returns a total of 0`.",
+      "expected_edit": "Empty cart returns a total of 0",
+      "repo": {
+        "plan.md": "---\ntitle: Cart discounts (apply fixture)\nstatus: in-progress\npriority: low\nsteps:\n- id: 1\n  title: Add discounted_total() to the cart\n  files:\n  - src/cart.py\n  change_type: feature\n  detail: detail/01-discounts.md\n  status: done\n---\n# Cart discounts (apply fixture)\n\n## Overview\nApply-finding benchmark fixture.\n",
+        "detail/01-discounts.md": "# Add discounted_total() to the cart\n\n## Summary\nApply a looked-up percentage coupon to the cart subtotal.\n\n## Table of Contents\n- Summary\n- Why\n- Files\n- Implementation\n- Tests\n- Acceptance criteria\n\n## Why\nCustomers expect coupon support at checkout.\n\n## Files\n- src/cart.py\n\n## Implementation\nLook up the coupon, clamp the percentage to 0-100, subtract from subtotal.\n\n## Tests\n- discounted_total applies a valid coupon\n\n## Acceptance criteria\n- A valid coupon reduces the total by its percentage\n",
+        "src/cart.py": "class Cart:\n    def subtotal(self):\n        return 0\n"
+      }
+    },
+    {
+      "id": "name-test-file-in-tests-section",
+      "plan_path": "plan.md",
+      "target_step_id": 1,
+      "target_file": "detail/01-exporter.md",
+      "finding_body": "MEDIUM: Step 1's detail `## Tests` section names no test file. Add a bullet `- tests/test_exporter.py` so the test footprint is explicit.",
+      "expected_edit": "tests/test_exporter.py",
+      "repo": {
+        "plan.md": "---\ntitle: Report exporter (apply fixture)\nstatus: in-progress\npriority: low\nsteps:\n- id: 1\n  title: Add export() to the report module\n  files:\n  - src/exporter.py\n  change_type: feature\n  detail: detail/01-exporter.md\n  status: done\n---\n# Report exporter (apply fixture)\n\n## Overview\nApply-finding benchmark fixture.\n",
+        "detail/01-exporter.md": "# Add export() to the report module\n\n## Summary\nWrite report rows to a CSV file.\n\n## Table of Contents\n- Summary\n- Why\n- Files\n- Implementation\n- Tests\n- Acceptance criteria\n\n## Why\nUsers need to export reports for offline analysis.\n\n## Files\n- src/exporter.py\n\n## Implementation\nOpen the path, write a header row, then one line per record.\n\n## Tests\n- export writes a header then one row per record\n\n## Acceptance criteria\n- export writes a header row then one line per record\n",
+        "src/exporter.py": "def export(rows, path):\n    return None\n"
+      }
+    }
+  ]
+}

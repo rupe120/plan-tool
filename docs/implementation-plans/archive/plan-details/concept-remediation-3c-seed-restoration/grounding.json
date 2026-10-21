@@ -1,0 +1,22 @@
+{
+  "plan_slug": "concept-remediation-3c-seed-restoration",
+  "grounded_at": "2026-07-13T19:04:15Z",
+  "plan_fingerprint": "ab3dd9ebcf345b29121974f7fe0a3732e58d6567a9ac9ba17f9e7028a45bd9ee",
+  "code_fingerprint": {
+    "BACKLOG.md": "4ab171fac41e44d36318f5629285401e7563e7b638173b52624eb7225d04fdbf",
+    "CLAUDE.md": "4d094b43e265485c6c5be2f7a383b003ba0d5fad94702f03be8b77dd3081ac93",
+    "RUNBOOK.md": "55f69d996e419b1d5b13e3cb2557dfb0d6dd759fdad0a373c694210fd74407c8",
+    "plan_tool/concept_tree.py": "fb63c4f467fba65cf009df583b8ac601916a274c4cc0e1913c867033b5609389",
+    "plan_tool/create.py": "44af6126261992dc41c93b622367a42a129b570b4ddba678c756438f784d44ae",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "tests/cli/test_authoring_cmds.py": "752756027d7456fe4af56302c86b6b106efefb94d8ffc6c1d62a4b2be21733f1",
+    "tests/cli/test_completeness_cmd.py": "886cf0f93301c67b6e706e18e1819c9c6e36ede230de28802aae12f3e5a9c396",
+    "tests/cli/test_scope_out_cmd.py": "721bc1ea5b84faf1f0fa5da44e84f5e2a278694c70476f9bd010a57d7a29cda6",
+    "tests/test_concept_tree.py": "4734eb9849d3afa9605c24511f1660f8ab8cec722428724a556bc7928a81170c",
+    "tests/test_create.py": "13919074a9741c18d1949cda5606aadbaed15bf4f750df9ab7a7002b558d2a66",
+    "tests/test_detail.py": "97066f6478fc1ec7a6a60924b732ed63cd90dcfd41bb8a381e2b8bb39965bfa2",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_scope_out.py": "45d1a886086232ba7c917e7d275366dda1c8fc2f864111ba323621c47296934c"
+  },
+  "schema_version": 1
+}

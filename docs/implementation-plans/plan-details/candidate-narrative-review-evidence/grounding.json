@@ -1,0 +1,28 @@
+{
+  "plan_slug": "candidate-narrative-review-evidence",
+  "grounded_at": "2026-10-02T17:11:33Z",
+  "plan_fingerprint": "f3cfee070246798e6b32bf61e455a58e6221521c2cbe02a53714d7c555712199",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "docs/ARCHITECTURE.md": "9c2368e32d7a6a5abf3405d7122c7578af94e1fa0193706034573f26c6102797",
+    "docs/cli/roadmap.md": "b9af83d76a9fe7b26691d69f33e3bb00d9fb6939262627375f68d5402ca1ef09",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_gates.py": "63eb68b96193e6f097f947b9e72db50fd9ef6cff232c40c524e26905716f357c",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_gates.py": "5c8ae5d3a11935575025ade8d6b906ec230354337a6b0e08e5f16bfd0466e25a"
+  },
+  "step_authoring_fingerprints": {
+    "1": "4ab132261971d4a216355dbc469d703d8b07135b659d5d2cc8f35272d39934e9",
+    "2": "3192f40639890eb79ac77b526e8a2a4d10a51831b45427bd286cdbd14e704d5e",
+    "3": "844927d5778c758264c59f6ebf4bd6f518bd84e0d155ad29a4d88239725555a2",
+    "4": "c532e622f46bbfe73b9c267124ababd939cbcd67cd37d05ea1c7b0679fef1a0f",
+    "5": "ab8162f9aafd75fedfe977f6abf89342f64e940d3622be87870c86f5e5b041e0",
+    "6": "6dcbcda5a01b73929a6de6f9d524ff16d5e257b6c2d97237a6000f086f843ef8",
+    "7": "720e063fe6c1b7e912193562284f3046059d8df7e1bb66fc78b38a14ed393e92",
+    "8": "82ed818765096dd5f8f2d04bf48273f2e0161e55c57a6b0574317f72cab4af79"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,17 @@
+{
+  "plan_slug": "developer-doc-research-parse-failure",
+  "grounded_at": "2026-09-02T16:51:09Z",
+  "plan_fingerprint": "6942905ea7e86cec80933f0ef180bf2a8572b0fadd1b13f6ccbafadd984e8dfc",
+  "code_fingerprint": {
+    "plan_tool/create.py": "7c180bf27c66bc371cf080977dea09e23aca9010151a8fe70b94c9479e16bc68",
+    "tests/cli/test_authoring_cmds.py": "a97066b0daf75360882528497a435ef2c9521f6fb62caf8f1c9a55caa88810ac",
+    "tests/test_create.py": "a5327f166f0ce0ebe9351b3b24a704a6b03de8558faadbc0335342ecf8a22491"
+  },
+  "step_authoring_fingerprints": {
+    "1": "bf3e2fc70c852d516ef7892653a6029194be1732c795f4faca4b21c484668d06",
+    "2": "11b7f4d5b51789ddfe5cb5ef7ef5e9223bf2e066988998df6bb69b9beeae05f7",
+    "3": "60f97b35905572dde23fdfc6202e4c7b2ebab8d4b91bb14e61742dba01c8c12e",
+    "4": "75a3da85b8a432031ee6f2c09e57591867b0639236cb1fa6962f2388f96cdaee"
+  },
+  "schema_version": 1
+}

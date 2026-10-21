@@ -1,0 +1,19 @@
+{
+  "plan_slug": "escalate-recurring-seams",
+  "grounded_at": "2026-07-20T02:07:07Z",
+  "plan_fingerprint": "ddb9010e4c3b1904a1be3deebecd51c639dc9bc0ced34b40a80cdb836c7f0e77",
+  "code_fingerprint": {
+    "BACKLOG.md": "9384b19b61a084406011517f70f8f5303b67ab0fb223e71aecc3a3389838dc66",
+    "plan_tool/cli/completeness_cmd.py": "2d877540eccd8d9c93cc177ea62bc8d12ae3c1d29cbac959f63c9abebeedd3a5",
+    "plan_tool/cli/completeness_phases.py": "8ab3ff73e540ece77b0f9c7d57527b7d19c1f3bf690b902e16114fcd67b6bc83",
+    "plan_tool/cli/reconcile.py": "d83ffff856111723631bab0ab8fa3816ce9a5e3d0aca021e2da10c37f0e95366",
+    "plan_tool/convergence.py": "2067d8f4069e8b752df8e684abdd7d03413a305f31e47771c91b6a05375aaf0f",
+    "plan_tool/convergence_diagnosis.py": "7b0c8a5e0c14f61892e25cc1a98cf020c8b4a3979e98c184bbfb6e8b22d0b841",
+    "tests/cli/test_completeness_cmd.py": "3eee024878ff59b6fa1901ad94f8691b39cc01f9031e5d35592ffd109a4d45cf",
+    "tests/cli/test_convergence_cmd.py": "43da3d7b6d3955ad94b653f079ed0e96b694946c0fb03f45a0246dd5decd5451",
+    "tests/test_cli.py": "335e2e94e25d22dc94c9cfd195acd27c412cf992d3afea4351d923f11a85e1e4",
+    "tests/test_convergence.py": "6dde4576ea42043938952f3b36319a517a6f035159b9763e80d3d848a3cece3a",
+    "tests/test_convergence_diagnosis.py": "e12559f4efa18298fdabb38ba694e4524335c9df9f01b5b1b7aa7bcd2fda7dc5"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,30 @@
+{
+  "plan_slug": "roadmap-stack-propagation",
+  "grounded_at": "2026-10-08T16:10:18Z",
+  "plan_fingerprint": "595cf8e1febad0ba890f89fc1eb3232b6fca5f75ef6513560aabebfd8dfd5a06",
+  "code_fingerprint": {
+    "BACKLOG.md": "48348a656456145622312f9f8de36257014c08dee3090e85a9825f989bcc698e",
+    "PLAN_FORMAT.md": "dee6c391f7ac3499df574d4143634458e7d5de11505042ef2cda085d9f758d0f",
+    "ROADMAP_FORMAT.md": "063b3b5f610cd719fec0f51960e21242c2e5beb739a995c356bcfc264a1445ac",
+    "docs/how-to/roadmap.md": "fbeea56d079e7f4375a16d071ef158d72304c99f9a0c596f6712d65897295827",
+    "plan_tool/create.py": "5bdbf0d5b433c345ca706c8599bdc83a18e500607f73b9b3343bd3b8345c6c68",
+    "plan_tool/prompts/distill-seed.md": "4669961dad07d886ee47814cacb9f35562989eee4dc38513e402cae6201cef49",
+    "plan_tool/prompts/plan-audit.md": "5ea26629e7fa0ead44e0c7ff92ef80e4ceecca689e3f9643b4501367bc4140d8",
+    "plan_tool/prompts/roadmap-seed.md": "4d7e4ceba9680805258372a4f2a1759136ec6fb4e9a010ca8b97a58ac8df4d04",
+    "plan_tool/prompts/synthesize-body.md": "3aa3f4cb81c076e4cbb509f11713447284cac683cdfc81a35a8efae594702418",
+    "plan_tool/roadmap.py": "3b417be6024ae8809ec33e28cab7135de500aa1fe7ef00cb9930224738798166",
+    "plan_tool/scope_fence.py": "74f6cb6ac4387972a73053ff0f5b461fa166cdb74ded8486bdc33e862d26d3e9",
+    "tests/test_create.py": "7b133305096b8e5bc33b9c0166276777eda04456312347fa398f82b194f7950d",
+    "tests/test_review.py": "035a354a25729deb63421c06854d5e23e68514ef8aa731a6bcf00cd2fffc097b",
+    "tests/test_roadmap.py": "49127f2e6f3998899d4d392a6ade6dc60e9cc6a134791c9be2a17351d031c317",
+    "tests/test_roadmap_seed_manifest.py": "bcae4154b80b648a8feaf1c4a50247d594a73007ed92a8c55e70cd14fb70489c",
+    "tests/test_scope_fence.py": "efc69e976dadcdc46a0583ef6f0c5f31f2c676c7b9a8da3d4c9dee3f3c78a513"
+  },
+  "step_authoring_fingerprints": {
+    "1": "a6b1e72f91ac0b93a72e1b97c85ceba6aeb934dd7d969ee3c6d6de26c3b86d64",
+    "2": "755f1e1c6ec182e8cd3b7cda03bf403e532db8db90cb53d9b31e8f41e407185f",
+    "3": "2bf3b583d6d00915dbe4cbdc196ee62c3f878894444dfc862f1ec670d9af72f2",
+    "4": "e7a08ec231fe5b0d674ff6c33a83737d99bf5dee0ca880e1af6f10e38b997d48"
+  },
+  "schema_version": 1
+}

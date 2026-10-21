@@ -1,0 +1,61 @@
+{
+  "_comment": "Policy replay for the two proposal routes. It records prompt inputs and expected audit altitude; it does not assert a live model response.",
+  "proposal_routes": [
+    {
+      "name": "combined",
+      "omit_foundational_item": false,
+      "expects_inline_foundational_item": true,
+      "refactor_boundary_property": "observable execution boundary",
+      "bare_cases": [
+        {
+          "kind": "missing-route",
+          "named_property": "The refactor keeps a destructive consumer from running after its producer is bypassed.",
+          "expected_axes": ["correctness"]
+        },
+        {
+          "kind": "unselected-delivery-choice",
+          "delivery_choice": "Use a typed attachment and a dependency edge to carry the bypass state.",
+          "described_as_severe": true,
+          "expected_axes": []
+        },
+        {
+          "kind": "explicit-observable-contract",
+          "observable_contract": "Expose a terminal bypass signal so callers preserve the safety boundary.",
+          "expected_axes": ["correctness"]
+        }
+      ],
+      "detail_stage": {
+        "selected_delivery_mechanism": true,
+        "may_check_selected_mechanism": true
+      }
+    },
+    {
+      "name": "split",
+      "omit_foundational_item": true,
+      "expects_inline_foundational_item": false,
+      "refactor_boundary_property": "observable execution boundary",
+      "bare_cases": [
+        {
+          "kind": "missing-route",
+          "named_property": "The refactor keeps a destructive consumer from running after its producer is bypassed.",
+          "expected_axes": ["correctness"]
+        },
+        {
+          "kind": "unselected-delivery-choice",
+          "delivery_choice": "Use a typed attachment and a dependency edge to carry the bypass state.",
+          "described_as_severe": true,
+          "expected_axes": []
+        },
+        {
+          "kind": "explicit-observable-contract",
+          "observable_contract": "Expose a terminal bypass signal so callers preserve the safety boundary.",
+          "expected_axes": ["correctness"]
+        }
+      ],
+      "detail_stage": {
+        "selected_delivery_mechanism": true,
+        "may_check_selected_mechanism": true
+      }
+    }
+  ]
+}

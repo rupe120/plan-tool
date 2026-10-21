@@ -1,0 +1,24 @@
+{
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "grounded_at": "2026-10-10T18:41:58Z",
+  "plan_fingerprint": "fc47081eb607e293b23039b16ce648bf8dad7156d6c85910fcc5531049391603",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "step_authoring_fingerprints": {
+    "1": "6df33c68b112aa54577a43bfc50aebca92a6e6d62b29999836158ea100ac3de3",
+    "2": "cd773a135628e79b36386a7d22e0ff667751ed24650e23102f6737522789245b",
+    "3": "dbc60072257fccf95e842926c48f8c5ee5f7f981bb76d5fd15eaa80cf9725dab",
+    "4": "ba3aa4851c584d5c7359c73555fcfc53937cba51cf6d720e7bf0e4529d4c1a6c",
+    "5": "7f1767e3eb1dd3e4880519c99150e2c6b9e7c5e6c5b29b6c63a5a8520d5954d8"
+  },
+  "schema_version": 1
+}

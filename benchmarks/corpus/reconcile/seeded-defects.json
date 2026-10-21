@@ -1,0 +1,44 @@
+{
+  "_doc": "Reconcile/audit benchmark corpus. Each entry under 'repos' is a scratch repo the step-2 engine materializes (tempdir + git init) from its 'repo' map (path -> file contents). The backend runs reconcile/audit against it; reported findings are scored for recall/precision against this file's seeded 'defects' manifest, with fuzzy matching on file+symbol. Shape and scoring are documented in docs/BENCHMARK_DESIGN.md. Every embedded plan file parses under plan_tool/schema.py:Plan.",
+  "repos": [
+    {
+      "id": "auth-service",
+      "plan_path": "plan.md",
+      "repo": {
+        "plan.md": "---\ntitle: Token auth for the API gateway\nstatus: completed\npriority: medium\nsteps:\n- id: 1\n  title: Add validate_token(token) to auth.py that verifies the signature and expiry\n  files:\n  - auth.py\n  change_type: feature\n  status: done\n- id: 2\n  title: Add a --strict CLI flag to cli.py that rejects tokens missing an audience claim\n  files:\n  - cli.py\n  change_type: feature\n  depends_on:\n  - 1\n  status: done\n---\n# Token auth for the API gateway\n\n## Acceptance criteria\n- validate_token rejects expired tokens\n- the --strict flag rejects tokens that carry no aud claim\n",
+        "auth.py": "import time\n\n\ndef verify_token(token):\n    \"\"\"Return True when the token's signature is valid and it has not expired.\"\"\"\n    parts = token.split(\".\")\n    if len(parts) != 3:\n        return False\n    exp = _decode_exp(parts[1])\n    return exp > time.time()\n\n\ndef _decode_exp(payload):\n    return 0\n",
+        "cli.py": "import argparse\n\nfrom auth import verify_token\n\n\ndef build_parser():\n    p = argparse.ArgumentParser()\n    p.add_argument(\"token\")\n    return p\n\n\ndef main(argv=None):\n    args = build_parser().parse_args(argv)\n    return 0 if verify_token(args.token) else 1\n"
+      },
+      "defects": [
+        {
+          "kind": "renamed_function",
+          "file": "auth.py",
+          "symbol": "validate_token",
+          "note": "Plan step 1 claims auth.py defines validate_token; the code instead defines verify_token. The audit must surface the rename/missing-symbol drift."
+        },
+        {
+          "kind": "dropped_flag",
+          "file": "cli.py",
+          "symbol": "--strict",
+          "note": "Plan step 2 and the acceptance criteria promise a --strict CLI flag; cli.py's build_parser never registers it. The audit must surface the silently dropped flag."
+        }
+      ]
+    },
+    {
+      "id": "report-exporter",
+      "plan_path": "plan.md",
+      "repo": {
+        "plan.md": "---\ntitle: CSV report exporter\nstatus: completed\npriority: low\nsteps:\n- id: 1\n  title: export(rows, path) writes rows to a CSV file, retrying on transient IO errors\n  files:\n  - exporter.py\n  change_type: feature\n  status: done\n---\n# CSV report exporter\n\n## Acceptance criteria\n- export writes a header row then one line per record\n- export retries up to 3 times on transient IO errors before raising\n",
+        "exporter.py": "import csv\n\n\ndef export(rows, path):\n    \"\"\"Write rows (list of dicts) to a CSV file at path.\"\"\"\n    if not rows:\n        return\n    fieldnames = list(rows[0].keys())\n    with open(path, \"w\", newline=\"\") as fh:\n        writer = csv.DictWriter(fh, fieldnames=fieldnames)\n        writer.writeheader()\n        for row in rows:\n            writer.writerow(row)\n"
+      },
+      "defects": [
+        {
+          "kind": "unimplemented_criterion",
+          "file": "exporter.py",
+          "symbol": "export",
+          "note": "Plan step 1 and its acceptance criteria require export() to retry up to 3 times on transient IO errors; the implementation has no retry loop and raises on the first failure. This is the LLM-backed criteria-fulfillment defect (plan_tool/review.py:check_criteria_fulfillment), scored by manifest overlap like the deterministic drift defects."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "verification_date": "2026-10-21",
+  "recommendation": "Retirement complete: ten approved branches deleted and verified absent; the eleventh is already absent. No patch replay or salvage needed.",
+  "method": "Nine branches: identical added/removed line sequences for every changed path versus the landing commit, beyond stable aggregate patch-id comparison. One branch: identical complete Git tree. One branch: ancestor of merged main. Expected branch tips are re-read from both hosts.",
+  "limits": "Line-sequence equivalence does not certify identical unrelated context or current runtime behavior after later changes. Matching landing commits remain reachable from the main baseline; no new runtime changes are made.",
+  "branches": [
+    {
+      "host": "bitbucket",
+      "branch": "docs/backlog-run-accept-and-seed-frontmatter-followups",
+      "tip": "3fa28e6cd1518e6022eece1eb0486e70cc98fdfb",
+      "landing_commit": "ca6fdaf25bd00c8016df23c0677adf610476d995",
+      "changed_paths": 2,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "3fa28e6cd1518e6022eece1eb0486e70cc98fdfb",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "agent/ground-create-synthesis-local-code",
+      "tip": "607460e87f8c50ed742f2a7118b4859c15b280d1",
+      "landing_commit": "e61516bfefe858f5494ebe357a8569ff4d82b948",
+      "changed_paths": 4,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "607460e87f8c50ed742f2a7118b4859c15b280d1",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "cleanup/backlog-drift-and-version-flag",
+      "tip": "f8a4ade90602d45738c1bbfa894b3dafa2ad161d",
+      "landing_commit": "c41efd753901dd1bfbc3aa30c08af226ee2968ee",
+      "changed_paths": 19,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "f8a4ade90602d45738c1bbfa894b3dafa2ad161d",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "codex/roadmap-feedback-batch-revision",
+      "tip": "d9a83a82a943c0c94aa8a81708db9e0c6da1cede",
+      "landing_commit": "30484873f04fbc3c9badded704fc870ad13f298b",
+      "changed_paths": 190,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "d9a83a82a943c0c94aa8a81708db9e0c6da1cede",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "codex/roadmap-structural-approval-handoff",
+      "tip": "dba3add7498d4a705d98514d699778499094f05c",
+      "landing_commit": "950365c2507dd7feddb1a7d11282b0f862777fd1",
+      "changed_paths": 82,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "dba3add7498d4a705d98514d699778499094f05c",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "docs/developer-front-door",
+      "tip": "3f0f23c175d4aa482ae47fc28850926d35ecb14c",
+      "landing_commit": "79a8e131de107ad74dff42a40d3bcde6a9b01850",
+      "changed_paths": 408,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "3f0f23c175d4aa482ae47fc28850926d35ecb14c",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "fix/backlog-entry-id-uniqueness",
+      "tip": "bdf21340f2326e685da5943f814a3d20582a0f39",
+      "landing_commit": "c41efd753901dd1bfbc3aa30c08af226ee2968ee",
+      "changed_paths": 19,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "bdf21340f2326e685da5943f814a3d20582a0f39",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "fix/reconcile-all-round-2",
+      "tip": "e610ef1762219d6a40eff6c41b98a30a7e1b32f4",
+      "landing_commit": "ff6c9fb29622e379b9e81ef98c20511b78e13744",
+      "changed_paths": 7,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "e610ef1762219d6a40eff6c41b98a30a7e1b32f4",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "plan/telemetry-linkage-backfill",
+      "tip": "9bd85705a2f0cba9803b5a6d0148345e797b98a0",
+      "landing_commit": "1218701ab833e5681d499422d64e6b9c2904e329",
+      "changed_paths": 55,
+      "exact_added_removed_lines_match": true,
+      "different_edit_paths": [],
+      "observed_remote_tip": "9bd85705a2f0cba9803b5a6d0148345e797b98a0",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "github",
+      "branch": "codex/roadmap-stack-aware-approval-seed",
+      "tip": "39358b73a05fe3cac3e2fa6e5990833ec6416de9",
+      "landing_commit": "93fbda8f46e3a46bd270f80023b4e4de287b1319",
+      "proof": "whole-tree-equal",
+      "observed_remote_tip": "39358b73a05fe3cac3e2fa6e5990833ec6416de9",
+      "remote_status": "unchanged",
+      "retirement_status": "deleted with owner approval; absence verified 2026-10-21"
+    },
+    {
+      "host": "bitbucket",
+      "branch": "docs/token-ledger-harness-evidence",
+      "tip": "747ce72589ba8c28bf524dc792128986377fd727",
+      "landing_commit": "25fe3b1ff87e79e9783ef3b2c36abc14c06d5b5b",
+      "proof": "ancestor-of-main",
+      "observed_remote_tip": null,
+      "remote_status": "already absent",
+      "retirement_status": "already absent at triage"
+    }
+  ],
+  "retirement_verification": "One Bitbucket and nine GitHub branches deleted with expected-tip leases and atomic per-host pushes; both full-suite pre-push checks pass; all remaining branch tips equal their pre-operation values."
+}

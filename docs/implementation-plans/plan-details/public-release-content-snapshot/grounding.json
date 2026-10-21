@@ -1,0 +1,20 @@
+{
+  "plan_slug": "public-release-content-snapshot",
+  "grounded_at": "2026-10-20T14:06:21Z",
+  "plan_fingerprint": "2c189b61cf7ab66f04340a70cc740513c239bf18b6ac6b193002082f6e454e9c",
+  "code_fingerprint": {
+    ".plan-tool/plans.json": "d4b6e0bb4a3298bb3054388743ad66c71d4e1ee44ddc51dec7b2c97d00dad8f7",
+    "AI_SDLC_POLICY.pdf": "f56bbe4b8967da21a26ab9b81db865a12663b968ce14628e91cc2e5b41d36e1b",
+    "BACKLOG.md": "05248b4baab6cc1126f166b0fbf891e52781b574ca23d85ed8b15623b0729237",
+    "CLAUDE.md": "927bd68424821dfd2cb46699871e3aa914f86de0d6e5968b77e23e2452c8672f",
+    "docs/evidence/claude-md-measured-incidents.md": "20633a5342dd45d753bc4f31d194e30f70a5edc8f0caaf0df8f56215f8b31ba4",
+    "docs/evidence/integration-context-budget-2026-10-09/provenance.json": "b7102c0dfd04afa0cb964da64e7e738bdc7e8f827d4c9ee6bcbdb6a30cc17262",
+    "docs/evidence/integration-context-budget-2026-10-09/sizing.md": "a1fa034ae87b3057f1cc3dd046e5ddf011762baf083d6d95149d74ce9ba0c86b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md": "6bf6f6d56e19162767e59c4246d2e5c9f46137b01434ce0e3d6a2f7b037acbee",
+    "docs/reference/ai-assisted-development-policy.md": "38c0b6a4f4a918a8df8ff6446a2862cc8bf1774af483bb214c07ec656e03f776",
+    "handoffs/2026-10-19-public-onboarding-and-release.md": "aa72ed2d79fb101fd4a84382580a88fa44b0d3f8e6cc1204207d7e8855684984",
+    "handoffs/README.md": "8464e5870302310d2fd2885a43dfa25b54b7ac733f20ef10518630e00198af51"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

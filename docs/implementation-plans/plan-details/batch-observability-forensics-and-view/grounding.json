@@ -1,0 +1,20 @@
+{
+  "plan_slug": "batch-observability-forensics-and-view",
+  "grounded_at": "2026-08-12T17:18:12Z",
+  "plan_fingerprint": "9735992ca11b20ff3dfd02a8460d458b85667ecd294e9a8fedd6d45f98d0a82a",
+  "code_fingerprint": {
+    "BACKLOG.md": "af43a712c1ec17c5795c57a576cf9e2b8fa82af8239e4e03cccc80f0b500a817",
+    "README.md": "04740b32833c11dcca0894604449649819748eab663b339371192a51eceae8eb",
+    "RUNBOOK.md": "5e46d9572fe46de59b2c49457c50d0a35a31095152b008a6c68e461cbacdaaf9",
+    "docs/RUN_FLOW.md": "3479b3e7b90386a18854671b61e5897090339dbe15340b53450fd3661bae5226",
+    "plan_tool/cli/runs.py": "88780b2b33670ae8bbd5dcfb7956ae9bb4844e309802725116c2b792008e7d89",
+    "plan_tool/launcher.py": "f36a81f51090e898a5e910ba6c79585f91281899c073ef28556b808c3256e05b",
+    "plan_tool/repo_lock.py": "7938f8191073d06f60f15c1371a33573863b69467eb0a7ad37678f5e0754b55a",
+    "plan_tool/run_log.py": "c33ad0f9599aa9f9fde80a7f304917754ef534c311e9d5e0c987caf0d724979d",
+    "tests/test_cli.py": "de2b211d129020bf86a9bd8cfde9a20727574f152111133cfcc473d97d080f1f",
+    "tests/test_launcher.py": "4d554155805818f54de4717ffe824d7b8b7315ff006238a703f3945f20420e34",
+    "tests/test_repo_lock.py": "504983226e0cd44b034f8a2e63acc881c60157294e73f6bffd423e7557157634",
+    "tests/test_run_log.py": "7b2910918688d27282104b7c29aa41b27d6373f5732a78823da0af97efcdfa80"
+  },
+  "schema_version": 1
+}

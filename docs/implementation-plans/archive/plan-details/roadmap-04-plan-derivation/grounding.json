@@ -1,0 +1,29 @@
+{
+  "plan_slug": "roadmap-04-plan-derivation",
+  "grounded_at": "2026-08-05T22:53:16Z",
+  "plan_fingerprint": "2fd6be04427cee4bdf0d827aa0191b29fcb3fc022ce46d9ba6d4b04f757123fc",
+  "code_fingerprint": {
+    "BACKLOG.md": "ad9ccb3901e6f227835709ced8261143d08b577e94eb4b0d83dce45f070ebfbe",
+    "CAPABILITIES.md": "b5e31a47829675f9540adb93e13519383bb1ac95ddc21aec82fed3718f21dbfc",
+    "CLAUDE.md": "4a77b1140cfbf5ecd7fb3fb7eeb982133005297ef0b1e716eeb7f92b1c589134",
+    "ROADMAP_FORMAT.md": "4d9ebe17ee2297f4b64866b94b53a0ac743d7958fde45c28dcf0dac03a4fedd0",
+    "RUNBOOK.md": "d1d62e27860c7d3532afb2bae2d1d7288bf204923d41c099b6adfad3fbe0be6d",
+    "USE_CASES.md": "d76e37747a22bb35514363be8171eb7a65f97e49c51a7c65520169ba8ca2775f",
+    "docs/ARCHITECTURE.md": "1234c45bbc4d549b124a1a68bb70dde379917e29c0fdb60ee582ad3e67f438fe",
+    "docs/ROADMAP_WALKTHROUGH.md": "0364dd14f1826ab886e7753917add2e102903b701fd65413ce6e07252ca30b57",
+    "docs/cli/roadmap.md": "c04ef0242e28e83542ee4a76c03c4326a925cf8cbe7dc70fd391b553133b9df6",
+    "integrations/claude/SKILL.md": "baec28c5fd31b4584d9813747680fbb9d5cfa66fcdbcbd722cb2c0d89293ce06",
+    "plan_tool/cli/authoring.py": "39d6ade88e9882aeab3636dd5a5063da3b8bfde28a4ff33b441e17a189fcc8f9",
+    "plan_tool/cli/roadmap_cmd.py": "9cf723f9ea3e99919d3c74821817a47229a79840b7d51bafed0da9ddb987f626",
+    "plan_tool/roadmap.py": "2a9b0ee719d7e6e2022157894cf5dbecdaf4ea4b1cacfb46250617e7210082e1",
+    "plan_tool/roadmap_artifacts.py": "401a10cfb1e119a856c3a01f4bd074ad3f0d9e431f66a2d6bc433edbc29c8b48",
+    "plan_tool/roadmap_gates.py": "291e2d825b2bd1c528fc41763c2b46d930c6c3841abf7e6b395a54afc8280e83",
+    "tests/cli/test_authoring_cmds.py": "4b8446b69885eacbbf687cca90cd9bc0826db7ad4391410ac9bc82effc3af23c",
+    "tests/cli/test_roadmap_cmd.py": "de3e8022ba072045797e4da0826a37c262b97865e075bfc9c9618ad4354dcc33",
+    "tests/test_roadmap.py": "9afdb11ce5851cb61e6d91902d2cd71c78d5f690c1282418b60817e6d5ed16cf",
+    "tests/test_roadmap_artifacts.py": "22892071b4dd4a3d85d92551be740cdac5a562388f5ddaf0eed913f026d38460",
+    "tests/test_roadmap_format.py": "28002f367daf5855e372f70fb9373068288d10d5ae4d1dd2cef54ac460866b63",
+    "tests/test_roadmap_gates.py": "31a29d00c65ca0447c2fb4b73a6982a0b9098e6bde8a1c9b36fa8fec5585ab6f"
+  },
+  "schema_version": 1
+}

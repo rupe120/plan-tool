@@ -1,0 +1,21 @@
+{
+  "plan_slug": "roadmap-hosting-and-stores",
+  "grounded_at": "2026-08-08T00:06:12Z",
+  "plan_fingerprint": "d0bbe5572a4b62727acb7226bc82c596ebc4820b01031a2689f0832c03a8cff6",
+  "code_fingerprint": {
+    "BACKLOG.md": "2ab2cabcd9c9d5f37d517ff69f109eca11c2c06892a1d9c7f9c13e55effbe715",
+    "CLAUDE.md": "37b052d01a7fe1976d5e19b5db10e56e0172bc0e8bc846b8d44b8538ce073d06",
+    "ROADMAP_FORMAT.md": "715079450d4fbfef7eb6535b75482e55ac14c36201c3deb967758dd241d02e2a",
+    "docs/ARCHITECTURE.md": "30409a480594452448418ec539f3e78456feb34ee352b9ec85af76ee1c6f0e13",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "5edd706bd80c5d8f6b5034e07805118f63a3e9f9b24bbb6f8faa7aaee660019b",
+    "plan_tool/roadmap_gates.py": "04343378c46122e5f9031c6ec5c58a08520f9385aee29fc9b9212d93df95cd65",
+    "tests/cli/test_roadmap_cmd.py": "423b8b9a804707f2fb63c67cdeace4bd176f62d7f4e3b9c11a73e4242d979997",
+    "tests/test_roadmap.py": "85f75c6a6d54801d24be0e843532a1830d2568126ee9e68f8ebff347d63743d1",
+    "tests/test_roadmap_artifacts.py": "c5db6a1f9a65faede8362d8f7c507e73025132488fa626f38d0c7505c0b8234d",
+    "tests/test_roadmap_format.py": "2d6b096ff60f964bc882b75f3c8bc745df4c4beeb7b5b1c21f591d8dd30b35bf",
+    "tests/test_roadmap_gates.py": "37c00321ec2992e043fa0dad97268b7c141a1de4f6c03c99e747d4da0dc052b3"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,27 @@
+{
+  "source_commit": "b73141d99fc5c4983c33d534ce5d6ac3dce673d4",
+  "root_commit": "80dba090cc2f2251dcd6d5ea0558225199ddf85a",
+  "selected_paths": 2588,
+  "path_inventory_sha256": "26a524d71657d6f32b87e8135e38e3dc7b1d14145bf4276bef75a16f4149f48a",
+  "content_sha256": "4426aafc3b8e6d704556a88eace233790b92947fd771473d48b2659afd3b9ce2",
+  "git_storage": "one parentless commit; no remotes or alternates; fsck passes; source historical commits absent; exact blobs/modes match",
+  "frozen_install_rc": 0,
+  "focused_tests_rc": 0,
+  "full_tests_rc": 0,
+  "selected_bytes_unchanged_after_tests": true,
+  "repaired_owners_missing_file_targets": [],
+  "policy_pdf_sha256": "225bc6e791d6676a69ce23f754fe793d09e2ec4245dc2aa13d685162084ff872",
+  "scope": "Maintainer-focused prose candidate; this verification record is outside the selected candidate.",
+  "verification_date": "2026-10-20",
+  "uv_version": "0.12.19",
+  "python_version": "3.14.0",
+  "focused_tests_result": "573 passed in 3.71s",
+  "full_tests_result": "14697 passed, 67 skipped in 67.49s (0:01:07)",
+  "prose_review": "No material repository-prose findings after correction of stale routes, premises and status chronology.",
+  "preserved_contracts": [
+    "plan step graph, statuses and file footprints",
+    "exact 5616-path report-exclusion appendix",
+    "content digests and policy PDF bytes",
+    "review finding dispositions and closure labels"
+  ]
+}

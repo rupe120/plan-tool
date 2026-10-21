@@ -1,0 +1,31 @@
+{
+  "plan_slug": "jira-developer-handoff-companion",
+  "grounded_at": "2026-08-22T03:51:22Z",
+  "plan_fingerprint": "f193ec613460a8c129b02234a7409606840d1f757628ff0c98bd5eb0c62536e9",
+  "code_fingerprint": {
+    "BACKLOG.md": "6741c28d21fdc5c995dd0423526523f115d7c1d2aab0decd24a13e966cc1b342",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "ec08f476bc4e5b83c8c0e21ae7606c3219d86e05c84aa576a018f40a8ad028c6",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "33adbb45f8e5a383b04ed189e90d8c56c13a3c3f3b1340c15192d97d2a2e9fa0",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_concept_sync.py": "a5ed2cd6e34cb160eb317e257889befb732faef5dcb5e0d429331ee0404c89fd",
+    "tests/test_detail.py": "a152a622453bf18511f288850e69e3953158e983369682fcfa8f1a43cb31cb3e",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c",
+    "tests/test_review_persistence.py": "9a6eb8b6937953c26175db7cc220e108047deb4c60351b065cab212f75d4875a"
+  },
+  "step_authoring_fingerprints": {
+    "1": "bebce6b8de80e25b9c02bb479c7f20debe4c56dc1e10e08a9aa5a67140ff1362",
+    "2": "8e9f1a5c541dd11cf7c29f2ae03b826dd25a09a3b9a605d6b541e4781fbddb8a",
+    "3": "0d0f878745d43935df5dc7d5dfbb479c7f60e17c940766622781e47155808581",
+    "4": "f0d2f3442e73c7bca561ca6cb08219b0b3b265de1d9746f9d7b38e7237db0544",
+    "5": "b06d59d7da4f28a85ee8cf22756f91edc72e7a8c762215c97af612d5564ba432",
+    "6": "e85f937649dc4c80ae78bed2865cf429964f1766d7c21496913ef2cc5f2b99d2",
+    "7": "03626fe185a9322fcfa88d604fca926869e11ff708ff843f3ec922325c2bb5cb"
+  },
+  "schema_version": 1
+}

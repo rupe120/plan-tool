@@ -1,0 +1,15 @@
+{
+  "plan_slug": "root-enrollment-rollback",
+  "grounded_at": "2026-09-17T23:08:55Z",
+  "plan_fingerprint": "9883a083604a88081f113cca2a49f4374363a66ac3bf60d3ba83823e2c2f962b",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "7eeae5824d4d6c57020fd8d5f889f93f1de11285313aff114a04bb4a3aee00bd",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

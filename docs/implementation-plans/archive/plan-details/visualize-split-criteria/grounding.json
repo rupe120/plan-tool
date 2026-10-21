@@ -1,0 +1,20 @@
+{
+  "plan_slug": "visualize-split-criteria",
+  "grounded_at": "2026-07-04T04:27:14Z",
+  "plan_fingerprint": "830d6f63faaa5fcf26ed6843f23cd9a5aac09739956382ef5a2ecf716c7d8f28",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "19fdb523daabc5ce6147cc6ae16ce537d02652fdae61f3c78adfc1147caa9bf6",
+    "DATA_CONTRACT.md": "91405ff95b41873631f3bacc761b13c7e3491663f4ebe2c6cd4f19731b3b001b",
+    "README.md": "c83db76b6394729eb33cb3f291396f34e3b965bb669e1afb6cfdfc174e7b6d6c",
+    "RUNBOOK.md": "c9d29c85d572df1419326107196e3232d9398daf715358292d02352b84deb721",
+    "USE_CASES.md": "ae8106cbf9ba9e1ccd7980a0591e9158ed84b6da3a9ba7411eedfe59ddf57207",
+    "docs/cli/README.md": "4ed6ed987f9650535ae460474ddc142f1d5f13dd2ce21a1012977e6d1db7392b",
+    "plan_tool/cli/__init__.py": "f4eea3a7bad09c2fede738df7fb1ec5693b5690ffd07627d79c45887c65463ed",
+    "plan_tool/cli/app.py": "c5e5ddbcf1bad02308f823b93f1b91ed032160415977eef79d0e1824bf3ab1ba",
+    "plan_tool/cli/parser.py": "5dec5ee33b6a8f2a098768352a33b1fa2f315055291dc9129fe8e9450d4e7612",
+    "plan_tool/telemetry.py": "6ad69c01f78c604af801aaf4685ac3fdde185907fd05c70acbfafbdfaafb661c",
+    "tests/test_data_contract.py": "c7bbc808250dbfee0fac8cad6e4b0b9f85cbadcf8d715b2c84620a44536936ae",
+    "tests/test_telemetry.py": "006b8683b25954bcd2c4b0101dc4b10d2c757e1c658ec413d7c9b7a6a7c1e59f"
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,26 @@
+{
+  "plan_slug": "roadmap-versioned-feedback-revision-chain",
+  "grounded_at": "2026-09-22T12:24:53Z",
+  "plan_fingerprint": "e059516697edeef4b1a8837de26393d9e883a34e907ea4e497e7b02b76ce6066",
+  "code_fingerprint": {
+    "BACKLOG.md": "0ae2daf21889d46dd855318f362ecb01e2b3885af35cc49ad3b7fab8744fa972",
+    "BUG_BACKLOG.md": "98606bd59b76a891ac9687473fc53d4e2cb9c5aed8116bb9e9efac2fd024be4c",
+    "CAPABILITIES.md": "356f0b82c62fd7ba4f09619193be1bdef8354b8bec2ccf1cb5474bb60f46265d",
+    "CLAUDE.md": "ebc8114f410cfd54bac40a3dc35bb43bc30e709c9b1a7144be83bbff3f14dc58",
+    "DATA_CONTRACT.md": "f0ffffbc0844eea047a98db2a61c76bc5edd04143a48b834d75e0440480be4e1",
+    "README.md": "c09a1245cc1b169e3736749d37441f26429bb154eb1d417b3ed44ceee7a8e522",
+    "ROADMAP_FORMAT.md": "2a54a2e7b5b84bc2aa56a8b8d1d385e8c65bef3cf34ff460b89acba4dfb29e85",
+    "RUNBOOK.md": "60f483a5a790065f218ee83bc302237785efc9ba30f160750d84cb5f2b89c6a6",
+    "TESTING.md": "f9a4f28e299937b63f81e4c0dd1653ca3ec936373f49bd1f9b90574c421048dd",
+    "docs/ARCHITECTURE.md": "b8ef534cfe7b80262cadbdacb9549b6a0ef1beacff668140c968db0f216f2ebb",
+    "docs/cli/roadmap.md": "4bb0f10dafb0d94e6710731818dfbc1701ae19f0d57f517f87c6defa642f98dd",
+    "docs/how-to/common-workflows.md": "4b3c0b37630446e56d5794364237c3328ee9f3db1cb8a9ffa655591d5c054350",
+    "docs/how-to/roadmap.md": "1c0e8f56d433cf566711c1e0f1e26f2b0701cb75f58a790f7cfef62f5719d814",
+    "docs/reference/commands.md": "afc1f5e998d4ed8c2ddd5a072911e3c2bd181722d403befb980fa39e80dfa7fb",
+    "plan_tool/cli/roadmap_cmd.py": "055a51bb183f17a0e44b535599c4ce4167371174e90d0e0ec60acf8aa2f4ff5b",
+    "tests/cli/test_roadmap_cmd.py": "017540e6903d1b216292e6ccf89e779797a7c6909536a902fc5b5b6bef9e530a",
+    "tests/test_roadmap_format.py": "460bff6ecd455bb0911a7a035ea249c8cfab4e6327dc9908c985657249b8ea37"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

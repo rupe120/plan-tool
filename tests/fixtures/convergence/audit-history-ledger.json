@@ -1,0 +1,72 @@
+{
+  "artifacts": [
+    {
+      "timestamp": "20260603-090000",
+      "report": true,
+      "sidecar": "final",
+      "state": "saved-final",
+      "filename_time": "2026-06-03T09:00:00Z"
+    },
+    {
+      "timestamp": "20260601-090000",
+      "report": true,
+      "sidecar": "checkpoint",
+      "state": "checkpoint",
+      "filename_time": "2026-06-01T09:00:00Z"
+    },
+    {
+      "timestamp": "manual-copy",
+      "report": true,
+      "sidecar": false,
+      "state": "report-only",
+      "filename_time": "unknown"
+    },
+    {
+      "timestamp": "20260602-090000",
+      "report": false,
+      "sidecar": "final",
+      "state": "orphan-sidecar",
+      "filename_time": "2026-06-02T09:00:00Z"
+    }
+  ],
+  "expected_order": [
+    "checkpoint",
+    "orphan-sidecar",
+    "saved-final",
+    "report-only"
+  ],
+  "expected_rows": [
+    {
+      "state": "checkpoint",
+      "filename_time": "2026-06-01T09:00:00Z",
+      "created_at": "2026-06-01T09:00:00Z",
+      "audit_stage": "bare",
+      "audit_coverage_status": "unknown-legacy",
+      "qualified_headline": "unknown"
+    },
+    {
+      "state": "orphan-sidecar",
+      "filename_time": "2026-06-02T09:00:00Z",
+      "created_at": "2026-06-02T09:00:00Z",
+      "audit_stage": "bare",
+      "audit_coverage_status": "unknown-legacy",
+      "qualified_headline": "unknown"
+    },
+    {
+      "state": "saved-final",
+      "filename_time": "2026-06-03T09:00:00Z",
+      "created_at": "2026-06-03T09:00:00Z",
+      "audit_stage": "bare",
+      "audit_coverage_status": "unknown-legacy",
+      "qualified_headline": "unknown"
+    },
+    {
+      "state": "report-only",
+      "filename_time": "unknown",
+      "created_at": "unknown",
+      "audit_stage": "unknown",
+      "audit_coverage_status": "unknown-legacy",
+      "qualified_headline": "unknown"
+    }
+  ]
+}

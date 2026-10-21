@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "intent": "Turn rough ideas into buildable implementation plans, keep them honest as the code changes, and carry them through execution or handoff.",
+  "non_goals": [
+    "Do not use plan-tool for a one-line or otherwise obvious change that should simply be made.",
+    "Do not treat generated text as trustworthy without grounding it in the current repository and deterministic checks.",
+    "Do not let the tool silently make consequential scope or structural decisions for the user."
+  ],
+  "decisions": [
+    "Machine-validated frontmatter is the plan's contract; prose serves the human reader.",
+    "Model calls are bounded by deterministic control flow and validation: validate output rather than trust it.",
+    "When audit findings do not converge, surface a directional change or re-decompose the work rather than keep patching.",
+    "Before execution, live code is authoritative for grounding a plan; after execution, the plan is authoritative for reconciling code.",
+    "Long-running work is checkpointed and resumable so interruption does not require restarting."
+  ]
+}

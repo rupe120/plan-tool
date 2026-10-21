@@ -1,0 +1,31 @@
+{
+  "plan_slug": "roadmap-carried-settled-decisions",
+  "grounded_at": "2026-09-16T18:06:45Z",
+  "plan_fingerprint": "819b9182e0971799672335dbdd04ba949f1f6c6596f12ebb4fb7271125e87576",
+  "code_fingerprint": {
+    "BACKLOG.md": "8981d8e3bf1cc8f2dc234cbb9a4f18271962b5b4ef4b0571c07c5919583b57cf",
+    "DATA_CONTRACT.md": "95399dad8144da1bc79f038e39114cae2c8912fb7b0627c829ed8a6654a84923",
+    "ROADMAP_FORMAT.md": "32ddec5099d440f0f87dcd0c09d7bd2d0b2c5f298a2075a14c39e9726943620b",
+    "docs/how-to/roadmap.md": "8f967486d52cbd3289b4e6770ca452c998036adb1525242b98072476098b254c",
+    "plan_tool/prompts/roadmap-components.md": "616c447aebd57844c09425aeac8f35b3e3fa0f1640850fced803eb4cd54a887e",
+    "plan_tool/prompts/roadmap-constraints.md": "a192218abc82e27638fa98ecf184394fd5ff52602c1590a4268c628d8a9a76a6",
+    "plan_tool/prompts/roadmap-domain.md": "879ee53b440a9380e92ca33da31f8ce859731b4a2c8b567c008a5636900f938e",
+    "plan_tool/prompts/roadmap-plans.md": "b55ca4621a3a2010f2425a3d43f7c4b7876431bc6ab54902a28b16c1eb535d88",
+    "plan_tool/roadmap.py": "0eebdad36cfe0752faf941a8cccd4a7f0018f564b8aa3eafbd56092dcfa9b3ce",
+    "plan_tool/roadmap_artifacts.py": "8b1d166df03a8ef3b2653d673b100417ba5300d41c9df8484d807c1a47db7f17",
+    "plan_tool/roadmap_gates.py": "e86aaaf99281ea836135c9bf372520f0dd6d48d637a4159a2ae0aa2060fcdab2",
+    "plan_tool/roadmap_source.py": "306b92fa4944d6e1d8b224f95400e6755c55a8c883532e175a95412b21701038",
+    "tests/test_roadmap.py": "567ec9da98c8ef5907a16e44269f037d7ac52d24a34d5d942bcdc5b22943a82c",
+    "tests/test_roadmap_artifacts.py": "879edec69df96c375a61a78f33b556e0565daa6e711b9eefa6118462a6df518c",
+    "tests/test_roadmap_gates.py": "8aeef26e4dbfaba2ed3dfe1b206c8ddcdf76ab949e3706bafa8f547fe4eb8d0d",
+    "tests/test_roadmap_source.py": "57e02394bc96b889cf4b0475242df737bba15811259ad90a8e52c76289e6951e"
+  },
+  "step_authoring_fingerprints": {
+    "1": "22e7d4736ec1458434e5916cbc8f572d42d11d8de6f1b853ce4902a80354ed00",
+    "2": "57bdda0985cd7f10adecebf4a330dee95275b909d53584a2c9e59f9a9915c49e",
+    "3": "6996a31fb290dee79a555411e0eaa4120aa24a5d64d2c12327350f6d30a95dab",
+    "4": "44534e937059c0746c5393d648f55e69832094f66897a944804da121319b2069",
+    "5": "ed286ae53f1aae1b9415a9df22359aa7c37a3f3516b58c8762e7afc8667c4c7d"
+  },
+  "schema_version": 1
+}

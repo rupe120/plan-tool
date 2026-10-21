@@ -1,0 +1,4 @@
+### Changed
+
+- The pre-send prompt-budget warning now measures a prompt against the selected model's context window when it is known, instead of always assuming 200,000 tokens. For Codex it reads the usable share of the model's window from `models_cache.json` under `$CODEX_HOME` (default `~/.codex`; refresh it with `codex debug models`). For Claude it uses the window the CLI reported on an earlier call in the same run, when that call used one model or listed the selected model's id (a result that mixes models gives only its smallest window), so a run stops warning `high` about prompts that fit a 1,000,000-token window. When no window is known the warning still uses 200,000 and now says `(default)`.
+- A selected `run-reconcile` prompt is the one budget check that can refuse a send. It uses the Codex catalog's window but never a window learned during the run, so its verdict does not depend on which calls happened first.

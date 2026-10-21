@@ -1,0 +1,13 @@
+{
+  "plan_slug": "create-default-test-command",
+  "grounded_at": "2026-08-18T19:20:42Z",
+  "plan_fingerprint": "59538a1cd62782143aa12ad3e0edd455d944afe4ebf5012a14b4fa944c201153",
+  "code_fingerprint": {
+    "BACKLOG.md": "8d07769552866afab47f41d71bb8663e8bd145988067738a60e8ce2fb2daad6a",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "schema_version": 1
+}

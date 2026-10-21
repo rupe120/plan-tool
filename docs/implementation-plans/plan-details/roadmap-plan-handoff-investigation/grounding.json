@@ -1,0 +1,13 @@
+{
+  "plan_slug": "roadmap-plan-handoff-investigation",
+  "grounded_at": "2026-10-15T21:55:26Z",
+  "plan_fingerprint": "5722da5ad5dd20aa6f873a6b115a7c6bdece5e9ec773e1e5663eb092985a2013",
+  "code_fingerprint": {
+    "BACKLOG.md": "b793f5e4457f8aece12caa5e5c9d1b8830861dd6069bbbb2d02769e93bc6875c"
+  },
+  "step_authoring_fingerprints": {
+    "1": "301b865b48d77e3b7f8aacaee53064a249f8ebc1aa5e9a27d546735fba578441",
+    "2": "0a1ee7be47b7b4f902cfac20ed9f64d84f43ffc39e9c0888cd0a4475203ca1cb"
+  },
+  "schema_version": 1
+}

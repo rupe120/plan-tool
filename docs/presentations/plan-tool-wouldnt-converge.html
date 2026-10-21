@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>When the Plan Wouldn't Converge — plan-tool</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/night.min.css" id="theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+  <style>
+    :root {
+      --accent: #4fd1c5;
+      --warn:   #f6ad55;
+      --bad:    #fc8181;
+      --good:   #68d391;
+      --muted:  #94a3b8;
+    }
+    .reveal { font-size: 30px; }
+    .reveal h1 { font-size: 1.85em; line-height: 1.1; }
+    .reveal h2 { color: var(--accent); font-size: 1.35em; text-transform: none; }
+    .reveal h3 { color: var(--warn); text-transform: none; }
+    .reveal section { text-align: left; }
+    .reveal .center { text-align: center; }
+    .reveal pre { width: 100%; box-shadow: none; font-size: 0.58em; }
+    .reveal pre code { padding: 16px 20px; border-radius: 8px; max-height: 460px; }
+    .reveal .muted { color: var(--muted); }
+    .reveal .accent { color: var(--accent); }
+    .reveal .warn { color: var(--warn); }
+    .reveal .bad { color: var(--bad); }
+    .reveal .good { color: var(--good); }
+    .reveal .tag {
+      display: inline-block; font-size: 0.5em; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent);
+      border-radius: 4px; padding: 2px 10px; margin-bottom: 18px;
+    }
+    .reveal blockquote.finding {
+      width: 100%; font-size: 0.62em; line-height: 1.45; background: #1a2233;
+      border-left: 4px solid var(--warn); padding: 18px 22px; border-radius: 6px;
+      box-shadow: none; font-style: normal;
+    }
+    .reveal .lead { font-size: 1.25em; }
+    .reveal .small { font-size: 0.7em; }
+    .reveal .cols { display: flex; gap: 28px; align-items: flex-start; }
+    .reveal .cols > div { flex: 1; min-width: 0; }
+    .reveal .kicker { color: var(--muted); font-size: 0.6em; letter-spacing: 0.2em; text-transform: uppercase; }
+    .reveal .panel {
+      background: #161e2e; border: 1px solid #2a3550; border-radius: 8px;
+      padding: 14px 20px; font-size: 0.74em;
+    }
+    .reveal .panel.bad  { border-color: var(--bad); }
+    .reveal .panel.good { border-color: var(--good); }
+    .reveal ul { margin-left: 0.4em; }
+    .reveal li { margin-bottom: 10px; }
+    .reveal .big-num { font-size: 2.4em; color: var(--warn); font-weight: 700; }
+    .reveal .runs { display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.62em; }
+    .reveal .runs .chip {
+      background: #2a1414; border: 1px solid var(--bad); color: #fca5a5;
+      border-radius: 6px; padding: 6px 12px; font-family: ui-monospace, monospace;
+    }
+  </style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+  <!-- 1. Title -->
+  <section data-background-color="#0b1120" class="center">
+    <span class="tag">plan-tool · value walkthrough</span>
+    <h1>When the Plan<br><span class="bad">Wouldn't Converge</span></h1>
+    <p class="muted">The audit kept finding correctness bugs — labeled HIGH, run after run,
+      all in the same place. The fix wasn't another patch. It was admitting the plan was the
+      wrong <em>shape</em>.</p>
+    <p class="small muted">A real session · the <code>escalate-structural-findings-to-split</code> plan</p>
+    <aside class="notes">plan-tool turns an idea into a plan, audits it against the code before any
+      implementation, then iterates to convergence. This session is what happens when iteration alone can't get there.</aside>
+  </section>
+
+  <!-- 2. The trigger -->
+  <section>
+    <span class="kicker">the trigger</span>
+    <h2>Eight audits. Same region. New HIGHs each time.</h2>
+    <p class="small muted">Each <code>completeness-audit --iterate</code> run reported
+      <span class="good">converged</span> / <span class="good">no-blocking-findings</span> — then a fresh
+      manual re-run surfaced more correctness findings, all clustered on one step:</p>
+    <div class="runs" style="margin: 18px 0;">
+      <span class="chip">midapply-verdict-convergence-routing · HIGH</span>
+      <span class="chip">recommendation-report-surfacing</span>
+      <span class="chip">phase-b-recommendation-emission · HIGH</span>
+      <span class="chip">create-trigger2-recommendation-emission</span>
+      <span class="chip">create-trigger2-proposal-unusable</span>
+      <span class="chip">recurring-unattended-trigger2-cost</span>
+    </div>
+    <p class="small muted">Six anchors, three audit rounds, <span class="warn">one step</span>. The count never trended down.</p>
+    <aside class="notes">The anchor slugs are stable across re-audits, so a finding that comes back is
+      recognizable. These all name the same step-5 region under different framings.</aside>
+  </section>
+
+  <!-- 3. The tell -->
+  <section data-background-color="#10172a">
+    <span class="kicker">the tell</span>
+    <h2>Each fix spawned the <span class="bad">next</span> finding</h2>
+    <blockquote class="finding">
+      <span class="warn">run 6 →</span> "the bridge's <code>Recommendation</code> is never surfaced…"<br>
+      <span class="warn">run 7 →</span> "…now the <code>recommendation=None</code> case is silently dropped…"<br>
+      <span class="warn">run 8 →</span> "…now it re-emits a duplicate recommendation <em>every</em> iteration."
+    </blockquote>
+    <p style="margin-top:24px;">Three runs, three fixes, three new holes — <span class="bad">in the same patch.</span>
+      That's not convergence. That's <span class="warn">whack-a-mole.</span></p>
+    <p class="small muted center">Whack-a-mole is the signature of fighting a plan's <strong>shape</strong>, not its prose.</p>
+    <aside class="notes">The give-away: the findings weren't independent. Each was a consequence of the previous
+      fix's mechanics. A loop that's converging produces fewer, smaller findings — not a fresh sibling each pass.</aside>
+  </section>
+
+  <!-- 4. The value moment -->
+  <section>
+    <span class="kicker">the value moment</span>
+    <h2>The author didn't hit <span class="good">apply</span> a ninth time</h2>
+    <blockquote class="finding" style="border-left-color: var(--accent);">
+      "The audit continues to find correctness bugs being labeled high. Is there a flaw in
+      the design that's hard to pin down — or does the design need to be broken into smaller parts?"
+    </blockquote>
+    <p style="margin-top:24px;">Every prior round asked <em>"how do I close this finding?"</em>
+      This question asked <span class="warn">"why does this region keep generating them?"</span></p>
+    <p class="small muted center">The tool surfaced the symptom. The right move was to <strong>stop and diagnose the cause.</strong></p>
+  </section>
+
+  <!-- 5. Diagnosis -->
+  <section>
+    <span class="kicker">the diagnosis</span>
+    <h2>A structural edit jammed into a <span class="bad">prose loop</span></h2>
+    <p class="small">The convergence loop applies <strong>prose</strong> edits idempotently:
+      <code>collect → apply → re-collect → repeat</code>. Every invariant assumes apply
+      <span class="warn">never changes step identity.</span></p>
+    <p class="small">Step 5 made it apply a <span class="bad">split</span> — which renumbers step ids
+      mid-iteration. So all six findings were <em>one</em> bug, refracted:</p>
+    <div class="panel bad small" style="margin-top:8px;">
+      stale captured ids · re-collection re-derives the same finding ·
+      the per-step summary already emitted · partial edits need revert-first
+    </div>
+    <p class="small muted" style="margin-top:14px;">Seven symptoms, one cause: a
+      <span class="bad">structure-mutating</span> operation forced through a
+      <span class="accent">prose-mutating</span> loop.</p>
+    <aside class="notes">Because the two convergence loops had different topologies — create's outer while,
+      detail's nested for-loops — every rule had to be written twice with different mechanics. That doubled the
+      surface area for the audit to find a hole in. That's why it felt un-pin-downable.</aside>
+  </section>
+
+  <!-- 6. The proof -->
+  <section>
+    <span class="kicker">the proof — machine-readable code, one grep</span>
+    <h2>Half the complexity defended <span class="bad">dead code</span></h2>
+    <p class="small">The plan called create's mid-apply split its "live structural trigger." Was it reachable?
+      One grep settled it:</p>
+    <pre><code class="language-python">APPLY_ELIGIBLE_SOURCES = frozenset({
+    "body-completeness", "detail-body", "plan-correctness",
+    "reconcile", "detail-reconcile", "run-reconcile", "claude",
+})   # ← create only ever dispatches PROSE-fill findings to apply_finding</code></pre>
+    <p class="small">For create's trigger to fire, Claude would have to be mid-apply on a
+      <em>"fill in this prose"</em> finding and decide the only fix is a <span class="warn">step split</span>.
+      The plan never named that scenario — because there isn't one.</p>
+    <p class="small muted center"><span class="bad">The most bug-dense part of the plan was wiring a path production never takes.</span></p>
+  </section>
+
+  <!-- 7. The deeper flaw -->
+  <section data-background-color="#1a1206">
+    <span class="kicker">the deeper flaw</span>
+    <h2 class="warn">apply can only <em>add</em> prose</h2>
+    <p class="lead"><code>apply_finding</code> edits text. It can fix <span class="good">under-specification</span> —
+      it can never delete a concern, drop dead wiring, or re-decompose.</p>
+    <p style="margin-top:16px;">So every fix <em>grew</em> the plan, which fed the next audit more surface.
+      The plan got <span class="bad">more complex</span> each pass, not more correct.</p>
+    <div class="panel" style="margin-top:18px;">
+      <div class="center"><code class="good">no-blocking-findings</code> ≠ <code class="bad">sound</code></div>
+      <div class="center small muted" style="margin-top:8px;">It means "nothing left the loop is <em>allowed</em> to auto-touch."
+        A plan whose remaining problems are all structural reports converged <span class="warn">prematurely</span>.</div>
+    </div>
+  </section>
+
+  <!-- 8. The fix -->
+  <section>
+    <span class="kicker">the fix</span>
+    <h2>Re-decompose: <span class="good">seed → regenerate</span></h2>
+    <div class="cols">
+      <div>
+        <p class="small bad center">before — one over-packed step</p>
+        <pre><code class="language-yaml">- id: 5            # complexity: high
+  files: [create.py, detail.py]
+  # trigger-1 + trigger-2
+  # refactor + feature
+  # break-out + dedup + revert
+  # + create-side dead wiring</code></pre>
+      </div>
+      <div>
+        <p class="small good center">after — a clean 9-step spine</p>
+        <pre><code class="language-yaml">1 refactor · predicate
+2 feature  · render recs
+…
+6 feature  · trigger-1 surface
+7 feature  · in-loop contract
+8 feature  · review-walk
+# create-side trigger → deferred</code></pre>
+      </div>
+    </div>
+    <p class="small" style="margin-top:14px;">The refactor split from the feature. Trigger-1 isolated from trigger-2.
+      The hostile in-loop renumbering contract got <span class="accent">its own step</span>. Dead wiring
+      <span class="good">deferred, not hardened.</span> The fresh small steps converge — each is small enough for the editor to finish.</p>
+  </section>
+
+  <!-- 9. The kicker -->
+  <section data-background-color="#0e1626">
+    <span class="kicker">the kicker</span>
+    <h2 class="accent">The blind spot became the next feature</h2>
+    <p class="lead">Every loop the tool has converges <span class="good">content</span>.
+      <span class="bad">None</span> converges step <em>boundaries</em> — they're decided once, by
+      <code>create</code>, at the moment of least information, then frozen.</p>
+    <div class="panel good" style="margin-top:18px;">
+      <div class="center">That gap is now <strong>BACKLOG #57</strong> — a <em>decomposition convergence loop</em>:</div>
+      <div class="center small muted" style="margin-top:10px;">detect non-convergence → fork the recommendation →
+        <span class="accent">re-split one step</span> vs. <span class="accent">re-seed the plan</span>. Seed already written.</div>
+    </div>
+    <p class="small center muted" style="margin-top:16px;">Diagnosing the failure produced the capability that would <span class="warn">catch it automatically next time.</span></p>
+    <aside class="notes">The pieces compose: the granularity advisor is the static detector, escalate_to_split is the
+      localized executor, #57 is the loop that ties them. The manual re-seed we just did is the escape hatch #57 would surface.</aside>
+  </section>
+
+  <!-- 10. Close -->
+  <section data-background-color="#0b1120">
+    <span class="kicker">why this is the demo</span>
+    <h2>Coherent plans, efficient to implement</h2>
+    <ul class="small">
+      <li><span class="accent">Non-convergence is a signal</span> — the audit's persistence pointed at a design flaw, not a typo.</li>
+      <li><span class="accent">It reviews shape, not just words</span> — the failure was a mis-decomposition no prose edit could fix.</li>
+      <li><span class="accent">Machine-readable truth is cheap</span> — "is this branch dead?" was a one-line grep.</li>
+      <li><span class="accent">Seed / plan separation</span> — the fix was a seed rewrite + regenerate, not surgery on a frozen plan.</li>
+      <li><span class="accent">Small, single-concern steps</span> — the regenerated spine is one you can build without fighting it.</li>
+    </ul>
+    <p class="lead center accent" style="margin-top:26px;">The tool's best moment isn't writing the plan —<br>it's making you fix the plan's <strong>shape</strong> before you build it.</p>
+  </section>
+
+</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/notes/notes.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    transition: 'slide',
+    width: 1280,
+    height: 760,
+    margin: 0.06,
+    plugins: [ RevealHighlight, RevealNotes ],
+  });
+</script>
+</body>
+</html>

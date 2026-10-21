@@ -1,0 +1,18 @@
+{
+  "plan_slug": "bare-correctness-restatement",
+  "grounded_at": "2026-09-02T03:12:32Z",
+  "plan_fingerprint": "4bed19a8c31d41086eab56cab2abc62be30addfa4327d75545c7a593cbe39807",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "3dde778dc6990c918fc5677a2e9e32260b601ea5ac82cbddfa7a591762a54c86",
+    "TESTING.md": "1d69441dc63bf93eb85cab9f9d8296333397c4455f3317c2d43e7046e582be99",
+    "plan_tool/cli/completeness_cmd.py": "571d4522807edef1ff1d8531db5731f1adef9cd1a2502c7ca1572a8584c857ec",
+    "plan_tool/completeness_report.py": "ef07b30dd6b5e2c7cd5c3da17f0315aa8235c86a932c41f49d62be182f983837",
+    "plan_tool/review.py": "512b6e4b5c282f06c39fcb911a51e331c7822e0495130660d81b0870894df051",
+    "tests/cli/test_completeness_cmd.py": "80e115ae14ee85c17efa65cc5ca4e6f4480947b52003abfe35245b46415b8a7b",
+    "tests/test_completeness_report.py": "f8d96ae179a11848b4bfae2dfc39a5c914db2c617984c95eadd2abf03c6ab6c8",
+    "tests/test_data_contract.py": "d4cf5c6b5b60f53461137440079964f0189cc93451d0154f8aa8c97e76b066c0",
+    "tests/test_review.py": "47d0c26651a09a1456be8fd8fcff0d546940deaf992479973ede4fd2651e2a34"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

@@ -1,0 +1,25 @@
+{
+  "plan_slug": "telemetry-linkage-backfill",
+  "grounded_at": "2026-07-11T22:13:22Z",
+  "plan_fingerprint": "a897db59937ff7d772aa6cbee7ad05b63a4551fe07914cd8c890f5758a68eacb",
+  "code_fingerprint": {
+    "BACKLOG.md": "b4c839ee1eaa4cff6ce66205b7bc518b85a27ea41965da568aa5b982240ca7cf",
+    "DATA_CONTRACT.md": "5a463df79c401d704b9082c604b9c8bac8ec39ef12185ccedce24898495440a2",
+    "plan_tool/cli/completeness_phases.py": "318c9f928104e6fedac408878982e377dab6264aa69a2a2b686104bb3f1f81d9",
+    "plan_tool/cli/convergence_cmd.py": "5df97a1d272274b8a0da8fee0b06293150fa762aff22e70e08f1d13a390ced8c",
+    "plan_tool/create.py": "42ec6181485aeb9af689a98a46f42e2d7a40415e5ab47dd9545d15773ccbf23e",
+    "plan_tool/launcher.py": "ebd3fce7fb94c27ff42e93a6914105887b2d41dde2d00e303f2dbb569f30b23b",
+    "plan_tool/refresh.py": "812449056b6a602ab33e2b4b8716684672c6d58d88327bc187821f703df2423e",
+    "plan_tool/review.py": "f6b70c6a99b52362b5df35cbecfb2fc13954caf237c53005baa7b1ff4363bb47",
+    "plan_tool/telemetry.py": "5bfa89ed728fc0940dd66c0cb0ebf1bcbb1013318b025131c64b59487d750341",
+    "tests/cli/test_completeness_cmd.py": "261996c62932388c0be689d82d7635273b70c35026950a1b2a3413356d1fdf6d",
+    "tests/cli/test_convergence_cmd.py": "c56639f92f8d07b214f1c2c5a8ff98da1a97c03660d0c3dbe893c83b1cc26e99",
+    "tests/test_create.py": "e1ba840ec6d3d97fc991ce2802d63a8f294a8dc65bf6ae10f40bfa6a3d807674",
+    "tests/test_data_contract.py": "14b343b23fc50202856b9991f8d4916717a8ad7ed25f8d0f1fd8dd3e708192e7",
+    "tests/test_launcher.py": "8e673ef0ad2080e65778f388de16191a9b7b7ce567ca716792a1f64bf36eeef9",
+    "tests/test_refresh.py": "28438a5c7514bc94dfcb115945a91ed2351a60213cc32b926c8599358ab43579",
+    "tests/test_review.py": "bd06d75582d25b4021ca13db165a2e66f491e06c013eb95a62f9c798cbcbd345",
+    "tests/test_telemetry.py": "9e617ff2b2d1b8a7a44a52b0caaa62ce7bb40254427dab4bca3826cd2c121014"
+  },
+  "schema_version": 1
+}
