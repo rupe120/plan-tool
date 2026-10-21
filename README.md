@@ -1,28 +1,110 @@
 # plan-tool
 
-`plan-tool` turns a rough idea into a developer-ready implementation plan — ordered steps with per-step detail files, backed by machine-validated YAML frontmatter — then **executes** it locally via Claude (`run`) or **exports** it as Jira-sized stories (`jira`).
+Use the **plan-tool skill** with your coding assistant to turn an idea into a reviewed implementation plan, execute it step by step, or export it as Jira stories. The assistant drives the CLI, reads saved audit findings, and helps you resolve scope and design decisions. Plans and step details stay in your repository as reviewable files.
 
 The mission and the grounding principles the codebase is built to obey live in [`MISSION.md`](MISSION.md). New here, or unsure whether your work is a good fit? [`docs/how-to/use-cases.md`](docs/how-to/use-cases.md) is the situation-first guide — when to use the tool and which path to take.
 
 ## Start here
 
-Choose the route that matches the work in front of you. The detailed command
-and contract references remain available after you choose a route.
+Start with the assistant skill for guided planning and execution. Use the CLI
+guides when you want to operate individual stages yourself.
 
 | I want to… | Start here | Next |
 | --- | --- | --- |
-| Try or install plan-tool | [Install](#install) | Follow [Your first plan](#your-first-plan). |
+| Use plan-tool with my coding assistant | [Use with your assistant](#use-with-your-assistant) | [Install the CLI and skill](#install), then ask for [your first plan](#your-first-plan). |
 | Explore or present a demo | [Demonstrations](docs/demos/README.md) | Choose an example and check its preparation status. |
-| Turn an idea or draft into a plan | [Decision flow](#decision-flow) | Follow [Common workflows](docs/how-to/common-workflows.md). |
+| Choose a planning starting point | [Use cases](docs/how-to/use-cases.md) | Describe your idea, existing draft or project concept to the assistant. |
 | Run, recover, or operate a plan | [How-to guides](docs/how-to/README.md) | Use the [Runbook](RUNBOOK.md) for a failed or surprising result. |
 | Look up a command, format, or exact rule | [Reference](docs/reference/README.md) | Use the generated [CLI reference](docs/cli/README.md) for every option. |
 | Develop plan-tool itself | [New contributor path](CONTRIBUTING.md#new-contributor-path) | Read the [architecture reference](docs/ARCHITECTURE.md) when the change needs it. |
 
+## Use with your assistant
+
+The skill gives Claude Code, Codex or Cursor a shared procedure for driving
+plan-tool. Tell your assistant the outcome you want and the boundaries of the
+work; it selects the stages, reads their results and brings decisions back to
+you. The CLI provides the persisted plans, audit reports and execution state.
+
+[Install the CLI and skill](#install), reload your assistant, and open the
+repository you want to work on. Planning runs in that consuming repository;
+keep the installation clone for the tool itself.
+
+## Install
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
+then keep a dedicated clone for the CLI that the skill invokes. `uv` manages
+the Python runtime:
+
+```bash
+git clone git@bitbucket.org:protagona/plan-tool.git
+cd plan-tool
+uv tool install --editable .     # puts `plan-tool` on PATH (uv's bin dir)
+```
+
+Keep the clone: `--editable` reads its source directly. Source updates take
+effect immediately; refresh the tool environment when dependencies or metadata
+change, and refresh copied skills separately. See
+[Install and update](docs/how-to/install-and-update.md) for release-tag versus
+`main` selection, access requirements and the complete update procedure.
+
+<a id="optional-the-agent-skill"></a>
+
+### Install the assistant skill
+
+Install the bundled skill once for your assistant. A user-level installation
+makes it available across your projects. The skill includes the workflow rules
+for seed authoring, both audit gates, execution and reconciliation.
+
+| Assistant | User-level installation |
+| --- | --- |
+| Claude Code | `plan-tool install-skill --integration claude --user` |
+| Codex | `plan-tool install-skill --integration codex --user` |
+| Cursor | `plan-tool install-skill --integration cursor --user` |
+
+The Claude and Cursor installers default to `~/.claude/skills/plan-tool/`;
+Cursor [supports Claude skill directories](https://cursor.com/docs/skills).
+Codex uses `~/.agents/skills/plan-tool/` and installs copies.
+
+Reload your assistant session and confirm it discovers the installed skill.
+Choose a supported destination with `--root` when your assistant uses a
+different skill root. Install and authenticate the backend CLI used for model
+calls as described in [Backends](docs/BACKENDS.md); installing a skill does not
+install or authenticate that backend.
+
+## Your first plan
+
+Open the repository you want to change in your assistant. Choose a small,
+independently testable change and ask:
+
+> Use the plan-tool skill to plan [describe a small feature] in this repository. Keep the
+> scope small, run both audit gates, and stop before implementation.
+
+The assistant grounds a seed in the code, creates the plan, reviews the bare
+plan, authors details, then reviews the complete bundle. It reads the findings
+and applies judged corrections between audits. You decide material scope and
+design questions and when implementation begins.
+
+Once you review the plan, continue in the same conversation:
+
+| Goal | Ask your assistant |
+| --- | --- |
+| Implement the reviewed work | “Use plan-tool to execute this plan, then reconcile the code and review the changes.” |
+| Resume an existing plan | “Use the plan-tool skill to check the status of `my-plan` and continue from its next step.” |
+| Prepare work for a team | “Use plan-tool to export this reviewed plan as local Jira stories.” |
+| Start with a larger concept | “Use the plan-tool skill to turn this concept into a roadmap before creating individual plans.” |
+
+Jira export produces local artifacts; tracker publication is a separate action.
+For project-scoped skills, committed copies, refresh behavior and optional
+extras, see [Installation options](#installation-options).
+
+For direct command operation, use the [decision flow](#decision-flow),
+[common workflows](docs/how-to/common-workflows.md), and [CLI usage](#cli-usage).
+
 ## Core subcommand workflow
 
 ```
-(roadmap) → create → detail → audit ──┬── run    (execute locally, step-by-step via Claude)
-                                      └── jira   (export to Jira-sized stories) ─── verify   (CI gate, optional)
+(roadmap) → create → bare audit → detail → detail audit ──┬── run → reconcile-code → review
+                                                        └── jira → verify
 ```
 
 | Step | What it does |
@@ -31,18 +113,21 @@ and contract references remain available after you choose a route.
 | **`create`** | Author a plan from prose (`--from`) or an existing draft (`--from-existing`). |
 | **`detail`** | Draft per-step detail files and wire each step's `detail:` pointer. |
 | **audit** | `completeness-audit` checks coverage + concepts; `reconcile-plan` re-fits a stale plan to current code. |
-| **`run`** | Execute one step at a time (fresh Claude subprocess per step); plan state advances on success. |
+| **`run`** | Execute one step at a time with the configured backend; plan state advances on success. |
 | **`jira`** | Export steps as Jira-sized stories (markdown/JSON) with estimates + dependencies. |
 | **`verify-all`** | *(optional CI gate)* read-only `[OK]/[WARN]/[FAIL]` rollup over done steps. |
 
-The authoring commands (`create`, `detail`) and the audits drive an **iterate-to-convergence** loop, and convergence is the plan's correctness signal — a plan that keeps surfacing findings in one spot is mis-shaped, not merely unfinished. See [Iterating to convergence](#iterating-to-convergence---iterate).
+The skill reviews a bare plan before detail authoring, then reviews the complete
+bundle before execution or export. It uses session-directed edits to address
+conceptual findings and re-audits changed, committed text. `detail` is a
+one-shot write by default; audit convergence has its own rules and stopping
+conditions. See [the audit guide](docs/how-to/pipeline/audit.md).
 
 A few verbs sit off the main spine:
 
 - **`annotate`** — judge old plans against current code and emit seeds for the *next* `create --from-existing`. A forward-seed bridge; never mutates its source except the opt-in `--archive` move (contrast `reconcile-plan`, which edits a live plan in place).
 - **Branch-awareness** — optionally bind a plan to its own git branch. Ships **OFF**; see [Branch-awareness](docs/how-to/branch-awareness.md).
 - **Worktrees** — provision an isolated working copy per plan so several plans' long `create`/`detail`/`run` processes run in parallel without sharing one index, branch, or checkout. See [Worktrees (parallel plans)](#worktrees-parallel-plans).
-- **Direct pipeline** — `direct-jira` and `direct-run` chain the whole pipeline in one process for a **small** change: `direct-jira` runs `create → detail → completeness-apply → jira`, `direct-run` runs `create → detail → completeness-apply → run --commit → reconcile-code`. Each is one command over the same gated stages, and stops (steering you to the full step-by-step pipeline) when `create` yields a plan too large to chain. See [CLI usage](#cli-usage). *(Name note: these `direct-*` CLI verbs are unrelated to the `Approach: direct` tag used in `BACKLOG.md` entries — that tag marks work done by hand-editing instead of the plan-tool pipeline, whereas the verbs are a pipeline. Different namespaces.)*
 
 Plan discovery is manifest-driven via `.plan-tool/plans.json` (repo-relative `.md` paths); override with `--plans-dir` or `PLAN_TOOL_PLANS_DIR`.
 
@@ -67,24 +152,18 @@ for the full lifecycle contract.
 | [Several old plans or notes](docs/how-to/choose-a-starting-point.md#assess-several-old-plans-or-notes) | `annotate <path-or-glob>...` | Reports show carryover coverage and grounding. |
 | [A project-sized concept](docs/how-to/choose-a-starting-point.md#stage-a-project-sized-concept) | `roadmap <slug> --from-existing <brief.md>` | `roadmap` emits staged artifacts and draft seeds. |
 
-## Your first plan
-
-Start with a small, independently testable change. Install the CLI, choose its
-input from the [decision flow](#decision-flow), then follow the normal stage
-sequence in [Common workflows](docs/how-to/common-workflows.md). That guide
-names the required audits and the points where a failed or stalled run moves to
-the [Runbook](RUNBOOK.md).
-
 ## Table of contents
 
 - [Start here](#start-here)
+- [Use with your assistant](#use-with-your-assistant)
+- [Install](#install)
+- [Your first plan](#your-first-plan)
 - [Core subcommand workflow](#core-subcommand-workflow)
 - [Decision flow](#decision-flow)
-- [Your first plan](#your-first-plan)
 - [Current code layout](#current-code-layout)
 - [Plan format](#plan-format)
-- [Install](#install)
 - [Develop and test](#develop-and-test)
+- [Installation options](#installation-options)
 - [CLI usage](#cli-usage)
 - [Common workflows](#common-workflows)
 - [Running headlessly](#running-headlessly)
@@ -133,7 +212,7 @@ plan-tool/                  (repo root)
       run.md                   The run gate gauntlet — which gates fire when, advisory vs blocking.
   integrations/
     claude/
-      SKILL.md  Optional agent skill — install with `plan-tool install-skill`.
+      SKILL.md  Assistant skill — install with `plan-tool install-skill`.
   plan_tool/
     __init__.py
     schema.py Pydantic models for frontmatter.
@@ -229,66 +308,6 @@ steps:
 
 See `PLAN_FORMAT.md` for the full schema and conventions.
 
-## Install
-
-`plan-tool` installs as a global CLI from a clone of this repo. `uv` fetches
-its own Python, so nothing else is required on the host:
-
-```bash
-git clone https://github.com/rupe120/plan-tool.git
-cd plan-tool
-uv tool install --editable .     # puts `plan-tool` on PATH (uv's bin dir)
-```
-
-Keep the clone: `--editable` reads its source directly. Source updates take
-effect immediately; refresh the tool environment when dependencies or metadata
-change, and refresh copied skills separately. See
-[Install and update](docs/how-to/install-and-update.md) for release-tag versus
-`main` selection, access requirements and the complete update procedure.
-
-**Optional spell check.** Install the `spell` extra to enable an advisory
-spell check on the plan slug/title at `create` time (a token-free, local
-`pyspellchecker` dictionary — no Claude call). It flags likely typos like
-`standardize-app-paramerters` → `parameters` before they get baked into the
-filename/manifest, and is a silent no-op when the extra isn't installed:
-
-```bash
-uv tool install --editable ".[spell]"
-```
-
-Each project you drive with `plan-tool` declares its plans in a per-project
-manifest at `<repo-root>/.plan-tool/plans.json` (a `{"plans": [...]}` array of
-repo-relative `.md` paths), or point the CLI at a directory with `--plans-dir`.
-
-### Optional: the agent skill
-
-`plan-tool` is a **standalone CLI** — you drive it directly. The bundled
-skill is only for letting **Claude Code**, **Codex**, or **Cursor**
-orchestrate it *for* you; if you invoke plan-tool yourself, skip this.
-
-```bash
-plan-tool install-skill            # symlink → <repo>/.claude/skills/plan-tool/
-plan-tool install-skill --user     # → ~/.claude/skills/ (every project, once — recommended)
-plan-tool install-skill --copy     # copy in (committable, but goes stale on upgrade)
-```
-
-Each run installs two files as one set: the bundled `SKILL.md` router and a
-`DIRECTIVES.md` sibling carrying the shared driving rules it cites. A
-per-project symlink is machine-local — it won't survive a fresh clone or CI
-(use `--copy` to commit it). `--root .agents` and `--integration codex|cursor`
-switch the destination root and the bundled variant.
-
-**Codex** reads `.agents/skills`, not `.claude`, and skips a symlinked
-`SKILL.md` without logging. `--integration codex` therefore defaults to
-`--root .agents` and always copies; `plan-tool install-skill --integration codex
---user` installs it once for every project. Re-run it with `--force` after a
-plan-tool upgrade to refresh the copy.
-
-To install by hand instead, put both files in one folder:
-`integrations/<integration>/SKILL.md` and `integrations/shared/DIRECTIVES.md`.
-Symlinking the `integrations/<integration>/` folder alone leaves
-`DIRECTIVES.md` out, and the router's links to it break.
-
 ## Develop and test
 
 ```bash
@@ -327,6 +346,47 @@ A real match: remove and rotate the credential and load it from an env var
 or secrets manager instead. A false positive: add a trailing
 `# pragma: allowlist secret` comment on that line, or bypass one commit
 with `git commit --no-verify`.
+
+## Installation options
+
+For project-scoped installation or a committed copy:
+
+```bash
+plan-tool install-skill            # symlink → <repo>/.claude/skills/plan-tool/
+plan-tool install-skill --user     # → ~/.claude/skills/ (every project, once — recommended)
+plan-tool install-skill --copy     # copy in (committable, but goes stale on upgrade)
+```
+
+Each run installs two files as one set: the bundled `SKILL.md` router and a
+`DIRECTIVES.md` sibling carrying the shared driving rules it cites. A
+per-project symlink is machine-local — it won't survive a fresh clone or CI
+(use `--copy` to commit it). `--root .agents` selects that destination root;
+`--integration` selects the bundled assistant variant. Codex also changes the default root, as below.
+
+**Codex** reads `.agents/skills`, not `.claude`, and skips a symlinked
+`SKILL.md` without logging. `--integration codex` therefore defaults to
+`--root .agents` and always copies; `plan-tool install-skill --integration codex
+--user` installs it once for every project. Re-run it with `--force` after a
+plan-tool upgrade to refresh the copy.
+
+To install by hand instead, put both files in one folder:
+`integrations/<integration>/SKILL.md` and `integrations/shared/DIRECTIVES.md`.
+Symlinking the `integrations/<integration>/` folder alone leaves
+`DIRECTIVES.md` out, and the router's links to it break.
+
+**Optional spell check.** Install the `spell` extra to enable an advisory
+spell check on the plan slug/title at `create` time (a token-free, local
+`pyspellchecker` dictionary — no Claude call). It flags likely typos like
+`standardize-app-paramerters` → `parameters` before they get baked into the
+filename/manifest, and is a silent no-op when the extra isn't installed:
+
+```bash
+uv tool install --editable ".[spell]"
+```
+
+Each project you drive with `plan-tool` declares its plans in a per-project
+manifest at `<repo-root>/.plan-tool/plans.json` (a `{"plans": [...]}` array of
+repo-relative `.md` paths), or point the CLI at a directory with `--plans-dir`.
 
 ## CLI usage
 
