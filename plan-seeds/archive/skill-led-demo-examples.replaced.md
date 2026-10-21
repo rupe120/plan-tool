@@ -46,6 +46,16 @@ is not a clean result. A resumed request checks persisted state and live work
 before starting another command. Use existing run/status/log surfaces; do not
 invent monitoring capabilities or change their behavior.
 
+Make user review of the created artifacts explicit in the examples. Present the
+seed for outcome, scope, constraints, non-goals and grounding before `create`;
+present the bare plan and its audit for steps, dependencies and acceptance
+criteria before `detail`; present the details and detail-grounded audit for
+implementation guidance and verification before execution or local export. At
+each checkpoint the assistant summarizes changes, links the actual artifacts,
+asks for corrections or continuation and waits for the user's response unless
+the user has already explicitly delegated that review and continuation. These
+are conversational review points using existing behavior, not new tool gates.
+
 Show the bare-plan audit before detail authoring and the detail-grounded audit
 afterward. Planning stops before implementation unless the user requests it.
 Local Jira export includes its paired developer handoff and does not imply
@@ -75,7 +85,7 @@ feedback/candidate, settlement and seed-materialization boundaries.
 
 This is a documentation and example conversion using existing skill behavior.
 No CLI, prompt-template, schema, installer or monitoring implementation changes
-belong here. Do not introduce a new workflow gate, automated prose-quality
+belong here. Do not introduce a new tool-enforced gate, automated prose-quality
 checker, background service, parallel runner, broad docs reorganization or new
 scenario. Do not push replacement demo refs, publish an Artifact, create remote
 Jira issues, merge a PR, or change release tags or repository visibility as part
@@ -130,6 +140,10 @@ add tests that merely match documentation wording.
 
 ## Acceptance criteria
 
+- The examples explicitly present the created seed, bare plan and detail bundle
+  for user review before their next consuming stage, with artifact links, a
+  change summary and a correction/continuation request. Existing explicit
+  delegation may authorize continuation; silence is not approval.
 - The learning journey starts with a request to use the plan-tool skill and
   author a grounded, scope-fenced seed; it does not require the reader to
   hand-author the seed or operate every stage.

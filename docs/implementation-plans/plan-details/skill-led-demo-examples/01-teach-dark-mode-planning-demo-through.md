@@ -44,6 +44,8 @@ Convert `docs/demos/planning-demo.md` into an assistant-led walkthrough of the r
 
 ## Implementation
 
+- **User review checkpoints.** In the dark-mode walkthrough and reading samples, show separate requests to review the assistant-authored seed before create, the bare plan plus audit before detail, and the details plus grounded audit before execution or export. The assistant links each artifact, summarizes changes and asks for corrections or continuation. Wait for the user unless explicit existing delegation covers that transition; do not infer approval from elapsed time. This changes the demo interaction, not tool enforcement.
+
 - **Foundational logic: assistant request → inspectable artifact → human decision.** Apply this teaching pattern locally in the walkthrough and example page. Keep procedural authority in existing documentation; reject a second command-by-command policy embedded in the demo.
 
 - **Lead the walkthrough with usable requests.** Rework `docs/demos/planning-demo.md` around its “Prepare the example” and “Present the workflow” sections. Include requests that ask the assistant to:
@@ -83,6 +85,7 @@ This is a non-code step. The test-authoring gate applies to `feature` and `refac
 
 ## Acceptance criteria
 
+- The step’s deliverables show explicit user review of seeds, plans and details at the correct stage boundaries, including artifact links, change summaries and correction/continuation requests; continuation follows a user response or explicit prior delegation.
 - `docs/demos/planning-demo.md` offers copyable assistant requests covering grounded seed creation, skill-driven planning, progress reporting, review decisions and paired local export.
 - The walkthrough identifies both audit stages and links to their authoritative procedure without replacing qualification with exit-code success.
 - `docs/demos/dark-mode-example.md` provides labeled dark-mode reading samples and distinguishes authored material from captured evidence.

@@ -45,6 +45,8 @@ Verify the learning journey delivered by steps 1–3 and rehearse the dark-mode 
 
 ## Implementation
 
+- **User review checkpoints.** Verify the reading journey and local rehearsal show user review of the actual seed, bare plan and details before their next consuming stages, or identify the explicit prior delegation authorizing continuation. Record this evidence separately from model audit results. The assistant links each artifact, summarizes changes and asks for corrections or continuation. Wait for the user unless explicit existing delegation covers that transition; do not infer approval from elapsed time. This changes the demo interaction, not tool enforcement.
+
 - **Foundational logic: readiness follows observed evidence.** Use the evidence record as the detailed account and link to it from the index and handoff. Reject a blanket “verified” label based only on fixture checks, command exit codes or documentation review.
 
 - **Review the complete reading journey.** Follow `README.md:Your first plan` through the step 3 guides, `docs/demos/planning-demo.md:Prepare the example` and “Present the workflow,” and step 1’s reading samples. Check that readers encounter a usable request, an artifact to inspect and a clear owner decision at each boundary.
@@ -84,6 +86,7 @@ This is a `non-code` step. The test-authoring gate in `plan_tool/launcher.py:_st
 
 ## Acceptance criteria
 
+- The step’s deliverables show explicit user review of seeds, plans and details at the correct stage boundaries, including artifact links, change summaries and correction/continuation requests; continuation follows a user response or explicit prior delegation.
 - `docs/evidence/skill-led-demo-examples-verification.md` identifies the reviewed snapshot, checks performed, results and verification limits.
 - The record covers the learning journey produced by steps 1–3 and identifies any unresolved discrepancies by owning surface.
 - The live rehearsal records actual command completion, bare/detail audit coverage and qualification, and paired local export evidence; alternatively, it records a named external blocker and explicit unverified stages.

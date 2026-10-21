@@ -44,6 +44,8 @@ Convert `docs/demos/roadmap-demo.md` into an assistant-led walkthrough of the re
 
 ## Implementation
 
+- **User review checkpoints.** In the TTRPG workflow, preserve roadmap review and additionally present each selected plan seed, bare plan and detail bundle for user review before its next consuming stage. Seed materialization or promotion is not approval of the seed content. The assistant links each artifact, summarizes changes and asks for corrections or continuation. Wait for the user unless explicit existing delegation covers that transition; do not infer approval from elapsed time. This changes the demo interaction, not tool enforcement.
+
 - **Foundational logic: assistant request → inspectable artifact → human decision.** Apply this pattern across `docs/demos/roadmap-demo.md`, especially “Phase 1 — the four roadmap stages,” “Phase 2 — the review loop,” “Phase 3 — promote the draft seeds” and “Phases 4–6 — one plan to full depth.” Keep commands as supporting examples where useful; reject a second procedural policy embedded in the demo.
 
 - **Lead with requests readers can reuse.** Include requests to prepare an isolated consuming repository, invoke the plan-tool skill on the existing concept brief, inspect the accepted roadmap, propose feedback changes, materialize selected seeds and carry one representative plan through both audit gates. Each request must identify the output to inspect and the decision the assistant must bring back.
@@ -84,6 +86,7 @@ This is a non-code step. The test-authoring gate keys on `change_type` and does 
 
 ## Acceptance criteria
 
+- The step’s deliverables show explicit user review of seeds, plans and details at the correct stage boundaries, including artifact links, change summaries and correction/continuation requests; continuation follows a user response or explicit prior delegation.
 - `docs/demos/roadmap-demo.md` provides reusable assistant requests covering roadmap generation, accepted-head inspection, ledger feedback, candidate review, settlement, seed materialization and representative-plan authoring.
 - Each major request identifies evidence to inspect and the decision to return to the reader.
 - Candidate proposal and comparison remain distinct from acceptance; settlement follows its separate confirmed route.

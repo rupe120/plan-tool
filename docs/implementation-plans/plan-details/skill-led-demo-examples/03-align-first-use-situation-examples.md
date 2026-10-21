@@ -47,6 +47,8 @@ Align the learning examples in `README.md`, the three scoped how-to guides and `
 
 ## Implementation
 
+- **User review checkpoints.** Carry the same explicit seed, plan and detail review checkpoints through the README, situation examples, starting-point guide, common workflows and RUNBOOK entry route; avoid a single request that silently consumes all three artifacts. The assistant links each artifact, summarizes changes and asks for corrections or continuation. Wait for the user unless explicit existing delegation covers that transition; do not infer approval from elapsed time. This changes the demo interaction, not tool enforcement.
+
 - **Foundational logic: assistant request → inspectable artifact → human decision.** Apply this pattern across the five scoped files. Reuse existing procedural owners unchanged; reject a second policy embedded in the examples.
 
 - **Make the first request include seed authoring.** In `README.md:Your first plan`, ask the assistant to inspect the consuming repository, draft a grounded seed with a scope fence and references, then drive the skill through both audit gates. The request must stop before implementation and bring material scope or design questions back to the reader.
@@ -86,6 +88,7 @@ The test-authoring gate does not apply to this `non-code` step; it keys on `feat
 
 ## Acceptance criteria
 
+- The step’s deliverables show explicit user review of seeds, plans and details at the correct stage boundaries, including artifact links, change summaries and correction/continuation requests; continuation follows a user response or explicit prior delegation.
 - `README.md:Your first plan` explicitly asks the assistant to prepare a grounded seed and stops the planning request before implementation.
 - The five scoped files use consistent requests for planning, status inspection, authorized execution and local export.
 - The starting-point and situation guides let readers begin with an idea without requiring a prewritten seed.
