@@ -1,7 +1,7 @@
 {
   "plan_slug": "skill-led-demo-examples",
-  "grounded_at": "2026-10-21T23:36:27Z",
-  "plan_fingerprint": "45167a06f91f6df483684a9118cbdb67d85824f675f27384f07ce19b605004dc",
+  "grounded_at": "2026-10-21T23:44:19Z",
+  "plan_fingerprint": "431a09d1250e7f4bd5e5799b3d0284fac7d534784c4ddcf2929050bd0efa7fa6",
   "code_fingerprint": {
     "README.md": "5eb7172cffc434d5c529ee057751593aff27e6662b4f5285afccfc0432b47e80",
     "RUNBOOK.md": "3cd86138707bfb45953d863de2c614afc577a70c35e524393bb8d3aaa10d68e9",
@@ -14,6 +14,11 @@
     "handoffs/2026-10-21-demo-refresh.md": "e2d75edeba4e029eb067cc2347dae38c5ba6cf1d07147d78ccc9db6d7ba9924b",
     "plans/2-demo.md": "861a7e738fa629ff2c134eef992beb13b89532c24262cb954f13cdb1b455b4aa"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "3501961b325970a3578d6ee476bb3743b491e91d3e28089e5055fdcb87cc441c",
+    "2": "14af14d56c681d1d416a9ed87d3c6e4908a6ba505dec9fb9942078866d1705e2",
+    "3": "6e65ccb43d2cfd76434276003ba45d6ea5120979f26b72eff67484d63bd2800a",
+    "4": "8b3165368ac06e61eae42126ab22135f15e497905f7a20b3f8d402184219a4ac"
+  },
   "schema_version": 1
 }
