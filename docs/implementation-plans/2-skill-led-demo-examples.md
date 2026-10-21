@@ -1,8 +1,89 @@
-# Teach plan-tool through coding-assistant requests
-
-## Outcome
-
-A reader can ask a coding assistant to create a grounded seed, drive the plan-tool skill, monitor its results and bring decisions back for review, using the demos and learning examples as a coherent guide.
+---
+format_version: 1
+title: Teach demos and examples through the plan-tool skill
+intent: A reader can ask a coding assistant to create a grounded seed, drive the plan-tool
+  skill, monitor its results and bring decisions back for review, using the demos
+  and learning examples as a coherent guide.
+status: planning
+priority: medium
+risk_profile: standard
+risk_profile_rationale: Risk declaration uses standard because --yes does not accept
+  model risk proposals.
+test_command: uv run pytest tests/ -q -n auto
+enforce_step_tests: true
+source_seed: plan-seeds/skill-led-demo-examples.md
+steps:
+- id: 1
+  title: Teach the dark-mode planning demo through assistant requests and refresh
+    its retained examples
+  intent: Readers can request grounded planning and inspect the seed, both audits
+    and paired local handoff without operating every stage.
+  files:
+  - docs/demos/planning-demo.md
+  - plans/2-demo.md
+  creates:
+  - docs/demos/dark-mode-example.md
+  complexity: medium
+  change_type: non-code
+  status: current
+- id: 2
+  title: Convert the TTRPG demo to assistant requests while preserving roadmap review
+    and publication boundaries
+  intent: Readers can guide the assistant through accepted-head review, feedback candidates,
+    settlement and seed materialization using the existing procedures.
+  files:
+  - docs/demos/roadmap-demo.md
+  complexity: medium
+  change_type: non-code
+  depends_on:
+  - 1
+  depends_on_notes:
+    1: Provides the request, assistant action, owner decision and inspectable-result
+      presentation pattern.
+- id: 3
+  title: Align first-use and situation examples with assistant-authored seeds, monitoring
+    and separate completion requests
+  intent: Readers encounter one consistent interaction from their first request through
+    planning, safe resumption, local export or authorized execution.
+  files:
+  - README.md
+  - docs/how-to/use-cases.md
+  - docs/how-to/choose-a-starting-point.md
+  - docs/how-to/common-workflows.md
+  - RUNBOOK.md
+  complexity: medium
+  change_type: non-code
+  depends_on:
+  - 1
+  - 2
+  depends_on_notes:
+    1: Supplies the concrete planning example and artifact review points.
+    2: Supplies the advanced roadmap request path and its owner decisions.
+- id: 4
+  title: Verify the reading journey and local planning-to-Jira rehearsal, then reconcile
+    demo preparation status
+  intent: Demo readiness reflects observed results, explicit external blockers and
+    remaining publication work.
+  files:
+  - docs/demos/README.md
+  - handoffs/2026-10-21-demo-refresh.md
+  creates:
+  - docs/evidence/skill-led-demo-examples-verification.md
+  complexity: medium
+  change_type: non-code
+  depends_on:
+  - 1
+  - 2
+  - 3
+  depends_on_notes:
+    1: Provides retained examples for format checks and the bounded consuming-repository
+      rehearsal.
+    2: Provides the roadmap narrative to check against current contracts without a
+      full regeneration.
+    3: Provides the complete learning journey for link, monitoring and resumption
+      review.
+---
+# Teach demos and examples through the plan-tool skill
 
 ## Overview
 
@@ -50,24 +131,6 @@ remote issue creation. An execution request includes the post-run code
 reconciliation and review tail. The roadmap example retains accepted-head,
 feedback/candidate, settlement and seed-materialization boundaries.
 
-## In scope
-
-- Convert the planning and roadmap demo guides and demo index to assistant-led
-  requests for seed creation, planning, monitoring, review, resumption and the
-  appropriate output. Refresh presenter guidance and local checkpoint cards
-  where the current demo preparation is available.
-- Align the README's first-plan prompts, the situation examples in
-  `docs/how-to/use-cases.md`, `docs/how-to/choose-a-starting-point.md` and
-  `docs/how-to/common-workflows.md`, and the RUNBOOK's entry route with that
-  same interaction. Preserve specialist command procedures as supporting
-  references; do not rewrite the entire command catalog or historical decks.
-- Make example inputs and inspectable outputs easy to find. State whether each
-  is an authored illustration, a prepared fixture, or a captured run. Update
-  relevant retained demo fixtures, local seeds and references to current formats
-  and real paths without registering sample plans as product work.
-- Reconcile `handoffs/2026-10-21-demo-refresh.md` and demo status labels with the
-  delivered local changes, actual verification and remaining publication work.
-
 ## Scope guardrails
 
 This is a documentation and example conversion using existing skill behavior.
@@ -79,23 +142,36 @@ Jira issues, merge a PR, or change release tags or repository visibility as part
 of the plan. Keep private recovery material private. Existing procedural
 contracts remain authoritative; do not copy them into a new competing policy.
 
-## Scope of work
+## References
 
-Establish a single assistant-led demo narrative and its user/assistant/reviewer
-responsibilities, convert the two demos and their local example artifacts,
-propagate matching request examples through the learning entry points, then
-validate the end-to-end reading and execution story and update preparation
-status. Keep the plan small and group work by a reviewable reader outcome.
+- README.md — assistant-first positioning, installation and first-plan requests.
+- docs/demos/README.md — demo discovery and preparation status.
+- docs/demos/planning-demo.md — the retained dark-mode planning scenario.
+- docs/demos/roadmap-demo.md — the retained advanced roadmap scenario.
+- docs/how-to/use-cases.md — situation-based learning examples.
+- docs/how-to/choose-a-starting-point.md — input selection examples.
+- docs/how-to/common-workflows.md — workflow entry and operator procedures.
+- RUNBOOK.md — operational entry route and monitoring/recovery procedures.
+- integrations/shared/DIRECTIVES.md — canonical seed, audit, monitoring and execution rules.
+- integrations/codex/SKILL.md — a supported assistant integration and request routing.
+- SEED_FORMAT.md — seed scope contract and References requirements.
+- PLAN_FORMAT.md — plan artifact contract.
+- DETAIL_FORMAT.md — detail artifact contract.
+- JIRA_FORMAT.md — local story export and paired developer handoff.
+- ROADMAP_FORMAT.md — immutable accepted-head artifact contract.
+- ROADMAP_FEEDBACK_FORMAT.md — mutable ledger and candidate route contract.
+- handoffs/2026-10-21-demo-refresh.md — current preparation and publication boundary.
+- docs/reference/documentation-style.md — live documentation structure and review.
 
-## Allowed behavior changes
+## Steps
 
-Only documentation, presentation instructions, example/reference content and
-preparation-status records change. Existing tool and skill behavior remains.
+See the `steps:` block in the frontmatter.
 
-## Allowed reorganization
+## Out of scope
 
-Keep established documentation destinations. Move or replace a sample only when
-needed to keep the retained scenario and its artifact links coherent.
+No tool behavior changes, new demo scenario, exhaustive conversion of command
+reference examples, rewrite of historical evidence or decks, full TTRPG
+regeneration, remote publication, or release workflow changes.
 
 ## Risks
 
@@ -143,40 +219,7 @@ add tests that merely match documentation wording.
 - The local rehearsal has actual evidence or a named external blocker and an
   explicit unverified status. The handoff and demo index agree with that result.
 
-## Out of scope
-
-No tool behavior changes, new demo scenario, exhaustive conversion of command
-reference examples, rewrite of historical evidence or decks, full TTRPG
-regeneration, remote publication, or release workflow changes.
-
-## Stop / defer
-
-Record unrelated product defects in BUG_BACKLOG.md and future capabilities in
-BACKLOG.md. If the narrative requires behavior the skill does not supply, name
-the gap instead of implementing it or asserting that it exists.
-
 ## Deferred
 
 Remote demo branch publication and the release workflow retain their separate
 owner and approval boundary.
-
-## References
-
-- README.md — assistant-first positioning, installation and first-plan requests.
-- docs/demos/README.md — demo discovery and preparation status.
-- docs/demos/planning-demo.md — the retained dark-mode planning scenario.
-- docs/demos/roadmap-demo.md — the retained advanced roadmap scenario.
-- docs/how-to/use-cases.md — situation-based learning examples.
-- docs/how-to/choose-a-starting-point.md — input selection examples.
-- docs/how-to/common-workflows.md — workflow entry and operator procedures.
-- RUNBOOK.md — operational entry route and monitoring/recovery procedures.
-- integrations/shared/DIRECTIVES.md — canonical seed, audit, monitoring and execution rules.
-- integrations/codex/SKILL.md — a supported assistant integration and request routing.
-- SEED_FORMAT.md — seed scope contract and References requirements.
-- PLAN_FORMAT.md — plan artifact contract.
-- DETAIL_FORMAT.md — detail artifact contract.
-- JIRA_FORMAT.md — local story export and paired developer handoff.
-- ROADMAP_FORMAT.md — immutable accepted-head artifact contract.
-- ROADMAP_FEEDBACK_FORMAT.md — mutable ledger and candidate route contract.
-- handoffs/2026-10-21-demo-refresh.md — current preparation and publication boundary.
-- docs/reference/documentation-style.md — live documentation structure and review.

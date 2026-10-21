@@ -1,0 +1,19 @@
+{
+  "plan_slug": "skill-led-demo-examples",
+  "grounded_at": "2026-10-21T23:36:27Z",
+  "plan_fingerprint": "45167a06f91f6df483684a9118cbdb67d85824f675f27384f07ce19b605004dc",
+  "code_fingerprint": {
+    "README.md": "5eb7172cffc434d5c529ee057751593aff27e6662b4f5285afccfc0432b47e80",
+    "RUNBOOK.md": "3cd86138707bfb45953d863de2c614afc577a70c35e524393bb8d3aaa10d68e9",
+    "docs/demos/README.md": "ea3bd807f37829bff19bc2c1a28eb4d766f9b93b8d64f0956a4a1eda7a4ddb30",
+    "docs/demos/planning-demo.md": "c6c12f1bb41163da65092f19205a5057440327d60f7442432f28505fb0a8d341",
+    "docs/demos/roadmap-demo.md": "f56145b502f19792a1bca936f22195fa7d8608582284f71a7cf0ab18c1c1a04f",
+    "docs/how-to/choose-a-starting-point.md": "a960964186da74a33ffd1a3cabc8b4c0793fb5e09a29bf2a25b93321f1f7ba7d",
+    "docs/how-to/common-workflows.md": "8bfa5230578ca1ae22ace28bfebdeaf63f514e9d2a915a1dee5a9eba122fa566",
+    "docs/how-to/use-cases.md": "043be5b1b30880fc7863f32b12d479f78eda5d889372824f27b820ce42e8e02a",
+    "handoffs/2026-10-21-demo-refresh.md": "e2d75edeba4e029eb067cc2347dae38c5ba6cf1d07147d78ccc9db6d7ba9924b",
+    "plans/2-demo.md": "861a7e738fa629ff2c134eef992beb13b89532c24262cb954f13cdb1b455b4aa"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}
