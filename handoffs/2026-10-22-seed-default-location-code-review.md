@@ -151,3 +151,19 @@ The change is committed locally on `fix/seed-default-location`. It requires
 architect-tier PR review because CLAUDE.md changes its seed authoring location.
 No push, PR, automatic migration, configuration feature or merge is part of this
 user-directed atomic action.
+
+
+## Integration after PR #136 merge — 2026-10-22
+
+Bitbucket confirms #136 merged. Current main `176ce30a5` is integrated in merge
+commit `42922cdc0`. Canonical integration sources combine without conflicts;
+the two tracked Claude copies are regenerated from those combined sources, and
+the handoff index retains both records. No runtime or test-source change occurs
+relative to the reviewed seed branch; only #136 documentation and guidance
+arrive. Existing review findings/dispositions remain the seed-logic evidence.
+
+Post-merge full suite: 14,717 passed, 67 skipped in 74.19s. Tracked copies
+byte-match their canonical sources, no conflict markers remain, and the tree is
+clean before this evidence update. User-level copies are not refreshed from an
+unshipped feature branch; they can update with the installed build after merge.
+The seed-default change remains a separate local branch, ready for its own PR.
