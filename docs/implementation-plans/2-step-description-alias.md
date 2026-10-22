@@ -3,7 +3,7 @@ format_version: 1
 title: Step Description Alias
 intent: New plans use `steps[].description`; existing plans using `steps[].title`
   remain readable and usable throughout the pipeline.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -87,7 +87,7 @@ steps:
     3: Mark the backlog entry plan-authored while execution is pending and remove
       it only after full shipment.
   detail: docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md
-  status: current
+  status: done
   description: 'Document the version-1 alias exception and reconcile BACKLOG #517
     with shipment status'
 ---
