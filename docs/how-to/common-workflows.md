@@ -236,8 +236,9 @@ Options applied *during* create:
   and `--iteration-budget SECONDS` (default 1800; a debounced
   no-progress deadline, not a cap on total loop time — see
   [Defaults). Pass `--no-iterate`
-  to skip the post-write loop. `detail --reconcile` and
-  `run --reconcile` default off; pass `--iterate` to opt in.
+  to skip the post-write loop. Detail authoring defaults to one shot;
+  enable its quality loop only when explicitly requested. Neither
+  `detail --reconcile` nor `run --reconcile` accepts `--iterate`.
 - `-y` + closed stdin (`< /dev/null`): headless mode. Default-
   accepts every wizard prompt with a declared default and fails fast
   if Claude can't extract steps (no interactive fallback).
@@ -338,7 +339,7 @@ plan-tool status my-plan                     # what's the current step?
 plan-tool run                                # no name: pick from plans with open steps
 plan-tool run my-plan --commit               # execute the current step
 plan-tool run my-plan --step 3 --commit      # run a specific step
-plan-tool run my-plan --reconcile --iterate --commit  # code edits to match plan
+plan-tool reconcile-code my-plan --step 3    # post-execution; verify and commit edits separately
 ```
 
 **Interactive plan picker.** `plan-tool run` with no plan name — or a

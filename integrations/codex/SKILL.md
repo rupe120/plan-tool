@@ -9,7 +9,7 @@ paths:
   - docs/implementation-plans/**
   - plan-seeds/** # retained existing seeds; new seeds live under docs/implementation-plans
   - .plan-tool/plans.json
-argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|stop|ask] [--fallback-backend BACKEND] <plan-name> [--step N] [--mode check|optimize|document|test|security|lint] [--reconcile] [--dry-run] [--iterate] [--max-iterations N] [--iteration-budget SECONDS]'
+argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|stop|ask] [--fallback-backend BACKEND] <plan-name> [--step N] [--mode check|optimize|document|test|security|lint] [--reconcile] [--dry-run]'
 ---
 
 # plan-tool
@@ -168,7 +168,8 @@ completeness findings exist, correctness renders first.
 `create` iterates by default. `detail` defaults to a one-shot write; do not
 opt it into iteration unless the user asks. Pass `--iterate` explicitly to
 `completeness-audit`. Use iteration flags only where the invocation accepts them:
-`detail --reconcile` cannot combine with `--iterate`, and standalone
+Neither `detail --reconcile` nor `run --reconcile` can combine with
+`--iterate`, and standalone
 `reconcile-plan` and `reconcile-code` do not accept that flag. Completed loops can exit 0 with unresolved findings or an
 exhausted budget. Read saved findings, stop reason and audit qualification;
 for `completeness-audit` CI gating, use its supported `--fail-on-findings` flag.

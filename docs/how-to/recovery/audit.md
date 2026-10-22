@@ -1,9 +1,8 @@
 # `completeness-audit` / `reconcile` resume & recovery
 
-Detailed operator resume/recovery reference for the audit-side convergence loops —
-`plan-tool completeness-audit <name> --iterate` and
-`plan-tool detail <name> --reconcile`. The shared machinery (iteration
-session, crash handler) is in [`RESUME_FLOW.md`](README.md); the happy path is in
+Detailed operator resume/recovery reference for the completeness convergence
+loop, `plan-tool completeness-audit <name> --iterate`. The shared machinery
+(iteration session, crash handler) is in [`RESUME_FLOW.md`](README.md); the happy path is in
 [`AUDIT_FLOW.md`](../pipeline/audit.md).
 
 ## TL;DR
@@ -199,7 +198,7 @@ there is nothing it could wrongly discard.
 
 `plan-tool reconcile-plan <name> --refresh` (the cheap fingerprint gate,
 `plan_tool/refresh.py: refresh_plan`) has a far simpler resume story than the
-convergence loops above — it is a single scoped reconcile, **not** a loop.
+completeness loop above — it is a single scoped reconcile, **not** a loop.
 
 - **The grounding baseline is the durable state.** `--refresh` diffs the plan's
   tracked grounding sidecar (`<plan-dir>/plan-details/<slug>/grounding.json`,
@@ -212,15 +211,23 @@ convergence loops above — it is a single scoped reconcile, **not** a loop.
   left the sidecar byte-identical, so its "resume" is trivial: there is nothing to
   continue. Only the drift / no-baseline branches reconcile and re-stamp.
 - **The refresh path is *not* wrapped in `iteration_session`.** Unlike the
-  completeness and reconcile loops, `--refresh` runs a single scoped reconcile
+  completeness loop, `--refresh` runs a single scoped reconcile
   with no convergence loop and no in-run drift lock, so it sits outside the
   `iteration_session` machinery entirely. A crash mid-reconcile leaves the saved
   findings (if any) on disk and the baseline un-stamped; re-running `--refresh`
   simply re-detects the same drift and reconciles again.
 
+## Detail reconciliation is a separate scoped walk
+
+`plan-tool detail <name> --reconcile` runs one pre-execution audit and may walk
+its saved findings; it has no iteration loop or iteration-session recovery
+contract. After interruption, inspect saved findings and on-disk edits, judge
+what remains, and commit corrections before a new invocation. Do not infer
+completeness sampler/checkpoint recovery from this route's saved review.
+
 ## Crash / interrupt recovery
 
-- Both loops wrap their body in `iteration_session`, so Ctrl-C or an unexpected
+- The completeness loop wraps its body in `iteration_session`, so Ctrl-C or an unexpected
   exception still restores the SIGINT handler and emits any live-edit drift
   warning on the way out.
 - An unexpected exception propagates to `main()`'s crash handler (traceback file
@@ -263,7 +270,7 @@ discard applied edits — see [`CREATE_RESUME_FLOW.md`](create.md)).
 | Concern | File |
 |---------|------|
 | Completeness convergence loop | `plan_tool/cli/completeness_cmd.py` (`cmd_completeness`) |
-| Reconcile convergence loop | `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`) |
+| Internal reconcile iteration helper (not exposed as a CLI loop) | `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`) |
 | Finding re-derivation (no cache) | `plan_tool/review.py` (`collect_deterministic_findings`) |
 | Conceptual-audit reuse verdict | `plan_tool/completeness_report.py` (`resolve_reusable_audit`, `is_reusable_audit_sidecar`, `ReusableAudit`) |
 | Sampler resume gate and lifecycle transition | `plan_tool/review.py` (`audit_plan_until_stable`, `_restore_sampler_checkpoint_state`, `write_completed_sampler_boundary`, `_remove_sampler_checkpoint`) |

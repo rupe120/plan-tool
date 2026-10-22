@@ -179,3 +179,4 @@ future tool-decision route (its successor-slug rule moved to
 - [Public-release snapshot execution review](2026-10-20-public-release-content-snapshot-execution-review.md) — six-step local result, two clean review passes and remaining #513 limits.
 
 - [New-seed default placement](2026-10-22-seed-default-location-code-review.md) — nested defaults, retained existing seeds, compatibility tests and Claude review dispositions.
+- [Iteration route documentation repair](2026-10-22-iteration-guide-routes-code-review.md) — source-backed defaults, supported flags and reconciliation guidance.

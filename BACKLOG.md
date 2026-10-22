@@ -1751,7 +1751,7 @@ contract.
   plan-tool completeness-audit conceptual-pass-impact-sweep --iterate --commit -y
   plan-tool detail conceptual-pass-impact-sweep --reconcile --step N --commit -y
   plan-tool run conceptual-pass-impact-sweep -y --step N
-  plan-tool run conceptual-pass-impact-sweep --mode reconcile --iterate -y --step N
+  plan-tool reconcile-code conceptual-pass-impact-sweep -y --step N
   plan-tool completeness-audit conceptual-pass-impact-sweep --iterate --commit -y
   ```
 - **Status:** not started.
@@ -2388,8 +2388,9 @@ implementation contract.
   paper-trail material.
 - **Iterate:** default recipe. **Phase 3 load-bearing** on the
   interactive section-walk step — the TTY/non-TTY split and the
-  seven-section write gate are exactly the acceptance criteria a
-  `run --iterate` loop converges against fixtures. **Phase 4** catches
+  seven-section write gate are exactly the acceptance criteria the
+  executed step must cover with fixtures, followed by plan-canonical
+  reconciliation and code review. **Phase 4** catches
   drift between the new wizard path and `create`'s established wizard
   conventions (both must honor the same `-y` / non-TTY contract).
 
@@ -2399,7 +2400,7 @@ implementation contract.
     --from "..."
   plan-tool detail detail-authoring-wizard --commit -y   # phase 1.5
   plan-tool completeness-audit detail-authoring-wizard --iterate --commit -y   # phase 2
-  plan-tool run detail-authoring-wizard --mode reconcile --iterate -y --step N   # phase 3
+  plan-tool reconcile-code detail-authoring-wizard -y --step N   # phase 3
   plan-tool reconcile-code detail-authoring-wizard --all   # post-run tail
   ```
 - **Status:** not started — design notes only.
@@ -2726,14 +2727,14 @@ implementation contract.
   a snapshot/restore design decision, not a one-line fix.
 - **Iterate:** default recipe (author + converge). Load-bearing: `create`,
   one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit --iterate` per step and the post-run
+  pass, then `run --commit` per step and the post-run
   `reconcile-code --all` tail.
 
   ```bash
   plan-tool create partial-mutation-snapshot-restore --iterate -y --from-existing plan-seeds/partial-mutation-snapshot-restore.md
   plan-tool detail partial-mutation-snapshot-restore --commit -y
   plan-tool completeness-audit partial-mutation-snapshot-restore --iterate --commit -y
-  plan-tool run partial-mutation-snapshot-restore --commit --iterate -y
+  plan-tool run partial-mutation-snapshot-restore --commit -y
   ```
 - **Status:** not started — backlog entry only.
 - **Origin:** deferred response B of the transient-retry-partial-mutation-guard
@@ -2782,14 +2783,14 @@ implementation contract.
   granularity + git-read policy), not a one-line fix.
 - **Iterate:** default recipe (author + converge). Load-bearing: `create`,
   one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit --iterate` per step and the post-run
+  pass, then `run --commit` per step and the post-run
   `reconcile-code --all` tail.
 
   ```bash
   plan-tool create partial-mutation-guard-hardening --iterate -y --from-existing plan-seeds/partial-mutation-guard-hardening.md
   plan-tool detail partial-mutation-guard-hardening --commit -y
   plan-tool completeness-audit partial-mutation-guard-hardening --iterate --commit -y
-  plan-tool run partial-mutation-guard-hardening --commit --iterate -y
+  plan-tool run partial-mutation-guard-hardening --commit -y
   ```
 - **Status:** not started — backlog entry only.
 - **Origin:** two adversarial `/code-review` rounds on the shipped
@@ -2863,7 +2864,7 @@ implementation contract.
   #88 lands and profiling confirms a specific call needs it).
 - **Iterate:** default recipe (author + converge): `create --iterate`,
   one-shot `detail --commit`, `completeness-audit --iterate --commit`, then
-  `run --commit --iterate` per step and the post-run `reconcile-code --all`
+  `run --commit` per step and the post-run `reconcile-code --all`
   tail.
 - **Status:** not started — backlog entry only. **Elevated 2026-07-12:** under the
   ≤5-min-per-unit design target of the shipped time budget, a single 3–6 min `claude` call already
@@ -5361,7 +5362,7 @@ separate)**
   plan-tool create detail-readiness-advisory --iterate -y --from-existing BACKLOG.md
   plan-tool detail detail-readiness-advisory --commit -y
   plan-tool completeness-audit detail-readiness-advisory --iterate --commit -y
-  plan-tool run detail-readiness-advisory --mode reconcile --iterate -y --step N
+  plan-tool reconcile-code detail-readiness-advisory -y --step N
   ```
 - **Origin:** 2026-08-11, operator decision during eight bare-plan audits of
   the now-retired #231 plan: the plan was materially ready for detail, but the
@@ -5777,8 +5778,9 @@ separate)**
   - Run-created stubs were cleaned up by hand in `701f3fda` and `fa1f03b2`
     (both 2026-06-22). No stub has been committed since. Whether any supported
     session-driven flow still populates `scope_buffer` is unverified;
-    `docs/TRACKING.md` phase 3b's `run --mode reconcile --iterate` is the
-    likeliest remaining path.
+    the retained `_iterate_reconcile_loop` helper is a candidate for source-level
+    investigation, but no current reconcile CLI route enables its budget. Do
+    not use the removed `--mode reconcile` route as a reproduction.
   - The stub mixes two kinds of record: `reverted` records are deferred work,
     while `kept-by-impact` records are scope expansions that already landed
     and need review.
@@ -11170,14 +11172,14 @@ longer describes current work. It is retained only as dated carve-out context.
   one-line fix.
 - **Iterate:** default recipe (author + converge). Load-bearing: `create`,
   one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit --iterate` per step and the post-run
+  pass, then `run --commit` per step and the post-run
   `reconcile-code --all` tail.
 
   ```bash
   plan-tool create connectivity-pause-and-poll --iterate -y --from-existing plan-seeds/connectivity-pause-and-poll.md
   plan-tool detail connectivity-pause-and-poll --commit -y
   plan-tool completeness-audit connectivity-pause-and-poll --iterate --commit -y
-  plan-tool run connectivity-pause-and-poll --commit --iterate -y
+  plan-tool run connectivity-pause-and-poll --commit -y
   ```
 - **Status:** plan-seed authored at
   `plan-seeds/connectivity-pause-and-poll.md`; `create` not yet run.
@@ -11454,7 +11456,7 @@ longer describes current work. It is retained only as dated carve-out context.
   plan-tool create artifact-contention-handoff --iterate -y --from-existing plan-seeds/artifact-contention-handoff.md
   plan-tool detail artifact-contention-handoff --commit -y
   plan-tool completeness-audit artifact-contention-handoff --iterate --commit -y
-  plan-tool run artifact-contention-handoff --commit --iterate -y
+  plan-tool run artifact-contention-handoff --commit -y
   plan-tool reconcile-code artifact-contention-handoff --all
   ```
 - **Arc assignment:**
