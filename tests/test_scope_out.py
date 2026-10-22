@@ -3117,8 +3117,9 @@ def test_detail_undo_conflict_is_preserved_reported_and_other_undos_continue(
         raise RuntimeError("original failure")
 
     monkeypatch.setattr(scope_out, "write_plan", collide_then_fail)
-    with pytest.raises(NarrowError, match="rollback incomplete"):
+    with pytest.raises(NarrowError, match="rollback incomplete") as exc:
         apply_narrow(path, preview, repo_root=tmp_path)
+    assert f"{tmp_path / _detail("02-third.md")} → {third}" in str(exc.value)
     assert third.read_bytes() == b"Concurrent new detail.\n"
     assert second.read_bytes() == details[second]
     assert parse_plan(path).steps[1].title == "Second"

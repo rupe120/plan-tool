@@ -1157,7 +1157,7 @@ def _rollback(journal: list[tuple]) -> list[str]:
                 raise NarrowError(f"undo destination {destination} is occupied; preserved")
             source.rename(destination)
         except (OSError, NarrowError) as exc:
-            errors.append(f"{a} → {b}: {exc}")
+            errors.append(f"{source} → {destination}: {exc}")
     return errors
 
 

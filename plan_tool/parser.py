@@ -525,10 +525,11 @@ def write_plan(
     raised instead. Re-``parse_plan`` the file and re-apply the change to
     pick up the edit. Pass ``expect_unchanged=False`` to force the write
     (e.g. an intentional overwrite that supersedes whatever is on disk).
-    An optional ``publish`` receives validated UTF-8 bytes after this guard;
-    it must publish those bytes or raise. Scope-out uses it for guarded recovery.
     Body-only edits never trip this — only the frontmatter is compared,
     and the body below is always taken from the current on-disk file.
+
+    An optional ``publish`` receives validated UTF-8 bytes after this guard;
+    it must publish those bytes or raise. Scope-out uses it for guarded recovery.
     """
     p = Path(path)
     original = p.read_bytes().decode("utf-8")
