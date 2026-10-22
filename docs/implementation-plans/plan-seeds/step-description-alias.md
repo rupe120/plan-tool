@@ -67,3 +67,10 @@ Bare-plan steps use `title`, but the owner selects `description` for future auth
 ## Deferred
 
 Unrelated schema and format-version redesign remain outside #517.
+
+## References
+
+- `BACKLOG.md` #517 supplies the scope and the owner-confirmed policy exception.
+- `PLAN_FORMAT.md` owns step field semantics and authored frontmatter.
+- `DATA_CONTRACT.md` owns the format-version policy to amend narrowly.
+- `plan_tool/schema.py` and `plan_tool/parser.py` own current strict input validation and plan serialization; their mirrored tests pin the existing contracts.
