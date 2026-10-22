@@ -13625,6 +13625,9 @@ plan-tool reconcile-code roadmap-stack-layer --all
   Document that older installations reject newly emitted `description` keys;
   this exception does not permit arbitrary unknown fields or unrelated schema
   changes.
+- **Plan:** `docs/implementation-plans/2-step-description-alias.md`
+  (plan-authored; bare, execution pending).
+- **Seed:** `docs/implementation-plans/plan-seeds/archive/step-description-alias.replaced.md`.
 - **Principle:** write-for-the-human.
 - **Route:** plan · **Readiness:** ready · **Tier:** architect.
 - **Origin:** owner direction, 2026-10-22; preferred spelling and continued

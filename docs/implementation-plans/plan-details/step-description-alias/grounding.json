@@ -1,0 +1,23 @@
+{
+  "plan_slug": "step-description-alias",
+  "grounded_at": "2026-10-22T13:55:43Z",
+  "plan_fingerprint": "29a0b9648dc0bd95c4a73d8dbbdc4e72465f865abf5e8bbd48a208774af94d29",
+  "code_fingerprint": {
+    "BACKLOG.md": "0b1073bd64ef1cf6c6d46e657846ed9aaf85e3edd040eabfe3fca4be00096db2",
+    "DATA_CONTRACT.md": "d20c7fcad4b3d44f2df322253aad141d780b83c276bcc4033b55b8a60c87977e",
+    "PLAN_FORMAT.md": "74bb42b2533849c81085cec0ba336686eacbd2b20393a9e34f8393bd3fa00cd3",
+    "plan_tool/create.py": "a0a57cd1f98004d473af82ff83e1c599227b7297cc78a372e4182c1318b8dcd9",
+    "plan_tool/parser.py": "cdec0f71ef0521dbab416ffce88f8041b4629766d37083220f90fac2fcc3e776",
+    "plan_tool/schema.py": "80707690d228d015047cde832492f73a93679d32185305cf15714a9b1ae6d0b5",
+    "tests/test_create.py": "9ccd8696cfd672bbfa4e3bf0265ad00c4e4c707ffbdb49cc92b2db54dea8b217",
+    "tests/test_data_contract.py": "f4c4b17466cbc2f3eb46a48e4277a567e6ce226a5839945cdfde36cdb5684c3f",
+    "tests/test_detail.py": "ef54144b51eab2d113b1484d6df162d782da8df7b4e1ab6c3c73f64e427a3ee7",
+    "tests/test_jira.py": "0dd21b057017fa79c2f286021530799b867c0025e09883828c60a8c9ceacc0e6",
+    "tests/test_launcher.py": "2b8da801b65b12da1788b3190efc6b05f19669681888b7afa9b591d38c991da4",
+    "tests/test_parser.py": "0fb5968152a71a2599d050e5a6637f9cedd3228b5f47d1c9afb73d7fdb51ba90",
+    "tests/test_renderer.py": "fa87d433da5ab724aa9621d5470421d8de33b9a02b5ac4185ddcdb485d1e758a",
+    "tests/test_review.py": "cd19d212936659f40e42994267bb1d3dab0ff1b51fc3efa294ab855fc4f1c470"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

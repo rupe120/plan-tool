@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-step-description-alias.md`.
+> Preserved here for history; do not edit.
+
 # Prefer step description with legacy title compatibility
 
 Source: BACKLOG.md #517. Route: plan; tier: architect.
