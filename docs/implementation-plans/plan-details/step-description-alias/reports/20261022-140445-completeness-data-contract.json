@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-bed09ad3": {
+      "code_anchor": "plan_tool/schema.py:Step.title",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.title` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261022-140445-completeness"
+}
