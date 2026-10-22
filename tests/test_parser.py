@@ -536,17 +536,25 @@ class TestFormatValidationErrors:
         # A pure typo isn't a real field anywhere, so no misplacement hint.
         assert "belongs on" not in line
 
-    @pytest.mark.parametrize("step_text", ["", "    descripton: Work\n"])
-    def test_missing_step_text_names_preferred_and_legacy_keys_without_mutating_errors(self, step_text):
+    @pytest.mark.parametrize("step_text,missing", [
+        ("", True),
+        ("    descripton: Work\n", True),
+        ("    title: Work\n    descripton: typo\n", False),
+        ("    description: Work\n    descripton: typo\n", False),
+    ])
+    def test_step_text_diagnostics_separate_missing_from_unknown_keys_without_mutating_errors(self, step_text, missing):
         text = _concept_plan("").replace("    title: First\n", step_text)
         with pytest.raises(ValidationError) as caught:
             parse_plan_text(text)
         errors = caught.value.errors
         snapshot = deepcopy(errors)
         lines = format_validation_errors(errors)
-        assert "steps.0.description: Field required (legacy title is also accepted)" in lines
+        missing_line = "steps.0.description: Field required (legacy title is also accepted)"
+        assert (missing_line in lines) is missing
         assert errors == snapshot
-        assert any(err["loc"] == ("steps", 0, "title") for err in errors)
+        assert any(err["loc"] == ("steps", 0, "title") for err in errors) is missing
+        if not missing:
+            assert all("Field required" not in line for line in lines)
         if step_text:
             typo = next(line for line in lines if line.startswith("steps.0.descripton:"))
             keys = typo.split("(allowed: ", 1)[1].split(")", 1)[0].split(", ")
