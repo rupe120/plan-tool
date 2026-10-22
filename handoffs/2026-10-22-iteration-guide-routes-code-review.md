@@ -93,3 +93,26 @@ stay under the explicit follow-up entry.
 
 Full suite at `99ffa33e6`: 14,698 passed, 66 skipped in 64.75s. Affected tests
 pass again (58 in 0.80s). No runtime implementation changes are introduced.
+
+
+## Claude review 3
+
+Range `330441789..0ba7e8692`; actual built-in `code-review` Skill at high effort,
+Sonnet 5.5, session `20aa6f74-8c4f-41fd-9db2-4bc2a8a9f3e6`; CLI exits zero.
+Report: `.tmp/iteration-guide-routes.review-3.md`. No medium-or-higher finding;
+the reviewer explicitly classifies the pass as low-yield.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 low: ordinary-run iteration flags remain in backlog | Fixed: remove ineffective flags from the enumerated ordinary-run recipes and replace the wizard's loop claim with fixture coverage and post-run review. |
+| 2 low: hand-written run synopses list accepted but ineffective flags | Deferred with existing help-surface follow-up; add README and command reference to its Files list so help and synopses move together. |
+| 3 generated pointer repeats deferred issue | Already tracked; no new finding. |
+| 4 optional: restore iteration to run-oriented hints | Declined: iteration is documented at its authoring verbs, not ineffective run flags. |
+| 5 optional: show literal commit command | Declined: workflow explicitly requires verifying and committing separately; reconcile-code accepts no commit flag. |
+| 6 optional: capital letter after colon | Declined: no behavior/interpretation defect; avoid installer churn for typography. |
+
+The third sweep covers ordinary-run ineffective iteration recipes, not only
+reconcile aliases. Tracked Claude files byte-match their canonical sources;
+review 3 independently verifies both copies. Full suite at `0ba7e8692`:
+14,698 passed, 66 skipped in 63.72s; affected tests 58 passed in 0.67s.
+Convergence window: one completed low-yield pass; independent confirmation pending.
