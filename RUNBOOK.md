@@ -666,7 +666,7 @@ step decomposition, external references, and canonical body-section
 synthesis. Pass the seed straight to `create --from-existing` —
 no preprocessing step is needed. Sources already in the strict
 canonical step layout (`## Steps` + `### N. Title` + `Files:`
-bullets — see [`PLAN_FORMAT.md`](PLAN_FORMAT.md#canonical-step-layout))
+bullets — see [`PLAN_FORMAT.md`](PLAN_FORMAT.md#canonical-step-layout-input-shape-for-create---from-existing))
 have their steps extracted deterministically, skipping the
 step-decomposition Claude round-trip.
 
