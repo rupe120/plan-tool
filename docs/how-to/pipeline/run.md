@@ -99,7 +99,8 @@ when the condition holds.
      │
      ├─[11] TEST-AUTHORING gate ........................... [BLOCK] no test file changed → status_note,
      │        SKIP-if not (enforcement-on & feature/refactor)          return rc=1, plan NOT advanced
-     │        compares git porcelain before/after the call             (non-git tree → can't tell → SKIP)
+     │        combines working-tree delta and commits since pre-call HEAD
+     │        excludes every path already dirty before the call
      │
      ├─[12] PLAN-LEVEL test_command gate ................... [BLOCK] rc≠0 → write status_note, return rc,
      │        SKIP-if plan has no `test_command:`                     plan NOT advanced
@@ -177,6 +178,15 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
 | **Files modified** | mutating mode, if step declares files | yes | "no edits applied": none of the declared files changed (content-compared; an identical rewrite counts as unchanged); `status_note` written, rc=1, plan not advanced. Runs before the test-authoring gate so the failure is not misnamed as a missing test. `--accept` certifies a step whose files already hold the intended content (commit them first; accept needs a clean tree), but only when the plan has a `test_command` or the step has a `gate` (otherwise nothing certifies it). A directory or unreadable `files:` entry has no content digest and counts as modified |
 | **`## Validation` present** | mutating mode | no — warn | "step didn't declare what it tested" |
 | **`creates:` on disk** | mutating mode, if step has `creates:` | no — warn | "N creates entries missing"; step still advances |
+
+The test-authoring gate combines newly dirty paths with added or modified
+paths between the pre-call HEAD and the post-call HEAD. A backend may commit
+its tests before returning; those commits still provide authorship evidence.
+Paths already dirty before the call remain excluded from both sources. An
+unchanged committed test or a committed deletion does not satisfy the gate.
+Without a readable pre-call HEAD (including an unborn repository), only the
+existing working-tree evidence is available. This gate checks file authorship,
+not coverage quality; test commands and per-step gates still run afterward.
 
 ### Conditional gates (only when configured)
 
