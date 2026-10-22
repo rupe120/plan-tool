@@ -87,6 +87,35 @@ def changed_paths(repo_root: Path) -> set[str]:
     return changed if changed is not None else set()
 
 
+def head_revision(repo_root: Path) -> Optional[str]:
+    """Return the pre-call commit, or None for unreadable/unborn repositories."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "HEAD^{commit}"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True,
+        )
+    except OSError:
+        return None
+    return proc.stdout.strip() if proc.returncode == 0 else None
+
+
+def committed_changed_paths(repo_root: Path, baseline: Optional[str]) -> set[str]:
+    """Added/modified destination paths between a known pre-call commit and HEAD."""
+    if baseline is None:
+        return set()
+    try:
+        proc = subprocess.run(
+            ["git", "diff", "--name-only", "-z", "--no-renames",
+             "--diff-filter=ACMRT", baseline, "HEAD", "--"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True,
+        )
+    except OSError:
+        return set()
+    return set(filter(None, proc.stdout.split("\0"))) if proc.returncode == 0 else set()
+
+
 def make_partial_mutation_retry_guard(
     spawn_cwd: Optional[Path],
     *,
