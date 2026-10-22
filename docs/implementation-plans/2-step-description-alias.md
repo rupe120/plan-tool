@@ -21,6 +21,7 @@ steps:
   - tests/test_parser.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/step-description-alias/01-accept-step-description-legacy-title.md
   status: current
 - id: 2
   title: Emit description from both plan serializers while preserving guarded frontmatter
