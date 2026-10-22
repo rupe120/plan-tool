@@ -131,14 +131,15 @@ Existing bug-backlog entries own that instrumentation gap.
 
 ## Skill observations
 
-All three shipped skill routers carry the same stale quick recipes: the
-“complete as possible” path skips the bare audit, the summary says detail
-iteration defaults on, and failed-step recovery says to mark the step done
+Provenance, 2026-10-21 before repair `31fdf2f22`: all three skill routers
+carried the same stale quick recipes. The
+“complete as possible” path skipped the bare audit, the summary said detail
+iteration defaulted on, and failed-step recovery said to mark the step done
 manually. The actual run follows the canonical directives: both audit gates,
 one-shot detail, and tool-mediated `run --accept` if recovery is needed.
-The confirmed instruction contradictions are filed separately in
-[the bug backlog](../../BUG_BACKLOG.md#installed-skill-quick-recipes-contradict-the-required-audit-order-detail-default-and-failed-step-recovery);
-no skill behavior or router content changes in this conversion.
+The [separate skill repair record](../../handoffs/2026-10-21-skill-router-recipes-code-review.md)
+owns their correction and validation. The demo conversion itself changes no
+skill behavior or router content.
 
 ## Retained artifacts and repository checks
 

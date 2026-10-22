@@ -17,7 +17,7 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | --- | --- | --- |
 | 1 | Content preparation — complete (#513) | PR #123 is merged; its selected bytes match the independently verified 2,588-path prose candidate. Preserve the selection and verification evidence when preparing a release. |
 | 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
-| 3 | #508 and the onboarding/workflow-consistency bug | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
+| 3 | #508; recipe consistency satisfied by the [skill-router repair](../../../handoffs/2026-10-21-skill-router-recipes-code-review.md) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
 | 4 | #509, #511, #512 and existing #377 | Hosting selection, skill installation/refresh, model guidance and seed authoring support the consuming repository. These are separate bounded items, not one combined implementation. |
 | 5 | #510, then #515 | A skill-first walkthrough works in a fresh consuming repository, with prerequisites resolved or explicitly dispositioned. |
 

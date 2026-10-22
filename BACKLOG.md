@@ -13639,8 +13639,9 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Walk the instructions in a consuming repository; check links and
-  command examples. Complete #377 seed-authoring support and the workflow-consistency
-  bug before calling the walkthrough complete.
+  command examples. Complete #377 seed-authoring support before calling the walkthrough complete.
+  The recipe-consistency prerequisite is satisfied by the
+  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md).
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -13751,8 +13752,10 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Record environment, commands, assistant/backend/model, observations
-  and limitations. Require #377, #508–#514 and the workflow-consistency bug to be
-  resolved or explicitly dispositioned before public onboarding sign-off; missing
+  and limitations. Require #377 and #508–#514 to be
+  resolved or explicitly dispositioned before public onboarding sign-off. The
+  recipe-consistency prerequisite is satisfied by the
+  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md); missing
   credentials remain an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.

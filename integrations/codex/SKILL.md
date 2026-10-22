@@ -73,10 +73,14 @@ Recovery section (in the plan-tool repo).
 When you (the agent) invoke plan-tool on the user's behalf, treat every run as
 **headless**: close stdin and pass `-y`.
 
+These are independent headless syntax examples, not a stage sequence. For
+sequential authoring, use the completeness recipe below and the two audit
+gates in DIRECTIVES.md; review and commit judged corrections between stages.
+
 ```bash
 plan-tool create <slug> --from-existing /tmp/seed.md --output-dir docs/implementation-plans -y < /dev/null
-plan-tool detail <slug> -y < /dev/null
-plan-tool reconcile-plan <slug> -y < /dev/null      # -y auto-applies every recommendation
+plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first
+plan-tool reconcile-plan <slug> -y < /dev/null # pre-execution only; -y auto-applies every recommendation without judgment
 ```
 
 **Critical:** never pipe an infinite empty-line source (`yes "" |`) — the
@@ -103,15 +107,15 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "review the code I just wrote for X" | `plan-tool run X --mode check` |
 | "add tests / docs / security review for the current step" | `plan-tool run X --mode test\|document\|security` |
 | "audit every done step in plan X" | `plan-tool verify-all --rollup X` |
-| "did step N actually get implemented?" | `plan-tool detail X --reconcile --step N` (plan side) or `plan-tool reconcile-code X --step N` (code side) |
+| "did step N actually get implemented?" | `plan-tool run X --step N --mode check` — request report-only correctness and implementation-mismatch review. Judge the evidence against the step; a clean report alone does not prove delivery. |
 | "make the code match the plan" | `plan-tool reconcile-code X --step N` |
-| "make the plan match the code" | `plan-tool detail X --reconcile --step N` |
-| "make the plan match the code for every remaining step" | `plan-tool detail X --reconcile --all` (sweeps every not-yet-done step; done steps are skipped) |
-| "is plan X still current / refresh it against the code" | `plan-tool reconcile-plan X --refresh` (cheap fingerprint gate: reconcile only the drifted files, no `codex exec` call unless code drifted) |
-| "reconcile printed `[REDIRECT]` — is it broken?" | No. `reconcile-code` (a.k.a. `run --reconcile`) found a plan-rooted issue; switch to `detail --reconcile` for that step. Do not retry. |
+| "make the plan match the code" | Before execution only: `plan-tool detail X --reconcile --step N`. After execution, preserve plan authority; judge a code shortfall or correct a false plan claim through a session-directed edit. |
+| "make the plan match the code for every remaining step" | Before execution only: `plan-tool detail X --reconcile --all` (skips done steps). Do not use plan-mutating reconciliation on executed work. |
+| "is plan X still current / refresh it against the code" | Before execution only: `plan-tool reconcile-plan X --refresh` (fingerprint-gated; no backend call on no drift). For executed work, use plan-canonical code review/reconciliation or `annotate` to seed the next iteration. |
+| "reconcile printed `[REDIRECT]` — is it broken?" | Read the saved redirect and judge its root cause. Before execution, plan-side reconciliation may be appropriate. After execution, preserve the plan’s authority: correct a false plan claim through a session-directed edit or surface a scope decision; do not automatically invoke `detail --reconcile` or `reconcile-plan`. See DIRECTIVES.md’s reconciliation directionality rule. |
 | "show me the prompt without running it" | add `--dry-run` |
 | "this run feels slow / hung" | `plan-tool runs list --slug X`, then `plan-tool runs show X/<run_id>`; or `cat .plan-tool/runs/X/in-flight.json` live |
-| "make the plan as complete as possible" | `plan-tool create <slug> --iterate -y < /dev/null`, then `plan-tool detail <name> -y < /dev/null` (one-shot; not `detail --iterate`), then `plan-tool completeness-audit <name> --iterate` (run grade, the default for both `detail` and the audit, so the audit grounds on the bundle `detail` wrote; `--grade jira` cannot combine with `--iterate`) |
+| "make the plan as complete as possible" | Commit a clean baseline before each stage. Ground and review a seed, then `plan-tool create <slug> --from-existing <seed> --iterate -y < /dev/null` → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (bare) → `plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first` (one-shot) → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (detail-grounded). Read each report and apply judged conceptual corrections through the session; commit corrections before re-auditing and continue under the canonical convergence rules. Preserve user review/continuation boundaries and stop before implementation. |
 | "I have a big doc — make a plan from it" | `plan-tool create <slug> --from-existing <path>` (a distill first-pass reorganizes the seed; if it spans several independent efforts, create proposes a multi-plan split and writes a `<slug>-split-proposal.md` worksheet instead of a plan) |
 | "I have a project-sized concept, not a single feature" | `plan-tool roadmap <slug> --from-existing <concept.md>` — see DIRECTIVES.md's Roadmap section for artifact layout, resume, and refusal semantics |
 | "reopen a retained roadmap feedback item" | `plan-tool roadmap <slug> --reopen-ledger-feedback ITEM_ID` — see DIRECTIVES.md's Roadmap section |
@@ -122,7 +126,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "run plan X on its own branch" / "bind X to branch B" | `plan-tool attach-branch X B`, then `plan-tool run X --switch-branch` for the unowned-branch nudge — enable branch-awareness first (see the note below) |
 | "run two plans at once" / "work on plan B without disturbing plan A" | `plan-tool worktree add B`, then `cd` into the printed path and run there — an isolated worktree per plan (caveats in docs/OPERATIONS.md's Worktrees section / RUNBOOK.md's parallel-worktrees workflow section, both in the plan-tool repo) |
 | "run several steps of X in a row" | `plan-tool run X --all --commit` (or step-by-step, `--commit` each time) — keeps the tree clean between steps |
-| "a `run` step failed its own tests / the test-authoring gate blocked a step whose tests exist" | do **not** hand-fix and bare re-run, and do not pass `--skip-merge-check`: fix the step's own test defect by hand, run the full suite, commit the step, mark it `done`, then `run --commit` the rest — see DIRECTIVES.md's "When a `run` step's own tests fail" |
+| "a `run` step failed its own tests / the test-authoring gate blocked a step whose tests exist" | Do not hand-fix and bare re-run or use `--skip-merge-check`. For a confirmed test defect, fix it, run the full suite and commit code/tests without the plan. Then `plan-tool run X --step N --accept --commit` runs the acceptance gates and advances only on success; continue remaining steps with `run --commit`. Never hand-edit the status. If the implementation itself is wrong or no test/gate can certify acceptance, follow DIRECTIVES.md’s “When a `run` step’s own tests fail.” |
 | "the plan finished running / every step is green" | not done yet — drive `reconcile-code` to convergence, then `/code-review` to convergence; see DIRECTIVES.md's session-directed convergence loop |
 | "completeness flagged a plan-correctness/plan-completeness gap" (session-driven) | do **not** run `completeness-apply` — apply it by hand; see DIRECTIVES.md's session-directed convergence loop |
 | "fix the bare-audit findings" | triage each finding first: R roadmap conflict, B plan contract, P owner decision, D detail mechanism, I settled by code or spike, T tool artifact. Edit the plan body only for B, from the finding's plan-altitude restatement, not its `Fix` line; see DIRECTIVES.md's Gate 1 |
@@ -132,8 +136,10 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 
 ## Subcommands at a glance
 
-The authoring pipeline is `create → detail → audit → (run \| jira)`, with
-`verify-all` as an optional CI gate.
+The authoring pipeline is
+`create → bare audit → detail → detail-grounded audit → (run \| jira)`,
+with `verify-all` as an optional CI gate. Follow the shared
+directives for judged corrections, user review and continuation.
 
 | Group | Subcommands | Calls codex? |
 |---|---|---|
@@ -141,7 +147,7 @@ The authoring pipeline is `create → detail → audit → (run \| jira)`, with
 | **Discovery** | `list`, `list --status` (cached annotate rollup), `status <name>`, `validate <name>` | No |
 | **Authoring** | `create <slug>`, `detail <name>`, `split <name> --step N --into "..." --into "..."` (split one step into named sub-steps, author them, re-audit), `merge <name> --steps N --steps M` (fold a contiguous set of steps into one, re-author it, re-audit), `scope-out <name> --step N` (carve an over-packed step out into a `create --from-existing` forward-seed and narrow the plan; recommend-only, `--apply` to mutate) | Yes |
 | **Annotate** (forward seed) | `annotate <path-or-glob>...` — judge old plans against current code, emit `<stem>.annotated.md` (verbatim + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED/NEEDS-REVIEW plus grounding) and a carryover `<stem>.seed.md` for the next `create --from-existing`; batch runs end with a coverage/grounding summary table; read-only on sources except opt-in `--archive` (numbered on archive collisions). `--iterate` is rejected; iterate the follow-up `create`, not annotate. | Yes |
-| **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (edit plan; best for older/stale plans, or as a supplement to `completeness-audit`), `reconcile-code <name>` (edit code), `detail <name> --reconcile` (per-step, plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip `codex exec` on no drift) | Yes (walk/refresh-no-drift: no) |
+| **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip `codex exec` on no drift) | Yes (walk/refresh-no-drift: no) |
 | **Audit · verify** (read-only) | `verify-all <name> --rollup` (verdict), `verify-all <name> --mode <m>` (sweep), `run <name> --mode <review>` | Yes |
 | **Audit · completeness** (design) | `completeness-audit <name>`, `completeness-apply <name>` (interactive-review surface — see DIRECTIVES.md's session-directed convergence loop before calling it from a session) | Yes |
 | **Execution** | `run <name>` (advances plan state on success) | Yes (one per step) |
@@ -159,9 +165,15 @@ correct + complete, grounded in the per-step detail bundle + code at HEAD
 semantic review of the plan against the code. When both correctness and
 completeness findings exist, correctness renders first.
 
-`--iterate` (on by default for `create`/`detail`; opt-in for the two
-`--reconcile` forms) wraps a write in a convergence loop and exits non-zero on
-budget exhaustion so CI can gate. See the README for the loop semantics.
+`create` iterates by default. `detail` defaults to a one-shot write; do not
+opt it into iteration unless the user asks. Pass `--iterate` explicitly to
+`completeness-audit`. Use iteration flags only where the invocation accepts them:
+`detail --reconcile` cannot combine with `--iterate`, and standalone
+`reconcile-plan` and `reconcile-code` do not accept that flag. Completed loops can exit 0 with unresolved findings or an
+exhausted budget. Read saved findings, stop reason and audit qualification;
+for `completeness-audit` CI gating, use its supported `--fail-on-findings` flag.
+A successful exit alone does not establish convergence. See DIRECTIVES.md and
+the repository’s `docs/ITERATION.md` for command-specific behavior.
 
 **Maintenance note:** when adding a subcommand, update these together:
 - add or extend the owning command module's `register(subparsers) -> dict[str,

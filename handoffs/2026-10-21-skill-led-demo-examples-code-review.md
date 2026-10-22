@@ -32,7 +32,7 @@ between narrative user-review checkpoints and assistant-reviewed batch artifacts
 | --- | --- |
 | Seed excerpt uses `Verification` instead of the canonical `Testing` heading | **fixed `e9bf52e68`** — the excerpt now demonstrates the heading SEED_FORMAT.md requires for ingestion; identifier/vocabulary review finds no sibling seed instance in the changed guides. |
 | Pre-existing RUNBOOK fragment does not resolve to the canonical step layout heading | **fixed `49311e1a1`** — the link now uses the actual heading slug. Final accuracy review checks the source heading and all 201 fragment targets; no workflow or logic changes. |
-| Three quick-recipe contradictions repeat across all shipped skill routers | **tracked [BUG_BACKLOG.md](../BUG_BACKLOG.md#installed-skill-quick-recipes-contradict-the-required-audit-order-detail-default-and-failed-step-recovery)** — bare audit omitted, detail iteration default misstated, manual done-state recovery suggested. Shared directives and command help establish the correct behavior; installer coverage does not pin the wrong claims. No router fix belongs to this conversion. |
+| Three quick-recipe contradictions repeat across all shipped skill routers | **fixed `31fdf2f22` in the [separate skill repair](2026-10-21-skill-router-recipes-code-review.md)** — bare audit omitted, detail iteration default misstated, manual done-state recovery suggested. Shared directives and command help establish the correct behavior; installer coverage does not pin the wrong claims. No router fix belongs to this conversion. |
 | Nested backend probe cannot initialize in the restricted step context | **fixed `81a83f5bb`** — parent-session access completes the real rehearsal and replaces the global blocker claim with context-specific failure/recovery provenance. This is an execution-context recovery, not a change to backend implementation. |
 | Rehearsal granularity heuristic calls three files unrelated | **declined** — one small feature owns initialization, browser wiring and markup. The INFO/limited-confidence advisory remains visible; both audit reports retain `advisory-only`, confirmed/current, zero conceptual findings. No split or clean-audit claim is made. |
 
@@ -71,6 +71,7 @@ story without warnings, and the rehearsal's single baseline Node test passes.
 Neither suite result is described as proof of an unimplemented feature.
 
 The review loop closes as converged for the implemented documentation scope.
-The tracked skill-router correction remains separate work. Remote demo ref
+The skill-router correction has its own repair and review record; it is separate
+from this demo implementation. Remote demo ref
 replacement, release publication, browser testing and any fresh TTRPG run retain
 their explicit boundaries; no merge or publication is performed by this review.
