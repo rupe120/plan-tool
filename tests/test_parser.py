@@ -25,6 +25,7 @@ from plan_tool import (
     write_plan,
 )
 from plan_tool.parser import (
+    ConcurrentModificationError,
     UnsupportedPlanFormatVersionError,
     _require_supported_plan_format_version,
     parse_body_sections,
@@ -2252,3 +2253,40 @@ def test_serialization_preserves_plan_and_feature_titles(tmp_path, serializer):
     ]
     assert all("title" not in step for step in raw["steps"])
     assert plan.model_dump() == before
+
+
+def test_custom_plan_publisher_receives_validated_bytes_and_refreshes_provenance(tmp_path):
+    path = tmp_path / "plan.md"
+    path.write_bytes(_concept_plan().replace("\n", "\r\n").encode())
+    plan = parse_plan(path)
+    calls = []
+
+    def publish(target, payload):
+        calls.append((target, payload))
+        target.write_bytes(payload)
+
+    write_plan(path, plan, publish=publish)
+    assert calls == [(path, path.read_bytes())]
+    assert path.read_bytes().endswith(b"# Exact body\r\n\r\nKeep this prose.\r\n")
+    write_plan(path, plan)  # successful custom publication refreshes the guard
+
+
+@pytest.mark.parametrize("invalid", ["concurrent", "schema", "format"])
+def test_custom_plan_publisher_cannot_bypass_existing_validation(tmp_path, invalid):
+    path = tmp_path / "plan.md"
+    path.write_text(_concept_plan())
+    plan = parse_plan(path)
+    if invalid == "concurrent":
+        path.write_text(path.read_text().replace("priority: medium", "priority: high"))
+    elif invalid == "schema":
+        plan.steps.append(plan.steps[0].model_copy())
+    else:
+        plan.format_version = 999
+    before = path.read_bytes()
+
+    def unexpected_publish(*args):
+        pytest.fail("invalid/stale plans must not reach the publisher")
+
+    with pytest.raises((ConcurrentModificationError, ValidationError)):
+        write_plan(path, plan, publish=unexpected_publish)
+    assert path.read_bytes() == before
