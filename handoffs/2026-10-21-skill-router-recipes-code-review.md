@@ -7,7 +7,7 @@
 | Scope | Claude, Codex and Cursor routers; resolved backlog and evidence links |
 | Runtime changes | None |
 | Validation | Eight parent parser checks; 33 affected tests pass; full suite at `8fcf1b1f7`: 14,698 passed, 66 skipped in 61.41s |
-| Review state | Codex reviews 3 and 4 are clean; actual Claude Code review convergence is pending |
+| Review state | Actual Claude Code passes 2–3 find no router correctness defect; record cleanup verified, see closure |
 
 ## Property and sites
 
@@ -161,8 +161,34 @@ findings below govern (one low-medium, four low, one nit).
 | A6 nit: per-pass pending line reads as current | **fixed** — explicitly label the pass-1 outcome. |
 
 Router convergence: passes 2 and 3 independently report no router correctness
-defect, with residual advisory limitations dispositioned. Supporting-record
-convergence remains pending verification of the reference sweep; it is not
-represented as a wholly clean branch review. The latest findings predominantly
+defect, with residual advisory limitations dispositioned. At the pass-3 snapshot, supporting-record
+verification remained pending; closure below records the completed sweep. This
+is not represented as a wholly clean branch review. The latest findings predominantly
 concern the repair's own record edits. Finish this bounded application and
 verify the named properties rather than repeatedly elaborating review prose.
+
+
+## Claude review closure
+
+The actual Claude Code route comprises three completed high-effort Skill
+invocations, with separate sessions, exact ranges and saved findings above.
+Passes 2 and 3 independently find no router correctness defect after the final
+router change (`8fcf1b1f7`); remaining model-judgment limitations and optional
+wording suggestions have explicit dispositions. This is router convergence,
+not a claim that those reports contain zero findings across every record.
+
+The final supporting-record correction is committed as `59796a8ad`. Verification
+confirms all four live prerequisite replacements resolve to this ledger, the
+removed-entry heading/vocabulary has no remaining live gate in BACKLOG,
+BUG_BACKLOG or the backlog arcs, and all three routers carry the clean-tree,
+every-recommendation and delivery-evidence clarifications. `git diff --check`
+is clean. The installed Codex skill and directives byte-match current sources.
+The final record-only sweep changes no router or runtime behavior, so the fresh
+33-test and 14,698-test results above remain the behavioral evidence.
+
+Stop under the direct-change self-seeded-edit exit: later findings predominantly
+concern these repair records; complete their bounded application and verify the
+properties instead of resampling unchanged routers. No further full review is
+claimed after `59796a8ad`, and no fully clean whole-branch Claude verdict is
+claimed. All reported findings have dispositions. The omission in the earlier
+execution is corrected; the skill already contains the Claude review requirement.
