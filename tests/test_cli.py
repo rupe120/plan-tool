@@ -4384,12 +4384,8 @@ def _iter_force_tty(monkeypatch: pytest.MonkeyPatch, value: bool) -> None:
 # ---------------------------------------------------------------------------
 # Step 5: --iterate / --max-iterations / --iteration-budget CLI flags.
 #
-# These exercise the argparse surface for ``create`` / ``detail`` / ``run``
-# and the shared ``_resolve_iterative_budget`` helper. Tests monkeypatch
-# the orchestrator (or ``_build_run_budget`` for ``run``) and capture the
-# resulting ``IterativeBudget`` to confirm the three flags propagate end-
-# to-end, the disabled-by-default behaviour holds without flags, and
-# zero/negative validation surfaces as rc=1/2 with a friendly error.
+# These exercise argparse and the shared budget resolver. Authoring tests
+# capture orchestrator budgets; run tests pin compatibility-value validation.
 # ---------------------------------------------------------------------------
 
 

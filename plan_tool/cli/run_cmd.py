@@ -1975,7 +1975,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_MAX_ITERATIONS,
         dest="max_iterations",
         metavar="N",
-        help="compatibility iteration count; no run loop executes. Existing value validation still applies.",
+        help="compatibility iteration count; no run loop executes. Value validation applies to ordinary and --all runs.",
     )
     iterate_parent.add_argument(
         "--iteration-budget",
@@ -1983,7 +1983,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_ITERATION_BUDGET_SECONDS,
         dest="iteration_budget",
         metavar="SECONDS",
-        help="compatibility progress budget; run has no iteration deadline. Existing value validation still applies.",
+        help="compatibility progress budget; run has no iteration deadline. Value validation applies to ordinary and --all runs.",
     )
     iterate_parent.add_argument(
         "--time-budget",
@@ -1991,7 +1991,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=None,
         dest="time_budget",
         metavar="SECONDS",
-        help="compatibility loop time budget; this option does not limit run execution time. Existing flag and PLAN_TOOL_TIME_BUDGET value validation still applies.",
+        help="compatibility loop time budget; this option does not limit run execution time. Flag and PLAN_TOOL_TIME_BUDGET value validation applies to ordinary and --all runs.",
     )
     iterate_parent.add_argument(
         "--max-stall-rounds",
@@ -1999,7 +1999,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_MAX_STALL_ROUNDS,
         dest="max_stall_rounds",
         metavar="N",
-        help="compatibility stall count; run has no iteration stall detector. Existing value validation still applies.",
+        help="compatibility stall count; run has no iteration stall detector. Value validation applies to ordinary and --all runs.",
     )
     iterate_parent.add_argument(
         "--allow-drift",

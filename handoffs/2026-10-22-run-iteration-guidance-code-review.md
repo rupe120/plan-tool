@@ -99,3 +99,36 @@ Full suite after these corrections: 14,717 passed, 67 skipped in 63.96s.
 Guidance-normalized AST comparison against the base matches for all six changed
 production Python modules (docstrings, help keyword values and warn arguments
 excluded); comments receive direct diff review.
+
+## Claude review 3 and closing disposition
+
+Range `e4ecd6e8b..488302fd5`; actual built-in `code-review` Skill at high
+ effort, Sonnet 5.5, session `c04a454e-d2fb-44cc-972b-4ead3d9b65d7`;
+CLI exits zero. Report `.tmp/run-iteration-guidance.review-3.md`. The Skill
+returns six candidates; supervising verification checks dispatch/callers/tests
+and independently repeats the six-module normalized AST comparison. No tests
+run inside this review; full-suite evidence above belongs to the reviewed tree.
+
+- D1 confirmed low: budget value validation runs on ordinary and `--all` paths,
+  not early-return accept/reconcile paths. Qualify all four help clauses and
+  regenerate the reference; preserve every validation branch.
+- D2 confirmed low: finish the retained-wrapper/removed-alias comment sweep in
+  the package header, tests/test_cli.py and both reconcile helper docstrings.
+  Package exports do not redirect handler globals; describe command-module
+  lookup ownership without replacing the old universal claim with another.
+  Keep the dated coverage baseline as provenance. No dormant code is removed.
+- Warning wording, silent all-step dispatch, synopsis selection and diagram
+  precision remain preferences or earlier dispositions. Disabled-budget code
+  removal remains outside scope. Backlog #517 remains tracking-only.
+
+Reviews 2 and 3 contain only low-severity guidance findings and no material
+correctness/completeness gap. This is **low-yield convergence, not a clean
+review**. The closing application above completes their prose corrections;
+review 3 reviews `488302fd5`, not the subsequent closing prose/evidence commit.
+Under the repository's stop-auditing-your-edits rule, no additional full review
+is launched merely to resample this advisory wording tail. Architect-tier PR
+review remains required for the protected policy change.
+
+Closing validation: full suite 14,717 passed, 67 skipped in 59.06s; generated
+reference check included. Six guidance-normalized production ASTs still match
+the base after the closing application. `git diff --check` passes.

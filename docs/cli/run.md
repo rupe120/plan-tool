@@ -17,10 +17,10 @@ plan-tool run [-h] [-y] [--max-iterations N] [--iteration-budget SECONDS] [--tim
 | Option | Default | Description |
 | --- | --- | --- |
 | `-y`, `--yes` | off | auto-accept Y/N confirmation prompts (proceed with the offered action without asking). Useful for scripted/unattended runs. |
-| `--max-iterations` `N` | `3` | compatibility iteration count; no run loop executes. Existing value validation still applies. |
-| `--iteration-budget` `SECONDS` | `1800` | compatibility progress budget; run has no iteration deadline. Existing value validation still applies. |
-| `--time-budget` `SECONDS` | — | compatibility loop time budget; this option does not limit run execution time. Existing flag and PLAN_TOOL_TIME_BUDGET value validation still applies. |
-| `--max-stall-rounds` `N` | `2` | compatibility stall count; run has no iteration stall detector. Existing value validation still applies. |
+| `--max-iterations` `N` | `3` | compatibility iteration count; no run loop executes. Value validation applies to ordinary and --all runs. |
+| `--iteration-budget` `SECONDS` | `1800` | compatibility progress budget; run has no iteration deadline. Value validation applies to ordinary and --all runs. |
+| `--time-budget` `SECONDS` | — | compatibility loop time budget; this option does not limit run execution time. Flag and PLAN_TOOL_TIME_BUDGET value validation applies to ordinary and --all runs. |
+| `--max-stall-rounds` `N` | `2` | compatibility stall count; run has no iteration stall detector. Value validation applies to ordinary and --all runs. |
 | `--allow-drift` | off | compatibility flag; run does not use an iteration live-edit drift guard. |
 | `--no-auto-reconcile-on-drift` | on | compatibility flag; run has no iteration-triggered auto-reconcile pass. |
 | `--no-triage` | on | compatibility flag; run has no iterative finding-apply triage. |
