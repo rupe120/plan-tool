@@ -13604,8 +13604,10 @@ plan-tool reconcile-code roadmap-stack-layer --all
   `steps[].title` remain readable and usable throughout the pipeline.
 - **In scope:** step-field input aliases, authoring and serialization contracts,
   relevant prompts, format documentation and consumers that depend on that
-  field. Define deterministic handling when both keys occur, including
-  conflicting values, without silently losing step content.
+  field. Narrowly amend the format policy to allow this compatible alias
+  without a version bump or an upgrade requirement. Define deterministic
+  handling when both keys occur, including conflicting values, without
+  silently losing step content.
 - **Out of scope / Non-goals:** migrating existing plans; renaming plan or
   feature titles; changing step meaning, execution order or detail requirements;
   unrelated schema cleanup.
@@ -13619,6 +13621,15 @@ plan-tool reconcile-code roadmap-stack-layer --all
   authoring examples and format-contract tests for the preferred spelling.
 - **Stop / defer:** surface any required format-version or migration decision
   before broadening this into a rewrite of stored plans or internal step APIs.
+- **Decision:** owner-confirmed 2026-10-22: retain format version 1 and
+  read/write compatibility for existing plans without explicit upgrades.
+  Document that older installations reject newly emitted `description` keys;
+  this exception does not permit arbitrary unknown fields or unrelated schema
+  changes.
+- **Plan:** `docs/implementation-plans/2-step-description-alias.md`
+  (plan-authored; 4/4 detailed, both audit gates confirmed clean; execution pending).
+- **Seed:** `docs/implementation-plans/plan-seeds/archive/step-description-alias.replaced.md`.
+- **Principle:** write-for-the-human.
 - **Route:** plan · **Readiness:** ready · **Tier:** architect.
 - **Origin:** owner direction, 2026-10-22; preferred spelling and continued
   acceptance of `title` are settled requirements.
