@@ -352,3 +352,58 @@ def test_first_publication_failure_leaves_both_files(tmp_path: Path) -> None:
     assert result.status is SyncStatus.PUBLICATION_FAILURE
     assert path.read_bytes() == old_plan
     assert concepts_path(path).read_bytes() == old_sidecar
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("with_snapshot", [False, True])
+def test_sync_preserves_unowned_bytes_and_replaces_real_owned_section(
+    tmp_path: Path, newline: str, with_snapshot: bool,
+) -> None:
+    path = tmp_path / "sync.md"
+    source = _write_plan_with_fenced_owned_heading(path).replace("\n", newline)
+    path.write_bytes(source.encode())
+    plan = parse_plan(path)
+    tree = _tree(_node("Delayed", "defer", order=0, step_id="2"))
+    _persist_tree(path, tree)
+    changed = source.replace("Keep custom content.", "Concurrent custom content.")
+    path.write_bytes(changed.encode())
+
+    result = synchronize_concepts(
+        path, plan, tree, tree,
+        source_plan_text=source if with_snapshot else None,
+    )
+
+    assert result.status is SyncStatus.SUCCESS
+    updated = path.read_bytes()
+    custom = changed[changed.index("# Sync"):changed.rindex("## Deferred")]
+    tail = changed[changed.index("## Tail"):]
+    assert custom.encode() in updated
+    assert tail.encode() in updated
+    sections = split_body_sections(updated.decode().split("---\n", 2)[2], ignore_fenced_code=True)
+    assert sections["deferred"] == "- Delayed — Why Delayed"
+    assert json.loads(concepts_path(path).read_text())["plan_fingerprint"] == compute_plan_fingerprint(path)
+    # Publication refreshes provenance for the original in-memory snapshot.
+    from plan_tool.parser import write_plan
+    write_plan(path, plan)
+    assert tail.encode() in path.read_bytes()
+
+
+@pytest.mark.parametrize("newline", ["\r\n", "\r"])
+def test_sync_rejects_concurrent_owned_edit_without_normalizing_bytes(
+    tmp_path: Path, newline: str,
+) -> None:
+    path = tmp_path / "sync.md"
+    source = _write_plan(path).replace("\n", newline)
+    path.write_bytes(source.encode())
+    plan = parse_plan(path)
+    tree = _tree(_node("Delayed", "defer", order=0))
+    _persist_tree(path, tree)
+    changed = source.replace("Old", "Concurrent").encode()
+    path.write_bytes(changed)
+    sidecar = concepts_path(path).read_bytes()
+
+    result = synchronize_concepts(path, plan, tree, tree, source_plan_text=source)
+
+    assert result.status is SyncStatus.SOURCE_DIVERGENCE
+    assert path.read_bytes() == changed
+    assert concepts_path(path).read_bytes() == sidecar

@@ -4,6 +4,8 @@ import argparse
 import json
 from pathlib import Path
 
+import pytest
+
 from plan_tool.cli import scope_review_cmd
 from plan_tool.concept_bootstrap import ConceptConflict, bootstrap_concepts
 from plan_tool.concept_sync import ConceptSyncResult, SyncStatus
@@ -390,3 +392,20 @@ def test_scope_review_uses_real_sections_for_flat_and_legacy_concepts(
 
     assert legacy_result == 0
     assert "example bucket" not in _stored_nodes(legacy_path)
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_scope_review_preserves_original_unowned_body_bytes(tmp_path, monkeypatch, newline):
+    path = tmp_path / "review-concepts.md"
+    source = _write_plan(path).replace("\n", newline)
+    path.write_bytes(source.encode())
+    _seed_flat_record(path, [("parked idea", "candidate", "defer")])
+    _resolve_to(monkeypatch, path)
+
+    result = scope_review_cmd.cmd_scope_review(_args(concept_id("parked idea", []), "defer"))
+
+    assert result == 0
+    body = split_plan_document(source).body.encode()
+    assert body in path.read_bytes()
+    assert _stored_nodes(path)["parked idea"]["review_state"] == "approved"
+    assert "- parked idea" in path.read_bytes().decode()

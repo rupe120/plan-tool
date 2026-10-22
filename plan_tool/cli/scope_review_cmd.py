@@ -111,7 +111,7 @@ def cmd_scope_review(args: argparse.Namespace) -> int:
     """Review exactly the requested concepts and synchronize accepted state."""
     context = _load_context(args)
     plan_path = resolve_plan_for_context(context, args.name)
-    source_plan_text = plan_path.read_text(encoding="utf-8")
+    source_plan_text = plan_path.read_bytes().decode("utf-8")
     if _fenced_code_spans(
         split_plan_document(source_plan_text).body
     ).unmatched_opening is not None:

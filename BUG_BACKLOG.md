@@ -538,16 +538,37 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
 
-### Concept sync and scope-out rollback normalize existing plan body newlines
+### Concept sync deletes an unowned H1 after an owned H2
 
-- **Files:** `plan_tool/concept_sync.py:synchronize_concepts` source read and `plan_tool/scope_out.py` mutation snapshot/rollback.
-- **Symptom:** concept sync reads the plan with `read_text` before passing its body to `render_plan_text`; scope-out snapshots with `read_text` and restores with `write_text`. Those paths normalize CRLF/CR body bytes before the serializer receives them or before rollback restores them.
-- **Evidence:** source inspection during #517 Claude Code review 1 identifies the source read around concept_sync.py:174 and scope_out.py:1044,1085. Python universal-newline reads normalize those bytes; parser raw-byte regressions demonstrate this failure class. No end-to-end reproduction of these separate command paths is claimed.
-- **Outcome / in scope:** preserve original body bytes through concept-sync publication and scope-out failure rollback, with provenance matching the preserved text.
-- **Out of scope:** changes to alias semantics, concept ownership, scope selection, archive operations or unrelated text readers.
-- **Verification:** reproduce with CRLF/CR inputs through each actual command path, including a failure after scope-out publication, and assert raw body bytes plus existing rollback/concurrency guarantees. Check existing tests before selecting the bounded fix.
+- **Files:** `plan_tool/parser.py:replace_body_sections`, consumed by concept sync.
+- **Symptom / evidence:** the reader ends an H2 at the next H1 or H2, but replacement ends only at the next H2. A `# Appendix` after `## Deferred` is deleted together with the owned text. A local 2026-10-22 probe reproduces this for LF, CRLF and CR. The logic predates the newline repair; no existing test pins this layout.
+- **Outcome / in scope:** preserve unowned H1 headings and their content when replacing an owned section, using fence-safe boundaries consistent with the reader.
+- **Out of scope:** newline I/O, scope selection, concept ownership, frontmatter schemas or a broader markdown parser redesign.
+- **Verification:** raw-byte replacement and actual concept-sync regressions for H1 before/after owned sections, including fenced pseudo-H1 content and all supported newline styles.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** #517 review, 2026-10-22; existing separate paths, outside the parser-boundary correction.
+- **Origin:** newline-preservation Claude Code review 1, F-2; independently reproduced.
+
+### Scope-out rollback overwrites the concurrent edit rejected by provenance
+
+- **Files:** `plan_tool/scope_out.py:apply_narrow` failure restoration.
+- **Symptom / evidence:** rollback unconditionally writes its original snapshot, including after `write_plan` rejects a concurrent frontmatter edit. A local 2026-10-22 probe inserts `priority: high` after the snapshot, observes `ConcurrentModificationError`, then confirms rollback overwrites that edit. The unconditional restoration predates the newline repair. Restoration failures are also swallowed, potentially leaving partial bytes.
+- **Outcome / in scope:** preserve concurrent edits when narrowing refuses or fails; restore only mutations owned by the failed attempt and expose restoration failures.
+- **Out of scope:** scope selection, seed generation, archive policy, alias semantics, or a general transaction framework.
+- **Verification:** inject edits before plan publication and after partial publication; assert the concurrent bytes survive, owned partial writes restore, details roll back and provenance agrees. Cover failures before the plan write and during restoration.
+- **Stop / defer:** defer if publisher ownership cannot be established with a bounded change; specify that ownership before adding infrastructure.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** newline-preservation Claude Code review 1, F-3; independently reproduced.
+
+### Create body-patch helpers can normalize existing plan body newlines
+
+- **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
+- **Evidence / symptom:** newline-preservation review 2 identifies `read_text`/`write_text` pairs that normalize an existing CRLF/CR body. These helpers are unchanged by the concept-sync/scope-out repair. No end-to-end create reproduction is claimed; investigate whether a reachable finalization path supplies non-LF text before selecting a fix.
+- **Outcome / in scope:** establish a real reachable case and, if confirmed, preserve unowned body bytes through these existing patch helpers.
+- **Out of scope:** concept-sync and scope-out, section ownership, seed synthesis, alias semantics, broad I/O consolidation or markdown redesign.
+- **Verification:** reproduce through the create path; assert raw unowned bytes while intended body edits still apply, including fence and concurrency behavior already supported by each helper.
+- **Stop / defer:** close without implementation if the reachable path cannot supply non-LF input; do not add a framework based only on a helper-level possibility.
+- **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
+- **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
 
 ## RISK
 

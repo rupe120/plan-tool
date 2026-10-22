@@ -213,7 +213,10 @@ def _real_h2_matches(
     for its own filtering (e.g. :func:`parse_body_sections`'s ``higher_matches``
     pass) reuse it here instead of re-scanning the same body a second time.
     """
-    matches = list(re.finditer(r"^##[ \t]+(.+?)[ \t]*$", body, re.MULTILINE))
+    # Recognize raw LF, CRLF and CR boundaries without changing source offsets.
+    matches = list(re.finditer(
+        r"(?:^|(?<=[\r\n]))##[ \t]+([^\r\n]+?)[ \t]*(?=$|[\r\n])", body
+    ))
     if not ignore_fenced_code:
         return matches
     if spans is None:
@@ -240,7 +243,7 @@ def parse_body_sections(
         body = _excise_fenced_code(body)
         ignore_fenced_code = True
 
-    higher_re = re.compile(r"^(#|##)\s+", re.MULTILINE)
+    higher_re = re.compile(r"(?:^|(?<=[\r\n]))(?:#|##)\s+")
     spans = _fenced_code_spans(body).spans if ignore_fenced_code else ()
     h2_matches = _real_h2_matches(
         body, ignore_fenced_code=ignore_fenced_code, spans=spans
@@ -266,7 +269,7 @@ def parse_body_sections(
             BodySection(
                 name=heading.rstrip(":.").lower(),
                 heading=heading,
-                body=body[section_start:section_end].strip("\n"),
+                body=body[section_start:section_end].strip("\r\n"),
                 order=order,
             )
         )

@@ -5491,8 +5491,9 @@ class TestValidateLessonsInRepo:
 
 
 class TestCreatePlanPublication:
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
     def test_publish_create_plan_preserves_collision_to_manifest_order(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, newline: str
     ) -> None:
         """Publish replacement state in the order later phases rely on."""
         from plan_tool import create as create_module
@@ -5570,7 +5571,7 @@ class TestCreatePlanPublication:
         def write(*args: Any, **kwargs: Any) -> Path:
             assert args[:3] == (output_dir, "demo", plan)
             events.append("write")
-            plan_path.write_text("published", encoding="utf-8")
+            plan_path.write_bytes(("published" + newline).encode())
             return plan_path
 
         def parse(path: Path) -> Plan:
@@ -5600,7 +5601,7 @@ class TestCreatePlanPublication:
         def sync(*args: Any, **kwargs: Any) -> ConceptSyncResult:
             assert args[:4] == (plan_path, plan, None, concept_tree)
             assert args[3] is not concept_tree
-            assert kwargs["source_plan_text"] == "published"
+            assert kwargs["source_plan_text"] == "published" + newline
             events.append("sync")
             return ConceptSyncResult(SyncStatus.SUCCESS, plan_fingerprint="synced")
 
@@ -5897,8 +5898,9 @@ class TestCreatePlanFinalization:
         assert result.iteration_stage_failure == "iteration 1 step proposal failed"
         assert checkpoint.exists()
 
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
     def test_finalize_create_plan_uses_original_plan_for_advice_and_disk_plan_for_concepts(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, newline: str
     ) -> None:
         from plan_tool import create as create_module
         from plan_tool.concept_sync import ConceptSyncResult, SyncStatus
@@ -5932,6 +5934,7 @@ class TestCreatePlanFinalization:
             concept_tree=concept_tree,
             signed_concept_scope=True,
         )
+        published.plan_path.write_bytes(("published plan" + newline).encode())
         advice_plans: list[Plan] = []
         coverage_plans: list[Plan] = []
 
@@ -5945,7 +5948,7 @@ class TestCreatePlanFinalization:
         def sync(plan_path: Path, plan: Plan, *args: Any, **kwargs: Any):
             assert plan_path == published.plan_path
             assert plan is disk_plan
-            assert kwargs["source_plan_text"] == "published plan\n"
+            assert kwargs["source_plan_text"] == "published plan" + newline
             return ConceptSyncResult(SyncStatus.SUCCESS, plan_fingerprint="synced")
 
         def coverage(plan: Plan, *args: Any, **kwargs: Any):

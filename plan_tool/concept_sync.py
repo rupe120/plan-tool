@@ -119,7 +119,7 @@ def _fingerprint(plan_path: Path, staged_plan: bytes) -> str:
 def _atomic_publish(target: Path, text: str) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     temporary = tempfile.NamedTemporaryFile(
-        mode="w", encoding="utf-8", dir=target.parent,
+        mode="w", encoding="utf-8", newline="", dir=target.parent,
         prefix=f".{target.name}.", suffix=".tmp", delete=False,
     )
     temporary_path = Path(temporary.name)
@@ -171,7 +171,7 @@ def synchronize_concepts(
         return ConceptSyncResult(status, mapping_error)
 
     try:
-        current_plan_text = path.read_text(encoding="utf-8")
+        current_plan_text = path.read_bytes().decode("utf-8")
         current_sidecar_text = sidecar.read_text(encoding="utf-8") if sidecar.exists() else None
     except (OSError, UnicodeDecodeError) as exc:
         return ConceptSyncResult(SyncStatus.SOURCE_DIVERGENCE, str(exc))

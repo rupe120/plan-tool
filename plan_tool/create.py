@@ -10410,7 +10410,7 @@ def _publish_create_plan(
             and _has_approved_concepts(concept_tree)
         )
         if signed_concept_scope:
-            source_plan_text = plan_path.read_text(encoding="utf-8")
+            source_plan_text = plan_path.read_bytes().decode("utf-8")
             sync_result = synchronize_concepts(
                 plan_path,
                 parsed_plan,
@@ -11270,7 +11270,7 @@ def _finalize_create_plan(
     # Reparse only after every finalization mutator before querying coverage.
     if budget.enabled and published.signed_concept_scope:
         final_plan = parse_plan(plan_path)
-        source_plan_text = plan_path.read_text(encoding="utf-8")
+        source_plan_text = plan_path.read_bytes().decode("utf-8")
         sync_result = synchronize_concepts(
             plan_path,
             final_plan,

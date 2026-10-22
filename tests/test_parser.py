@@ -268,6 +268,24 @@ class TestSplitBodySections:
         sections = split_body_sections(body)
         assert sections == {"a": "body-a", "b": "body-b"}
 
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+    def test_raw_newlines_preserve_section_boundaries_and_fenced_examples(self, newline):
+        body = ("## A\n\nbody-a\n\n# Top\ncontent\n"
+                "## B\n\n```markdown\n## Example\n```\n\nend\n").replace("\n", newline)
+        sections = split_body_sections(body, ignore_fenced_code=True)
+        assert sections == {
+            "a": "body-a",
+            "b": "```markdown\n## Example\n```\n\nend".replace("\n", newline),
+        }
+
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+    @pytest.mark.parametrize("boundary", ["#", "##", "#\u00a0Top"])
+    def test_raw_newline_support_retains_existing_empty_and_whitespace_boundaries(
+        self, newline, boundary,
+    ):
+        body = newline.join(["## A", "x", boundary, "y", "## B", "z", ""])
+        assert split_body_sections(body) == {"a": "x", "b": "z"}
+
     def test_trailing_punctuation_normalized(self) -> None:
         body = "## Risks:\n\ncolon\n\n## RISKS.\n\nperiod\n"
         sections = split_body_sections(body)

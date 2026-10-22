@@ -188,3 +188,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Committed test authorship gate](2026-10-22-committed-test-authorship-code-review.md) — committed test evidence, preserved dirty-path exclusions, ancestry/decoder regressions and actual Claude Code review dispositions.
 
 - [Step description diagnostics](2026-10-22-step-description-diagnostics-code-review.md) — preferred/legacy field advice, unchanged validation and two independent clean Claude Code reviews; feature-container wording remains separately tracked.
+
+- [Plan body newline preservation](2026-10-22-plan-body-newline-preservation-code-review.md) — raw concept-sync snapshots, exact scope-out restoration, compatibility regressions and two final clean Claude Code reviews.

@@ -653,7 +653,7 @@ def compute_frontmatter_hash(plan_path: Path) -> str:
     same primitives :mod:`plan_tool.parser` hashes provenance with, so the
     value matches what ``write_plan``'s compare-and-swap compares against.
     """
-    text = Path(plan_path).read_text(encoding="utf-8")
+    text = Path(plan_path).read_bytes().decode("utf-8")
     return _frontmatter_hash(_split_frontmatter(text).frontmatter_yaml)
 
 
@@ -988,7 +988,7 @@ def apply_narrow(
     longer matches ``preview.source_frontmatter_hash`` — the hard invariant
     that the graph is never corrupted, independent of step 3's policy gate.
     The all-or-nothing guarantee comes solely from the LIFO journal rollback,
-    not from an atomic write (``write_plan``'s ``write_text`` is not atomic).
+    not from an atomic write (``write_plan``'s ``write_bytes`` is not atomic).
     """
     plan_path = Path(plan_path)
     if preview.blockers:
@@ -1041,7 +1041,7 @@ def apply_narrow(
     journal: list[tuple] = []  # (inverse-op-tag, *paths) replayed LIFO
     archived: list[Path] = []
     migrated: list[Path] = []
-    original_plan_text = plan_path.read_text(encoding="utf-8")
+    original_plan_text = plan_path.read_bytes().decode("utf-8")
     try:
         for path in archive_first:
             dest = _archive_file_strict(path)
@@ -1082,7 +1082,7 @@ def apply_narrow(
         # journal. Restore both snapshots even when a publisher replaced its
         # target and then raised.
         try:
-            plan_path.write_text(original_plan_text, encoding="utf-8")
+            plan_path.write_bytes(original_plan_text.encode("utf-8"))
             refresh_plan_provenance(plan_path, original_plan_text)
         except OSError:
             pass
