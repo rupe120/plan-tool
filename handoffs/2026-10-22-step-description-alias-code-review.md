@@ -77,3 +77,11 @@ consumer suites: 2,812 passed, 1 skipped in 13.72s. Full result and the fresh
 reconciliation/review evidence follow as each completes.
 
 Full suite after the correction: 14,996 passed, 67 skipped in 76.59s.
+
+## Reconcile sweep 2
+
+Same explicit command, after `06ee36b41`; completes all three code steps.
+Reports `20261022-145655-run-reconcile.json`,
+`20261022-145723-run-reconcile.json`, and
+`20261022-145752-run-reconcile.json` each contain zero recommendations.
+The body-byte finding is closed by the raw-byte reproduction and regression.
