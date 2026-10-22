@@ -10068,8 +10068,6 @@ def test_serial_detail_lifecycle_reauthors_later_step_from_accepted_frontmatter_
     the loop began. Refreshing ``plan`` mid-loop without also refreshing the
     stale ``step`` object it hands to ``render_detail_prompt`` would leave
     step 2 authored against its pre-edit title."""
-    import re
-
     from plan_tool import detail as detail_module
     from plan_tool import launcher as launcher_module
 
@@ -10082,16 +10080,13 @@ def test_serial_detail_lifecycle_reauthors_later_step_from_accepted_frontmatter_
     def apply_invoker(prompt: str) -> tuple[int, str]:
         apply_prompts.append(prompt)
         # By the time this runs, step 1's own ``detail:`` update has already
-        # re-serialized the plan through the tool's canonical YAML writer,
-        # so match the title regardless of the indent style it landed on.
-        plan_path.write_text(
-            re.sub(
-                rf"(\s+)title: {re.escape(original_title)}\n",
-                rf"\g<1>title: {updated_title}\n",
-                plan_path.read_text(encoding="utf-8"),
-            ),
-            encoding="utf-8",
-        )
+        # re-serialized the plan; edit through its retained internal API.
+        from plan_tool.parser import parse_plan, write_plan
+
+        updated = parse_plan(plan_path)
+        assert updated.step_by_id(2).title == original_title
+        updated.step_by_id(2).title = updated_title
+        write_plan(plan_path, updated)
         return 0, "## Summary\n- retitle step 2\n\n## Verdict\nAPPLIED\n"
 
     real_apply = launcher_module.apply_finding
@@ -16727,3 +16722,20 @@ def test_candidate_body_buckets_ignore_fenced_pseudo_heading(tmp_path: Path) -> 
     assert "overview" in names
     assert "risks" in names
     assert "example bucket" not in names
+
+
+def test_detail_render_and_pointer_update_keep_description_step_text(tmp_path):
+    import yaml
+    from plan_tool.parser import parse_plan, parse_plan_text, render_plan_text, split_plan_document
+    from plan_tool.detail import render_detail_prompt, update_step_detail_field
+
+    plan = parse_plan_text("---\ntitle: Plan\nstatus: planning\npriority: medium\nsteps:\n- id: 1\n  description: Exact step text\n---\n")
+    path = tmp_path / "plan.md"
+    path.write_text(render_plan_text(plan, "# Body\n"))
+    assert "Exact step text" in render_detail_prompt(plan, plan.steps[0], repo_root=tmp_path)
+    update_step_detail_field(path, 1, "details/one.md")
+    step = yaml.safe_load(split_plan_document(path.read_text()).frontmatter_yaml)["steps"][0]
+    assert step["description"] == "Exact step text"
+    assert "title" not in step
+    assert parse_plan(path).steps[0].detail == "details/one.md"
+    assert parse_plan(path).steps[0].title == "Exact step text"

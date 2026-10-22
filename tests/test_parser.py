@@ -2058,3 +2058,93 @@ class TestStepDescriptionAlias:
         path.write_bytes(original)
         assert parse_plan(path).steps[0].title == "Exact\ntext"
         assert path.read_bytes() == original
+
+
+class TestDescriptionSerialization:
+    @pytest.mark.parametrize("serializer", ["render", "write"])
+    @pytest.mark.parametrize("keys", [("title",), ("description",), ("title", "description")])
+    @pytest.mark.parametrize("text", ["", "line one\nline two\n", "雪: [yes] # text"])
+    @pytest.mark.parametrize("version", [None, 1])
+    def test_only_step_keys_change_without_mutating_models(
+        self, tmp_path, serializer, keys, text, version
+    ):
+        source = TestStepDescriptionAlias.plan_text(
+            {"id": 1, **dict.fromkeys(keys, text)},
+            **({"format_version": version} if version else {}),
+        )
+        plan = parse_plan_text(source)
+        before = deepcopy(plan.model_dump())
+        body = "\n# Body  \n\n```yaml\ntitle: untouched\n```\n\n"
+        if serializer == "render":
+            output = render_plan_text(plan, body)
+        else:
+            path = tmp_path / "plan.md"
+            path.write_text(source)
+            plan = parse_plan(path)
+            path.write_text(source.split("---\n# Body")[0] + "---\n" + body)
+            write_plan(path, plan)
+            write_plan(path, plan)  # Published keys refresh provenance.
+            output = path.read_text()
+        document = split_plan_document(output)
+        raw = yaml.safe_load(document.frontmatter_yaml)
+        assert raw["steps"] == [{"id": 1, "description": text}]
+        assert raw["title"] == "Plan"
+        assert raw["format_version"] == 1
+        assert document.body == body
+        assert parse_plan_text(output).steps[0].title == text
+        assert plan.model_dump() == before
+        assert "title" in plan.model_dump()["steps"][0]
+        assert "description" not in plan.model_dump()["steps"][0]
+
+    @pytest.mark.parametrize("serializer", ["render", "write"])
+    @pytest.mark.parametrize("mutation", ["version", "title"])
+    def test_invalid_mutation_never_publishes(self, tmp_path, serializer, mutation):
+        source = TestStepDescriptionAlias.plan_text({"id": 1, "title": "Keep"})
+        path = tmp_path / "plan.md"
+        path.write_text(source)
+        plan = parse_plan(path)
+        if mutation == "version":
+            plan.format_version = 99
+        else:
+            plan.steps[0].title = None
+        with pytest.raises(ValidationError):
+            if serializer == "render":
+                render_plan_text(plan, "body")
+            else:
+                write_plan(path, plan)
+        assert path.read_text() == source
+
+    def test_legacy_conversion_refuses_external_frontmatter_edit_without_writing(self, tmp_path):
+        from plan_tool.parser import ConcurrentModificationError
+
+        path = tmp_path / "plan.md"
+        path.write_text(TestStepDescriptionAlias.plan_text({"id": 1, "title": "Keep"}))
+        plan = parse_plan(path)
+        external = path.read_text().replace("Keep", "External")
+        path.write_text(external)
+        with pytest.raises(ConcurrentModificationError):
+            write_plan(path, plan)
+        assert path.read_text() == external
+
+
+@pytest.mark.parametrize("serializer", ["render", "write"])
+def test_serialization_preserves_plan_and_feature_titles(tmp_path, serializer):
+    plan = parse_plan_text(_FEATURE_PLAN)
+    before = plan.model_dump()
+    if serializer == "render":
+        output = render_plan_text(plan, "")
+    else:
+        path = tmp_path / "features.md"
+        path.write_text(_FEATURE_PLAN)
+        write_plan(path, plan)
+        output = path.read_text()
+    raw = yaml.safe_load(split_plan_document(output).frontmatter_yaml)
+    assert raw["title"] == plan.title
+    assert [feature["title"] for feature in raw["features"]] == [
+        feature.title for feature in plan.features
+    ]
+    assert [step["description"] for step in raw["steps"]] == [
+        step.title for step in plan.steps
+    ]
+    assert all("title" not in step for step in raw["steps"])
+    assert plan.model_dump() == before

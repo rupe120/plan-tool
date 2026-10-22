@@ -353,6 +353,12 @@ def _stamp_current_format_version(
     return {"format_version": PLAN_FORMAT_VERSION, **dumped}
 
 
+def _prefer_step_description(dumped: dict[str, Any]) -> None:
+    """Translate only authored step text; internal dumps keep their title keys."""
+    for step in dumped.get("steps", []):
+        step["description"] = step.pop("title")
+
+
 def render_plan_text(plan: Plan, body: str) -> str:
     """Validate ``plan`` and render complete Markdown around ``body``.
 
@@ -365,6 +371,7 @@ def render_plan_text(plan: Plan, body: str) -> str:
     except PydanticValidationError as exc:
         raise ValidationError(str(exc), errors=exc.errors()) from exc
     dumped = _stamp_current_format_version(plan, dumped)
+    _prefer_step_description(dumped)
     new_fm = yaml.safe_dump(
         _coerce_enums(dumped), default_flow_style=False, sort_keys=False,
         allow_unicode=True,
@@ -523,6 +530,7 @@ def write_plan(
     except PydanticValidationError as exc:
         raise ValidationError(str(exc), errors=exc.errors()) from exc
     dumped = _stamp_current_format_version(plan, dumped)
+    _prefer_step_description(dumped)
     dumped = _coerce_enums(dumped)
 
     new_fm = yaml.safe_dump(
