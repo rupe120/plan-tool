@@ -262,3 +262,29 @@ def test_failed_atomic_publish_preserves_previous_record(
         ct.save_concepts(plan, replace(original, concepts=[_node("New")]))
     assert ct.load_concepts(plan, "fingerprint") == original
     assert [path.name for path in ct.concepts_path(plan).parent.iterdir()] == ["concepts.json"]
+
+
+def test_custom_concept_publisher_receives_validated_exact_json(tmp_path):
+    plan = tmp_path / "1-sample.md"
+    tree = _tree()
+    calls = []
+
+    def publish(target, payload):
+        calls.append((target, payload))
+        target.write_bytes(payload)
+
+    target = ct.save_concepts(plan, tree, publish=publish)
+    assert calls == [(target, target.read_bytes())]
+    assert ct.load_concepts(plan, "fingerprint") == tree
+
+
+def test_custom_concept_publisher_cannot_bypass_tree_validation(tmp_path):
+    tree = _tree()
+    tree.concepts[0].id = "invalid"
+
+    def unexpected_publish(*args):
+        pytest.fail("invalid concepts must not reach the publisher")
+
+    with pytest.raises(ct.InvalidConceptTreeError):
+        ct.save_concepts(tmp_path / "1-sample.md", tree, publish=unexpected_publish)
+    assert not ct.concepts_path(tmp_path / "1-sample.md").exists()

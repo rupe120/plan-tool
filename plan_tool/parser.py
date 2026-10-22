@@ -18,7 +18,7 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import yaml
 from pydantic import ValidationError as PydanticValidationError
@@ -502,7 +502,8 @@ def parse_plan(path: str | Path) -> Plan:
 
 
 def write_plan(
-    path: str | Path, plan: Plan, *, expect_unchanged: bool = True
+    path: str | Path, plan: Plan, *, expect_unchanged: bool = True,
+    publish: Callable[[Path, bytes], None] | None = None,
 ) -> None:
     """Write `plan` back to `path`, preserving the prose body byte-for-byte.
 
@@ -526,6 +527,9 @@ def write_plan(
     (e.g. an intentional overwrite that supersedes whatever is on disk).
     Body-only edits never trip this — only the frontmatter is compared,
     and the body below is always taken from the current on-disk file.
+
+    An optional ``publish`` receives validated UTF-8 bytes after this guard;
+    it must publish those bytes or raise. Scope-out uses it for guarded recovery.
     """
     p = Path(path)
     original = p.read_bytes().decode("utf-8")
@@ -557,7 +561,10 @@ def write_plan(
         allow_unicode=True,
     )
     new_text = f"{_FENCE}\n{new_fm}{_FENCE}\n{split.body}"
-    p.write_bytes(new_text.encode("utf-8"))
+    if publish is None:
+        p.write_bytes(new_text.encode("utf-8"))
+    else:
+        publish(p, new_text.encode("utf-8"))
     # Refresh provenance to what we just wrote so a subsequent in-process
     # write from the same parse doesn't false-trip on our own change.
     # Hash via _split_frontmatter (not raw new_fm) so it matches exactly

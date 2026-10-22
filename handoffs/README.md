@@ -190,3 +190,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Step description diagnostics](2026-10-22-step-description-diagnostics-code-review.md) — preferred/legacy field advice, unchanged validation and two independent clean Claude Code reviews; feature-container wording remains separately tracked.
 
 - [Plan body newline preservation](2026-10-22-plan-body-newline-preservation-code-review.md) — raw concept-sync snapshots, exact scope-out restoration, compatibility regressions and two final clean Claude Code reviews.
+
+- [Scope-out rollback ownership](2026-10-22-scope-out-rollback-ownership-code-review.md) — exact publication receipts, concurrent-edit preservation, durable writes and two final independent clean Claude Code reviews.

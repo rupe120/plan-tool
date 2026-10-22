@@ -275,8 +275,11 @@ def load_concepts(
     return tree
 
 
-def save_concepts(plan_path: Path, tree: ConceptTree) -> Path:
-    """Validate and atomically publish one complete concept tree."""
+def save_concepts(
+    plan_path: Path, tree: ConceptTree,
+    *, publish: Callable[[Path, bytes], None] | None = None,
+) -> Path:
+    """Validate and atomically publish a tree; an optional publisher owns the write."""
     from plan_tool.locator import slug_from_filename
 
     slug = slug_from_filename(plan_path)
@@ -285,6 +288,9 @@ def save_concepts(plan_path: Path, tree: ConceptTree) -> Path:
     path = concepts_path(plan_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(asdict(tree), indent=2, allow_nan=False) + "\n"
+    if publish is not None:
+        publish(path, text.encode("utf-8"))
+        return path
     temporary = tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", dir=path.parent,
         prefix=f".{path.name}.", suffix=".tmp", delete=False,

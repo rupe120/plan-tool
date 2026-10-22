@@ -2923,7 +2923,7 @@ plan-tool scope-out my-feature --step 2 --through 4 --apply
 
 `--through M` carves the inclusive `N..M` region (from `--step N`) as a
 single carve — one `create --from-existing` seed for the whole region, one
-atomic narrow. The CLI rejects an out-of-order range (`--through` before
+guarded narrow. The CLI rejects an out-of-order range (`--through` before
 `--step`). `--step N` alone stays the single-step carve.
 
 - **Recommend-only by default.** Without `--apply` the command previews the
@@ -2933,9 +2933,15 @@ atomic narrow. The CLI rejects an out-of-order range (`--through` before
 - **Seed-first ordering.** The `create --from-existing` forward-seed is
   written to `docs/implementation-plans/plan-seeds/` **before** the plan is narrowed, so the carved
   work survives as a durable artifact even if the narrow rolls back. The
-  narrow itself is all-or-nothing: drop the step, renumber survivors to
-  `1..N`, repair `depends_on`, and migrate/archive the carved detail file,
-  with a rollback if any part fails.
+  narrow drops the step, renumbers survivors to `1..N`, repairs `depends_on`,
+  and migrates/archives the carved detail file. On failure, guarded recovery
+  restores only this attempt's published bytes and attempts all detail undos.
+  A changed or missing file is preserved; an occupied undo destination is not
+  overwritten. `rollback incomplete` names the affected paths and says whether
+  detail moves are restored. Inspect the plan, concept record and detail paths
+  before retrying, because their states can differ after incomplete recovery.
+  The seed remains available. These checks do not lock external writers between
+  comparison and replacement.
 - **Four refusal blockers** (each refuses with no write):
   - **inbound-dependent** — a surviving step still `depends_on` the carved
     step.
