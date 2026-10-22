@@ -6,7 +6,7 @@
 | Base | `80dfaa78e8ff95d1528a581e4fb10fba6ecc0b27` |
 | Reviewed implementation snapshot | `81a83f5bb0409e58150c703a0d6add8ef381d133` |
 | Branch | `implement/skill-led-demo-examples` |
-| Checks | Four full-suite step gates pass; final suite: 14,698 passed, 66 skipped in 71.48s; 243 local file targets resolve; fixture parser/round-trip checks pass |
+| Checks | Four full-suite step gates pass; final suite: 14,698 passed, 66 skipped in 71.48s; 290 local file targets and 201 fragment targets resolve; fixture parser/round-trip checks pass |
 | Reviewers | Two independent Codex `gpt-6.1-sol` report-only sessions, read-only sandbox |
 | Disposition | Documentation review converges: two consecutive independent passes report no material findings; implementation and bounded live rehearsal complete |
 
@@ -31,6 +31,7 @@ between narrative user-review checkpoints and assistant-reviewed batch artifacts
 | Finding | Disposition and evidence |
 | --- | --- |
 | Seed excerpt uses `Verification` instead of the canonical `Testing` heading | **fixed `e9bf52e68`** — the excerpt now demonstrates the heading SEED_FORMAT.md requires for ingestion; identifier/vocabulary review finds no sibling seed instance in the changed guides. |
+| Pre-existing RUNBOOK fragment does not resolve to the canonical step layout heading | **fixed `49311e1a1`** — the link now uses the actual heading slug. Final accuracy review checks the source heading and all 201 fragment targets; no workflow or logic changes. |
 | Three quick-recipe contradictions repeat across all shipped skill routers | **tracked [BUG_BACKLOG.md](../BUG_BACKLOG.md#installed-skill-quick-recipes-contradict-the-required-audit-order-detail-default-and-failed-step-recovery)** — bare audit omitted, detail iteration default misstated, manual done-state recovery suggested. Shared directives and command help establish the correct behavior; installer coverage does not pin the wrong claims. No router fix belongs to this conversion. |
 | Nested backend probe cannot initialize in the restricted step context | **fixed `81a83f5bb`** — parent-session access completes the real rehearsal and replaces the global blocker claim with context-specific failure/recovery provenance. This is an execution-context recovery, not a change to backend implementation. |
 | Rehearsal granularity heuristic calls three files unrelated | **declined** — one small feature owns initialization, browser wiring and markup. The INFO/limited-confidence advisory remains visible; both audit reports retain `advisory-only`, confirmed/current, zero conceptual findings. No split or clean-audit claim is made. |
@@ -51,7 +52,9 @@ between narrative user-review checkpoints and assistant-reviewed batch artifacts
 The saved final responses identify their reviewed ranges and methods. Their
 conclusions are retained here because `.tmp/` paths may disappear. The second
 pass reviews the final evidence update independently; it does not assume the
-first pass's conclusion. No production logic changes in this range.
+first pass's conclusion. No production logic changes in this range. The later one-line navigation
+correction (`49311e1a1`) is checked against the actual heading and the full
+changed-document fragment set; final closure metadata adds no behavioral claim.
 
 ## Reconciliation and closure
 

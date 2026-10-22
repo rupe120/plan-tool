@@ -176,8 +176,8 @@ Observed verification results, 2026-10-21:
 ## Final implementation checks and review
 
 The parent session's final full suite reports **14,698 passed, 66 skipped in
-71.48s**. All four launcher step gates also pass. Local file-target checks cover
-243 links across 14 changed Markdown files. The
+71.48s**. All four launcher step gates also pass. Final local-target checks cover 290 file links and 201 Markdown fragments,
+including the review ledger and the corrected RUNBOOK canonical-layout anchor. The
 [review ledger](../../handoffs/2026-10-21-skill-led-demo-examples-code-review.md)
 retains two independent report-only reviews and their exact ranges and methods;
 both report no material findings. The code reconciliation sweep exits 0 with no
