@@ -43,6 +43,7 @@ steps:
   depends_on_notes:
     1: Alias validation lets rendered description fields parse back into the unchanged
       Step.title API.
+  detail: docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md
 - id: 3
   title: Request description in step proposals and accept legacy responses while preserving
     existing create writes, archive moves, deletions, and rollback
