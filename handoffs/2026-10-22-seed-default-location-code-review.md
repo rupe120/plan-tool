@@ -88,3 +88,27 @@ The mutation is restored before subsequent checks. The post-correction full
 suite has 14,714 passing tests and one intentional help-snapshot mismatch;
 the snapshot is regenerated and then verified without the update flag. A fresh
 full-suite result follows after the corrected committed snapshot.
+
+
+## Claude review 2
+
+Range `330441789..808c80e03`; actual built-in `code-review` Skill, high effort,
+Sonnet 5.5, session `b4805783-6a97-4430-aa3a-e71f71b9e0aa`; CLI exits zero.
+It verifies candidate findings against code/tests and independently runs the
+affected suites: 1,394 passed, 65 skipped. Report:
+`.tmp/seed-default-location.review-2.md` (with its test log in sibling scratch).
+No blocking/medium finding; one low advisory behavior and one low coverage gap.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 low: a seed-create race can leave a fresh report without a new seed | Declined: annotate already permits partial report/seed writes on I/O failure; the command returns failure, source is not archived, and the existing seed is protected. This change does not add an atomic report/seed transaction. |
+| 2 low: legacy apply-skip and accept not directly pinned | Fixed with two direct tests: skip returns root destination without moving bytes; accept updates only the root publication and preserves a same-named nested file and absence of the layout field. Existing nested tests and legacy materialize/refresh coverage remain. |
+| Nit: target docstring uses old ambiguous path | Clarified as recorded/default destination. |
+| Nit: state change between two CLI handoff reads can escape guard | Declined as unchanged narrow race in guarded reads; no normal-input failure or source corruption is demonstrated. No incidental state-read refactor. |
+| Nit: default-collision remedy wording | Clarified: choose a new explicit path, or explicitly pass the existing path to permit replacement. |
+| Nit: import alphabetization | Declined: no linter contract; no behavioral change and avoid style-only churn. |
+
+Fresh full suite at `808c80e03`: 14,715 passed, 67 skipped in 61.58s. The new
+review-2 changes are tests and explanatory strings/docstring only; no placement
+or collision logic changes after `f53201887`. One completed advisory-only review
+is recorded; independent confirmation remains pending.

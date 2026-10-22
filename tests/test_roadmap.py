@@ -10899,3 +10899,45 @@ def test_materialize_preserves_recorded_destination_and_other_directory(
     assert untouched.read_text() == "retained sentinel"
     entry = load_seed_state(state_path)["seeds"][_PLAN_ORDER.id]
     assert entry.get("publication_layout", "root") == layout
+
+
+def test_apply_skip_reports_the_legacy_destination_without_moving_seed(tmp_path):
+    env = _apply_env(tmp_path)
+    _standard_apply_setup(env)
+    path = seed_state_path(env.roadmap_root)
+    state = load_seed_state(path)
+    state["seeds"][_PLAN_AUTH.id]["published"] = True
+    state["seeds"][_PLAN_AUTH.id].pop("publication_layout", None)
+    write_seed_state(path, state)
+    old = env.repo_root / "plan-seeds" / f"{_PLAN_AUTH.id}.md"
+    old.parent.mkdir()
+    old.write_text("legacy bytes", encoding="utf-8")
+    result = apply_roadmap_seeds(
+        env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=False,
+    )
+    assert result.skipped == ((_PLAN_AUTH.id, old),)
+    assert old.read_text() == "legacy bytes"
+    assert not (env.plan_seeds_dir / old.name).exists()
+
+
+def test_accept_legacy_publication_keeps_root_and_nested_file_untouched(tmp_path):
+    env = _apply_env(tmp_path)
+    _standard_apply_setup(env)
+    TestAcceptRoadmapSeed._hand_edit_auth_draft(env)
+    path = seed_state_path(env.roadmap_root)
+    state = load_seed_state(path)
+    state["seeds"][_PLAN_AUTH.id]["published"] = True
+    state["seeds"][_PLAN_AUTH.id].pop("publication_layout", None)
+    write_seed_state(path, state)
+    old = env.repo_root / "plan-seeds" / f"{_PLAN_AUTH.id}.md"
+    nested = env.plan_seeds_dir / old.name
+    for target in (old, nested):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("retained bytes", encoding="utf-8")
+    result = accept_roadmap_seed(
+        env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir,
+    )
+    assert result.promoted_target == old
+    assert "HAND-EDITED-AUTH" in old.read_text()
+    assert nested.read_text() == "retained bytes"
+    assert "publication_layout" not in load_seed_state(path)["seeds"][_PLAN_AUTH.id]

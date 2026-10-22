@@ -2713,7 +2713,7 @@ def ordered_plan_seed_targets(
     *,
     repo_root: Path,
 ) -> tuple[tuple[str, Path, Path], ...]:
-    """Each ordered plan row as ``(plan_id, draft_source, plan-seeds/dest)``."""
+    """Each ordered row as ``(plan_id, draft_source, recorded_or_default_dest)``."""
     plan_by_id = {plan.id: plan for plan in artifact.plans}
     plan_seeds_dir = default_seeds_dir(repo_root)
     entries = _load_roadmap_seed_state(plans_dir=plans_dir, slug=slug)["seeds"]

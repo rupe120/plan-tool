@@ -212,7 +212,7 @@ def _annotate_one(
     if default_seed and (paths.seed.exists() or paths.seed.is_symlink()):
         message = (
             f"default seed already exists: {_short_path(paths.seed, repo_root)}; "
-            "use --seed with a distinct path or an explicit destination to replace it"
+            "choose a different --seed path; explicitly passing the existing path permits replacement"
         )
         error(message)
         return AnnotateBatchResult(
