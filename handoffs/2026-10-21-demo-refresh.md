@@ -1,119 +1,73 @@
 # Demonstration refresh pickup
 
-**Deferred by owner decision, 2026-10-21. The demo needs updating before its
-next presentation.** Resume this work separately from repository cleanup and
-release preparation. Preserve the four remote demo branches; the local fixture
-commits below are preparation material, not approved replacements.
+The assistant-led guides and authored reading samples support review of the
+retained dark-mode and TTRPG scenarios. **The live dark-mode rehearsal needs
+verification:** Codex cannot initialize its app-server client in the restricted
+verification runtime. Remote checkpoint publication remains pending and requires
+separate authorization through the [release handoff](2026-10-19-public-onboarding-and-release.md).
+
+The [verification record](../docs/evidence/skill-led-demo-examples-verification.md)
+owns the reviewed revision, reading checks, runtime error, fixture availability,
+and every unverified stage. Documentation readiness, a live rehearsal and remote
+publication are separate results.
 
 Keep `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` on both
-Bitbucket and GitHub. Each branch presents one checkpoint of the same generic
-dark-mode-toggle example. This handoff owns the local preparation and remaining
-verification; the [release handoff](2026-10-19-public-onboarding-and-release.md)
-owns remote publication.
-
-The [sanitized publication record](2026-10-21-sanitized-publication.md) confirms
-that all four remote demo names point to a shared needs-updating notice on the
-new history. Their previous staged contents remain in private recovery bundles.
-The fixture tips below remain local preparation material for a future refresh.
+Bitbucket and GitHub. The [sanitized publication record](2026-10-21-sanitized-publication.md)
+records their shared needs-updating notice. Private recovery bundles retain the
+previous staged contents; local fixture tips below are not approved replacements.
 
 ## Current plan pickup: use the plan-tool skill
 
-The current authoring result is
 [Teach demos and examples through the plan-tool skill](../docs/implementation-plans/2-skill-led-demo-examples.md)
-(`skill-led-demo-examples`), with four run-grade detail files. Resume that plan;
-do not create a second seed or re-author the same effort. Its source seed is
-[the archived brief](../plan-seeds/archive/skill-led-demo-examples.replaced.md).
-The local plan branch is `plan/skill-led-demo-examples`; its base is
-`5c38aa9da`. The plan remains `planning`, and all implementation steps remain
-unexecuted. Neither a plan pull request nor remote demo publication is part of
-this authoring result.
+provides the maintained walkthroughs and learning entry points. Steps 1–3 are
+done at the verification snapshot; this step supplies evidence and status.
+The launcher owns plan status and the post-flight check. Do not re-author the
+seed, restart the guide conversion or reopen scenario selection.
 
-Suggested pickup prompt:
-
-> Use the plan-tool skill to review the completed `skill-led-demo-examples`
-> plan and its four detail files with me. Keep user review of created seeds,
-> bare plans and details explicit in the demos, and respect any explicit
-> delegation to continue. After I authorize execution and the reviewed plan
-> bundle meets the merge prerequisite, run the plan, monitor each command to
-> confirmed completion, read its results, and finish reconciliation and code
-> review. Preserve remote demo refs and publication boundaries.
-
-Read the installed skill and tracked
-[shared directives](../integrations/shared/DIRECTIVES.md); the tracked
-[Codex router](../integrations/codex/SKILL.md) is the fallback. Use the integration
-appropriate to the session. The skill's plan-PR/merge prerequisite still applies
-before implementation; this handoff does not authorize a merge or publication.
+Next pickup: resolve the runtime blocker, then use the plan-tool skill to
+rehearse [the dark-mode walkthrough](../docs/demos/planning-demo.md) in an isolated
+consuming repository with working application tests. Monitor each original
+command to confirmed exit and retain actual results. Follow the
+[shared directives](../integrations/shared/DIRECTIVES.md) and
+[audit procedure](../docs/how-to/pipeline/audit.md); do not infer qualification
+or convergence from an exit code.
 
 ### Plan scope and user review
 
-The plan retains the dark-mode planning scenario and the advanced TTRPG roadmap
-scenario. It converts the guides under `docs/demos/` and the named learning
-entry points to assistant requests for grounded seed creation, monitored work,
-judged result review and resumption. Commands remain supporting operator
-references. No CLI, skill, schema or monitoring implementation changes belong
-to the effort.
+Dark mode remains the planning scenario; TTRPG remains the advanced roadmap
+scenario. TTRPG receives contract review here, not full regeneration.
+No CLI, skill, schema or monitoring changes belong to this effort.
 
-The owner asks on 2026-10-21 whether the examples have users review created
-seeds, plans and details. The plan and every detail now explicitly require:
-
-- Seed review before `create`: outcome, scope, constraints, non-goals and grounding.
-- Bare-plan and audit review before `detail`: steps, dependencies and acceptance.
-- Detail-bundle and grounded-audit review before execution or local export:
-  implementation guidance, verification and unresolved decisions.
-
-At each point the assistant presents artifact links, summarizes changes, asks
-for corrections or continuation, and waits unless explicit prior delegation
-covers the transition. Silence is not approval. These are conversational review
-points using existing behavior, not new tool-enforced gates.
+The guides ask the assistant to link actual artifacts, summarize changes and
+ask for corrections or continuation at seed, bare-plan/audit and detail/audit
+boundaries. Wait for the user's response unless explicit prior delegation covers
+the transition. Export requires its separate request after detail review.
+The verification record confirms these narrative checkpoints, not actual user
+approval of nonexistent rehearsal artifacts or fresh model-audit results.
 
 ### Authoring evidence and audit trajectory
 
-Provenance, 2026-10-21: all commands use `--backend codex --model gpt-6.1-sol`.
-`create skill-led-demo-examples --from-existing
-plan-seeds/skill-led-demo-examples.md --iterate -y` selects the direct route,
-publishes four steps and archives the seed. `detail skill-led-demo-examples
---commit -y` writes four files and performs its default completeness check.
-Both commands use closed stdin and finish before the next invocation starts.
-The explicit audit invocations use `completeness-audit skill-led-demo-examples
---iterate --commit --audit-passes 1 -y` with closed stdin.
+Dated plan-authoring provenance, 2026-10-21: the plan's bare and detailed audit
+reports record the following snapshots. These audit this documentation plan,
+not a consuming-repository dark-mode rehearsal.
 
-| Snapshot | Detail coverage | Result and qualification | Report |
-| --- | --- | --- | --- |
-| Bare-plan gate | 0 of 4 | clean; confirmed; current at snapshot; no conceptual findings; completeness/detail apply routes withheld | [23:38 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-233834-completeness.md) |
-| Initial detail-grounded gate | 4 of 4 | clean; confirmed; no conceptual findings; superseded by the user-review amendment | [23:44 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234419-completeness.md) |
-| Amended detail-grounded gate | 4 of 4 | clean; confirmed; current; zero blocking or deferred findings | [23:47 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234705-completeness.md) |
+| Snapshot | Coverage and retained conclusion | Report |
+| --- | --- | --- |
+| Bare | 0 of 4; clean, confirmed; detail/completeness apply withheld | [23:38 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-233834-completeness.md) |
+| Initial detailed | 4 of 4; clean, confirmed; superseded by user-review amendment | [23:44 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234419-completeness.md) |
+| Amended detailed | 4 of 4; clean, confirmed; zero blocking/deferred findings | [23:47 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234705-completeness.md) |
 
-The amendment adds the owner's user-review requirement across the archived seed,
-plan and all four details. It is not an audit finding or a change to the step
-graph. The three snapshots contain no recurring conceptual finding; the final
-clean result closes authoring. No extra unchanged resampling is needed.
-
-The plan and all four amended detail files parse with current readers.
-`uv run pytest tests/ -q -n auto` reports **14,698 passed, 66 skipped in
-62.83 seconds**. Local handoff links and whitespace checks pass. These checks
-cover plan authoring; they do not certify a converted demo or live consuming-repo
-rehearsal. Detail's automatic audit warns that its model-call usage has no
-run-log sink; its saved report is retained, but usage/cost is not inferred.
-
-Named local logs: `.tmp/skill-led-demo-examples.create.log`,
-`.tmp/skill-led-demo-examples.detail.log`,
-`.tmp/skill-led-demo-examples.audit-bare-1.log`, and
-`.tmp/skill-led-demo-examples.audit-detail-final.log`. They are transient;
-the committed reports above own the retained conclusions.
-
-### Earlier example preparation
-
-Preparation provenance, 2026-10-21: Git object `0b8f96427` contains the earlier
-task-list demo attempt; those files are absent from this plan's baseline.
-Inspect with `git show 0b8f96427 --stat` and targeted file reads if useful.
-The new plan uses it as design input, keeps the current documentation placement
-and scenarios, and does not cherry-pick it over `docs/demos/`.
-
-The local dark-mode fixture preparation below remains separate from the plan
-and from verified live model output. Confirm any `.tmp/` path exists before
-relying on it in another clone.
+The original authoring handoff records 14,698 passed and 66 skipped in 62.83s.
+That dated result does not replace the launcher's current post-flight result or
+verify the live demo. The [archived source brief](../plan-seeds/archive/skill-led-demo-examples.replaced.md)
+and retained reports provide durable authoring provenance; transient logs are
+not required to read the current guides.
 
 ## Local candidate
+
+Dated preparation provenance, 2026-10-21: the following describes the original
+local candidate snapshot. Its scratch repository and receipts are absent in
+this clone; none of these checks is a fresh verification.
 
 The local review repository is `.tmp/public-release-demo-refresh-v2`. Its bundle
 is `.tmp/public-release-demo-refresh.bundle`, and its machine-readable ref and
@@ -162,18 +116,20 @@ final isolated run on `demo/4-jira` passes: **14,698 passed, 66 skipped in
 
 ## Remaining demo verification and publication
 
-Resume the reviewed plan above for local conversion and live-rehearsal evidence.
-The following checks continue to constrain any later checkpoint publication.
+1. Resolve the Codex runtime permission blocker identified in the verification
+   record. Confirm backend availability in the consuming environment.
+2. Rehearse grounded seed → create → bare audit → detail → grounded audit with
+   actual user reviews or explicit delegation at each boundary. Retain report
+   coverage, qualification, conclusions and unresolved findings.
+3. After the separate local-export request, inspect stories and the paired
+   developer handoff; lint the actual story artifact and record warnings separately.
+4. Update the verification record with captured evidence before describing the
+   live route as verified. Recheck local checkpoint refs, stage differences,
+   bundles and old remote tips before proposing replacements.
+5. Obtain separate review and authorization for remote demo ref updates, then
+   read both hosts back. Main, tags, visibility and organization transfer remain
+   with the release workflow.
 
-1. Review the exact local refs, stage differences, bundle and old remote tips.
-2. Exercise live `create` → bare audit → `detail` → detail audit → Jira in a
-   separate React consuming repository with a working test command and
-   authenticated backend. Keep the actual coverage and convergence reports.
-   This is required before describing the live workflow as verified.
-3. Review and authorize the demo ref updates separately, then read both hosts
-   back and confirm matching tips. Main, release tags, public visibility and any
-   GitHub organization transfer remain with the release workflow.
-
-Use [the demo guide](../docs/demos/planning-demo.md) for the reusable workflow.
-Use [the documentation placement handoff](2026-10-21-documentation-placement-review.md)
-for the primary-folder README and how-to review record.
+Use [the planning guide](../docs/demos/planning-demo.md) for the workflow and
+[the documentation placement handoff](2026-10-21-documentation-placement-review.md)
+for the primary-folder review record. No remote publication is performed here.
