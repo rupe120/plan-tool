@@ -86,6 +86,7 @@ steps:
       and older strict-reader rejection.
     3: Mark the backlog entry plan-authored while execution is pending and remove
       it only after full shipment.
+  detail: docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md
 ---
 # Step Description Alias
 
