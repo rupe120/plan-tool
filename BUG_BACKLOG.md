@@ -527,16 +527,16 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
-### Step-field diagnostics advertise only legacy title after description alias support
+### Feature-container unknown fields are mislabeled as plan-level fields
 
-- **Files:** `plan_tool/parser.py:format_validation_errors`, `_explain_extra_field`, and mirrored tests.
-- **Symptom:** accepted step `description` is absent from the allowed-field list because the formatter enumerates internal `Step.model_fields`. Missing step text is reported as `steps.0.title: Field required`. A typo such as `descripton` therefore directs new authors only to the legacy spelling, although `description` is preferred.
-- **Evidence:** alias implementation Claude Code review 1, range `b2e46f5a4..09338c987`; independent throwaway-input probes confirm the messages. Existing parser tests pin the allowed-field prefix, not this omission. Acceptance/rejection is correct and legacy title remains a valid remedy.
-- **Outcome / in scope:** expose both supported step spellings in actionable diagnostics without renaming internal fields or changing validation. Distinguish missing step text from plan/feature title errors and misplaced fields.
-- **Out of scope:** new alias behavior, error-schema redesign, format-version changes or broad message normalization.
-- **Verification:** actual missing/typo/misplaced-field inputs show the preferred and accepted spellings; plan/feature title diagnostics and validation outcomes stay unchanged.
+- **Files:** `plan_tool/parser.py:_explain_extra_field` and mirrored tests.
+- **Symptom:** a rejected extra field in a feature registry object, such as `features: [{id: cap, title: X, description: d}]`, is labeled “unknown plan-level field” and lists Plan fields rather than the Feature fields. Validation correctly rejects the input; the container label and allowed-field list are misleading.
+- **Evidence:** step-description diagnostic review 1 probes this input and the existing `features.0.depends_on` case. The helper classifies every non-step location as plan-level at the pre-repair base as well; this is not introduced by the alias diagnostic change.
+- **Outcome / in scope:** identify actual feature containers and list their supported fields while preserving plan/step diagnostics and placement hints.
+- **Out of scope:** accepting new fields, changing feature or step schemas, altering error payloads or exit codes, or normalizing unrelated application errors.
+- **Verification:** real feature-extra-field errors name the feature container and only its valid keys; plan/step extra and missing-field cases retain their correct behavior.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** #517 review, 2026-10-22; non-blocking diagnostic improvement, separate from alias implementation.
+- **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
 
 ### Concept sync and scope-out rollback normalize existing plan body newlines
 

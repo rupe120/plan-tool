@@ -186,3 +186,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Step description alias implementation](2026-10-22-step-description-alias-code-review.md) — four green steps, clean reconciliation and two independent Claude Code logic reviews; source plan PR #139.
 
 - [Committed test authorship gate](2026-10-22-committed-test-authorship-code-review.md) — committed test evidence, preserved dirty-path exclusions, ancestry/decoder regressions and actual Claude Code review dispositions.
+
+- [Step description diagnostics](2026-10-22-step-description-diagnostics-code-review.md) — preferred/legacy field advice, unchanged validation and two independent clean Claude Code reviews; feature-container wording remains separately tracked.
