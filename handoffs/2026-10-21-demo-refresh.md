@@ -26,6 +26,9 @@ are done. The launcher owns plan status and the post-flight checks. Do not
 re-author the seed, restart the conversion or repeat the completed rehearsal
 merely because the original nested step could not initialize Codex.
 
+The [implementation review ledger](2026-10-21-skill-led-demo-examples-code-review.md)
+records two independent clean documentation reviews and the final passing suite.
+
 Next pickup: read the final reconciliation/review evidence and prepare a bounded
 implementation pull request when authorized. The documentation plan's code
 reconciliation sweep reports no eligible code steps because all four are
