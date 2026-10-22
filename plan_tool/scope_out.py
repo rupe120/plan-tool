@@ -9,7 +9,7 @@ Two halves of scope-out live here:
   re-plannable seed. No file IO, no git, no Claude, no ``invoker=`` seam;
   mirrors :mod:`plan_tool.annotate_render`'s ``render_create_seed`` design.
 - **The narrow** — :func:`compute_narrow` (dry-run preview) and
-  :func:`apply_narrow` (all-or-nothing commit with rollback): drop the carved
+  :func:`apply_narrow` (guarded publication with rollback): drop the carved
   step, renumber survivors to a contiguous ``1..N-1``, repair every
   ``depends_on`` edge, migrate/archive detail files, and re-establish the run
   cursor. The narrow is the IO half (it imports :mod:`plan_tool.detail` and
@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from plan_tool import locator
+from plan_tool.fileio import atomic_write_bytes
 from plan_tool.seed_paths import default_seeds_dir
 from plan_tool.detail import (
     _DETAIL_ID_PREFIX_RE,
@@ -47,6 +48,7 @@ from plan_tool.detail_artifacts import (
     strip_detail_format_version_marker,
 )
 from plan_tool.parser import (
+    ConcurrentModificationError,
     _frontmatter_hash,
     _split_frontmatter,
     parse_plan,
@@ -553,7 +555,7 @@ class _ConceptNarrowUpdate:
     """
 
     updated_tree: object
-    original_sidecar_text: str
+    original_sidecar_bytes: bytes
     prepared_plan_fingerprint: str
 
 
@@ -638,10 +640,10 @@ def _prepare_concept_narrow_update(
 
     sidecar = concepts_path(plan_path)
     try:
-        original_text = sidecar.read_text(encoding="utf-8")
+        original_bytes = sidecar.read_bytes()
     except OSError as exc:
         raise NarrowError(f"cannot snapshot concept record for scope-out: {exc}") from exc
-    return _ConceptNarrowUpdate(updated, original_text, fingerprint)
+    return _ConceptNarrowUpdate(updated, original_bytes, fingerprint)
 
 
 def compute_frontmatter_hash(plan_path: Path) -> str:
@@ -981,14 +983,14 @@ def apply_narrow(
     repo_root: Path,
     concept_update: _ConceptNarrowUpdate | None = None,
 ) -> NarrowResult:
-    """Commit ``preview`` all-or-nothing via a reversible journal.
+    """Publish ``preview`` with guarded recovery. See docs/ARCHITECTURE.md.
 
     Refuses (writes nothing) when ``preview.blockers`` is non-empty, when
     ``preview.narrowed_plan is None``, or when the on-disk frontmatter no
     longer matches ``preview.source_frontmatter_hash`` — the hard invariant
     that the graph is never corrupted, independent of step 3's policy gate.
-    The all-or-nothing guarantee comes solely from the LIFO journal rollback,
-    not from an atomic write (``write_plan``'s ``write_bytes`` is not atomic).
+    Publication is atomic; guarded rollback preserves later edits and reports
+    incomplete recovery rather than overwriting files it no longer owns.
     """
     plan_path = Path(plan_path)
     if preview.blockers:
@@ -1013,10 +1015,10 @@ def apply_narrow(
 
         sidecar_path = concepts_path(plan_path)
         try:
-            current_sidecar_text = sidecar_path.read_text(encoding="utf-8")
+            current_sidecar_bytes = sidecar_path.read_bytes()
         except OSError as exc:
             raise NarrowError(f"cannot revalidate concept record: {exc}") from exc
-        if current_sidecar_text != concept_update.original_sidecar_text:
+        if current_sidecar_bytes != concept_update.original_sidecar_bytes:
             raise NarrowError(
                 "refusing to narrow: concept record changed since preparation"
             )
@@ -1041,7 +1043,25 @@ def apply_narrow(
     journal: list[tuple] = []  # (inverse-op-tag, *paths) replayed LIFO
     archived: list[Path] = []
     migrated: list[Path] = []
-    original_plan_text = plan_path.read_bytes().decode("utf-8")
+    receipts: dict[Path, tuple[bytes, bytes]] = {}
+
+    def publish(target: Path, payload: bytes) -> None:
+        before = target.read_bytes()
+        if target == plan_path:
+            document = _split_frontmatter(before.decode("utf-8"))
+            if (
+                _frontmatter_hash(document.frontmatter_yaml) != preview.source_frontmatter_hash
+                or document.body != _split_frontmatter(payload.decode("utf-8")).body
+            ):
+                raise ConcurrentModificationError(
+                    f"{target}: plan changed before publication; refusing to overwrite"
+                )
+        elif concept_update is None or before != concept_update.original_sidecar_bytes:
+            raise NarrowError("refusing to narrow: concept record changed before publication")
+        # Record before the replace so a post-publication failure is recoverable.
+        receipts[target] = (before, payload)
+        atomic_write_bytes(target, payload)
+
     try:
         for path in archive_first:
             dest = _archive_file_strict(path)
@@ -1066,33 +1086,38 @@ def apply_narrow(
             journal.append(("restore", dest, path))
             archived.append(dest)
 
-        # Write the plan last — preserves ``write_plan``'s compare-and-swap
-        # provenance (a temp-write + ``os.replace`` would bypass it).
-        write_plan(plan_path, preview.narrowed_plan)
+        # Keep parser validation/provenance, with an atomic publisher receipt.
+        write_plan(plan_path, preview.narrowed_plan, publish=publish)
         if concept_update is not None:
             from plan_tool.concept_tree import save_concepts
             from plan_tool.review_persistence import compute_plan_fingerprint
 
             final_tree = copy.deepcopy(concept_update.updated_tree)
             final_tree.plan_fingerprint = compute_plan_fingerprint(plan_path)
-            save_concepts(plan_path, final_tree)
-    except Exception:
-        _rollback(journal)
-        # ``write_plan`` and the atomic concept saver are outside the rename
-        # journal. Restore both snapshots even when a publisher replaced its
-        # target and then raised.
-        try:
-            plan_path.write_bytes(original_plan_text.encode("utf-8"))
-            refresh_plan_provenance(plan_path, original_plan_text)
-        except OSError:
-            pass
-        if concept_update is not None and sidecar_path is not None:
+            save_concepts(plan_path, final_tree, publish=publish)
+    except Exception as exc:
+        errors = _rollback(journal)
+        for target, (before, payload) in reversed(receipts.items()):
             try:
-                sidecar_path.write_text(
-                    concept_update.original_sidecar_text, encoding="utf-8"
-                )
-            except OSError:
-                pass
+                current = target.read_bytes()
+                if current == before:
+                    continue  # publication never happened, or is already restored
+                if current != payload:
+                    raise NarrowError("file changed after publication; preserved current bytes")
+                atomic_write_bytes(target, before)
+            except Exception as restore_exc:
+                errors.append(f"{target}: {restore_exc}")
+            finally:
+                if target == plan_path:
+                    try:
+                        if target.read_bytes() == before:
+                            refresh_plan_provenance(target, before.decode("utf-8"))
+                    except OSError:
+                        pass  # the failed read/restore is already reported above
+        if errors:
+            raise NarrowError(
+                f"narrowing failed ({exc}); rollback incomplete: " + "; ".join(errors)
+            ) from exc
         raise
 
     return NarrowResult(
@@ -1105,22 +1130,22 @@ def apply_narrow(
     )
 
 
-def _rollback(journal: list[tuple]) -> None:
+def _rollback(journal: list[tuple]) -> list[str]:
     """Replay the apply journal LIFO, restoring the pre-narrow file layout.
 
     Best-effort per inverse op — a single failed undo must not abort the rest
-    of the rollback (the original exception is what the caller re-raises)."""
+    of the rollback. Return failures for the caller to report."""
+    errors: list[str] = []
     for entry in reversed(journal):
         tag, a, b = entry
         try:
-            if tag == "rename":
-                # forward was a→b; undo by moving b back to a.
-                b.rename(a)
-            elif tag == "restore":
-                # forward archived b→a; undo by moving a back to b.
-                a.rename(b)
-        except OSError:
-            continue
+            source, destination = (b, a) if tag == "rename" else (a, b)
+            if destination.exists() or destination.is_symlink():
+                raise NarrowError(f"undo destination {destination} is occupied; preserved")
+            source.rename(destination)
+        except (OSError, NarrowError) as exc:
+            errors.append(f"{a} → {b}: {exc}")
+    return errors
 
 
 def _archive_file_strict(path: Path) -> Path:

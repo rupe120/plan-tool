@@ -1947,6 +1947,7 @@ def test_concept_save_failure_rolls_back_narrow(tmp_path, monkeypatch, newline):
     _save_concept_record(path, "Owned")
     before_plan = path.read_bytes()
     concept_path = concept_tree.concepts_path(path)
+    concept_path.write_bytes(concept_path.read_bytes().replace(b"\n", newline.encode()))
     before_concepts = concept_path.read_bytes()
     real_save = concept_tree.save_concepts
 
@@ -2870,3 +2871,253 @@ def test_narrow_preview_detects_frontmatter_newline_changes(tmp_path, newline):
         apply_narrow(path, preview, repo_root=tmp_path)
 
     assert path.read_bytes() == changed
+
+
+@pytest.fixture
+def rollback_case(tmp_path):
+    path = _write_plan_file(tmp_path, _mk_plan([
+        _mk_step(1, "First", detail=_detail("01-first.md")),
+        _mk_step(2, "Second", detail=_detail("02-second.md")),
+        _mk_step(3, "Third", detail=_detail("03-third.md")),
+    ], status=PlanStatus.PLANNING))
+    plan = parse_plan(path)
+    details = {}
+    for name in ("01-first.md", "02-second.md", "03-third.md"):
+        _touch_detail(tmp_path, _detail(name))
+        detail = tmp_path / _detail(name)
+        details[detail] = detail.read_bytes()
+    preview = compute_narrow(
+        plan, carved_id=2, plan_path=path, repo_root=tmp_path,
+        source_frontmatter_hash=compute_frontmatter_hash(path),
+    )
+    return path, plan, preview, details
+
+
+def test_refused_plan_write_preserves_the_concurrent_edit_and_undoes_details(
+    tmp_path, monkeypatch, rollback_case,
+):
+    from plan_tool.parser import ConcurrentModificationError
+    path, plan, preview, details = rollback_case
+    changed = path.read_bytes().replace(b"priority: medium", b"priority: high")
+    real_write = scope_out.write_plan
+
+    def edit_then_write(*args, **kwargs):
+        path.write_bytes(changed)
+        return real_write(*args, **kwargs)
+
+    monkeypatch.setattr(scope_out, "write_plan", edit_then_write)
+    with pytest.raises(ConcurrentModificationError):
+        apply_narrow(path, preview, repo_root=tmp_path)
+
+    assert path.read_bytes() == changed
+    assert all(detail.read_bytes() == text for detail, text in details.items())
+    with pytest.raises(ConcurrentModificationError):
+        real_write(path, plan)
+
+
+def test_failed_write_restores_frontmatter_but_keeps_body_edit_it_observed(
+    tmp_path, monkeypatch, rollback_case,
+):
+    path, plan, preview, _ = rollback_case
+    changed = path.read_bytes() + b"Concurrent body edit.\r\n"
+    real_write = scope_out.write_plan
+
+    def edit_publish_then_fail(*args, **kwargs):
+        path.write_bytes(changed)
+        real_write(*args, **kwargs)
+        raise RuntimeError("after publication")
+
+    monkeypatch.setattr(scope_out, "write_plan", edit_publish_then_fail)
+    with pytest.raises(RuntimeError, match="after publication"):
+        apply_narrow(path, preview, repo_root=tmp_path)
+
+    assert path.read_bytes() == changed
+    real_write(path, plan)  # rollback refreshes provenance for restored bytes
+
+
+@pytest.mark.parametrize("edit", ["frontmatter", "body", "delete"])
+def test_rollback_preserves_later_plan_changes_and_reports_incomplete_recovery(
+    tmp_path, monkeypatch, rollback_case, edit,
+):
+    path, _, preview, details = rollback_case
+    real_write = scope_out.write_plan
+    changed = None
+
+    def publish_edit_then_fail(*args, **kwargs):
+        nonlocal changed
+        real_write(*args, **kwargs)
+        changed = path.read_bytes()
+        if edit == "frontmatter":
+            changed = changed.replace(b"priority: medium", b"priority: high")
+        elif edit == "body":
+            changed += b"Concurrent body edit.\n"
+        if edit == "delete":
+            path.unlink()
+        else:
+            path.write_bytes(changed)
+        raise RuntimeError("after concurrent change")
+
+    monkeypatch.setattr(scope_out, "write_plan", publish_edit_then_fail)
+    with pytest.raises(NarrowError, match="rollback incomplete") as exc:
+        apply_narrow(path, preview, repo_root=tmp_path)
+
+    assert isinstance(exc.value.__cause__, RuntimeError)
+    assert path.read_bytes() == changed if edit != "delete" else not path.exists()
+    assert all(detail.read_bytes() == text for detail, text in details.items())
+
+
+@pytest.mark.parametrize("phase", ["before", "after"])
+def test_sidecar_rollback_preserves_concurrent_record_and_restores_owned_plan(
+    tmp_path, monkeypatch, phase,
+):
+    import plan_tool.concept_tree as ct
+    owned = concept_id("Owned", [])
+    path = _write_plan_file(tmp_path, _mk_plan([
+        _mk_step(1), _mk_step(2, concept_ids=[owned]), _mk_step(3),
+    ], status=PlanStatus.PLANNING))
+    _save_concept_record(path, "Owned")
+    before_plan = path.read_bytes()
+    sidecar = ct.concepts_path(path)
+    real_save = ct.save_concepts
+    changed = None
+
+    def edit_and_fail(*args, **kwargs):
+        nonlocal changed
+        if phase == "after":
+            real_save(*args, **kwargs)
+        changed = sidecar.read_bytes() + b" \n"
+        sidecar.write_bytes(changed)
+        if phase == "before":
+            return real_save(*args, **kwargs)
+        raise RuntimeError("after concurrent sidecar change")
+
+    monkeypatch.setattr(ct, "save_concepts", edit_and_fail)
+    with pytest.raises((NarrowError, RuntimeError)):
+        scope_out_step(path, carved_id=2, repo_root=tmp_path, allow_scope_out=True, yes=True)
+
+    assert sidecar.read_bytes() == changed
+    assert path.read_bytes() == before_plan
+
+
+@pytest.mark.parametrize("phase", ["before", "after"])
+def test_atomic_publication_failure_leaves_or_restores_exact_plan(
+    tmp_path, monkeypatch, rollback_case, phase,
+):
+    path, plan, preview, details = rollback_case
+    before = path.read_bytes()
+    real_atomic = scope_out.atomic_write_bytes
+    calls = []
+
+    def fail_publication(target, payload):
+        calls.append(payload)
+        if len(calls) == 1:
+            if phase == "after":
+                real_atomic(target, payload)
+            else:
+                # A partial staging write never touches the canonical plan.
+                target.with_suffix(".partial").write_bytes(payload[:9])
+            raise OSError("publication interrupted")
+        real_atomic(target, payload)
+
+    monkeypatch.setattr(scope_out, "atomic_write_bytes", fail_publication)
+    with pytest.raises(OSError, match="publication interrupted"):
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert path.read_bytes() == before
+    assert len(calls) == (1 if phase == "before" else 2)
+    assert all(detail.read_bytes() == text for detail, text in details.items())
+    scope_out.write_plan(path, plan)
+
+
+def test_plan_restoration_failure_is_reported_with_original_cause(
+    tmp_path, monkeypatch, rollback_case,
+):
+    path, _, preview, details = rollback_case
+    real_atomic = scope_out.atomic_write_bytes
+    real_write = scope_out.write_plan
+    published = None
+
+    def fail_restore(target, payload):
+        nonlocal published
+        if published is not None:
+            raise OSError("restore unavailable")
+        real_atomic(target, payload)
+        published = payload
+
+    def publish_then_fail(*args, **kwargs):
+        real_write(*args, **kwargs)
+        raise RuntimeError("original failure")
+
+    monkeypatch.setattr(scope_out, "atomic_write_bytes", fail_restore)
+    monkeypatch.setattr(scope_out, "write_plan", publish_then_fail)
+    with pytest.raises(NarrowError, match="rollback incomplete.*restore unavailable") as exc:
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert str(exc.value.__cause__) == "original failure"
+    assert path.read_bytes() == published
+    assert len(parse_plan(path).steps) == 2
+    assert all(detail.read_bytes() == text for detail, text in details.items())
+
+
+@pytest.mark.parametrize("edit", ["frontmatter", "body"])
+def test_publisher_rechecks_changes_after_serialization_without_overwriting(
+    tmp_path, monkeypatch, rollback_case, edit,
+):
+    from plan_tool.parser import ConcurrentModificationError
+    path, _, preview, details = rollback_case
+    before = path.read_bytes()
+    changed = (before.replace(b"priority: medium", b"priority: high")
+               if edit == "frontmatter" else before + b"Late body edit.\n")
+    real_write = scope_out.write_plan
+
+    def intercept(*args, **kwargs):
+        publish = kwargs["publish"]
+        def edit_then_publish(target, payload):
+            target.write_bytes(changed)
+            publish(target, payload)
+        return real_write(*args, **{**kwargs, "publish": edit_then_publish})
+
+    monkeypatch.setattr(scope_out, "write_plan", intercept)
+    with pytest.raises(ConcurrentModificationError):
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert path.read_bytes() == changed
+    assert all(detail.read_bytes() == text for detail, text in details.items())
+
+
+def test_failure_before_plan_publication_never_rewrites_plan(tmp_path, monkeypatch, rollback_case):
+    path, _, preview, _ = rollback_case
+    writes = []
+    real_write_bytes = Path.write_bytes
+
+    def observe(target, payload):
+        if target == path:
+            writes.append(payload)
+        return real_write_bytes(target, payload)
+
+    def fail_archive(_path):
+        raise OSError("archive failed")
+
+    monkeypatch.setattr(Path, "write_bytes", observe)
+    monkeypatch.setattr(scope_out, "_archive_file_strict", fail_archive)
+    with pytest.raises(OSError, match="archive failed"):
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert writes == []
+
+
+def test_detail_undo_conflict_is_preserved_reported_and_other_undos_continue(
+    tmp_path, monkeypatch, rollback_case,
+):
+    path, _, preview, details = rollback_case
+    third = tmp_path / _detail("03-third.md")
+    second = tmp_path / _detail("02-second.md")
+    real_write = scope_out.write_plan
+
+    def collide_then_fail(*args, **kwargs):
+        real_write(*args, **kwargs)
+        third.write_bytes(b"Concurrent new detail.\n")
+        raise RuntimeError("original failure")
+
+    monkeypatch.setattr(scope_out, "write_plan", collide_then_fail)
+    with pytest.raises(NarrowError, match="rollback incomplete"):
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert third.read_bytes() == b"Concurrent new detail.\n"
+    assert second.read_bytes() == details[second]
+    assert parse_plan(path).steps[1].title == "Second"
