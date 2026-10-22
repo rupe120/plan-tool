@@ -536,6 +536,53 @@ class TestFormatValidationErrors:
         # A pure typo isn't a real field anywhere, so no misplacement hint.
         assert "belongs on" not in line
 
+    @pytest.mark.parametrize("step_text", ["", "    descripton: Work\n"])
+    def test_missing_step_text_names_preferred_and_legacy_keys_without_mutating_errors(self, step_text):
+        text = _concept_plan("").replace("    title: First\n", step_text)
+        with pytest.raises(ValidationError) as caught:
+            parse_plan_text(text)
+        errors = caught.value.errors
+        snapshot = deepcopy(errors)
+        lines = format_validation_errors(errors)
+        assert "steps.0.description: Field required (legacy title is also accepted)" in lines
+        assert errors == snapshot
+        assert any(err["loc"] == ("steps", 0, "title") for err in errors)
+        if step_text:
+            typo = next(line for line in lines if line.startswith("steps.0.descripton:"))
+            keys = typo.split("(allowed: ", 1)[1].split(")", 1)[0].split(", ")
+            assert "description" in keys and "title" in keys
+            assert keys.index("description") < keys.index("title")
+
+    def test_plan_level_description_is_rejected_with_step_placement_hint(self):
+        text = _concept_plan("").replace("status: planning", "description: misplaced\nstatus: planning")
+        with pytest.raises(ValidationError) as caught:
+            parse_plan_text(text)
+        (line,) = format_validation_errors(caught.value.errors)
+        assert line.startswith("description: unknown plan-level field")
+        assert "description belongs on a step" in line
+        keys = line.split("(allowed: ", 1)[1].split(")", 1)[0].split(", ")
+        assert "description" not in keys
+
+    @pytest.mark.parametrize("container", ["plan", "feature"])
+    def test_missing_plan_and_feature_titles_keep_their_original_diagnostics(self, container):
+        text = _concept_plan("")
+        if container == "plan":
+            text = text.replace("title: Concept ownership\n", "")
+            expected = "title: Field required"
+        else:
+            text = text.replace("steps:", "features:\n  - id: capability\nsteps:")
+            expected = "features.0.title: Field required"
+        with pytest.raises(ValidationError) as caught:
+            parse_plan_text(text)
+        assert format_validation_errors(caught.value.errors) == [expected]
+
+    @pytest.mark.parametrize("step_text", ["    title: 5\n", "    description: 5\n", "    description: one\n    title: two\n"])
+    def test_invalid_or_conflicting_step_text_remains_rejected_without_missing_field_advice(self, step_text):
+        text = _concept_plan("").replace("    title: First\n", step_text)
+        with pytest.raises(ValidationError) as caught:
+            parse_plan_text(text)
+        assert all("Field required" not in line for line in format_validation_errors(caught.value.errors))
+
     def test_extra_forbidden_renders_end_to_end(self) -> None:
         """The whole path (parse -> errors -> format) yields the clear message."""
         text = (

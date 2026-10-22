@@ -103,6 +103,15 @@ def format_validation_errors(errors: list[dict[str, Any]]) -> list[str]:
             lines.append(f"{loc}: {_explain_extra_field(loc_parts)}")
             continue
         msg = str(err.get("msg", "invalid")).removeprefix("Value error, ")
+        if (
+            err.get("type") == "missing"
+            and len(loc_parts) == 3
+            and loc_parts[0] == "steps"
+            and isinstance(loc_parts[1], int)
+            and loc_parts[2] == "title"
+        ):
+            loc = f"steps.{loc_parts[1]}.description"
+            msg = "Field required (legacy title is also accepted)"
         lines.append(f"{loc}: {msg}" if loc else msg)
     return lines
 
@@ -118,10 +127,15 @@ def _explain_extra_field(loc_parts: tuple[Any, ...]) -> str:
     field = str(loc_parts[-1]) if loc_parts else ""
     is_step = any(str(p) == "steps" for p in loc_parts[:-1])
     here, here_fields = ("step", Step) if is_step else ("plan-level", Plan)
-    allowed = ", ".join(here_fields.model_fields)
+    allowed_fields = list(here_fields.model_fields)
+    if is_step:
+        allowed_fields.insert(allowed_fields.index("title"), "description")
+    allowed = ", ".join(allowed_fields)
     msg = f"unknown {here} field (allowed: {allowed})"
     other_fields = Plan if is_step else Step
-    if field in other_fields.model_fields:
+    if field in other_fields.model_fields or (
+        other_fields is Step and field == "description"
+    ):
         where = "the plan level" if is_step else "a step"
         msg += f"; {field} belongs on {where}"
     return msg

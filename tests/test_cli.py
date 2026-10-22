@@ -13673,6 +13673,23 @@ class TestCmdValidateFailOnFindings:
         assert rc == 1
         assert "INVALID:" in capsys.readouterr().out
 
+    @pytest.mark.integration
+    @pytest.mark.parametrize("fail_on_findings", [False, True])
+    def test_validate_names_step_description_and_legacy_title_without_changing_exit_policy(
+        self, tmp_path, monkeypatch, capsys, fail_on_findings
+    ):
+        text = "---\ntitle: Plan\nstatus: planning\npriority: medium\nsteps:\n  - id: 1\n    descripton: Work\n---\n"
+        manifest = self._setup(tmp_path, text)
+        monkeypatch.chdir(tmp_path)
+        args = ["--manifest", str(manifest), "validate", "plan"]
+        if fail_on_findings:
+            args.append("--fail-on-findings")
+        assert main(args) == (1 if fail_on_findings else 0)
+        out = capsys.readouterr().out
+        assert "steps.0.description: Field required (legacy title is also accepted)" in out
+        assert "steps.0.descripton: unknown step field" in out
+        assert "[type=" not in out
+
     def test_valid_with_flag_exits_zero(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
         capsys: pytest.CaptureFixture[str],
