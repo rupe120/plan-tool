@@ -5,7 +5,7 @@
 | Base | `db0b81151`, merged alias PR #140 |
 | Branch | `fix/committed-test-authorship` |
 | Route | Bounded direct fix; existing BUG_BACKLOG condition permits direct repair when no evidence redesign is needed |
-| Current state | Implementation and focused tests complete; full validation and Claude Code review pending |
+| Current state | Production correction validated; review 3 is first clean logic pass after correction; independent confirmation pending |
 
 ## Property and scope
 
@@ -133,3 +133,37 @@ Post-correction validation: 54 focused tests pass in 6.89s; full suite 15,019
 passed, 67 skipped in 74.27s. The new ancestry regression reproduces a false
 pass before correction; the path-output regression reproduces UnicodeDecodeError
 before correction. Both now pass. Fixes are committed separately by concern.
+
+## Claude Code review 3
+
+Range `db0b81151..f92ba61ba`, actual built-in code-review Skill at high effort,
+Sonnet 5.5, session `498b9cd1-6af0-4c8a-b5a3-1f747a2ba21a`, CLI exit zero. Report
+`.tmp/committed-test-authorship.review-3.md`. Eight candidates receive
+independent verification against callers/tests and real-git throwaway probes;
+47 focused tests pass. **No logic defect; first clean pass after `f92ba61ba`.**
+
+- Ancestry correction is verified: unrelated/divergent history supplies no
+  committed evidence. Amend/rebase can lose proof and fail closed; document
+  that consequence, not a new rewrite-history feature.
+- A fast-forward/import of existing descendant history can provide the same
+  path delta as new backend commits. This is an accepted residual of the binary
+  path-delta observable; do not infer author identity or build provenance
+  machinery. Document the limit explicitly in the run guide.
+- Dirty exclusions, unborn commit-only execution and rename destinations are
+  pinned/settled boundaries. Generic failure messages remain a usability
+  preference, not a reason to add an error taxonomy.
+- The decoder correction is independently verified with a raw-byte filename
+  committed through git's index, bypassing the macOS filename limitation.
+  Existing real-subprocess decoding regression is sufficient; no fixture
+  redesign is needed merely to mirror the independent probe.
+- Fix the stale ledger header and run-guide wrapping as bookkeeping.
+  Boilerplate factoring, argument formatting and alternate test mechanics
+  remain declined preferences; no verified consolidation is asserted.
+
+Review 3 verifies actual latest code, not the stale “logic remains at 59e13bc32”
+line inherited earlier in its prompt; the prompt's final correction block and
+this report explicitly identify `33f5c7996` / `f92ba61ba` as the current fixes.
+The next review receives a fresh prompt without that stale sentence.
+
+Post-review-3 focused validation: 54 passed. Production logic stays at
+`f92ba61ba`; only the run guide, index and evidence record change in this round.

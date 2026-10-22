@@ -180,17 +180,19 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
 | **`creates:` on disk** | mutating mode, if step has `creates:` | no — warn | "N creates entries missing"; step still advances |
 
 The test-authoring gate combines newly dirty paths with added or modified
-paths between the pre-call HEAD and the post-call HEAD, provided the post-call HEAD descends from the captured commit. A
-checkout/reset to unrelated or older history supplies no committed evidence.
-A backend may commit
-its tests before returning; those commits still provide authorship evidence.
-Paths already dirty before the call remain excluded from both sources. An
-unchanged committed test or a committed deletion does not satisfy the gate.
+paths between the pre-call HEAD and the post-call HEAD, provided the latter
+descends from the captured commit. Checkout/reset to unrelated or older history
+supplies no committed evidence; amend/rebase can also lose that ancestry proof.
+A backend may commit its tests before returning; those commits still provide
+authorship evidence. Paths already dirty before the call remain excluded from
+both sources. Unchanged committed tests and committed deletions do not count.
+This is path-delta evidence, not author attribution: importing descendant
+history can provide the same evidence as creating new commits during the call.
 Without a readable pre-call HEAD (including an unborn repository), only the
 existing working-tree evidence is available. In a non-git tree neither source
 provides evidence, so an enforced step blocks rather than skipping the gate.
-This gate checks file authorship,
-not coverage quality; test commands and per-step gates still run afterward.
+This gate checks file authorship, not coverage quality; test commands and
+per-step gates still run afterward.
 
 ### Conditional gates (only when configured)
 
