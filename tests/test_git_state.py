@@ -135,6 +135,26 @@ class TestCommittedChangedPaths:
         _run_git(["commit", "-qm", "delete"], tmp_path)
         assert committed_changed_paths(tmp_path, baseline) == {"new name.py"}
 
+    def test_git_path_output_preserves_non_utf8_bytes_without_decoding_failure(self, tmp_path, monkeypatch):
+        import os
+        import sys
+
+        real_run = subprocess.run
+
+        def git_output(args, **kwargs):
+            if args[1] == "merge-base":
+                return subprocess.CompletedProcess(args, 0, "", "")
+            data = b"?? test_\xff.py\0" if args[1] == "status" else b"test_\xff.py\0"
+            return real_run(
+                [sys.executable, "-c", f"import sys; sys.stdout.buffer.write({data!r})"],
+                **kwargs,
+            )
+
+        monkeypatch.setattr(subprocess, "run", git_output)
+        name = os.fsdecode(b"test_\xff.py")
+        assert changed_paths_or_none(tmp_path) == {name}
+        assert committed_changed_paths(tmp_path, "revision") == {name}
+
     def test_unavailable_baseline_or_git_returns_no_committed_evidence(self, tmp_path, monkeypatch):
         assert head_revision(tmp_path) is None
         assert committed_changed_paths(tmp_path, None) == set()

@@ -50,7 +50,7 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
             cwd=str(repo_root),
             stdin=subprocess.DEVNULL,
             capture_output=True,
-            text=True,
+            text=True, errors="surrogateescape",
         )
     except (FileNotFoundError, PermissionError, OSError):
         return None
@@ -91,7 +91,7 @@ def head_revision(repo_root: Path) -> Optional[str]:
         proc = subprocess.run(
             ["git", "rev-parse", "--verify", "HEAD^{commit}"],
             cwd=str(repo_root), stdin=subprocess.DEVNULL,
-            capture_output=True, text=True,
+            capture_output=True, text=True, errors="surrogateescape",
         )
     except OSError:
         return None
@@ -107,7 +107,7 @@ def committed_changed_paths(repo_root: Path, baseline: Optional[str]) -> set[str
             ["git", "diff", "--name-only", "-z", "--no-renames",
              "--diff-filter=ACMRT", baseline, "HEAD", "--"],
             cwd=str(repo_root), stdin=subprocess.DEVNULL,
-            capture_output=True, text=True,
+            capture_output=True, text=True, errors="surrogateescape",
         )
     except OSError:
         return set()
