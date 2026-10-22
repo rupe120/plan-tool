@@ -2290,3 +2290,40 @@ def test_custom_plan_publisher_cannot_bypass_existing_validation(tmp_path, inval
     with pytest.raises((ConcurrentModificationError, ValidationError)):
         write_plan(path, plan, publish=unexpected_publish)
     assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("append_tail", [False, True])
+def test_replacement_preserves_h1_content_between_owned_sections_and_at_eof(newline, append_tail):
+    prefix = "# Plan\n\nKeep prefix.\n\n".replace("\n", newline)
+    appendix = "# Appendix\n\nKeep  this prose.\n\n## Notes\n\nKeep notes.\n\n".replace("\n", newline)
+    ending = "# Closing\n\nKeep final prose.".replace("\n", newline)
+    tail = "\n\n## Tail\n\nKeep tail.\n".replace("\n", newline) if append_tail else ""
+    owned = "## Deferred\n\nOld\n\n```markdown\n# Example\n## Example H2\n```\n\n".replace("\n", newline)
+    body = prefix + owned + appendix + "## Out of scope\n\nOld too\n\n".replace("\n", newline) + ending + tail
+
+    updated = replace_body_sections(
+        body, {"deferred": "- Later", "out of scope": "- Never"}, ignore_fenced_code=True,
+    )
+
+    expected = prefix + "## Deferred\n\n- Later\n" + appendix + "## Out of scope\n\n- Never\n" + ending + tail
+    assert updated.encode() == expected.encode()
+    assert split_body_sections(updated, ignore_fenced_code=True)["deferred"] == "- Later"
+    assert split_body_sections(updated, ignore_fenced_code=True)["out of scope"] == "- Never"
+
+
+@pytest.mark.parametrize("boundary", ["#", "##", "#\u00a0Appendix"])
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_replacement_retains_the_readers_existing_empty_and_whitespace_boundaries(boundary, newline):
+    suffix = newline.join([boundary, "Keep boundary content.", ""])
+    body = newline.join(["## Deferred", "Old", ""]) + suffix
+    assert split_body_sections(body)["deferred"] == "Old"
+    assert replace_body_sections(body, {"deferred": "New"}) == "## Deferred\n\nNew\n" + suffix
+
+
+@pytest.mark.parametrize("ignore_fenced_code", [False, True])
+def test_replacement_fence_boundary_safety_remains_explicit_opt_in(ignore_fenced_code):
+    body = "## Deferred\nold\n```markdown\n# Example\nexample\n```\n# Appendix\nkeep\n"
+    updated = replace_body_sections(body, {"deferred": "new"}, ignore_fenced_code=ignore_fenced_code)
+    suffix = "# Appendix\nkeep\n" if ignore_fenced_code else "# Example\nexample\n```\n# Appendix\nkeep\n"
+    assert updated == "## Deferred\n\nnew\n" + suffix
