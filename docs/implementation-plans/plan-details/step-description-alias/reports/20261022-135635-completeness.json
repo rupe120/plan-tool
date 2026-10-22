@@ -1,0 +1,111 @@
+{
+  "version": 4,
+  "plan_slug": "step-description-alias",
+  "plan_path": "docs/implementation-plans/2-step-description-alias.md",
+  "created_at": "2026-10-22T13:56:35Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "29a0b9648dc0bd95c4a73d8dbbdc4e72465f865abf5e8bbd48a208774af94d29",
+  "code_fingerprint": {
+    "BACKLOG.md": "9490b7858119e9a62f361e91fa300039480b510709e3ff0cb93a450447b7b47a",
+    "DATA_CONTRACT.md": "d20c7fcad4b3d44f2df322253aad141d780b83c276bcc4033b55b8a60c87977e",
+    "PLAN_FORMAT.md": "74bb42b2533849c81085cec0ba336686eacbd2b20393a9e34f8393bd3fa00cd3",
+    "plan_tool/create.py": "a0a57cd1f98004d473af82ff83e1c599227b7297cc78a372e4182c1318b8dcd9",
+    "plan_tool/parser.py": "cdec0f71ef0521dbab416ffce88f8041b4629766d37083220f90fac2fcc3e776",
+    "plan_tool/schema.py": "80707690d228d015047cde832492f73a93679d32185305cf15714a9b1ae6d0b5",
+    "tests/test_create.py": "9ccd8696cfd672bbfa4e3bf0265ad00c4e4c707ffbdb49cc92b2db54dea8b217",
+    "tests/test_data_contract.py": "f4c4b17466cbc2f3eb46a48e4277a567e6ce226a5839945cdfde36cdb5684c3f",
+    "tests/test_detail.py": "ef54144b51eab2d113b1484d6df162d782da8df7b4e1ab6c3c73f64e427a3ee7",
+    "tests/test_jira.py": "0dd21b057017fa79c2f286021530799b867c0025e09883828c60a8c9ceacc0e6",
+    "tests/test_launcher.py": "2b8da801b65b12da1788b3190efc6b05f19669681888b7afa9b591d38c991da4",
+    "tests/test_parser.py": "0fb5968152a71a2599d050e5a6637f9cedd3228b5f47d1c9afb73d7fdb51ba90",
+    "tests/test_renderer.py": "fa87d433da5ab724aa9621d5470421d8de33b9a02b5ac4185ddcdb485d1e758a",
+    "tests/test_review.py": "cd19d212936659f40e42994267bb1d3dab0ff1b51fc3efa294ab855fc4f1c470"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/step-description-alias/01-accept-step-description-legacy-title.md": "163c5875e99f05a9555e111eb878a9f4aab8e3d47c94e6c4427420446f4acbe0",
+    "docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md": "041d6e41fffd0ec1e78bc5ff9b436bfc152d2e96ccc5c6e061b842b87ea188e0",
+    "docs/implementation-plans/plan-details/step-description-alias/03-request-description-step-proposals.md": "d946a2e6ecdad5eff56fb879d8461d3d6e26fe418b60139b3b963e5a7f9c2a25",
+    "docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md": "451781ff10d4266f1d80514988fed38481f9e7f11bace46746d97035502fb1e5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Step Description Alias\n\n`step-description-alias` \u00b7 generated 2026-10-22T13:56:34Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `29a0b9648dc0bd95c4a73d8dbbdc4e72465f865abf5e8bbd48a208774af94d29`\n- **Detail bundle digest:** `d192dea75556bedd393cb7bb5df75d04a5fb7062fde1bb7d28504956450e3257`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.67\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool detail step-description-alias` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Step Description Alias\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `29a0b9648dc0bd95c4a73d8dbbdc4e72465f865abf5e8bbd48a208774af94d29`\n- **Detail bundle digest:** `d192dea75556bedd393cb7bb5df75d04a5fb7062fde1bb7d28504956450e3257`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail step-description-alias` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "29a0b9648dc0bd95c4a73d8dbbdc4e72465f865abf5e8bbd48a208774af94d29",
+      "detail_bundle_digest": "d192dea75556bedd393cb7bb5df75d04a5fb7062fde1bb7d28504956450e3257",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/step-description-alias/01-accept-step-description-legacy-title.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/step-description-alias/03-request-description-step-proposals.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "8ecb875cc3d7f00a962f04c4bbbeeb02ea2e3858ee89037cd3a1bef04c6caceb",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.6666666666666666,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}
