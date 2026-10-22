@@ -1,7 +1,7 @@
 """Live-edit drift detection for iteration loops.
 
 Wraps an iteration loop's lifetime (``cmd_create`` / ``cmd_detail`` /
-``cmd_detail --reconcile --iterate`` / ``cmd_completeness --iterate``)
+``cmd_completeness --iterate``)
 with one guarantee:
 
 **Live-edit drift detection.** On acquire we snapshot the SHA-256

@@ -1033,29 +1033,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
-### Run iteration help and protected policy promise a reconcile loop the CLI rejects
-
-- **Files:** `CLAUDE.md` iteration mandate, `plan_tool/cli/run_cmd.py` run help,
-  `plan_tool/drift_detection.py` module docstring (rejected reconcile invocation),
-  generated CLI references and package help golden file; hand-written run
-  synopses in `README.md` and `docs/reference/commands.md`; the ordinary-run
-  `--iterate` warning that incorrectly recommends detail reconciliation.
-- **Symptom:** protected policy says `run --iterate` loops reconciliation;
-  actual `cmd_run` rejects `run --reconcile --iterate` with exit 2 and warns
-  that the flag has no effect on ordinary execution. Generated help repeats
-  the obsolete promise. The ordinary-run warning points to rejected
-  `detail --reconcile --iterate`; correct it in the same runtime-surface sweep.
-  The user-facing guides and installed directives
-  describe the existing behavior.
-- **Evidence:** `tests/test_cli.py::TestRunReconcileDispatch::test_cmd_run_reconcile_with_iterate_is_rejected`
-  pins the rejection before backend invocation; `cmd_run` owns the check.
-- **Fix:** align help and protected development policy with the shipped handler;
-  regenerate affected references. Preserve runtime behavior. Changes to
-  `CLAUDE.md` require architect-tier review through the normal PR flow.
-- **Route:** direct · **Readiness:** ready · **Tier:** architect.
-- **Origin:** iteration-guide follow-up, 2026-10-22; source/tests correct the
-  earlier repair-ledger disposition that inferred support from policy prose.
-
 ## ROADMAP
 
 Owner-tracked. The `roadmap` verb is experimental work the

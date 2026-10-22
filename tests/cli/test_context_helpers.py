@@ -13,12 +13,8 @@ and how ``--iterate`` / ``--max-iterations`` / ``--iteration-budget`` /
 written against the monolith so the package split can move the helpers
 without changing resolution precedence.
 
-Scope is set by ``tests/cli/COVERAGE_BASELINE.md``: direct tests are added
-only for helpers it marks as lacking direct coverage. ``_build_run_budget``
-is already directly covered (``test_cli.py`` passes a pass-through spy and
-asserts its real ``IterativeBudget``), so it keeps that baseline pointer
-instead of a duplicate here — and since it merely delegates to
-``_resolve_iterative_budget``, the validation tests below cover its logic.
+The retained ``_build_run_budget`` compatibility wrapper delegates to
+``_resolve_iterative_budget``; the validation tests below cover that resolver.
 
 Split-proof conventions (see ``test_package_surface.py``): the helpers are
 imported from ``plan_tool.cli`` and driven through real namespaces built by

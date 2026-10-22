@@ -54,8 +54,8 @@ Source-of-truth references are inline; see the [source map](#source-map).
               └───────────────────────────────┬───────────────────────────────┘
                                                v
                               ┌────────────────────────────────┐
-                              │  validate iteration budget      │  fail → rc=2
-                              │  (--max-iterations / -budget)   │
+                              │  validate legacy loop flags      │  fail → rc=2
+                              │  (compatibility only; no loop)   │
                               └────────────────┬───────────────┘
                                                v
                                          run_step()  ◄── the shared core

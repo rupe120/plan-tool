@@ -149,3 +149,11 @@ runtime behavior or parser change is introduced. Full suite at `0ba7e8692` is
 14,698 passed / 66 skipped in 63.72s; later changes are backlog recipes,
 recovery prose and review records. All findings have dispositions. Changes are
 committed on `fix/iteration-guide-routes`; no push or PR is part of this action.
+
+
+## Iteration policy/help follow-up — 2026-10-22
+
+The protected-policy and CLI help/warning deferral is implemented in the
+[run iteration guidance repair](2026-10-22-run-iteration-guidance-code-review.md).
+That record owns current validation and review status; deferrals above retain
+the provenance of these earlier review snapshots, not a remaining open bug.

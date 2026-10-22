@@ -13594,6 +13594,37 @@ plan-tool reconcile-code roadmap-stack-layer --all
 
 ---
 
+**#517 — Prefer step `description` while accepting legacy `title`**
+
+- **What:** bare-plan steps currently require `steps[].title` (`Step.title` in
+  `plan_tool/schema.py`, documented in `PLAN_FORMAT.md`). Use `description` as
+  the preferred field for newly authored steps and accept `title` as a backward
+  compatible alias.
+- **Outcome:** new plans use `steps[].description`; existing plans using
+  `steps[].title` remain readable and usable throughout the pipeline.
+- **In scope:** step-field input aliases, authoring and serialization contracts,
+  relevant prompts, format documentation and consumers that depend on that
+  field. Define deterministic handling when both keys occur, including
+  conflicting values, without silently losing step content.
+- **Out of scope / Non-goals:** migrating existing plans; renaming plan or
+  feature titles; changing step meaning, execution order or detail requirements;
+  unrelated schema cleanup.
+- **Allowed behavior changes:** prefer `description` in newly authored output
+  while preserving legacy `title` input compatibility. Document the selected
+  serialization and duplicate-key policy explicitly.
+- **Allowed reorganization:** none beyond changes necessary for the alias.
+- **Verification:** cover description-only and legacy title-only plans,
+  agreeing and conflicting dual-key inputs, and read/write round trips. Verify
+  affected detail, audit, run and Jira consumers retain the step text; update
+  authoring examples and format-contract tests for the preferred spelling.
+- **Stop / defer:** surface any required format-version or migration decision
+  before broadening this into a rewrite of stored plans or internal step APIs.
+- **Route:** plan · **Readiness:** ready · **Tier:** architect.
+- **Origin:** owner direction, 2026-10-22; preferred spelling and continued
+  acceptance of `title` are settled requirements.
+
+---
+
 ## Public onboarding and release candidates
 
 These candidates retain clone plus editable `uv` installation. Existing arcs own

@@ -53,7 +53,7 @@ Audit — check the plan and code agree, or judge the plan's design; never advan
     plan-tool split-criteria [<plan>]        Show the split-criteria legend, or (with a plan) why that plan is shaped the way it is; no claude; criterion results exit 0.
 
 Execution — drive code edits by running plan steps.
-  plan-tool run <name> [--iterate]         Execute a step via a fresh claude subprocess; default --mode advances plan state; --iterate loops reconcile.
+  plan-tool run <name>                     Execute a step via a fresh claude subprocess; default --mode advances plan state; no iteration loop.
   plan-tool run <name> --all [--max-steps N]  Sweep every runnable step in one invocation; halts on first failure; implies -y.
 
 Integration — emit artifacts for external systems.
@@ -85,14 +85,8 @@ Setup — opt-in integration wiring (the CLI is standalone; never required).
 # ``plan-tool = "plan_tool.cli:main"`` keep resolving after the former
 # ``plan_tool/cli.py`` monolith became a package.
 #
-# Where dispatch reads its globals (load-bearing): every ``cmd_*`` handler
-# resolves its collaborators (``run_step``, ``walk_recommendations``,
-# ``create_plan``, ``generate_detail``, ``_build_run_budget``, …) as
-# :mod:`plan_tool.cli.app` *module globals*. A name re-exported here points
-# at the **same** function object as the one in ``app``, so rebinding it on
-# this package does **not** affect dispatch — the handler still reads
-# ``app``'s binding. Tests that ``monkeypatch.setattr`` a CLI global must
-# therefore target ``plan_tool.cli.app``, not this package alias.
+# Package re-exports do not redirect handler globals. Patch collaborators in
+# the command module that resolves them; inspect each handler's lookup seam.
 
 from __future__ import annotations
 

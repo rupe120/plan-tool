@@ -1053,10 +1053,7 @@ def _cmd_detail_reconcile(
     mirrors ``cmd_run``'s reconcile reuse heuristic so we don't spend
     a fresh claude call when one already landed.
 
-    The actual audit logic lives in :func:`_run_detail_reconcile_path`
-    so the step-5 deprecation alias for ``plan-tool run --mode
-    reconcile`` can dispatch into the same code path under its own
-    ``command="run"`` run-log slug without double-logging.
+    Per-step audit logic lives in :func:`_run_detail_reconcile_path`.
     """
     from plan_tool.detail import _plan_slug as _detail_plan_slug
 
@@ -1290,32 +1287,14 @@ def _run_detail_reconcile_path(
     run_logger: RunLogWriter,
     budget: IterativeBudget = IterativeBudget(enabled=False),
 ) -> tuple[int, Optional[str]]:
-    """Plan/detail-side reconcile body shared by detail and the alias.
+    """Plan/detail-side reconcile body for single-step and all-step callers.
 
-    Returns ``(rc, err_msg)`` so the caller can record a single
-    ``run_end`` against the run logger it owns. Step-3's
-    :func:`_cmd_detail_reconcile` and step-5's ``plan-tool run --mode
-    reconcile`` deprecation alias inside :func:`cmd_run` both call
-    this; the alias passes its own ``command="run"`` ``RunLogWriter``
-    so ``plan-tool runs list`` still shows the invocation under the
-    operator's original verb (no double-log under
-    ``command="detail-reconcile"``).
+    Return ``(rc, err_msg)`` so the caller records one ``run_end`` against
+    its logger. Callers supply step selection and review options; optional
+    save/walk flags default to off when absent.
 
-    Assumes the caller has already validated that the args namespace
-    carries ``step``, ``dry_run``, ``yes``, and ``name`` -- the run
-    subparser and the detail subparser both produce these. ``no_save``
-    and ``no_walk`` are only on the run subparser; ``_save_and_walk_-
-    reconcile`` reads them via ``getattr(..., False)`` so omission is
-    silently treated as off (matches the detail subparser's behaviour
-    of always persisting + walking).
-
-    ``budget`` controls the post-walk iteration loop. The default
-    ``IterativeBudget(enabled=False)`` matches :func:`_cmd_detail_-
-    reconcile`'s historical behaviour (no iteration after a detail-side
-    audit). The deprecation alias in :func:`cmd_run` passes
-    ``_build_run_budget(args)`` so legacy ``plan-tool run --mode
-    reconcile --iterate`` invocations keep iterating during the
-    transition window.
+    ``budget`` controls the retained internal post-walk helper. Current CLI
+    reconciliation routes leave it disabled; they expose no iteration loop.
     """
     if args.step is None:
         error(
