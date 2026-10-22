@@ -527,17 +527,6 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
-### Step-field diagnostics advertise only legacy title after description alias support
-
-- **Files:** `plan_tool/parser.py:format_validation_errors`, `_explain_extra_field`, and mirrored tests.
-- **Symptom:** accepted step `description` is absent from the allowed-field list because the formatter enumerates internal `Step.model_fields`. Missing step text is reported as `steps.0.title: Field required`. A typo such as `descripton` therefore directs new authors only to the legacy spelling, although `description` is preferred.
-- **Evidence:** alias implementation Claude Code review 1, range `b2e46f5a4..09338c987`; independent throwaway-input probes confirm the messages. Existing parser tests pin the allowed-field prefix, not this omission. Acceptance/rejection is correct and legacy title remains a valid remedy.
-- **Outcome / in scope:** expose both supported step spellings in actionable diagnostics without renaming internal fields or changing validation. Distinguish missing step text from plan/feature title errors and misplaced fields.
-- **Out of scope:** new alias behavior, error-schema redesign, format-version changes or broad message normalization.
-- **Verification:** actual missing/typo/misplaced-field inputs show the preferred and accepted spellings; plan/feature title diagnostics and validation outcomes stay unchanged.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** #517 review, 2026-10-22; non-blocking diagnostic improvement, separate from alias implementation.
-
 ### Feature-container unknown fields are mislabeled as plan-level fields
 
 - **Files:** `plan_tool/parser.py:_explain_extra_field` and mirrored tests.

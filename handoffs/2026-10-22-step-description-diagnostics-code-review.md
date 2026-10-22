@@ -6,7 +6,7 @@
 | Branch | `fix/step-description-diagnostics` |
 | Scope | BUG_BACKLOG “Step-field diagnostics advertise only legacy title after description alias support” |
 | Route | Bounded direct formatter correction; no schema or alias change |
-| Current state | Full suite passes; first actual Claude Code review clean on logic; independent confirmation pending |
+| Current state | Complete: 15,032 tests pass; two independent actual Claude Code reviews confirm logic convergence |
 
 ## Property and sites
 
@@ -76,3 +76,31 @@ This round adds tests and tracking only. Production logic stays at `fedb8ff44`.
 Review-1 follow-up checks: 499 affected tests pass in 1.21s; full suite 15,032
 passed, 67 skipped in 73.79s. Production formatter is unchanged; new coverage
 and tracking do not reset the logic review window.
+
+## Claude Code review 2 and closure
+
+Range `2445c3740..78740f1cd`, actual built-in code-review Skill at high effort,
+Sonnet 5.5, session `0ef7a12a-0014-4bc2-b1a6-335039425d2b`, CLI exit zero. Consolidated
+report `.tmp/step-description-diagnostics.review-2.md`. Four candidates receive
+independent source/caller/test verification and 15 real-parser probes. Tests:
+973 passed, 1 skipped, including parser, CLI, locator and sweep consumers.
+No introduced logic defect or regression; review 1's correction is independently
+confirmed against the latest full diff.
+
+- Feature-container label/list issue remains separately filed and verified as
+  pre-existing; this fix adds only an accurate step-placement hint for that key.
+- Missing text plus a typo correctly emits both errors; actual parser and CLI
+  regressions pin it. Correlating/suppressing errors via typo heuristics is
+  declined new scope, not a missing implementation.
+- Hypothetical internal Step.title renames are not a current defect; the schema
+  and tests explicitly preserve the field. No alias metadata refactor is needed.
+- Displayed versus structured locations differ deliberately; structured payload
+  and raw exception text stay unchanged. No in-repo consumer parses the old text.
+- Close source tracking now that the second confirmation is complete. Keep the
+  deferred feature-container entry rather than silently broadening this repair.
+
+**Logic convergence:** reviews 1 and 2 independently find no introduced defect
+against latest production change `fedb8ff44`; later changes add tests and
+tracking only. Last full suite: 15,032 passed, 67 skipped in 73.79s. The closing
+commit removes the source BUG_BACKLOG entry and indexes this evidence; no claim
+is made that those bookkeeping bytes receive a third Claude review.
