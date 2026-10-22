@@ -1363,7 +1363,8 @@ def test_apply_raises_and_rolls_back_when_carved_archive_fails(tmp_path, monkeyp
     assert path.read_text(encoding="utf-8") == before
 
 
-def test_apply_narrows_plan_on_disk(tmp_path):
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_apply_narrows_plan_on_disk(tmp_path, newline):
     plan = _mk_plan(
         [
             _mk_step(1, "First", status=StepStatus.DONE),
@@ -1373,10 +1374,13 @@ def test_apply_narrows_plan_on_disk(tmp_path):
         ]
     )
     path = _write_plan_file(tmp_path, plan)
+    path.write_bytes(path.read_bytes().replace(b"\n", newline.encode()))
+    body = path.read_bytes().split(newline.encode() + b"---" + newline.encode(), 1)[1]
     plan = parse_plan(path)
 
     _apply(tmp_path, path, plan, 2)
 
+    assert path.read_bytes().endswith(body)
     narrowed = parse_plan(path)
     assert [s.id for s in narrowed.steps] == [1, 2, 3]
     assert [s.title for s in narrowed.steps] == ["First", "Third", "Fourth"]
@@ -1929,7 +1933,8 @@ def test_unknown_owned_concept_id_refuses_before_writes(tmp_path):
     assert not _seed_files(tmp_path)
 
 
-def test_concept_save_failure_rolls_back_narrow(tmp_path, monkeypatch):
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_concept_save_failure_rolls_back_narrow(tmp_path, monkeypatch, newline):
     import plan_tool.concept_tree as concept_tree
 
     owned = concept_id("Owned", [])
@@ -1938,10 +1943,11 @@ def test_concept_save_failure_rolls_back_narrow(tmp_path, monkeypatch):
         status=PlanStatus.PLANNING,
     )
     path = _write_plan_file(tmp_path, plan)
+    path.write_bytes(path.read_bytes().replace(b"\n", newline.encode()))
     _save_concept_record(path, "Owned")
-    before_plan = path.read_text(encoding="utf-8")
+    before_plan = path.read_bytes()
     concept_path = concept_tree.concepts_path(path)
-    before_concepts = concept_path.read_text(encoding="utf-8")
+    before_concepts = concept_path.read_bytes()
     real_save = concept_tree.save_concepts
 
     def _save_then_fail(*args, **kwargs):
@@ -1954,8 +1960,8 @@ def test_concept_save_failure_rolls_back_narrow(tmp_path, monkeypatch):
             path, carved_id=2, repo_root=tmp_path, allow_scope_out=True, yes=True
         )
 
-    assert path.read_text(encoding="utf-8") == before_plan
-    assert concept_path.read_text(encoding="utf-8") == before_concepts
+    assert path.read_bytes() == before_plan
+    assert concept_path.read_bytes() == before_concepts
     assert len(_seed_files(tmp_path)) == 1
 
 
@@ -2808,3 +2814,59 @@ class TestScopeOutCLI:
             if isinstance(action, argparse._SubParsersAction):
                 choices = action.choices
         assert "scope-out" in choices
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+def test_rollback_after_plan_publication_restores_exact_bytes_and_provenance(
+    tmp_path, monkeypatch, newline,
+):
+    path = _write_plan_file(tmp_path, _mk_plan([
+        _mk_step(1, "First", detail=_detail("01-first.md")),
+        _mk_step(2, "Second", depends_on=[1], detail=_detail("02-second.md")),
+        _mk_step(3, "Third", depends_on=[1], detail=_detail("03-third.md")),
+    ], status=PlanStatus.PLANNING))
+    before = path.read_bytes().replace(b"\n", newline.encode())
+    path.write_bytes(before)
+    plan = parse_plan(path)
+    details = {}
+    for name in ("01-first.md", "02-second.md", "03-third.md"):
+        _touch_detail(tmp_path, _detail(name))
+        detail = tmp_path / _detail(name)
+        details[detail] = detail.read_bytes()
+    real_write = scope_out.write_plan
+
+    def publish_then_fail(*args, **kwargs):
+        real_write(*args, **kwargs)
+        assert path.read_bytes() != before
+        raise RuntimeError("failure after publication")
+
+    monkeypatch.setattr(scope_out, "write_plan", publish_then_fail)
+    preview = compute_narrow(
+        plan, carved_id=2, plan_path=path, repo_root=tmp_path,
+        source_frontmatter_hash=compute_frontmatter_hash(path),
+    )
+    with pytest.raises(RuntimeError, match="after publication"):
+        apply_narrow(path, preview, repo_root=tmp_path)
+
+    assert path.read_bytes() == before
+    assert all(detail.read_bytes() == content for detail, content in details.items())
+    assert not (tmp_path / _detail("02-third.md")).exists()
+    real_write(path, plan)
+    assert path.read_bytes().endswith(before.split(newline.encode() + b"---" + newline.encode(), 1)[1])
+
+
+@pytest.mark.parametrize("newline", ["\r\n", "\r"])
+def test_narrow_preview_detects_frontmatter_newline_changes(tmp_path, newline):
+    path = _write_plan_file(tmp_path, _mk_plan([_mk_step(1), _mk_step(2)]))
+    plan = parse_plan(path)
+    preview = compute_narrow(
+        plan, carved_id=2, plan_path=path, repo_root=tmp_path,
+        source_frontmatter_hash=compute_frontmatter_hash(path),
+    )
+    changed = path.read_bytes().replace(b"\n", newline.encode())
+    path.write_bytes(changed)
+
+    with pytest.raises(NarrowError):
+        apply_narrow(path, preview, repo_root=tmp_path)
+
+    assert path.read_bytes() == changed
