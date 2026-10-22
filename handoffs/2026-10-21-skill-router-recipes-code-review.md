@@ -7,7 +7,7 @@
 | Scope | Claude, Codex and Cursor routers; resolved backlog and evidence links |
 | Runtime changes | None |
 | Validation | Eight parent parser checks; 33 affected tests pass; full suite: 14,698 passed, 66 skipped in 63.02s |
-| Review state | Review 3 is clean after the headless correction; final independent confirmation pending |
+| Review state | Converged: reviews 3 and 4 are independently clean after the headless correction |
 
 ## Property and sites
 
@@ -63,10 +63,36 @@ the demo is resolved by parent access; it is not claimed as a skill runtime fix.
   source and tests, with 12 parser-only probes. Its final response is saved by
   the outer CLI despite its read-only workspace. The remaining deeper iteration
   guide contradiction is tracked in BUG_BACKLOG.md rather than expanded into
-  this router repair. Final independent confirmation is pending. Saved artifacts
-  use `.tmp/skill-router-recipes.review-N.md`; durable verdicts belong here
-  because scratch paths may disappear.
+  this router repair. Review 4, `94e259687..49f663dc4`, independently checks all eight changed
+  files, 19 parser probes, handlers, source/tests, resolved links and the
+  retained full-suite result; it reports no material findings. Saved artifacts
+  use `.tmp/skill-router-recipes.review-N.md`; these verdicts retain the
+  conclusions when scratch paths disappear.
 
 No plan-tool execution plan or post-run code reconcile sweep is needed for this
 direct documentation correction. The direct-change accuracy/completeness loop
 applies; installation refresh and publication are recorded only when performed.
+
+## Installation and closure
+
+Before refresh, the installed Codex `SKILL.md` and `DIRECTIVES.md` copies match
+the pre-fix source, so no custom content is overwritten. The global
+`plan-tool install-skill --integration codex --user --force` reports “already
+installed,” but a byte comparison still finds the old router. Its bundled-source
+resolution does not select this checkout's changed router; this is not evidence
+that `--force` is broken.
+
+The explicit checkout invocation succeeds:
+
+```bash
+.venv/bin/python -c 'from plan_tool.cli.app import main; raise SystemExit(main(["install-skill", "--integration", "codex", "--user", "--force"]))'
+```
+
+Post-install byte checks confirm both installed files match the verified source.
+Existing Claude/Cursor installation links are not retargeted. The branch push's
+required full-suite hook also passes.
+
+Two consecutive independent post-correction reviews are clean. The loop closes
+as converged for all five confirmed router instruction defects. The deeper
+iteration-guide mismatch remains separately tracked. No CLI behavior changes,
+new gates, default-branch pushes or pull-request merge are part of this repair.
