@@ -134,7 +134,7 @@ class SectionAnnotation:
     not-yet-implemented remainder (the only part step 2's seed renderer
     scopes forward). ``is_step`` is ``True`` when the section is a
     frontmatter ``steps:`` entry, so its ``heading`` is the step's YAML
-    ``title:`` (which has no markdown heading line).
+    ``description:`` or legacy ``title:`` text (no markdown heading line).
     """
 
     heading: str

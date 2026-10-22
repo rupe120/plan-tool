@@ -2633,7 +2633,7 @@ _PROPOSAL_DEPENDS_ON_NOTES_EXPLAINER = (
 )
 
 # Fixed item 8 (destructive-operation disposition), riding both arms. Targets
-# `title`/a dedicated step, never `intent` (reserved for the one-line
+# `description`/a dedicated step, never `intent` (reserved for the one-line
 # why-this-step-exists statement) — avoid a hand-typed item-number
 # cross-reference here; the last renumber already nearly missed one
 # stale reference elsewhere (BACKLOG #268).
@@ -2644,15 +2644,15 @@ _PROPOSAL_DESTRUCTIVE_ITEM = (
     "(Grep those files for the delete/replace/cleanup calls), state what "
     "happens to each destructive operation under the new design — "
     "preserved, narrowed, or retired — by naming the disposition in the "
-    "step's `title`, or by adding a dedicated step linked with "
-    "`depends_on` when it needs more room than the title can hold. Do not "
+    "step's `description`, or by adding a dedicated step linked with "
+    "`depends_on` when it needs more room than the description can hold. Do not "
     "fold it into `intent`, which is reserved for the one-line "
     "why-this-step-exists statement. Watch "
     "especially for a step that retires or bypasses a producer while an "
     "existing destructive consumer keeps running: state what that "
     "consumer now does on the new (possibly empty) input. A destructive "
     "operation left implicit is the defect class later audits return as "
-    "CRITICAL. Fold the disposition into `title` or a dedicated step, "
+    "CRITICAL. Fold the disposition into `description` or a dedicated step, "
     "never a new JSON key and never `intent`."
 )
 
@@ -2716,7 +2716,7 @@ _PROPOSAL_FOUNDATIONAL_ITEM = (
 _STEP_PROPOSAL_RESPONSE_CONTRACT = JsonResponseContract(
     root=JSON_ROOT_ARRAY,
     example=[{
-        "title": "plain-language step title",
+        "description": "plain-language step description",
         "complexity": "medium",
         "change_type": "feature",
         "rationale": "why this is feature work",
@@ -2726,7 +2726,7 @@ _STEP_PROPOSAL_RESPONSE_CONTRACT = JsonResponseContract(
         "depends_on": [],
         "depends_on_notes": {},
     }, {
-        "title": "a later step depending on the one above",
+        "description": "a later step depending on the one above",
         "complexity": "low",
         "change_type": "feature",
         "rationale": "why this is feature work",
@@ -2828,15 +2828,15 @@ def _render_from_prompt(
         "or a bare `agent.py`) — partial or basename-only paths get "
         "flagged downstream as stale/typo references. Reflect "
         "new-vs-existing in the complexity rating.\n"
-        "2. Use Grep to look for symbols implied by the step titles. If "
-        "the work is already partially done, rewrite the step title to "
+        "2. Use Grep to look for symbols implied by the step descriptions. If "
+        "the work is already partially done, rewrite the step description to "
         "reflect what's left (\"Replace X with Y\" instead of \"Add Y\") "
         "and shrink the complexity accordingly. If a step is fully done, "
         "drop it from the response.\n"
         "3. Note runtime dependencies the description implies (packages, "
         "SDKs, env vars) but which aren't already declared in "
         "`package.json` / `pyproject.toml` / equivalent. Fold any "
-        "dependency-adding work into the relevant step title rather than "
+        "dependency-adding work into the relevant step description rather than "
         "leaving it implicit.\n"
         "4. Include a step (or fold into an existing step) for **test "
         "coverage**. Unit tests by default; integration tests ONLY "
@@ -2903,7 +2903,7 @@ def _render_from_prompt(
         "`depends_on_notes` keys denote the same integers but, "
         "like every JSON object key, are written as strings (`\"1\"`) — "
         "only the array items must be bare numbers. "
-        "**Write every `title` in plain, everyday words** "
+        "**Write every `description` in plain, everyday words** "
         "— name the change the way you'd say it to a teammate (\"Add "
         "worktree path helpers\"), not in dense or clever phrasing; keep "
         "real identifiers (file, function, flag names) but drop "
@@ -6366,8 +6366,11 @@ def _parse_steps_json(
     for i, item in enumerate(items, start=1):
         if not isinstance(item, dict):
             return None
-        title = item.get("title")
-        if not isinstance(title, str) or not title.strip():
+        step_text = {key: item[key] for key in ("description", "title") if key in item}
+        if not step_text or any(
+            not isinstance(value, str) or not value.strip()
+            for value in step_text.values()
+        ):
             return None
         complexity: Optional[Complexity] = None
         raw_cx = item.get("complexity")
@@ -6457,7 +6460,7 @@ def _parse_steps_json(
             steps.append(
                 Step(
                     id=i,
-                    title=title,
+                    **step_text,
                     intent=intent,
                     complexity=complexity,
                     change_type=change_type,
@@ -6782,7 +6785,7 @@ def _propose_step_split(
         f"Step detail: {step.detail or '(none)'}\n\n"
         f"Step concept_ids: {json.dumps(step.concept_ids)}\n\n"
         "Return ONLY a JSON array of exactly two objects, each with keys "
-        '`title`, `change_type` ("refactor" then "feature"), `files`, '
+        '`description`, `change_type` ("refactor" then "feature"), `files`, '
         "`creates`, `concept_ids`, and a one-line `rationale`. Distribute "
         "only the supplied concept_ids: every supplied id must appear on at "
         "least one replacement, no new id may appear, and an id may appear "

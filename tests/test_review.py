@@ -20338,3 +20338,12 @@ def test_input_contract_dispatch_routes_share_sibling_eligibility(tmp_path):
         ("details/step-1.md", 1, "details/step-1.md:## Input"),
     ]
     assert all(i.code_anchor == "pkg/typo.py:Missing" for i in dispatched)
+
+
+def test_review_prompt_keeps_step_text_after_description_round_trip(tmp_path):
+    from plan_tool.parser import parse_plan_text, render_plan_text
+    from plan_tool.review import render_review_prompt
+
+    plan = parse_plan_text("---\ntitle: Plan\nstatus: planning\npriority: medium\nsteps:\n- id: 1\n  title: Exact step text\n---\n")
+    rewritten = parse_plan_text(render_plan_text(plan, ""))
+    assert "Exact step text" in render_review_prompt(rewritten, tmp_path)

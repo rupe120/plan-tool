@@ -537,6 +537,15 @@ def test_detail_format_version_documented_with_live_value() -> None:
 def test_plan_format_version_class_rules_documented() -> None:
     section = _section(_doc_text(), "Plan format version")
     assert 'extra="forbid"' in section
+    assert "must bump" in section
+    assert "except for the named" in section
+    assert "Version-1 step alias exception" in section
+    assert "owner-confirmed 2026-10-22 (#517)" in section
+    assert "retaining format version 1 without an explicit upgrade" in section
+    assert "Existing\n  plans remain readable and writable" in section
+    assert "Older installations that do not recognize" in section
+    assert "reject newly emitted keys through strict validation" in section
+    assert "permits no arbitrary unknown fields" in section
     assert "effective-older plan" in section
     assert "current-minus-one" in section
     assert "dated, user-approved record" in section

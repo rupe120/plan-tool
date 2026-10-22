@@ -6226,6 +6226,9 @@ class TestCreatePlanRecoveryBoundaries:
                 output_dir_override=output_dir,
                 manifest_path=manifest,
                 input_fn=_queue_input(_basic_metadata_answers() + _single_step_answers()),
+                from_description="Build a thing",
+                claude_invoker=lambda _prompt: json.dumps([{"description": "Build it", "intent": "Deliver behavior"}]),
+                yes=True,
             )
 
         retained = output_dir / "2-demo.md"
@@ -8258,7 +8261,8 @@ class TestCreatePlanReplaceOnCollision:
             lambda *a, **kw: ReferenceResearchResult.from_references([]),
         )
 
-    def test_replace_via_kwarg_archives_existing(self, tmp_path: Path) -> None:
+    @pytest.mark.parametrize("text_key", ["description", "title"])
+    def test_replace_via_kwarg_archives_existing(self, tmp_path: Path, text_key: str) -> None:
         (tmp_path / ".git").mkdir()
         out_dir = tmp_path / "plans"
         out_dir.mkdir()
@@ -8284,8 +8288,15 @@ class TestCreatePlanReplaceOnCollision:
             manifest_path=manifest,
             input_fn=_queue_input(answers),
             replace_on_collision=True,
+            from_description="Build a replacement",
+            claude_invoker=lambda _prompt: json.dumps([{text_key: "Replacement step", "intent": "Supply replacement behavior"}]),
+            yes=True,
         )
 
+        assert parse_plan(result.plan_path).steps[0].title == "Replacement step"
+        assert "  description: Replacement step" in result.plan_path.read_text()
+        assert not existing.exists()
+        assert not old_details.exists()
         # New plan lands at the medium-priority bucket.
         assert result.plan_path.name == "2-foo.md"
         # Existing plan moved into archive with replacement notice.
@@ -23999,3 +24010,98 @@ def test_normalized_create_refreshes_research_and_finalizes_with_source_context(
     assert "Testing source proof." in body
     assert "Acceptance criteria source proof." in body
     assert "https://updated.example.com" in body
+
+
+class TestProposalDescriptionAlias:
+    @pytest.mark.parametrize("omit_foundational_item", [False, True])
+    def test_step_proposal_contract_requests_description_in_both_prompt_arms(
+        self, omit_foundational_item: bool
+    ) -> None:
+        prompt = _render_from_prompt("Build it", omit_foundational_item=omit_foundational_item)
+        assert '"description": "plain-language step description"' in prompt
+        assert "Write every `description`" in prompt
+        assert '"title"' not in prompt
+        assert "`title`" not in prompt
+
+    @pytest.mark.parametrize("keys", [
+        {"description": "  Keep text exactly  "},
+        {"title": "  Keep text exactly  "},
+        {"description": "  Keep text exactly  ", "title": "  Keep text exactly  "},
+    ])
+    def test_proposal_accepts_either_step_text_spelling_without_changing_text(self, keys) -> None:
+        steps = _parse_steps_json(json.dumps([keys]))
+        assert steps is not None
+        assert steps[0].title == "  Keep text exactly  "
+
+    @pytest.mark.parametrize("keys", [
+        {}, {"description": ""}, {"title": ""},
+        {"description": " \n "}, {"title": " \n "},
+        {"description": "one", "title": "two"},
+        *[{key: value, other: "valid"}
+          for key, other in [("description", "title"), ("title", "description")]
+          for value in [None, 1, True, [], {}, "", "  "]],
+    ])
+    def test_proposal_rejects_missing_blank_conflicting_or_invalid_supplied_text(self, keys) -> None:
+        assert _parse_steps_json(json.dumps([keys])) is None
+
+    def test_description_proposal_preserves_other_step_fields(self) -> None:
+        rationales = {}
+        steps = _parse_steps_json(json.dumps([{
+            "description": "Deliver it", "depends_on": ["2", 2],
+            "depends_on_notes": {"2": "Use its output"}, "concept_ids": [_CONCEPT_A],
+            "intent": "Deliver\nbehavior", "rationale": "  New behavior  ",
+            "complexity": "low", "change_type": "unrecognized", "gate": ["untrusted"],
+            "files": ["existing.py"], "creates": ["new.py"],
+        }]), rationales_out=rationales)
+        assert steps is not None
+        step = steps[0]
+        assert step.depends_on == [2]
+        assert step.depends_on_notes == {2: "Use its output"}
+        assert step.concept_ids == [_CONCEPT_A]
+        assert step.intent == "Deliver behavior"
+        assert rationales == {1: "New behavior"}
+        assert step.complexity is Complexity.LOW
+        assert step.change_type is None
+        assert step.gate == []
+        assert step.files == ["existing.py"] and step.creates == ["new.py"]
+        assert _parse_steps_json('[{"description":"Valid", "complexity":"invalid"}]') is None
+
+    @pytest.mark.parametrize("text_key", ["description", "title"])
+    def test_split_proposal_requests_description_and_accepts_either_spelling(self, text_key) -> None:
+        prompts = []
+        def invoke(prompt):
+            prompts.append(prompt)
+            return json.dumps([{text_key: "Refactor", "change_type": "refactor"},
+                               {text_key: "Feature", "change_type": "feature"}])
+        original = Step(id=3, title="Mixed", depends_on=[1])
+        pair = _propose_step_split(original, invoke)
+        assert pair is not None
+        assert '`description`, `change_type`' in prompts[0]
+        assert '`title`' not in prompts[0]
+        wired = _apply_step_split([Step(id=1, title="Before"), original], 3, pair)
+        assert wired[1].title == "Refactor" and wired[1].depends_on == [1]
+        assert wired[2].title == "Feature" and wired[2].depends_on == [wired[1].id]
+
+
+def test_description_steps_preserve_archive_failure_restoration(tmp_path, monkeypatch) -> None:
+    steps = _parse_steps_json('[{"description":"Keep this text"}]')
+    assert steps is not None
+    source = create_module.write_new_plan(
+        tmp_path, "demo", Plan(title="Demo", status="planning", priority="medium", steps=steps)
+    )
+    original = source.read_bytes()
+    details = tmp_path / "plan-details" / "demo"
+    details.mkdir(parents=True)
+    (details / "01-step.md").write_text("detail")
+
+    def fail_publication(*_args):
+        raise OSError("publication stopped")
+
+    monkeypatch.setattr(create_module, "_publish_archive_dir", fail_publication)
+    result = archive_existing_source(source, tmp_path / "replacement.md", repo_root=tmp_path)
+    assert result.skipped and result.archived == []
+    assert source.read_bytes() == original
+    assert parse_plan(source).steps[0].title == "Keep this text"
+    assert (details / "01-step.md").read_text() == "detail"
+    assert not list((tmp_path / "archive").rglob("*.md"))
+    assert not list((tmp_path / "archive").rglob("*.tmp"))

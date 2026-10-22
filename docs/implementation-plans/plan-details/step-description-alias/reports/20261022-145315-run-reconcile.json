@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "plan_slug": "step-description-alias",
+  "plan_path": "docs/implementation-plans/2-step-description-alias.md",
+  "created_at": "2026-10-22T14:53:15Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "da191655270ebb6e8cec172468eaaef4cb4d7d10c23f66eeca2cf09a7440f8df",
+  "code_fingerprint": {
+    "BACKLOG.md": "4202917b4f8cdd9faa39a64fa9c2958e762c6e6a3792441fc8653f4599ccffb8",
+    "DATA_CONTRACT.md": "dfb542712cd217284f39a861f207b5b7cf5355a9c35ff7cc1f3b24f0ca095f43",
+    "PLAN_FORMAT.md": "a709c982804403d31922840163da05eac8d94059ad1aa0ae71131c9dd982319a",
+    "plan_tool/create.py": "8e9dc5aabc1fbd63bf2c67e018a32b87900a26f9957a95fda36e79328780d956",
+    "plan_tool/parser.py": "919b7f059f6a1ad0506a6b6cf6ae9a3c44ca657c7157c3cbce20e74ad3fcf8cb",
+    "plan_tool/schema.py": "9e74d9a640761f0322cb427e16f1a76b847dabb325a1ef4790fc37afce8f31f2",
+    "tests/test_create.py": "51db7654b3a595d59cfdbce4827c98520995b89e96dfafff3316acad6e0a4278",
+    "tests/test_data_contract.py": "7da53b6a1806a3ef821dca55a99aaa6a7a9efed7da21f77fdcb2f80b42590b45",
+    "tests/test_detail.py": "d0624da73873110cc65d7e35abbf08d682c2e6d033abf9b346c2c267c38fa387",
+    "tests/test_jira.py": "f89e81c69840c84f3cf289aa60fc4eebc204bd60308d7cbe21dd29bfd94b3524",
+    "tests/test_launcher.py": "40989be070dfab283a34243bc279532487f8324ef237b136644b2d7af6f5e7f3",
+    "tests/test_parser.py": "dabc24917582245ebd9a2b1d0e574a227a601dcab889eb383cc67db247dfe5ea",
+    "tests/test_renderer.py": "47480dfec73aa8e90169174259cdc735d406c7ffd222ffbad4ab782da5630f45",
+    "tests/test_review.py": "ba125fb15098706b0ec5a9d084026bbe86daf7bc12bfd2a695ead6eb562a6e74"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 3 of 3 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

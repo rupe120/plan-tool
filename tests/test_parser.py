@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
 import pytest
 import yaml
+from pydantic import ValidationError as ModelValidationError
 
 from plan_tool import (
     ChangeType,
@@ -32,7 +34,7 @@ from plan_tool.parser import (
     split_plan_document,
     upgrade_plan_frontmatter_to_current,
 )
-from plan_tool.schema import PLAN_FORMAT_VERSION, SUPPORTED_PLAN_FORMAT_VERSIONS
+from plan_tool.schema import PLAN_FORMAT_VERSION, SUPPORTED_PLAN_FORMAT_VERSIONS, Step
 
 FIXTURES = Path(__file__).parent / "fixtures"
 CONCEPT_A = "a" * 64
@@ -592,6 +594,37 @@ class TestRoundTrip:
         original_body = original.split("---", 2)[2]
         new_body = new_text.split("---", 2)[2]
         assert new_body == original_body
+
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+    @pytest.mark.parametrize("text_key", ["title", "description"])
+    def test_write_preserves_raw_body_bytes_and_repeated_write_provenance(
+        self, tmp_path, newline, text_key
+    ):
+        text = _concept_plan("").replace("    title: First", f"    {text_key}: First")
+        target = tmp_path / "plan.md"
+        target.write_bytes(text.replace("\n", newline).encode("utf-8"))
+        plan = parse_plan(target)
+        original_body = split_plan_document(target.read_bytes().decode("utf-8")).body
+        for _ in range(2):
+            write_plan(target, plan)
+            written = target.read_bytes().decode("utf-8")
+            assert split_plan_document(written).body.encode("utf-8") == original_body.encode("utf-8")
+            assert "description:" in split_plan_document(written).frontmatter_yaml
+
+    def test_crlf_body_edit_is_preserved_but_frontmatter_edit_is_refused(self, tmp_path):
+        from plan_tool.parser import ConcurrentModificationError
+
+        target = tmp_path / "plan.md"
+        target.write_bytes(_concept_plan("").replace("\n", "\r\n").encode("utf-8"))
+        plan = parse_plan(target)
+        target.write_bytes(target.read_bytes() + b"Fresh body.\r\n")
+        write_plan(target, plan)
+        assert target.read_bytes().endswith(b"Fresh body.\r\n")
+        changed = target.read_bytes().replace(b"title: Concept ownership", b"title: External edit")
+        target.write_bytes(changed)
+        with pytest.raises(ConcurrentModificationError):
+            write_plan(target, plan)
+        assert target.read_bytes() == changed
 
     def test_status_update_persists(self, tmp_path: Path) -> None:
         target = tmp_path / "plan.md"
@@ -1939,3 +1972,210 @@ class TestUpgradePlanFrontmatterToCurrent:
 
         with pytest.raises(NotImplementedError):
             upgrade_plan_frontmatter_to_current(raw)
+
+
+class TestStepDescriptionAlias:
+    @staticmethod
+    def plan_data(step):
+        return dict(title="Plan", status="planning", priority="medium", steps=[step])
+
+    @classmethod
+    def plan_text(cls, step, **extra):
+        return "---\n" + yaml.safe_dump(cls.plan_data(step) | extra) + "---\n# Body\n"
+
+    @classmethod
+    def validate_step(cls, entry, data):
+        if entry == "constructor":
+            return Step(**data)
+        if entry == "model":
+            return Step.model_validate(data)
+        if entry == "plan":
+            return Plan.model_validate(cls.plan_data(data)).steps[0]
+        return parse_plan_text(cls.plan_text(data)).steps[0]
+
+    @pytest.mark.parametrize("entry", ["constructor", "model", "plan", "parser"])
+    @pytest.mark.parametrize("key", ["description", "title"])
+    def test_step_accepts_either_text_key_through_shared_validation(self, entry, key):
+        assert self.validate_step(entry, {"id": 1, key: "Exact text"}).title == "Exact text"
+
+    @pytest.mark.parametrize("entry", ["constructor", "model", "plan", "parser"])
+    @pytest.mark.parametrize("keys", [("description", "title"), ("title", "description")])
+    def test_equal_dual_keys_are_accepted_in_either_key_order(self, entry, keys):
+        data = {"id": 1, **dict.fromkeys(keys, "Same")}
+        assert self.validate_step(entry, data).title == "Same"
+
+    @pytest.mark.parametrize("entry", ["model", "parser"])
+    @pytest.mark.parametrize("other", ["Different", "same", "Same "])
+    def test_conflicting_dual_keys_name_both_keys_in_error(self, entry, other):
+        with pytest.raises((ModelValidationError, ValidationError), match="description and title conflict; supply only one key"):
+            self.validate_step(entry, dict(id=1, description="Same", title=other))
+
+    @pytest.mark.parametrize("entry", ["constructor", "model", "plan", "parser"])
+    @pytest.mark.parametrize("invalid", [None, 42, True, [], {}])
+    @pytest.mark.parametrize("key", ["description", "title"])
+    @pytest.mark.parametrize("peer", ["absent", "valid", "invalid"])
+    def test_invalid_alias_is_not_hidden_by_valid_peer(self, entry, invalid, key, peer):
+        data = {"id": 1, key: invalid}
+        if peer != "absent":
+            data["title" if key == "description" else "description"] = "Valid" if peer == "valid" else invalid
+        with pytest.raises((ModelValidationError, ValidationError)):
+            self.validate_step(entry, data)
+
+    @pytest.mark.parametrize("entry", ["constructor", "model", "plan", "parser"])
+    def test_missing_both_text_keys_remains_invalid(self, entry):
+        with pytest.raises((ModelValidationError, ValidationError), match="title"):
+            self.validate_step(entry, {"id": 1})
+
+    @pytest.mark.parametrize("key", ["description", "title"])
+    @pytest.mark.parametrize("value", ["", "  ", "世界 🌍", "First\nSecond\n"])
+    @pytest.mark.parametrize("entry", ["constructor", "model", "plan", "parser"])
+    def test_step_text_is_preserved_without_new_content_restrictions(self, entry, key, value):
+        assert self.validate_step(entry, {"id": 1, key: value}).title == value
+
+    @pytest.mark.parametrize("other", ["same", "Same ", " Same", "Same\n"])
+    def test_dual_key_equality_does_not_trim_or_fold_text(self, other):
+        with pytest.raises(ModelValidationError, match="conflict"):
+            Step(id=1, title="Same", description=other)
+
+    @pytest.mark.parametrize("extra", [{}, {"title": "Same"}, {"title": "Other"}, {"title": []}, {"unknown": []}])
+    def test_alias_validation_does_not_mutate_input_mapping(self, extra):
+        data = dict(id=1, description="Same", **extra)
+        original = deepcopy(data)
+        try:
+            Step.model_validate(data)
+        except ModelValidationError:
+            pass
+        assert data == original
+
+    def test_step_dump_keeps_internal_title_contract(self):
+        plan = Plan.model_validate(self.plan_data(dict(id=1, description="Exact")) | dict(
+            risk_profile="standard", risk_profile_rationale="Round-trip fixture"
+        ))
+        for dumped in (plan.steps[0].model_dump(), plan.model_dump()["steps"][0]):
+            assert dumped["title"] == "Exact"
+            assert "description" not in dumped
+            assert Step.model_validate(dumped).title == "Exact"
+        assert Plan.model_validate(plan.model_dump()).steps[0].title == "Exact"
+
+    def test_step_alias_does_not_allow_unrelated_unknown_fields(self):
+        with pytest.raises(ModelValidationError, match="unknown"):
+            Step(id=1, description="Text", unknown=True)
+
+    def test_step_alias_does_not_change_plan_or_feature_titles(self):
+        data = self.plan_data(dict(id=1, description="Step"))
+        data["features"] = [dict(id="feature", title="Feature")]
+        plan = Plan.model_validate(data)
+        assert plan.title == "Plan"
+        assert plan.features[0].title == "Feature"
+        for target in (data, data["features"][0]):
+            title = target.pop("title")
+            target["description"] = title
+            with pytest.raises(ModelValidationError, match="title"):
+                Plan.model_validate(data)
+            target["title"] = target.pop("description")
+
+    @pytest.mark.parametrize("version", [None, PLAN_FORMAT_VERSION, 999])
+    def test_step_alias_accepts_absent_and_current_format_version(self, version):
+        text = self.plan_text(dict(id=1, description="Text"), **({} if version is None else dict(format_version=version)))
+        if version == 999:
+            with pytest.raises(UnsupportedPlanFormatVersionError):
+                parse_plan_text(text)
+        else:
+            assert parse_plan_text(text).steps[0].title == "Text"
+
+    def test_reading_description_plan_preserves_source_bytes(self, tmp_path):
+        path = tmp_path / "description.md"
+        original = self.plan_text(dict(id=1, description="Exact\ntext")).replace("\n", "\r\n").encode()
+        path.write_bytes(original)
+        assert parse_plan(path).steps[0].title == "Exact\ntext"
+        assert path.read_bytes() == original
+
+
+class TestDescriptionSerialization:
+    @pytest.mark.parametrize("serializer", ["render", "write"])
+    @pytest.mark.parametrize("keys", [("title",), ("description",), ("title", "description")])
+    @pytest.mark.parametrize("text", ["", "line one\nline two\n", "雪: [yes] # text"])
+    @pytest.mark.parametrize("version", [None, 1])
+    def test_only_step_keys_change_without_mutating_models(
+        self, tmp_path, serializer, keys, text, version
+    ):
+        source = TestStepDescriptionAlias.plan_text(
+            {"id": 1, **dict.fromkeys(keys, text)},
+            **({"format_version": version} if version else {}),
+        )
+        plan = parse_plan_text(source)
+        before = deepcopy(plan.model_dump())
+        body = "\n# Body  \n\n```yaml\ntitle: untouched\n```\n\n"
+        if serializer == "render":
+            output = render_plan_text(plan, body)
+        else:
+            path = tmp_path / "plan.md"
+            path.write_text(source)
+            plan = parse_plan(path)
+            path.write_text(source.split("---\n# Body")[0] + "---\n" + body)
+            write_plan(path, plan)
+            write_plan(path, plan)  # Published keys refresh provenance.
+            output = path.read_text()
+        document = split_plan_document(output)
+        raw = yaml.safe_load(document.frontmatter_yaml)
+        assert raw["steps"] == [{"id": 1, "description": text}]
+        assert raw["title"] == "Plan"
+        assert raw["format_version"] == 1
+        assert document.body == body
+        assert parse_plan_text(output).steps[0].title == text
+        assert plan.model_dump() == before
+        assert "title" in plan.model_dump()["steps"][0]
+        assert "description" not in plan.model_dump()["steps"][0]
+
+    @pytest.mark.parametrize("serializer", ["render", "write"])
+    @pytest.mark.parametrize("mutation", ["version", "title"])
+    def test_invalid_mutation_never_publishes(self, tmp_path, serializer, mutation):
+        source = TestStepDescriptionAlias.plan_text({"id": 1, "title": "Keep"})
+        path = tmp_path / "plan.md"
+        path.write_text(source)
+        plan = parse_plan(path)
+        if mutation == "version":
+            plan.format_version = 99
+        else:
+            plan.steps[0].title = None
+        with pytest.raises(ValidationError):
+            if serializer == "render":
+                render_plan_text(plan, "body")
+            else:
+                write_plan(path, plan)
+        assert path.read_text() == source
+
+    def test_legacy_conversion_refuses_external_frontmatter_edit_without_writing(self, tmp_path):
+        from plan_tool.parser import ConcurrentModificationError
+
+        path = tmp_path / "plan.md"
+        path.write_text(TestStepDescriptionAlias.plan_text({"id": 1, "title": "Keep"}))
+        plan = parse_plan(path)
+        external = path.read_text().replace("Keep", "External")
+        path.write_text(external)
+        with pytest.raises(ConcurrentModificationError):
+            write_plan(path, plan)
+        assert path.read_text() == external
+
+
+@pytest.mark.parametrize("serializer", ["render", "write"])
+def test_serialization_preserves_plan_and_feature_titles(tmp_path, serializer):
+    plan = parse_plan_text(_FEATURE_PLAN)
+    before = plan.model_dump()
+    if serializer == "render":
+        output = render_plan_text(plan, "")
+    else:
+        path = tmp_path / "features.md"
+        path.write_text(_FEATURE_PLAN)
+        write_plan(path, plan)
+        output = path.read_text()
+    raw = yaml.safe_load(split_plan_document(output).frontmatter_yaml)
+    assert raw["title"] == plan.title
+    assert [feature["title"] for feature in raw["features"]] == [
+        feature.title for feature in plan.features
+    ]
+    assert [step["description"] for step in raw["steps"]] == [
+        step.title for step in plan.steps
+    ]
+    assert all("title" not in step for step in raw["steps"])
+    assert plan.model_dump() == before

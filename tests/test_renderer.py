@@ -820,3 +820,10 @@ class TestAllModesShip:
         # Every rendered prompt should reference the plan and step.
         assert "Render Test" in prompt
         assert "Step two" in prompt
+
+
+def test_run_prompt_keeps_step_text_after_description_round_trip(tmp_path):
+    from plan_tool.parser import render_plan_text
+
+    plan = parse_plan_text(render_plan_text(_plan(), ""))
+    assert "Step two" in render_prompt(plan, plan.steps[1], repo_root=tmp_path)

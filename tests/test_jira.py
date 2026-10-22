@@ -5706,3 +5706,26 @@ def test_run_grade_paired_export_rejects_unmatched_fence_before_target_write(
     assert handoff_target.read_text(encoding="utf-8") == before_handoff
     assert list(story_target.parent.glob(".*.companion.tmp")) == []
     assert list(handoff_target.parent.glob(".*.companion.tmp")) == []
+
+
+def test_export_accepts_rewritten_description_plan_without_changing_story_title(tmp_path):
+    from plan_tool.parser import parse_plan, write_plan
+
+    path = _write_companion_plan(tmp_path)
+    plan = parse_plan(path)
+    text = plan.steps[0].title
+    write_plan(path, plan)
+    prompts = []
+    def fake_invoker(prompt):
+        prompts.append(prompt)
+        return _companion_response([{"id": "AUTH-S1", "steps": [1], "title": "Story title"}])
+
+    target = tmp_path / "stories.md"
+    export_jira(
+        path, repo_root=tmp_path, epic=_DEFAULT_EPIC,
+        story_output_path=target,
+        handoff_output_path=_companion_handoff_target(tmp_path),
+        invoker=fake_invoker,
+    )
+    assert text in prompts[0]
+    assert "Story title" in target.read_text()

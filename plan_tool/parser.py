@@ -353,6 +353,12 @@ def _stamp_current_format_version(
     return {"format_version": PLAN_FORMAT_VERSION, **dumped}
 
 
+def _prefer_step_description(dumped: dict[str, Any]) -> None:
+    """Translate only authored step text; internal dumps keep their title keys."""
+    for step in dumped.get("steps", []):
+        step["description"] = step.pop("title")
+
+
 def render_plan_text(plan: Plan, body: str) -> str:
     """Validate ``plan`` and render complete Markdown around ``body``.
 
@@ -365,6 +371,7 @@ def render_plan_text(plan: Plan, body: str) -> str:
     except PydanticValidationError as exc:
         raise ValidationError(str(exc), errors=exc.errors()) from exc
     dumped = _stamp_current_format_version(plan, dumped)
+    _prefer_step_description(dumped)
     new_fm = yaml.safe_dump(
         _coerce_enums(dumped), default_flow_style=False, sort_keys=False,
         allow_unicode=True,
@@ -466,7 +473,7 @@ def parse_plan(path: str | Path) -> Plan:
     :class:`ConcurrentModificationError`).
     """
     p = Path(path)
-    text = p.read_text(encoding="utf-8")
+    text = p.read_bytes().decode("utf-8")
     plan = parse_plan_text(text)
     try:
         _FRONTMATTER_PROVENANCE[str(p.resolve())] = _frontmatter_hash(
@@ -504,7 +511,7 @@ def write_plan(
     and the body below is always taken from the current on-disk file.
     """
     p = Path(path)
-    original = p.read_text(encoding="utf-8")
+    original = p.read_bytes().decode("utf-8")
     split = _split_frontmatter(original)
 
     key = str(p.resolve())
@@ -523,6 +530,7 @@ def write_plan(
     except PydanticValidationError as exc:
         raise ValidationError(str(exc), errors=exc.errors()) from exc
     dumped = _stamp_current_format_version(plan, dumped)
+    _prefer_step_description(dumped)
     dumped = _coerce_enums(dumped)
 
     new_fm = yaml.safe_dump(
@@ -532,7 +540,7 @@ def write_plan(
         allow_unicode=True,
     )
     new_text = f"{_FENCE}\n{new_fm}{_FENCE}\n{split.body}"
-    p.write_text(new_text, encoding="utf-8")
+    p.write_bytes(new_text.encode("utf-8"))
     # Refresh provenance to what we just wrote so a subsequent in-process
     # write from the same parse doesn't false-trip on our own change.
     # Hash via _split_frontmatter (not raw new_fm) so it matches exactly

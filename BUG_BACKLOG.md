@@ -536,6 +536,28 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
+### Step-field diagnostics advertise only legacy title after description alias support
+
+- **Files:** `plan_tool/parser.py:format_validation_errors`, `_explain_extra_field`, and mirrored tests.
+- **Symptom:** accepted step `description` is absent from the allowed-field list because the formatter enumerates internal `Step.model_fields`. Missing step text is reported as `steps.0.title: Field required`. A typo such as `descripton` therefore directs new authors only to the legacy spelling, although `description` is preferred.
+- **Evidence:** alias implementation Claude Code review 1, range `b2e46f5a4..09338c987`; independent throwaway-input probes confirm the messages. Existing parser tests pin the allowed-field prefix, not this omission. Acceptance/rejection is correct and legacy title remains a valid remedy.
+- **Outcome / in scope:** expose both supported step spellings in actionable diagnostics without renaming internal fields or changing validation. Distinguish missing step text from plan/feature title errors and misplaced fields.
+- **Out of scope:** new alias behavior, error-schema redesign, format-version changes or broad message normalization.
+- **Verification:** actual missing/typo/misplaced-field inputs show the preferred and accepted spellings; plan/feature title diagnostics and validation outcomes stay unchanged.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** #517 review, 2026-10-22; non-blocking diagnostic improvement, separate from alias implementation.
+
+### Concept sync and scope-out rollback normalize existing plan body newlines
+
+- **Files:** `plan_tool/concept_sync.py:synchronize_concepts` source read and `plan_tool/scope_out.py` mutation snapshot/rollback.
+- **Symptom:** concept sync reads the plan with `read_text` before passing its body to `render_plan_text`; scope-out snapshots with `read_text` and restores with `write_text`. Those paths normalize CRLF/CR body bytes before the serializer receives them or before rollback restores them.
+- **Evidence:** source inspection during #517 Claude Code review 1 identifies the source read around concept_sync.py:174 and scope_out.py:1044,1085. Python universal-newline reads normalize those bytes; parser raw-byte regressions demonstrate this failure class. No end-to-end reproduction of these separate command paths is claimed.
+- **Outcome / in scope:** preserve original body bytes through concept-sync publication and scope-out failure rollback, with provenance matching the preserved text.
+- **Out of scope:** changes to alias semantics, concept ownership, scope selection, archive operations or unrelated text readers.
+- **Verification:** reproduce with CRLF/CR inputs through each actual command path, including a failure after scope-out publication, and assert raw body bytes plus existing rollback/concurrency guarantees. Check existing tests before selecting the bounded fix.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** #517 review, 2026-10-22; existing separate paths, outside the parser-boundary correction.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in

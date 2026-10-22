@@ -65,7 +65,18 @@ schema references for that shape.
   frontmatter shape.
 - **Break rule:** any new frontmatter key is a break, even an optional one —
   `Plan` and `Step` both declare `extra="forbid"`, so a writer must bump
-  `PLAN_FORMAT_VERSION` before it ever emits such a key.
+  `PLAN_FORMAT_VERSION` before it ever emits such a key, except for the named
+  version-1 step alias exception below.
+- **Version-1 step alias exception:** owner-confirmed 2026-10-22 (#517),
+  `steps[].description` is preferred output while legacy `steps[].title`
+  remains accepted. Both plan serializers emit `description` on ordinary
+  rewrites, retaining format version 1 without an explicit upgrade. Existing
+  plans remain readable and writable. Older installations that do not recognize
+  step `description` reject newly emitted keys through strict validation,
+  even with declared version 1; accepting version 1 does not guarantee support
+  for this spelling. This exception permits no arbitrary unknown fields or
+  unrelated schema changes. [PLAN_FORMAT.md](PLAN_FORMAT.md#field-semantics)
+  owns the alias and dual-key input rules.
 - **Writer eligibility:** `write_plan`/`render_plan_text` stamp the current
   declaration only when the plan's effective version is already current, and
   refuse to serialize an effective-older plan — including a raw absent
@@ -82,7 +93,9 @@ schema references for that shape.
   supported live on-disk plan reach a reader or writer refusal ships an
   operator-invocable upgrade route for the plan class, and a shared
   compatibility preflight before every affected mutating command's first
-  state change, in that same release.
+  state change, in that same release. The step alias exception preserves this
+  release's support for existing plans; older installations rejecting new output
+  do not constitute this release refusing an existing plan.
 - **Upgrade obligation:** `plan_tool.parser.upgrade_plan_frontmatter_to_current`
   takes a raw frontmatter mapping — not a parsed `Plan`, whose
   `format_version` field already defaults to current — and returns one

@@ -298,8 +298,8 @@ def _insert_status_blocks(
 
     Prose sections (``is_step`` False) are heading-matched: their block is
     emitted right after the first matching heading line. Plan-step sections
-    (``is_step`` True) carry a frontmatter ``title:`` that never appears as
-    a markdown heading, so they are anchored to the ``## Steps`` region in
+    (``is_step`` True) carry frontmatter ``description:`` or legacy ``title:``
+    text rather than a markdown heading, so they anchor to the ``## Steps`` region in
     frontmatter order. The only writes are pass-through of each original
     line plus inserted ``>``-prefixed block lines — no original line is
     modified, reordered, or dropped.

@@ -11380,3 +11380,24 @@ class TestInvokeAndLogEnd:
                 invoker, "p", run_logger=object(), started_monotonic=0.0, attempt=1,
             )
         assert seen["stats"] == ClaudeRunStats()
+
+
+def test_run_writeback_keeps_description_and_step_text(plan_path, tmp_path):
+    import yaml
+    from plan_tool.parser import split_plan_document, write_plan
+
+    plan = parse_plan(plan_path)
+    text = plan.step_by_id(2).title
+    write_plan(plan_path, plan)
+    prompts = []
+    def fake_invoker(prompt):
+        prompts.append(prompt)
+        return 0, ""
+
+    result = run_step(plan_path, repo_root=tmp_path, invoker=fake_invoker)
+    assert result.done
+    assert text in prompts[0]
+    assert parse_plan(plan_path).step_by_id(2).title == text
+    assert parse_plan(plan_path).step_by_id(2).status == StepStatus.DONE
+    steps = yaml.safe_load(split_plan_document(plan_path.read_text()).frontmatter_yaml)["steps"]
+    assert all("description" in step and "title" not in step for step in steps)

@@ -6,6 +6,7 @@ See PLAN_FORMAT.md for the human-facing spec.
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from enum import Enum
 from typing import Optional
 
@@ -124,6 +125,23 @@ class Step(BaseModel):
     # runnable-step selection and from the completion tally.
     scope: StepScope = StepScope.COMMITTED
     status_note: Optional[str] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_step_description(cls, data: object) -> object:
+        if not isinstance(data, Mapping) or "description" not in data:
+            return data
+        for key in ("description", "title"):
+            if key in data and not isinstance(data[key], str):
+                raise ValueError(f"step {key} must be a string")
+        if "title" in data and data["description"] != data["title"]:
+            raise ValueError(
+                "step description and title conflict; supply only one key "
+                "or give both exactly equal strings"
+            )
+        normalized = dict(data)
+        normalized["title"] = normalized.pop("description")
+        return normalized
 
     @model_validator(mode="after")
     def _scope_status_coherent(self) -> "Step":
