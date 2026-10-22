@@ -99,10 +99,17 @@ def head_revision(repo_root: Path) -> Optional[str]:
 
 
 def committed_changed_paths(repo_root: Path, baseline: Optional[str]) -> set[str]:
-    """Added/modified destination paths between a known pre-call commit and HEAD."""
+    """Added/modified paths when HEAD extends the known pre-call commit."""
     if baseline is None:
         return set()
     try:
+        lineage = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", baseline, "HEAD"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True, errors="surrogateescape",
+        )
+        if lineage.returncode != 0:
+            return set()
         proc = subprocess.run(
             ["git", "diff", "--name-only", "-z", "--no-renames",
              "--diff-filter=ACMRT", baseline, "HEAD", "--"],

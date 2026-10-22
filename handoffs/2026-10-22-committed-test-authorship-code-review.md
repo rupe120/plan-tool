@@ -97,3 +97,39 @@ D1/D2 verification: 52 focused tests pass in 6.65s; the non-git regression fails
 when unreadable HEAD is incorrectly made an exemption (1 mutation failure).
 Full suite after the coverage/doc correction: 15,017 passed, 67 skipped in
 77.67s. Source is restored after mutation; diff whitespace checks pass.
+
+## Claude Code review 2: independent triage overrides two labels
+
+Range `db0b81151..9a626fd7e`, actual built-in code-review Skill at high effort,
+Sonnet 5.5, session `091d62b0-8a93-48ec-be73-57c2b9c8ef89`, CLI exit zero. Report
+`.tmp/committed-test-authorship.review-2.md`. Five candidates receive
+supervising verification; 37 focused tests pass. The report calls the change
+clean but explicitly describes a new false-pass route and a decoding crash.
+Those classifications do not override the actual gate property.
+
+- B1 is confirmed with a real-git run_step reproduction: prepare existing test
+  history, diverge the pre-call branch, and let the fake backend only checkout
+  that history. The current gate incorrectly advances. Committed evidence must
+  extend the captured HEAD; add an ancestry check before accepting its delta.
+  This narrows the new evidence source and leaves working-tree evidence intact.
+- B2 is confirmed via raw-byte subprocess output: UnicodeDecodeError escapes
+  the current path decoder. A first on-disk fixture cannot create invalid UTF-8
+  names on this macOS filesystem, so it is not counted as a code reproduction.
+  A real subprocess emitting the raw bytes reproduces the decoder failure
+  independently of that filesystem limitation. Use surrogateescape at all three
+  existing/new git subprocess readers so the shared evidence class stays whole.
+  Identifier/vocabulary sweep: subprocess.run, text=True, changed_paths_or_none,
+  committed_changed_paths, head_revision, path bytes, UnicodeDecodeError and
+  HEAD movement. The retry policy itself remains unchanged.
+- C1 dirty exclusion and C2 unborn commit-only extension remain pinned/deferred
+  scope, not defects. Diagnostic taxonomy and factoring remain preferences.
+- Fix the informational known-limit comment's porcelain wording while touching
+  that exact contract; its dirty-path exclusion remains the intended rule.
+
+The production corrections reset the two-pass logic confirmation window.
+Do not count reviews 1/2 as clean passes against the changed implementation.
+
+Post-correction validation: 54 focused tests pass in 6.89s; full suite 15,019
+passed, 67 skipped in 74.27s. The new ancestry regression reproduces a false
+pass before correction; the path-output regression reproduces UnicodeDecodeError
+before correction. Both now pass. Fixes are committed separately by concern.

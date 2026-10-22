@@ -180,7 +180,9 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
 | **`creates:` on disk** | mutating mode, if step has `creates:` | no — warn | "N creates entries missing"; step still advances |
 
 The test-authoring gate combines newly dirty paths with added or modified
-paths between the pre-call HEAD and the post-call HEAD. A backend may commit
+paths between the pre-call HEAD and the post-call HEAD, provided the post-call HEAD descends from the captured commit. A
+checkout/reset to unrelated or older history supplies no committed evidence.
+A backend may commit
 its tests before returning; those commits still provide authorship evidence.
 Paths already dirty before the call remain excluded from both sources. An
 unchanged committed test or a committed deletion does not satisfy the gate.

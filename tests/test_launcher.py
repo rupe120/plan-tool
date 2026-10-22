@@ -3741,6 +3741,31 @@ class TestTestAuthoringGate:
         assert result.done
         assert result.exit_code == 0
 
+    def test_checkout_of_existing_test_history_does_not_certify_new_authorship(self, tmp_path):
+        import subprocess
+
+        _git_init(tmp_path)
+        p = _gate_plan_path(tmp_path, "feature", enforce=True)
+        _git_commit_all(tmp_path, "baseline")
+        before = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, text=True).strip()
+        (tmp_path / "src.py").write_text("unrelated source\n")
+        (tmp_path / "test_old.py").write_text("def test_old(): assert True\n")
+        _git_commit_all(tmp_path, "existing unrelated work")
+        old_work = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, text=True).strip()
+        subprocess.run(["git", "checkout", "--detach", before], cwd=tmp_path, check=True, capture_output=True)
+        # Make the pre-call commit diverge from the already-authored test history.
+        (tmp_path / "README.md").write_text("current branch\n")
+        _git_commit_all(tmp_path, "current branch")
+
+        def fake(prompt):
+            subprocess.run(["git", "checkout", "--detach", old_work], cwd=tmp_path, check=True, capture_output=True)
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        assert not result.done
+        assert result.exit_code == 1
+        assert "test-authoring gate failed" in parse_plan(p).step_by_id(1).status_note
+
     def test_advances_with_root_conftest(self, tmp_path: Path) -> None:
         """A `conftest.py` at the repo root satisfies the gate (the matcher
         recognizes it, not just `tests/` paths)."""

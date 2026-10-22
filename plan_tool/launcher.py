@@ -2181,7 +2181,7 @@ def run_step(
     # test file. Runs before test_command/gate: it's the cheap check, and a
     # suite run would otherwise drop __pycache__ under tests/ into the delta.
     # Same re-read → status_note → write_plan → early-return contract as the
-    # gates below. Known limit: a porcelain set-difference can't see a step
+    # gates below. Known limit: dirty-path exclusion can't credit a step
     # that only re-edits a test left dirty by a prior step (uncommitted
     # `run --all`); `--commit` clears the tree between steps and avoids it.
     if enforce_step_tests:
