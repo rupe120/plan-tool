@@ -224,6 +224,14 @@ def _real_h2_matches(
     return [match for match in matches if _is_outside_spans(match.start(), spans)]
 
 
+def _higher_heading_matches(
+    body: str, *, spans: tuple[tuple[int, int], ...] = (),
+) -> list[re.Match[str]]:
+    """Share raw H1/H2 body boundaries between section readers and writers."""
+    matches = re.finditer(r"(?:^|(?<=[\r\n]))(?:#|##)\s+", body)
+    return [match for match in matches if _is_outside_spans(match.start(), spans)]
+
+
 def parse_body_sections(
     body: str,
     *,
@@ -243,18 +251,11 @@ def parse_body_sections(
         body = _excise_fenced_code(body)
         ignore_fenced_code = True
 
-    higher_re = re.compile(r"(?:^|(?<=[\r\n]))(?:#|##)\s+")
     spans = _fenced_code_spans(body).spans if ignore_fenced_code else ()
     h2_matches = _real_h2_matches(
         body, ignore_fenced_code=ignore_fenced_code, spans=spans
     )
-    higher_matches = list(higher_re.finditer(body))
-    if ignore_fenced_code:
-        higher_matches = [
-            match
-            for match in higher_matches
-            if _is_outside_spans(match.start(), spans)
-        ]
+    higher_matches = _higher_heading_matches(body, spans=spans)
 
     sections: list[BodySection] = []
     for order, match in enumerate(h2_matches):
@@ -316,21 +317,26 @@ def replace_body_sections(
     """Replace selected H2 bodies while preserving every unowned byte.
 
     Replacement keys use the same normalization as :func:`parse_body_sections`.
-    ``ignore_fenced_code`` limits selection and replacement boundaries to real
-    H2 headings without changing any unowned source text.
+    Bodies end at the next H1/H2, matching :func:`parse_body_sections`.
+    ``ignore_fenced_code`` excludes fenced headings from selection/boundaries.
     A missing section is appended in ``section_order`` only when its replacement
     is non-empty; an absent empty section remains absent.
     """
     normalized = {name.rstrip(":.").lower(): value for name, value in replacements.items()}
-    matches = _real_h2_matches(body, ignore_fenced_code=ignore_fenced_code)
+    spans = _fenced_code_spans(body).spans if ignore_fenced_code else ()
+    matches = _real_h2_matches(body, ignore_fenced_code=ignore_fenced_code, spans=spans)
+    higher_matches = _higher_heading_matches(body, spans=spans)
     pieces: list[str] = []
     cursor = 0
     found: set[str] = set()
-    for index, match in enumerate(matches):
+    for match in matches:
         name = match.group(1).strip().rstrip(":.").lower()
         if name not in normalized:
             continue
-        section_end = matches[index + 1].start() if index + 1 < len(matches) else len(body)
+        section_end = next(
+            (candidate.start() for candidate in higher_matches if candidate.start() >= match.end()),
+            len(body),
+        )
         pieces.append(body[cursor : match.end()])
         replacement = normalized[name]
         pieces.append(f"\n\n{replacement.rstrip()}\n" if replacement else "\n")

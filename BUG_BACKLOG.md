@@ -538,16 +538,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
 
-### Concept sync deletes an unowned H1 after an owned H2
-
-- **Files:** `plan_tool/parser.py:replace_body_sections`, consumed by concept sync.
-- **Symptom / evidence:** the reader ends an H2 at the next H1 or H2, but replacement ends only at the next H2. A `# Appendix` after `## Deferred` is deleted together with the owned text. A local 2026-10-22 probe reproduces this for LF, CRLF and CR. The logic predates the newline repair; no existing test pins this layout.
-- **Outcome / in scope:** preserve unowned H1 headings and their content when replacing an owned section, using fence-safe boundaries consistent with the reader.
-- **Out of scope:** newline I/O, scope selection, concept ownership, frontmatter schemas or a broader markdown parser redesign.
-- **Verification:** raw-byte replacement and actual concept-sync regressions for H1 before/after owned sections, including fenced pseudo-H1 content and all supported newline styles.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** newline-preservation Claude Code review 1, F-2; independently reproduced.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
@@ -558,6 +548,16 @@ Durable re-open conditions for retired items are recorded in
 - **Stop / defer:** close without implementation if the reachable path cannot supply non-LF input; do not add a framework based only on a helper-level possibility.
 - **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
+
+### Multiline concept decisions can create document headings outside their owned section
+
+- **Files:** `plan_tool/concept_sync.py:render_scope_decisions` interpolates concept titles/rationales as unescaped Markdown.
+- **Symptom / evidence:** a valid deferred concept with rationale `why\n# Injected heading\nmore rationale` publishes successfully, but the section reader sees only `- Delayed — why` inside Deferred; the rest becomes an H1 section. A 2026-10-22 probe through `synchronize_concepts` confirms the heading and truncated owned body. The rendering code predates the H1-boundary repair and is unchanged by it.
+- **Outcome / in scope:** render valid concept text as decision content without letting it introduce document-level boundaries; cover title and rationale consistently.
+- **Out of scope:** changing concept ownership/decisions, tightening stored schemas, parser boundary rules, publication protocols or broader Markdown sanitization.
+- **Verification:** actual sync with multiline titles/rationales, heading-looking and fenced-looking lines; assert intended decision content remains within its owned section, unowned bytes survive and repeat sync does not accumulate unintended sections.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** H1-boundary Claude Code review 1, candidate 6; independently reproduced through the actual synchronizer.
 
 ## RISK
 

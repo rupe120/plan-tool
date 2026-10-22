@@ -407,3 +407,31 @@ def test_sync_rejects_concurrent_owned_edit_without_normalizing_bytes(
     assert result.status is SyncStatus.SOURCE_DIVERGENCE
     assert path.read_bytes() == changed
     assert concepts_path(path).read_bytes() == sidecar
+
+
+@pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("concurrent_edit", [False, True])
+def test_sync_keeps_unowned_h1_content_and_ignores_fenced_boundary_examples(
+    tmp_path, newline, concurrent_edit,
+):
+    path = tmp_path / "sync.md"
+    source = _write_plan(path).replace(
+        "Old\n\n## Tail", "Old\n\n```markdown\n# Owned example\n```\n\n# Appendix\n\nKeep appendix.\n\n## Tail",
+    ).replace("\n", newline)
+    path.write_bytes(source.encode())
+    plan = parse_plan(path)
+    tree = _tree(_node("Delayed", "defer", order=0, step_id="2"))
+    _persist_tree(path, tree)
+    changed = source.replace("Keep appendix.", "Concurrent appendix.") if concurrent_edit else source
+    path.write_bytes(changed.encode())
+    expected_suffix = changed[changed.index("# Appendix"):].encode()
+
+    result = synchronize_concepts(path, plan, tree, tree, source_plan_text=source)
+
+    assert result.status is SyncStatus.SUCCESS
+    assert path.read_bytes().endswith(expected_suffix)
+    updated = path.read_bytes().decode()
+    assert "# Owned example" not in updated
+    assert split_body_sections(updated, ignore_fenced_code=True)["deferred"] == "- Delayed — Why Delayed"
+    assert parse_plan(path).step_by_id(2).scope is StepScope.DEFERRED
+    assert json.loads(concepts_path(path).read_text())["plan_fingerprint"] == compute_plan_fingerprint(path)
