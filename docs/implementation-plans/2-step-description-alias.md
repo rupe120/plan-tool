@@ -22,7 +22,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/step-description-alias/01-accept-step-description-legacy-title.md
-  status: current
+  status: done
 - id: 2
   title: Emit description from both plan serializers while preserving guarded frontmatter
     replacement and body bytes
@@ -44,6 +44,7 @@ steps:
     1: Alias validation lets rendered description fields parse back into the unchanged
       Step.title API.
   detail: docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md
+  status: current
 - id: 3
   title: Request description in step proposals and accept legacy responses while preserving
     existing create writes, archive moves, deletions, and rollback
