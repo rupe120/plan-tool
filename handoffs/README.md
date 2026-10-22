@@ -196,3 +196,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Concept-sync H1 boundaries](2026-10-22-concept-sync-h1-boundaries-code-review.md) — shared reader/writer section boundaries, raw unowned-content regressions and two independent clean Claude Code reviews.
 
 - [Post-1.0 release versioning](2026-10-22-post-1-release-versioning-code-review.md) — explicit Breaking notes, major/minor/patch derivation, retained release guards and independent review convergence.
+
+- [Release 1.1.0 preparation](2026-10-22-release-1.1.0.md) — fragment coverage, green tests, two independent artifact reviews, and pending Jira/tag publication prerequisites.
