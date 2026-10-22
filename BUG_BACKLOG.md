@@ -548,17 +548,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 1, F-2; independently reproduced.
 
-### Scope-out rollback overwrites the concurrent edit rejected by provenance
-
-- **Files:** `plan_tool/scope_out.py:apply_narrow` failure restoration.
-- **Symptom / evidence:** rollback unconditionally writes its original snapshot, including after `write_plan` rejects a concurrent frontmatter edit. A local 2026-10-22 probe inserts `priority: high` after the snapshot, observes `ConcurrentModificationError`, then confirms rollback overwrites that edit. The unconditional restoration predates the newline repair. Restoration failures are also swallowed, potentially leaving partial bytes.
-- **Outcome / in scope:** preserve concurrent edits when narrowing refuses or fails; restore only mutations owned by the failed attempt and expose restoration failures.
-- **Out of scope:** scope selection, seed generation, archive policy, alias semantics, or a general transaction framework.
-- **Verification:** inject edits before plan publication and after partial publication; assert the concurrent bytes survive, owned partial writes restore, details roll back and provenance agrees. Cover failures before the plan write and during restoration.
-- **Stop / defer:** defer if publisher ownership cannot be established with a bounded change; specify that ownership before adding infrastructure.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** newline-preservation Claude Code review 1, F-3; independently reproduced.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.

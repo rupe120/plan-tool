@@ -6,7 +6,7 @@
 | Branch | `fix/scope-out-rollback-ownership` |
 | Scope | BUG_BACKLOG “Scope-out rollback overwrites the concurrent edit rejected by provenance” |
 | Route | Bounded publication/recovery repair; no transaction framework |
-| Current state | Tests and Claude Code review in progress |
+| Current state | Complete: 15,095 tests pass; two consecutive independent clean final Claude Code reviews |
 
 ## Property and pre-edit sites
 
@@ -138,3 +138,28 @@ The reviewer cannot run its attempted mutation through its permission layer;
 no independent mutation claim is made. Session-owned pre-fix/mutation results
 are recorded above. Its actual completed test runs independently confirm the
 final committed snapshot.
+
+## Claude Code review 4 and convergence
+
+Range `c330cbb2e..e44316a747e65c297388230703232bef589e4417`;
+actual built-in `code-review` Skill at high effort plus independent verification.
+Session `b720f143-c2f7-4e52-92ae-09aa9f4a02f6`.
+Clean, low-yield: no material reproducible bug or missing invariant route.
+The reviewer independently runs **678 affected tests** and the full suite:
+**15,095 passed, 67 skipped** in 69.77s, exit 0; diff whitespace is clean.
+
+Five candidates are checked: O-1 remains pinned/reportable behavior;
+exists/rename races are within the documented no-lock interval; replacement
+metadata limitations are accepted L-3; the sidecar discriminator is a style
+preference; “detail moves restored” for an empty undo journal is advisory
+wording only. No source change is recommended. No new material issue remains.
+
+Reviews 3 and 4 give two consecutive independent clean final passes after
+source snapshot `bcf3b8bb7`; only documentation/evidence follows it. Their
+“clean, low-yield” verdicts retain the explicit no-lock/metadata residuals and
+operator inspection requirement rather than imply a filesystem transaction.
+The original backlog item is removed after completed verification and review.
+The separate H1-deletion and create-helper investigations remain untouched.
+
+Final tree verification: diff whitespace check passes; all changes are committed.
+No push or PR is part of this task.
