@@ -13596,8 +13596,7 @@ plan-tool reconcile-code roadmap-stack-layer --all
 
 **#517 — Prefer step `description` while accepting legacy `title`**
 
-- **What:** bare-plan steps currently require `steps[].title` (`Step.title` in
-  `plan_tool/schema.py`, documented in `PLAN_FORMAT.md`). Use `description` as
+- **What:** retain internal `Step.title` in `plan_tool/schema.py`. Use `description` as
   the preferred field for newly authored steps and accept `title` as a backward
   compatible alias.
 - **Outcome:** new plans use `steps[].description`; existing plans using
@@ -13627,7 +13626,9 @@ plan-tool reconcile-code roadmap-stack-layer --all
   this exception does not permit arbitrary unknown fields or unrelated schema
   changes.
 - **Plan:** `docs/implementation-plans/2-step-description-alias.md`
-  (plan-authored; 4/4 detailed, both audit gates confirmed clean; execution pending).
+  (4/4 detailed; alias implementation and documentation are present; final
+  verification remains pending. Retain this entry until required verification
+  and the post-run reconciliation/review establish full shipment).
 - **Seed:** `docs/implementation-plans/plan-seeds/archive/step-description-alias.replaced.md`.
 - **Principle:** write-for-the-human.
 - **Route:** plan · **Readiness:** ready · **Tier:** architect.

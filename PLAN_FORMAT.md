@@ -45,7 +45,7 @@ features: # optional. Registry of capability ids → titles the plan declares.
     title: string # required. Human-facing capability name.
 steps: # required. Non-empty list.
   - id: integer # required. Must be unique within the plan.
-    title: string # required.
+    description: string # preferred; legacy title accepted. At least one is required.
     intent: string # optional. One line on why this step exists — the positive
                    # half of its scope fence. Same author-time-only check.
     files: [string, ...] # default []. Existing repo-relative paths the step modifies.
@@ -121,7 +121,11 @@ Where the value comes from: `plan-tool create` maps the first non-empty paragrap
 
 **`steps[].id`** — integer unique within the plan. Not required to be sequential (gaps are allowed) but conventionally 1, 2, 3… The structural-edit commands `plan-tool split` and `plan-tool merge` keep ids contiguous: `split` replaces one step with its named sub-steps and `merge` folds a contiguous, dependency-connected set into one, each renumbering the surviving steps to a contiguous `1..N` and rewiring every `depends_on` edge to the new ids. (`plan-tool merge` is the plan-step fold, unrelated to a git merge.)
 
-**`steps[].intent`** — one line on **why this step exists**, the step-altitude twin of plan-level `intent` above: same type, same `null` default, same elision on rewrite, same presence-is-the-whole-contract rule, and the same author-time-only check. It is not a second `title`: the title names what the step changes, the intent names why the step is in the plan at all. `create` reads it off each proposed step in the step-proposal JSON, and its review wizard offers a drafted line for any step still without one.
+**`steps[].description`** — preferred step text; legacy `steps[].title` remains accepted. Supply either spelling alone, or both with exactly equal strings (no trimming or normalization). Conflicting values or any supplied non-string value are rejected; neither spelling can conceal an invalid value under the other. Empty strings remain valid. These are two distinct field names; this alias adds no policy for repeated occurrences of the same YAML key.
+
+The internal attribute and model dumps remain `plan_tool/schema.py:Step.title`. Both `write_plan` and `render_plan_text` emit only `description`, including ordinary rewrites of legacy-title plans, while retaining format version 1 without an explicit upgrade. Plan and feature `title` fields retain their meanings. Older installations that do not recognize step `description` reject this output even at version 1; see the [named version-1 exception](DATA_CONTRACT.md#plan-format-version-plan_toolschemapy).
+
+**`steps[].intent`** — one line on **why this step exists**, the step-altitude twin of plan-level `intent` above: same type, same `null` default, same elision on rewrite, same presence-is-the-whole-contract rule, and the same author-time-only check. It is not a second `description`: the description names what the step changes, the intent names why the step is in the plan at all. `create` reads it off each proposed step in the step-proposal JSON, and its review wizard offers a drafted line for any step still without one.
 
 **Intent under structural edits and the conceptual audit.** After a structural mutation or a conceptual-audit call, every surviving step's `intent` is either true of that step or absent — prefer absent over a quietly false carry-over. Presence (above) and the [Scope fence](#scope-fence-reaches-the-detail-and-run-prompts) / [Intent-presence](#smell-checks-advisory) prose stay the authoring contract; this subsection is the mutation and audit-consumer contract only. All four surfaces collapse multi-line values through `plan_tool/scope_fence.py:collapse_intent_to_one_line` — do not invent a third normalizer. Merge, forward-seed, and conceptual-audit omit use the **fence** placeholder set (`TODO` / `_(TODO)_`); bare `TBD` is outside that named set (it still clears under `is_usable_intent` for the advisory presence smell — the two predicates are not unified).
 
@@ -242,7 +246,8 @@ The parser rejects the plan when:
 7. More than one step has `status: current`.
 8. The plan declares a `format_version` outside `SUPPORTED_PLAN_FORMAT_VERSIONS` — checked before rule 9's unknown-field rejection, so a plan carrying both an unsupported version and an unknown key is refused for the version, not the key.
 9. An unknown field appears at plan level or inside a step (strict mode — prevents silent typos).
-10. A risk-profile declaration omits either paired field, uses explicit `null`, uses a tier outside `low` / `standard` / `high`, or supplies a blank or multi-line rationale.
+10. Step `description` and legacy `title` conflict or contain an invalid supplied value (see [Field semantics](#field-semantics)).
+11. A risk-profile declaration omits either paired field, uses explicit `null`, uses a tier outside `low` / `standard` / `high`, or supplies a blank or multi-line rationale.
 
 The feature fields are an exception worth stating: the parser enforces only the **types** of `features` / `steps[].features` (a list of `{id, title}` objects and a list of strings respectively, with rule 9's unknown-key rejection still applying inside a `Feature`). Uniqueness, kebab-case ids, and `steps[].features` reference resolution are **not** in the reject set above — they are **advisory** checks that run at author time and emit findings, never a parse error. See [Smell checks (advisory)](#smell-checks-advisory).
 
@@ -259,13 +264,13 @@ risk_profile_rationale: Routine parser work with a bounded compatibility contrac
 lessons: plan-details/example-plan/lessons.md
 steps:
   - id: 1
-    title: Add YAML schema validator
+    description: Add YAML schema validator
     intent: Nothing downstream can trust the frontmatter until one place defines its shape.
     files: [plan_tool/schema.py]
     complexity: low
     status: done
   - id: 2
-    title: Write structured parser
+    description: Write structured parser
     intent: The schema is inert until a reader turns a plan file into it.
     files: [plan_tool/parser.py]
     allowed_mentions: [plan_tool/schema.py]
@@ -275,7 +280,7 @@ steps:
     detail: plan-details/example-plan/02-structured-parser.md
     status: current
   - id: 3
-    title: Build the launcher CLI
+    description: Build the launcher CLI
     complexity: high
     depends_on: [2]
     status: pending
