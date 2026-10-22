@@ -5,7 +5,7 @@
 | Base | `db0b81151`, merged alias PR #140 |
 | Branch | `fix/committed-test-authorship` |
 | Route | Bounded direct fix; existing BUG_BACKLOG condition permits direct repair when no evidence redesign is needed |
-| Current state | Relative-path correction validated; fresh independent confirmation window pending |
+| Current state | Complete: 15,020 tests pass; two independent final-snapshot Claude Code passes confirm logic convergence |
 
 ## Property and scope
 
@@ -17,11 +17,11 @@ test/gate execution, failure persistence and advancement contracts.
 No coverage-quality judgment, automatic acceptance, test-ordering contract,
 retry-guard redesign, or exemption expansion belongs here.
 
-Existing BUG_BACKLOG entry “Run's test-authoring gate misses tests committed
-inside the backend call” names this repair. Observed alias steps in PR #140
+Source defect: BUG_BACKLOG entry “Run's test-authoring gate misses tests committed
+inside the backend call” supplies this repair's scope. Observed alias steps in PR #140
 supply three more real reproductions; their full-suite acceptance recovery is
-recorded in the alias implementation ledger. Keep the entry until verification
-and the actual Claude Code review loop establish delivery.
+recorded in the alias implementation ledger. Backlog removal requires verification and the actual Claude Code review loop
+to establish delivery; both are complete in the closing record below.
 
 ## Pre-edit site enumeration
 
@@ -49,6 +49,9 @@ porcelain, dirty tests and commit evidence across source/tests/run docs.
 Capture a readable pre-call commit only when the gate applies. Union the
 post-call working-tree paths with the net pre-call-HEAD/post-call-HEAD added or
 modified paths, then subtract all pre-call dirty paths and filter test paths.
+The captured HEAD must be an ancestor of the post-call HEAD. The commit diff
+uses --no-relative, matching the git-root-relative porcelain baseline regardless
+of cwd or diff.relative configuration; path readers preserve undecodable bytes.
 NUL-delimited diff output preserves spaces and rename destinations; committed
 deletions are excluded. No known pre-call HEAD or a failed diff supplies no
 additional evidence; existing working-tree behavior remains. Unborn/no-HEAD
@@ -191,3 +194,34 @@ as preferences. A git-diff read failure already returns no extra evidence.
 
 Relative-path correction validation: 55 focused tests pass in 7.07s; full suite
 15,020 passed, 67 skipped in 81.86s. Diff whitespace check passes.
+
+## Final independent reviews 5 and 6
+
+Both review the full range `db0b81151..b8064b023`, containing the latest
+production correction. Both invoke the actual built-in code-review Skill at
+high effort, Sonnet 5.5, report-only, and exit zero.
+
+| Review | Session | Report | Independent verification |
+| --- | --- | --- | --- |
+| 5 | `5507eb11-fd14-4b74-8a44-175cb1348d73` | `.tmp/committed-test-authorship.review-5.md` | No logic defect; git-state/duplication 29 passed and gate tests 36 passed. Real-git probe independently reproduces the relative-path mismatch and verifies the flag closes it. |
+| 6 | `e37a0641-c9a4-4d4b-bdad-77b3817174ce` | `.tmp/committed-test-authorship.review-6.md` | No logic defect; git-state/duplication 29 passed and gate tests 36 passed. Full source/caller/test trace; its additional probe commands are not permitted, so it does not claim fresh probes or mutations. |
+
+**Converged for logic:** two consecutive independent clean passes against the
+latest production snapshot. Reviews 1–4 do not supply this final window; their
+actual findings and corrections remain recorded above. Last complete suite:
+15,020 passed, 67 skipped in 81.86s. Positive/exclusion mutations and the real
+git/decoder/relative-path regressions provide the acceptance evidence.
+
+Dispositions: documented imported-history, amend/rebase and unborn limits stay;
+dirty-file exclusions and rename-destination credit are pinned contracts.
+Universal-newline handling shared with the existing reader, unmeasured git
+version concerns, diagnostic taxonomy, subprocess factoring, extra-call
+optimization and snapshot concurrency are not reproduced in-scope defects and
+remain declined preferences. No author attribution, coverage-quality or
+provenance checker is introduced. A reviewer attribution-policy note is refuted
+by this repository's explicit requirement to record actual review method/session.
+
+The original BUG_BACKLOG entry is removed after delivery verification. The
+closing commit changes tracking/evidence only; it does not claim another
+Claude review of those bookkeeping bytes. Production code remains the reviewed
+`b8064b023` snapshot. The changelog and indexed ledger accompany the ready PR.
