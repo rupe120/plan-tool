@@ -35,6 +35,8 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from plan_tool import locator
+from plan_tool.seed_paths import default_seeds_dir
+
 from plan_tool.detail import (
     _DETAIL_ID_PREFIX_RE,
     _repo_relative,
@@ -1442,7 +1444,7 @@ def _resolve_carved_detail_path(
 
 
 def _carved_seed_path(plan_path: Path, carved_step: Step, repo_root: Path) -> Path:
-    """Derive a collision-safe ``plan-seeds/<plan-slug>-carved-<step-slug>.md``
+    """Derive a collision-safe ``docs/implementation-plans/plan-seeds/<plan-slug>-carved-<step-slug>.md``
     path under ``repo_root``.
 
     ``<plan-slug>`` comes from the filename (``schema.Plan`` has no ``slug``);
@@ -1455,7 +1457,7 @@ def _carved_seed_path(plan_path: Path, carved_step: Step, repo_root: Path) -> Pa
 
     plan_slug = locator.slug_from_filename(plan_path)
     step_slug = slugify(carved_step.title) or f"step-{carved_step.id}"
-    seeds_dir = repo_root / "plan-seeds"
+    seeds_dir = default_seeds_dir(repo_root)
     base = seeds_dir / f"{plan_slug}-carved-{step_slug}.md"
     candidate = base
     n = 2
@@ -1469,7 +1471,7 @@ def _carved_region_seed_path(
     plan_path: Path, carved_steps: Sequence[Step], repo_root: Path
 ) -> Path:
     """Derive a collision-safe region seed path
-    ``plan-seeds/<plan-slug>-carved-<first-step-slug>-through-<M>.md``.
+    ``docs/implementation-plans/plan-seeds/<plan-slug>-carved-<first-step-slug>-through-<M>.md``.
 
     Names the seed after the ``N..M`` range (first carved step's slug + last
     carved id) so a region seed is distinguishable from a single-step carve and
@@ -1482,7 +1484,7 @@ def _carved_region_seed_path(
     first = carved_steps[0]
     first_slug = slugify(first.title) or f"step-{first.id}"
     last_id = carved_steps[-1].id
-    seeds_dir = repo_root / "plan-seeds"
+    seeds_dir = default_seeds_dir(repo_root)
     base = seeds_dir / f"{plan_slug}-carved-{first_slug}-through-{last_id}.md"
     candidate = base
     n = 2

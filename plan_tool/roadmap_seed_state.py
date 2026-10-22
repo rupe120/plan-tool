@@ -169,12 +169,21 @@ def validate_seed_state(raw: Any, *, path: Path | None = None) -> dict[str, Any]
             raise RoadmapSeedStateError(
                 f"roadmap seed state entry {plan_id!r} has invalid published flag{where}"
             )
+        layout = entry.get("publication_layout")
+        if "publication_layout" in entry and (
+            not isinstance(layout, str) or layout not in {"root", "nested"}
+        ):
+            raise RoadmapSeedStateError(
+                f"roadmap seed state entry {plan_id!r} has invalid publication layout{where}"
+            )
         clean["seeds"][plan_id] = {
             "draft_seed_path": draft_seed_path,
             "status": status,
             "digest": digest,
             "published": published,
         }
+        if layout is not None:
+            clean["seeds"][plan_id]["publication_layout"] = layout
     return clean
 
 

@@ -478,12 +478,12 @@ def test_default_disposition_is_mark_done(tmp_path):
     result = reground_bridge(path, step_ids=[1, 2], allow_reground=True, yes=True)
     assert result.outcome == "applied"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
 
 
 def test_rebaseline_writes_seed_first_then_marks_done(tmp_path, monkeypatch):
     path = _built_plan_file(tmp_path)
-    seed_dir = tmp_path / "plan-seeds"
+    seed_dir = tmp_path / "docs" / "implementation-plans" / "plan-seeds"
     events: list[str] = []
     original_mark_steps_done = reground.mark_steps_done
     original_write_plan = reground.write_plan
@@ -511,7 +511,7 @@ def test_rebaseline_writes_seed_first_then_marks_done(tmp_path, monkeypatch):
     )
     assert result.outcome == "applied"
     assert result.seed_path is not None and result.seed_path.is_file()
-    assert result.seed_path.parent == tmp_path / "plan-seeds"
+    assert result.seed_path.parent == tmp_path / "docs" / "implementation-plans" / "plan-seeds"
     assert events == ["mark", "write"]
     reparsed = parse_plan(path)
     assert reparsed.step_by_id(1).status is StepStatus.DONE
@@ -651,7 +651,7 @@ def test_rebaseline_recommended_when_not_allowed(tmp_path):
     )
     assert result.outcome == "recommended"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
     assert path.read_text(encoding="utf-8") == before
 
 
@@ -670,7 +670,7 @@ def test_rebaseline_recommended_when_confirm_declined(tmp_path, monkeypatch):
     )
     assert result.outcome == "recommended"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
     assert path.read_text(encoding="utf-8") == before
 
 
@@ -687,7 +687,7 @@ def test_rebaseline_recommended_when_non_tty_without_yes(tmp_path, monkeypatch):
     )
     assert result.outcome == "recommended"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
 
 
 def test_rebaseline_requires_repo_root(tmp_path):
@@ -743,8 +743,8 @@ def test_rebaseline_seed_never_overwrites(tmp_path):
 def test_rebaseline_seed_collision_suffixes(tmp_path):
     # Two re-baselines of the *same* id set collide on the base stem; the second
     # gets a -2 suffix rather than overwriting.
-    seeds = tmp_path / "plan-seeds"
-    seeds.mkdir()
+    seeds = tmp_path / "docs" / "implementation-plans" / "plan-seeds"
+    seeds.mkdir(parents=True)
     plan = _plan(
         [
             _step(1, status=StepStatus.CURRENT),
@@ -784,7 +784,7 @@ def test_rebaseline_step_missing_writes_no_seed(tmp_path):
     )
     assert result.outcome == "step-missing"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
 
 
 def test_rebaseline_unsafe_writes_no_seed(tmp_path):
@@ -806,7 +806,7 @@ def test_rebaseline_unsafe_writes_no_seed(tmp_path):
     )
     assert result.outcome == "unsafe"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
 
 
 def test_rebaseline_noop_writes_no_seed(tmp_path):
@@ -824,7 +824,7 @@ def test_rebaseline_noop_writes_no_seed(tmp_path):
     )
     assert result.outcome == "noop"
     assert result.seed_path is None
-    assert not (tmp_path / "plan-seeds").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds").exists()
 
 
 def test_rebaseline_renderer_touches_no_disk(tmp_path):

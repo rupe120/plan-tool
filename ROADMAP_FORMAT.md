@@ -2527,3 +2527,13 @@ writes the next `awaiting-review` response.
   no schema or gate change, and it reads the same parsed artifacts — a row
   this doc's schema admits renders, and one it does not never reaches the
   page.
+
+
+### Published seed placement
+
+New promotions use `docs/implementation-plans/plan-seeds/` and record
+`publication_layout: nested` in their seed-state entry. The optional field
+accepts `root` or `nested`; absence means the legacy root `plan-seeds/` path.
+Acceptance, materialization and refresh preserve the recorded layout, including
+when the promoted file is archived or temporarily absent. Existing seed files
+are never moved, and unrelated files never establish publication ownership.

@@ -25,7 +25,7 @@ Project setup — capture repo-owned metadata; never infer it or call claude.
 
 Roadmap — turn a concept brief into staged architecture artifacts, one rung above `create`.
   plan-tool roadmap <slug> [--from-existing <concept.md>] Non-interactively stage a concept brief into the four gated architecture artifacts (domain, constraints, components, roadmap), plus draft seeds, and publish them as one immutable version under docs/implementation-plans/roadmaps/<slug>/; the accepted head is written last. A failed run holds its gate-clean stages and the next run with the same brief resumes from them; a changed brief is refused with its remedy, and a roadmap that already has an accepted head refuses a stage run. Deterministic gates retry each stage's claude call before writing; exits non-zero only when a stage exhausts its retry budget.
-  plan-tool roadmap <slug> --apply [-y]    Apply-only: promote the draft seeds named by 04-roadmap.md into plan-seeds/ after a preview and confirm (-y skips the confirm). Runs no stage and invokes no backend.
+  plan-tool roadmap <slug> --apply [-y]    Apply-only: promote the draft seeds named by 04-roadmap.md into docs/implementation-plans/plan-seeds/ after a preview and confirm (-y skips the confirm). Runs no stage and invokes no backend.
   plan-tool roadmap <slug> --refresh-seeds  Reprocess invalidated derived seeds against the current codebase, restoring archived copies and writing a before/after difference report without rewriting roadmap artifacts.
   plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html} [--mode {current,review}] [--id ROW_ID] [--output PATH]   Inspect: render a compact review summary, traceability walk, decision ledger, reverse citation index, draft-seed state report, or a self-contained, print-formatted HTML page of every artifact row with its resolvable references linked and dangling or ambiguous ones marked, over the accepted roadmap version. --mode selects design-state (current, default) or the review channel (review); --id scopes --view index to one row's citers. Every view but html prints; html writes <roadmap-dir>/review.html by default (--output PATH chooses the destination, --output - prints instead). Runs no stage or backend and changes no canonical roadmap state.
 
@@ -120,8 +120,9 @@ positional arguments:
     roadmap             stage a concept brief into gated architecture
                         artifacts under docs/implementation-
                         plans/roadmaps/<slug>/ (one rung above create); use
-                        --apply to promote draft seeds into plan-seeds/ or
-                        --refresh-seeds to regenerate invalidated seeds
+                        --apply to promote draft seeds into
+                        docs/implementation-plans/plan-seeds/ or --refresh-
+                        seeds to regenerate invalidated seeds
     create              interactively author a new plan
     reconcile-plan (reconcile, review)
                         reconcile the plan against the current codebase (edits

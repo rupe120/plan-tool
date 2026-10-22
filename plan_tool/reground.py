@@ -30,6 +30,8 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from plan_tool import locator
+from plan_tool.seed_paths import default_seeds_dir
+
 from plan_tool.parser import parse_plan, write_plan
 from plan_tool.schema import Plan, PlanStatus, Step, StepScope, StepStatus
 from plan_tool.scope_fence import (
@@ -152,7 +154,7 @@ def reground_bridge(
 
     Two dispositions select what the apply branch does with the flagged set:
     ``mark-done`` (default) flips them ``done``; ``re-baseline`` additionally
-    writes a ``create --from-existing`` re-decompose seed under ``plan-seeds/``
+    writes a ``create --from-existing`` re-decompose seed under the default seed directory
     **first** (so the durable artifact survives a failed plan write), then marks
     them done. ``repo_root`` is required for ``re-baseline`` (the seed's target
     dir) and unused by ``mark-done``. An unknown disposition is a programming
@@ -312,7 +314,7 @@ def _confirm_reground(
     if disposition == DISPOSITION_REBASELINE:
         lines.append(
             "A `plan-tool create --from-existing` re-baseline seed will also be "
-            "written under plan-seeds/."
+            "written under docs/implementation-plans/plan-seeds/."
         )
     lines.append("Mark them done? [y/N]: ")
     try:
@@ -499,7 +501,7 @@ def _rebaseline_seed_path(
     plan_path: Path, flagged_ids: Sequence[int], repo_root: Path
 ) -> Path:
     """Derive a collision-safe
-    ``plan-seeds/<plan-slug>-reground-<first>-<last>.md`` path under
+    ``docs/implementation-plans/plan-seeds/<plan-slug>-reground-<first>-<last>.md`` path under
     ``repo_root``, mirroring :func:`scope_out._carved_seed_path`.
 
     ``<plan-slug>`` comes from the filename (:class:`schema.Plan` has no
@@ -510,7 +512,7 @@ def _rebaseline_seed_path(
     ids = sorted({int(i) for i in flagged_ids})
     plan_slug = locator.slug_from_filename(plan_path)
     stem = f"{plan_slug}-reground-{ids[0]}-{ids[-1]}"
-    seeds_dir = repo_root / "plan-seeds"
+    seeds_dir = default_seeds_dir(repo_root)
     candidate = seeds_dir / f"{stem}.md"
     n = 2
     while candidate.exists():

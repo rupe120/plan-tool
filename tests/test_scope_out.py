@@ -1617,7 +1617,7 @@ def test_apply_multi_id_rolls_back_on_failure(tmp_path, monkeypatch):
 
 
 def _seeds_dir(tmp_path: Path) -> Path:
-    return tmp_path / "plan-seeds"
+    return tmp_path / "docs" / "implementation-plans" / "plan-seeds"
 
 
 def _seed_files(tmp_path: Path) -> list[Path]:

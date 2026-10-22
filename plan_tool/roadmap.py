@@ -65,6 +65,8 @@ from string import Template
 from types import SimpleNamespace
 from typing import Any, Callable, Iterator, Mapping, Optional, Sequence
 
+from plan_tool.seed_paths import default_seeds_dir, published_seeds_dir
+
 from plan_tool.fileio import atomic_write_text, is_write_temp_name
 from plan_tool.model_response_sidecar import store_model_response_sidecar
 from plan_tool.pathutil import latest_seed_archive
@@ -2714,12 +2716,17 @@ def ordered_plan_seed_targets(
 ) -> tuple[tuple[str, Path, Path], ...]:
     """Each ordered plan row as ``(plan_id, draft_source, plan-seeds/dest)``."""
     plan_by_id = {plan.id: plan for plan in artifact.plans}
-    plan_seeds_dir = Path(repo_root) / "plan-seeds"
+    plan_seeds_dir = default_seeds_dir(repo_root)
+    entries = _load_roadmap_seed_state(plans_dir=plans_dir, slug=slug)["seeds"]
     targets: list[tuple[str, Path, Path]] = []
     for entry in artifact.ordering:
         plan = plan_by_id[entry.plan_id]
         source = resolve_draft_seed_path(plans_dir, slug, plan.draft_seed_path)
-        dest = resolve_plan_seed_dest(plan_seeds_dir, plan.id)
+        dest_dir = (
+            published_seeds_dir(repo_root, entries[plan.id])
+            if _seed_recorded_published(entries, plan.id) else plan_seeds_dir
+        )
+        dest = resolve_plan_seed_dest(dest_dir, plan.id)
         targets.append((plan.id, source, dest))
     return tuple(targets)
 
@@ -2763,6 +2770,7 @@ def _register_roadmap_seed_promotions(
             "status": old.get("status", "current"),
             "digest": digest_text(source_text),
             "published": True,
+            "publication_layout": "nested",
         }
     _write_roadmap_seed_state(state, plans_dir=plans_dir, slug=slug)
 
@@ -2785,10 +2793,10 @@ def _confirm_apply_seeds(
     confirm_fn = prompt_fn if prompt_fn is not None else input
     try:
         answer = (
-            confirm_fn(f"Promote draft seeds for {slug} to plan-seeds/? [y/N]: ").strip().lower()
+            confirm_fn(f"Promote draft seeds for {slug} to docs/implementation-plans/plan-seeds/? [y/N]: ").strip().lower()
         )
     except (EOFError, KeyboardInterrupt):
-        print("\n  cancelled — plan-seeds/ left unchanged.", file=sys.stderr)
+        print("\n  cancelled — seed directories left unchanged.", file=sys.stderr)
         return False
     return answer in ("y", "yes")
 
@@ -2945,7 +2953,9 @@ def _accept_roadmap_seed(
 
     # Copy first, sidecar second (as materialize does): a failed copy write
     # leaves the draft digest-mismatched, so --accept-seed can be re-run.
-    promoted = resolve_plan_seed_dest(repo_root / "plan-seeds", plan_id)
+    promoted = resolve_plan_seed_dest(
+        published_seeds_dir(repo_root, entries.get(plan_id, {})), plan_id
+    )
     if published:
         try:
             atomic_write_text(
@@ -2971,6 +2981,7 @@ def _accept_roadmap_seed(
         promoted_target = None
 
     entries[plan_id] = {
+        **entries.get(plan_id, {}),
         "draft_seed_path": plan.draft_seed_path,
         "status": "current",
         "digest": digest_text(text),
@@ -3240,7 +3251,7 @@ def _apply_roadmap_seeds(
             refused_drafts=tuple(post_classification_refusals),
         )
 
-    plan_seeds_dir = repo_root / "plan-seeds"
+    plan_seeds_dir = default_seeds_dir(repo_root)
     plan_seeds_dir.mkdir(parents=True, exist_ok=True)
 
     # Two-phase commit: stage every body to a sibling tempfile, then link it
@@ -3666,7 +3677,9 @@ def _materialize_plan_seed(
 
         state = _load_roadmap_seed_state(plans_dir=plans_dir, slug=slug)
         entries = state["seeds"]
-        promoted = resolve_plan_seed_dest(repo_root / "plan-seeds", plan.id)
+        promoted = resolve_plan_seed_dest(
+            published_seeds_dir(repo_root, entries.get(plan.id, {})), plan.id
+        )
         published = _seed_recorded_published(entries, plan.id)
         if published:
             atomic_write_text(
@@ -3683,6 +3696,7 @@ def _materialize_plan_seed(
             )
 
         entries[plan.id] = {
+            **entries.get(plan.id, {}),
             "draft_seed_path": plan.draft_seed_path,
             "status": "current",
             "digest": digest_text(lifted),
@@ -3813,8 +3827,10 @@ def _materialize_and_diff_one_plan(
     repo_root = Path(repo_root)
     plans_dir = Path(plans_dir)
     draft_path = resolve_draft_seed_path(plans_dir, slug, row.draft_seed_path)
-    promoted_path = resolve_plan_seed_dest(repo_root / "plan-seeds", row.id)
     entries = _load_roadmap_seed_state(plans_dir=plans_dir, slug=slug)["seeds"]
+    promoted_path = resolve_plan_seed_dest(
+        published_seeds_dir(repo_root, entries.get(row.id, {})), row.id
+    )
     # An unpublished seed's plan-seeds file is not the tool's: neither read nor
     # reported, since refresh will not rewrite it.
     targets = (

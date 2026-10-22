@@ -169,7 +169,7 @@ def test_iterate_is_rejected_before_annotation(
     assert rc == 2
     assert invoker.calls == []
     assert not (tmp_path / "plan.annotated.md").exists()
-    assert not (tmp_path / "plan.seed.md").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").exists()
     assert "--iterate is not supported for annotate" in capsys.readouterr().err
 
 
@@ -186,7 +186,7 @@ def test_writes_report_and_seed(tmp_path: Path) -> None:
     rc = cmd_annotate(_ns(src), invoker=_recording_stub())
     assert rc == 0
     assert (tmp_path / "plan.annotated.md").is_file()
-    assert (tmp_path / "plan.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").is_file()
 
 
 def test_unmatched_opening_fence_skips_classifier_outputs_and_archive(
@@ -203,7 +203,7 @@ def test_unmatched_opening_fence_skips_classifier_outputs_and_archive(
     assert invoker.calls == []
     assert src.read_text(encoding="utf-8") == original
     assert not (tmp_path / "plan.annotated.md").exists()
-    assert not (tmp_path / "plan.seed.md").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").exists()
     assert not (tmp_path / "archive").exists()
 
 
@@ -218,7 +218,7 @@ def test_report_is_additive(tmp_path: Path) -> None:
 def test_seed_lists_carryover_headings(tmp_path: Path) -> None:
     src = _write_source(tmp_path)
     cmd_annotate(_ns(src), invoker=_recording_stub())
-    seed = (tmp_path / "plan.seed.md").read_text(encoding="utf-8")
+    seed = (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").read_text(encoding="utf-8")
     carryover, _, done = seed.partition(
         "## Already implemented (done-context — do not re-plan)"
     )
@@ -334,11 +334,11 @@ def test_batch_continues_past_an_unsupported_plan_format_version(
     assert rc == 1
     assert len(invoker.calls) == 2
     assert (tmp_path / "a.annotated.md").is_file()
-    assert (tmp_path / "a.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "a.seed.md").is_file()
     assert not (tmp_path / "b.annotated.md").exists()
-    assert not (tmp_path / "b.seed.md").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "b.seed.md").exists()
     assert (tmp_path / "c.annotated.md").is_file()
-    assert (tmp_path / "c.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "c.seed.md").is_file()
     captured = capsys.readouterr()
     assert "FAIL" in captured.out
     assert "b.md" in captured.out
@@ -383,11 +383,11 @@ def test_batch_continues_past_one_sources_unsupported_detail_marker(
     assert rc == 1
     assert len(invoker.calls) == 2
     assert (tmp_path / "a.annotated.md").is_file()
-    assert (tmp_path / "a.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "a.seed.md").is_file()
     assert not (tmp_path / "b.annotated.md").exists()
-    assert not (tmp_path / "b.seed.md").exists()
+    assert not (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "b.seed.md").exists()
     assert (tmp_path / "c.annotated.md").is_file()
-    assert (tmp_path / "c.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "c.seed.md").is_file()
     captured = capsys.readouterr()
     assert "FAIL" in captured.out
     assert "b.md" in captured.out
@@ -420,7 +420,8 @@ def test_batch_expands_directory_and_excludes_generated_or_archived_inputs(
     detail = _write_source(details, name="01-step.md")
     generated_report = tmp_path / "a.annotated.md"
     generated_report.write_text("# report\n", encoding="utf-8")
-    generated_seed = tmp_path / "a.seed.md"
+    generated_seed = tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "a.seed.md"
+    generated_seed.parent.mkdir(parents=True)
     generated_seed.write_text("# seed\n", encoding="utf-8")
     invoker = _recording_stub()
 
@@ -590,7 +591,7 @@ def test_all_implemented_emits_no_forward_work_notice(
     rc = cmd_annotate(_ns(src), invoker=_recording_stub(all_done))
     assert rc == 0
     assert (tmp_path / "plan.annotated.md").is_file()
-    assert (tmp_path / "plan.seed.md").is_file()
+    assert (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").is_file()
     out = capsys.readouterr().out
     assert "no remaining work" in out
     assert "plan.annotated.md" in out
@@ -624,7 +625,7 @@ def test_low_grounding_report_and_seed_surface_review_required_work(
     rc = cmd_annotate(_ns(src), invoker=_recording_stub())
     assert rc == 0
     report = (tmp_path / "plan.annotated.md").read_text(encoding="utf-8")
-    seed = (tmp_path / "plan.seed.md").read_text(encoding="utf-8")
+    seed = (tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan.seed.md").read_text(encoding="utf-8")
     assert "**Low grounding (0 files)**" in report
     assert "Goal A" in seed
     assert "[NEEDS-REVIEW]" in seed
