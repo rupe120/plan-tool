@@ -55,7 +55,7 @@ overriding a wrong auto-selection. **Plans** are discovered per project via
 | --- | --- |
 | Plans | `docs/implementation-plans/<N>-<slug>.md` |
 | Per-step detail | `docs/implementation-plans/plan-details/<slug>/NN-*.md` |
-| Seeds | `docs/implementation-plans/plan-seeds/` |
+| Seeds | `docs/implementation-plans/plan-seeds/` (where `SEED_FORMAT.md` and `roadmap --apply` write them) |
 | Tool state | `<repo>/.plan-tool/` (`plans.json`, `runs/<slug>/`, `checkpoints/<slug>/`) |
 
 The `<N>-` tier prefix on the plan filename is **added by the tool** — pass a
@@ -110,10 +110,40 @@ killing a live `plan-tool` process. Consider recovery or resume only after the
 original command has definitely exited.
 
 **Classify preflight refusals accurately.** A seed or command preflight refusal
-(for example, a missing required `## References` section) is a normal
-no-authoring outcome, not a backend or execution failure. Correct the named
-input issue, commit the correction, and start a new invocation only after any
-prior invocation has exited.
+is a normal no-authoring outcome, not a backend or execution failure. That
+covers a missing required `## References` section and a
+`route: refused — file-backed source: …` exit 2 from the distill route: both are
+a defect in the seed, not model variance. Do not retry the same input; read the
+reason printed after `file-backed source:`, correct the seed to clear it,
+commit the correction, and start a new invocation only after any prior
+invocation has exited.
+
+**A run another session launched is not yours to poll.** Watching a
+`plan-tool` command you did not start — reading its `in-flight.json` or run log
+until it disappears — is not an endorsed procedure. Ask the user how they want
+to follow it (wait for its own exit, or have the launching session report).
+
+## Creating several plans in one session
+
+**The batch is a set the user names; never infer it from what exists.** Accept
+specific plan rows or seed files, or a roadmap, which names all of that
+roadmap's plan rows. Never default to every file in `plan-seeds/`, every seed
+`roadmap --apply` promoted, or every row of a roadmap the user did not name.
+Asked to create plans with neither a selection nor a roadmap named, ask which
+ones.
+
+- **Order.** For roadmap-derived plans, order the named rows by the roadmap's
+  `ordering`; for seeds not tied to a roadmap, use the order the user gave.
+- **A dependency outside the batch stops it.** A named plan that depends on an
+  unnamed roadmap row with no plan yet stops the batch with a question; do not
+  pull the row in.
+- **Resume, don't restart.** Each plan resumes at its first incomplete stage of
+  `create` → bare audit → `detail` → detail-grounded audit. A completed stage is
+  skipped and reported. A plan whose latest audit has not converged on its
+  current committed snapshot finishes that convergence before the next plan.
+- **Sequential, stop at the first refusal.** Each `create` writes
+  `.plan-tool/plans.json`, so plans are handled one at a time, and the batch
+  stops at the first refusal (see "Classify preflight refusals accurately").
 
 ## Subcommands by intent
 
@@ -121,11 +151,14 @@ prior invocation has exited.
   [Roadmap](#roadmap) below.
 - **Discovery** (read-only, never calls the model): `list`, `status <name>`,
   `validate <name>`, `runs`, `checkpoint`, `convergence <name>`,
-  `split-criteria`.
+  `gate-status <name> --json` (saved final audit verdicts), `split-criteria`.
 - **Authoring**: `create [slug]`, `detail <name>`, `split`, `merge`,
   `scope-out`, `scope-review`, `annotate <plan-file>`.
 - **Audit — completeness** (judges the plan's own design): `completeness-audit`
-  → `convergence`. (`completeness-apply` still exists but is deprecated and
+  → `convergence` (loop trend). `gate-status <name> --json` reads the latest
+  saved final verdict per stage; it runs no audit. It cannot report an
+  invocation that writes no final sidecar, including Jira-grade audits and
+  terminal plan-quota stops. (`completeness-apply` still exists but is deprecated and
   going away — BACKLOG #376 — see "The session-directed convergence loop" below.)
 - **Audit — reconcile/verify** (plan vs. code): `reconcile-plan`
   (**pre-execution only**), `reconcile-code` (**post-execution**),
@@ -195,8 +228,17 @@ Expect to find an altitude mismatch, not only a wrong answer.
 
 ## Which model to run a subcommand with
 
-**Use the strongest tier for `create` and `roadmap` only; use the working tier
-for every other subcommand.** Pass the model per invocation —
+**Use `gpt-6.1-sol` for all Codex model-backed work. For Claude Code, use Opus for roadmap, seed, and plan
+creation and Sonnet for subsequent work.** This includes roadmap generation
+and candidate authoring, seed authoring/regeneration (`--refresh-seeds`,
+`--materialize`, and `annotate` when producing a forward seed), and `create`
+including its distill and step-proposal passes. After creation, use the working
+tier for audits, detail, execution, reconciliation, and reviews. Deterministic
+commands that make no model call need no model selection.
+
+**Select both backend and model explicitly on every model-backed invocation.**
+Do not rely on the default backend or a per-backend model default, and use
+`gpt-6.1-sol` for every Codex invocation. Pass the model per invocation —
 `--model` is resolved
 `--model` flag > `.plan-tool/backends.json` > manifest default, and every
 shipped manifest sets `default_model: null`, so the backend CLI's own default
@@ -204,23 +246,23 @@ applies when nothing is passed. The project file's override is
 **per-backend, not per-subcommand**, so there is no config that says "create
 uses one model, run uses another." This is operator discipline today.
 
-| Backend | `create`, `roadmap` | Everything else |
+| Backend | Roadmap, seed, and plan creation | Subsequent model-backed work |
 | --- | --- | --- |
-| Codex | `gpt-6.1-sol` | `gpt-5.6-terra` |
-| Claude | `claude-opus-5-5` | `claude-sonnet-5-5` |
+| Codex | Sol: `gpt-6.1-sol` | Sol: `gpt-6.1-sol` |
+| Claude Code | Opus: `claude-opus-5-5` | Sonnet: `claude-sonnet-5-5` |
 | Cursor | no `--model`; Cursor's Auto | no `--model`; Cursor's Auto |
 
-Model names last verified 2026-10-05; confirm against the backend's own model
+Codex model selection updated by owner instruction 2026-10-14; confirm against the backend's own model
 list (`codex -m`, `agent models`) before relying on a name.
 
-- **Strongest tier — `create` (and `roadmap`).** Both run **once** and constrain
-  everything downstream: the step list, the `depends_on` graph, the file
-  footprints that every later `detail`, `run`, and audit round inherits. Cost is
-  bounded because they run once; a wrong decomposition is not, because it gets
+- **Creation tier — roadmap, seeds, and `create`.** These establish scope and constrain
+  everything downstream: the seed scope, step list, `depends_on` graph, and file
+  footprints that every later `detail`, `run`, and audit round inherits. A wrong
+  decomposition compounds because it gets
   *elaborated* by every step that follows. `create`'s two conceptual sub-passes
   are the reason — the distill "one plan, or many?" decision, and the step
   proposal that authors the dependency graph.
-- **Working tier — everything else,** including `detail`, `run`, both reconcile
+- **Working tier — subsequent work,** including `detail`, `run`, both reconcile
   verbs, `verify-all`, `jira`, and the completeness audit. These scale with
   steps and iterations, and a weaker call surfaces as a failing test or a
   refuted claim rather than compounding.
@@ -245,28 +287,33 @@ rules, workflows), `02-constraints.md` (each quality attribute with exactly
 one disposition, plus the constraints discharging them), `03-components.md`
 (logical components and pattern discharge), and `04-roadmap.md` (plan
 mapping, ordering, assumptions) — plus draft seeds, all written under
-`docs/implementation-plans/roadmaps/<slug>/`, recording the brief reference
-in `source.json`. Re-entry uses that recorded source via
-`roadmap <slug> --from-stage N`: it re-gates every artifact below `N` and
-rewrites every artifact from `N` up, `N` included. Rewriting is not
-regenerating: an artifact that already exists is revised in place, keeping
-its row ids, `feedback` rows, and `settled` decisions — but body prose and
-unsettled wording are **not** preserved, so copy those aside first. The
-backend runs only inside a stage; deterministic gates between stages retry
-a stage with its violations quoted back, and stage runs are non-interactive
-(no prompt or `-y`). Two non-zero exits: `1` when a stage spends its retry
-budget (backend failure, unparseable reply, or gate rejection), `2` for a
-pre-flight failure before any stage runs (an unreadable brief, an
-out-of-range `--from-stage`, or a below-`N` artifact failing its own gates).
+`docs/implementation-plans/roadmaps/<slug>/`. The stage run is first-run only:
+it holds each gate-clean stage in the resume directory
+(`.plan-tool/runs/<slug>/roadmap-stage-resume/`), and publishes one immutable
+version, a ledger-native feedback ledger, and the accepted head only after all
+four stages pass. A failed run leaves only the resume directory and the next
+run resumes from the first stage that is missing or fails its re-gate; a
+changed brief refuses with a remedy (restore the brief, delete the named
+resume directory by hand, or start a successor slug). Once an accepted head
+exists, a stage run refuses: a roadmap with a head changes through ledger
+feedback and candidate review (`docs/how-to/roadmap.md` § 6). The backend runs
+only inside a stage; deterministic gates between stages retry a stage with
+its violations quoted back, and stage runs are non-interactive (no prompt or
+`-y`). Two non-zero exits: `1` when a stage spends its retry budget (backend
+failure, unparseable reply, or gate rejection), `2` for a pre-flight failure
+before any stage runs (for example an unreadable brief). Every command that reads the roadmap
+reads the accepted version; a folder with no accepted head refuses with
+`no published version`, and `docs/how-to/roadmap.md` § 1 owns the hand
+conversion of an older folder (no tool migrates one).
 Settle a `pending` decision with `roadmap <slug>
 --settle-decision <artifact>:<decision-id> --settlement-evidence
-<artifact>:<feedback-id> --confirm-decision-settlement`, citing a live
-feedback row that approves it — never by hand-editing `status` in the
+<artifact>:<feedback-id> --confirm-decision-settlement`, citing an open
+ledger item that approves it — never by hand-editing `status` in the
 artifact (see `docs/how-to/roadmap.md` § 5); to ask for a change instead of
-making it, write a `feedback` row and re-enter **at** that artifact's own
-stage. `--apply`, `--from-stage`, and `--view`
-share one mutually exclusive group. `roadmap <slug> --apply` (plus a TTY
-confirm, or `-y` under `--apply`) promotes draft seeds into `plan-seeds/`;
+making it, submit a ledger item (`--submit-feedback`) and propose a candidate
+(`--propose-candidate`); `--reopen-ledger-feedback ITEM_ID` reopens a
+retained ledger item. `roadmap <slug> --apply` (plus a TTY
+confirm, or `-y` under `--apply`) promotes draft seeds into `docs/implementation-plans/plan-seeds/`;
 writes no plan and no manifest entry, and prints `create --from-existing`
 lines on stage-4 completion. Feedback invalidates existing seeds without
 replacing them; use `roadmap <slug> --refresh-seeds` to regenerate them
@@ -274,45 +321,12 @@ from current code, restoring archived sources and saving a diff report.
 Until refresh, `create --from-existing` asks for stale-seed confirmation.
 `roadmap <slug> --view {walk,ledger,index} [--mode {current,review}] [--id
 ROW_ID]` is the read-only third mode: renders the traceability walk,
-decision ledger, or reverse citation index over the on-disk roadmap — no
-backend call, no stage run, no mutation; exits `0` unless the roadmap
-directory is missing.
-
-A changed or legacy same-path baseline refuses when `--from-existing` repeats
-without `--confirm-brief-rebind`. That stage-run-only flag explicitly permits
-`accepted-rebind`: it is used to replace only the accepted decoded-text
-baseline, unneeded for initial and matching-baseline stage runs, and without
-changing artifacts, feedback, or seed state — it is not a non-stage recovery
-route.
-
-## Roadmap non-stage routes
-
-`roadmap <slug> --analyze-escalation RECEIPT_FINAL` creates immutable
-noncanonical routing evidence only for a matching recorded decoded-text
-baseline; `changed-brief` and `legacy-brief` refuse redacted with status `1`
-and no immutable analysis publication. `roadmap <slug> --view
-impact-analyses` remains log-free and returns status `0` with no route or
-workflow for those states. `roadmap <slug> --enroll-version` is backend-free
-and exclusive; a matching recorded decoded-text baseline retains its
-behavior, while `changed-brief` and `legacy-brief` refuse redacted with
-status `1` and make no immutable version or accepted-head claim. Stage-run-
-only same-path `--from-existing` plus `--confirm-brief-rebind` baseline
-acceptance is not a recovery path for any non-stage route.
-
-## Roadmap rewrite
-
-`roadmap <slug> --rewrite-structural RECEIPT_FINAL --rewrite-analysis
-ANALYSIS_FINAL` is the exclusive exact-pair writer for one bounded candidate,
-admitted by current `same-artifact` or `cross-artifact` evidence. An
-unavailable evaluator rejects fact-free before evidence is read; after
-evaluator admission and guarded recovery, structural preflight checks the
-current brief baseline before rebuilding and validating the exact pair.
-`changed-brief` and `legacy-brief` refuse redacted with status `1` and no
-artifact, baseline, or seed publication; every other failure — including a
-`requires-scope-review` route — also refuses. It publishes only the selected
-artifact and selected feedback row; cross-artifact evidence grants no
-transaction, second artifact update, or broader relation change. See
-`ROADMAP_FORMAT.md` for the closed schema.
+decision ledger, or reverse citation index over the accepted version — no
+backend call, no stage run, no mutation. `roadmap <slug> --compare`
+compares the accepted head with the active candidate (an omitted
+`--comparison-target` means the active candidate and refuses when none is
+active). `INDEX.md` in the roadmap folder is generated for people, rewritten
+after every version-store change, and read by no command.
 
 ---
 
@@ -324,6 +338,12 @@ early one is the cheaper of the two by a wide margin — a missing plan-level
 contract, ordering rule, risk, or acceptance criterion caught before detail
 authoring is one fix, not one fix multiplied across every detail file that
 elaborated the gap.
+
+**Parse every plan's YAML frontmatter before an audit or a commit.** A hand edit
+that puts `: ` inside a plain scalar (an unquoted `title:` or step field) breaks
+the YAML, and the audit then exits 2 without judging anything. Load each edited
+plan's frontmatter with a YAML parser and fix the error first. Treat an audit
+exit code 2 as a failed run, not a clean one: read its log.
 
 ## Gate 1 — the bare-plan audit (before `detail`)
 
@@ -354,6 +374,31 @@ Leave a finding for `detail` only when its remedy genuinely specifies
 implementation mechanics, a per-step detail contract, or fixture-level coverage.
 Never copy those mechanics into the plan just to satisfy the early audit — and
 never use a missing detail file as licence to invent detail content in the plan.
+
+**Triage each bare finding before editing anything.** Label it: **R** (conflicts
+with an accepted roadmap artifact), **B** (a plan contract), **P** (an owner's
+product decision), **D** (a detail mechanism), **I** (settled by code or a
+platform spike), or **T** (a tool artifact). Edit the plan body only for B.
+Route R to roadmap feedback, P to the owner, D to `detail`, I to a step's test
+or spike, and T to the bug backlog. Fix from the finding's plan-altitude
+restatement, not from its `Fix` line, which often names a mechanism. The
+labels exist because the default reading of a bare report — every finding is
+a plan-body edit — is what pulls detail into plans.
+
+- **R — a conflict with an accepted roadmap is not a plan-body fix.** Either
+  align the plan to the roadmap, or record the departure as roadmap feedback
+  with the owner's decision (`roadmap <slug> --submit-feedback`) and cite that
+  record in the plan, so re-audits stop re-flagging it.
+- **T — tool artifacts.** A finding that cites a path another plan in the same
+  roadmap creates as missing, or a stale roadmap or seed path, is a known false
+  positive: verify it once, file or cite the bug entry, and leave the plan alone.
+
+**Diff a bare-round fix before committing it.** If it adds a table, algorithm,
+schema constraint, state machine, file layout, or platform-specific behavior,
+cut it to the one-sentence property and move the rest to the step's detail
+hint. If a plan body grows by more than about a quarter across bare rounds,
+stop and re-check altitude before the next audit: growth is the visible sign
+that mechanism is landing in the body.
 
 **Choose the artifact by the contract, not by the proposed implementation.** If
 the plan names a safety, ordering, ownership, compatibility, bypass, or
@@ -408,13 +453,29 @@ detail-grounded audit remains the stage that judges the selected mechanism.
 **Proceed to `detail` when** a re-audit is confirmed-dry (or confirmed-low-yield
 per the stopping rule below) against a fresh unchanged snapshot. Record the
 report path, the `N of M` detail coverage, the audit-coverage verdict
-(including a budget-limited result), and which axes were withheld.
+(including a budget-limited result), and which axes were withheld. **After three
+bare rounds, proceed to `detail` when the remaining findings are D, I, or about
+text the previous round added**, and carry them as detail inputs; a fourth bare
+round on them audits your own edits (the second of the three exits below), not the plan.
 
 ## Gate 2 — the detail-grounded audit (after `detail`)
 
 Once every step has a detail file, run the **same iterative audit again** before
 implementation. This is the final gate; only here are the detail-level axes
 un-withheld. Apply its conceptual findings by the same session-directed loop below.
+
+## Infrastructure plans: claim scope only for resources the plan creates
+
+**An infrastructure plan makes scoping, isolation, and least-privilege claims
+only for resources whose creation pattern it defines.** Resources the toolchain
+or the platform creates and needs to operate (a deployment tool's bootstrap
+roles, account-level services, managed roles) are out of scope, because the plan
+cannot change them: a fix that wraps one in a mechanism the plan does not own,
+or claims isolation over it, is false. List them in the plan as named
+exceptions, one reason each, as a closed list. Judge findings against a listed
+exception as informational; a finding against any resource not on the list,
+including a toolchain resource the plan forgot to list, still stands. An
+exception never covers a resource the plan's own code creates.
 
 **Both gates use the same session-directed convergence loop and the same
 judgment, but different conceptual blocking bars** (see below). The bare-plan
@@ -737,6 +798,14 @@ for that finding:
    environment provides; a question buried in a longer status update that the
    session then proceeds past is not a pause.
 
+The same holds when a finding has no contradiction but its only remedy is
+choosing between valid product behaviors (single or parallel runs, cookie or
+token, block on stale or warn): ask; never invent the choice to clear the
+finding. **Record the answer as one decision line in the plan, with its date
+and the audit report id**, so the next audit reads it as settled. A choice the
+owner explicitly deferred stays deferred: state the property every option must
+meet, not a pick.
+
 **Only the product-question subset blocks.** Every other finding in the same
 report — the ordinary correctness fixes the test above already resolved —
 keeps flowing through the session-directed loop in the same round: apply,
@@ -825,6 +894,14 @@ remedy as stated) or of check 4 as normally applied (each fix was verified
 against its own cited finding); they were a failure to ask, before sweeping,
 whether the remedy's *shape* — not just its coverage — could ever be complete.
 
+### A finding that names another plan is fixed in every plan at once
+
+When a finding names another plan's section, the class spans plans. Write the
+shared contract once (owning plan, operation, invariant), apply it to every
+named plan in one batch, and re-audit them together. Before closing a class
+such as owner-only access, list every operation in every plan it governs.
+Fixing one plan per round re-seeds the finding in its sibling.
+
 ## Filing a backlog or bug entry
 
 **Write every entry, ticket, and heading for a person who has not seen the
@@ -909,6 +986,11 @@ mostly self-seeded still contains real gaps worth applying.
 Don't tack it onto commands where it is a no-op (a non-reconcile `run`,
 `review`, `verify`, `jira`) — it warns or errors.
 
+**"Make the plan as complete as possible" is not a request for `detail
+--iterate`.** `detail` stays one-shot unless the user explicitly asks for its
+loop. That request means: `create` (which iterates by default), then `detail`,
+then the detail-grounded `completeness-audit <name> --iterate` (Gate 2).
+
 ## `--commit`
 
 **Commit before every `plan-tool` invocation, and prefer `--commit` where the
@@ -936,6 +1018,57 @@ you drive the pipeline. Withholding commits to inspect first means advancing
 
 `detail --commit` is also per-step — it commits each converged step as it lands,
 keeping an interrupted batch's completed steps durable.
+
+**A worktree that is dirty on purpose.** When the tree holds changes the user
+means to keep out of the plan's history, do not `git add -A` or sweep them into a
+commit. Commit by explicit path (`git commit <paths>`), so the baseline holds
+only your edits and theirs stay untouched; `--commit` on a verb that refuses a
+dirty tree cannot be used there, so land the commits by path and run without it,
+one step at a time.
+
+### When a `run` step's own tests fail
+
+**Fix the defect by hand, commit it, and accept the step with `run --accept`.** A
+step that clears its claude call but fails a gate stays `current` with a
+`status_note`, and the tree keeps its edits. When the failing test is the step's
+own defect (a wrong assertion, an invalid fixture, a missed case), the tool's
+re-run path cannot land it: it does not tell the model which tests failed, so the
+re-run changes no test file and the test-authoring gate blocks the step even though
+its tests exist. `--commit` also refuses to start over a dirty tree. `--accept`
+is the route that lands it. Recover in this order:
+
+1. **Inspect.** Read `git diff` and the failing test. Confirm the implementation
+   delivers the step's stated outcome; a failure that shows missing or wrong
+   behavior is not covered here (revert and re-run, per `RUNBOOK.md` § "Step failed
+   with uncommitted edits left in the tree").
+2. **Fix the smallest defect by hand** in the step's own files, then sweep the
+   step's other new tests for the same defect before re-running anything.
+3. **Run the full suite to green** (`uv run pytest tests/ -q -n auto`). A hand-fixed
+   step is certified by the whole suite, not by the one test that failed.
+4. **Commit the step's code and tests as one bounded commit**, leaving the plan
+   file out. The failed gate left a `status_note` in the plan, so the plan being
+   dirty is expected; `--accept` tolerates the plan file and its lessons log and
+   refuses any other uncommitted change.
+5. **Accept the step through the tool:** `plan-tool run <slug> --step N --accept
+   --commit`. It runs the plan's `test_command` and the step's `gate`, and only
+   when they pass marks the step `done`, clears its `status_note`, promotes the
+   next runnable step (or completes the plan), appends the lessons entry, and
+   commits the plan and lessons files only. On a red gate it writes nothing. It
+   accepts only a step a failed gate left behind (`current`, or `pending` with a
+   failed-gate `status_note`), so a mistyped id is refused. Build output the suite
+   left untracked is not committed: ignore or remove it before step 6.
+   It refuses a plan with neither a `test_command` nor a step `gate`; there, hand
+   the decision to the user rather than editing `status:` yourself.
+6. **Continue with `run --commit`** from the clean tree for the remaining steps.
+
+Never hand-fix and then bare re-run: the re-run re-drives the model over the dirty
+tree and trips the test-authoring gate. Never mark a step `done` by hand-editing
+`status:` (it skips promoting the next step and can leave a step runnable), and
+never use `--skip-merge-check` or a plan-wide `enforce_step_tests` change to get
+past a test failure. Record the failing test, the hand fix, and the
+suite result in the handoff. Redoing the step from a clean tree is the alternative
+when the implementation itself is wrong; it costs a model pass and can reproduce the
+same test defect.
 
 ## Feature-branch durability and merge order
 
@@ -969,11 +1102,37 @@ directly to `main`. Do not merge a partially executed plan's code merely
 because some steps are durable; leave it on its feature branch until its
 stated completion contract is met.
 
-### Opening pull requests with `bkt`
+### Select the pull-request system before use
 
-Use the Bitbucket CLI (`bkt`, <https://github.com/avivsinai/bitbucket-cli>) to
-open, inspect, and merge pull requests from the session; resolve the workspace and repository from the verified remote rather than
-assuming an organization target.
+Before creating, inspecting, commenting on, or merging a pull request, verify
+the target system and repository rather than inferring them from the checkout:
+
+```bash
+git remote get-url origin
+git branch --show-current
+```
+
+- An `origin` on `bitbucket.org` uses `bkt`. Run `bkt context list` and
+  `bkt repo view` to confirm that the active context selects the expected
+  Bitbucket host, workspace, and repository before any `bkt pr` command.
+- An `origin` on `github.com` uses `gh`. Run
+  `gh repo view --json nameWithOwner,defaultBranchRef` to confirm the expected
+  GitHub repository and base branch before any `gh pr` command.
+- For another host, an ambiguous remote, or a mismatched CLI context, stop and
+  resolve the target with the user. Do not create a pull request through the
+  other CLI or by guessing a repository flag.
+
+Use the verified source branch and default branch in the create command. A
+configured CLI context is not evidence that it matches the current checkout.
+
+### Opening Bitbucket pull requests with `bkt`
+
+Use the Bitbucket CLI (`bkt`, <https://github.com/avivsinai/bitbucket-cli>) for
+all Bitbucket pull-request lifecycle work: create, inspect, comment, review,
+and merge. Do not use an Atlassian MCP tool for Bitbucket pull requests;
+reserve that integration for Jira and Confluence. Resolve the Bitbucket
+workspace and repository from the verified remote; internal workstation
+settings may live in ignored local context.
 
 **One-time setup.** `bkt auth login` (the OAuth token expires; `bkt auth status`
 shows when), then bind the repository so commands need no flags:
@@ -1026,6 +1185,21 @@ action.
 
 **If `bkt` is unavailable or unauthenticated,** report it and give the user the
 compare URL `git push` prints; do not fall back to a direct push to `main`.
+
+### Opening GitHub pull requests with `gh`
+
+For a verified GitHub target, use `gh pr create`, not `bkt` or an Atlassian MCP
+tool. Write the review body to a file and pass it with `--body-file` so quotes,
+backticks, and newlines remain intact:
+
+```bash
+gh pr create --head <branch> --base <default-branch> \
+  --title "<one concern>" --body-file .tmp/<slug>.pr-body.md
+```
+
+Use `gh pr view`, `gh pr checks`, and `gh pr comment` for the corresponding
+GitHub review work. The same review, validation, and merge-authorization rules
+above apply regardless of the hosting system.
 
 ## The two reconcile verbs are not interchangeable
 
