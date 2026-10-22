@@ -73,6 +73,10 @@ Recovery section (in the plan-tool repo).
 When you (the agent) invoke plan-tool on the user's behalf, treat every run as
 **headless**: close stdin and pass `-y`.
 
+These are independent headless syntax examples, not a stage sequence. For
+sequential authoring, use the completeness recipe below and the two audit
+gates in DIRECTIVES.md; review and commit judged corrections between stages.
+
 ```bash
 plan-tool create <slug> --from-existing /tmp/seed.md --output-dir docs/implementation-plans -y < /dev/null
 plan-tool detail <slug> --commit -y < /dev/null
