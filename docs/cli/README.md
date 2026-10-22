@@ -18,7 +18,7 @@ walkthroughs see the user guides in `docs/` (e.g. `RUNBOOK.md`).
 | [`checkpoint`](checkpoint.md) | inspect / manage on-disk resume checkpoints under <repo>/.plan-tool/checkpoints/. Subactions: list / show / clear. |
 | [`runs`](runs.md) | inspect / manage on-disk run logs under <repo>/.plan-tool/runs/. Subactions: list / show / diff / profile / clear. |
 | [`lessons`](lessons.md) | maintenance verbs over plan-tool's lessons files (general.md / project.md / per-plan lessons.md). Subactions: consolidate. |
-| [`roadmap`](roadmap.md) | stage a concept brief into gated architecture artifacts under docs/implementation-plans/roadmaps/<slug>/ (one rung above create); use --apply to promote draft seeds into plan-seeds/ or --refresh-seeds to regenerate invalidated seeds |
+| [`roadmap`](roadmap.md) | stage a concept brief into gated architecture artifacts under docs/implementation-plans/roadmaps/<slug>/ (one rung above create); use --apply to promote draft seeds into docs/implementation-plans/plan-seeds/ or --refresh-seeds to regenerate invalidated seeds |
 | [`create`](create.md) | interactively author a new plan |
 | [`reconcile-plan`](reconcile-plan.md) | reconcile the plan against the current codebase (edits the plan) |
 | [`reconcile-code`](reconcile-code.md) | audit the code against the plan (plan is canonical) and land code edits inline; plan-rooted findings redirect to 'detail --reconcile' (legacy form: 'run --reconcile') |

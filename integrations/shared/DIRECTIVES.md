@@ -55,7 +55,7 @@ overriding a wrong auto-selection. **Plans** are discovered per project via
 | --- | --- |
 | Plans | `docs/implementation-plans/<N>-<slug>.md` |
 | Per-step detail | `docs/implementation-plans/plan-details/<slug>/NN-*.md` |
-| Seeds | `plan-seeds/` at the repo root (where `SEED_FORMAT.md` and `roadmap --apply` write them) |
+| Seeds | `docs/implementation-plans/plan-seeds/` (where `SEED_FORMAT.md` and `roadmap --apply` write them) |
 | Tool state | `<repo>/.plan-tool/` (`plans.json`, `runs/<slug>/`, `checkpoints/<slug>/`) |
 
 The `<N>-` tier prefix on the plan filename is **added by the tool** — pass a
@@ -313,7 +313,7 @@ artifact (see `docs/how-to/roadmap.md` § 5); to ask for a change instead of
 making it, submit a ledger item (`--submit-feedback`) and propose a candidate
 (`--propose-candidate`); `--reopen-ledger-feedback ITEM_ID` reopens a
 retained ledger item. `roadmap <slug> --apply` (plus a TTY
-confirm, or `-y` under `--apply`) promotes draft seeds into `plan-seeds/`;
+confirm, or `-y` under `--apply`) promotes draft seeds into `docs/implementation-plans/plan-seeds/`;
 writes no plan and no manifest entry, and prints `create --from-existing`
 lines on stage-4 completion. Feedback invalidates existing seeds without
 replacing them; use `roadmap <slug> --refresh-seeds` to regenerate them

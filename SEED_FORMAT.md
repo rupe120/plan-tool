@@ -1,6 +1,6 @@
 # Plan-seed authoring directives
 
-Directives for authoring plan seeds — the `plan-seeds/*.md` briefs fed to
+Directives for authoring plan seeds — the `docs/implementation-plans/plan-seeds/*.md` briefs fed to
 `plan-tool create <slug> --from-existing <path>`. `PLAN_FORMAT.md` governs the
 plan a seed becomes; this document governs the seed itself. Where the two
 could disagree about seed content, this document wins.
@@ -231,7 +231,8 @@ derive. Everything else waits for the plan or detail stage.
 
 ## Conventions
 
-- **Placement and naming.** Seeds live in `plan-seeds/`. Ordered groups use
+- **Placement and naming.** New seeds live in `docs/implementation-plans/plan-seeds/`. Existing root-level
+  `plan-seeds/` files stay at their current paths; no automatic migration occurs. Ordered groups use
   `<group>-NN-<slug>.md` (zero-padded, matching the plan slug so manifests
   and run dirs sort in execution order); a standalone seed keeps a plain
   slug. A staged seed pins its stage's tool state — which earlier stages

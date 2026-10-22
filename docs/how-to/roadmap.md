@@ -583,7 +583,7 @@ Materialization, digest acceptance, promotion, and ordinary create do not approv
 a roadmap candidate or advance the accepted head. Changes to accepted scope use
 the [feedback and review procedure](#6-turn-reviewer-ledger-feedback-into-a-candidate).
 
-Inspect the promotion and confirm interactively to copy the accepted drafts into `plan-seeds/`.
+Inspect the promotion and confirm interactively to copy the accepted drafts into `docs/implementation-plans/plan-seeds/`.
 
 ```bash
 plan-tool roadmap my-project --apply
@@ -606,7 +606,7 @@ plan-tool create my-first-plan --from-existing docs/implementation-plans/roadmap
 After promotion, use the corresponding copied seed.
 
 ```bash
-plan-tool create my-first-plan --from-existing plan-seeds/my-first-plan.md
+plan-tool create my-first-plan --from-existing docs/implementation-plans/plan-seeds/my-first-plan.md
 ```
 
 Choose one source for a plan: the slug-relative draft or its promoted copy.
