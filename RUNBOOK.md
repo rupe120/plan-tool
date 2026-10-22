@@ -1836,6 +1836,12 @@ Each source still gets its own report and seed. After the per-file
 coverage, grounding (`grounded/candidate (skipped skipped)`), and section
 counts (`I/P/N/R`).
 
+Default annotate seed output refuses an existing destination instead of replacing
+it. A batch with same-named sources in different directories fails its collision
+preflight. Use separate invocations with distinct explicit `--seed` paths for
+those sources. Explicit `--seed`, `--seed-dir` and `--output-dir` destinations
+retain their replacement behavior.
+
 ### Flags
 
 - **`path-or-glob`** (positional, repeatable) — path or glob for the
@@ -4165,3 +4171,4 @@ There is no built-in undo. Recovery options:
 
 For high-stakes runs, commit before each `run` so a `git reset --hard
 HEAD~1` is always available.
+

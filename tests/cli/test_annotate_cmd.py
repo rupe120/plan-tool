@@ -420,8 +420,7 @@ def test_batch_expands_directory_and_excludes_generated_or_archived_inputs(
     detail = _write_source(details, name="01-step.md")
     generated_report = tmp_path / "a.annotated.md"
     generated_report.write_text("# report\n", encoding="utf-8")
-    generated_seed = tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "a.seed.md"
-    generated_seed.parent.mkdir(parents=True)
+    generated_seed = tmp_path / "a.seed.md"
     generated_seed.write_text("# seed\n", encoding="utf-8")
     invoker = _recording_stub()
 
@@ -651,3 +650,51 @@ def test_real_invoker_is_default_seam() -> None:
         annotate_cmd.shell_annotate_invoker
         is annotate_module.shell_annotate_invoker
     )
+
+
+def test_default_seed_never_replaces_an_existing_file_or_invokes_backend(tmp_path):
+    src = _write_source(tmp_path)
+    seed = tmp_path / "docs/implementation-plans/plan-seeds/plan.seed.md"
+    seed.parent.mkdir(parents=True)
+    seed.write_text("existing seed bytes")
+    invoker = _recording_stub()
+    assert cmd_annotate(_ns(src), invoker=invoker) == 1
+    assert not invoker.calls
+    assert seed.read_text() == "existing seed bytes"
+    assert not (tmp_path / "plan.annotated.md").exists()
+
+
+def test_default_seed_created_during_classification_is_not_overwritten(tmp_path):
+    src = _write_source(tmp_path)
+    seed = tmp_path / "docs/implementation-plans/plan-seeds/plan.seed.md"
+    stub = _recording_stub()
+
+    def concurrent_writer(*args, **kwargs):
+        seed.parent.mkdir(parents=True)
+        seed.write_text("concurrent seed bytes")
+        return stub(*args, **kwargs)
+
+    assert cmd_annotate(_ns(src), invoker=concurrent_writer) == 1
+    assert seed.read_text() == "concurrent seed bytes"
+
+
+def test_explicit_seed_retains_replacement_behavior(tmp_path):
+    src = _write_source(tmp_path)
+    seed = tmp_path / "explicit.md"
+    seed.write_text("old bytes")
+    assert cmd_annotate(_ns(src, seed=seed), invoker=_recording_stub()) == 0
+    assert seed.read_text() != "old bytes"
+
+
+def test_same_named_sources_in_shared_default_fail_before_any_backend(tmp_path):
+    first = tmp_path / "a"
+    second = tmp_path / "b"
+    first.mkdir()
+    second.mkdir()
+    a = _write_source(first)
+    b = _write_source(second)
+    invoker = _recording_stub()
+    args = _ns(a, plan_files=[a, b], repo_root=tmp_path)
+    assert cmd_annotate(args, invoker=invoker) == 2
+    assert not invoker.calls
+    assert not (tmp_path / "docs/implementation-plans/plan-seeds").exists()

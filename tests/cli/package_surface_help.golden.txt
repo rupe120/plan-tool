@@ -223,8 +223,9 @@ positional arguments:
                         code and emit two artifacts — an additive
                         `<name>.annotated.md` (verbatim original + per-section
                         IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED status) and a
-                        carryover `<name>.seed.md` for `create --from-
-                        existing`; read-only except the opt-in `--archive`.
+                        carryover seed in docs/implementation-plans/plan-
+                        seeds/ for `create --from-existing`; read-only except
+                        the opt-in `--archive`.
     attach-branch       attach a registered plan to an ad-hoc branch
                         (untracked local git-config override; refuses unless
                         branch awareness is enabled; re-homes the plan onto

@@ -4,7 +4,8 @@
 against the current code and emits two artifacts per source: an additive
 ``<name>.annotated.md`` (the original verbatim plus per-section
 IMPLEMENTED / PARTIAL / NOT-IMPLEMENTED status blocks) and a compact
-``<name>.seed.md`` carryover brief for ``create --from-existing``. It
+``<name>.seed.md`` carryover brief in the default seed directory for
+``create --from-existing``. It
 continues past per-file failures in batch mode and is read-only over each
 source except the opt-in ``--archive``, which moves the original (and, for an
 ``N-slug.md`` plan, its sibling ``plan-details/<slug>/`` bundle) into
@@ -32,7 +33,6 @@ from pathlib import Path
 from typing import Optional
 
 from plan_tool.seed_paths import default_seeds_dir
-
 from plan_tool.annotate import (
     AnnotateError,
     AnnotateInvoker,
@@ -205,6 +205,21 @@ def _annotate_one(
     resolved_source = source_path.resolve()
     paths = _derive_annotate_paths(args, source_path=resolved_source, repo_root=repo_root)
 
+    default_seed = (
+        args.seed is None and args.output_dir is None
+        and getattr(args, "seed_dir", None) is None
+    )
+    if default_seed and (paths.seed.exists() or paths.seed.is_symlink()):
+        message = (
+            f"default seed already exists: {_short_path(paths.seed, repo_root)}; "
+            "use --seed with a distinct path or an explicit destination to replace it"
+        )
+        error(message)
+        return AnnotateBatchResult(
+            source_path=resolved_source, report_path=paths.report,
+            seed_path=paths.seed, annotation=None, error_message=message,
+        )
+
     try:
         reject_unmatched_annotation_fence(
             resolved_source.read_text(encoding="utf-8"), resolved_source
@@ -248,7 +263,11 @@ def _annotate_one(
     for path, text in ((paths.report, report_md), (paths.seed, seed_md)):
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding="utf-8")
+            if path == paths.seed and default_seed:
+                with path.open("x", encoding="utf-8") as stream:
+                    stream.write(text)
+            else:
+                path.write_text(text, encoding="utf-8")
         except OSError as exc:
             message = f"could not write {_short_path(path, repo_root)}: {exc}"
             error(message)
@@ -447,7 +466,8 @@ def register(subparsers) -> dict[str, Handler]:
             "judge an existing plan/notes file against the current code and "
             "emit two artifacts — an additive `<name>.annotated.md` (verbatim "
             "original + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED status) "
-            "and a carryover `<name>.seed.md` for `create --from-existing`; "
+            "and a carryover seed in docs/implementation-plans/plan-seeds/ "
+            "for `create --from-existing`; "
             "read-only except the opt-in `--archive`."
         ),
     )
