@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import copy
 import re
+import stat
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass, field
@@ -35,7 +36,7 @@ from pathlib import Path
 from typing import Callable, Optional
 
 from plan_tool import locator
-from plan_tool.fileio import atomic_write_bytes
+from plan_tool.fileio import durable_write_bytes
 from plan_tool.seed_paths import default_seeds_dir
 from plan_tool.detail import (
     _DETAIL_ID_PREFIX_RE,
@@ -386,9 +387,8 @@ def _upstream_block(
 class NarrowError(Exception):
     """Raised when :func:`apply_narrow` refuses to (or fails to) narrow.
 
-    Refusal is the safe case: a blocker-bearing or stale preview never
-    touches disk. A mid-apply failure rolls the journal back LIFO and
-    re-raises this so the caller sees the pre-narrow state restored.
+    Refusal leaves the plan untouched. Failed recovery preserves conflicting
+    edits and reports unrestored paths. See RUNBOOK.md, scope-out recovery.
     """
 
 
@@ -1043,10 +1043,18 @@ def apply_narrow(
     journal: list[tuple] = []  # (inverse-op-tag, *paths) replayed LIFO
     archived: list[Path] = []
     migrated: list[Path] = []
-    receipts: dict[Path, tuple[bytes, bytes]] = {}
+    receipts: dict[Path, tuple[bytes, bytes, int]] = {}
+    plan_destination: Path | None = None
+
+    def write(target: Path, payload: bytes, mode: int) -> None:
+        durable_write_bytes(target, payload)
+        target.chmod(mode)
 
     def publish(target: Path, payload: bytes) -> None:
-        before = target.read_bytes()
+        nonlocal plan_destination
+        destination = target.resolve(strict=True)
+        before = destination.read_bytes()
+        mode = stat.S_IMODE(destination.stat().st_mode)
         if target == plan_path:
             document = _split_frontmatter(before.decode("utf-8"))
             if (
@@ -1059,8 +1067,10 @@ def apply_narrow(
         elif concept_update is None or before != concept_update.original_sidecar_bytes:
             raise NarrowError("refusing to narrow: concept record changed before publication")
         # Record before the replace so a post-publication failure is recoverable.
-        receipts[target] = (before, payload)
-        atomic_write_bytes(target, payload)
+        receipts[destination] = (before, payload, mode)
+        if target == plan_path:
+            plan_destination = destination
+        write(destination, payload, mode)
 
     try:
         for path in archive_first:
@@ -1096,27 +1106,30 @@ def apply_narrow(
             final_tree.plan_fingerprint = compute_plan_fingerprint(plan_path)
             save_concepts(plan_path, final_tree, publish=publish)
     except Exception as exc:
-        errors = _rollback(journal)
-        for target, (before, payload) in reversed(receipts.items()):
+        detail_errors = _rollback(journal)
+        errors = list(detail_errors)
+        for target, (before, payload, mode) in reversed(receipts.items()):
             try:
                 current = target.read_bytes()
                 if current == before:
                     continue  # publication never happened, or is already restored
                 if current != payload:
                     raise NarrowError("file changed after publication; preserved current bytes")
-                atomic_write_bytes(target, before)
+                write(target, before, mode)
             except Exception as restore_exc:
                 errors.append(f"{target}: {restore_exc}")
             finally:
-                if target == plan_path:
+                if target == plan_destination:
                     try:
-                        if target.read_bytes() == before:
-                            refresh_plan_provenance(target, before.decode("utf-8"))
+                        if plan_path.resolve(strict=True) == target and target.read_bytes() == before:
+                            refresh_plan_provenance(plan_path, before.decode("utf-8"))
                     except OSError:
                         pass  # the failed read/restore is already reported above
         if errors:
+            detail_state = "detail undo incomplete" if detail_errors else "detail moves restored"
             raise NarrowError(
                 f"narrowing failed ({exc}); rollback incomplete: " + "; ".join(errors)
+                + f"; {detail_state}; inspect plan and detail paths before retrying"
             ) from exc
         raise
 
@@ -1377,9 +1390,8 @@ def scope_out_step(
     seed_path.parent.mkdir(parents=True, exist_ok=True)
     seed_path.write_text(seed, encoding="utf-8")
 
-    # apply_narrow's only raise here is a mid-apply IO error (the blocker/stale
-    # checks already passed); it rolls the plan back and re-raises. Let that
-    # propagate — no ScopeOutResult, seed stays as a harmless durable artifact.
+    # Publication/recovery failures propagate; the forward-seed stays available.
+    # Incomplete recovery names unrestored paths instead of returning an outcome.
     narrow = apply_narrow(
         plan_path,
         preview,

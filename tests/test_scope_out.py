@@ -2962,6 +2962,7 @@ def test_rollback_preserves_later_plan_changes_and_reports_incomplete_recovery(
         apply_narrow(path, preview, repo_root=tmp_path)
 
     assert isinstance(exc.value.__cause__, RuntimeError)
+    assert "detail moves restored" in str(exc.value)
     assert path.read_bytes() == changed if edit != "delete" else not path.exists()
     assert all(detail.read_bytes() == text for detail, text in details.items())
 
@@ -3005,7 +3006,7 @@ def test_atomic_publication_failure_leaves_or_restores_exact_plan(
 ):
     path, plan, preview, details = rollback_case
     before = path.read_bytes()
-    real_atomic = scope_out.atomic_write_bytes
+    real_atomic = scope_out.durable_write_bytes
     calls = []
 
     def fail_publication(target, payload):
@@ -3019,7 +3020,7 @@ def test_atomic_publication_failure_leaves_or_restores_exact_plan(
             raise OSError("publication interrupted")
         real_atomic(target, payload)
 
-    monkeypatch.setattr(scope_out, "atomic_write_bytes", fail_publication)
+    monkeypatch.setattr(scope_out, "durable_write_bytes", fail_publication)
     with pytest.raises(OSError, match="publication interrupted"):
         apply_narrow(path, preview, repo_root=tmp_path)
     assert path.read_bytes() == before
@@ -3032,7 +3033,7 @@ def test_plan_restoration_failure_is_reported_with_original_cause(
     tmp_path, monkeypatch, rollback_case,
 ):
     path, _, preview, details = rollback_case
-    real_atomic = scope_out.atomic_write_bytes
+    real_atomic = scope_out.durable_write_bytes
     real_write = scope_out.write_plan
     published = None
 
@@ -3047,7 +3048,7 @@ def test_plan_restoration_failure_is_reported_with_original_cause(
         real_write(*args, **kwargs)
         raise RuntimeError("original failure")
 
-    monkeypatch.setattr(scope_out, "atomic_write_bytes", fail_restore)
+    monkeypatch.setattr(scope_out, "durable_write_bytes", fail_restore)
     monkeypatch.setattr(scope_out, "write_plan", publish_then_fail)
     with pytest.raises(NarrowError, match="rollback incomplete.*restore unavailable") as exc:
         apply_narrow(path, preview, repo_root=tmp_path)
@@ -3121,3 +3122,74 @@ def test_detail_undo_conflict_is_preserved_reported_and_other_undos_continue(
     assert third.read_bytes() == b"Concurrent new detail.\n"
     assert second.read_bytes() == details[second]
     assert parse_plan(path).steps[1].title == "Second"
+
+
+@pytest.mark.parametrize("mode", [0o600, 0o640])
+@pytest.mark.parametrize("fail", [False, True])
+def test_scope_out_preserves_existing_plan_permissions(tmp_path, monkeypatch, rollback_case, mode, fail):
+    import stat
+    path, _, preview, _ = rollback_case
+    path.chmod(mode)
+    before = path.read_bytes()
+    if fail:
+        real_write = scope_out.write_plan
+        def publish_then_fail(*args, **kwargs):
+            real_write(*args, **kwargs)
+            raise RuntimeError("after publication")
+        monkeypatch.setattr(scope_out, "write_plan", publish_then_fail)
+        with pytest.raises(RuntimeError, match="after publication"):
+            apply_narrow(path, preview, repo_root=tmp_path)
+        assert path.read_bytes() == before
+    else:
+        apply_narrow(path, preview, repo_root=tmp_path)
+    assert stat.S_IMODE(path.stat().st_mode) == mode
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_scope_out_keeps_plan_symlink_and_writes_its_existing_target(
+    tmp_path, monkeypatch, rollback_case, fail,
+):
+    path, _, preview, _ = rollback_case
+    target = tmp_path / "actual-plan.md"
+    before = path.read_bytes()
+    path.rename(target)
+    path.symlink_to(target.name)
+    if fail:
+        real_write = scope_out.write_plan
+        def publish_then_fail(*args, **kwargs):
+            real_write(*args, **kwargs)
+            raise RuntimeError("after publication")
+        monkeypatch.setattr(scope_out, "write_plan", publish_then_fail)
+        with pytest.raises(RuntimeError, match="after publication"):
+            apply_narrow(path, preview, repo_root=tmp_path)
+        assert target.read_bytes() == before
+    else:
+        apply_narrow(path, preview, repo_root=tmp_path)
+        assert len(parse_plan(target).steps) == 2
+    assert path.is_symlink()
+    assert path.readlink() == Path(target.name)
+    assert path.read_bytes() == target.read_bytes()
+
+
+def test_scope_out_syncs_plan_and_concept_bytes_before_reporting_success(tmp_path, monkeypatch):
+    import os
+    import stat
+    import plan_tool.fileio as fileio
+    owned = concept_id("Owned", [])
+    path = _write_plan_file(tmp_path, _mk_plan([
+        _mk_step(1), _mk_step(2, concept_ids=[owned]), _mk_step(3),
+    ], status=PlanStatus.PLANNING))
+    _save_concept_record(path, "Owned")
+    synced = set()
+
+    def observe_sync(fd):
+        if stat.S_ISDIR(os.fstat(fd).st_mode):
+            synced.add("directory")
+        else:
+            head = os.pread(fd, 3, 0)
+            synced.add("plan" if head == b"---" else "concept")
+
+    monkeypatch.setattr(fileio.os, "fsync", observe_sync)
+    result = scope_out_step(path, carved_id=2, repo_root=tmp_path, allow_scope_out=True, yes=True)
+    assert result.outcome == "applied"
+    assert synced == {"plan", "concept", "directory"}
