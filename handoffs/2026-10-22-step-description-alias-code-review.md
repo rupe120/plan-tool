@@ -6,7 +6,7 @@
 | Branch | `feat/step-description-alias` |
 | Scope | BACKLOG #517, four approved steps; plan-canonical reconciliation and review tail |
 | Execution | All four steps green and committed |
-| Current review state | First reconciliation complete; bounded newline correction under validation; Claude Code reviews not yet run |
+| Current review state | Three reconciliation sweeps complete; final two clean; Claude Code reviews not yet run |
 
 ## Settled decisions
 
@@ -85,3 +85,11 @@ Reports `20261022-145655-run-reconcile.json`,
 `20261022-145723-run-reconcile.json`, and
 `20261022-145752-run-reconcile.json` each contain zero recommendations.
 The body-byte finding is closed by the raw-byte reproduction and regression.
+
+## Reconcile sweep 3
+
+Same explicit command after `cd23db696`; all three code steps complete with
+zero recommendations. Reports: `20261022-145853-run-reconcile.json`,
+`20261022-145925-run-reconcile.json`, `20261022-150003-run-reconcile.json`.
+The final two full sweeps are clean against the corrected implementation.
+No further full sweep is warranted without a material code correction.
