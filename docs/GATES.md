@@ -21,8 +21,9 @@ checks. For which gates fire on every run, see [`RUN_FLOW.md`](how-to/pipeline/r
 A correctness gate is what stops a bad step, or a malformed response, before
 it does any damage. They live as shared validation primitives in
 `review.py`, and every claude-invoking subcommand runs them. With
-`--iterate` on, four subcommands loop these gates until they converge:
-`create`, `detail`, `detail --reconcile`, and `run --reconcile`. Each loop
+`--iterate` on, `create`, explicitly requested detail authoring, and
+`completeness-audit` loop their supported gates. Reconciliation uses separate
+invocations, without `--iterate`. Each authoring loop
 runs the checks, hands any findings to `apply-finding`, and re-audits — see
 [Iterating to convergence](ITERATION.md).
 
@@ -124,7 +125,6 @@ Persistence path:
 
 ```bash
 plan-tool detail my-feature --reconcile --step 3
-plan-tool detail my-feature --reconcile --step 3 --iterate
 plan-tool detail my-feature --reconcile --all
 ```
 
@@ -208,7 +208,7 @@ Within each axis there are two layers:
   audit until findings run dry (typically 2-3 calls; tune with
   `--audit-samples` / `--audit-dry-rounds`); `reconcile-plan` and
   `verify-all` make theirs per the table below. Under `--iterate`,
-  `create`, `detail`, `completeness-audit`, and `run --reconcile` re-audit until
+  `create`, `detail`, and `completeness-audit` re-audit until
   findings converge. See [Iterating to convergence](ITERATION.md).
 
 The audit verbs split by lifecycle phase:

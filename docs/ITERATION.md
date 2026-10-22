@@ -37,7 +37,7 @@ See [RUNBOOK.md → When repeated audit/apply doesn't converge](../RUNBOOK.md#wh
 
 | If you need to… | First command or action | Then read |
 | --- | --- | --- |
-| Let a supported authoring or reconcile route converge | Add `--iterate` | [When to use `--iterate`](#when-to-use-iterate) |
+| Let a supported authoring route converge | Add `--iterate` | [When to use `--iterate`](#when-to-use-iterate) |
 | Check why a plan's structure is under pressure | `plan-tool split-criteria <name>` | [See a plan's split criteria](#see-a-plans-split-criteria-plan-tool-split-criteria) |
 | Carve an over-packed step into follow-up work | `plan-tool scope-out <name> --step N` | [Carve an over-packed step out](#carve-an-over-packed-step-out-plan-tool-scope-out) |
 | Understand why a loop stopped | Read the saved report and its terminal state | [How the loop terminates](#how-the-loop-terminates) |
@@ -90,17 +90,24 @@ them once, and the loop runs itself within the fence you drew.
 
 | Flag | Default | Source | Effect |
 | --- | --- | --- | --- |
-| `--iterate` / `--no-iterate` | `create`: `--iterate` (on). `detail`, `run --reconcile`, `detail --reconcile`, `completeness-audit`: `--no-iterate` (off). | `BooleanOptionalAction` + per-subparser `default=True` on `create`, `default=False` on `detail` | Master switch. Off ⇒ `IterativeBudget(enabled=False)` ⇒ `should_continue` short-circuits with `"disabled"` on the first call. |
+| `--iterate` / `--no-iterate` | `create`: `--iterate` (on). `detail`, `completeness-audit`: `--no-iterate` (off). | `BooleanOptionalAction` + per-subparser `default=True` on `create`, `default=False` on `detail` | Master switch. Off ⇒ `IterativeBudget(enabled=False)` ⇒ `should_continue` short-circuits with `"disabled"` on the first call. |
 | `--max-iterations N` | `3` | `convergence.DEFAULT_MAX_ITERATIONS` | Maximum iterations after the initial write. `--max-iterations 0` is rejected by `_resolve_iterative_budget`. |
 | `--iteration-budget SECONDS` | `1800` | `convergence.DEFAULT_ITERATION_BUDGET_SECONDS` | Debounced no-progress deadline: fires only after SECONDS pass with zero forward progress. It resets on every round and every `apply_finding` call, so a single 15-20+ minute claude call never trips it — this is not a cap on total loop wall-clock (see `--time-budget` for that). |
 | `--max-stall-rounds N` | `2` | `convergence.DEFAULT_MAX_STALL_ROUNDS` | Stop after N consecutive rounds whose open-finding **count** doesn't shrink. It's an ID-agnostic backstop for a subjective audit that re-phrases the same findings each round (fresh ids would otherwise defeat the `marginal` / `converged` checks). `0` disables. |
 
 - **On by default:** `create`. Pass `--no-iterate` to skip the
   post-write loop.
-- **Off by default:** `detail`, `detail --reconcile`, `run
-  --reconcile`, `completeness-audit`. Pass `--iterate` when convergence matters more than
-  speed — each extra iteration costs one or more extra claude calls.
-- **Not supported:** `annotate`, `reconcile-plan`, `verify-all`.
+- **Off by default:** `detail` and `completeness-audit`. Pass `--iterate`
+  explicitly for completeness audits. Keep detail authoring one-shot unless
+  the user explicitly requests its quality loop.
+- **Reconciliation:** neither `detail --reconcile` nor `run --reconcile`
+  supports `--iterate`; both reject it with exit 2. Detail reconciliation
+  also rejects `--no-iterate`. Standalone `reconcile-plan` and `reconcile-code`
+  do not accept iteration flags. Use saved reports and session-directed
+  corrections followed by a new invocation. Plan-side reconciliation is
+  pre-execution only; after execution, keep the plan canonical with
+  `reconcile-code`.
+- **Other unsupported routes:** `annotate`, `verify-all`.
   `annotate --iterate` exits 2 before writing anything, because
   `annotate` is a single classification pass plus deterministic
   renderers, not a loop. The convergence step happens on the next run:
@@ -114,25 +121,20 @@ them once, and the loop runs itself within the fence you drew.
   deterministic completeness primitives (body sections, detail
   coverage, references) to drive 2–3 author-fix-reaudit passes before
   you hand it to a developer.
-- You're authoring detail files with `detail` and want the
+- You explicitly request iterative detail authoring with `detail` and want the
   `detail-quality.md` review to drive 2–3 quality revisions on the
   just-written body — citations tightened, vague prose pinned to real
   line ranges, generic bullets replaced with code-checkable ones.
-- You're reconciling a `done` step with `run --reconcile --step N`
-  (code edits) or `detail --reconcile --step N` (plan/detail edits) and
-  want the audit→edit→audit loop to converge instead of stopping at the
-  first audit (the historical one-shot shape).
-- You're running headlessly (`-y < /dev/null`) and want the walk to
-  apply every finding without stopping. Under `-y` / non-TTY, the inner
-  walks default to `apply-all` so iteration N+1 isn't blocked on
-  `input()` — there's no one there to answer the prompt.
+- You want supported deterministic authoring fixes to run headlessly
+  (`-y < /dev/null`). Conceptual audit gaps still need session-directed
+  judgment; headless mode does not turn them into automatic applies.
 
 ### Skip `--iterate` when
 
-- You only want the *audit*, not the apply. Use `plan-tool reconcile-plan`
-  or `verify-all` — neither iterates; both emit findings for you to
-  session-directed review. (`completeness-audit --iterate` converges only its
-  deterministic findings and leaves the conceptual ones for you.)
+- You only want a report: use `verify-all`, or pre-execution
+  `reconcile-plan --no-walk` to save findings without applying them.
+  (`completeness-audit --iterate` converges only its deterministic findings
+  and leaves conceptual gaps for session-directed edits.)
 - You're debugging a claude regression and need iteration-1 state to
   inspect before iteration 2 overwrites it. Pass `--no-iterate`
   explicitly for `create`, where omitting the flag opts you INTO the
@@ -140,13 +142,8 @@ them once, and the loop runs itself within the fence you drew.
 - You're in CI with a hard wall-clock cap and one extra claude call per
   iteration is too expensive (or pass `--max-iterations 1` for exactly
   one pass — see tiebreakers below).
-- You want byte-for-byte parity with the historical one-shot behavior.
-  `--no-iterate` is the explicit form; for `run --reconcile` and
-  `detail --reconcile`, omitting the pair is also off-by-default, but
-  `--no-iterate` makes the intent visible in scripts. Watch out: for
-  `create` you MUST pass `--no-iterate`, because omitting the flag
-  opts INTO iteration. `detail` is the other way round: it's a
-  one-shot write unless you pass `--iterate`.
+- You want a single authoring pass: use `create --no-iterate` or plain
+  `detail`. Do not add iteration flags to reconciliation commands.
 
 **Tiebreakers:**
 
@@ -159,9 +156,7 @@ them once, and the loop runs itself within the fence you drew.
   pass."
 - **Per-step vs. per-plan scope.** `detail`'s budget is *per step* (the
   loop wraps each detail-file write independently). `create`'s budget
-  is *per plan* (one loop around the post-`write_new_plan` reaudit). `run
-  --reconcile` and `detail --reconcile`'s budgets are *per run
-  invocation* (one loop around the reconcile-save-walk / apply cycle).
+  is *per plan* (one loop around the post-`write_new_plan` reaudit).
   When you iterate across multiple steps with `detail` (no `--step`
   argument), each step gets its own fresh budget — one step exhausting
   its budget doesn't block the next.
@@ -191,8 +186,7 @@ N+1's claude call is **not** served the cached body from iteration N
 when you resume. Each completed iteration's payload caches at its own
 slot, and a resumed run replays them in order.
 
-`detail`, `detail --reconcile`, and `run --reconcile` do *not* extend
-their hash keys. `detail` relies on `apply_finding` mutating the file
+`detail` does *not* extend its hash keys. `detail` relies on `apply_finding` mutating the file
 in place between iterations, and `run` doesn't go through the
 checkpoint module at all. When you resume an interrupted `create
 --iterate` run, the cache replays each completed iteration; only the

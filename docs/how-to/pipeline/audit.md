@@ -345,8 +345,9 @@ recommendation classes can be demoted. High-impact recommendations and
 `high`/`critical` severities always block; this is not an impact-only policy.
 `audit_plan_until_stable` uses the predicate to decide whether new findings are
 material, so completeness callers using that audit loop inherit this narrow
-materiality rule. Every refresh in `_iterate_reconcile_loop` uses it for its
-open-blocking-finding state.
+materiality rule. The internal `_iterate_reconcile_loop` helper uses it for its
+open-blocking-finding state, but current reconcile CLI routes do not expose
+an iteration loop.
 
 `check_plan_audit`'s own within-round materiality check (feeding
 `audit_plan_until_stable`'s dry-streak accounting) additionally passes
@@ -920,7 +921,7 @@ for the code-is-truth vs plan-is-truth split.
 | Stage conceptual bar              | `plan_tool/convergence.py` (`is_blocking_finding`, `STAGE_BARE`, `STAGE_DETAIL`); `plan_tool/review.py` (`classify_finding_domain`) |
 | Conceptual bar blocking set       | `plan_tool/cli/completeness_phases.py` (`compute_conceptual_bar_blocking_ids`); `plan_tool/completeness_report.py` (`BlockingVerdict`, `blocking_verdict_from_gate`); `plan_tool/cli/completeness_cmd.py` (`_completeness_has_blocking_findings`) |
 | Mid-run bar steering              | `plan_tool/cli/completeness_phases.py` (`_run_iterate_convergence_loop` → `terminal_hand_apply`) |
-| Impact-aware continuation         | `plan_tool/convergence.py` (`is_blocking_impact` — reconcile + `material_new` only, **not** the completeness stage bar); audit materiality in `plan_tool/review.py` (`audit_plan_until_stable`, inherited by completeness callers); reconcile refreshes in `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`) |
+| Impact-aware continuation         | `plan_tool/convergence.py` (`is_blocking_impact` — reconcile + `material_new` only, **not** the completeness stage bar); audit materiality in `plan_tool/review.py` (`audit_plan_until_stable`, inherited by completeness callers); internal reconcile refresh helper in `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`; no CLI iteration route) |
 | Plan-vs-code audit               | `plan_tool/cli/review_cmd.py` (`cmd_review`), `plan_tool/review.py` (`review_plan_full`) |
 | Review prompt template           | `plan_tool/prompts/review.md`                                   |
 | Findings parse / verdict         | `plan_tool/review.py` (`_claude_recommendations`), `plan_tool/launcher.py` (`summarize_findings`, `format_findings_verdict`) |

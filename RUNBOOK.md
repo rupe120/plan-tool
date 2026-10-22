@@ -993,20 +993,17 @@ hand, run the full suite, commit, and certify the step with
 
 ## Workflow: drive an authoring task to convergence (`--iterate`)
 
-`--iterate` turns five CLI surfaces into convergence loops:
-`create`, `detail`, `detail --reconcile`, `run --reconcile`, and
-`completeness`. **`create` and `detail` opt INTO the loop by
-default** (pass `--no-iterate` to skip); the two reconcile
-subcommands and `completeness` are opt-in (pass `--iterate` to
-enable). Each loop runs its deterministic correctness/completeness
-primitives after every write, hands the findings back to claude via
-`apply-finding` (or, under `run --reconcile`, lands code edits
-inline), and stops when findings converge, the budget exhausts, or
-the loop stops making progress. `completeness --iterate` exists for
-CLI symmetry and is largely a no-op in practice — reach for it only
-when automation needs the flag threaded uniformly; reach for
-`create --iterate` or `detail --iterate` to actually drive
-authoring convergence.
+`create` defaults to iteration; `detail` and `completeness-audit` default
+it off. Pass `--iterate` for completeness audits, and leave detail one-shot
+unless the user explicitly requests its quality loop. The supported loops
+apply deterministic findings and re-audit within their budgets; conceptual
+audit gaps require session-directed judgment and edits.
+
+Neither `detail --reconcile` nor legacy `run --reconcile` accepts `--iterate`.
+Standalone reconciliation commands do not accept iteration flags either.
+Read the saved report, make judged corrections, commit, and invoke the
+appropriate reconciliation direction again. Plan-side reconciliation is
+pre-execution only; after execution, use plan-canonical `reconcile-code`.
 
 See [README.md → Iterating to convergence](README.md#iterating-to-convergence---iterate)
 for the canonical "when to use" decision tree. This section covers
@@ -1066,29 +1063,16 @@ the just-written detail body), hands those findings to
 between iterations, so iteration N+1 reads the prior pass's output
 as its starting point.
 
-### Reconcile with iteration
+### Reconcile through separate invocations
 
-```bash
-plan-tool detail my-feature --reconcile --step 3 --iterate
-plan-tool detail my-feature --reconcile --step 3 --iterate -y
-plan-tool run    my-feature --reconcile --step 3 --iterate
-plan-tool run    my-feature --reconcile --step 3 --iterate -y
-```
+Before execution, `detail my-feature --reconcile --step 3` treats code as
+canonical and proposes plan/detail edits. After execution,
+`reconcile-code my-feature --step 3` treats the plan as canonical and lands
+code edits inline. Neither route has a built-in iteration loop.
 
-Reconcile's loop is the audit→edit→audit cycle. Under
-`detail --reconcile` (prompt mode `detail-reconcile`), claude
-proposes plan/detail edits, the walk applies them via
-`apply_finding`, the deterministic primitives re-audit the post-edit
-plan, and the loop reinvokes the audit if new findings surfaced. The
-inner walk defaults to `apply-all` (via the `WalkState(yes_to_all=True)`
-seed) under `-y` or non-TTY so iteration N+1 isn't blocked on
-per-rec prompts.
-
-Under `run --reconcile` (prompt mode `run-reconcile`), there is no
-recommendation walk — claude lands code edits inline under
-`--permission-mode acceptEdits`. The loop is audit → code edits →
-re-audit; iteration N+1 reads the post-edit working tree as its
-starting state.
+Read each saved report, judge the result, verify corrections, and commit
+before invoking the appropriate route again. Do not pass `--iterate` to
+`detail --reconcile`, `run --reconcile`, or standalone reconciliation verbs.
 
 ### Completeness with iteration
 
@@ -1098,7 +1082,7 @@ plan-tool completeness-audit my-feature --iterate -y < /dev/null
 ```
 
 `completeness-audit` accepts the same `--iterate` / `--max-iterations` /
-`--iteration-budget` surface as the other three subcommands. Off by
+`--iteration-budget` surface as the authoring subcommands. Off by
 default — like `detail`, and unlike `create`, which iterates by default —
 so you must pass `--iterate` explicitly to drive the loop.
 
@@ -2238,10 +2222,6 @@ drifted; create --reprocess = fill placeholders from an archive.**
 
 ```bash
 plan-tool detail my-feature --reconcile --step 3
-plan-tool detail my-feature --reconcile --step 3 --no-walk # save only
-plan-tool detail my-feature --reconcile --step 3 --no-save # neither save nor walk
-plan-tool detail my-feature --reconcile --step 3 --iterate
-plan-tool detail my-feature --reconcile --step 3 --iterate -y
 ```
 
 Findings are **plan/detail edits** — `step.files` lists to trim or
@@ -2279,8 +2259,9 @@ Edit/Write tools under `--permission-mode acceptEdits` — *not*
 through `apply_finding`. Findings are saved to
 `<plan-dir>/plan-details/<plan-slug>/reports/<ts>-run-reconcile.json`
 (kind `"run-reconcile"` in the JSON payload). There is no
-recommendation walk on this side; the loop is audit → land code
-edits → re-audit when `--iterate` is set.
+recommendation walk on this side. Read the saved report, verify the code
+edits, commit corrections, and invoke `reconcile-code` again as needed;
+`--iterate` is not supported.
 
 The prompt context is intentionally code-edit oriented: it may emphasize
 the implementation excerpt and only enough plan/detail material to judge

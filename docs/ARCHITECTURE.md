@@ -161,7 +161,7 @@ convergence loop.
 | --- | --- | --- |
 | Shared validation | `review.py`, `gates.py`, `scope_guard.py`, `drift_detection.py` | `run` pre/post-flight, review findings, Jira parsing, the run-grade seven-section `detail` response, and `create` re-parsing from disk. |
 | Grade selection | The detail readers | Existing Jira-grade files retain their closed five-section validation only at explicit reader boundaries; `detail --grade jira` rejects before authoring. |
-| Iterative repair | `convergence.py`, `auto_reconcile.py` | Under `--iterate`, `create`, `detail`, and reconcile loop gates → `apply_finding` → re-audit. |
+| Iterative repair | `convergence.py`, `auto_reconcile.py` | Under `--iterate`, `create`, `detail`, and `completeness-audit` loop their supported gates → `apply_finding` → re-audit. |
 | Bundle-aware audit | `completeness_report.py` | `audit_detail_bundle_status` and `DetailBundleStatus.is_bare` feed `next_step_gaps`, which splits the gaps to close from the advisory ones by the blocking verdict. |
 
 ### Detail-bundle state guides the audit route
