@@ -26,7 +26,7 @@ steps:
   complexity: medium
   change_type: non-code
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/01-teach-dark-mode-planning-demo-through.md
-  status: current
+  status: done
 - id: 2
   title: Convert the TTRPG demo to assistant requests while preserving roadmap review
     and publication boundaries
@@ -42,6 +42,7 @@ steps:
     1: Provides the request, assistant action, owner decision and inspectable-result
       presentation pattern.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/02-convert-ttrpg-demo-assistant-requests.md
+  status: current
 - id: 3
   title: Align first-use and situation examples with assistant-authored seeds, monitoring
     and separate completion requests
