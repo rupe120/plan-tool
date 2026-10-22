@@ -55,6 +55,8 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Skill-led demo conversion review](2026-10-21-skill-led-demo-examples-code-review.md) — completed execution, live rehearsal, two independent review verdicts and the separately tracked skill issue.
+
 - [Demo and example refresh](2026-10-21-demo-refresh.md) — skill-driven pickup,
   current demo placement, earlier task-list preparation and verification/publication boundaries.
 

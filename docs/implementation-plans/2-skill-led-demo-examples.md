@@ -4,7 +4,7 @@ title: Teach demos and examples through the plan-tool skill
 intent: A reader can ask a coding assistant to create a grounded seed, drive the plan-tool
   skill, monitor its results and bring decisions back for review, using the demos
   and learning examples as a coherent guide.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -26,7 +26,7 @@ steps:
   complexity: medium
   change_type: non-code
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/01-teach-dark-mode-planning-demo-through.md
-  status: current
+  status: done
 - id: 2
   title: Convert the TTRPG demo to assistant requests while preserving roadmap review
     and publication boundaries
@@ -42,6 +42,7 @@ steps:
     1: Provides the request, assistant action, owner decision and inspectable-result
       presentation pattern.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/02-convert-ttrpg-demo-assistant-requests.md
+  status: done
 - id: 3
   title: Align first-use and situation examples with assistant-authored seeds, monitoring
     and separate completion requests
@@ -62,6 +63,7 @@ steps:
     1: Supplies the concrete planning example and artifact review points.
     2: Supplies the advanced roadmap request path and its owner decisions.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md
+  status: done
 - id: 4
   title: Verify the reading journey and local planning-to-Jira rehearsal, then reconcile
     demo preparation status
@@ -86,6 +88,7 @@ steps:
     3: Provides the complete learning journey for link, monitoring and resumption
       review.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/04-verify-reading-journey-local-planning.md
+  status: done
 ---
 # Teach demos and examples through the plan-tool skill
 

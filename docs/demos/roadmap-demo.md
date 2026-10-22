@@ -1,541 +1,358 @@
 # TTRPG World Builder — demo orchestration runbook
 
-**What this is.** The procedure for producing a demo that documents what it
-looks like to take a project-sized concept brief all the way through
-`plan-tool roadmap` → seed promotion → `create` → `completeness-audit` →
-`detail`. It is the runbook, not the demo: executing it produces the four
-deliverables in § 8.
+Ask a coding assistant to use the plan-tool skill to turn the
+[TTRPG world-builder brief](../concepts/ttrpg-world-builder.md) into a reviewed
+roadmap, selected seeds and one plan with details. The scenario retains markdown
+notes, visibility rules, a link graph, marginalia, maps, calendars, timelines
+and two far-future AI features.
 
-**Input brief.** [`docs/concepts/ttrpg-world-builder.md`](../concepts/ttrpg-world-builder.md) — a TTRPG world-builder web app
-(markdown notes, per-note and per-section visibility, a link graph, player
-marginalia, maps, calendars, timelines, and two far-future AI features).
-
-**Why this brief works as a demo.** It has the three properties
-[`docs/how-to/roadmap.md`](../how-to/roadmap.md) § 1 says a brief needs, plus one bonus:
-
-- **Explicit feature tiers** — `CORE FEATURE` / `FEATURE` / `FAR FEATURE` is a
-  priority signal stage 2 can rank against instead of inventing one.
-- **A real architectural fork** — visibility (draft/published, secrets, per-user
-  and per-group marginalia sharing) cuts across *every* feature. Whether that
-  becomes a permission check or a structural separation is exactly the kind of
-  load-bearing call the decision rows exist to pin.
-- **A stated non-goal boundary** — the two AI features are marked far-future, so
-  the demo can show a `pending` decision or an explicit deferral rather than
-  scope creep.
-- **It is not a CRUD app.** The graph and timeline views make component seams
-  genuinely arguable, which is what makes stage 3 worth watching.
-
----
+This runbook describes preparation requests, not a completed demonstration.
+The [refresh handoff](../../handoffs/2026-10-21-demo-refresh.md#plan-scope-and-user-review)
+records preparation boundaries; retained measurements do not establish a fresh
+model run, qualified audit convergence or publication approval. Use the sibling
+[planning demo](planning-demo.md) for the smaller request → artifact → decision
+pattern.
 
 ## 1. Demo setup and outputs
 
-Use a fresh scratch repository and carry one representative plan to full depth.
-Produce a narrative walkthrough, terminal transcripts, a reveal.js deck and an
-Artifact page. Author a thin scaffold after stage 3 from the component IDs it
-produces. Publishing an Artifact remains a separately authorized action.
+Work in an isolated consuming repository. Keep its roadmap, manifest, seeds and
+plans outside the plan-tool installation checkout. Prepare transcripts, a
+narrative walkthrough, a deck and an unpublished Artifact draft only when actual
+run evidence supports them (§ 8). Publication requires separate authorization.
 
-Roadmap artifacts and plans belong in the consuming repository. A separate demo
-repository keeps them out of plan-tool's own manifest and implementation plans.
-Keep recording progress, preparation status and changes to the presentation brief
-in a session handoff; this runbook owns the repeatable procedure.
+Each request below asks the assistant to link its outputs, summarize changes
+and return a decision. Review selected seeds before `create`, the bare plan and
+audit before `detail`, and the detail bundle and grounded audit before any next
+consuming stage. Wait for a user response unless explicit prior delegation covers
+that transition. Silence and elapsed time grant no approval. These are demo
+review points, not new tool-enforced gates.
 
----
+The [roadmap guide](../how-to/roadmap.md) owns procedure; the
+[shared directives](../../integrations/shared/DIRECTIVES.md) own assistant-driven
+checkpointing, audits and monitoring. Follow those owners rather than treating
+this walkthrough as another procedural policy.
 
 ## 2. Why the demo repo carries a scaffold
 
-`roadmap` grounds only in the brief, so all four stages run fine against an
-empty repo. **`create` and `detail` do not** — they ground against live code and
-docs. In an empty repo the plan and its detail bundle reference files that do
-not exist and the prose reads visibly thin, which is a demo-quality problem
-precisely where the demo makes its point.
+Roadmap generation grounds in the brief; `create` and `detail` also need live
+code and documentation. A thin scaffold gives them real component seams and a
+green test command. Scaffold what the accepted roadmap decides; leave behavior
+design to the plans. Modules represent components and frozen dataclasses carry
+entity `id` fields only. Do not invent function signatures or implementation
+fields in advance.
 
-So the repo gets a **thin** scaffold, and thin is a real boundary rather than a
-hedge: **scaffold what the roadmap decided, stub nothing it left to the plans.**
-The roadmap settled the component seams and the entity ids, so those become
-modules and dataclasses. It deliberately did *not* decide behavior, so no
-function stubs are invented — inventing a signature here would pre-empt the
-plan's design and give `detail` a wrong thing to bind to.
-
-**The stack is a scaffold decision, not a roadmap decision.** `ROADMAP_FORMAT.md`
-keeps artifacts logical — `FieldType` is six logical members with no physical
-types — so nothing under `roadmaps/` names a language. Python + `pytest` is
-chosen here because the scaffold's one job is a **green** test command, and a
-Node scaffold needs a network install that can leave that command broken. Swap
-it freely; nothing upstream depends on it.
-
----
+Python and pytest provide a small local scaffold without a Node dependency
+install. This is a scaffold choice, not a logical roadmap decision. Preserve any
+accepted stack commitments when choosing the scaffold. Actual component and
+entity IDs come from accepted artifacts, never guessed names.
 
 ## 3. Phase 0 — scratch repo setup
 
-Start inside the plan-tool source checkout so the concept brief resolves from
-its Git root. The demo uses a new temporary directory, independent of your
-checkout layout.
+> Prepare a disposable Git repository for the TTRPG demo, separate from the
+> plan-tool source checkout. Copy the existing concept brief to
+> `docs/concepts/ttrpg-world-builder.md`; ignore `.tmp/`, Python bytecode and
+> pytest caches before committing. Let the tool create its own manifest.
+> Link the copied brief and repository README, report the repository path and
+> clean checkpoint, and ask me to correct the setup or continue to roadmap
+> generation. Do not create remote refs or publish anything.
 
-```bash
-plan_tool_source_root="$(git rev-parse --show-toplevel)"
-DEMO="$(mktemp -d "${TMPDIR:-/tmp}/plan-tool-demo.XXXXXX")"
-mkdir -p "$DEMO" && cd "$DEMO"
-git init
-mkdir -p docs/concepts plan-seeds .tmp
-
-# Bytecode and scratch, ignored from the first commit. Untracked .pyc files
-# land inside the test-authoring gate's post-call git delta later, so this is
-# load-bearing rather than tidiness.
-printf '.tmp/\n__pycache__/\n*.pyc\n.pytest_cache/\n' > .gitignore
-
-cp "$plan_tool_source_root/docs/concepts/ttrpg-world-builder.md" \
-   docs/concepts/ttrpg-world-builder.md
-
-git add -A && git commit -m "demo: concept brief for the TTRPG world builder"
-```
-
-**Why a `git init` is enough.** `locator.py` resolves the project root at the
-nearest ancestor holding a `.git` entry **or** a `.plan-tool/plans.json`
-manifest; the manifest is created on first write. No `register` step is needed
-and no `--repo-root` flag is needed as long as every command runs from inside
-`$DEMO`.
-
-**The brief travels with the demo.** It lands at the same
-`docs/concepts/ttrpg-world-builder.md` path in the demo repo that it holds here,
-so the command on the slide is the command that ran.
-
-**Do not** create `.plan-tool/` directly.
+The nearest Git root scopes discovery; no registration or manually created
+`.plan-tool/` directory is needed. Use specifically named local logs such as
+`.tmp/ttrpg-demo.roadmap-stage-run.log`.
 
 ### Phase 0b — the scaffold, authored after stage 3
 
-**Run this after Phase 1, never before.** The skeleton mirrors the component ids
-stage 3 actually produced; guessing them in advance is how the scaffold and the
-artifacts end up disagreeing. Per § 2 it carries seams and entity ids only.
+Run this after Phase 1 exposes the accepted component artifact, never before.
+The first run publishes an accepted head only after all four stages pass.
 
-What it ships:
+> Read the accepted `03-components` artifact through its accepted-head version.
+> Propose a thin module map using its actual component and entity IDs, then bring
+> the map back for review before authoring it. Keep behavior with the plans.
+> After authorization, create one module per component with `COMPONENT_ID`,
+> `ENTITY_IDS` and frozen entity dataclasses carrying only `id`. Use safe Python
+> names, such as `chronology.py` rather than the stdlib name `time.py`.
+> Link the README's module-to-component table and traceability test. Make the
+> test resolve the accepted component artifact and compare the complete component
+> set and every module's entity set. Mutation-check it by perturbing one module's
+> `ENTITY_IDS` and separately dropping a component from the map: each must fail
+> for the expected reason and pass after restoration. Report actual results and
+> ask me to review the scaffold before plan authoring.
 
-- **One module per component**, named for the component but not identically —
-  a component id is prose-shaped and a module name is not (`component-time` →
-  `chronology.py`, dodging the stdlib `time`).
-- **Each module declares `COMPONENT_ID` and `ENTITY_IDS`**, copied from
-  `03-components.md`, plus a frozen dataclass per owned entity carrying only
-  `id`. Fields land with the plan that builds the entity.
-- **`README.md`** naming the stack, the test command, and the module ↔ component
-  table.
-- **A traceability test that reads the artifact.** `tests/` parses
-  `03-components.md` and asserts the component set matches the module map and
-  that every module's `ENTITY_IDS` equals the artifact's. This is what keeps
-  scaffold and roadmap from drifting silently, and it makes the test command
-  *mean* something instead of asserting `True`.
-
-**Mutation-check the traceability test before trusting it** — the repo rule is
-*verify by mutation, never by reading*, and a regex that silently matches
-nothing would otherwise pass forever. Break it both ways: perturb one module's
-`ENTITY_IDS`, and drop one component from the module map. Both must go red for
-the right reason, and the suite must return green when restored.
-
-Commit before Phase 4 so `create` sees a clean tree.
-
----
+These checks are requirements for a future preparation run, not results of this
+documentation conversion. Commit the reviewed scaffold before `create`.
 
 ## 4. Phase 1 — the four roadmap stages
 
+> Use the plan-tool skill to generate the TTRPG roadmap from the copied brief.
+> Monitor to confirmed completion and retain the command output and run records.
+> If it stops, report its actual state without claiming a completed roadmap.
+> Link the accepted version and its four artifacts when published, summarize
+> decisions and unresolved questions, and ask me to review before proposing
+> changes or building the scaffold.
+
+Supporting command, from the consuming repository:
+
 ```bash
-cd "$DEMO"
 set -o pipefail && plan-tool roadmap ttrpg-world-builder \
   --from-existing docs/concepts/ttrpg-world-builder.md \
   2>&1 | tee .tmp/ttrpg-demo.roadmap-stage-run.log
 ```
 
-Four Claude calls, one per stage, each gated before it is held. A run that
-fails part-way leaves only the resume directory
-`.plan-tool/runs/ttrpg-world-builder/roadmap-stage-resume/`, and re-running the
-same command with the same brief resumes from the first stage that is missing or
-fails its re-gate. Once all four stages pass, the run publishes one immutable
-version, its ledger, and the accepted head, then deletes the resume directory.
-The run leaves no top-level artifact files; the version store
-`.roadmap-versions/` and the generated `INDEX.md` listing are what appear in
-`docs/implementation-plans/roadmaps/ttrpg-world-builder/`. Read the artifacts
-with `plan-tool roadmap ttrpg-world-builder --view summary` (or `walk`, `ledger`,
-`index`, `seeds`, `html`).
-
-| Artifact | Holds | Gates |
-|---|---|---|
-| `01-domain` | entities, business rules, workflows, decisions | 9 |
-| `02-constraints` | one disposition per quality attribute + anchored constraints | 9 |
-| `03-components` | components owning entity ids, applying patterns, discharging constraints | 12 |
-| `04-roadmap` | ordered plan rows with intent, non-goals, and dispositions | 13 |
-
-Twenty-two distinct `check_*` functions across the four tuples; seven are shared
-by every stage. The run touches no plan manifest — roadmap artifacts are not
-plans, and `list` / `status` / `run` will not resolve one.
-
-**Capture for the demo:** the combined stdout-and-stderr terminal record. The
-existing `2>&1 | tee` leaves stdout as the command's existing output and
-includes lifecycle lines written to stderr, along with stage banners, gate
-results, and retry lines if any. Capture it, then `git add -A && git commit`
-the roadmap folder so the published version is a reviewable commit.
-
-For normal roadmap stage runs, lifecycle lines confirm only the last transition
-the command reached. A quiet period after one neither adds periodic reporting
-nor proves that the backend remains live. The lines contain no backend-derived
-content; use the per-run JSONL record for detailed attempt diagnosis.
+The first stage run holds passed stages in a resume directory and publishes the
+immutable version and accepted head only when all four pass. Once a head exists,
+stage runs refuse; use feedback routes for changes. Roadmap artifacts are not
+plans and do not enter the plan manifest.
 
 ### What to read for, per stage
 
-Read for **seams**, not completeness — a missing entity is cheap, a wrong seam
-is expensive three plans later.
+> Inspect the accepted roadmap read-only first. Show its accepted version ID,
+> artifact links, decision ledger, plan mapping and seed states. Distinguish
+> canonical accepted content from mutable reviewer-ledger items and any inert
+> active candidate. Summarize the seams below and ask which, if any, I want to
+> challenge; do not submit feedback or accept a candidate from this inspection.
 
-- **Stage 1.** Is `secret` its own entity or a field on `note`? Is `marginalia`
-  an entity anchored to a text range, or a note subtype? These are the
-  `conflict`-entity call from the `cfp-review` run, and they are the demo's best
-  material either way they land.
-- **Stage 2.** The disposition table is the most useful thing the verb produces.
-  For this brief `security` should come back `prioritized` — the secrets and
-  marginalia rules are the whole product. Watch whether `performance` and
-  `scalability` get ranked honestly against a small-group app, or reflexively.
-  **An all-`prioritized` table means the brief never said what the project will
-  spend, and no gate catches it.**
-- **Stage 3.** Does visibility land as one cross-cutting component, or is it
-  smeared across notes / graph / marginalia? Both are defensible; the demo wants
-  whichever it chose stated as a decision row with the rejected alternative.
-- **Stage 4.** Are the two `FAR FEATURE` AI items deferred explicitly, or did
-  they become plan rows? Either is showable; silently dropping them is the one
-  outcome worth a feedback row.
+| Artifact | Inspect | Reader decision |
+| --- | --- | --- |
+| `01-domain` | Secret entity versus note field; marginalia ownership and anchors | Are the domain boundaries faithful to the brief? |
+| `02-constraints` | Security priority and explicit tradeoffs for a small-group app | Do priorities reflect what the project will spend? |
+| `03-components` | Visibility ownership across notes, graph and marginalia | Are seams and rejected alternatives explained? |
+| `04-roadmap` | Ordered slices, non-goals and explicit AI deferrals | Which plans belong, and which should wait? |
 
-**Do not get attached to non-entity ids.** Measured re-run stability: entity ids
-survive at 85%, business-rule and decision ids at 30% / 25%, field names not at
-all. Anchor anything downstream to entity ids.
-
----
+Use summary, walk, ledger, index, seeds or HTML views as appropriate. The
+[immutable authority contract](../../ROADMAP_FORMAT.md#immutable-candidate-version-authority)
+owns selection: comparison and presentation do not accept a proposal. Prefer
+actual entity IDs for downstream traceability; do not assume generated names
+remain stable across independent runs.
 
 ## 5. Phase 2 — the review loop (the part worth demoing)
 
-This is the phase that shows the verb **collaborates**. Everything before it is
-generation; this is the propose → review → re-propose loop. Budget real time
-here — it carries the demo.
-
-Two channels, and they are different moves:
-
-### `pending` decisions — settle with the confirmed command
-
-A stage that guessed at something load-bearing records `status: pending`. The
-run still exits 0; pending is a queue, not a failure. Settle one with
-`plan-tool roadmap <slug> --settle-decision <artifact>:<decision-id>
---settlement-evidence <artifact>:<feedback-id> --confirm-decision-settlement`,
-citing a named, live feedback row that approves it. The accepted version is
-immutable, so `status` is never hand-edited.
-
-A stage run is refused once the accepted head exists, so the review loop runs
-entirely through the ledger and candidate routes.
+Keep reviewer input, candidate review and decision settlement separate. The
+[ledger lifecycle](../../ROADMAP_FEEDBACK_FORMAT.md#lifecycle-and-ownership)
+owns mutable input; immutable accepted artifacts are never hand-edited.
 
 ### Ledger feedback — say what is wrong and let the model propose
 
-Submit a request to the ledger, then build an inert candidate from it:
+> Draft feedback against the accepted roadmap, using real artifact or row IDs.
+> For example, investigate whether People/Place/Thing/Event make note types too
+> heavy. Show me the proposed ledger target and request for correction or approval
+> before submitting. After authorized submission, link the ledger item and report
+> its state; ask whether to build an inert candidate from eligible feedback.
 
-```bash
-plan-tool roadmap ttrpg-world-builder --submit-feedback note-type-weight \
-  --feedback-target domain:artifact \
-  --feedback-request "The note-type modelling feels too heavy."
+> Propose the candidate from the reviewed ledger input. Link its narrative
+> evidence, stored route and selected feedback snapshot, and compare it read-only
+> with the accepted head. Show the entire unpromoted stack if present. Summarize
+> the changes and questions; return them for my review without accepting or
+> promoting anything.
 
-set -o pipefail && plan-tool roadmap ttrpg-world-builder --propose-candidate \
-  2>&1 | tee .tmp/ttrpg-demo.roadmap-candidate-1.log
+### Review the candidate by its stored route
 
-plan-tool roadmap ttrpg-world-builder --compare
-```
+> Follow the candidate's stored review requirement under the ledger-to-candidate
+> procedure. For a nonstructural reviewed route, show the review questions and
+> proposed answers before recording my responses, then return the answered seal
+> for a separately authorized promotion. If any hop is structural, disclose every
+> unpromoted hop and cumulative diff and ask for one approve/edit/reject decision
+> on the top candidate covering the whole stack. For approval, show the first
+> invocation's disclosure and exact stack digest before requesting authorization
+> to confirm it. Explain that matching confirmation seals and publishes the top
+> candidate. After any authorized action, link its evidence and re-read the
+> accepted head so I can verify what changed.
 
-`--propose-candidate` takes no selector and prints the candidate's narrative
-evidence; `--compare` shows the accepted head against the active candidate and
-writes nothing. Decide the candidate with
-`--decide-candidate CANDIDATE_VERSION_ID --candidate-decision approve|edit|reject`;
-approve is two invocations, and the second carries the printed
-`--confirm-stack-digest`. Reject or discard releases the candidate and leaves
-the accepted version unchanged.
+Use [Ledger-to-candidate workflow](../../ROADMAP_FEEDBACK_FORMAT.md#ledger-to-candidate-workflow)
+for bounded versus structural routes, whole-stack disclosure, digest confirmation
+and recovery. A request to compare, propose or present grants no publication
+authority. Editing a candidate requires fresh review; rejection advances no head.
 
-Change a retained ledger item with `--edit-feedback`, `--retarget-feedback`,
-`--defer-feedback`, or `--close-feedback`, and reopen one with
-`--reopen-ledger-feedback ITEM_ID`. When a candidate's review asks a question,
-read it with `--review-candidate INITIAL_CANDIDATE_VERSION_ID` and answer with
-`--answer-question QUESTION_ID --answer TEXT`.
+### `pending` decisions — settle with the confirmed command
 
-**Capture for the demo:** the `--compare` output for every candidate, and each
-candidate's narrative evidence verbatim.
+> Inspect pending decisions and identify one whose choice I can actually settle.
+> Link its accepted artifact, alternatives, anchor and named live approving
+> feedback evidence. Ask for my decision before running settlement; do not
+> infer it from candidate review. If authorized, use the confirmed selector-based
+> settlement route. If it would stale an active candidate, show the exact
+> confirmation-evidence receipt and ask whether to proceed. Apply my yes/no
+> response in a separate invocation bound to that receipt, then link the result
+> and accepted head for review.
+
+[Settle a pending decision](../how-to/roadmap.md#5-settle-a-pending-decision)
+owns selectors and evidence; [Settlement confirmation](../../ROADMAP_FEEDBACK_FORMAT.md#settlement-confirmation)
+owns receipt-bound responses. There is no prompt or `-y` substitute for that
+response, and no direct edit of immutable decision status.
 
 ### Two feedback items to write, chosen to show both outcomes
 
-The demo needs one request the model **accepts** and one it **refuses**. The
-accept is the easy half; the refusal is the one the demo cannot ship without.
-
-**The accept-shaped request** — artifact-level and deliberately vague, e.g.
-*"the note-type modelling feels too heavy; People/Place/Thing/Event look like one
-entity with a discriminator."* Expect a concrete counter-proposal for the
-candidate to carry.
-
-**The refused request** gets its own section below, because it is the frame the
-demo is actually for.
-
----
+Seek one accepted change and one request conflicting with a settled commitment.
+Bring both back for review; neither model agreement nor refusal is guaranteed.
+Capture the real exchange and candidate comparison, including a stopped or
+unexpected outcome rather than inventing a successful demonstration.
 
 ## 5a. The refused feedback row — the highest-value thing to film
 
-**Do not skip this, do not save it for last, and do not wait for a request that
-happens to be worth refusing. Manufacture one.** A deliberately silly request is
-completely fine — better, even. The demo is not showing that the model has good
-taste; it is showing that **the tool will not let the model overwrite a decision
-the prior artifact marks `settled`**. A frivolous request makes that point *more*
-legible, not less, because nobody can mistake the refusal for the model merely
-disagreeing on the merits.
+The useful frame is a prior commitment confronting a new request. Inspect the
+predecessor before selecting the request:
 
-**Why this is the single most valuable frame in the demo.** Every other phase
-shows generation, and generation is table stakes — any model writes a domain
-model. This is the only place where the prior artifact's decision visibly wins
-over the model's current opinion. It is the whole difference between a tool
-that preserves a roadmap and one that regenerates over it, and it is the claim
-the walkthrough makes in its closing line. Without this frame the demo asserts
-that claim; with it, the demo shows it.
+> Find a real settled decision in the accepted predecessor, and link its ID,
+> chosen option and anchor. If none exists, report that the demonstration lacks
+> its precondition; ask whether I want to settle a genuinely pending decision
+> through the separate route. Propose a feedback request that conflicts with the
+> actual settled choice, such as reversing the secret entity decision or dropping
+> its anchored row. Show the exact target and request for my review first.
+> After authorization, submit it and propose an inert candidate. Capture the
+> narrative evidence, comparison and any gate violations. Report whether the
+> model preserves the commitment, a deterministic check rejects an attempted
+> change, or the observed route exposes a limitation. Do not accept the candidate
+> merely to complete the demonstration.
 
 ### Why the refusal is reliable, not hopeful
 
-It is enforced by a deterministic gate. `check_settled_decisions` pins a settled
-decision's `id`, `status`, `chosen_option`, and `anchor` against the
-predecessor. Dropping it raises `dropped-settled-decision`; changing any of
-those four raises `altered-settled-decision`. The docstring is explicit that **a
-cited removal does not excuse dropping it**. And because the `anchor` is pinned
-*and* `check_decision_records` requires every anchor to resolve
-(`unresolved-decision-anchor`), the design row the decision points at cannot be
-removed either.
+The deterministic property is conditional on a supplied predecessor.
+[`check_settled_decisions`](../../plan_tool/roadmap_gates.py) compares settled
+IDs, status, chosen option and anchor; dropping or altering them produces
+`dropped-settled-decision` or `altered-settled-decision`.
+`check_decision_records` requires resolvable anchors. Rationale and rejected
+alternatives are deliberately outside the equality check.
 
-**So the demo has no bad outcome.** If the candidate leaves the decision
-untouched, film that. If a candidate would drop or alter it, the gate rejects
-the candidate with the violation quoted — which films the *deterministic* half
-of the fence instead. Either way the point lands; only the slide changes.
+A model leaving the commitment untouched is evidence of model compliance, not
+an observed deterministic rejection. Record a gate rejection only if it occurs.
+The [closed-vocabulary contract](../../ROADMAP_FORMAT.md#closed-vocabularies)
+documents that candidate promotion supplies no predecessor to this check, making
+it a no-op there. Do not claim an end-to-end promotion guarantee from these gates.
 
 ### The precondition that will bite
 
-`check_settled_decisions` is **predecessor-only** — "without one there is no
-settled commitment to break." Two consequences:
-
-- It only fires against an **existing accepted version**. A first-ever run has no
-  predecessor and nothing to refuse.
-- **There must actually be a `settled` decision to violate.** A stage or an
-  operator may have set the status, so **check first, and settle one with
-  `plan-tool roadmap <slug> --settle-decision <artifact>:<decision-id>
-  --settlement-evidence <artifact>:<feedback-id>
-  --confirm-decision-settlement` if needed**, citing a live feedback row that
-  approves it. That command records the operator's decision and publishes a
-  receipt. Do that when the filmed claim specifically needs to show a human
-  decision, rather than the general persistence fence.
-
-```bash
-cd "$DEMO"
-plan-tool roadmap ttrpg-world-builder --view ledger
-```
-
-The decision ledger view lists every decision with its status; pick a `settled`
-one.
+Without a predecessor there is no prior settled commitment to compare. Inspect
+the real accepted decision and its lineage, not a guessed example ID. Pending
+status alone cannot demonstrate the fence.
 
 ### The recipe
 
-1. **Pick a settled decision** (or settle one). For this brief the natural
-   candidate is whatever stage 1 decided about `secret` — its own entity versus a
-   field on `note`. Note its `id` and its `anchor`.
-2. **Submit a ledger item that the decision blocks.** Either shape works, and
-   silly is explicitly allowed:
-   - *Flip it* — `--feedback-target domain:artifact`, request: *"change
-     `decision-secret-is-an-entity` to the rejected alternative, I've changed my
-     mind."*
-   - *Drop what it anchors* — `--feedback-target domain:row:secret`, request:
-     *"delete the secret entity entirely, players can just not read the note."*
-   - *Or something plainly frivolous* — *"rename every entity to a Star Wars
-     character."* It will still be refused where it collides with the settled row.
-     Silliness costs nothing here.
-3. **Run `--propose-candidate`** and read the narrative evidence it prints.
-4. **Expect** the candidate to leave the decision row and its anchored design row
-   untouched, or the gate to reject the candidate with the violation text.
+1. Review a real settled predecessor decision and its anchored design row.
+2. Review and authorize the conflicting ledger request.
+3. Propose and compare an inert candidate; retain actual narrative and gate evidence.
+4. Present the observed outcome and enforcement limits for reader review.
 
-**Capture:** the narrative evidence verbatim, the unchanged decision row beside
-it, and, if the gate path fires, the `dropped-settled-decision` /
-`altered-settled-decision` violation text — the messages name exactly which row
-is pinned, and they read well on a slide.
-
-**One caveat worth stating on the slide.** `check_settled_decisions` deliberately
-does **not** compare `rationale` or `rejected_alternatives` — whether a reworded
-rationale still means the same thing is not decidable by a gate, and an equality
-check on prose would fail on formatting alone. What is pinned is the *commitment*
-(id, status, chosen option, anchor), not the prose around it. Do not overclaim
-the fence.
-
----
+There is no promised unlock or supported un-settle sequence in this demo. Do
+not edit immutable artifacts or promise that repeating the request will succeed.
 
 ## 6. Phase 3 — promote the draft seeds
 
-Stage 4 publishes the plan rows but no draft bodies, so a fresh roadmap has one
-`missing` draft per row. Materialize each recoverable draft before promotion;
-the batch command runs the per-plan materializer for every eligible row.
+> Inspect the accepted `04-roadmap` mapping and draft states, showing which
+> version supplies them. Ask which rows I want materialized, then materialize
+> only those eligible drafts. An active candidate must not silently supply their
+> content. Link each selected seed, summarize scope, prerequisites, proof
+> obligations, non-goals and Stack context, and ask for corrections or continuation.
+> Wait for my review before `create`; materialization is not content approval.
 
-```bash
-plan-tool roadmap ttrpg-world-builder --materialize    # backfill every eligible draft
-plan-tool roadmap ttrpg-world-builder --apply          # preview, no writes
-plan-tool roadmap ttrpg-world-builder --apply -y       # second opt-in, copies
-```
+> For reviewed current drafts, show the promotion preview and destination paths.
+> Ask whether to authorize the copy into `plan-seeds/` or use the current drafts
+> directly. After an authorized copy, link the seeds and ordered create handoff.
+> Promotion does not approve the seed content or accept a roadmap candidate.
 
-`--apply` is apply-only: it reads the accepted version's `04-roadmap` artifact, never invokes a
-backend, and previews by default. `-y` is the deliberate second opt-in that
-bypasses the TTY confirm. Stage runs stay non-interactive and do not accept `-y`.
-
-**Draft seeds for new roadmaps live under `<roadmap dir>/plan-seed-drafts/`.**
-The path is enforced, not conventional: `_validate_draft_seed_path` accepts the
-new prefix or the legacy `seeds/` prefix for an existing roadmap, and rejects
-an absolute path or one containing `..`.
-
-Running `create` directly against a slug-relative draft path also works and
-skips promotion entirely:
-
-```bash
-plan-tool create <plan-id> --from-existing \
-  docs/implementation-plans/roadmaps/ttrpg-world-builder/plan-seed-drafts/<plan-id>.md
-```
-
-**Capture:** the preview output and the printed ordered `create` lines — that
-list *is* the roadmap-to-plans handoff, and it is one clean slide.
-
----
+[Promote accepted draft seeds, or create directly from them](../how-to/roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
+owns materialization, reviewed digest acceptance and optional copying.
+Supporting commands are `--materialize PLAN_ID`, `--apply` for preview, and
+`--apply -y` only for an authorized unattended copy. Choose one reviewed source
+per plan: its current slug-relative draft or promoted copy. Do not hand-edit the
+tool-written Stack section; change accepted commitments through feedback.
 
 ## 7. Phases 4–6 — one plan to full depth
 
 ### Choosing the plan
 
-Target the **notes + secrets visibility** slice. It is the right pick because it
-owns the brief's central architectural fork, it is exercised by both core
-features, and every later feature (graph, marginalia, timeline) depends on its
-answer — so the demo can show inter-plan assumptions pointing *at* it.
-
-If stage 4 names it differently, apply the walkthrough's slice test rather than
-forcing the name: one outcome statable in a sentence, a handful of rules
-meaningless apart, a clear boundary against the rest. Rules that never share an
-entity are probably two slices.
+Prefer the notes + secrets visibility slice: it owns the brief's central fork
+and supplies assumptions for graph, marginalia and timeline work. Use the actual
+accepted plan ID. Ask the reader to confirm a coherent outcome and boundary
+rather than forcing the illustrative name `ttrpg-note-visibility`.
 
 ### Phase 4 — `create`
 
-```bash
-set -o pipefail && plan-tool create ttrpg-note-visibility \
-  --from-existing plan-seeds/ttrpg-note-visibility.md \
-  2>&1 | tee .tmp/ttrpg-demo.create.log
-```
+> Use the plan-tool skill to create the selected plan from its reviewed seed.
+> Preserve settled decisions and sibling scope fences while grounding reasons
+> against live code and docs. Monitor to completion, link the bare plan and
+> summarize steps, dependencies, acceptance criteria and changes from the seed.
+> Run the bare audit next, then bring the plan and its audit back for review
+> before authoring details.
 
-`--iterate` defaults **ON** here; do not pass `--no-iterate`.
-
-**The one caveat to state in the walkthrough** (it is the honest half of the
-measurement): the roadmap's rejected-alternative *reasoning* is frozen at
-authoring time, while `create` grounds against live docs. Carry the settled
-**decision** forward as a fence; let `create` re-ground the **reasons**.
+Supporting command: `plan-tool create <plan-id> --from-existing <reviewed-seed>`.
+Create defaults to iteration; retain it.
 
 ### Phase 5 — audit the bare plan, before detail
 
-```bash
-set -o pipefail && plan-tool completeness-audit ttrpg-note-visibility --iterate \
-  2>&1 | tee .tmp/ttrpg-demo.completeness-audit-bare.log
-```
+> Run the bare-plan audit through the skill with iteration and checkpointing.
+> Read the saved report and triage conceptual findings through session-directed
+> judgment under the shared directives, not the human-TTY completeness-apply
+> walk. Surface consequential scope or design decisions to me. Commit bounded
+> corrections before re-auditing changed snapshots. Link the plan and reports,
+> summarize changes, exact N of M detail coverage, qualification, convergence
+> outcome and withheld axes. Ask for corrections or continuation and wait before
+> detail authoring unless explicit prior delegation covers it.
 
-A plan is *bare* while any step has no detail file, and the audit supports that
-state: it judges the plan body and code at HEAD at the plan/concept level and
-labels the report with exact detail coverage. Read it by axis —
-`plan-correctness` findings are actionable plan-body defects now;
-`plan-completeness` and detail-level findings are recorded with their
-`completeness-apply` actions **withheld**.
+Supporting command: `plan-tool completeness-audit <plan-id> --iterate --commit`.
+Bare means at least one detail file is absent. Read findings by axis; withheld
+completeness/detail apply actions do not defer material plan-body corrections.
+The [audit procedure](../how-to/pipeline/audit.md) owns qualified-result
+interpretation, freshness and convergence exits. Process success alone does not
+certify a completed gate.
 
-**This is a live demo of the session-vs-human split, so show it deliberately.**
-`--iterate` converges only the deterministic well-formedness findings; the
-conceptual gaps persist unapplied. Because a human is at a TTY for this demo,
-`completeness-apply`'s interactive `--jobs 1` walk **is** the intended path and
-is worth filming — it is the surface an auto-driving session must *not* use.
-Note that distinction on the slide; it is the non-obvious bit.
-
-Re-audit until clean or confirmed low-yield. Record the report path, the
-`N of M` detail coverage, and which axes were withheld.
-
-**Quota-stopped branch.** If the report records
-`early_stop_reason: "plan-quota"`, record its unconfirmed coverage and actual
-pass count, but do not treat it as a completed gate or apply/reuse its findings.
-Resolve the provider condition, then rerun `completeness-audit` as a fresh
-invocation before continuing to detail.
+**Quota-stopped branch.** If `early_stop_reason="plan-quota"`, retain the report,
+actual pass count and unconfirmed coverage. Do not apply/reuse its findings or
+claim completion. Resolve the provider condition and start a fresh audit before
+detail. Other unconfirmed or budget-limited results retain their reported limits.
 
 ### Phase 6 — `detail`
 
-```bash
-set -o pipefail && plan-tool detail ttrpg-note-visibility --commit \
-  2>&1 | tee .tmp/ttrpg-demo.detail.log
-```
+> After my bare-plan review, author run-grade details through the skill with
+> per-step commits and default one-shot detail behavior. Run the detail-grounded
+> iterative audit and judge corrections through the existing directives. Link
+> the detail bundle and saved reports, summarize changes, verification guidance,
+> unresolved decisions, coverage, qualification and convergence outcome. Ask for
+> corrections or continuation and wait unless explicitly delegated. Stop at
+> authoring; this demo does not authorize implementation or export.
 
-`detail`'s `--iterate` defaults **OFF** — it is a one-shot write. Do not opt it
-back in. `--commit` is per-step, so an interrupted batch keeps its completed
-steps durable.
-
-Then audit again, now detail-grounded:
-
-```bash
-set -o pipefail && plan-tool completeness-audit ttrpg-note-visibility --iterate \
-  2>&1 | tee .tmp/ttrpg-demo.completeness-audit-detailed.log
-```
-
-If this audit is quota-stopped, capture the unconfirmed report, resolve the
-provider condition, and rerun the audit as a new invocation. Do not call the
-gate complete or continue to execution from that incomplete result.
-
-**Stop here.** The demo documents authoring, not execution — no `run`, no
-`reconcile-code`, no `/code-review` tail. Those belong to a different demo, and
-in a scaffold-only repo a `run` would produce nothing worth showing.
-
----
+Supporting commands: `plan-tool detail <plan-id> --commit`, then
+`plan-tool completeness-audit <plan-id> --iterate --commit`. Do not opt detail
+into iteration. A quota-stopped detail-grounded audit is also incomplete; resolve
+it and rerun before describing the bundle as having passed both gates.
 
 ## 8. Phase 7 — build the four deliverables
 
-All four were requested. Build them in this order; each feeds the next.
+> Once the reviewed authoring bundle has completed both audit gates, prepare the
+> following local outputs from actual evidence. Link each draft, identify missing
+> evidence and ask me to review before continuing. Do not invent counts, quotes
+> or successful outcomes, and do not publish an Artifact or replace remote refs.
 
-1. **Captured terminal transcripts** — already produced by the `tee` in every
-   phase above. Keep them under `$DEMO/.tmp/ttrpg-demo.*.log`. These are the
-   evidence base: every count and quote in the other three deliverables cites a
-   log, so nothing is paraphrased from memory.
-2. **Narrative markdown walkthrough** — the durable reference, built on
-   `docs/how-to/roadmap.md`'s structure but told on the TTRPG run: real
-   ids, real counts, the real disposition table, the accepted and refused
-   feedback exchange verbatim, and the resulting plan + one detail file. Written
-   forward-looking; history only where a reader needs it to act.
-3. **reveal.js deck** — `docs/presentations/`, matching the two existing decks'
-   shape. Roughly: the brief → four artifacts → the disposition table → **the
-   refusal, then the unlock** → the seed list → the plan → one detail file.
-   **Build the deck around the refusal pair (§ 5a) and the disposition table**;
-   everything else is connective tissue. Give the refusal two slides, not one —
-   the refused request beside the untouched decision row, then the same request
-   honored after the unlock. That pair is the deck's argument.
-4. **Published Artifact page** — the shareable version of (2), with diagrams for
-   the stage arc and the entity → component → plan traceability chain. Starts
-   private. **Load the `artifact-design` skill before writing it**, and
-   `artifact-diagramming` for the diagrams.
+| Preparation output | Evidence to inspect | Reader decision |
+| --- | --- | --- |
+| Terminal transcripts | Named logs, reports, accepted IDs and actual comparisons | Is the capture complete and safe to share? |
+| Narrative walkthrough | Real disposition table, feedback outcomes, plan and detail links | Does each claim match the retained run? |
+| reveal.js deck | Brief → artifacts → tradeoffs → observed refusal → seeds → plan → detail | Does the presentation explain the review boundaries? |
+| Unpublished Artifact draft | Reviewed narrative and stage/traceability diagrams | Correct the draft or separately authorize publication |
 
-**Sequencing note.** Do not start (2)–(4) until Phase 6 is complete. The demo's
-value is that every number in it came from one real run; assembling narrative
-against a partial run is how invented counts get in.
-
----
+Prepare transcripts during the run; build the narrative, deck and Artifact draft
+only after Phase 6 completes. Show the conflicting request beside the actual
+unchanged commitment or rejection evidence, with its limits (§ 5a). A presentation
+request does not authorize publication. Use the available Artifact authoring
+procedure only when separately asked to produce that output; this conversion
+creates no deliverables and publishes nothing.
 
 ## 9. Capture discipline
 
-- **Background anything that could exceed ~30s** and announce the task id and
-  log path in the same turn. Every `roadmap`, `create`, `detail`, and audit call
-  qualifies.
-- **Prefix every pipe with `set -o pipefail`.** Without it a `| tee` reports the
-  *tee's* exit status, so a failed run reads as success. Every command above
-  already does this — keep it when improvising.
-- **Name logs specifically** — `.tmp/ttrpg-demo.<phase>.log`, never `output.log`.
-- **Never suppress progress** — no `/dev/null`, no discarded stderr.
-- **Commit between phases** so each artifact set is a reviewable diff. The diffs
-  are demo material in their own right.
+> Follow the shared directives for long-running commands. Report task and log
+> paths, monitor to confirmed completion and share progress; do not stop a quiet
+> process without my explicit permission. Keep specifically named logs and
+> preserve stderr. Record actual completion and review decisions in the handoff.
 
----
+For shell captures use `set -o pipefail` before `| tee` so failures remain visible.
+Commit clean checkpoints before tool invocations and prefer supported `--commit`
+flags as the directives specify. Retain comparisons and narrative evidence;
+review logs for private material before preparing shareable outputs.
 
 ## 10. Cost, time, and what can go wrong
 
-**Claude calls:** 4 for the initial stage run, plus one bounded call for each
-selected existing stage with active `open` feedback, one materialization call
-per plan row after Phase 1 and before promotion, plus `create`'s iterate loop,
-the two audits, and `detail` (one call per step). Feedback-free re-gates make no
-backend call.
+**Budget for:** four initial stage calls plus any retries, candidate proposals
+and review edits, selected seed materialization, create iteration, both audit
+gates and per-step detail authoring. Report actual usage from retained records;
+do not promise fixed cost or duration. Read-only inspection and promotion copies
+do not invoke a backend.
 
 **Failure modes to expect and film rather than hide:**
 
@@ -543,8 +360,7 @@ backend call.
 |---|---|---|
 | `stage-exhausted` | one stage burned all 3 attempts | Each `retrying (attempt N) after <kind>` line and the final `stopped after <kind>` line already name every attempt's kind; inspect `.plan-tool/runs/<slug>/*.jsonl` for the specific violation or parse detail |
 | Gate violations on retry | working as designed | This is the deterministic half of the design — worth showing, not editing out |
-| All-`prioritized` stage 2 | the brief never said what the project spends | A brief problem. Fix the brief and re-run stage 2 |
-| A feedback-free re-gate published nothing | no active `open` feedback selected a bounded stage route | Add feedback at the owning stage if a model change is needed |
+| All-`prioritized` stage 2 | priorities may lack meaningful tradeoffs | Review the brief; with an accepted head, use ledger feedback and candidate review rather than rerunning stages |
 | Ordinary shared-budget rate limiting | short retry window | Inherited backoff handles it; do not add concurrency |
 | Confirmed Cursor monthly plan quota | terminal provider condition | Return after the failed attempt; resolve the provider condition and start a fresh command, not a retry or fallback |
 
@@ -588,36 +404,32 @@ is better than one that hides four silent retries.
 
 ## 11. What the demo deliberately does not show
 
-State these in the walkthrough so nobody reads absence as a gap:
-
-- **Execution.** No `run`, no `reconcile-code`, no `/code-review` tail.
-- **Framework lenses.** Arc position 05 is unauthored; stages run on the generic
-  quality-attribute list, and `--framework` does not exist yet.
-- **Decomposition quality scoring.** The gates enforce entity-id coverage and
-  constraint discharge. Whether the seams are *right* is reviewer judgment and
-  the tool does not score it — say so plainly.
-- **A claim that roadmap produces better designs.** It does not, and the
-  measurement says so: three plans for the same slice reached the same
-  architecture. What layering buys is a **decision record** — settled calls with
-  rejected alternatives, citable ids, and a do-not-re-open fence. Read
-  `docs/evidence/roadmap-layering-measurement.md` § "How to read this result" before
-  citing it; its null was misread once already, and that reversal is settled.
-- **Any framing of the verb as a replacement for human authorship.** Settled
-  2026-08-02, user-confirmed. It collaborates: it proposes, a human reviews, it
-  re-proposes.
-
----
+- **Execution:** no `run`, `reconcile-code` or post-run code-review tail.
+- **Framework lenses:** this walkthrough uses the existing four-stage route.
+- **Scored decomposition quality:** gates check contracts; readers judge seams.
+- **Proof of better designs:** read the [layering measurement's interpretation](../evidence/roadmap-layering-measurement.md#how-to-read-this-result)
+  before citing it; it supports decision provenance rather than a design-quality claim.
+- **Replacement of human authorship:** the assistant proposes, readers review,
+  and the assistant returns consequential choices for decision.
 
 ## 12. Execution checklist
 
-- [x] Phase 0 — scratch repo, brief copied and committed
-- [x] Phase 1 — four stages green, artifacts committed *(second run; see § 10)*
-- [x] Phase 0b — scaffold authored from stage 3's components, mutation-checked
-- [ ] Phase 2 — one **accepted** ledger item (candidate proposed, `--compare` output captured)
-- [ ] Phase 2 — **≥1 decision confirmed `settled`** before submitting the refusal item
-- [ ] Phase 2 — one **refused** ledger item, narrative evidence captured verbatim *(§ 5a — the frame the demo cannot ship without)*
-- [ ] Phase 3 — `--materialize`, `--apply` preview, then `-y`; create lines captured
-- [ ] Phase 4 — `create` on the visibility slice
-- [ ] Phase 5 — bare-plan audit, conceptual gaps applied, re-audited
-- [ ] Phase 6 — `detail --commit`, then detail-grounded re-audit
-- [ ] Phase 7 — transcripts → walkthrough → deck → Artifact page
+Preparation provenance: the retained 2026-08-06 run records these first three
+items as complete (see § 10). They do not certify a fresh rehearsal; reverify
+artifacts and results before presenting. The remaining entries request future
+preparation, not completed work.
+
+- [x] Phase 0 — scratch repo, brief copied and committed (retained preparation)
+- [x] Phase 1 — four stages green, artifacts committed (retained second run)
+- [x] Phase 0b — scaffold from stage 3, mutation-checked (retained preparation)
+- [ ] Phase 1 — inspect current accepted head, artifacts and unresolved decisions with reader
+- [ ] Phase 2 — review ledger request, candidate evidence and stored review route
+- [ ] Phase 2 — authorize candidate decision/confirmation or seal promotion separately
+- [ ] Phase 2 — inspect settled predecessor; capture actual conflicting-feedback outcome and limits (§ 5a)
+- [ ] Phase 2 — if needed, authorize settlement separately, including receipt-bound response
+- [ ] Phase 3 — materialize selected accepted seeds and obtain content review
+- [ ] Phase 3 — review copy preview; obtain authorization for promotion or direct draft use
+- [ ] Phase 4–5 — create, bare audit, then reader review of plan, reports and changes
+- [ ] Phase 6 — detail, grounded audit, then reader review of bundle, reports and changes
+- [ ] Phase 7 — prepare transcripts, narrative, deck and unpublished Artifact draft from real evidence
+- [ ] Publication — obtain separate authorization before publishing any reviewed output

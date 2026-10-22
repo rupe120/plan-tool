@@ -87,24 +87,40 @@ install or authenticate that backend.
 Open the repository you want to change in your assistant. Choose a small,
 independently testable change and ask:
 
-> Use the plan-tool skill to plan [describe a small feature] in this repository. Keep the
-> scope small, run both audit gates, and stop before implementation.
+> Inspect this repository and draft a grounded seed for [describe a small feature],
+> with an explicit scope fence and verified references. Use the plan-tool skill
+> to prepare a reviewed plan through the bare-plan audit, then details and the
+> detail-grounded audit. At each seed, plan/audit and detail/audit boundary, link
+> the artifacts, summarize changes and ask me for corrections or continuation.
+> Wait for my response unless I explicitly delegate that transition. Bring material
+> scope or design questions back to me and stop before implementation or export.
 
 The assistant grounds a seed in the code, creates the plan, reviews the bare
 plan, authors details, then reviews the complete bundle. It reads the findings
 and applies judged corrections between audits. You decide material scope and
 design questions and when implementation begins.
 
-Once you review the plan, continue in the same conversation:
+After reviewing the plan, details and audits, choose a separate follow-up request:
 
 | Goal | Ask your assistant |
 | --- | --- |
-| Implement the reviewed work | “Use plan-tool to execute this plan, then reconcile the code and review the changes.” |
-| Resume an existing plan | “Use the plan-tool skill to check the status of `my-plan` and continue from its next step.” |
+| Implement the reviewed work | “Use plan-tool to execute this plan, then reconcile the code against the plan and review changes to convergence.” |
+| Inspect status | “Inspect `my-plan`, saved reports and any active invocation; report the current state and next decision without implementing.” |
+| Resume within the agreed scope | “Inspect the plan, reports and original invocation first. Only after its confirmed exit, use its recorded outcome to resume the next incomplete stage within my requested scope.” |
 | Prepare work for a team | “Use plan-tool to export this reviewed plan as local Jira stories.” |
 | Start with a larger concept | “Use the plan-tool skill to turn this concept into a roadmap before creating individual plans.” |
 
-Jira export produces local artifacts; tracker publication is a separate action.
+Ask for execution or export separately after detail review. Local export includes
+stories and their paired developer handoff; ask for links, a change summary and
+validation results. Tracker publication requires a separate request.
+
+During long commands, ask the assistant to report progress and monitor the original
+invocation to confirmed exit. Quiet output, checkpoints and backend completion do
+not establish command completion or authorize an overlapping invocation. Follow
+[monitoring and safe recovery](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
+See the [planning walkthrough](docs/demos/planning-demo.md) and
+[authored reading samples](docs/demos/dark-mode-example.md) for review checkpoints;
+these samples do not demonstrate live audit convergence.
 For project-scoped skills, committed copies, refresh behavior and optional
 extras, see [Installation options](#installation-options).
 

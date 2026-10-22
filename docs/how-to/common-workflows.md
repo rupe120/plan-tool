@@ -12,6 +12,36 @@ Assumptions: run from the repo root with the manifest
 (`.plan-tool/plans.json`) in use. Substitute `--plans-dir <dir>` if
 you've opted out of the manifest.
 
+## Ask an assistant to prepare the work
+
+> Inspect this repository and draft a grounded seed for [change], with a scope
+> fence and references. Link it and summarize changes for my review before
+> creating a plan. Use the plan-tool skill to create and bare-audit the reviewed
+> seed, then link the plan and report for review before details. After approval,
+> author details and run the grounded audit; link both and summarize changes,
+> verification and unresolved decisions. Ask for corrections or continuation at
+> each boundary and wait unless I explicitly delegate that transition. Stop
+> before implementation or export.
+
+Follow the [planning demo](../demos/planning-demo.md) and its
+[authored samples](../demos/dark-mode-example.md), or the
+[TTRPG roadmap demo](../demos/roadmap-demo.md) for a larger concept. These examples
+teach artifact review; they do not establish successful live model runs.
+
+After detail review, choose a separate request:
+
+| Result | Request |
+| --- | --- |
+| Status | “Inspect the plan, reports and any active invocation; report state and next decisions without implementation.” |
+| Resume | “Check the original invocation first; after confirmed exit, use its recorded outcome to resume the next incomplete stage within the agreed scope.” |
+| Execution | “Execute the reviewed plan, reconcile code against it and review changes to convergence; report results.” |
+| Local export | “Export local stories and their paired developer handoff; link both and summarize validation for review. Leave tracker publication for a separate request.” |
+
+Quiet output and backend completion do not prove command exit. Follow
+[monitoring and recovery](../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely)
+before resuming; do not overlap invocations. The sections below retain direct
+operator procedures.
+
 ## 0. `roadmap` — stage a project-sized concept *(optional)*
 
 Reach for `roadmap` when the work is **project-sized** and you can't yet name
@@ -256,8 +286,9 @@ plan-tool detail my-slug --no-resume         # ignore checkpoint cache
 
 Options applied *during* detail:
 
-- `--iterate`: per-step quality loop — after each write, the
-  detail-quality review drives 2–3 revisions tightening citations
+- `--iterate`: opt in only when explicitly requested; the normal authoring route
+  uses one-shot detail followed by the grounded audit. After each write, the
+  optional detail-quality loop drives 2–3 revisions tightening citations
   and pinning vague prose. Budget is **per step**; one step
   exhausting doesn't block the next.
 - `-y < /dev/null`: headless. Skips the re-run Y/N gates.
@@ -268,17 +299,17 @@ Options applied *during* detail:
 
 ## 3. Audit a plan's quality
 
-`completeness-audit` is the primary authoring audit — run it after
-authoring and mid-sprint:
+`completeness-audit` is the primary authoring audit: run it before detail,
+then again on the completed bundle, following the [audit procedure](pipeline/audit.md):
 
 ```bash
-plan-tool completeness-audit my-plan         # plan's own concepts (one Claude call)
+plan-tool completeness-audit my-plan --iterate --commit  # both authoring gates
 ```
 
 A free deterministic layer catches the cheap problems first (missing body
-sections, steps without detail files, lessons gaps). Then a sampled
-Claude audit judges whether the plan's own concepts are correct and
-complete, grounded in the per-step detail bundle and the code at HEAD.
+sections and lessons gaps). Missing details are coverage at the bare gate,
+not a defect by themselves. A sampled Claude audit judges the plan against
+code at HEAD, with detail grounding only for the available bundle.
 The same audit can surface `data-contract` findings: plan/detail `## Input`
 reference drift is repaired in the authored files, while saved
 `DATA_CONTRACT.md` documentation drift is walked with
@@ -286,7 +317,7 @@ reference drift is repaired in the authored files, while saved
 audit.
 
 `reconcile-plan` is the **stale-plan** audit — reach for it when a plan
-was written a while ago and the code has moved on under it, so the plan
+has not been executed and the code has moved on under it, so the plan
 body and frontmatter may no longer describe reality. It compares every
 step against the current code and its apply walk edits the plan/detail
 files to match. It's also a useful **supplement** to `completeness-audit`
@@ -305,12 +336,9 @@ directly edited frontmatter, not a peer audit verb.
 ```bash
 plan-tool status my-plan                     # what's the current step?
 plan-tool run                                # no name: pick from plans with open steps
-plan-tool run my-plan                        # execute the current step
-plan-tool run my-plan --step 3               # run a specific step
-plan-tool detail my-plan --reconcile         # plan/detail edits to match code
-plan-tool detail my-plan --reconcile --all   # sweep that audit across every not-yet-done step
-plan-tool run my-plan --reconcile            # code edits to match plan
-plan-tool detail my-plan --reconcile --iterate   # loop until findings stabilize
+plan-tool run my-plan --commit               # execute the current step
+plan-tool run my-plan --step 3 --commit      # run a specific step
+plan-tool run my-plan --reconcile --iterate --commit  # code edits to match plan
 ```
 
 **Interactive plan picker.** `plan-tool run` with no plan name — or a
@@ -326,7 +354,11 @@ The picker is TTY-only. With stdin redirected or piped (CI, `-y` scripts), a
 missing name is a hard error and an unresolved name re-raises — automation
 fails fast instead of blocking on a prompt.
 
-**Entry point for plan-vs-codebase reconciliation:**
+After the last green step, run `plan-tool reconcile-code my-plan --all`, retain
+reports and drive code review under the [post-run contract](../../integrations/shared/DIRECTIVES.md#after-run-finishes-a-plan).
+Dry runs render prompts only; completeness audits do not belong in this tail.
+
+**Pre-execution entry point for plan-vs-codebase reconciliation:**
 `plan-tool reconcile-plan <name>` (section 3) — most useful on an
 **older plan the code has drifted under**, or as a supplement to
 `completeness-audit`. One claude call audits every step's plan body and
@@ -334,8 +366,8 @@ frontmatter against the current code. Reach for
 `plan-tool detail <name> --reconcile --step N` as a drill-down only when
 `reconcile-plan` flags concrete drift in a specific step's detail body.
 
-See [Per-subcommand reconcile for the
-split between code-is-truth and plan-is-truth audits.
+See [the two reconcile verbs](../../integrations/shared/DIRECTIVES.md#the-two-reconcile-verbs-are-not-interchangeable)
+for the split between code-is-truth and plan-is-truth audits.
 
 ## 4a. `suggest-gates` — lock in built work against later steps
 
