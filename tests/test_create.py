@@ -9361,7 +9361,7 @@ class TestFromExistingSeedValidation:
 
     def test_live_plan_seeds_pass_references_preflight(self) -> None:
         seed_dir = Path(__file__).resolve().parents[1] / "plan-seeds"
-        seed_paths = sorted(seed_dir.glob("*.md"))
+        seed_paths = sorted(path for path in seed_dir.glob("*.md") if path.name != "README.md")
         assert seed_paths
         for seed_path in seed_paths:
             validate_from_existing_seed(seed_path.read_text(encoding="utf-8"))

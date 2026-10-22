@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import json
 from pathlib import Path
 
 import pytest
@@ -373,3 +374,24 @@ def test_invalidation_refreshes_a_renamed_draft_seed_path() -> None:
 
     assert invalidated["seeds"]["slice"]["draft_seed_path"] == "seeds/current-name.md"
     assert invalidated["seeds"]["slice"]["status"] == "invalidated"
+
+
+@pytest.mark.parametrize("layout", ["root", "nested"])
+def test_publication_layout_survives_state_roundtrip_and_invalidation(tmp_path, layout):
+    path = _write_invalidated_state(tmp_path / "roadmap")
+    state = snapshot_seed_state(json.loads(path.read_text()))
+    state["seeds"]["slice"]["publication_layout"] = layout
+    write_seed_state(path, state)
+    reread = snapshot_seed_state(json.loads(path.read_text()))
+    assert reread["seeds"]["slice"]["publication_layout"] == layout
+    assert invalidated_seed_state(reread)["seeds"]["slice"]["publication_layout"] == layout
+
+
+@pytest.mark.parametrize("layout", ["elsewhere", [], {}, 1, None])
+def test_invalid_publication_layout_fails_closed(tmp_path, layout):
+    from plan_tool.roadmap_seed_state import RoadmapSeedStateError
+    path = _write_invalidated_state(tmp_path / "roadmap")
+    state = json.loads(path.read_text())
+    state["seeds"]["slice"]["publication_layout"] = layout
+    with pytest.raises(RoadmapSeedStateError, match="publication layout"):
+        snapshot_seed_state(state)

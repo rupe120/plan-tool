@@ -204,7 +204,7 @@ def resolve_draft_seed_path(plans_dir: Path, slug: str, draft_seed_path: str) ->
 
 
 def resolve_plan_seed_dest(plan_seeds_dir: Path, plan_id: str) -> Path:
-    """Join ``plan-seeds/`` with a promotion destination for a validated id.
+    """Join a publication directory with a destination for a validated id.
 
     The write-side mirror of :func:`resolve_draft_seed_path`: parsing stays
     permissive so a bad id reaches ``check_plan_ordering_totality`` as a gate

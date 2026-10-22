@@ -7,7 +7,7 @@ allowed-tools: Bash Read Grep Glob Edit Write
 # See the plan-tool repo's docs/history/backlog-decisions.md § "#390".
 paths:
   - docs/implementation-plans/**
-  - plan-seeds/**
+  - plan-seeds/** # retained existing seeds; new seeds live under docs/implementation-plans
   - .plan-tool/plans.json
 argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|stop|ask] [--fallback-backend BACKEND] <plan-name> [--step N] [--mode check|optimize|document|test|security|lint] [--reconcile] [--dry-run]'
 ---
@@ -232,7 +232,7 @@ These live in the plan-tool repo (paths relative to its root):
 - **`RUNBOOK.md`** — operational walkthroughs ("how do I X?"): start a plan,
   drive to completion, converge with `--iterate`, review before running,
   export to JIRA, recover an interrupted run, investigate a slow run.
-- **`SEED_FORMAT.md`** — authoring directives for the `plan-seeds/*.md`
+- **`SEED_FORMAT.md`** — authoring directives for the `docs/implementation-plans/plan-seeds/*.md`
   briefs fed to `create --from-existing`: density, single-effort focus,
   destinations-not-turn-by-turn, and the required scope-contract fence.
 - **`PLAN_FORMAT.md`** — the frontmatter schema, field semantics, and the

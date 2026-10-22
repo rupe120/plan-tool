@@ -36,7 +36,7 @@ plan-tool roadmap <slug> --reopen-ledger-feedback ITEM_ID                # reope
 plan-tool roadmap <slug> --propose-candidate                             # snapshot eligible ledger items into an inert candidate
 plan-tool roadmap <slug> --materialize [PLAN_ID]                         # rebuild draft seeds
 plan-tool roadmap <slug> --refresh-seeds                                 # refresh all draft seeds
-plan-tool roadmap <slug> --apply [-y]                                    # promote seeds to plan-seeds/
+plan-tool roadmap <slug> --apply [-y]                                    # promote seeds to docs/implementation-plans/plan-seeds/
 plan-tool roadmap <slug> --accept-seed PLAN_ID                           # accept a directly edited draft
 plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html} [--mode {current,review}] [--id ROW_ID] [--output PATH]   # read-only artifact views
 

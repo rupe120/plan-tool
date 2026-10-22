@@ -6893,7 +6893,7 @@ class TestMaterializePlanSeed:
         monkeypatch.setattr(create_module, "propose_steps_from_claude", propose_steps)
         for route, source in (
             ("draft", materialized),
-            ("promoted", env.repo_root / "plan-seeds" / f"{_PLAN_ORDER.id}.md"),
+            ("promoted", env.repo_root / "docs" / "implementation-plans" / "plan-seeds" / f"{_PLAN_ORDER.id}.md"),
         ):
             seed = source.read_text(encoding="utf-8")
             validate_from_existing_seed(seed)
@@ -8222,7 +8222,7 @@ class _ApplyEnv:
 
     @property
     def plan_seeds_dir(self) -> Path:
-        return self.repo_root / "plan-seeds"
+        return self.repo_root / "docs" / "implementation-plans" / "plan-seeds"
 
     def write_plans(self, artifact: PlansArtifact) -> None:
         """Publish ``artifact`` as the accepted head's plans member."""
@@ -8350,6 +8350,7 @@ class TestAcceptRoadmapSeed:
         state_path = seed_state_path(env.roadmap_root)
         state = load_seed_state(state_path)
         state["seeds"][_PLAN_AUTH.id]["published"] = True
+        state["seeds"][_PLAN_AUTH.id]["publication_layout"] = "nested"
         write_seed_state(state_path, state)
         promoted = env.plan_seeds_dir / f"{_PLAN_AUTH.id}.md"
         promoted.parent.mkdir()
@@ -8712,6 +8713,8 @@ def _set_seed_state_value(
     path = seed_state_path(env.roadmap_root)
     state = load_seed_state(path)
     state["seeds"][plan_id][key] = value
+    if key == "published" and value is True:
+        state["seeds"][plan_id]["publication_layout"] = "nested"
     write_seed_state(path, state)
 
 
@@ -8834,6 +8837,7 @@ class TestApplyRoadmapSeeds:
             plans_dir=env.plans_dir, slug=env.slug
         )
         state["seeds"].setdefault(plan_id, {})["published"] = True
+        state["seeds"][plan_id]["publication_layout"] = "nested"
         roadmap_module._write_roadmap_seed_state(
             state, plans_dir=env.plans_dir, slug=env.slug
         )
@@ -10397,6 +10401,7 @@ class TestAcceptedVersionSeedRoutes:
         state_path = seed_state_path(env.roadmap_root)
         state = load_seed_state(state_path)
         state["seeds"][_PLAN_AUTH.id]["published"] = True
+        state["seeds"][_PLAN_AUTH.id]["publication_layout"] = "nested"
         write_seed_state(state_path, state)
         promoted = env.plan_seeds_dir / f"{_PLAN_AUTH.id}.md"
         promoted.parent.mkdir()
@@ -10870,3 +10875,69 @@ def test_materialized_seed_context_reaches_create_and_the_published_plan(
     assert sections["references"] in published
     for body in evidence.values():
         assert body in published
+
+
+@pytest.mark.parametrize("layout", ["root", "nested"])
+def test_materialize_preserves_recorded_destination_and_other_directory(
+    env: _Env, layout: str,
+) -> None:
+    _prepare_seed_materialization(env)
+    _record_order_seed_published(env)
+    state_path = seed_state_path(roadmap_dir(env.plans_dir, SLUG))
+    state = load_seed_state(state_path)
+    if layout == "nested":
+        state["seeds"][_PLAN_ORDER.id]["publication_layout"] = "nested"
+        write_seed_state(state_path, state)
+    legacy = env.repo_root / "plan-seeds" / f"{_PLAN_ORDER.id}.md"
+    nested = env.repo_root / "docs/implementation-plans/plan-seeds" / legacy.name
+    for path in (legacy, nested):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("retained sentinel", encoding="utf-8")
+    _materialize(env, _StubInvoker(_seed_text(marker="PLACEMENT-REFRESH")))
+    selected, untouched = (nested, legacy) if layout == "nested" else (legacy, nested)
+    assert "PLACEMENT-REFRESH" in selected.read_text()
+    assert untouched.read_text() == "retained sentinel"
+    entry = load_seed_state(state_path)["seeds"][_PLAN_ORDER.id]
+    assert entry.get("publication_layout", "root") == layout
+
+
+def test_apply_skip_reports_the_legacy_destination_without_moving_seed(tmp_path):
+    env = _apply_env(tmp_path)
+    _standard_apply_setup(env)
+    path = seed_state_path(env.roadmap_root)
+    state = load_seed_state(path)
+    state["seeds"][_PLAN_AUTH.id]["published"] = True
+    state["seeds"][_PLAN_AUTH.id].pop("publication_layout", None)
+    write_seed_state(path, state)
+    old = env.repo_root / "plan-seeds" / f"{_PLAN_AUTH.id}.md"
+    old.parent.mkdir()
+    old.write_text("legacy bytes", encoding="utf-8")
+    result = apply_roadmap_seeds(
+        env.slug, repo_root=env.repo_root, plans_dir=env.plans_dir, allow_apply=False,
+    )
+    assert result.skipped == ((_PLAN_AUTH.id, old),)
+    assert old.read_text() == "legacy bytes"
+    assert not (env.plan_seeds_dir / old.name).exists()
+
+
+def test_accept_legacy_publication_keeps_root_and_nested_file_untouched(tmp_path):
+    env = _apply_env(tmp_path)
+    _standard_apply_setup(env)
+    TestAcceptRoadmapSeed._hand_edit_auth_draft(env)
+    path = seed_state_path(env.roadmap_root)
+    state = load_seed_state(path)
+    state["seeds"][_PLAN_AUTH.id]["published"] = True
+    state["seeds"][_PLAN_AUTH.id].pop("publication_layout", None)
+    write_seed_state(path, state)
+    old = env.repo_root / "plan-seeds" / f"{_PLAN_AUTH.id}.md"
+    nested = env.plan_seeds_dir / old.name
+    for target in (old, nested):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("retained bytes", encoding="utf-8")
+    result = accept_roadmap_seed(
+        env.slug, _PLAN_AUTH.id, repo_root=env.repo_root, plans_dir=env.plans_dir,
+    )
+    assert result.promoted_target == old
+    assert "HAND-EDITED-AUTH" in old.read_text()
+    assert nested.read_text() == "retained bytes"
+    assert "publication_layout" not in load_seed_state(path)["seeds"][_PLAN_AUTH.id]

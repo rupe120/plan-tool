@@ -14624,7 +14624,7 @@ class TestAnnotateEndToEnd:
         for line in _ANNOTATE_SOURCE.splitlines():
             assert line in report
         assert "NOT IMPLEMENTED" in report
-        assert (repo / "legacy.seed.md").is_file()
+        assert (repo / "docs" / "implementation-plans" / "plan-seeds" / "legacy.seed.md").is_file()
 
     def test_seed_feeds_create_from_existing(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -14637,7 +14637,7 @@ class TestAnnotateEndToEnd:
             lambda prompt: _annotate_sections(),
         )
         assert main(["--repo-root", str(repo), "annotate", str(src)]) == 0
-        seed = repo / "legacy.seed.md"
+        seed = repo / "docs" / "implementation-plans" / "plan-seeds" / "legacy.seed.md"
         seed_text = seed.read_text(encoding="utf-8")
 
         # The discriminating split (Finding 1's regression): the PARTIAL's

@@ -17,7 +17,7 @@ Work in a disposable consuming repository with an authenticated backend. Start
 with this request:
 
 > Inspect this repository's actual application paths, conventions and tests.
-> Draft `plan-seeds/dark-mode-toggle.md` using the seed format: users can switch
+> Draft `docs/implementation-plans/plan-seeds/dark-mode-toggle.md` using the seed format: users can switch
 > between light and dark themes and retain their choice after reload. Identify
 > constraints and unresolved product decisions from the repository rather than
 > assuming an application layout. Keep implementation outside this planning task.

@@ -20,9 +20,9 @@ plan-tool roadmap [-h] [-y] --apply slug
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `-y`, `--yes` | off | skip the interactive promote confirmation (relevant only with --apply): the deliberate second opt-in that may copy seeds into plan-seeds/ without a TTY. Useful for scripted/unattended runs. |
+| `-y`, `--yes` | off | skip the interactive promote confirmation (relevant only with --apply): the deliberate second opt-in that may copy seeds into docs/implementation-plans/plan-seeds/ without a TTY. Useful for scripted/unattended runs. |
 | `--from-existing` `PATH` | — | path to the concept brief a first stage run grounds a new roadmap in. A run that failed part-way holds its passed stages and the next run resumes from them, but only for the same brief content. Refused beside an accepted head. Not used with --apply. |
-| `--apply` | off | apply-only mode: read the accepted version's roadmap and promote draft seeds into plan-seeds/ after confirm (or -y). Does not run stages or invoke the backend. |
+| `--apply` | off | apply-only mode: read the accepted version's roadmap and promote draft seeds into docs/implementation-plans/plan-seeds/ after confirm (or -y). Does not run stages or invoke the backend. |
 | `--refresh-seeds` | off | explicitly regenerate roadmap-derived seeds against the current codebase, restoring a consumed or archived seed at its original path when needed. Writes a before/after difference report; does not rewrite any roadmap artifact. |
 | `--accept-seed` `PLAN_ID` | — | accept one validated directly edited digest-mismatched draft as current without regenerating it or running roadmap stages. |
 | `--materialize` `PLAN_ID` | — | explicitly regenerate every recoverable draft seed, or only PLAN_ID when supplied. Skips current drafts and refuses duplicate plan rows; writes the seed refresh difference report. |

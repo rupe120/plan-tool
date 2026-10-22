@@ -432,7 +432,7 @@ plan-tool roadmap <slug> --compare [--comparison-base VERSION_ID] [--comparison-
 plan-tool roadmap <slug> --settle-decision <artifact>:<decision-id> --settlement-evidence <artifact>:<feedback-id> --confirm-decision-settlement # transition one Roadmap-derived decision pending → settled; publishes a committed receipt
 plan-tool roadmap <slug> --materialize [PLAN_ID]                         # regenerate every recoverable draft seed, or one named row, through the standalone seed materializer; no roadmap stages
 plan-tool roadmap <slug> --refresh-seeds                                 # regenerate every source-order draft seed against current code through the standalone seed materializer; write their diff report
-plan-tool roadmap <slug> --apply [-y]                                    # apply-only: promote the draft seeds into plan-seeds/ (no brief, no backend, no stages); preview + confirm unless -y
+plan-tool roadmap <slug> --apply [-y]                                    # apply-only: promote the draft seeds into docs/implementation-plans/plan-seeds/ (no brief, no backend, no stages); preview + confirm unless -y
 plan-tool roadmap <slug> --accept-seed PLAN_ID                           # accept one validated hand-edited draft as current (no backend, no stages)
 plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html} [--mode {current,review}] [--id ROW_ID] [--output PATH]   # inspect: start with a compact review summary, or render the traceability walk, decision ledger, reverse citation index, draft-seed state report, or a self-contained print-formatted HTML page of every artifact row (writes <roadmap-dir>/review.html by default; --output PATH chooses the destination; --output - prints instead); no Claude call or roadmap mutation
 
@@ -676,8 +676,8 @@ stage run refuses once the head exists; use the ledger routes above.
 `create --from-existing` line per plan row:
 
 ```bash
-plan-tool roadmap my-project --apply     # optional: promote accepted drafts into plan-seeds/
-plan-tool create first-plan --from-existing plan-seeds/first-plan.md
+plan-tool roadmap my-project --apply     # optional: promote accepted drafts into docs/implementation-plans/plan-seeds/
+plan-tool create first-plan --from-existing docs/implementation-plans/plan-seeds/first-plan.md
 ```
 
 `--apply` runs no stages and invokes no backend — it previews, confirms (or
@@ -941,7 +941,7 @@ backfires — carve it out of the plan instead of patching again:
   converges and the carved work is re-planned on its own.
 - **Recommend-only by default**; it mutates only under `--apply` plus a TTY
   confirm (`-y` is the deliberate non-interactive opt-in). It is
-  **seed-first** — the forward-seed is written to `plan-seeds/` before the
+  **seed-first** — the forward-seed is written to `docs/implementation-plans/plan-seeds/` before the
   plan is narrowed — and spends no claude.
 - `plan-tool convergence <name>` does not recommend or actuate this carve —
   it is a read-only loop/structure signal; pick the step (or range) yourself.

@@ -1827,3 +1827,11 @@ renumbering, and `split_step` already requires them unique within one split. A
 step added by hand-editing the plan file is not observable through this path and
 is never counted; a step created by a split and later retitled by hand goes
 stale the same way every provenance signal in this tool does under a hand edit.
+
+
+### Roadmap seed publication layout
+
+The version-1 seed-state entry optionally carries `publication_layout`, a closed
+`root` / `nested` string. Absence reads as `root` for existing publications;
+new promotions record `nested`. Normalization and state rewrites preserve this
+field. See ROADMAP_FORMAT.md for destination and ownership semantics.

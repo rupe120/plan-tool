@@ -1570,7 +1570,7 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "disposition selector (not a visibility or enable toggle): on "
             "apply, make an actuated re-ground ALSO write a `create "
-            "--from-existing` re-baseline seed under plan-seeds/ for the "
+            "--from-existing` re-baseline seed under docs/implementation-plans/plan-seeds/ for the "
             "flagged already-built steps, in addition to marking them done. "
             "The seed supersedes the plan's remaining scope, so re-create from "
             "it and retire this plan. Still needs the re-ground enabled "
@@ -1803,7 +1803,7 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "disposition selector (not a visibility or enable toggle): on "
             "apply, make an actuated re-ground ALSO write a `create "
-            "--from-existing` re-baseline seed under plan-seeds/ for the "
+            "--from-existing` re-baseline seed under docs/implementation-plans/plan-seeds/ for the "
             "flagged already-built steps, in addition to marking them done. "
             "The seed supersedes the plan's remaining scope, so re-create from "
             "it and retire this plan. Still needs the re-ground enabled "

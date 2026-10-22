@@ -433,7 +433,7 @@ three role-shaped paths together for later reference.
 | Unreleased changes, and the release notes they become | [`changelog.d/`](changelog.d/README.md), [`CHANGELOG.md`](CHANGELOG.md) |
 | Choosing a version and cutting a release | [`docs/RELEASING.md`](docs/RELEASING.md) |
 | Closed decisions that shouldn't be reopened | [`docs/history/backlog-decisions.md`](docs/history/backlog-decisions.md) |
-| Seeds and plans | `plan-seeds/`, `docs/implementation-plans/` |
+| Seeds and plans | New seeds: `docs/implementation-plans/plan-seeds/`; plans: `docs/implementation-plans/`; retained seeds: `plan-seeds/` |
 | Handoffs and review ledgers | [`handoffs/`](handoffs/README.md#review-ledgers) (tracked) |
 | Scratch notes and logs | `.tmp/` (ignored; name files `<slug>.<what>`, never `notes.md`) |
 | Design-level lessons | [`docs/explanations/lessons-learned.md`](docs/explanations/lessons-learned.md) |

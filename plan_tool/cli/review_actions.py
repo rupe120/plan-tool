@@ -1083,7 +1083,7 @@ def _build_review_action_fn(
         The ``reground_rebaseline`` builder kwarg selects the bridge's
         *disposition*: off (default) marks the flagged already-built steps
         ``done``; on additionally writes a ``create --from-existing`` re-baseline
-        seed under ``plan-seeds/`` for them. The disposition never changes
+        seed under the default seed directory for them. The disposition never changes
         *whether* the re-ground actuates (the enable opt-in gate below is
         unchanged); ``repo_root=ctx.repo_root`` is forwarded unconditionally
         since the mark-done arm ignores it.

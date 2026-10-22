@@ -70,7 +70,7 @@ subaction) is generated under [`docs/cli/`](docs/cli/README.md).
 | `plan-tool roadmap <slug> --compare` | Compare the accepted head with the active candidate (read-only; pass `--comparison-target` when none is active) |
 | `plan-tool roadmap <slug> --decide-candidate CANDIDATE_VERSION_ID --candidate-decision approve\|edit\|reject` | Decide the active structural candidate; approve is two invocations and the second carries `--confirm-stack-digest` |
 | `plan-tool roadmap <slug> --reopen-ledger-feedback ITEM_ID` | Reopen one retained reviewer ledger item |
-| `plan-tool roadmap <slug> --apply` / `plan-tool roadmap <slug> --apply -y` | Promote draft seeds from the accepted `04-roadmap` artifact into `plan-seeds/` without invoking stages (preview by default; `-y` is the second opt-in) |
+| `plan-tool roadmap <slug> --apply` / `plan-tool roadmap <slug> --apply -y` | Promote draft seeds from the accepted `04-roadmap` artifact into `docs/implementation-plans/plan-seeds/` without invoking stages (preview by default; `-y` is the second opt-in) |
 | `plan-tool roadmap <slug> --refresh-seeds` | Reprocess invalidated derived seeds against current code, restore archived ones, and write a diff report without rewriting roadmap artifacts |
 
 A stage run is refused once the roadmap has an accepted head; the roadmap then
@@ -543,7 +543,7 @@ A full run publishes the four artifacts as one version and writes draft seeds
 under the slug directory. The default hand-off is **automated**: the CLI prints
 runnable `create --from-existing` lines against each draft path. Optional
 `plan-tool roadmap <slug> --apply` (+ confirm or `--apply -y`) copies accepted
-drafts into `plan-seeds/`; you can also run `create` directly against
+drafts into `docs/implementation-plans/plan-seeds/`; you can also run `create` directly against
 slug-relative draft paths without promoting. See
 [`docs/how-to/roadmap.md`](docs/how-to/roadmap.md) for the full operator
 narrative and a manual fallback when stage 4 is skipped or rejected.
@@ -553,7 +553,7 @@ Arc position **05** (framework lenses) remains unauthored (BACKLOG #208).
 
 Apply-only mode reads the accepted version's `04-roadmap` artifact — no brief,
 no Claude, no stage run. Preview by default; `-y` is a second opt-in that
-bypasses the TTY confirm. Collisions with existing `plan-seeds/` paths refuse by
+bypasses the TTY confirm. Collisions with existing default seed paths refuse by
 default. Copies do not remove slug-relative drafts. Stage runs stay
 non-interactive and do not accept `-y`.
 
@@ -1801,11 +1801,11 @@ wrote" → `annotate`.
 
 ```bash
 plan-tool annotate docs/implementation-plans/2-old-plan.md
-plan-tool create next-plan --from-existing 2-old-plan.seed.md --iterate
+plan-tool create next-plan --from-existing docs/implementation-plans/plan-seeds/2-old-plan.seed.md --iterate
 ```
 
 The first command writes `2-old-plan.annotated.md` and
-`2-old-plan.seed.md` beside the source; the second feeds the seed into a
+the seed under `docs/implementation-plans/plan-seeds/`; the second feeds it into a
 fresh `create`.
 
 For a batch, pass multiple paths and/or shell globs:
@@ -1820,6 +1820,12 @@ Each source still gets its own report and seed. After the per-file
 coverage, grounding (`grounded/candidate (skipped skipped)`), and section
 counts (`I/P/N/R`).
 
+Default annotate seed output refuses an existing destination instead of replacing
+it. A batch with same-named sources in different directories fails its collision
+preflight. Use separate invocations with distinct explicit `--seed` paths for
+those sources. Explicit `--seed`, `--seed-dir` and `--output-dir` destinations
+retain their replacement behavior.
+
 ### Flags
 
 - **`path-or-glob`** (positional, repeatable) — path or glob for the
@@ -1828,8 +1834,8 @@ counts (`I/P/N/R`).
   `create --from-existing`. These are filesystem paths, not registered
   plan slugs.
 - **`--output-dir <dir>`** — directory for the derived
-  `<stem>.annotated.md` / `<stem>.seed.md`. Defaults beside the source
-  file.
+  `<stem>.annotated.md` / `<stem>.seed.md`. Without an override, the report
+  stays beside the source and the seed uses `docs/implementation-plans/plan-seeds/`.
 - **`--report <path>`** — explicit path for the annotated report;
   overrides the derived name and `--output-dir` for that one artifact.
   Only valid with a single source.
@@ -1840,8 +1846,8 @@ counts (`I/P/N/R`).
   `<stem>.annotated.md` reports. Defaults to `--output-dir` or beside
   each source file.
 - **`--seed-dir <dir>`** — directory for derived `<stem>.seed.md`
-  carryover files. Defaults to `--output-dir` or beside each source
-  file.
+  carryover files. Defaults to `--output-dir` or
+  `docs/implementation-plans/plan-seeds/` beneath the repository root.
 - **`--archive`** — the **only** mutation of the source: move the
   original (and, for an `N-slug.md` plan, its sibling
   `plan-details/<slug>/` bundle) into `archive/` with a one-line notice
@@ -2925,7 +2931,7 @@ atomic narrow. The CLI rejects an out-of-order range (`--through` before
   asks for an interactive confirm first; `-y` is the deliberate second
   opt-in that bypasses the confirm for scripted/unattended runs.
 - **Seed-first ordering.** The `create --from-existing` forward-seed is
-  written to `plan-seeds/` **before** the plan is narrowed, so the carved
+  written to `docs/implementation-plans/plan-seeds/` **before** the plan is narrowed, so the carved
   work survives as a durable artifact even if the narrow rolls back. The
   narrow itself is all-or-nothing: drop the step, renumber survivors to
   `1..N`, repair `depends_on`, and migrate/archive the carved detail file,

@@ -6320,7 +6320,7 @@ class TestAcceptSeedMode:
     def test_accept_seed_prints_accepted_target_and_promoted_handoff(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
     ) -> None:
-        promoted = tmp_path / "plan-seeds" / "plan-a.md"
+        promoted = tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan-a.md"
         _stub_accept(
             monkeypatch,
             RoadmapSeedAcceptResult(
@@ -6336,15 +6336,15 @@ class TestAcceptSeedMode:
         assert "plan-a" in out
         assert "drafts/plan-a.md" in out
         assert "plan-seeds/plan-a.md" in out
-        assert "plan-tool create plan-a --from-existing plan-seeds/plan-a.md" in out
+        assert "plan-tool create plan-a --from-existing docs/implementation-plans/plan-seeds/plan-a.md" in out
 
     def test_accept_seed_says_an_unpublished_seeds_existing_file_was_left_untouched(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
     ) -> None:
         # promoted_target=None alone reads as "no promoted copy exists"; the
         # existing file the tool deliberately skipped must be named.
-        existing = tmp_path / "plan-seeds" / "plan-a.md"
-        existing.parent.mkdir()
+        existing = tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan-a.md"
+        existing.parent.mkdir(parents=True)
         existing.write_text("hand-written\n", encoding="utf-8")
         _stub_accept(
             monkeypatch,
@@ -6358,7 +6358,7 @@ class TestAcceptSeedMode:
 
         assert cmd_roadmap(_ns(tmp_path, accept_seed="plan-a", from_existing=None)) == 0
         out = capsys.readouterr().out
-        assert "left untouched: plan-seeds/plan-a.md" in out
+        assert "left untouched: docs/implementation-plans/plan-seeds/plan-a.md" in out
         assert "re-synced promoted seed" not in out
 
     @pytest.mark.parametrize(
@@ -6598,8 +6598,8 @@ class TestApplyMode:
         out = capsys.readouterr().out
         assert rc == 0
         assert run_called == []
-        assert "plan-tool create plan-b --from-existing plan-seeds/plan-b.md" in out
-        assert "plan-tool create plan-a --from-existing plan-seeds/plan-a.md" in out
+        assert "plan-tool create plan-b --from-existing docs/implementation-plans/plan-seeds/plan-b.md" in out
+        assert "plan-tool create plan-a --from-existing docs/implementation-plans/plan-seeds/plan-a.md" in out
         assert out.index("plan-tool create plan-b") < out.index(
             "plan-tool create plan-a"
         )
@@ -6632,8 +6632,8 @@ class TestApplyMode:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
     ) -> None:
         _write_apply_fixtures(tmp_path)
-        plan_seeds = tmp_path / "plan-seeds"
-        plan_seeds.mkdir()
+        plan_seeds = tmp_path / "docs" / "implementation-plans" / "plan-seeds"
+        plan_seeds.mkdir(parents=True)
         (plan_seeds / "plan-b.md").write_text("existing\n", encoding="utf-8")
         monkeypatch.setattr(
             f"{MODULE}.run_roadmap",
@@ -6652,7 +6652,7 @@ class TestApplyMode:
     ) -> None:
         result = RoadmapApplyResult(
             outcome=APPLY_OUTCOME_RECOMMENDED,
-            skipped=(("plan-a", tmp_path / "plan-seeds" / "plan-a.md"),),
+            skipped=(("plan-a", tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan-a.md"),),
         )
         _stub_apply(monkeypatch, result)
 
@@ -6670,7 +6670,7 @@ class TestApplyMode:
     ) -> None:
         result = RoadmapApplyResult(
             outcome=APPLY_OUTCOME_RECOMMENDED,
-            skipped=(("plan-a", tmp_path / "plan-seeds" / "plan-a.md"),),
+            skipped=(("plan-a", tmp_path / "docs" / "implementation-plans" / "plan-seeds" / "plan-a.md"),),
             stale_published=(DraftSeedClassification(plan_id="plan-a", state="stale"),),
         )
         _stub_apply(monkeypatch, result)
@@ -6744,8 +6744,8 @@ class TestApplyMode:
     def test_four_stage_run_still_does_not_touch_plan_seeds(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        repo_seeds = tmp_path / "plan-seeds"
-        repo_seeds.mkdir()
+        repo_seeds = tmp_path / "docs" / "implementation-plans" / "plan-seeds"
+        repo_seeds.mkdir(parents=True)
         marker = repo_seeds / "marker.md"
         marker.write_text("untouched\n", encoding="utf-8")
         _stub_run(monkeypatch, _four_stage_completed(tmp_path))

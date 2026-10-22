@@ -37,7 +37,7 @@ closed id stays citable.
    [Priority section](../BACKLOG.md#priority-mission-grounded) and
    `BUG_BACKLOG.md`, and for each item selected to build, opens the matching
    Jira ticket (assignment, status, priority) and, when the work will run
-   through `plan-tool`, authors the seed under `plan-seeds/` naming that
+   through `plan-tool`, authors the seed under `docs/implementation-plans/plan-seeds/` naming that
    ticket. Opening the ticket is **promotion**: the ticket takes the whole
    entry, and the entry becomes a [promotion stub](#promotion-stubs). An
    engineer picks up the Jira ticket, not the backlog entry
@@ -366,7 +366,7 @@ In order:
    route and the exact command that starts it, so the ticket is
    self-explaining without cross-referencing this file or the `plan` label:
    - `Route: plan — start with \`plan-tool create --from-existing
-     plan-seeds/<name>.md\`, then follow the audit gates in
+     docs/implementation-plans/plan-seeds/<name>.md\`, then follow the audit gates in
      integrations/shared/DIRECTIVES.md (bare-plan audit, \`detail\`,
      detail-grounded audit, \`run\`); see docs/TRACKING.md § "Jira board"
      for review and merge.`
@@ -376,7 +376,7 @@ In order:
    line, once the seed exists, and after `create` runs by a `Plan:` line:
 
    ```text
-   Seed: `plan-seeds/<name>.md` — authored here; `create` archives it under `plan-seeds/archive/` as `<name>.replaced[.N].md`
+   Seed: `docs/implementation-plans/plan-seeds/<name>.md` — authored here; `create` archives it under `docs/implementation-plans/plan-seeds/archive/` as `<name>.replaced[.N].md`
    Plan: `docs/implementation-plans/<name>.md`
    ```
 
@@ -899,7 +899,7 @@ operations**, the order must live in the artifacts, not in an operator's
 memory:
 
 - **Seed naming carries the order.** Ordered seeds use
-  `plan-seeds/<group>-NN-<slug>.md` — a shared group name plus a zero-padded
+  `docs/implementation-plans/plan-seeds/<group>-NN-<slug>.md` — a shared group name plus a zero-padded
   position (e.g. `quality-bench-01-corpus-and-noise-floor.md`,
   `quality-bench-02-judged-metrics.md`). Prefer the same `<group>-NN-<slug>` as
   the plan slug so manifests, run dirs, and saved reports sort in execution
@@ -1029,10 +1029,10 @@ The short form, for scoping an entry:
 #    Backlog-derived seeds name their source entry (and ticket key, once
 #    promoted) and require the plan to reconcile it — see "Adding a new
 #    entry" above.
-$EDITOR plan-seeds/<slug>.md
+$EDITOR docs/implementation-plans/plan-seeds/<slug>.md
 
 # 2. Author the plan. --iterate is ON by default; do not opt out.
-plan-tool create <slug> -y --from-existing plan-seeds/<slug>.md
+plan-tool create <slug> -y --from-existing docs/implementation-plans/plan-seeds/<slug>.md
 
 # 3. Early design gate, while the plan is still bare.
 plan-tool completeness-audit <slug> --iterate --audit-passes 1 -y

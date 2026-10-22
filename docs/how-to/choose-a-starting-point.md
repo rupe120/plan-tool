@@ -43,7 +43,7 @@ The wizard writes a new registered plan. Continue with
 Use this when one or two sentences describe the change.
 
 ```bash
-plan-tool create my-feature --from-existing plan-seeds/my-feature.md
+plan-tool create my-feature --from-existing docs/implementation-plans/plan-seeds/my-feature.md
 ```
 
 `create` turns the reviewed seed into a plan. Operators can also use `--from` for a short throwaway description. Continue with

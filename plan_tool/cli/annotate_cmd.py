@@ -4,7 +4,8 @@
 against the current code and emits two artifacts per source: an additive
 ``<name>.annotated.md`` (the original verbatim plus per-section
 IMPLEMENTED / PARTIAL / NOT-IMPLEMENTED status blocks) and a compact
-``<name>.seed.md`` carryover brief for ``create --from-existing``. It
+``<name>.seed.md`` carryover brief in the default seed directory for
+``create --from-existing``. It
 continues past per-file failures in batch mode and is read-only over each
 source except the opt-in ``--archive``, which moves the original (and, for an
 ``N-slug.md`` plan, its sibling ``plan-details/<slug>/`` bundle) into
@@ -31,6 +32,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from plan_tool.seed_paths import default_seeds_dir
 from plan_tool.annotate import (
     AnnotateError,
     AnnotateInvoker,
@@ -90,8 +92,8 @@ def cmd_annotate(
 
     Resolves the Claude seam first (``invoker`` override → the real
     ``shell_annotate_invoker``), runs one classification pass, renders the
-    additive report + the carryover seed, and writes both beside the source
-    (or under ``--output-dir`` / at explicit ``--report`` / ``--seed`` paths).
+    additive report beside the source and the carryover seed in the default
+    seed directory, preserving explicit output destinations.
     ``--archive`` moves the original with a report-pointing notice.
 
     Returns 2 (no artifact written) when ``--iterate`` is requested, 1 on a
@@ -120,7 +122,7 @@ def cmd_annotate(
     if len(sources) > 1 and (args.report is not None or args.seed is not None):
         error("--report/--seed can only be used with a single annotate source")
         return 2
-    output_errors = _find_duplicate_annotate_outputs(args, sources)
+    output_errors = _find_duplicate_annotate_outputs(args, sources, repo_root=ctx.repo_root)
     if output_errors:
         for message in output_errors:
             error(message)
@@ -201,7 +203,22 @@ def _annotate_one(
 ) -> AnnotateBatchResult:
     """Classify one source and write its report/seed artifacts."""
     resolved_source = source_path.resolve()
-    paths = _derive_annotate_paths(args, source_path=resolved_source)
+    paths = _derive_annotate_paths(args, source_path=resolved_source, repo_root=repo_root)
+
+    default_seed = (
+        args.seed is None and args.output_dir is None
+        and getattr(args, "seed_dir", None) is None
+    )
+    if default_seed and (paths.seed.exists() or paths.seed.is_symlink()):
+        message = (
+            f"default seed already exists: {_short_path(paths.seed, repo_root)}; "
+            "choose a different --seed path; explicitly passing the existing path permits replacement"
+        )
+        error(message)
+        return AnnotateBatchResult(
+            source_path=resolved_source, report_path=paths.report,
+            seed_path=paths.seed, annotation=None, error_message=message,
+        )
 
     try:
         reject_unmatched_annotation_fence(
@@ -246,7 +263,11 @@ def _annotate_one(
     for path, text in ((paths.report, report_md), (paths.seed, seed_md)):
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(text, encoding="utf-8")
+            if path == paths.seed and default_seed:
+                with path.open("x", encoding="utf-8") as stream:
+                    stream.write(text)
+            else:
+                path.write_text(text, encoding="utf-8")
         except OSError as exc:
             message = f"could not write {_short_path(path, repo_root)}: {exc}"
             error(message)
@@ -296,12 +317,13 @@ def _annotate_one(
 
 
 def _derive_annotate_paths(
-    args: argparse.Namespace, *, source_path: Path
+    args: argparse.Namespace, *, source_path: Path, repo_root: Path
 ) -> AnnotatePaths:
     """Derive report/seed paths for one source file."""
     output_dir = args.output_dir if args.output_dir is not None else source_path.parent
     report_dir = getattr(args, "report_dir", None) or output_dir
-    seed_dir = getattr(args, "seed_dir", None) or output_dir
+    seed_dir = (getattr(args, "seed_dir", None) or args.output_dir
+                or default_seeds_dir(repo_root))
     report_path = (
         args.report.resolve()
         if args.report is not None
@@ -316,13 +338,13 @@ def _derive_annotate_paths(
 
 
 def _find_duplicate_annotate_outputs(
-    args: argparse.Namespace, sources: list[Path]
+    args: argparse.Namespace, sources: list[Path], *, repo_root: Path
 ) -> list[str]:
     """Return duplicate derived report/seed paths that would overwrite output."""
     seen: dict[Path, Path] = {}
     errors: list[str] = []
     for source in sources:
-        paths = _derive_annotate_paths(args, source_path=source.resolve())
+        paths = _derive_annotate_paths(args, source_path=source.resolve(), repo_root=repo_root)
         for path in (paths.report, paths.seed):
             resolved = path.resolve()
             if resolved in seen:
@@ -444,7 +466,8 @@ def register(subparsers) -> dict[str, Handler]:
             "judge an existing plan/notes file against the current code and "
             "emit two artifacts — an additive `<name>.annotated.md` (verbatim "
             "original + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED status) "
-            "and a carryover `<name>.seed.md` for `create --from-existing`; "
+            "and a carryover seed in docs/implementation-plans/plan-seeds/ "
+            "for `create --from-existing`; "
             "read-only except the opt-in `--archive`."
         ),
     )
@@ -465,7 +488,7 @@ def register(subparsers) -> dict[str, Handler]:
         dest="output_dir",
         help=(
             "directory for the derived <name>.annotated.md / <name>.seed.md "
-            "(default: beside the source file)"
+            "(default: report beside source; seed in docs/implementation-plans/plan-seeds)"
         ),
     )
     p.add_argument(
@@ -497,7 +520,7 @@ def register(subparsers) -> dict[str, Handler]:
         dest="seed_dir",
         help=(
             "directory for derived <name>.seed.md carryover files "
-            "(default: --output-dir or beside each source file)"
+            "(default: --output-dir or docs/implementation-plans/plan-seeds)"
         ),
     )
     p.add_argument(

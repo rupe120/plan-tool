@@ -8619,23 +8619,22 @@ separate)**
   defect in that output.
 - **Origin:** 2026-07-29, first real scope-out exercise (jira-grade-01).
 
-**#184 — `scope-out`/`reground` write seeds to a hardcoded `plan-seeds/` that can miss the repo's actual seed directory**
+**#184 — Configure the repository seed directory**
 
-- **What:** `plan_tool/scope_out.py` and `plan_tool/reground.py` both write
-  forward-seeds to `repo_root / "plan-seeds"`, hardcoded. This repo itself has
-  **two** seed directories — `plan-seeds/` (where the tools write) and
-  `docs/implementation-plans/plan-seeds/` (which the documented per-repo layout
-  names, and which real entries live in) — so a consuming repo following the
-  documented convention gets carved seeds silently written to a directory it
-  does not look at.
+- **What:** seed writers share the default
+  `docs/implementation-plans/plan-seeds/`; existing root-level seeds and recorded
+  roadmap publication layouts remain in place. A consuming repository can still
+  need a different project-owned seed destination. This entry owns project-level
+  configuration, not the shipped nested-default choice.
 - **Why it matters:** the seed is the carve's whole output; writing it where
   the operator's convention does not look is a quiet way to lose the carved
   scope. The tool already has layered config (`project_config.py`) for exactly
   this kind of per-repo path decision.
 - **Sketch:** resolve the seeds directory the same way other per-repo paths
   resolve — a `seeds_dir` key in `.plan-tool/config.json` (project) falling
-  back to the current `plan-seeds/` default — and use it from both writers
-  (`scope_out.py`, `reground.py`) plus anything else that derives seed paths.
+  back to the `docs/implementation-plans/plan-seeds/` default — and use it from every default seed writer, preserving explicit
+  per-command overrides
+  and existing roadmap publication destinations.
   Print the resolved path in the success line (already done) so the operator
   sees where it went either way.
 - **Scope contract:**
@@ -8651,7 +8650,7 @@ separate)**
     set.
   - **Allowed reorganization:** extracting a shared `resolve_seeds_dir` helper.
   - **Verification:** with the key set, both writers land seeds there; without
-    it, byte-for-byte today's paths.
+    it, retain the nested default and existing publication destinations.
   - **Stop / defer:** if config layering questions grow (env override? user
     level?), ship project-level only and note the rest here.
 - **Dependencies:** none.
@@ -13570,6 +13569,30 @@ plan-tool reconcile-code roadmap-stack-layer --all
 - **Arc assignment:** `backlog-arc-roadmap`, roadmap-to-plan subroute.
 - **Seed:** none until #492 establishes the distinct need and representation.
 - **Origin:** Integration roadmap-to-plan pilot, 2026-10-15.
+
+**#516 — Decide which seed files directory-wide annotate includes**
+
+- **What:** directory input to `annotate` recursively includes Markdown beneath
+  seed directories, except `.seed.md` and `archive/` files. The nested seed
+  directory already contains existing briefs; new default outputs add roadmap,
+  scope-out and reground briefs plus an explanatory README to that traversal.
+- **Outcome:** a documented owner decision defines whether those files belong
+  in directory-wide annotation, with tests for the selected behavior.
+- **In scope:** annotate directory expansion and its input-selection docs.
+- **Out of scope / Non-goals:** seed migration, default placement, publication
+  ownership and changing explicitly supplied file-path inputs.
+- **Allowed behavior changes:** only the directory-selection rule the owner
+  selects; do not silently classify this as a new default-placement regression.
+- **Allowed reorganization:** none.
+- **Verification:** directory fixtures distinguish plans, briefs, README,
+  generated `.seed.md`, archives and explicit file selection.
+- **Stop / defer:** settle inclusion policy before changing filters; file other
+  output or classification changes separately.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** seed-default review 3, 2026-10-22; advisory about a pre-existing
+  recursive traversal, not evidence of data loss or a failed publication gate.
+
+---
 
 ## Public onboarding and release candidates
 

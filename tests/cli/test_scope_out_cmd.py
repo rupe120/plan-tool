@@ -82,7 +82,7 @@ def _scope_out_argv(tmp_path: Path, manifest: Path, *rest: str) -> list[str]:
 
 
 def _seed_files(tmp_path: Path) -> list[Path]:
-    d = tmp_path / "plan-seeds"
+    d = tmp_path / "docs" / "implementation-plans" / "plan-seeds"
     return sorted(d.glob("*.md")) if d.is_dir() else []
 
 

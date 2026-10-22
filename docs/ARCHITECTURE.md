@@ -470,3 +470,11 @@ A failing stage gate retries the stage with its violations; an exhausted stage s
 ## CLI reference generation
 
 **CLI reference generation (`cli_reference.py`).** A leaf doc-generation module backing `docs/cli/`: it imports the assembled parser (`plan_tool.cli.build_parser`) and walks argparse's own introspection surface to render one Markdown file per subcommand plus an index, so the reference set can never drift from the actual CLI surface — the argparse parser is the single source of truth for flags, defaults, choices, and help text. Generated, not directly edited; regenerate with `python -m plan_tool.cli_reference --write`, drift-guarded by `tests/cli/test_cli_reference.py`.
+
+
+### Seed output paths
+
+`seed_paths.py` is a stdlib-only leaf shared by seed writers. New default seeds
+use `docs/implementation-plans/plan-seeds/`. Existing roadmap publications use
+their recorded root/nested layout rather than directory-existence guessing.
+Explicit annotate destinations remain authoritative. No file migration runs.

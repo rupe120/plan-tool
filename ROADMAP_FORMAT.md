@@ -619,13 +619,13 @@ surfaced by `create` or `detail` (deliberately not built, decided 2026-10-08:
 recognizing that a design contradicts a stack is a semantic judgment the tool
 cannot observe; the plan audit is the contradiction check, and it is advisory).
 
-**After `--apply`** — promoted copies under `plan-seeds/` drop the provenance
+**After `--apply`** — new promoted copies under `docs/implementation-plans/plan-seeds/` drop the provenance
 block and carry a machine-readable HTML comment that links the copy (and any
 later archive generation) to its roadmap lifecycle state; see
 `plan_tool/cli/roadmap_cmd.py` for apply semantics. The promoted copy carries
 the `## Stack` section, and a rematerialization rewrites it there too.
 Refresh and `--accept-seed` rewrite a promoted copy only for a seed whose state
-records `published: true`; an existing `plan-seeds/<plan_id>.md` alone is not
+records `published: true`; an existing file at either publication destination alone is not
 proof the tool wrote it, so an unpublished seed's file is left untouched and
 `--apply` refuses it as a collision.
 
@@ -685,7 +685,7 @@ unchanged, reprocesses each current plan row against the current codebase, and
 writes `<roadmap>/seed-refresh-report.md` with a unified diff from the last
 live or archived generation. A draft consumed by `create` or moved into its
 `plan-seed-drafts/archive/` directory is recreated at its original live path;
-a promoted `plan-seeds/` copy is refreshed or recreated too, but only for a seed
+a promoted copy at its recorded destination is refreshed or recreated too, but only for a seed
 the state records as published. `plan-tool roadmap
 <slug> --accept-seed PLAN_ID` records a reviewed `digest-mismatched` hand edit's
 live digest as `current` without calling the backend or regenerating the draft.
@@ -2527,3 +2527,13 @@ writes the next `awaiting-review` response.
   no schema or gate change, and it reads the same parsed artifacts — a row
   this doc's schema admits renders, and one it does not never reaches the
   page.
+
+
+### Published seed placement
+
+New promotions use `docs/implementation-plans/plan-seeds/` and record
+`publication_layout: nested` in their seed-state entry. The optional field
+accepts `root` or `nested`; absence means the legacy root `plan-seeds/` path.
+Acceptance, materialization and refresh preserve the recorded layout, including
+when the promoted file is archived or temporarily absent. Existing seed files
+are never moved, and unrelated files never establish publication ownership.

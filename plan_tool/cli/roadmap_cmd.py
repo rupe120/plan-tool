@@ -8,7 +8,7 @@ continues from them; a roadmap with an accepted head is refused.
 
 ``plan-tool roadmap <slug> --apply [-y]`` is a separate apply-only mode: it
 reads the accepted version's roadmap artifact, promotes slug-directory draft seeds into
-``plan-seeds/`` after opt-in confirm (or ``-y``), and prints create handoff
+the default seed directory after opt-in confirm (or ``-y``), and prints create handoff
 lines against the promoted paths. It never runs the stage table or invokes the
 backend.
 
@@ -25,7 +25,7 @@ processes every recoverable plan; with an id it processes only that plan.
 ``plan-tool roadmap <slug> --accept-seed PLAN_ID`` accepts one validated,
 directly edited digest-mismatched draft without invoking the backend. It preserves
 the draft bytes and re-syncs the promoted copy only when the seed state records
-it published; an unpublished seed's existing `plan-seeds/` file is left untouched.
+it published; an unpublished seed's existing destination file is left untouched.
 
 ``plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html}
 [--mode {current,review}] [--id ROW_ID] [--output PATH]`` is a third inspection
@@ -86,6 +86,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Literal, Optional
 
+from plan_tool.seed_paths import default_seeds_dir
 from plan_tool.cli.console import _short_path, render_roadmap_view
 from plan_tool.cli.context import _resolve_cmd_repo_root
 from plan_tool.cli.parser import Handler
@@ -2067,7 +2068,7 @@ def _render_apply_result(result: RoadmapApplyResult, *, slug: str, repo_root: Pa
         )
         warn(
             f"{stale.plan_id}: published seed's draft is {stale.state}; its "
-            f"plan-seeds/ copy may be out of date (see {remedy})"
+            f"published seed copy may be out of date (see {remedy})"
         )
 
 
@@ -2076,7 +2077,7 @@ def _render_apply_outcome(result: RoadmapApplyResult, *, slug: str, repo_root: P
         info(f"roadmap {slug}: no unpublished seed to promote.")
         return
     if result.outcome == APPLY_OUTCOME_APPLIED:
-        success(f"roadmap {slug}: promoted {len(result.promotions)} seed(s) to plan-seeds/")
+        success(f"roadmap {slug}: promoted {len(result.promotions)} seed(s) to docs/implementation-plans/plan-seeds/")
         for plan_id, _source, dest in result.promotions:
             detail(f"  {plan_id}: {_short_path(dest, repo_root)}")
         for line in _promoted_create_handoff_lines(result, repo_root=repo_root):
@@ -2124,7 +2125,7 @@ def _render_accept_result(result: RoadmapSeedAcceptResult, *, slug: str, repo_ro
                 f"{_short_path(result.promoted_target, repo_root)}"
             )
         else:
-            existing = resolve_plan_seed_dest(repo_root / "plan-seeds", result.plan_id)
+            existing = resolve_plan_seed_dest(default_seeds_dir(repo_root), result.plan_id)
             if existing.exists():
                 detail(
                     f"  left untouched: {_short_path(existing, repo_root)} "
@@ -2430,7 +2431,7 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "skip the interactive promote confirmation (relevant only with "
             "--apply): the deliberate second opt-in that may copy seeds into "
-            "plan-seeds/ without a TTY. Useful for scripted/unattended runs."
+            "docs/implementation-plans/plan-seeds/ without a TTY. Useful for scripted/unattended runs."
         ),
     )
     p = subparsers.add_parser(
@@ -2438,7 +2439,7 @@ def register(subparsers) -> dict[str, Handler]:
         help=(
             "stage a concept brief into gated architecture artifacts under "
             "docs/implementation-plans/roadmaps/<slug>/ (one rung above "
-            "create); use --apply to promote draft seeds into plan-seeds/ or "
+            "create); use --apply to promote draft seeds into docs/implementation-plans/plan-seeds/ or "
             "--refresh-seeds to regenerate invalidated seeds"
         ),
         parents=[yes_parent],
@@ -2475,7 +2476,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=False,
         help=(
             "apply-only mode: read the accepted version's roadmap and promote draft "
-            "seeds into plan-seeds/ after confirm (or -y). Does not run "
+            "seeds into docs/implementation-plans/plan-seeds/ after confirm (or -y). Does not run "
             "stages or invoke the backend."
         ),
     )
