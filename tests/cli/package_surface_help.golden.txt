@@ -62,7 +62,7 @@ Audit — check the plan and code agree, or judge the plan's design; never advan
     plan-tool split-criteria [<plan>]        Show the split-criteria legend, or (with a plan) why that plan is shaped the way it is; no claude; criterion results exit 0.
 
 Execution — drive code edits by running plan steps.
-  plan-tool run <name> [--iterate]         Execute a step via a fresh claude subprocess; default --mode advances plan state; --iterate loops reconcile.
+  plan-tool run <name>                     Execute a step via a fresh claude subprocess; default --mode advances plan state; no iteration loop.
   plan-tool run <name> --all [--max-steps N]  Sweep every runnable step in one invocation; halts on first failure; implies -y.
 
 Integration — emit artifacts for external systems.

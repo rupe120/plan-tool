@@ -1314,16 +1314,11 @@ def cmd_run(args: argparse.Namespace) -> int:
             error(str(exc))
             rc = 2
             return rc
-        # Soft check: ``--iterate`` has no effect on ``run`` — the
-        # convergence loop lives on ``plan-tool detail <name>
-        # --reconcile``. Emit a one-line warning instead of erroring so
-        # scripts that uniformly tack ``--iterate`` onto every ``run``
-        # don't break.
+        # Keep shared script flags compatible without promising a run loop.
         if getattr(args, "iterate", False):
             warn(
-                f"--iterate only applies to `plan-tool detail "
-                f"<name> --reconcile` (got --mode {args.mode}); the "
-                f"iteration loop will not run."
+                f"--iterate has no effect on `plan-tool run` (mode={args.mode}); "
+                "remove it. Reconciliation does not support --iterate."
             )
 
         # Capture the step title for a ``--commit`` subject BEFORE run_step's
@@ -2161,9 +2156,9 @@ def register(subparsers) -> dict[str, Handler]:
         action=argparse.BooleanOptionalAction,
         default=False,
         help=(
-            "no effect on `run` -- the reconcile re-audit loop lives on "
-            "`plan-tool detail <name> --reconcile`. Accepted (with a "
-            "warning) so scripts that uniformly pass --iterate don't break."
+            "no effect on run; retained for script compatibility. "
+            "--reconcile rejects --iterate. Use separate reconcile-code "
+            "invocations after reviewing and committing corrections."
         ),
     )
     # ``--reconcile`` switches ``run`` into a code-audit path (renders

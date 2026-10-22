@@ -13804,14 +13804,13 @@ class TestSubcommandStyleOutput:
             ]
         )
 
-    # Legacy body of the non-reconcile iterate warning (cli.py:4169).
+    # The warning must not recommend a rejected reconciliation route.
     _ITERATE_WARN_BODY = (
-        "--iterate only applies to `plan-tool detail "
-        "<name> --reconcile` (got --mode check); the "
-        "iteration loop will not run."
+        "--iterate has no effect on `plan-tool run` (mode=check); "
+        "remove it. Reconciliation does not support --iterate."
     )
 
-    def test_run_iterate_warning_plain_matches_legacy(
+    def test_run_iterate_warning_states_no_effect_without_rejected_route(
         self,
         tmp_path: Path,
         monkeypatch: pytest.MonkeyPatch,
