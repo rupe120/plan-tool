@@ -83,8 +83,8 @@ gates in DIRECTIVES.md; review and commit judged corrections between stages.
 
 ```bash
 plan-tool create <slug> --from-existing /tmp/seed.md --output-dir docs/implementation-plans -y < /dev/null
-plan-tool detail <slug> --commit -y < /dev/null
-plan-tool reconcile-plan <slug> -y < /dev/null # pre-execution only; -y applies findings
+plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first
+plan-tool reconcile-plan <slug> -y < /dev/null # pre-execution only; -y auto-applies every recommendation without judgment
 ```
 
 **Critical:** never pipe an infinite empty-line source (`yes "" |`) — the
@@ -111,7 +111,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "review the code I just wrote for X" | `plan-tool run X --mode check` |
 | "add tests / docs / security review for the current step" | `plan-tool run X --mode test\|document\|security` |
 | "audit every done step in plan X" | `plan-tool verify-all --rollup X` |
-| "did step N actually get implemented?" | `plan-tool run X --step N --mode check` — read-only inspection; report findings without changing the plan or code. |
+| "did step N actually get implemented?" | `plan-tool run X --step N --mode check` — request report-only correctness and implementation-mismatch review. Judge the evidence against the step; a clean report alone does not prove delivery. |
 | "make the code match the plan" | `plan-tool reconcile-code X --step N` |
 | "make the plan match the code" | Before execution only: `plan-tool detail X --reconcile --step N`. After execution, preserve plan authority; judge a code shortfall or correct a false plan claim through a session-directed edit. |
 | "make the plan match the code for every remaining step" | Before execution only: `plan-tool detail X --reconcile --all` (skips done steps). Do not use plan-mutating reconciliation on executed work. |
@@ -119,7 +119,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "reconcile printed `[REDIRECT]` — is it broken?" | Read the saved redirect and judge its root cause. Before execution, plan-side reconciliation may be appropriate. After execution, preserve the plan’s authority: correct a false plan claim through a session-directed edit or surface a scope decision; do not automatically invoke `detail --reconcile` or `reconcile-plan`. See DIRECTIVES.md’s reconciliation directionality rule. |
 | "show me the prompt without running it" | add `--dry-run` |
 | "this run feels slow / hung" | `plan-tool runs list --slug X`, then `plan-tool runs show X/<run_id>`; or `cat .plan-tool/runs/X/in-flight.json` live |
-| "make the plan as complete as possible" | Commit a clean baseline before each stage. Ground and review a seed, then `plan-tool create <slug> --from-existing <seed> --iterate -y < /dev/null` → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (bare) → `plan-tool detail <slug> --commit -y < /dev/null` (one-shot) → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (detail-grounded). Read each report and apply judged conceptual corrections through the session; commit corrections before re-auditing and continue under the canonical convergence rules. Preserve user review/continuation boundaries and stop before implementation. |
+| "make the plan as complete as possible" | Commit a clean baseline before each stage. Ground and review a seed, then `plan-tool create <slug> --from-existing <seed> --iterate -y < /dev/null` → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (bare) → `plan-tool detail <slug> --commit -y < /dev/null # requires a clean tree; commit the plan first` (one-shot) → `plan-tool completeness-audit <slug> --iterate --commit -y < /dev/null` (detail-grounded). Read each report and apply judged conceptual corrections through the session; commit corrections before re-auditing and continue under the canonical convergence rules. Preserve user review/continuation boundaries and stop before implementation. |
 | "I have a big doc — make a plan from it" | `plan-tool create <slug> --from-existing <path>` (a distill first-pass reorganizes the seed; if it spans several independent efforts, create proposes a multi-plan split and writes a `<slug>-split-proposal.md` worksheet instead of a plan) |
 | "I have a project-sized concept, not a single feature" | `plan-tool roadmap <slug> --from-existing <concept.md>` — see DIRECTIVES.md's Roadmap section for artifact layout, resume, and refusal semantics |
 | "reopen a retained roadmap feedback item" | `plan-tool roadmap <slug> --reopen-ledger-feedback ITEM_ID` — see DIRECTIVES.md's Roadmap section |

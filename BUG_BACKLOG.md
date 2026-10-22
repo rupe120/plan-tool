@@ -1033,7 +1033,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
-
 ### The iteration guide recommends an iteration flag that detail reconciliation rejects
 
 - **Files:** `docs/ITERATION.md`, the flag/default table, “On/off by default”

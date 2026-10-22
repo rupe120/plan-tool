@@ -7,7 +7,7 @@
 | Scope | Claude, Codex and Cursor routers; resolved backlog and evidence links |
 | Runtime changes | None |
 | Validation | Eight parent parser checks; 33 affected tests pass; full suite: 14,698 passed, 66 skipped in 63.02s |
-| Review state | Converged: reviews 3 and 4 are independently clean after the headless correction |
+| Review state | Codex reviews 3 and 4 are clean; actual Claude Code review convergence is pending |
 
 ## Property and sites
 
@@ -36,7 +36,7 @@ two demo records linking the removed backlog heading; those links move here.
 | Independent headless examples still resemble an unaudited sequence | **fixed `4c5b20e62`** — all three blocks are explicitly syntax examples, with sequential authoring routed to the staged recipe and canonical gates. |
 
 The original three-issue backlog record is fulfilled and removed. The two
-additional findings have provenance in local commit `c02aa3ff7`; that tracking
+additional findings have provenance in local branch `docs/skill-router-follow-up-findings` at `c02aa3ff7`; that tracking
 commit is not a remaining fix and should not be replayed as pending work after
 this repair. The broader installed-skill portability and policy effort (#508)
 remains separate. A nested sandbox initialization limitation observed during
@@ -60,10 +60,10 @@ the demo is resolved by parent access; it is not claimed as a skill runtime fix.
   17 representative parser cases and the implemented authority boundaries.
 - Review 3, `94e259687..4c5b20e62`: no material finding after the correction;
   independently checks the full identifier/vocabulary class, canonical rules,
-  source and tests, with 12 parser-only probes. Its final response is saved by
-  the outer CLI despite its read-only workspace. The remaining deeper iteration
+  source and tests, with 12 parser-only probes. The remaining deeper iteration
   guide contradiction is tracked in BUG_BACKLOG.md rather than expanded into
-  this router repair. Review 4, `94e259687..49f663dc4`, independently checks all eight changed
+  this router repair.
+- Review 4, `94e259687..49f663dc4`, independently checks all eight changed
   files, 19 parser probes, handlers, source/tests, resolved links and the
   retained full-suite result; it reports no material findings. Saved artifacts
   use `.tmp/skill-router-recipes.review-N.md`; these verdicts retain the
@@ -92,7 +92,29 @@ Post-install byte checks confirm both installed files match the verified source.
 Existing Claude/Cursor installation links are not retargeted. The branch push's
 required full-suite hook also passes.
 
-Two consecutive independent post-correction reviews are clean. The loop closes
-as converged for all five confirmed router instruction defects. The deeper
+Two consecutive independent post-correction Codex reviews are clean. They do not
+constitute the directed Claude Code `/code-review` route; that omission is
+identified on 2026-10-21 and the actual Claude loop follows below. The deeper
 iteration-guide mismatch remains separately tracked. No CLI behavior changes,
 new gates, default-branch pushes or pull-request merge are part of this repair.
+
+
+## Claude Code review pass 1 — 2026-10-21
+
+Scope: `94e259687..ef924797e`. Claude Sonnet 5.5 invokes the actual built-in
+`code-review` Skill with `high` effort in session
+`1b67de09-bf16-47ed-b385-4dc20c19831d`. The original CLI exits zero and writes
+`.tmp/skill-router-recipes.claude-review-1.md`; its stream records the Skill
+invocation. Local diff review only; no publication or code edits.
+
+| Finding | Disposition |
+| --- | --- |
+| F1 medium-low: check mode does not assess implementation | **refuted in part / clarified** — `prompts/check.md` explicitly requests mismatches between the step and code and forbids rewriting. A clean model report cannot prove delivery; the routers now state that limitation instead of promising read-only enforcement. Mutating `reconcile-code` is inappropriate for an inspection request. |
+| F2 medium-low: detail example lacks clean-tree precondition | **fixed** — all three detail syntax lines state the precondition and plan commit. |
+| F3 low: reconcile auto-apply warning loses “every” | **fixed** — all three lines state every recommendation is auto-applied without judgment. |
+| F4 low: local provenance is unreachable on this branch | **clarified** — the local branch is named beside the commit. The finding descriptions and dispositions are retained here without depending on that branch merging. |
+| F5 low: review 4 is embedded in review 3 | **fixed** — separate review bullet; remove incidental CLI narration. |
+| F6 nit: extra backlog separator | **fixed** — normalize heading separators. |
+| F7 nit: long completeness recipe duplicates directives | **declined** — the router must expose both audit gates, commits and user boundaries; its explicit clean-baseline instruction already covers the scenario. No additional workflow is introduced. |
+
+Convergence: pending fresh Claude Code reviews after these corrections.
