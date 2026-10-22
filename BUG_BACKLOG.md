@@ -1053,8 +1053,8 @@ Durable re-open conditions for retired items are recorded in
   one-shot detail; `run --help` exposes `--accept`. Inspection of
   `tests/cli/test_skill_cmd.py` finds installer/artifact coverage, with no
   assertion pinning these incorrect recipes. The similarly named authoring
-  `test_jobs_with_default_iterate_conflicts` covers a different invocation
-  contract and does not establish these prose claims.
+  `test_jobs_with_default_iterate_conflicts` stubs a generator error; it does
+  not assert the parsed iteration default or establish these prose claims.
 - **Fix:** Correct the three quick recipes across all shipped integrations,
   preserving the canonical two audit gates, explicit detail default and
   tool-mediated acceptance. Review installed copies and their refresh
