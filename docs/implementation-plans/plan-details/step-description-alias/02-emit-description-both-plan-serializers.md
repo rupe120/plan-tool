@@ -25,7 +25,7 @@ Both serializers in `plan_tool/parser.py` currently dump the internal model fiel
 
 ## Input
 
-- **Step 1 owns alias acceptance.** Its outcome lets preferred and legacy frontmatter parse into the same `plan_tool/schema.py:Step.title` attribute. Read the landed implementation before choosing the serializer change.
+- **Step 1 owns alias acceptance.** Its outcome lets preferred and legacy frontmatter parse into the same the `title` field on `plan_tool/schema.py:Step` attribute. Read the landed implementation before choosing the serializer change.
 - **Model dumps remain internal data.** Both serializers call `Plan.model_dump(exclude_defaults=True, exclude_none=True)` and validate the resulting mapping with `Plan.model_validate`.
 - **Version stamping remains authoritative.** `plan_tool/parser.py:_stamp_current_format_version` checks writer eligibility and supplies the explicit declaration.
 - **The writer owns current disk content.** `plan_tool/parser.py:write_plan` reads the current body and checks `_FRONTMATTER_PROVENANCE` before replacing frontmatter.

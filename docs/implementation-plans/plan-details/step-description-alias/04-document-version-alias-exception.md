@@ -4,7 +4,7 @@
 
 ## Summary
 
-Update `PLAN_FORMAT.md` to describe preferred step `description`, accepted legacy `title`, and the dual-key rules supplied by step 1. Amend `DATA_CONTRACT.md` with the narrow, owner-approved version-1 exception while retaining the general version policy. Extend `tests/test_data_contract.py` to guard that distinction. Reconcile `BACKLOG.md` #517 with verified shipment status, retaining it while execution remains pending.
+Update `PLAN_FORMAT.md` to describe preferred step `description`, accepted legacy `title`, and the dual-key rules supplied by step 1. Amend `DATA_CONTRACT.md` with the narrow, owner-approved version-1 exception while retaining the general version policy. Update existing `tests/test_data_contract.py` checks where the policy wording changes. Reconcile `BACKLOG.md` #517 with verified shipment status, retaining it while execution remains pending.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ Update `PLAN_FORMAT.md` to describe preferred step `description`, accepted legac
 - **Existing files (edits only):**
   - `PLAN_FORMAT.md` — Update the step schema, field semantics, relevant validation prose, and worked example.
   - `DATA_CONTRACT.md` — Document the specific version-1 exception and its compatibility limits.
-  - `tests/test_data_contract.py` — Add focused guards for the exception and preserve existing version-policy checks.
+  - `tests/test_data_contract.py` — Update existing policy checks as needed and preserve version-policy coverage.
   - `BACKLOG.md` — Reconcile #517 with actual shipment status and any references to its pending work.
 
 ## Implementation
@@ -46,7 +46,7 @@ Update `PLAN_FORMAT.md` to describe preferred step `description`, accepted legac
 
 - **Enumerate affected statements before editing.** Search the declared files for `steps[].title`, `description`, `#517`, and vocabulary about new keys, version bumps, upgrades, and older readers. Review each match in context: plan titles, feature titles, and internal `Step.title` references remain valid.
 
-- **Make preferred authored output clear.** In `PLAN_FORMAT.md` under “Frontmatter schema,” “Field semantics,” and “Example,” use step `description` as the preferred spelling. Retain plan and feature `title`. Explain that legacy step `title` remains accepted and that the internal attribute remains `plan_tool/schema.py:Step.title`.
+- **Make preferred authored output clear.** In `PLAN_FORMAT.md` under “Frontmatter schema,” “Field semantics,” and “Example,” use step `description` as the preferred spelling. Retain plan and feature `title`. Explain that legacy step `title` remains accepted and that the internal attribute remains the `title` field on `plan_tool/schema.py:Step`.
 
 - **Document the complete input boundary.** Describe description-only and title-only acceptance, acceptance of exactly equal valid strings under both keys, and rejection of conflicting or invalid supplied values. Neither spelling may conceal an invalid value under the other. Distinguish these two field names from repeated occurrences of the same YAML key; this step adds no duplicate-YAML-key policy.
 
@@ -62,12 +62,9 @@ Update `PLAN_FORMAT.md` to describe preferred step `description`, accepted legac
 
 ## Tests
 
-The following names are proposed additions in `tests/test_data_contract.py`; existing names identify checks to retain.
+Update existing policy checks rather than adding tests that only mirror new prose. Behavioral alias, legacy round-trip, strict-validation and older-reader fixtures belong to steps 1 and 2.
 
-- `test_step_description_alias_exception_is_documented_as_version_one_only` — The plan-version section names the specific alias, version 1, and dated owner approval.
-- `test_step_description_alias_exception_documents_older_reader_rejection` — The exception explicitly describes rejection by older installations without claiming universal version-1 compatibility.
-- `test_step_description_alias_exception_preserves_strict_validation_and_general_break_rule` — The documented exception remains specific while unrelated new keys and unknown-field validation retain the general policy.
-- `test_plan_format_version_class_rules_documented` — Preserve the existing assertions for strict models, writer eligibility, support, retirement, and upgrade obligations.
+- `test_plan_format_version_class_rules_documented` — Preserve the general strict-model, writer-eligibility, support, retirement and upgrade assertions while allowing the named owner-approved exception in the documented break rule.
 - `test_plan_format_version_binds_live_constant` — Preserve the live registry-to-code binding.
 - `test_plan_format_version_documented_with_live_value` — Preserve agreement between the documented current version and the registered constant.
 
