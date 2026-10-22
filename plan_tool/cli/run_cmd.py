@@ -1973,20 +1973,7 @@ def register(subparsers) -> dict[str, Handler]:
 
     yes_parent = make_yes_parent()
 
-    # Shared iteration-loop flags inherited by the
-    # create/completeness/detail/run subparsers. The loops themselves
-    # live in steps 2–4 of the iterative-correctness plan; this parent
-    # is just the CLI surface.
-    #
-    # NOTE: ``--iterate`` / ``--no-iterate`` is *intentionally* NOT
-    # added here. Argparse's ``parents=`` mechanism copies actions by
-    # reference, and ``set_defaults`` mutates the shared action's
-    # ``default`` attribute -- so a single ``parent`` entry can't
-    # express "default ON for create, default OFF for the others."
-    # Each subparser adds its own ``--iterate`` action below with the
-    # subcommand-appropriate default. The remaining iteration flags
-    # (--max-iterations, --iteration-budget, etc.) share
-    # the same defaults across subcommands and stay here.
+    # Retain loop options for shared scripts; run never consumes a loop budget.
     iterate_parent = argparse.ArgumentParser(add_help=False)
     iterate_parent.add_argument(
         "--max-iterations",
@@ -1994,11 +1981,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_MAX_ITERATIONS,
         dest="max_iterations",
         metavar="N",
-        help=(
-            f"cap the convergence loop at N iterations even if findings "
-            f"keep changing (default: {DEFAULT_MAX_ITERATIONS}). Ignored "
-            f"when --no-iterate is set."
-        ),
+        help="compatibility iteration count; no run loop executes. Existing value validation still applies.",
     )
     iterate_parent.add_argument(
         "--iteration-budget",
@@ -2006,15 +1989,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_ITERATION_BUDGET_SECONDS,
         dest="iteration_budget",
         metavar="SECONDS",
-        help=(
-            f"debounced no-progress deadline in seconds: stop the "
-            f"convergence loop only once SECONDS pass with no forward "
-            f"progress at all (default: {DEFAULT_ITERATION_BUDGET_SECONDS}). "
-            f"Resets on every round and every apply_finding call, so one "
-            f"long claude call — even 15-20+ minutes — never trips it on "
-            f"its own; see --time-budget for a true total-elapsed cap. "
-            f"Ignored when --no-iterate is set."
-        ),
+        help="compatibility progress budget; run has no iteration deadline. Existing value validation still applies.",
     )
     iterate_parent.add_argument(
         "--time-budget",
@@ -2022,16 +1997,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=None,
         dest="time_budget",
         metavar="SECONDS",
-        help=(
-            "cooperative wall-clock cap (#123): stop the convergence loop "
-            "cleanly at the next round boundary once SECONDS of total elapsed "
-            "time pass — even while still converging — so a long op lands "
-            "before an external execution ceiling instead of being killed "
-            "mid-call. Exits 0 with a resume hint. Unlike --iteration-budget "
-            "(a no-progress stall deadline), this is a hard total-elapsed cap. "
-            "Falls back to PLAN_TOOL_TIME_BUDGET; default off. Ignored under "
-            "--no-iterate."
-        ),
+        help="compatibility loop time budget; this option does not limit run execution time.",
     )
     iterate_parent.add_argument(
         "--max-stall-rounds",
@@ -2039,111 +2005,41 @@ def register(subparsers) -> dict[str, Handler]:
         default=DEFAULT_MAX_STALL_ROUNDS,
         dest="max_stall_rounds",
         metavar="N",
-        help=(
-            f"stop the convergence loop after N consecutive rounds whose "
-            f"open-finding count fails to shrink (default: "
-            f"{DEFAULT_MAX_STALL_ROUNDS}). This is the ID-agnostic "
-            f"backstop for a subjective claude audit that re-phrases the "
-            f"same findings each round (fresh ids defeat the marginal / "
-            f"converged checks). Pass 0 to disable. Ignored when "
-            f"--no-iterate is set."
-        ),
+        help="compatibility stall count; run has no iteration stall detector. Existing value validation still applies.",
     )
     iterate_parent.add_argument(
         "--allow-drift",
         action="store_true",
         dest="allow_drift",
-        help=(
-            "opt back into the legacy 'warn but proceed' behavior when a "
-            "watched file's content changes mid-iteration. Default: the "
-            "loop checks drift BEFORE each apply (halts without spending "
-            "claude tokens if drift detected) AND AFTER (keeps the "
-            "apply's edits but halts subsequent applies if drift "
-            "happened during the apply call). Token-preserving by "
-            "design -- no revert, just halt + flag for `git diff` "
-            "review (task #30). Pass --allow-drift only when you're "
-            "sure the drift is expected (e.g. an automated formatter "
-            "touching files in step.files during iteration)."
-        ),
+        help="compatibility flag; run does not use an iteration live-edit drift guard.",
     )
     iterate_parent.add_argument(
         "--no-auto-reconcile-on-drift",
         action="store_false",
         dest="auto_reconcile_on_drift",
         default=True,
-        help=(
-            "skip the auto-reconcile pass that fires when drift halts "
-            "the iteration loop. Default: when drift is detected, "
-            "plan-tool runs `reconcile` against the step(s) that own "
-            "the drifted file(s), saves the findings, and prints a "
-            "structured summary inline with the halt (Lesson 13: "
-            "audit beats observe). Pass this flag to suppress that "
-            "extra claude call -- useful in CI runs that prefer a "
-            "minimal stderr footprint, or when you'll inspect drift "
-            "manually via `git diff` and `plan-tool run --mode "
-            "reconcile`."
-        ),
+        help="compatibility flag; run has no iteration-triggered auto-reconcile pass.",
     )
     iterate_parent.add_argument(
         "--no-triage",
         action="store_false",
         dest="triage",
         default=True,
-        help=(
-            "skip the impact-weighted triage gate on findings. "
-            "Default: when a finding carries impact/complexity tags "
-            "(the plan-audit prompt's trailing "
-            "``(impact=…, complexity=…)`` on conceptual findings; the "
-            "reconcile prompt's ``Impact:`` / ``Complexity:`` fields), "
-            "the iteration loop skips applies whose complexity "
-            "strictly exceeds their impact (low+medium, low+high, "
-            "medium+high) -- those findings are reported on stderr "
-            "and dropped from the open-set so convergence "
-            "short-circuits when only triaged findings remain. "
-            "Findings without triage tags (deterministic checks, "
-            "untagged output) default to apply. Pass this flag to "
-            "force-apply every finding regardless of triage tags -- "
-            "useful for completeness sweeps where you want to land "
-            "every applicable edit."
-        ),
+        help="compatibility flag; run has no iterative finding-apply triage.",
     )
     iterate_parent.add_argument(
         "--include-info",
         action="store_true",
         dest="include_info",
         default=False,
-        help=(
-            "apply info-severity findings too. Default: info findings "
-            "are advisory (a concept too vague to audit, a heuristic "
-            "hit, a detail-only path) and are excluded from the apply "
-            "loop -- they're still reported in the deferred summary, "
-            "just not auto-applied. Pass this to spend claude tokens "
-            "applying them as well."
-        ),
+        help="compatibility flag; run does not auto-apply review findings.",
     )
     iterate_parent.add_argument(
         "--no-collision-sidecar",
         action="store_false",
         dest="collision_sidecar",
         default=True,
-        help=(
-            "skip the change-collision sidecar pause when drift fires "
-            "during apply_finding. Default: when drift is detected "
-            "post-apply, plan-tool saves claude's edits to "
-            "`<stem>-change-collision<ext>` next to each modified "
-            "original, restores originals to pre-apply state, and "
-            "pauses interactively for the user to merge with their "
-            "preferred tool (vimdiff, `code --diff`, meld, etc.). "
-            "Pressing Enter at the prompt continues the iteration "
-            "loop against the merged state; Ctrl-D / typing 'abort' "
-            "halts as today. Pass this flag to revert to the legacy "
-            "'keep claude's edits on disk, review via git diff' "
-            "behavior -- useful when scripting or piping to a CI "
-            "consumer that doesn't expect sidecar files. Headless "
-            "runs (-y or non-TTY) auto-skip the pause and fall "
-            "through to halt regardless of this flag, since there's "
-            "no human to merge."
-        ),
+        help="compatibility flag; run has no iteration collision-sidecar pause.",
     )
 
     p_run = sub.add_parser(

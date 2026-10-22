@@ -1309,13 +1309,8 @@ def _run_detail_reconcile_path(
     silently treated as off (matches the detail subparser's behaviour
     of always persisting + walking).
 
-    ``budget`` controls the post-walk iteration loop. The default
-    ``IterativeBudget(enabled=False)`` matches :func:`_cmd_detail_-
-    reconcile`'s historical behaviour (no iteration after a detail-side
-    audit). The deprecation alias in :func:`cmd_run` passes
-    ``_build_run_budget(args)`` so legacy ``plan-tool run --mode
-    reconcile --iterate`` invocations keep iterating during the
-    transition window.
+    ``budget`` controls the retained internal post-walk helper. Current CLI
+    reconciliation routes leave it disabled; they expose no iteration loop.
     """
     if args.step is None:
         error(
