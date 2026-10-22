@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+from pathlib import Path
 
 import pytest
-from pathlib import Path
 
 from plan_tool.cli import scope_review_cmd
 from plan_tool.concept_bootstrap import ConceptConflict, bootstrap_concepts

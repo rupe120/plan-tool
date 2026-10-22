@@ -278,6 +278,14 @@ class TestSplitBodySections:
             "b": "```markdown\n## Example\n```\n\nend".replace("\n", newline),
         }
 
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+    @pytest.mark.parametrize("boundary", ["#", "##", "#\u00a0Top"])
+    def test_raw_newline_support_retains_existing_empty_and_whitespace_boundaries(
+        self, newline, boundary,
+    ):
+        body = newline.join(["## A", "x", boundary, "y", "## B", "z", ""])
+        assert split_body_sections(body) == {"a": "x", "b": "z"}
+
     def test_trailing_punctuation_normalized(self) -> None:
         body = "## Risks:\n\ncolon\n\n## RISKS.\n\nperiod\n"
         sections = split_body_sections(body)

@@ -243,7 +243,7 @@ def parse_body_sections(
         body = _excise_fenced_code(body)
         ignore_fenced_code = True
 
-    higher_re = re.compile(r"(?:^|(?<=[\r\n]))(?:#|##)[ \t]+")
+    higher_re = re.compile(r"(?:^|(?<=[\r\n]))(?:#|##)\s+")
     spans = _fenced_code_spans(body).spans if ignore_fenced_code else ()
     h2_matches = _real_h2_matches(
         body, ignore_fenced_code=ignore_fenced_code, spans=spans
