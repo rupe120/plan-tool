@@ -1033,6 +1033,39 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
+### Installed skill quick recipes contradict the required audit order, detail default and failed-step recovery
+
+- **Files:** `integrations/claude/SKILL.md`, `integrations/codex/SKILL.md`,
+  `integrations/cursor/SKILL.md`; canonical counterparts in
+  `integrations/shared/DIRECTIVES.md` under Gate 1, iterate defaults and
+  “When a `run` step's own tests fail.”
+- **Symptom:** All three shipped routers tell the assistant to go from create
+  directly to detail in the “make the plan as complete as possible” row,
+  omitting the required bare-plan audit. Their subcommand summary says iteration
+  defaults on for both create and detail, although detail defaults off. Their
+  failed-step recipe says to mark a step `done` after fixing tests, whereas the
+  canonical recovery requires `run --accept --commit` and explicitly forbids
+  hand-editing the status. These are verified instruction contradictions;
+  the current demo run follows the canonical directives and does not reproduce
+  a skipped gate or incorrectly accepted step.
+- **Evidence:** Identifier and vocabulary searches find all three claims in
+  each tracked router. The live `detail --help` and shared directives confirm
+  one-shot detail; `run --help` exposes `--accept`. Inspection of
+  `tests/cli/test_skill_cmd.py` finds installer/artifact coverage, with no
+  assertion pinning these incorrect recipes. The similarly named authoring
+  `test_jobs_with_default_iterate_conflicts` covers a different invocation
+  contract and does not establish these prose claims.
+- **Fix:** Correct the three quick recipes across all shipped integrations,
+  preserving the canonical two audit gates, explicit detail default and
+  tool-mediated acceptance. Review installed copies and their refresh
+  instructions; keep runtime behavior unchanged. No fix is applied here.
+- **Approach:** direct; documentation correctness review plus existing installer
+  checks, without adding a prose-quality checker or new workflow gates.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** owner-requested skill monitoring during the
+  `skill-led-demo-examples` execution, 2026-10-21/22. Related #508 concerns
+  portable policy placement; this item concerns contradictory shipped recipes.
+
 ## ROADMAP
 
 Owner-tracked. The `roadmap` verb is experimental work the
