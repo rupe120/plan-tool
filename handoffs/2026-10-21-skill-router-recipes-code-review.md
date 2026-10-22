@@ -3,10 +3,10 @@
 | Field | Record |
 | --- | --- |
 | Base | `94e259687968ad18dfc965799a45df93218acd30` |
-| Source-fix snapshot | `4c5b20e62` on `fix/skill-router-recipes` |
+| Source-fix snapshot | `8fcf1b1f7` on `fix/skill-router-recipes` |
 | Scope | Claude, Codex and Cursor routers; resolved backlog and evidence links |
 | Runtime changes | None |
-| Validation | Eight parent parser checks; 33 affected tests pass; full suite: 14,698 passed, 66 skipped in 63.02s |
+| Validation | Eight parent parser checks; 33 affected tests pass; full suite at `8fcf1b1f7`: 14,698 passed, 66 skipped in 61.41s |
 | Review state | Codex reviews 3 and 4 are clean; actual Claude Code review convergence is pending |
 
 ## Property and sites
@@ -35,8 +35,9 @@ two demo records linking the removed backlog heading; those links move here.
 | Summary promises budget exhaustion exits nonzero | **fixed `31fdf2f22`** — completed loops can exit zero; inspect saved outcome/qualification and use only supported CI flags. Existing exhaustion coverage explicitly asserts zero. |
 | Independent headless examples still resemble an unaudited sequence | **fixed `4c5b20e62`** — all three blocks are explicitly syntax examples, with sequential authoring routed to the staged recipe and canonical gates. |
 
-The original three-issue backlog record is fulfilled and removed. The two
-additional findings have provenance in local branch `docs/skill-router-follow-up-findings` at `c02aa3ff7`; that tracking
+The original three-issue backlog record is fulfilled and removed. The two additional findings are the produced-work verification/redirect
+authority error and the budget-exhaustion exit-status claim listed above.
+They have provenance in local branch `docs/skill-router-follow-up-findings` at `c02aa3ff7`; that tracking
 commit is not a remaining fix and should not be replayed as pending work after
 this repair. The broader installed-skill portability and policy effort (#508)
 remains separate. A nested sandbox initialization limitation observed during
@@ -118,3 +119,23 @@ invocation. Local diff review only; no publication or code edits.
 | F7 nit: long completeness recipe duplicates directives | **declined** — the router must expose both audit gates, commits and user boundaries; its explicit clean-baseline instruction already covers the scenario. No additional workflow is introduced. |
 
 Convergence: pending fresh Claude Code reviews after these corrections.
+
+
+## Claude Code review pass 2 — 2026-10-21
+
+Scope: `94e259687..8fcf1b1f7`. Actual built-in `code-review` Skill at high effort,
+Claude Sonnet 5.5, fresh session `43e9f02a-db4b-48aa-9bc2-79190646a2a7`;
+CLI exits zero with `.tmp/skill-router-recipes.claude-review-2.md`.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 medium-low: evidence page describes repaired recipes as current | **fixed** — date the observation and frame the former recipes as past; retain it as demo provenance. |
+| 2 low: header names an earlier source/test snapshot | **fixed** — name `8fcf1b1f7` and its fresh full-suite result (14,698 pass, 66 skip, 61.41s); affected set is 33 pass in 0.54s. |
+| 3 low: local provenance does not name its two findings | **fixed** — identify both defects explicitly beside the branch reference; their descriptions/dispositions remain in the finding table. |
+| 4 low: check mode is model-judged | **declined, residual limitation** — the existing caveat states that a clean report cannot prove delivery; no deterministic semantic guarantee is claimed. |
+| 5 nit: completeness recipe duplicates directives and omits output override | **declined** — retain both gates in the router; the independent syntax example's optional output override does not constrain the default-location recipe. |
+| 6 nit: backlog should include run reconciliation iteration | **refuted as proposed** — canonical directives explicitly describe `run --iterate` as reconcile-loop control; the unsupported detail combination is independently proven by the parser. Do not widen the backlog from an unverified claim that run ignores reconciliation iteration. |
+
+The router instructions receive no further change in this pass. These record
+corrections do not reset their review window. Pass 2 reports no router correctness
+defect; another independent pass is required before Claude convergence is claimed.
