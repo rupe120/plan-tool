@@ -2633,7 +2633,7 @@ _PROPOSAL_DEPENDS_ON_NOTES_EXPLAINER = (
 )
 
 # Fixed item 8 (destructive-operation disposition), riding both arms. Targets
-# `title`/a dedicated step, never `intent` (reserved for the one-line
+# `description`/a dedicated step, never `intent` (reserved for the one-line
 # why-this-step-exists statement) — avoid a hand-typed item-number
 # cross-reference here; the last renumber already nearly missed one
 # stale reference elsewhere (BACKLOG #268).

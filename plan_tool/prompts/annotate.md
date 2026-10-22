@@ -62,8 +62,9 @@ When the document is a valid plan-tool plan, its substantive spec is the
 frontmatter `steps:` block, and its `## Steps` prose body is just a
 placeholder ("See the `steps:` block in the frontmatter"). Treat **each
 frontmatter `steps:` entry as its own classifiable section**: the entry's
-`title:` is the section `heading`, and its `detail:` content (loaded into
-the **Plan spec** section above, matched by `title:`) is the spec to
+`description:` (or legacy `title:`) supplies the section `heading`, and its
+`detail:` content (loaded into the **Plan spec** section above, matched by
+that step text) is the spec to
 judge against. Emit one array element per step entry with
 `"is_step": true`, plus elements for any other substantive prose sections
 (`Overview`, `Architecture`, `Risks`, …) with `"is_step": false`. Do not
