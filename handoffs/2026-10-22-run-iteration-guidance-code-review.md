@@ -67,3 +67,35 @@ parent, the pipeline validation box, the retained helper's obsolete route
 comment and sweep-vs-single-step warning wording. It does not alter the shared
 contracts of authoring commands. A green message test alone was not treated as
 proof the option descriptions were complete.
+
+## Claude review 2
+
+Range `e4ecd6e8b..1f99f9614`; actual built-in `code-review` Skill at high
+ effort, Sonnet 5.5, session `7a70785e-373d-4532-b4dc-34c1b9eeae82`;
+CLI exits zero. Report `.tmp/run-iteration-guidance.review-2.md`. The supervising
+review independently verifies callers, AST equivalence after removing guidance
+strings/docstrings, and 177 targeted tests (452 deselected). No defect in changed
+statements; three low-severity sibling gaps form the first low-yield pass.
+
+- F-A confirmed: time-budget help must preserve flag/environment value validation
+  information. Add that clause and regenerate the run reference.
+- F-B confirmed: `_build_run_budget` has no production callers; describe its
+  retained compatibility delegation without promising a run loop. Identifier
+  and vocabulary searches also identify the app re-export comment and context
+  test module's stale spy claim; correct those comments only. The dated coverage
+  baseline remains provenance, not current coverage authority.
+- F-C confirmed: run owns a separate compatibility parent, so remove the
+  register docstring's verbatim/shared-parent claim.
+- F-D declined wording preference: existing warning is accurate. F-E refuted by
+  accept-mode warning code and its existing test. F-F refuted by rejection tests
+  and the recorded mutation; no additional prose-conformance test is warranted.
+
+The invariant remains guidance accuracy without execution changes. This bounded
+sweep changes help/docstrings/comments only; it neither removes dormant helpers
+nor introduces tests for prose. Affected tests after correction: 90 passed in
+0.74s. Full suite at `1f99f9614`: 14,717 passed, 67 skipped in 60.08s.
+
+Full suite after these corrections: 14,717 passed, 67 skipped in 63.96s.
+Guidance-normalized AST comparison against the base matches for all six changed
+production Python modules (docstrings, help keyword values and warn arguments
+excluded); comments receive direct diff review.

@@ -134,11 +134,7 @@ from plan_tool.style import (
     success,
     warn,
 )
-# Cross-command helpers live in two leaf submodules; re-import every name
-# back into this namespace so the bare-name call sites in this module (and
-# the ``plan_tool.cli`` package re-export) keep resolving — and so the
-# ``_build_run_budget`` monkeypatch in the legacy suite, which rebinds it as
-# an ``app``-module global, keeps intercepting ``cmd_run``'s bare-name call.
+# Keep helper re-exports stable for package consumers and monkeypatch seams.
 from plan_tool.cli.console import (
     _atomic_write,
     _common_dir_prefix,

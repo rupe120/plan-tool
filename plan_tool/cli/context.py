@@ -145,16 +145,5 @@ def _resolve_time_budget_seconds(args: argparse.Namespace) -> int:
 
 
 def _build_run_budget(args: argparse.Namespace) -> IterativeBudget:
-    """Return the ``IterativeBudget`` ``cmd_run`` should hand to the
-    post-reconcile iteration loop.
-
-    Reads ``--iterate`` / ``--max-iterations`` / ``--iteration-budget``
-    from ``args`` via :func:`_resolve_iterative_budget`, the shared
-    helper used by ``cmd_create`` and ``cmd_detail``. Validation
-    errors (``--max-iterations 0`` etc.) are caught at the top of
-    ``cmd_run`` before this is called, so a ``CreateError`` raised
-    here would be a programmer error rather than user input — it
-    surfaces as an uncaught exception. Tests reach the iteration
-    loop by patching this function.
-    """
+    """Retained budget-building compatibility seam; delegate validation to the resolver."""
     return _resolve_iterative_budget(args)

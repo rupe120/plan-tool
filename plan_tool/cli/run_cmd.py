@@ -1952,15 +1952,9 @@ def cmd_reconcile_code(args: argparse.Namespace) -> int:
 def register(subparsers) -> dict[str, Handler]:
     """Add the ``run`` + ``reconcile-code`` subparsers and their dispatch map.
 
-    ``run`` declares ``parents=[yes_parent, iterate_parent]``; those parents
-    currently originate in ``app.register``. Per the duplicate-then-defer
-    rule, this command module — carved out before ``parser.py`` owns the
-    shared parents — rebuilds its own verbatim copies (argparse ``parents=``
-    copies actions by reference, so identical parent objects yield
-    byte-identical ``run --help``). Consolidation into ``parser.py`` is
-    deferred. ``AVAILABLE_MODES`` is imported lazily from the
-    ``plan_tool.cli`` package surface (not ``app``) so this module keeps no
-    import edge to ``app``.
+    Run owns compatibility-only iteration help; authoring commands own
+    separate active-loop parents. ``AVAILABLE_MODES`` is imported lazily
+    from ``plan_tool.cli`` so this module keeps no import edge to ``app``.
     """
     from plan_tool.cli import AVAILABLE_MODES
     from plan_tool.convergence import (
@@ -1997,7 +1991,7 @@ def register(subparsers) -> dict[str, Handler]:
         default=None,
         dest="time_budget",
         metavar="SECONDS",
-        help="compatibility loop time budget; this option does not limit run execution time.",
+        help="compatibility loop time budget; this option does not limit run execution time. Existing flag and PLAN_TOOL_TIME_BUDGET value validation still applies.",
     )
     iterate_parent.add_argument(
         "--max-stall-rounds",
