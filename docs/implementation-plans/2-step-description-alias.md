@@ -62,6 +62,7 @@ steps:
       rules as plan input.
     2: Existing create entry paths reuse the canonical writer to publish description
       frontmatter.
+  detail: docs/implementation-plans/plan-details/step-description-alias/03-request-description-step-proposals.md
 - id: 4
   title: 'Document the version-1 alias exception and reconcile BACKLOG #517 with shipment
     status'
