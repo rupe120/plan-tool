@@ -11,32 +11,40 @@ checks out a tag.
 
 ## Choose the version
 
-The version lives in `pyproject.toml` (`[project].version`) and follows
-semantic versioning. Below 1.0, a bump means:
+The version lives in `pyproject.toml` (`[project].version`). The script derives
+its next value from the pending fragment categories, with the strongest bump
+winning:
 
-| Bump | The release contains |
-| --- | --- |
-| minor (`0.1.0` → `0.2.0`) | a new feature, a change to a CLI surface, or a change to a persisted contract or format version |
-| patch (`0.1.0` → `0.1.1`) | fixes only |
+| Categories present | At 1.0 and later | Before 1.0 |
+| --- | --- | --- |
+| **Breaking** | major (`1.2.3` → `2.0.0`) | minor (`0.2.3` → `0.3.0`) |
+| otherwise any **Added**, **Changed**, **Deprecated**, **Removed** | minor (`1.2.3` → `1.3.0`) | minor (`0.2.3` → `0.3.0`) |
+| only **Fixed** and **Security** | patch (`1.2.3` → `1.2.4`) | patch (`0.2.3` → `0.2.4`) |
 
-- **Formats keep their own versions.** The plan, detail, and run-log formats
-  carry their own version constants and evolution policy
-  ([`DATA_CONTRACT.md`](../DATA_CONTRACT.md#version-evolution-policy)). A bump to
-  any of them forces at least a minor release.
-- **Minor releases may change behavior below 1.0.** The changelog lists each
-  such change under **Changed** or **Removed**.
+At 1.0 and later, compatible features use a minor release and compatible fixes
+use a patch. An incompatible public CLI or persisted-contract change must have
+an explicit `### Breaking` section explaining the incompatibility and the
+user's upgrade action. This section is collected into release notes. Other
+categories alone never declare a breaking change: a public removal belongs
+under **Breaking** even if it also has a **Removed** entry. The script checks
+categories; the author and reviewer judge compatibility.
 
-`scripts/release.py` derives the bump from the category headings in the pending
-`changelog.d/` fragments, so nobody picks it by hand:
+Before 1.0, breaking changes still use a minor bump and retain their **Breaking**
+notes. The script does not promote a 0.x release to 1.0 automatically; the first
+stable release uses the manual procedure.
 
-| Categories present across the fragments | Bump |
-| --- | --- |
-| any of **Added**, **Changed**, **Deprecated**, **Removed** | minor |
-| only **Fixed** and **Security** | patch |
+**Formats keep their own versions.** Plan, detail and run-log formats have
+separate version constants and evolution rules
+([`DATA_CONTRACT.md`](../DATA_CONTRACT.md#version-evolution-policy)). A format
+version bump requires at least a minor package release; use **Breaking** when
+it breaks the supported compatibility contract. The script does not infer a
+format bump from prose. Use an appropriate category or `--minor` to raise a
+fix-only release to minor. `--minor` never lowers a major bump.
 
-A fragment cannot say that its change bumps a format version. File such a
-change under **Changed** or **Added**, or pass `--minor` to raise a patch bump.
-There is no flag that lowers a derived bump.
+`uv run scripts/release.py --dry-run` prints the current tag, proposed version,
+bump and contributing categories/fragments. It explains the pre-1.0 breaking
+exception when applicable, without collecting notes, changing files or
+committing. A major bump resets both minor and patch; a minor bump resets patch.
 
 ## Record each change
 
@@ -88,10 +96,10 @@ The script refuses, with a message, in these cases:
 | No tag `v<current version>` exists | The current version is unreleased. [Cut it by hand](#cut-a-release-by-hand). |
 | That tag is not an ancestor of `HEAD` | Branch from a commit that contains the tag, such as `main` after the last release merged. |
 | The tag for the new version already exists | `v<current version>` is not the latest release; check the tags before releasing. |
-| The version is 1.0 or later, or is not `X.Y.Z` | [Cut it by hand](#cut-a-release-by-hand); this page gives the bump rule below 1.0 only. |
+| The version is not `X.Y.Z` | [Cut it by hand](#cut-a-release-by-hand); prerelease and build suffixes are outside this script. |
 | `changelog.d/` holds no fragment | Nothing to release. |
 | A fragment is not Markdown, has an unknown category, no category, or text before its first category heading | Fix the fragment; the categories are the six in the table above and `changelog.d/README.md`. |
-| `[tool.scriv].categories` in `pyproject.toml` is not the script's six categories | Map the new category to a bump in `scripts/release.py`, or restore the six. |
+| `[tool.scriv].categories` in `pyproject.toml` is not the script's seven categories | Map the new category to a bump in `scripts/release.py`, or restore the seven. |
 | scriv's output disagrees with the derived categories, or leaves a fragment behind | The script restores the release paths. Read scriv's parse of the fragments before trusting any bump. |
 | `git`, `uv lock`, or `uvx scriv collect` is missing or fails; `uv lock` changes more than plan-tool's own version line in `uv.lock`; `pyproject.toml` is unreadable or has no `[project].version` line | Fix the cause and run again; the script restores the release paths first. For a drifted lock, commit the lock update on its own first. |
 
@@ -126,7 +134,6 @@ version: `v0.1.0` or a later one.
 | --- | --- |
 | Publishing to PyPI or an internal index | Installation stays clone-based; a published package needs its own decisions on naming, credentials, and support. |
 | Tagging and pushing from the script, or running it from a pipeline | The tag needs the maintainer's go-ahead. A pipeline that pushes a release branch needs a stored access token; add it when a one-click release is wanted. |
-| The bump rule at 1.0 and later | Only the rule below 1.0 is written, so the script refuses 1.0 and later until one exists. |
 | A Fix Version and a `next` release in Jira | The release check above uses resolution dates and `changelog.d/`. Add a Fix Version when someone must ask, after the fact, which release shipped a ticket ([`docs/TRACKING.md`](TRACKING.md#deliberately-not-configured)). |
 | Backport branches for old tags | Not needed until a team stays on an old tag; decide when one does. |
 

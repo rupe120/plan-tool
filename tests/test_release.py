@@ -34,7 +34,7 @@ version = "0.1.0"
 version = "9.9.9"
 
 [tool.scriv]
-categories = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
+categories = ["Breaking", "Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
 version = "literal: pyproject.toml: project.version"
 """
 UV_LOCK = 'version = 1\n\n[[package]]\nname = "plan-tool"\nversion = "0.1.0"\nsource = { editable = "." }\n'
@@ -121,7 +121,7 @@ def fake_tools(
         if argv[0] == "uv":
             version = re.search(r'^version = "(.*)"$', (cwd / "pyproject.toml").read_text(), re.M)
             lock = (cwd / "uv.lock").read_text()
-            lock = re.sub(r'version = "0\.\d+\.\d+"', f'version = "{version[1]}"', lock)
+            lock = re.sub(r'(?<=name = "plan-tool"\n)version = "\d+\.\d+\.\d+"', f'version = "{version[1]}"', lock)
             (cwd / "uv.lock").write_text(lock + ("# unrelated churn\n" if lock_churn else ""))
             return
         version = re.search(r'^version = "(.*)"$', (cwd / "pyproject.toml").read_text(), re.M)[1]
@@ -222,7 +222,7 @@ def test_derive_refuses_a_fragment_it_cannot_categorize(titles: list, message: s
 def test_this_repos_scriv_categories_are_exactly_the_ones_the_bump_table_maps() -> None:
     """A category added to [tool.scriv] without a bump rule would make every release refuse."""
     real = tomllib.loads((SCRIPT.parents[1] / "pyproject.toml").read_text(encoding="utf-8"))
-    mapped = release.MINOR_CATEGORIES + release.PATCH_CATEGORIES
+    mapped = release.MAJOR_CATEGORIES + release.MINOR_CATEGORIES + release.PATCH_CATEGORIES
     assert sorted(real["tool"]["scriv"]["categories"]) == sorted(mapped)
     assert len(set(mapped)) == len(mapped)
 
@@ -535,11 +535,6 @@ def test_an_unparseable_pyproject_exits_2_with_a_message(
     assert "release: cannot read pyproject.toml" in capsys.readouterr().err
 
 
-def test_release_refuses_version_one_and_later(repo: Repo) -> None:
-    repo.write("pyproject.toml", PYPROJECT.replace('version = "0.1.0"', 'version = "1.0.0"'))
-    repo.fragment("IPPT-1", "Added")
-    repo.commit_all("One point oh")
-    _refused(repo, "1.0 or later")
 
 
 def test_release_refuses_a_version_that_is_not_x_y_z(repo: Repo) -> None:
@@ -566,3 +561,137 @@ def test_main_exits_2_with_a_message_on_a_refusal(repo: Repo, monkeypatch: pytes
 
     assert release.main(["--dry-run"]) == 2
     assert "release: no fragments" in capsys.readouterr().err
+
+
+
+def _released_base(repo: Repo, version: str) -> None:
+    repo.write("pyproject.toml", PYPROJECT.replace('version = "0.1.0"', f'version = "{version}"'))
+    repo.write("uv.lock", UV_LOCK.replace('version = "0.1.0"', f'version = "{version}"'))
+    repo.commit_all("Released baseline")
+    repo.git("tag", f"v{version}")
+
+
+@pytest.mark.parametrize(("current", "categories", "expected"), [
+    ("1.0.0", ["Fixed", "Security"], "1.0.1"),
+    ("1.2.3", ["Added", "Fixed"], "1.3.0"),
+    ("1.2.3", ["Breaking", "Added", "Fixed"], "2.0.0"),
+    ("2.4.7", ["Breaking"], "3.0.0"),
+])
+def test_post_one_release_commits_derived_version_and_collects_breaking_notes(repo, current, categories, expected):
+    _released_base(repo, current)
+    repo.fragment("change", *categories)
+    repo.commit_all("Pending changes")
+    tags = repo.git("tag", "--list")
+
+    assert release.cut(repo.path, force_minor=False, dry_run=False, tool=fake_tools(repo.path)) == 0
+
+    assert repo.git("log", "-1", "--format=%s").strip() == f"Release {expected}"
+    assert tomllib.loads((repo.path / "pyproject.toml").read_text())["project"]["version"] == expected
+    lock = tomllib.loads((repo.path / "uv.lock").read_text())
+    assert lock["package"][0]["version"] == expected
+    notes = (repo.path / "CHANGELOG.md").read_text()
+    assert all(f"### {category}" in notes for category in categories)
+    assert "change" in notes
+    assert not (repo.path / "changelog.d/change.md").exists()
+    assert repo.dirty() == ""
+    assert repo.git("tag", "--list") == tags
+
+
+@pytest.mark.parametrize("force_minor", [False, True])
+def test_breaking_preview_explains_major_and_minor_flag_cannot_demote_it(repo, capsys, force_minor):
+    _released_base(repo, "1.4.9")
+    repo.fragment("api-removal", "Breaking")
+    repo.fragment("bug-fix", "Fixed")
+    repo.commit_all("Pending changes")
+    before = repo.head()
+
+    release.cut(repo.path, force_minor=force_minor, dry_run=True)
+
+    output = capsys.readouterr().out
+    assert "1.4.9 (tag v1.4.9) -> 2.0.0: major" in output
+    assert "Breaking   api-removal.md" in output
+    assert "Fixed      bug-fix.md" in output
+    assert "raised by --minor" not in output
+    assert repo.head() == before and repo.dirty() == ""
+
+
+def test_breaking_before_one_keeps_minor_policy_and_explains_it(repo, capsys):
+    repo.fragment("incompatible", "Breaking")
+    repo.commit_all("Pending changes")
+    release.cut(repo.path, force_minor=False, dry_run=False, tool=fake_tools(repo.path))
+    assert repo.git("log", "-1", "--format=%s").strip() == "Release 0.2.0"
+    assert "before 1.0" in capsys.readouterr().out
+    assert "### Breaking" in (repo.path / "CHANGELOG.md").read_text()
+
+
+@pytest.mark.parametrize("failing_tool", ["uv", "uvx"])
+def test_major_release_failure_restores_all_release_inputs(repo, failing_tool):
+    _released_base(repo, "1.2.3")
+    repo.fragment("incompatible", "Breaking")
+    repo.commit_all("Pending changes")
+    before = repo.head()
+    snapshots = {p: (repo.path / p).read_bytes() for p in ["pyproject.toml", "uv.lock", "CHANGELOG.md", "changelog.d/incompatible.md"]}
+    with pytest.raises(release.ReleaseError, match="exited 1"):
+        release.cut(repo.path, force_minor=False, dry_run=False, tool=fake_tools(repo.path, fail=failing_tool))
+    assert repo.head() == before and repo.dirty() == ""
+    assert all((repo.path / p).read_bytes() == content for p, content in snapshots.items())
+
+
+@pytest.mark.parametrize(("current", "bump", "expected"), [
+    ((1, 2, 9), "patch", "1.2.10"),
+    ((1, 2, 9), "minor", "1.3.0"),
+    ((1, 2, 9), "major", "2.0.0"),
+    ((2, 0, 1), "major", "3.0.0"),
+])
+def test_next_version_resets_subordinate_components_for_post_one_bumps(current, bump, expected):
+    assert release.next_version(current, bump) == expected
+
+
+def test_breaking_category_dominates_all_compatible_categories():
+    assert release.derive({"a.md": ["Fixed", "Breaking"], "b.md": ["Added"]}) == (
+        "major", {"Fixed": ["a.md"], "Breaking": ["a.md"], "Added": ["b.md"]},
+    )
+
+
+
+def test_post_one_minor_override_raises_fix_only_preview(repo, capsys):
+    _released_base(repo, "1.2.8")
+    repo.fragment("fix", "Fixed")
+    repo.commit_all("Pending fix")
+    release.cut(repo.path, force_minor=True, dry_run=True)
+    assert "-> 1.3.0: minor (raised by --minor)" in capsys.readouterr().out
+    assert repo.dirty() == ""
+
+
+def test_major_release_refuses_existing_destination_tag(repo):
+    _released_base(repo, "1.9.9")
+    repo.git("tag", "v2.0.0")
+    repo.fragment("break", "Breaking")
+    repo.commit_all("Pending change")
+    _refused(repo, "tag v2.0.0 already exists")
+    assert repo.dirty() == ""
+
+
+def test_major_collection_must_retain_breaking_category_or_restore_inputs(repo):
+    _released_base(repo, "1.2.3")
+    repo.fragment("break", "Breaking")
+    repo.commit_all("Pending change")
+    before = repo.head()
+    tools = fake_tools(repo.path)
+
+    def lose_breaking(argv, cwd):
+        tools(argv, cwd)
+        if argv[0] == "uvx":
+            path = cwd / "CHANGELOG.md"
+            path.write_text(path.read_text().replace("### Breaking", "### Changed"))
+
+    with pytest.raises(release.ReleaseError, match="bump may be wrong"):
+        release.cut(repo.path, force_minor=False, dry_run=False, tool=lose_breaking)
+    assert repo.head() == before and repo.dirty() == ""
+    assert (repo.path / "changelog.d/break.md").exists()
+    assert (repo.path / "CHANGELOG.md").read_text() == CHANGELOG
+
+
+def test_unknown_bump_cannot_silently_become_patch():
+    with pytest.raises(release.ReleaseError, match="unknown release bump"):
+        release.next_version((1, 2, 3), "typo")

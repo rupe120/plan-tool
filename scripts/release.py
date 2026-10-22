@@ -4,8 +4,7 @@
     uv run scripts/release.py [--minor] [--dry-run]
 
 Runs the release-commit step of docs/RELEASING.md, which owns the bump rule,
-the refusals, and what the script deliberately leaves out (tagging, pushing,
-1.0 and later). It never tags or pushes, and restores the four release paths
+the refusals, and what the script deliberately leaves out (tagging and pushing). It never tags or pushes, and restores the four release paths
 to HEAD on any failure before the commit.
 
 The fragment parse mirrors scriv's markdown parser because scriv consumes the
@@ -24,6 +23,7 @@ import tomllib
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
+MAJOR_CATEGORIES = ("Breaking",)
 MINOR_CATEGORIES = ("Added", "Changed", "Deprecated", "Removed")
 PATCH_CATEGORIES = ("Fixed", "Security")
 FRAGMENT_DIR = "changelog.d"
@@ -94,8 +94,8 @@ def fragment_paths(root: Path) -> list[Path]:
 
 
 def derive(fragments: dict[str, list[str | None]]) -> tuple[str, dict[str, list[str]]]:
-    """The bump ("minor" or "patch") and which fragments carry each category."""
-    known = MINOR_CATEGORIES + PATCH_CATEGORIES
+    """The bump ("major", "minor" or "patch") and which fragments carry each category."""
+    known = MAJOR_CATEGORIES + MINOR_CATEGORIES + PATCH_CATEGORIES
     by_category: dict[str, list[str]] = {}
     for name, titles in fragments.items():
         if not titles:
@@ -107,13 +107,22 @@ def derive(fragments: dict[str, list[str | None]]) -> tuple[str, dict[str, list[
                 raise ReleaseError(f"{name} has unknown category {title!r}; use one of {', '.join(known)}")
             if name not in by_category.setdefault(title, []):
                 by_category[title].append(name)
-    bump = "minor" if any(c in by_category for c in MINOR_CATEGORIES) else "patch"
+    if any(c in by_category for c in MAJOR_CATEGORIES):
+        bump = "major"
+    else:
+        bump = "minor" if any(c in by_category for c in MINOR_CATEGORIES) else "patch"
     return bump, by_category
 
 
 def next_version(current: tuple[int, int, int], bump: str) -> str:
     major, minor, patch = current
-    return f"{major}.{minor + 1}.0" if bump == "minor" else f"{major}.{minor}.{patch + 1}"
+    if bump == "major":
+        return f"{major + 1}.0.0"
+    if bump == "minor":
+        return f"{major}.{minor + 1}.0"
+    if bump == "patch":
+        return f"{major}.{minor}.{patch + 1}"
+    raise ReleaseError(f"unknown release bump {bump!r}")
 
 
 def set_project_version(text: str, new: str) -> str:
@@ -174,9 +183,7 @@ def _read_version(root: Path) -> tuple[str, tuple[int, int, int], tuple[str, ...
 
 def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_tool) -> int:
     current, parts, configured = _read_version(root)
-    if parts[0] >= 1:
-        raise ReleaseError(f"version {current} is 1.0 or later; docs/RELEASING.md gives the bump rule below 1.0 only")
-    if set(configured) != set(MINOR_CATEGORIES + PATCH_CATEGORIES):
+    if set(configured) != set(MAJOR_CATEGORIES + MINOR_CATEGORIES + PATCH_CATEGORIES):
         raise ReleaseError(
             f"[tool.scriv].categories {list(configured)} differ from the categories this script maps to a bump"
         )
@@ -198,6 +205,9 @@ def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_
         if path.suffix != ".md":
             raise ReleaseError(f"{path.name} is not a Markdown fragment; the script reads .md fragments only")
     bump, by_category = derive({p.name: fragment_sections(p.read_text(encoding="utf-8")) for p in paths})
+    pre_one_breaking = parts[0] == 0 and bump == "major"
+    if pre_one_breaking:
+        bump = "minor"
     raised = force_minor and bump == "patch"
     if raised:
         bump = "minor"
@@ -206,7 +216,9 @@ def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_
         raise ReleaseError(f"tag v{new} already exists, so v{current} is not the latest release; check the tags")
 
     print(f"{current} (tag v{current}) -> {new}: {bump}{' (raised by --minor)' if raised else ''}")
-    for category in MINOR_CATEGORIES + PATCH_CATEGORIES:
+    if pre_one_breaking:
+        print("  Breaking changes before 1.0 use a minor bump.")
+    for category in MAJOR_CATEGORIES + MINOR_CATEGORIES + PATCH_CATEGORIES:
         if category in by_category:
             print(f"  {category:<10} {', '.join(by_category[category])}")
     if dry_run:
