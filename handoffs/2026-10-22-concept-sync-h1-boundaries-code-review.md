@@ -6,7 +6,7 @@
 | Branch | `fix/concept-sync-h1-boundaries` |
 | Scope | BUG_BACKLOG “Concept sync deletes an unowned H1 after an owned H2” |
 | Route | Bounded parser boundary correction |
-| Current state | Full-suite verification and Claude Code review in progress |
+| Current state | Complete: 15,118 tests pass; two independent final clean Claude Code reviews |
 
 ## Property and pre-edit sites
 
@@ -56,3 +56,38 @@ and confirms the Deferred body is only `- Delayed — why`. BUG_BACKLOG
 “Multiline concept decisions can create document headings outside their owned
 section” owns the follow-up. This repair does not expand into rendering/schema
 policy. The reader's original inline regex/filter is extracted unchanged.
+
+## Claude Code review 2 and convergence
+
+Range `702c767c8..9a9c850007528b2d5262938cdb1e6bc1b3f0cdec`;
+actual built-in `code-review` Skill at high effort plus independent verification.
+Session `611c2e03-f2c9-4205-a302-801b495982de`.
+Clean for the bounded fix, with no introduced/in-scope invariant failure and an
+explicit low-yield advisory tail. The reviewer independently runs the full suite:
+**15,118 passed, 67 skipped** in 89.40s. Its parser/concept-sync/scope-review/
+duplication suite passes **526 tests** in 4.11s. Side-by-side old/new probes
+cover seven hand-built bodies in both fence modes. Of 30,000 generated bodies,
+8,279 qualified LF/CRLF/CR cases produce zero reader/writer parity or unowned
+section preservation violations. The reviewer does not independently replay the
+23-case pre-fix count; that evidence remains the session-owned run above.
+
+Advisory dispositions:
+
+- A1, a proposed additional section-end helper, is declined as unnecessary
+  abstraction. The high-risk regex/filter is shared. The reader retains a
+  matching object before taking its offset; the writer retrieves an offset
+  directly. Neither lookup diverges today, and no exact duplicate function is
+  introduced (the duplication guard passes). No consolidation is claimed or
+  folded into the repair.
+- A2, the in-progress handoff headline, is updated on completed review here.
+- Owned LF rendering, the deliberately retained whitespace matcher, explicit
+  fence opt-in and globally selected owned H2 names are current pinned policies,
+  not new defects. Selecting an owned-named H2 below an H1 remains the same
+  ownership policy; hierarchy-aware selection would require a separate scope
+  decision, not a bug fix inferred from this review.
+
+Reviews 1 and 2 are two independent clean final passes after the sole production
+change `d5991b6cd`; only evidence/backlog/changelog records follow. The original
+H1-loss backlog item is removed after completed verification and review. The
+separate multiline concept-rendering defect and create-helper investigation
+remain. Diff whitespace is clean, and all work is committed locally.

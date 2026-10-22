@@ -538,16 +538,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
 
-### Concept sync deletes an unowned H1 after an owned H2
-
-- **Files:** `plan_tool/parser.py:replace_body_sections`, consumed by concept sync.
-- **Symptom / evidence:** the reader ends an H2 at the next H1 or H2, but replacement ends only at the next H2. A `# Appendix` after `## Deferred` is deleted together with the owned text. A local 2026-10-22 probe reproduces this for LF, CRLF and CR. The logic predates the newline repair; no existing test pins this layout.
-- **Outcome / in scope:** preserve unowned H1 headings and their content when replacing an owned section, using fence-safe boundaries consistent with the reader.
-- **Out of scope:** newline I/O, scope selection, concept ownership, frontmatter schemas or a broader markdown parser redesign.
-- **Verification:** raw-byte replacement and actual concept-sync regressions for H1 before/after owned sections, including fenced pseudo-H1 content and all supported newline styles.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** newline-preservation Claude Code review 1, F-2; independently reproduced.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
