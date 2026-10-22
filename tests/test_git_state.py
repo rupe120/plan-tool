@@ -135,6 +135,25 @@ class TestCommittedChangedPaths:
         _run_git(["commit", "-qm", "delete"], tmp_path)
         assert committed_changed_paths(tmp_path, baseline) == {"new name.py"}
 
+    def test_relative_diff_config_cannot_bypass_dirty_exclusion_from_subdirectory(self, tmp_path):
+        _init_git_repo(tmp_path)
+        _run_git(["config", "diff.relative", "true"], tmp_path)
+        project = tmp_path / "app"
+        test = project / "tests" / "test_x.py"
+        test.parent.mkdir(parents=True)
+        test.write_text("before\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "baseline"], tmp_path)
+        baseline = head_revision(project)
+        test.write_text("dirty before call\n")
+        dirty = changed_paths_or_none(project)
+        test.write_text("backend edit\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "backend"], tmp_path)
+        committed = committed_changed_paths(project, baseline)
+        assert committed == dirty == {"app/tests/test_x.py"}
+        assert committed - dirty == set()
+
     def test_git_path_output_preserves_non_utf8_bytes_without_decoding_failure(self, tmp_path, monkeypatch):
         import os
         import sys

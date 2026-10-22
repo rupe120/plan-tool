@@ -5,7 +5,7 @@
 | Base | `db0b81151`, merged alias PR #140 |
 | Branch | `fix/committed-test-authorship` |
 | Route | Bounded direct fix; existing BUG_BACKLOG condition permits direct repair when no evidence redesign is needed |
-| Current state | Production correction validated; review 3 is first clean logic pass after correction; independent confirmation pending |
+| Current state | Relative-path correction validated; fresh independent confirmation window pending |
 
 ## Property and scope
 
@@ -167,3 +167,27 @@ The next review receives a fresh prompt without that stale sentence.
 
 Post-review-3 focused validation: 54 passed. Production logic stays at
 `f92ba61ba`; only the run guide, index and evidence record change in this round.
+
+## Claude Code review 4 and relative-path reproduction
+
+Range `db0b81151..ca9221876`, actual built-in code-review Skill at high effort,
+Sonnet 5.5, session `3e5517ea-1c54-4260-bcb4-4c14a68b0c6e`, CLI exit zero. Consolidated
+report `.tmp/committed-test-authorship.review-4.md`; Skill checks 496 launcher,
+git-state and duplication tests. It marks diff.relative as speculative because
+its probe is not permitted. The session verifies rather than adopting the label.
+
+Real-git reproduction: set diff.relative=true, invoke from app/ under the git
+root, dirty app/tests/test_x.py before the call, commit a later edit. Porcelain
+returns app/tests/test_x.py while the diff returns tests/test_x.py; subtraction
+incorrectly leaves evidence. The regression fails before correction. Add
+--no-relative to the single committed-path diff so both sources share one base.
+This closes a true dirty-exclusion violation; it resets the confirmation window.
+
+Normal-path/exceptions readability in run.md is corrected while recording that
+exact path contract. Imported descendant history, unborn execution, amend/rebase
+and dirty-file limits remain documented; no new provenance or retry machinery.
+Factoring, optimizations and exhaustive branch-coverage suggestions are declined
+as preferences. A git-diff read failure already returns no extra evidence.
+
+Relative-path correction validation: 55 focused tests pass in 7.07s; full suite
+15,020 passed, 67 skipped in 81.86s. Diff whitespace check passes.

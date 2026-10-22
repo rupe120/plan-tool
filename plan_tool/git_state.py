@@ -111,7 +111,7 @@ def committed_changed_paths(repo_root: Path, baseline: Optional[str]) -> set[str
         if lineage.returncode != 0:
             return set()
         proc = subprocess.run(
-            ["git", "diff", "--name-only", "-z", "--no-renames",
+            ["git", "diff", "--name-only", "-z", "--no-renames", "--no-relative",
              "--diff-filter=ACMRT", baseline, "HEAD", "--"],
             cwd=str(repo_root), stdin=subprocess.DEVNULL,
             capture_output=True, text=True, errors="surrogateescape",
