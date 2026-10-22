@@ -175,8 +175,8 @@ otherwise continue*. **Default off**: with no budget set, no clock is consulted
 and behavior is byte-for-byte unchanged.
 
 Covered surfaces (they route through `should_continue`): `create --iterate`,
-`detail --iterate`, `completeness-audit --iterate`, and `detail --reconcile
---iterate` (the reconcile loop — `run --iterate` is a no-op).
+`detail --iterate` and `completeness-audit --iterate`. Reconcile routes do
+not expose an iteration loop; ordinary `run --iterate` has no effect.
 Completed rounds are durable at the stop via per-finding annotations, plan
 pointers, and `--commit` per-step commits (see
 [`DETAIL_RESUME_FLOW.md`](detail.md)). Because the cap is checked

@@ -34,3 +34,32 @@ that mirror prose are added. Full suite and review results follow when completed
 ## Review status
 
 Pending actual Claude Code `/code-review` at high effort on the committed diff.
+
+## Claude review 1
+
+Range `330441789..9816a9482`; actual built-in `code-review` Skill at high effort,
+Sonnet 5.5, session `918ad21b-85d2-4e5f-905a-dccfd3471ef3`; CLI exits zero.
+Saved report: `.tmp/iteration-guide-routes.review-1.md`.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 medium: GATES guide still advertises reconcile iteration | Fixed: gate lists and example use implemented authoring routes. |
+| 2 medium: directives imply reconcile-run is the valid iterate route | Fixed: ordinary run is named as a no-op; reconcile rejection remains explicit. |
+| 3 medium: TRACKING prescribes removed mode/iteration | Fixed: phase 3b and examples use post-execution `reconcile-code`, with judged separate invocations. |
+| 4 low: headless explanations still reference obsolete loop | Fixed: explain deterministic authoring fixes, conceptual judgment, valid independent examples and actual completeness CI flag. |
+| 5 low: architecture/recovery/pipeline siblings | Fixed: supported route lists and time-budget coverage; internal helper references explicitly distinguish implementation from CLI availability. |
+| 6 low: runtime warning absent from follow-up | Filed in existing protected-policy/help bug; runtime behavior stays unchanged here. |
+| 7 low: router argument hints include ineffective iteration flags | Fixed: remove run-iteration budget flags from all three hints; authoring loops remain documented in the body. |
+| 8 low: voice and unnecessary churn | Fixed human-facing detail-request wording and headless paragraphs; retain equivalent README/guide facts while correcting stale route claims. No broad style rewrite. |
+| 9 info: whitespace | Fixed extra separators at changed sites. |
+
+Second sweep: identifier searches include `--mode reconcile`, `_iterate_reconcile_loop`,
+both aliases and iteration flags. Vocabulary includes gate surface lists,
+re-audit, per-step/per-run budgets, headless apply and time-budget coverage.
+Additional sites are GATES, TRACKING, ARCHITECTURE, recovery index/audit and
+pipeline audit; all receive route corrections or explicit internal-only labels.
+
+Full suite at `9816a9482`: 14,698 passed, 66 skipped in 54.73s. Parser-only probes
+confirm three defaults, four valid forms and four unsupported combinations;
+run-side rejection is pinned by its existing handler test. Review is not yet
+converged; the next pass reviews the corrected committed snapshot.

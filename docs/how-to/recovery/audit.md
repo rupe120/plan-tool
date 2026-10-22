@@ -212,7 +212,7 @@ convergence loops above — it is a single scoped reconcile, **not** a loop.
   left the sidecar byte-identical, so its "resume" is trivial: there is nothing to
   continue. Only the drift / no-baseline branches reconcile and re-stamp.
 - **The refresh path is *not* wrapped in `iteration_session`.** Unlike the
-  completeness and reconcile loops, `--refresh` runs a single scoped reconcile
+  completeness loop, `--refresh` runs a single scoped reconcile
   with no convergence loop and no in-run drift lock, so it sits outside the
   `iteration_session` machinery entirely. A crash mid-reconcile leaves the saved
   findings (if any) on disk and the baseline un-stamped; re-running `--refresh`
@@ -263,7 +263,7 @@ discard applied edits — see [`CREATE_RESUME_FLOW.md`](create.md)).
 | Concern | File |
 |---------|------|
 | Completeness convergence loop | `plan_tool/cli/completeness_cmd.py` (`cmd_completeness`) |
-| Reconcile convergence loop | `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`) |
+| Internal reconcile iteration helper (not exposed as a CLI loop) | `plan_tool/cli/reconcile.py` (`_iterate_reconcile_loop`) |
 | Finding re-derivation (no cache) | `plan_tool/review.py` (`collect_deterministic_findings`) |
 | Conceptual-audit reuse verdict | `plan_tool/completeness_report.py` (`resolve_reusable_audit`, `is_reusable_audit_sidecar`, `ReusableAudit`) |
 | Sampler resume gate and lifecycle transition | `plan_tool/review.py` (`audit_plan_until_stable`, `_restore_sampler_checkpoint_state`, `write_completed_sampler_boundary`, `_remove_sampler_checkpoint`) |

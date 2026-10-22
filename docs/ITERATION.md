@@ -121,14 +121,13 @@ them once, and the loop runs itself within the fence you drew.
   deterministic completeness primitives (body sections, detail
   coverage, references) to drive 2–3 author-fix-reaudit passes before
   you hand it to a developer.
-- The user explicitly requests iterative detail authoring with `detail` and wants the
+- You explicitly request iterative detail authoring with `detail` and want the
   `detail-quality.md` review to drive 2–3 quality revisions on the
   just-written body — citations tightened, vague prose pinned to real
   line ranges, generic bullets replaced with code-checkable ones.
-- You're running headlessly (`-y < /dev/null`) and want the walk to
-  apply every finding without stopping. Under `-y` / non-TTY, the inner
-  walks default to `apply-all` so iteration N+1 isn't blocked on
-  `input()` — there's no one there to answer the prompt.
+- You want supported deterministic authoring fixes to run headlessly
+  (`-y < /dev/null`). Conceptual audit gaps still need session-directed
+  judgment; headless mode does not turn them into automatic applies.
 
 ### Skip `--iterate` when
 

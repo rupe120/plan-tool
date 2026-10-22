@@ -986,7 +986,7 @@ mostly self-seeded still contains real gaps worth applying.
 `run --reconcile` accepts `--iterate`; standalone reconcile verbs do not
 accept iteration flags. Read saved reports and drive judged corrections
 through separate committed invocations instead.
-Don't tack it onto commands where it is a no-op (a non-reconcile `run`,
+Don't tack it onto commands where it is a no-op (`run`,
 `review`, `verify`, `jira`) — it warns or errors.
 
 **"Make the plan as complete as possible" is not a request for `detail

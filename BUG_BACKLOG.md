@@ -1036,11 +1036,14 @@ Durable re-open conditions for retired items are recorded in
 ### Run iteration help and protected policy promise a reconcile loop the CLI rejects
 
 - **Files:** `CLAUDE.md` iteration mandate, `plan_tool/cli/run_cmd.py` run help,
-  generated CLI references and package help golden file.
+  generated CLI references and package help golden file; the ordinary-run
+  `--iterate` warning that incorrectly recommends detail reconciliation.
 - **Symptom:** protected policy says `run --iterate` loops reconciliation;
   actual `cmd_run` rejects `run --reconcile --iterate` with exit 2 and warns
   that the flag has no effect on ordinary execution. Generated help repeats
-  the obsolete promise. The user-facing guides and installed directives
+  the obsolete promise. The ordinary-run warning points to rejected
+  `detail --reconcile --iterate`; correct it in the same runtime-surface sweep.
+  The user-facing guides and installed directives
   describe the existing behavior.
 - **Evidence:** `tests/test_cli.py::TestRunReconcileDispatch::test_cmd_run_reconcile_with_iterate_is_rejected`
   pins the rejection before backend invocation; `cmd_run` owns the check.
@@ -1050,7 +1053,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** architect.
 - **Origin:** iteration-guide follow-up, 2026-10-22; source/tests correct the
   earlier repair-ledger disposition that inferred support from policy prose.
-
 
 ## ROADMAP
 

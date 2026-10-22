@@ -673,18 +673,16 @@ from "pre-plan" to "matches plan").
 3. **Execute with `run --step N`** (plan canonical; per step).
    Single-pass executor lands code edits and advances the step
    to `done`. `--iterate` is a no-op under `--mode run` (the
-   default) — only `--mode reconcile` honors the iteration
-   loop, so do not pass `--iterate` on the execute call. For
-   steps with discoverable acceptance criteria or expected
-   drift, follow up with phase 3b below to converge
-   post-execution.
+   default), so do not pass `--iterate` on the execute call. For
+   steps with discoverable acceptance criteria or expected drift, follow up
+   with phase 3b below to check post-execution delivery.
 
-3b. **Post-execute reconcile with `run --step N --mode reconcile
-    --iterate`** (plan canonical; per step; optional). Audits
-    the just-landed code against the plan and loops apply-
-    finding until convergence. Skip 3b for mechanical / obvious
-    steps where the loop would just spin without adding value
-    (single-line deletions, mechanical renames, etc.).
+3b. **Post-execute reconcile with `reconcile-code <slug> --step N`**
+    (plan canonical; per step; optional). Audit the just-landed code against
+    the plan and land code edits. Read the report, verify corrections and
+    commit before another invocation; this route has no `--iterate` loop.
+    Skip 3b for mechanical / obvious steps where the per-step pass adds no
+    value; the complete post-run sweep in phase 4 still applies.
 
 4. **Post-run reconciliation and review** (plan canonical). After every
    green step is committed, use `reconcile-code <slug> --all` and a code-review
@@ -750,9 +748,9 @@ plan-tool detail <slug> --reconcile --step N -y
 # Phase 3: execute the step (plan canonical). Per step.
 plan-tool run <slug> --commit -y --step N
 
-# Phase 3b: optional post-execute reconcile loop. Skip for
+# Phase 3b: optional post-execute reconcile pass. Skip for
 # mechanical / obvious steps.
-plan-tool run <slug> --mode reconcile --iterate -y --step N
+plan-tool reconcile-code <slug> -y --step N
 
 # Phase 4: post-execution reconcile and code review (plan canonical).
 plan-tool reconcile-code <slug> --all
@@ -864,7 +862,7 @@ When you add a candidate, include at minimum:
   and is summarized in the phase list above. Name the phases that are
   load-bearing or skippable for this entry and give the concrete
   invocation for any phase that departs; do not copy the whole recipe.
-  `--iterate` on `run` belongs only to `--mode reconcile`. Direct entries
+  Reconcile routes do not accept `--iterate`. Direct entries
   omit this field entirely.
 - **Status:** "not started," "design notes only," "plan authored at
   `<path>`," etc.
@@ -890,7 +888,7 @@ A skeleton:
 - **Iterate:** (plan-tool only) — departures from the default recipe in
   `integrations/shared/DIRECTIVES.md`, with the concrete invocation for
   each departing phase. Example: `phase 3b essential — mechanical
-  re-indent; plan-tool run <slug> --mode reconcile --iterate -y --step 2`
+  re-indent; plan-tool reconcile-code <slug> -y --step 2`
 - **Status:** ...
 ```
 

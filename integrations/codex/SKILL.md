@@ -9,7 +9,7 @@ paths:
   - docs/implementation-plans/**
   - plan-seeds/**
   - .plan-tool/plans.json
-argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|stop|ask] [--fallback-backend BACKEND] <plan-name> [--step N] [--mode check|optimize|document|test|security|lint] [--reconcile] [--dry-run] [--iterate] [--max-iterations N] [--iteration-budget SECONDS]'
+argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|stop|ask] [--fallback-backend BACKEND] <plan-name> [--step N] [--mode check|optimize|document|test|security|lint] [--reconcile] [--dry-run]'
 ---
 
 # plan-tool

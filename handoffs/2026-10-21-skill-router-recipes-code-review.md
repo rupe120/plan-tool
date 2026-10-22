@@ -193,7 +193,6 @@ claimed after `59796a8ad`, and no fully clean whole-branch Claude verdict is
 claimed. All reported findings have dispositions. The omission in the earlier
 execution is corrected; the skill already contains the Claude review requirement.
 
-
 ## Follow-up correction — 2026-10-22
 
 Pass-2 finding 6 above is incorrectly refuted: the canonical directive itself

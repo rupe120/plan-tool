@@ -111,27 +111,20 @@ exact line format.
 
 ### Iterating headlessly
 
-`--iterate` and `-y` compose. Under `-y` (or closed stdin, or a
-non-TTY), the walk inside every iteration defaults to `apply-all`, so
-iteration N+1 never blocks on `input()`. The same
-`WalkState(yes_to_all=True)` seed that drives the inner walks under
-`-y` (per the step-4 wiring at
-`plan_tool/cli/reconcile.py:_iterate_reconcile_loop`) also auto-keeps
-every apply-finding diff. A completed loop exits 0 even when the
-budget runs out with findings still open — a CI job should inspect
-the printed report or the saved findings rather than the return code.
-For the audit commands (`completeness-audit` / `verify-all` /
-`validate`), pass `--fail-on-findings` instead, to gate the pipeline
-on the exit code directly:
+On supported authoring routes, `-y` with closed stdin permits automatic
+application of deterministic findings. It does not authorize blind application
+of conceptual audit gaps: read the report and make judged session-directed edits.
+A completed loop can exit 0 with findings still open; inspect the report and
+stop reason. For completeness-audit CI gating, use `--fail-on-findings`.
 
-These are independent syntax examples; commit a clean baseline before each
+These are independent syntax examples. Commit a clean baseline before each
 stage and follow both audit gates in the shared directives. Reconciliation
-commands do not support iteration.
+commands do not support iteration. Detail's optional quality loop is for an
+explicit request to iterate detail authoring.
 
 ```bash
-plan-tool detail my-plan --iterate -y < /dev/null # only when explicitly requested
-plan-tool completeness-audit my-plan --iterate -y < /dev/null
-
+plan-tool detail my-plan --iterate -y < /dev/null
+plan-tool completeness-audit my-plan --iterate --fail-on-findings -y < /dev/null
 ```
 
 See [Iterating to convergence](ITERATION.md)

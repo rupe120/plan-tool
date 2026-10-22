@@ -821,25 +821,20 @@ exact line format.
 
 ### Iterating headlessly
 
-`--iterate` and `-y` compose: under `-y` (or closed stdin / non-TTY),
-the walk inside every iteration defaults to `apply-all` so iteration
-N+1 isn't blocked on `input()`. The same `WalkState(yes_to_all=True)`
-seed that drives the inner walks under `-y` (per the step-4 wiring at
-`plan_tool/cli/reconcile.py:_iterate_reconcile_loop`) also auto-keeps every apply-finding
-diff. A completed loop exits 0 even when the budget is exhausted with
-findings still open, so a CI job inspects the printed report / saved
-findings rather than the rc — or, for the audit commands
-(`completeness` / `verify-all` / `verify-all` / `validate`), passes
-`--fail-on-findings` to gate the pipeline on the exit code directly:
+On supported authoring routes, `-y` with closed stdin permits automatic
+application of deterministic findings. It does not authorize blind application
+of conceptual audit gaps: read the report and make judged session-directed edits.
+A completed loop can exit 0 with findings still open; inspect the report and
+stop reason. For completeness-audit CI gating, use `--fail-on-findings`.
 
-These are independent syntax examples; commit a clean baseline before each
+These are independent syntax examples. Commit a clean baseline before each
 stage and follow both audit gates in the shared directives. Reconciliation
-commands do not support iteration.
+commands do not support iteration. Detail's optional quality loop is for an
+explicit request to iterate detail authoring.
 
 ```bash
-plan-tool detail my-plan --iterate -y < /dev/null # only when explicitly requested
-plan-tool completeness-audit my-plan --iterate -y < /dev/null
-
+plan-tool detail my-plan --iterate -y < /dev/null
+plan-tool completeness-audit my-plan --iterate --fail-on-findings -y < /dev/null
 ```
 
 See [Iterating to convergence](#iterating-to-convergence---iterate)
@@ -990,7 +985,6 @@ parsing, and unsupported-detail-format errors still exit non-zero.
   renderers, not a loop. The convergence step happens on the next run:
   `create --from-existing <seed> --iterate`.
 
-
 ### Defaults
 
 | Flag | Default | Source | Effect |
@@ -1000,7 +994,6 @@ parsing, and unsupported-detail-format errors still exit non-zero.
 | `--iteration-budget SECONDS` | `1800` | `convergence.DEFAULT_ITERATION_BUDGET_SECONDS` | Debounced no-progress deadline: fires only after SECONDS pass with zero forward progress. It resets on every round and every `apply_finding` call, so a single 15-20+ minute claude call never trips it — this is not a cap on total loop wall-clock (see `--time-budget` for that). |
 | `--max-stall-rounds N` | `2` | `convergence.DEFAULT_MAX_STALL_ROUNDS` | Stop after N consecutive rounds whose open-finding **count** doesn't shrink. It's an ID-agnostic backstop for a subjective audit that re-phrases the same findings each round (fresh ids would otherwise defeat the `marginal` / `converged` checks). `0` disables. |
 
-
 ### When to use `--iterate`
 
 **Reach for `--iterate` when:**
@@ -1009,14 +1002,13 @@ parsing, and unsupported-detail-format errors still exit non-zero.
   deterministic completeness primitives (body sections, detail
   coverage, references) to drive 2–3 author-fix-reaudit passes before
   you hand it to a developer.
-- The user explicitly requests iterative detail authoring with `detail` and wants the
+- You explicitly request iterative detail authoring with `detail` and want the
   `detail-quality.md` review to drive 2–3 quality revisions on the
   just-written body — citations tightened, vague prose pinned to real
   line ranges, generic bullets replaced with code-checkable ones.
-- You're running headlessly (`-y < /dev/null`) and want the walk to
-  apply every finding without stopping. Under `-y` / non-TTY, the inner
-  walks default to `apply-all` so iteration N+1 isn't blocked on
-  `input()` — there's no one there to answer the prompt.
+- You want supported deterministic authoring fixes to run headlessly
+  (`-y < /dev/null`). Conceptual audit gaps still need session-directed
+  judgment; headless mode does not turn them into automatic applies.
 
 **Skip `--iterate` when:**
 
