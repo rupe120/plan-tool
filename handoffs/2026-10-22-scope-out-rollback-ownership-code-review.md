@@ -113,3 +113,28 @@ paths make the plan discriminator valid; exact preimage bytes need no restoratio
 Generated dated lessons and archived plans remain historical provenance, outside
 live contract ownership. A possible body edit before fingerprinting is unchanged
 and lies within the documented no-lock boundary. No unrelated finding is applied.
+
+## Claude Code review 3
+
+Range `c330cbb2e..9821b481b9bbec9ad78aeee33d097de80ef49fcc`;
+actual built-in `code-review` Skill at high effort plus independent verification.
+Session `a2e83a65-fafc-4240-a02c-ebc55b856eeb`.
+Clean for the invariant, with no material reproducible bug or missing route.
+The reviewer independently runs **678 affected tests** in 1.62s and the full
+suite: **15,095 passed, 67 skipped** in 70.18s; diff whitespace is clean.
+The session's separate final full run is also **15,095 passed, 67 skipped**
+in 70.53s after the arrow correction.
+
+Six candidates are checked: restrictive mode/check-replace windows remain
+explicit accepted residuals; KeyboardInterrupt handling is unchanged at base
+and proposes a new abort contract; provenance-refresh objections are refuted
+by the guards/tests; local closures/discriminator changes are preferences;
+the sibling split rollback already guards occupied destinations. Its
+“mirroring scope_out._rollback” wording specifically describes best-effort
+continuation, which both still implement; no unrelated split code is changed.
+No out-of-scope hardening or consolidation is added without a concrete defect.
+
+The reviewer cannot run its attempted mutation through its permission layer;
+no independent mutation claim is made. Session-owned pre-fix/mutation results
+are recorded above. Its actual completed test runs independently confirm the
+final committed snapshot.
