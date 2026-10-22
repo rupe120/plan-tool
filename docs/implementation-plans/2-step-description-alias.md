@@ -62,7 +62,7 @@ steps:
     2: Existing create entry paths reuse the canonical writer to publish description
       frontmatter.
   detail: docs/implementation-plans/plan-details/step-description-alias/03-request-description-step-proposals.md
-  status: current
+  status: done
   description: Request description in step proposals and accept legacy responses while
     preserving existing create writes, archive moves, deletions, and rollback
 - id: 4
@@ -87,6 +87,7 @@ steps:
     3: Mark the backlog entry plan-authored while execution is pending and remove
       it only after full shipment.
   detail: docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md
+  status: current
   description: 'Document the version-1 alias exception and reconcile BACKLOG #517
     with shipment status'
 ---
