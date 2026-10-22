@@ -13605,8 +13605,9 @@ plan-tool reconcile-code roadmap-stack-layer --all
 - **In scope:** step-field input aliases, authoring and serialization contracts,
   relevant prompts, format documentation and consumers that depend on that
   field. Narrowly amend the format policy to allow this compatible alias
-  without a version bump or an upgrade requirement. Define deterministic handling when both keys occur, including
-  conflicting values, without silently losing step content.
+  without a version bump or an upgrade requirement. Define deterministic
+  handling when both keys occur, including conflicting values, without
+  silently losing step content.
 - **Out of scope / Non-goals:** migrating existing plans; renaming plan or
   feature titles; changing step meaning, execution order or detail requirements;
   unrelated schema cleanup.
@@ -13626,7 +13627,7 @@ plan-tool reconcile-code roadmap-stack-layer --all
   this exception does not permit arbitrary unknown fields or unrelated schema
   changes.
 - **Plan:** `docs/implementation-plans/2-step-description-alias.md`
-  (plan-authored; bare, execution pending).
+  (plan-authored; 4/4 detailed, both audit gates confirmed clean; execution pending).
 - **Seed:** `docs/implementation-plans/plan-seeds/archive/step-description-alias.replaced.md`.
 - **Principle:** write-for-the-human.
 - **Route:** plan · **Readiness:** ready · **Tier:** architect.
