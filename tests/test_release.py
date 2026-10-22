@@ -536,7 +536,6 @@ def test_an_unparseable_pyproject_exits_2_with_a_message(
 
 
 
-
 def test_release_refuses_a_version_that_is_not_x_y_z(repo: Repo) -> None:
     repo.write("pyproject.toml", PYPROJECT.replace('version = "0.1.0"', 'version = "0.2.0rc1"'))
     repo.commit_all("Pre-release")
@@ -561,7 +560,6 @@ def test_main_exits_2_with_a_message_on_a_refusal(repo: Repo, monkeypatch: pytes
 
     assert release.main(["--dry-run"]) == 2
     assert "release: no fragments" in capsys.readouterr().err
-
 
 
 def _released_base(repo: Repo, version: str) -> None:
@@ -651,7 +649,6 @@ def test_breaking_category_dominates_all_compatible_categories():
     assert release.derive({"a.md": ["Fixed", "Breaking"], "b.md": ["Added"]}) == (
         "major", {"Fixed": ["a.md"], "Breaking": ["a.md"], "Added": ["b.md"]},
     )
-
 
 
 def test_post_one_minor_override_raises_fix_only_preview(repo, capsys):

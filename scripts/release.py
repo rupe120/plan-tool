@@ -4,8 +4,9 @@
     uv run scripts/release.py [--minor] [--dry-run]
 
 Runs the release-commit step of docs/RELEASING.md, which owns the bump rule,
-the refusals, and what the script deliberately leaves out (tagging and pushing). It never tags or pushes, and restores the four release paths
-to HEAD on any failure before the commit.
+the refusals, and what the script deliberately leaves out (tagging and pushing).
+It never tags or pushes, and restores the four release paths to HEAD on any
+failure before the commit.
 
 The fragment parse mirrors scriv's markdown parser because scriv consumes the
 fragments; after `scriv collect`, its output categories are compared with the

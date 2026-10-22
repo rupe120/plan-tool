@@ -98,7 +98,7 @@ The script refuses, with a message, in these cases:
 | The tag for the new version already exists | `v<current version>` is not the latest release; check the tags before releasing. |
 | The version is not `X.Y.Z` | [Cut it by hand](#cut-a-release-by-hand); prerelease and build suffixes are outside this script. |
 | `changelog.d/` holds no fragment | Nothing to release. |
-| A fragment is not Markdown, has an unknown category, no category, or text before its first category heading | Fix the fragment; the categories are the six in the table above and `changelog.d/README.md`. |
+| A fragment is not Markdown, has an unknown category, no category, or text before its first category heading | Fix the fragment; the categories are the seven in the table above and `changelog.d/README.md`. |
 | `[tool.scriv].categories` in `pyproject.toml` is not the script's seven categories | Map the new category to a bump in `scripts/release.py`, or restore the seven. |
 | scriv's output disagrees with the derived categories, or leaves a fragment behind | The script restores the release paths. Read scriv's parse of the fragments before trusting any bump. |
 | `git`, `uv lock`, or `uvx scriv collect` is missing or fails; `uv lock` changes more than plan-tool's own version line in `uv.lock`; `pyproject.toml` is unreadable or has no `[project].version` line | Fix the cause and run again; the script restores the release paths first. For a drifted lock, commit the lock update on its own first. |
