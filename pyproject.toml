@@ -91,6 +91,6 @@ packages = ["plan_tool"]
 [tool.scriv]
 format = "md"
 fragment_directory = "changelog.d"
-categories = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
+categories = ["Breaking", "Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
 md_header_level = "2"
 version = "literal: pyproject.toml: project.version"

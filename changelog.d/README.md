@@ -16,8 +16,14 @@ stays.
   request adds.
 - **Body:** one or more category sections, each a bullet list. Write for
   someone who uses the tool, not someone who reads the diff, and name the
-  ticket key in parentheses. The categories are Added, Changed, Deprecated,
+  ticket key in parentheses. The categories are Breaking, Added, Changed, Deprecated,
   Removed, Fixed, and Security.
+
+Use `### Breaking` for an incompatible public change, including an incompatible
+removal. Explain what changes and how users upgrade. This is explicit release
+metadata: it forces major at 1.0 and later, minor before 1.0, and remains visible
+in the collected notes. A **Changed** or **Removed** heading alone selects minor;
+authors and reviewers must mark incompatibility explicitly.
 
 Example (`IPPT-123.md`):
 

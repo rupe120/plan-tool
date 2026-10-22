@@ -194,3 +194,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Scope-out rollback ownership](2026-10-22-scope-out-rollback-ownership-code-review.md) — exact publication receipts, concurrent-edit preservation, durable writes and two final independent clean Claude Code reviews.
 
 - [Concept-sync H1 boundaries](2026-10-22-concept-sync-h1-boundaries-code-review.md) — shared reader/writer section boundaries, raw unowned-content regressions and two independent clean Claude Code reviews.
+
+- [Post-1.0 release versioning](2026-10-22-post-1-release-versioning-code-review.md) — explicit Breaking notes, major/minor/patch derivation, retained release guards and independent review convergence.
