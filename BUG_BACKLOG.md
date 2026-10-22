@@ -1034,6 +1034,30 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
 
+### The iteration guide recommends an iteration flag that detail reconciliation rejects
+
+- **Files:** `docs/ITERATION.md`, the flag/default table, “On/off by default”
+  explanation and “When to use `--iterate`” reconcile example.
+- **Symptom:** The guide lists `detail --reconcile` among routes where the
+  operator can opt into `--iterate`. The real parser makes those options
+  mutually exclusive and exits 2 before the command runs. The repaired skill
+  routers explicitly state that limit; the deeper iteration guide still
+  contradicts it. No runtime or parser change is needed.
+- **Evidence:** `build_parser().parse_args(['detail', 'X', '--reconcile',
+  '--step', '1', '--iterate'])` exits 2 with “not allowed with argument
+  --reconcile.” The `p_detail_mode` mutually exclusive group in
+  `plan_tool/cli/authoring.py` owns that behavior. Report-only review 3 of the
+  skill-router repair confirms the mismatch outside the router diff.
+- **Fix:** Correct the iteration guide's supported-route/default descriptions
+  and example as one bounded documentation accuracy change. Preserve current
+  CLI behavior and the pre-execution-only plan-reconciliation policy; do not
+  restore flag support to satisfy stale prose.
+- **Approach:** direct, actual parser checks and source/contract review rather
+  than tests matching the document's wording.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** skill-router recipe repair review, 2026-10-21/22. This remaining
+  deeper-guide defect is separate from the fulfilled five router defects.
+
 ## ROADMAP
 
 Owner-tracked. The `roadmap` verb is experimental work the
