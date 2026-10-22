@@ -42,7 +42,7 @@ steps:
     1: Provides the request, assistant action, owner decision and inspectable-result
       presentation pattern.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/02-convert-ttrpg-demo-assistant-requests.md
-  status: current
+  status: done
 - id: 3
   title: Align first-use and situation examples with assistant-authored seeds, monitoring
     and separate completion requests
@@ -63,6 +63,7 @@ steps:
     1: Supplies the concrete planning example and artifact review points.
     2: Supplies the advanced roadmap request path and its owner decisions.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md
+  status: current
 - id: 4
   title: Verify the reading journey and local planning-to-Jira rehearsal, then reconcile
     demo preparation status
