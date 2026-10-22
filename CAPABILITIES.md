@@ -32,7 +32,7 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
   draft-seed destinations. `--materialize` and `--refresh-seeds` generate
   `SEED_FORMAT.md`-conformant drafts separately; create handoff lines appear
   only for drafts that classify `current`. Opt-in `--apply` (+ confirm or `-y`)
-  promotes accepted drafts into `plan-seeds/` without invoking stages; roadmap
+  promotes accepted drafts into `docs/implementation-plans/plan-seeds/` without invoking stages; roadmap
   revisions invalidate rather than overwrite those seeds, and `--refresh-seeds`
   explicitly reprocesses them against current code with a persisted diff report.
   Backend work occurs in roadmap stages and in the standalone seed materializer

@@ -87,7 +87,6 @@ from pathlib import Path
 from typing import Literal, Optional
 
 from plan_tool.seed_paths import default_seeds_dir
-
 from plan_tool.cli.console import _short_path, render_roadmap_view
 from plan_tool.cli.context import _resolve_cmd_repo_root
 from plan_tool.cli.parser import Handler
@@ -2069,7 +2068,7 @@ def _render_apply_result(result: RoadmapApplyResult, *, slug: str, repo_root: Pa
         )
         warn(
             f"{stale.plan_id}: published seed's draft is {stale.state}; its "
-            f"plan-seeds/ copy may be out of date (see {remedy})"
+            f"published seed copy may be out of date (see {remedy})"
         )
 
 

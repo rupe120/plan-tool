@@ -31,7 +31,6 @@ from typing import Callable, Optional
 
 from plan_tool import locator
 from plan_tool.seed_paths import default_seeds_dir
-
 from plan_tool.parser import parse_plan, write_plan
 from plan_tool.schema import Plan, PlanStatus, Step, StepScope, StepStatus
 from plan_tool.scope_fence import (
