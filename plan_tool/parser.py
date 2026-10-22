@@ -473,7 +473,7 @@ def parse_plan(path: str | Path) -> Plan:
     :class:`ConcurrentModificationError`).
     """
     p = Path(path)
-    text = p.read_text(encoding="utf-8")
+    text = p.read_bytes().decode("utf-8")
     plan = parse_plan_text(text)
     try:
         _FRONTMATTER_PROVENANCE[str(p.resolve())] = _frontmatter_hash(
@@ -511,7 +511,7 @@ def write_plan(
     and the body below is always taken from the current on-disk file.
     """
     p = Path(path)
-    original = p.read_text(encoding="utf-8")
+    original = p.read_bytes().decode("utf-8")
     split = _split_frontmatter(original)
 
     key = str(p.resolve())
@@ -540,7 +540,7 @@ def write_plan(
         allow_unicode=True,
     )
     new_text = f"{_FENCE}\n{new_fm}{_FENCE}\n{split.body}"
-    p.write_text(new_text, encoding="utf-8")
+    p.write_bytes(new_text.encode("utf-8"))
     # Refresh provenance to what we just wrote so a subsequent in-process
     # write from the same parse doesn't false-trip on our own change.
     # Hash via _split_frontmatter (not raw new_fm) so it matches exactly

@@ -595,6 +595,37 @@ class TestRoundTrip:
         new_body = new_text.split("---", 2)[2]
         assert new_body == original_body
 
+    @pytest.mark.parametrize("newline", ["\n", "\r\n", "\r"])
+    @pytest.mark.parametrize("text_key", ["title", "description"])
+    def test_write_preserves_raw_body_bytes_and_repeated_write_provenance(
+        self, tmp_path, newline, text_key
+    ):
+        text = _concept_plan("").replace("    title: First", f"    {text_key}: First")
+        target = tmp_path / "plan.md"
+        target.write_bytes(text.replace("\n", newline).encode("utf-8"))
+        plan = parse_plan(target)
+        original_body = split_plan_document(target.read_bytes().decode("utf-8")).body
+        for _ in range(2):
+            write_plan(target, plan)
+            written = target.read_bytes().decode("utf-8")
+            assert split_plan_document(written).body.encode("utf-8") == original_body.encode("utf-8")
+            assert "description:" in split_plan_document(written).frontmatter_yaml
+
+    def test_crlf_body_edit_is_preserved_but_frontmatter_edit_is_refused(self, tmp_path):
+        from plan_tool.parser import ConcurrentModificationError
+
+        target = tmp_path / "plan.md"
+        target.write_bytes(_concept_plan("").replace("\n", "\r\n").encode("utf-8"))
+        plan = parse_plan(target)
+        target.write_bytes(target.read_bytes() + b"Fresh body.\r\n")
+        write_plan(target, plan)
+        assert target.read_bytes().endswith(b"Fresh body.\r\n")
+        changed = target.read_bytes().replace(b"title: Concept ownership", b"title: External edit")
+        target.write_bytes(changed)
+        with pytest.raises(ConcurrentModificationError):
+            write_plan(target, plan)
+        assert target.read_bytes() == changed
+
     def test_status_update_persists(self, tmp_path: Path) -> None:
         target = tmp_path / "plan.md"
         target.write_text(_fixture("well_formed.md").read_text(encoding="utf-8"), encoding="utf-8")
