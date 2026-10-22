@@ -982,7 +982,10 @@ mostly self-seeded still contains real gaps worth applying.
 **Use `--iterate` on every command that supports it except `detail`; never pass
 `--no-iterate` by default.** Availability and defaults differ: `create` defaults it
 **ON**; `completeness-audit` defaults it **OFF**, so pass it there explicitly; `detail` defaults it **OFF** (a one-shot write
-— don't opt back in unless asked); on `run` it loops reconcile (default OFF).
+— don't opt back in unless asked). Neither `detail --reconcile` nor
+`run --reconcile` accepts `--iterate`; standalone reconcile verbs do not
+accept iteration flags. Read saved reports and drive judged corrections
+through separate committed invocations instead.
 Don't tack it onto commands where it is a no-op (a non-reconcile `run`,
 `review`, `verify`, `jira`) — it warns or errors.
 

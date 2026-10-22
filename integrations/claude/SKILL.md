@@ -167,7 +167,8 @@ completeness findings exist, correctness renders first.
 `create` iterates by default. `detail` defaults to a one-shot write; do not
 opt it into iteration unless the user asks. Pass `--iterate` explicitly to
 `completeness-audit`. Use iteration flags only where the invocation accepts them:
-`detail --reconcile` cannot combine with `--iterate`, and standalone
+Neither `detail --reconcile` nor `run --reconcile` can combine with
+`--iterate`, and standalone
 `reconcile-plan` and `reconcile-code` do not accept that flag. Completed loops can exit 0 with unresolved findings or an
 exhausted budget. Read saved findings, stop reason and audit qualification;
 for `completeness-audit` CI gating, use its supported `--fail-on-findings` flag.

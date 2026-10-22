@@ -192,3 +192,14 @@ properties instead of resampling unchanged routers. No further full review is
 claimed after `59796a8ad`, and no fully clean whole-branch Claude verdict is
 claimed. All reported findings have dispositions. The omission in the earlier
 execution is corrected; the skill already contains the Claude review requirement.
+
+
+## Follow-up correction — 2026-10-22
+
+Pass-2 finding 6 above is incorrectly refuted: the canonical directive itself
+contains a stale claim. `cmd_run` and its existing dispatch test explicitly
+reject `run --reconcile --iterate` with exit 2. The
+[iteration-route repair](2026-10-22-iteration-guide-routes-code-review.md)
+corrects the user-facing guides and directives against source/test evidence;
+protected CLAUDE.md policy and generated help remain separately tracked.
+The earlier no-router-defect verdict does not establish run-side flag support.

@@ -124,10 +124,14 @@ For the audit commands (`completeness-audit` / `verify-all` /
 `validate`), pass `--fail-on-findings` instead, to gate the pipeline
 on the exit code directly:
 
+These are independent syntax examples; commit a clean baseline before each
+stage and follow both audit gates in the shared directives. Reconciliation
+commands do not support iteration.
+
 ```bash
-plan-tool detail my-plan --iterate -y < /dev/null
-plan-tool detail my-plan --reconcile --step 3 --iterate -y < /dev/null
-plan-tool run my-plan --reconcile --step 3 --iterate -y < /dev/null
+plan-tool detail my-plan --iterate -y < /dev/null # only when explicitly requested
+plan-tool completeness-audit my-plan --iterate -y < /dev/null
+
 ```
 
 See [Iterating to convergence](ITERATION.md)
