@@ -6,7 +6,7 @@
 | Branch | `fix/plan-body-newline-preservation` |
 | Scope | BUG_BACKLOG “Concept sync and scope-out rollback normalize existing plan body newlines” |
 | Route | Bounded direct I/O and heading-boundary correction |
-| Current state | Verification and review in progress |
+| Current state | Complete: 15,068 tests pass; two consecutive independent clean Claude Code reviews after the final logic change |
 
 ## Property and pre-edit sites
 
@@ -83,3 +83,28 @@ raw CR line starts reproduce prior universal-newline behavior. The separate
 create body patch/References helpers still use normalizing I/O; no public-path
 reproduction is claimed, and the follow-up belongs in BUG_BACKLOG for
 investigation. This does not expand the concept-sync/scope-out repair.
+
+## Claude Code review 3 and convergence
+
+Range `75aa0a7e5..82ab0765977cdafb95358357ba4431047962de9a`;
+actual built-in `code-review` Skill at high effort plus supervising verification.
+Session `84af0abf-87f1-44e1-ba73-0635e245ecfd`.
+Clean for introduced defects. All 1,746 affected tests pass in 3.94s;
+`git diff --check` is clean. Independent raw-prefix/suffix and missing-section
+append probes preserve bytes for LF/CRLF/CR. A 5,000-sequence parser differential
+finds zero cross-ending mismatches.
+
+Eight raw recommendations are checked: F-2/F-3 and create patch helpers are
+known separate backlog work; mixed owned sections and LF frontmatter are
+allowed; trimming CR/LF section-edge terminators restores prior translated
+semantics; raw frontmatter hashes deliberately invalidate newline-only stale
+previews; helper extraction is a preference. No new in-scope defect remains.
+
+Reviews 2 and 3 are two consecutive independent clean reviews after final logic
+`35173d3f8`. Only evidence, changelog and backlog records follow that logic.
+The original newline-normalization entry is removed after verified completion;
+three separately scoped follow-ups remain. Optional EOF/repeat-sync coverage is
+retained above as advisory rather than claimed as a regression.
+
+The changelog describes the normalization repair specifically; it does not claim
+that the separate H1-deletion or concurrent-rollback ownership defects are fixed.

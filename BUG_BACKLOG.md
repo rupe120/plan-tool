@@ -538,18 +538,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
 
-### Concept sync and scope-out rollback normalize existing plan body newlines
-
-- **Files:** `plan_tool/concept_sync.py:synchronize_concepts` source read and `plan_tool/scope_out.py` mutation snapshot/rollback.
-- **Symptom:** concept sync reads the plan with `read_text` before passing its body to `render_plan_text`; scope-out snapshots with `read_text` and restores with `write_text`. Those paths normalize CRLF/CR body bytes before the serializer receives them or before rollback restores them.
-- **Evidence:** source inspection during #517 Claude Code review 1 identifies the source read around concept_sync.py:174 and scope_out.py:1044,1085. Python universal-newline reads normalize those bytes; parser raw-byte regressions demonstrate this failure class. No end-to-end reproduction of these separate command paths is claimed.
-- **Outcome / in scope:** preserve original body bytes through concept-sync publication and scope-out failure rollback, with provenance matching the preserved text.
-- **Out of scope:** changes to alias semantics, concept ownership, scope selection, archive operations or unrelated text readers.
-- **Verification:** reproduce with CRLF/CR inputs through each actual command path, including a failure after scope-out publication, and assert raw body bytes plus existing rollback/concurrency guarantees. Check existing tests before selecting the bounded fix.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** #517 review, 2026-10-22; existing separate paths, outside the parser-boundary correction.
-
-
 ### Concept sync deletes an unowned H1 after an owned H2
 
 - **Files:** `plan_tool/parser.py:replace_body_sections`, consumed by concept sync.
