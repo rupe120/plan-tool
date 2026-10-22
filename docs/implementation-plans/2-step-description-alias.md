@@ -13,7 +13,6 @@ enforce_step_tests: true
 source_seed: docs/implementation-plans/plan-seeds/step-description-alias.md
 steps:
 - id: 1
-  title: Accept step description and legacy title with explicit dual-key validation
   intent: Both new and legacy plans retain their step text without silently discarding
     conflicting or invalid input.
   files:
@@ -23,9 +22,8 @@ steps:
   change_type: feature
   detail: docs/implementation-plans/plan-details/step-description-alias/01-accept-step-description-legacy-title.md
   status: done
+  description: Accept step description and legacy title with explicit dual-key validation
 - id: 2
-  title: Emit description from both plan serializers while preserving guarded frontmatter
-    replacement and body bytes
   intent: New plans and ordinary rewrites use description while existing plans remain
     writable at format version 1.
   files:
@@ -44,10 +42,10 @@ steps:
     1: Alias validation lets rendered description fields parse back into the unchanged
       Step.title API.
   detail: docs/implementation-plans/plan-details/step-description-alias/02-emit-description-both-plan-serializers.md
-  status: current
+  status: done
+  description: Emit description from both plan serializers while preserving guarded
+    frontmatter replacement and body bytes
 - id: 3
-  title: Request description in step proposals and accept legacy responses while preserving
-    existing create writes, archive moves, deletions, and rollback
   intent: Generated proposals supply the preferred step field and reach a usable plan
     through the existing authoring pipeline.
   files:
@@ -64,9 +62,10 @@ steps:
     2: Existing create entry paths reuse the canonical writer to publish description
       frontmatter.
   detail: docs/implementation-plans/plan-details/step-description-alias/03-request-description-step-proposals.md
+  status: current
+  description: Request description in step proposals and accept legacy responses while
+    preserving existing create writes, archive moves, deletions, and rollback
 - id: 4
-  title: 'Document the version-1 alias exception and reconcile BACKLOG #517 with shipment
-    status'
   intent: Readers understand the preferred spelling, legacy compatibility, dual-key
     rules, and limits of older installations.
   files:
@@ -88,6 +87,8 @@ steps:
     3: Mark the backlog entry plan-authored while execution is pending and remove
       it only after full shipment.
   detail: docs/implementation-plans/plan-details/step-description-alias/04-document-version-alias-exception.md
+  description: 'Document the version-1 alias exception and reconcile BACKLOG #517
+    with shipment status'
 ---
 # Step Description Alias
 
