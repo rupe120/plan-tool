@@ -1,9 +1,8 @@
 # `completeness-audit` / `reconcile` resume & recovery
 
-Detailed operator resume/recovery reference for the audit-side convergence loops —
-`plan-tool completeness-audit <name> --iterate` and
-`plan-tool detail <name> --reconcile`. The shared machinery (iteration
-session, crash handler) is in [`RESUME_FLOW.md`](README.md); the happy path is in
+Detailed operator resume/recovery reference for the completeness convergence
+loop, `plan-tool completeness-audit <name> --iterate`. The shared machinery
+(iteration session, crash handler) is in [`RESUME_FLOW.md`](README.md); the happy path is in
 [`AUDIT_FLOW.md`](../pipeline/audit.md).
 
 ## TL;DR
@@ -199,7 +198,7 @@ there is nothing it could wrongly discard.
 
 `plan-tool reconcile-plan <name> --refresh` (the cheap fingerprint gate,
 `plan_tool/refresh.py: refresh_plan`) has a far simpler resume story than the
-convergence loops above — it is a single scoped reconcile, **not** a loop.
+completeness loop above — it is a single scoped reconcile, **not** a loop.
 
 - **The grounding baseline is the durable state.** `--refresh` diffs the plan's
   tracked grounding sidecar (`<plan-dir>/plan-details/<slug>/grounding.json`,
@@ -218,9 +217,17 @@ convergence loops above — it is a single scoped reconcile, **not** a loop.
   findings (if any) on disk and the baseline un-stamped; re-running `--refresh`
   simply re-detects the same drift and reconciles again.
 
+## Detail reconciliation is a separate scoped walk
+
+`plan-tool detail <name> --reconcile` runs one pre-execution audit and may walk
+its saved findings; it has no iteration loop or iteration-session recovery
+contract. After interruption, inspect saved findings and on-disk edits, judge
+what remains, and commit corrections before a new invocation. Do not infer
+completeness sampler/checkpoint recovery from this route's saved review.
+
 ## Crash / interrupt recovery
 
-- Both loops wrap their body in `iteration_session`, so Ctrl-C or an unexpected
+- The completeness loop wraps its body in `iteration_session`, so Ctrl-C or an unexpected
   exception still restores the SIGINT handler and emits any live-edit drift
   warning on the way out.
 - An unexpected exception propagates to `main()`'s crash handler (traceback file

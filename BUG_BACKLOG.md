@@ -1036,6 +1036,7 @@ Durable re-open conditions for retired items are recorded in
 ### Run iteration help and protected policy promise a reconcile loop the CLI rejects
 
 - **Files:** `CLAUDE.md` iteration mandate, `plan_tool/cli/run_cmd.py` run help,
+  `plan_tool/drift_detection.py` module docstring (rejected reconcile invocation),
   generated CLI references and package help golden file; hand-written run
   synopses in `README.md` and `docs/reference/commands.md`; the ordinary-run
   `--iterate` warning that incorrectly recommends detail reconciliation.

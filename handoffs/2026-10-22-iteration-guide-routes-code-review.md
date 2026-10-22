@@ -33,8 +33,9 @@ that mirror prose are added. Full-suite and review results are recorded below.
 
 ## Review status
 
-Review 1 covers `9816a9482`; review 2 covers `99ffa33e6`. Findings and
-dispositions follow; convergence remains pending the next corrected snapshot.
+Four actual Claude Code Skill reviews are complete. Reviews 3 and 4 are
+consecutive low-yield passes with no new medium-or-higher finding. Their
+advisories are dispositioned below; closure is low-yield, not wholly clean.
 
 ## Claude review 1
 
@@ -116,3 +117,35 @@ reconcile aliases. Tracked Claude files byte-match their canonical sources;
 review 3 independently verifies both copies. Full suite at `0ba7e8692`:
 14,698 passed, 66 skipped in 63.72s; affected tests 58 passed in 0.67s.
 Convergence window: one completed low-yield pass; independent confirmation pending.
+
+
+## Claude review 4 and closure
+
+Range `330441789..655c70b3a`; actual built-in `code-review` Skill at high effort,
+Sonnet 5.5, session `0cb2fa6f-c51e-464b-982f-0f9336172154`; original CLI exits
+zero. Report: `.tmp/iteration-guide-routes.review-4.md`. It independently
+re-runs the 58 affected tests (pass in 0.73s), probes defaults/rejections and
+verifies canonical/installed-copy equality. It reports no medium-or-higher issue
+and explicitly classifies the pass as low-yield.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 low: recovery audit intro/crash text still says both loops | Fixed: name only the completeness loop, and give detail reconciliation its separate scoped-walk interruption guidance. Identifier/vocabulary sweep covers intro, refresh comparison, crash section and internal helper table. |
+| 2 low: drift-detection module docstring advertises rejected invocation | Deferred in the existing policy/help follow-up: add the exact source docstring to its Files list. Runtime/source cleanup stays outside this instruction repair. |
+| 3–4: backlog examples lose an execute step | Refuted by reviewer after inspecting base: both already contain a rejected reconcile-mode recipe, not execution. No execute step is removed by this change. |
+| Optional: phase label, router typography/hints, operator voice | Retain existing dispositions; no newly verified route/default defect. |
+| Protected policy, generated help and runtime warning/synopses | Already deferred explicitly; do not silently broaden this repair. |
+
+Convergence is **low-yield**: two consecutive completed independent passes
+(3 and 4) add only low/advisory findings, with no new material defect. Finish the
+bounded recovery-text application and retain the named follow-up; stop here
+under the repository policy rather than raising the pass cap for prose precision.
+There is no claim of zero findings or a clean whole-branch review after the
+final record/recovery edit.
+
+Final verification: the installed Codex and tracked Claude skill/directive
+files byte-match their canonical sources. `git diff --check` is clean. No
+runtime behavior or parser change is introduced. Full suite at `0ba7e8692` is
+14,698 passed / 66 skipped in 63.72s; later changes are backlog recipes,
+recovery prose and review records. All findings have dispositions. Changes are
+committed on `fix/iteration-guide-routes`; no push or PR is part of this action.
