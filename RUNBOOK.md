@@ -565,6 +565,24 @@ generated [`docs/cli/roadmap.md`](docs/cli/roadmap.md).
 
 ## Workflow: start a new plan
 
+Prepare a reviewed bundle before requesting execution:
+
+> Inspect this repository and draft a grounded seed for [change] with a scope
+> fence and verified references. Link it, summarize changes and unresolved
+> decisions, and ask me for corrections or continuation before creating a plan.
+> Use the plan-tool skill for the reviewed seed: create and bare-audit the plan,
+> then link the plan and report and summarize changes before asking to author
+> details. After approval, author details and run the grounded audit; link both,
+> summarize changes and verification, and ask for review. Wait at each boundary
+> unless explicit prior delegation covers it. Stop before execution or export.
+
+See the [planning demo](docs/demos/planning-demo.md) and
+[authored samples](docs/demos/dark-mode-example.md), or the
+[roadmap demo](docs/demos/roadmap-demo.md) for project-sized concepts. The examples
+are preparation guidance, not proof of live audit convergence. Direct operator
+routes follow; use [both audit gates](docs/how-to/pipeline/audit.md) before
+separately requested execution or local export.
+
 ### From scratch
 
 ```bash
@@ -707,22 +725,39 @@ plan-tool create my-feature --output-dir custom/path/
 
 ## Workflow: drive a plan to completion
 
+After reviewing the seed, plan and details, request execution separately:
+
+> Execute this reviewed plan through the plan-tool skill, reconcile code against
+> the plan and review changes to convergence. Link reports and summarize changes,
+> validation and unresolved decisions.
+
+For inspection alone, ask: “Inspect the plan, saved reports and any active
+invocation; report state and next decisions without implementing.” To hand off
+instead, ask: “Export local Jira stories and their paired developer handoff;
+link both and summarize changes and validation for review.” Local export does
+not authorize tracker publication. Reading a demo or requesting planning does
+not authorize execution.
+
 ```bash
 # 1. See where you left off.
 plan-tool status my-feature
 
-# 2. Audit the plan-vs-codebase before doing anything destructive.
-plan-tool reconcile-plan my-feature
+# 2. Only before execution, refresh a stale, unexecuted plan if needed.
+# plan-tool reconcile-plan my-feature --refresh
 
 # 3. Run the next pending step (the launcher picks it automatically).
-plan-tool run my-feature
+plan-tool run my-feature --commit
 
 # 4. Check status; the step you just ran is now `done` and the next
 # runnable step is `current`.
 plan-tool status my-feature
 ```
 
-Repeat 3–4 until `progress=N/N`. The launcher only advances on a clean
+Repeat 3–4 until `progress=N/N`. Then run a complete
+`plan-tool reconcile-code my-feature --all` sweep, save the reports and drive
+code review under the [post-run contract](integrations/shared/DIRECTIVES.md#after-run-finishes-a-plan).
+Use actual audits as drift evidence; `--dry-run` renders prompts only. Do not
+insert completeness audits into this execution tail. The launcher only advances on a clean
 exit from claude; a non-zero exit leaves the plan untouched.
 
 At a milestone — some steps `done`, more still pending — consider
@@ -798,8 +833,8 @@ plan-tool run my-feature --step 4
 ```
 
 When the plan is still being authored (not just executed),
-`plan-tool create --iterate` and `plan-tool detail --iterate` drive
-the authoring to convergence before the per-step `run` cycle starts.
+`create --iterate`, the bare audit, one-shot `detail`, and the grounded audit
+prepare the reviewed bundle before the per-step `run` cycle starts.
 See [Workflow: drive an authoring task to convergence](#workflow-drive-an-authoring-task-to-convergence---iterate).
 
 ### Gated sweep: `run --all --commit`
@@ -1014,6 +1049,9 @@ replays completed iterations and re-invokes claude only for the
 in-flight one.
 
 ### Detail with iteration
+
+Use this optional per-step loop only when explicitly requested; normal planning
+uses one-shot detail followed by the detail-grounded audit.
 
 ```bash
 plan-tool detail my-feature --iterate
@@ -1882,6 +1920,15 @@ non-conventional report cache and `--format md` for a markdown table.
 
 ## Workflow: recover from an interrupted create/detail run
 
+> Inspect the plan, saved reports and original invocation first. Confirm that
+> command has exited, then use its recorded outcome to select the next incomplete
+> stage within my requested scope; show the recovery choice before continuing.
+
+Follow [monitoring and safe recovery](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
+While the original process is live or its exit is unconfirmed, keep monitoring
+it; do not start another invocation or checkpoint resume. Quiet output, a
+checkpoint and a backend completion message do not establish command exit.
+
 `plan-tool create` and `plan-tool detail` cache every successful
 Claude response to `<repo>/.plan-tool/checkpoints/<plan-slug>/`. If
 a run dies between a successful parse and the durable on-disk write
@@ -1896,7 +1943,8 @@ own — see
 
 ### Re-run after a failure
 
-Just run the same command again:
+After confirming the original command has exited, inspect its recorded outcome
+and artifacts before selecting the retry. When the same command remains appropriate:
 
 ```bash
 plan-tool detail my-plan -y < /dev/null
@@ -1965,11 +2013,20 @@ so manual cleanup is rarely needed — but operators can clear sooner.
 
 ## Workflow: investigating a slow run
 
-The run-log surface answers four common questions deterministically:
+> Inspect the original invocation and matching run records, report its current
+> phase and progress, and keep monitoring it to confirmed exit. Do not restart
+> or advance stages while its exit remains unconfirmed.
+
+Use the [canonical liveness procedure](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely),
+including its intervention rule: ask before stopping a live command. For a run
+launched by another session, ask how the reader wants that session to report
+completion rather than polling it as your own.
+
+The run-log surface supports these diagnostic questions:
 
 | Question | Where to look |
 | --- | --- |
-| Is the run still alive, or is it hung? | `cat .plan-tool/runs/<slug>/in-flight.json` |
+| What phase does the run record? | Match `in-flight.json` and JSONL by `run_id`; check the original process and shell separately |
 | Which phase is taking so long? | `plan-tool runs show <slug>/<latest>` |
 | Did a parse-retry fire? | grep `parse_failure` in `runs show` output |
 | Was the cost different from yesterday? | `plan-tool runs diff <slug>/<yesterday> <slug>/<today>` |
@@ -1998,12 +2055,11 @@ Sample output during a slow `cmd_run`:
 }
 ```
 
-Interpret stale `last_event_ts` (more than ~15s behind wall-clock) by
-phase:
-
-- **`current_phase: "claude_call"`** — model is still thinking.
-- **`current_phase: "prompt_build"`** — renderer regression; Claude
-  hasn't been called yet.
+Use `current_phase` to locate the last recorded activity: `claude_call` records
+backend work and `prompt_build` records prompt preparation. A stale timestamp
+alone proves neither a hang nor its cause. Compare separated observations of
+the original process, matching run-log tail and snapshot under the liveness
+procedure before considering intervention.
 
 Snapshot writes are atomic (tempfile + `os.replace`) on every phase
 and claude-call boundary, so `cat` never races the writer.
@@ -3787,6 +3843,13 @@ manifest mode. Same effect as setting `PLAN_TOOL_PLANS_DIR`.
 ---
 
 ## Progress output during long claude calls
+
+Ask the assistant to monitor the original command and report progress using
+[the liveness procedure](integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
+A `done in` line or `backend_terminated` event closes a backend call only;
+publication, iteration and finalization can remain. Completion requires the
+original shell's exit status and the matching run's `run_end`. Quiet output or
+a checkpoint supplies no shortcut and never authorizes a second invocation.
 
 Every claude-invoking subcommand — `run`, `verify-all`, `detail`, `jira`,
 `reconcile-plan`, and `create --from*` — emits human-facing status lines on

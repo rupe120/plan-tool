@@ -63,7 +63,7 @@ steps:
     1: Supplies the concrete planning example and artifact review points.
     2: Supplies the advanced roadmap request path and its owner decisions.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/03-align-first-use-situation-examples.md
-  status: current
+  status: done
 - id: 4
   title: Verify the reading journey and local planning-to-Jira rehearsal, then reconcile
     demo preparation status
@@ -88,6 +88,7 @@ steps:
     3: Provides the complete learning journey for link, monitoring and resumption
       review.
   detail: docs/implementation-plans/plan-details/skill-led-demo-examples/04-verify-reading-journey-local-planning.md
+  status: current
 ---
 # Teach demos and examples through the plan-tool skill
 

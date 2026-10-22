@@ -6,7 +6,7 @@ opposite end of the other docs:
 
 - [`MISSION.md`](../../MISSION.md) — *why* the tool is built the way it is (principles).
 - [`CAPABILITIES.md`](../../CAPABILITIES.md) — *what* surfaces exist and which principle each serves.
-- [`../reference/commands.md`](../reference/commands.md) and [`common-workflows.md`](common-workflows.md) — *how* commands and flags work. The [`README.md`](README.md) is the front door that links them.
+- [`../reference/commands.md`](../reference/commands.md) and [`common-workflows.md`](common-workflows.md) — *how* commands and flags work. The [`README.md`](../../README.md) is the front door that links them.
 - This doc — *when* to use it and *which path* to take.
 
 ## What it's for, in one line
@@ -40,17 +40,31 @@ overhead. If the change is small enough to just do, do it.
 ## Use-case catalog
 
 Each entry is a situation, the path to take, and what you get out of it. Spine
-commands only — see the linked guide sections for every flag.
+commands support the assistant requests below — see the linked guides for every flag.
+
+Ask the assistant to prepare inputs; you do not need a prewritten seed. Follow
+[the planning walkthrough](../demos/planning-demo.md): review the linked seed and
+scope summary before plan creation, the plan and bare audit before details, and
+the details and grounded audit before a separate execution or local-export request.
+At each boundary the assistant summarizes changes, asks for corrections or
+continuation and waits for your response unless explicit prior delegation covers
+it. Status inspection alone authorizes no implementation. For resumption, inspect
+the original invocation and reports first; choose the next incomplete stage within
+the requested scope only after confirmed command exit, using its recorded outcome.
+See [monitoring and recovery](../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
 
 ### 1. Turn a rough idea into a buildable plan
+
+> Inspect this repository and draft a grounded seed for [feature] with a scope fence and references; link it for review before creating the plan.
 
 You have a feature in your head or a sentence in a ticket, and you want an
 ordered plan a developer can build from.
 
 ```bash
-plan-tool create my-feature --from "one or two sentence description"
-plan-tool detail my-feature        # per-step implementation notes
-plan-tool completeness-audit my-feature
+plan-tool create my-feature --from-existing plan-seeds/my-feature.md --iterate
+plan-tool completeness-audit my-feature --iterate --commit  # bare audit, then review
+plan-tool detail my-feature --commit                       # after plan review
+plan-tool completeness-audit my-feature --iterate --commit  # grounded audit, then review
 ```
 
 `create` proposes the steps (checked against files that actually exist),
@@ -65,6 +79,8 @@ and come back here with a seed.
 
 ### 2. Bring an external or AI-written draft under control
 
+> Assess this draft against current code and show the grounded input and changes for review before plan creation.
+
 Someone (or some model) handed you a draft plan. It reads well, but you don't
 trust that it fits the code.
 
@@ -77,17 +93,19 @@ plan-tool reconcile-plan my-feature     # pin every step to the current code
 will tell you if it's really several plans in a trench coat), then
 `reconcile-plan` checks each step against the live tree and edits the plan to
 match. You get a draft that's been ground against reality instead of taken on
-faith. See [README → Decision flow](README.md#decision-flow).
+faith. See [README → Decision flow](../../README.md#decision-flow).
 
 ### 3. Execute a plan locally, one step at a time
+
+> Execute this reviewed plan through the plan-tool skill, then reconcile code against the plan and review changes to convergence; report results and unresolved decisions.
 
 You have a vetted plan and want to build it on your own machine without losing
 the thread between steps.
 
 ```bash
 plan-tool status my-feature        # what's the current step?
-plan-tool run my-feature           # build the current step
-plan-tool run my-feature --all     # build every runnable step in order
+plan-tool run my-feature --commit       # build the current step
+plan-tool run my-feature --all --commit # build every runnable step in order
 ```
 
 Each step runs in a fresh Claude subprocess with gates around it; plan state
@@ -96,24 +114,21 @@ You get step-by-step execution that survives a crash or a Ctrl-C. See
 [README → run](common-workflows.md#4-run--execute-the-plan) and
 [Resuming after a failure](../OPERATIONS.md#resuming-after-a-failure).
 
-**When the plan completes, verify the code covers it — green steps aren't the
-finish line.** Drive three convergence loops before calling it done:
+**After the plan completes, reconcile code with the plan and review it.**
 
 ```bash
-plan-tool reconcile-code my-feature        # plan is canonical: land edits so code fully covers the plan
-plan-tool reconcile-code my-feature --dry-run   # loop (1) until this reports no drift
-plan-tool completeness-audit my-feature --iterate  # loop (2): audit, then read the saved
-# report and hand-edit the plan/detail files yourself (completeness-apply is deprecated,
-# BACKLOG #367 — reviewing the whole report at once beats walking it gap by gap), then re-audit
-# then run /code-review in your Claude session, looping until it converges — loop (3)
+plan-tool reconcile-code my-feature --all  # complete sweep, including done code steps
 ```
 
-Loops (1) and (2) are plan-tool commands; loop (3) `/code-review` is a **Claude
-session activity, not a plan-tool command** (plan-tool doesn't review code — that
-lives in the driving session, per `CLAUDE.md`). See
-[RUN_FLOW → the two-loop verification tail](pipeline/run.md#after-the-plan-completes--the-two-loop-verification-tail).
+Save every report and judge findings against code and tests. `--dry-run` renders
+prompts only; it supplies no drift verdict. Follow the existing
+[post-run reconciliation and code-review contract](../../integrations/shared/DIRECTIVES.md#after-run-finishes-a-plan)
+for convergence and stopping. Code review belongs to the driving session;
+post-run completeness auditing is outside this tail.
 
 ### 4. Hand the work off as Jira stories
+
+> Export this reviewed bundle as local Jira stories and their paired developer handoff. Link both, summarize changes and validation, and leave tracker publication for a separate request.
 
 Your team works in Jira, and you want the plan exported as right-sized stories
 with estimates and dependencies.
@@ -132,6 +147,8 @@ a CI gate. See [README → jira](../reference/commands.md#cli-usage) and
 
 ### 5. Keep a long-lived plan honest as the code moves
 
+> Inspect this unexecuted plan and current code, then refresh its grounding and show proposed changes for review; do not implement it.
+
 A plan you wrote weeks ago is still open, but the codebase has changed under it.
 
 ```bash
@@ -146,6 +163,8 @@ re-fits the repo instead of one that quietly went stale. See
 
 ### 6. Start the next iteration from what's already built
 
+> Assess this old plan against current code and prepare a forward seed for review without changing the source or executing new work.
+
 An old plan is partly built, and you want to start fresh from where the code
 actually is — not re-run the stale plan.
 
@@ -157,29 +176,34 @@ plan-tool create next-iteration --from-existing <stem>.seed.md
 `annotate` reads the old plan, sees what's been built, and emits a seed for the
 next `create` — without touching the original. You get a clean next iteration
 grounded in the current state, not a patched-over old one. See
-[README → annotate / Decision flow](README.md#decision-flow).
+[README → annotate / Decision flow](../../README.md#decision-flow).
 
 ### 7. Drive a plan to "actually correct," not just "generated"
+
+> Use the plan-tool skill to prepare this reviewed seed through both audit gates, bringing material scope and design decisions back to me; stop before execution or export.
 
 You want the plan tightened until it stops surfacing problems, not just written
 once.
 
 ```bash
 plan-tool create my-feature --from-existing seed.md --iterate
-plan-tool detail my-feature --iterate
+plan-tool completeness-audit my-feature --iterate --commit  # bare gate
+plan-tool detail my-feature --commit                       # after review
+plan-tool completeness-audit my-feature --iterate --commit  # detail-grounded gate
 ```
 
-`--iterate` (on by default for `create`; off by default for `detail`, pass it to
-opt in) loops audit → fix →
-re-audit until findings stop appearing. Convergence is the correctness signal:
-a plan that keeps re-flagging the same spot is mis-shaped, not just unfinished —
-that's your cue to re-split or carve the over-packed step out:
+Use judged corrections between audits and report coverage, qualification and
+convergence under the [audit procedure](pipeline/audit.md). Detail authoring is
+one-shot by default; do not routinely opt into `detail --iterate`. A recurring
+finding calls for investigation of its provenance before structural changes.
+Operator diagnostics remain available:
 
 ```bash
-plan-tool convergence my-feature                 # loop health + newest-run advisories
-plan-tool split-criteria my-feature              # why is this plan shaped this way?
-plan-tool scope-out my-feature --step N --apply  # carve it out, re-plan it on its own
+plan-tool convergence my-feature     # loop health and advisories
+plan-tool split-criteria my-feature  # inspect the decomposition rationale
 ```
+
+Use `scope-out` only after reviewing whether a separate plan is warranted.
 
 See [README → Iterating to convergence](../ITERATION.md)
 and the [Runbook](../../RUNBOOK.md).
@@ -264,6 +288,12 @@ Two limits worth knowing before you commit: the jira-grade audit is
 by hand), and `direct-jira` / `direct-run` have no grade selector yet.
 
 ### 11. Ground a project-sized concept before you write a seed
+
+> Inspect the repository and help prepare a grounded concept brief for review.
+> Use the plan-tool skill to prepare a roadmap, link its artifacts and summarize
+> decisions for my review before deriving seeds or individual plans.
+
+See the [TTRPG demo](../demos/roadmap-demo.md) for the larger-concept review route.
 
 You have a concept brief for a whole project rather than one feature, and you
 can't yet say what the domain is, which quality attributes it trades on, or how
@@ -387,13 +417,13 @@ for the end-to-end loop.
 
 | You're starting from… | Start with |
 | --- | --- |
-| A project-sized concept, before you have a seed | `roadmap <slug> --from-existing <concept.md>` (writes four artifacts and draft seeds; review mapping, then run the printed `create --from-existing` lines — optionally `roadmap --apply` to promote into `plan-seeds/`; see walkthrough § 5) |
-| A rough idea (1–2 sentences) | `create <slug> --from "…"` |
-| Nothing — author interactively | `create <slug>` |
-| A rich draft (yours or an AI's) | `create <slug> --from-existing <path>` |
+| A project-sized concept, before you have a seed | Ask for brief and roadmap review; `roadmap <slug> --from-existing <concept.md>` (writes four artifacts and draft seeds; review mapping, then run the printed `create --from-existing` lines — optionally `roadmap --apply` to promote into `plan-seeds/`; see walkthrough § 5) |
+| A rough idea (1–2 sentences) | Ask for a grounded seed and review it, then `create <slug> --from-existing <seed>` |
+| Nothing — author interactively | Ask for framing and seed review, or use the operator wizard: `create <slug>` |
+| A rich draft (yours or an AI's) | Ask for grounding and input review, then `create <slug> --from-existing <path>` |
 | A draft already in `## Steps` layout | `create <slug> --from-existing <path>` (skips the step-decomposition call) |
-| An old plan + current code | `annotate <old-plan>` → `create … --from-existing <seed>` |
-| A plan file another tool wrote | `register <path>`, then audit / run |
+| An old plan + current code | Ask for carryover assessment and seed review; `annotate <old-plan>` → `create … --from-existing <seed>` |
+| A plan file another tool wrote | Ask for grounding and review; `register <path>`, then both audit gates before separately requested execution |
 | A small change you want straight to Jira stories | `direct-jira <slug> --from-existing <path>` (deprecated, BACKLOG #367 — see § 9) |
 | A small change you want built and reconciled | `direct-run <slug> --from-existing <path>` (deprecated, BACKLOG #367 — see § 9) |
 
