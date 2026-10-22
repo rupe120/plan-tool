@@ -180,3 +180,5 @@ future tool-decision route (its successor-slug rule moved to
 
 - [New-seed default placement](2026-10-22-seed-default-location-code-review.md) — nested defaults, retained existing seeds, compatibility tests and Claude review dispositions.
 - [Iteration route documentation repair](2026-10-22-iteration-guide-routes-code-review.md) — source-backed defaults, supported flags and reconciliation guidance.
+
+- [Run iteration guidance accuracy](2026-10-22-run-iteration-guidance-code-review.md) — protected policy, help and warning text align with shipped behavior.

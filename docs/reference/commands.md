@@ -55,7 +55,7 @@ plan-tool reconcile-plan <name> [--step N | --all] [--dry-run] [--refresh] [--no
 
 # Execute — lock in built work with gates, then run steps.
 plan-tool suggest-gates <name> [-y] [--all-steps]   # propose gate: commands
-plan-tool run <name> [--step N | --all [--max-steps N]] [--mode M] [--dry-run] [--allow-missing-parent] [--iterate | --no-iterate] [--max-iterations N] [--iteration-budget SECONDS]
+plan-tool run <name> [--step N | --all [--max-steps N]] [--mode M] [--dry-run] [--allow-missing-parent]   # run has no iteration loop; legacy iteration flags remain accepted for compatibility
 
 # Verify finished (done) steps before merge.
 plan-tool verify-all --rollup <name> [--max-steps N] [--dry-run] [--deep]
