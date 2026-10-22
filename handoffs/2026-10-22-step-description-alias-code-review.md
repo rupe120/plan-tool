@@ -6,7 +6,7 @@
 | Branch | `feat/step-description-alias` |
 | Scope | BACKLOG #517, four approved steps; plan-canonical reconciliation and review tail |
 | Execution | All four steps green and committed |
-| Current review state | Three reconciliation sweeps complete; final two clean; Claude Code reviews not yet run |
+| Current review state | Three reconciliation sweeps complete; final two clean; two independent Claude Code passes confirm logic convergence |
 
 ## Settled decisions
 
@@ -117,3 +117,46 @@ the latest committed snapshot before the tail closes.
 
 D1 correction validation: annotate/create tests 1,132 passed in 5.10s; full
 suite 14,996 passed, 67 skipped in 78.87s. Diff whitespace check passes.
+
+## Claude Code review 2 and final disposition
+
+Range `b2e46f5a4..db6e63807`; actual built-in code-review Skill at high effort,
+Sonnet 5.5; session `7a1b7b7f-21e6-4693-b06d-4281e4ecfe6d`, CLI exit zero.
+Report `.tmp/step-description-alias.review-2.md`. The Skill returns six
+candidates; supervising verification checks each against the approved plan,
+existing tests, actual callers and independent probes. Targeted tests:
+4,322 passed, 1 skipped in 25s. No confirmed in-scope logic defect.
+
+- C2 rejected-conflicting/invalid proposal peers is refuted as a bug: the
+  approved dual-key rule requires rejection and the existing tests pin it.
+- C4 cross-flow provenance mismatch is refuted as a regression: each flow
+  captures and compares its own representation. Remaining separate-path
+  newline loss is the already-filed bug, not a reason to widen this fix.
+- DOC-1 low confirms two sibling raw-key comments in annotate.py and
+  annotate_render.py. Finish the D1 class sweep there with description/legacy
+  title wording. The implementation reads step.title, populated by either key;
+  no runtime change or prose-conformance test is needed. Session accuracy
+  review compares both comments with those callers and the approved prompt.
+- Key position, error-shape differences and generic colon-quoting examples
+  remain wording/preferences. Legacy-only diagnostics stay in BUG_BACKLOG.
+- The D1 prompt correction and maintained format docs are independently
+  verified accurate by review 2.
+
+**Logic convergence is confirmed:** two independent consecutive passes against
+ranges containing latest logic change `06ee36b41` find no logic defect.
+Both carry a low documentation tail, corrected through the closing comment
+sweep; do not call this a completely clean all-prose audit. Review 2 covers
+`db6e63807`, not the later comment/bookkeeping commit. Repository policy permits
+finishing advisory prose corrections without resetting the logic window.
+No additional full reconciliation is warranted on those comment findings.
+
+BACKLOG #517 is removed only after four green steps, complete reconciliations,
+full tests and the two independent reviews establish delivery. The two bounded
+follow-up bugs remain in BUG_BACKLOG. Retire the plan-only pickup handoff and
+route the index here; source plan PR #139 and its committed artifacts preserve
+authoring provenance. Runtime code, the approved version-1 exception and
+compatibility decisions are unchanged by this final bookkeeping.
+
+Closing comment accuracy checks: annotate/annotate-render tests 83 passed in
+0.32s; diff whitespace check passes. Last complete full suite remains 14,996
+passed, 67 skipped; the closing change contains comments and bookkeeping only.

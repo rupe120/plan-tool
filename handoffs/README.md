@@ -183,4 +183,4 @@ future tool-decision route (its successor-slug rule moved to
 
 - [Run iteration guidance accuracy](2026-10-22-run-iteration-guidance-code-review.md) — protected policy, help and warning text align with shipped behavior.
 
-- [Step description alias plan](2026-10-22-step-description-alias-plan.md) — owner-approved version policy, four detailed steps and both clean audit gates; implementation pending.
+- [Step description alias implementation](2026-10-22-step-description-alias-code-review.md) — four green steps, clean reconciliation and two independent Claude Code logic reviews; source plan PR #139.
