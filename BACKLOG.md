@@ -1751,7 +1751,7 @@ contract.
   plan-tool completeness-audit conceptual-pass-impact-sweep --iterate --commit -y
   plan-tool detail conceptual-pass-impact-sweep --reconcile --step N --commit -y
   plan-tool run conceptual-pass-impact-sweep -y --step N
-  plan-tool run conceptual-pass-impact-sweep --mode reconcile --iterate -y --step N
+  plan-tool reconcile-code conceptual-pass-impact-sweep -y --step N
   plan-tool completeness-audit conceptual-pass-impact-sweep --iterate --commit -y
   ```
 - **Status:** not started.
@@ -2399,7 +2399,7 @@ implementation contract.
     --from "..."
   plan-tool detail detail-authoring-wizard --commit -y   # phase 1.5
   plan-tool completeness-audit detail-authoring-wizard --iterate --commit -y   # phase 2
-  plan-tool run detail-authoring-wizard --mode reconcile --iterate -y --step N   # phase 3
+  plan-tool reconcile-code detail-authoring-wizard -y --step N   # phase 3
   plan-tool reconcile-code detail-authoring-wizard --all   # post-run tail
   ```
 - **Status:** not started — design notes only.
@@ -5361,7 +5361,7 @@ separate)**
   plan-tool create detail-readiness-advisory --iterate -y --from-existing BACKLOG.md
   plan-tool detail detail-readiness-advisory --commit -y
   plan-tool completeness-audit detail-readiness-advisory --iterate --commit -y
-  plan-tool run detail-readiness-advisory --mode reconcile --iterate -y --step N
+  plan-tool reconcile-code detail-readiness-advisory -y --step N
   ```
 - **Origin:** 2026-08-11, operator decision during eight bare-plan audits of
   the now-retired #231 plan: the plan was materially ready for detail, but the
@@ -5777,8 +5777,9 @@ separate)**
   - Run-created stubs were cleaned up by hand in `701f3fda` and `fa1f03b2`
     (both 2026-06-22). No stub has been committed since. Whether any supported
     session-driven flow still populates `scope_buffer` is unverified;
-    `docs/TRACKING.md` phase 3b's `run --mode reconcile --iterate` is the
-    likeliest remaining path.
+    the retained `_iterate_reconcile_loop` helper is a candidate for source-level
+    investigation, but no current reconcile CLI route enables its budget. Do
+    not use the removed `--mode reconcile` route as a reproduction.
   - The stub mixes two kinds of record: `reverted` records are deferred work,
     while `kept-by-impact` records are scope expansions that already landed
     and need review.

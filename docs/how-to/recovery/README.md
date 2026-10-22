@@ -39,8 +39,10 @@ live in the correlating docs:
 
 ## The iteration session (`iteration_session`)
 
-All four iterative entry points — `create_plan`, `generate_detail`,
-`cmd_completeness`, `_iterate_reconcile_loop` — wrap their loop body in:
+The supported authoring loops (`create_plan`, `generate_detail`, and
+`cmd_completeness`) wrap their loop body in the session below. The retained
+internal `_iterate_reconcile_loop` helper also uses it, but no current
+reconciliation CLI route enables that helper's iteration budget.
 
 ```
 with iteration_session(repo_root, enabled=..., slug=..., command=...,

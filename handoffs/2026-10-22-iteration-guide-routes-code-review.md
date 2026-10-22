@@ -29,11 +29,12 @@ Existing tests: `TestIterateFlagsDetail`, `TestDetailReconcileDispatch`,
 `TestRunReconcileDispatch` in tests/test_cli.py plus tests/cli/test_skill_cmd.py:
 58 passed in 0.66s. These pin authoring defaults, both reconciliation rejections,
 standalone dispatch and installation behavior without a live backend. No tests
-that mirror prose are added. Full suite and review results follow when completed.
+that mirror prose are added. Full-suite and review results are recorded below.
 
 ## Review status
 
-Pending actual Claude Code `/code-review` at high effort on the committed diff.
+Review 1 covers `9816a9482`; review 2 covers `99ffa33e6`. Findings and
+dispositions follow; convergence remains pending the next corrected snapshot.
 
 ## Claude review 1
 
@@ -63,3 +64,32 @@ Full suite at `9816a9482`: 14,698 passed, 66 skipped in 54.73s. Parser-only prob
 confirm three defaults, four valid forms and four unsupported combinations;
 run-side rejection is pinned by its existing handler test. Review is not yet
 converged; the next pass reviews the corrected committed snapshot.
+
+
+## Claude review 2
+
+Range `330441789..99ffa33e6`; actual built-in `code-review` Skill at high effort,
+Sonnet 5.5, session `7cf66b91-f7dc-4e1e-af4c-66950cd54049`; CLI exits zero.
+Saved report: `.tmp/iteration-guide-routes.review-2.md`.
+
+| Finding | Disposition |
+| --- | --- |
+| 1 medium: TRACKING retains run/reconcile iteration sentence | Fixed: describe separate invocations and actual completeness default. |
+| 2 low: plan-route rationale promises reconcile iteration | Fixed: name authoring audits plus separate reconciliation/review. |
+| 3 low: backlog recipes use removed mode | Fixed: three recipes use `reconcile-code`; source-investigation entry explicitly distinguishes dormant helper from available CLI route. |
+| 4 low: touched detail example has unsupported no-walk/no-save | Fixed: remove both lines; standalone reconcile-plan flags stay. |
+| 5 low: repo-local installed Claude copy remains stale | Refresh from canonical integration sources using the supported copy installer; retain copies as tracked artifacts, not a second authoring source. |
+| 6 low: handoff pending text is stale | Fixed: name completed review snapshots in the overview. |
+| 7 low: recovery entry-point list implies a live reconcile loop | Fixed: supported authoring entry points are separate from the retained internal helper, whose budget no CLI route enables. |
+| 8 info: reconcile-code has no automatic commit | Clarified: workflow example says verify and commit separately. |
+| 9 optional/unverified: detail iteration wording | Declined: current text explicitly requires a request for detail iteration and correctly states its off default. No conflicting claim is verified. |
+
+Site enumeration expands to TRACKING's plan-route rationale and quality paragraph,
+BACKLOG's three removed-mode recipes and one investigation claim, recovery's
+session entry-point list, touched detail examples and the tracked Claude install.
+Archive plans/evidence describe retained implementation/history rather than live
+CLI recipes and stay. Protected CLAUDE.md, generated help and runtime warning
+stay under the explicit follow-up entry.
+
+Full suite at `99ffa33e6`: 14,698 passed, 66 skipped in 64.75s. Affected tests
+pass again (58 in 0.80s). No runtime implementation changes are introduced.

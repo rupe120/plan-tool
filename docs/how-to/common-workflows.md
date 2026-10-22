@@ -339,7 +339,7 @@ plan-tool status my-plan                     # what's the current step?
 plan-tool run                                # no name: pick from plans with open steps
 plan-tool run my-plan --commit               # execute the current step
 plan-tool run my-plan --step 3 --commit      # run a specific step
-plan-tool reconcile-code my-plan --step 3    # post-execution code edits to match plan
+plan-tool reconcile-code my-plan --step 3    # post-execution; verify and commit edits separately
 ```
 
 **Interactive plan picker.** `plan-tool run` with no plan name — or a

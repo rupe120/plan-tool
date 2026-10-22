@@ -2222,8 +2222,6 @@ drifted; create --reprocess = fill placeholders from an archive.**
 
 ```bash
 plan-tool detail my-feature --reconcile --step 3
-plan-tool detail my-feature --reconcile --step 3 --no-walk # save only
-plan-tool detail my-feature --reconcile --step 3 --no-save # neither save nor walk
 ```
 
 Findings are **plan/detail edits** — `step.files` lists to trim or

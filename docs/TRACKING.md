@@ -558,8 +558,8 @@ capability via a small patch.
   scaffold, then wire callers, then update tests").
 - There's a meaningful design choice worth a paper trail
   (Direction/Justification, scope guard, intent gates, etc.).
-- The work would benefit from `--iterate` (reconcile +
-  apply-finding loop) to converge against acceptance criteria.
+- The work benefits from iterative plan authoring and audits, followed by
+  separate plan-canonical code reconciliation and review against acceptance criteria.
 
 Use the [How to author a new plan](#how-to-author-a-new-plan)
 procedure below. Authored plans live under
@@ -696,9 +696,9 @@ cascading interdependencies between steps"). Absence of an Iterate
 note on a plan-tool entry means the default recipe applies.
 
 Iterate is the quality default across the toolchain, regardless of
-approach. `create` and `completeness-audit` use their convergence loop by
-default; `detail` is deliberately one-shot, and `run --iterate` applies only
-to reconcile mode. Direct changes require the equivalent session-directed review and
+approach. `create` defaults to iteration; pass `--iterate` explicitly to
+`completeness-audit`. Detail is deliberately one-shot, and reconciliation
+uses separate invocations without `--iterate`. Direct changes require the equivalent session-directed review and
 test loop. An `Iterate:` note records only a meaningful divergence.
 
 **Plan-tool entries MUST include explicit
