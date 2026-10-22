@@ -31,7 +31,7 @@ two demo records linking the removed backlog heading; those links move here.
 | Completeness recipe and pipeline omit the bare audit | **fixed `31fdf2f22`** — seed/create → bare audit → one-shot detail → grounded audit, with committed judged corrections and user review boundaries. |
 | Detail default and compatible iteration flags are misstated | **fixed `31fdf2f22`** — detail defaults off; actual parser checks reject `detail --reconcile --iterate` and standalone reconcile iteration flags. The examples use only valid combinations. |
 | Test-defect recovery suggests hand-editing done status | **fixed `31fdf2f22`** — commit the tested code/test correction without the plan, use `run --accept --commit` to run gates and advance, and retain the canonical unsuitable-implementation/no-gate escape routes. |
-| Verification/redirect recipes send produced work to plan mutation | **fixed `31fdf2f22`** — inspect with read-only `run --step N --mode check`; qualify all plan-side recipes as pre-execution and judge post-run redirects without an automatic code-canonical plan rewrite. |
+| Verification/redirect recipes send produced work to plan mutation | **fixed `31fdf2f22`** — request report-only inspection with `run --step N --mode check`; qualify all plan-side recipes as pre-execution and judge post-run redirects without an automatic code-canonical plan rewrite. |
 | Summary promises budget exhaustion exits nonzero | **fixed `31fdf2f22`** — completed loops can exit zero; inspect saved outcome/qualification and use only supported CI flags. Existing exhaustion coverage explicitly asserts zero. |
 | Independent headless examples still resemble an unaudited sequence | **fixed `4c5b20e62`** — all three blocks are explicitly syntax examples, with sequential authoring routed to the staged recipe and canonical gates. |
 
@@ -46,13 +46,14 @@ the demo is resolved by parent access; it is not claimed as a skill runtime fix.
 ## Validation and reviews
 
 - Real `build_parser().parse_args()` checks cover create, both audit gates,
-  one-shot detail, read-only step inspection, both plan-side reconcile routes
+  one-shot detail, report-only step inspection, both plan-side reconcile routes
   and gated acceptance without executing handlers.
 - `uv run pytest tests/cli/test_skill_cmd.py
   tests/test_cli.py::TestCrossCuttingIterationCLI::test_budget_exhaustion_stderr_signal_create -q`:
   33 pass, including installer/copy behavior and the documented zero-exit case.
   After the headless correction the same affected set passes in 0.53s.
-- `uv run pytest tests/ -q -n auto`: 14,698 pass and 66 skip in 63.02s.
+- Initial full-suite run before the Claude corrections: `uv run pytest tests/ -q -n auto`,
+  14,698 pass and 66 skip in 63.02s. The later snapshot/result is in the header.
   No tests matching prose are added.
 - Review 1, `94e259687..31fdf2f22`: no material finding; independently checks
   parser variants, owning contracts, source and relevant existing tests.
@@ -118,7 +119,8 @@ invocation. Local diff review only; no publication or code edits.
 | F6 nit: extra backlog separator | **fixed** — normalize heading separators. |
 | F7 nit: long completeness recipe duplicates directives | **declined** — the router must expose both audit gates, commits and user boundaries; its explicit clean-baseline instruction already covers the scenario. No additional workflow is introduced. |
 
-Convergence: pending fresh Claude Code reviews after these corrections.
+Pass-1 outcome: convergence remained pending fresh Claude Code reviews after
+these corrections.
 
 
 ## Claude Code review pass 2 — 2026-10-21
@@ -139,3 +141,28 @@ CLI exits zero with `.tmp/skill-router-recipes.claude-review-2.md`.
 The router instructions receive no further change in this pass. These record
 corrections do not reset their review window. Pass 2 reports no router correctness
 defect; another independent pass is required before Claude convergence is claimed.
+
+
+## Claude Code review pass 3 — 2026-10-21
+
+Scope: `94e259687..a575487d5`. Actual built-in `code-review` Skill at high effort,
+Claude Sonnet 5.5, session `a467cb5b-edf1-413e-aad8-c80585d634b4`, original CLI
+exit zero. Report: `.tmp/skill-router-recipes.claude-review-3.md`. Its summary
+count has a typo the reviewer could not edit after writing; the individual
+findings below govern (one low-medium, four low, one nit).
+
+| Finding | Disposition |
+| --- | --- |
+| A1 low-medium: four live gates reference the removed bug entry | **fixed** — BACKLOG #510/#515 and the installed-skill/public-release arcs link this repair as satisfying recipe consistency. Their independent unfinished prerequisites stay. Identifier and vocabulary searches enumerate all four sites before editing. |
+| A2 low: iteration follow-up omits README sibling | **fixed tracking** — add README.md to the existing guide-accuracy backlog entry; leave actual guide changes to that bounded work. |
+| A3 low: repair table overstates check-mode enforcement | **fixed** — use “request report-only inspection”; the prompt directs no rewriting but does not enforce filesystem isolation. |
+| A4 low: index count differs from table rows | **clarified** — remove the count from the index; the finding table retains individual fixes and provenance. |
+| A5 low: two full-suite timings lack separate attribution | **clarified** — label the original run separately from the fresh `8fcf1b1f7` run. |
+| A6 nit: per-pass pending line reads as current | **fixed** — explicitly label the pass-1 outcome. |
+
+Router convergence: passes 2 and 3 independently report no router correctness
+defect, with residual advisory limitations dispositioned. Supporting-record
+convergence remains pending verification of the reference sweep; it is not
+represented as a wholly clean branch review. The latest findings predominantly
+concern the repair's own record edits. Finish this bounded application and
+verify the named properties rather than repeatedly elaborating review prose.

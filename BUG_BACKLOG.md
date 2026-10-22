@@ -1035,7 +1035,7 @@ Durable re-open conditions for retired items are recorded in
 
 ### The iteration guide recommends an iteration flag that detail reconciliation rejects
 
-- **Files:** `docs/ITERATION.md`, the flag/default table, “On/off by default”
+- **Files:** `docs/ITERATION.md` and `README.md`, the flag/default tables, “On/off by default”
   explanation and “When to use `--iterate`” reconcile example.
 - **Symptom:** The guide lists `detail --reconcile` among routes where the
   operator can opt into `--iterate`. The real parser makes those options
