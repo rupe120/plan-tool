@@ -185,7 +185,9 @@ its tests before returning; those commits still provide authorship evidence.
 Paths already dirty before the call remain excluded from both sources. An
 unchanged committed test or a committed deletion does not satisfy the gate.
 Without a readable pre-call HEAD (including an unborn repository), only the
-existing working-tree evidence is available. This gate checks file authorship,
+existing working-tree evidence is available. In a non-git tree neither source
+provides evidence, so an enforced step blocks rather than skipping the gate.
+This gate checks file authorship,
 not coverage quality; test commands and per-step gates still run afterward.
 
 ### Conditional gates (only when configured)

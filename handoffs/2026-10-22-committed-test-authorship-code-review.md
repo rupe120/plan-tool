@@ -65,3 +65,35 @@ restored after mutation. Dirty-exclusion mutation and full results follow.
 Removing dirty-path subtraction produces 9 failures and 7 passes in the
 16-case matrix; the source is restored afterward. Full suite: 15,016 passed,
 67 skipped in 70.41s. `git diff --check` passes.
+
+## Claude Code review 1
+
+Range `db0b81151..b877be0d9`; actual built-in code-review Skill at high effort,
+Sonnet 5.5, session `fbfb31e0-5d5f-4c5d-a1db-00d1562e0f99`, CLI exit zero. Report
+`.tmp/committed-test-authorship.review-1.md`. The Skill supplies seven
+candidates; supervising review independently verifies callers and existing
+tests. It runs no tests because its test shell request requires approval;
+its verdict relies on static verification and the recorded author tests.
+**No logic defect**; first independent clean logic pass against `59e13bc32`.
+
+- D1 low confirmed: stale non-git skip claims in git_state.changed_paths,
+  launcher._git_changed_paths and the launcher test comment. Correct all three
+  and explicitly document the existing enforced-gate failure in the run guide.
+  Add an actual run_step regression: creating a test outside git supplies no
+  git evidence and cannot advance an enforced step. This pins existing behavior,
+  not a product policy change. Identifier/vocabulary sweep covers never block,
+  never blocks, non-git, changed-path readers and the gate diagram.
+- D2 info confirmed: module summary now names working-tree and commit reads.
+- Unborn HEAD extension and retry-guard redesign are outside the bounded task.
+  Dirty-path subtraction is required, not a defect. Committed rename destinations
+  agree with the existing test that credits dirty rename destinations.
+- Subprocess factoring, diff short-circuiting and test formatting are declined
+  maintenance preferences; no verified consolidation is claimed or taken.
+
+The correction changes comments/docs and adds coverage only. Enforcement,
+return values and all production logic remain the reviewed implementation.
+
+D1/D2 verification: 52 focused tests pass in 6.65s; the non-git regression fails
+when unreadable HEAD is incorrectly made an exemption (1 mutation failure).
+Full suite after the coverage/doc correction: 15,017 passed, 67 skipped in
+77.67s. Source is restored after mutation; diff whitespace checks pass.

@@ -1,4 +1,4 @@
-"""Working-tree reads and the partial-mutation retry guard built on them.
+"""Working-tree and commit reads, plus the partial-mutation retry guard.
 
 A stdlib-only leaf below ``shell``/``launcher`` whose one first-party import is
 ``rate_limit_loop`` (itself a stdlib-only leaf), so it forms no cycle. It exists
@@ -78,10 +78,8 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
 def changed_paths(repo_root: Path) -> set[str]:
     """Repo-relative changed paths, or an empty set on any git error.
 
-    Thin wrapper over :func:`changed_paths_or_none` for callers (the
-    test-authoring gate) that treat "can't tell" as "nothing changed" and so
-    never block on a non-git tree. The retry-guard uses the ``_or_none`` form
-    directly so it can fail closed instead.
+    Unreadable git supplies no authorship evidence. Retry guards use the
+    ``_or_none`` form to distinguish read failures from a clean tree.
     """
     changed = changed_paths_or_none(repo_root)
     return changed if changed is not None else set()

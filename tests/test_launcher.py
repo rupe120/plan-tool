@@ -3553,9 +3553,21 @@ class TestTestAuthoringGate:
     def test_git_changed_paths_empty_outside_git(self, tmp_path: Path) -> None:
         from plan_tool.launcher import _git_changed_paths
 
-        # No `git init` — not a work tree, so the gate gets an empty set
-        # and never blocks.
+        # No git metadata means no authorship evidence, not an exemption.
         assert _git_changed_paths(tmp_path) == set()
+
+    def test_non_git_tree_cannot_certify_authorship_even_with_new_test_file(self, tmp_path):
+        p = _gate_plan_path(tmp_path, "feature", enforce=True)
+
+        def fake(prompt):
+            (tmp_path / "src.py").write_text("changed\n")
+            (tmp_path / "test_src.py").write_text("def test_ok(): assert True\n")
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        assert not result.done
+        assert result.exit_code == 1
+        assert "test-authoring gate failed" in parse_plan(p).step_by_id(1).status_note
 
     def test_git_changed_paths_handles_spaces(self, tmp_path: Path) -> None:
         """A path with a space comes through verbatim under ``-z`` (no quoting),

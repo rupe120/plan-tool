@@ -1084,8 +1084,8 @@ def _git_changed_paths(repo_root: Path) -> set[str]:
 
     Thin wrapper over :func:`_git_changed_paths_or_none` (rather than over the
     leaf directly) so the test-authoring gate honors the same monkeypatch seam.
-    Callers here treat "can't tell" as "nothing changed" and so never block on
-    a non-git tree; the retry-guard fails closed instead.
+    An unreadable/non-git tree supplies no authorship evidence; an enforced
+    gate therefore blocks. The retry-guard distinguishes read failures.
     """
     changed = _git_changed_paths_or_none(repo_root)
     return changed if changed is not None else set()
