@@ -2662,7 +2662,7 @@ class RoadmapApplyResult:
     collisions: tuple[Path, ...] = ()
     refused_drafts: tuple[DraftSeedClassification, ...] = ()
     bijection_error: str | None = None
-    # Already-published seeds left untouched, as ``(plan_id, plan-seeds/dest)``.
+    # Already-published seeds left untouched, as ``(plan_id, recorded_dest)``.
     skipped: tuple[tuple[str, Path], ...] = ()
     # Skipped seeds whose draft is no longer current: warned, never refused, so
     # one out-of-date published copy cannot block promoting the new seeds.
@@ -2753,7 +2753,7 @@ def _register_roadmap_seed_promotions(
     slug: str,
     source_text_by_plan_id: Mapping[str, str],
 ) -> None:
-    """Record the admitted draft snapshots that gained ``plan-seeds/`` copies.
+    """Record layout provenance for admitted draft snapshots that are published.
 
     Iterates ``source_text_by_plan_id`` — the plans actually promoted — not
     ``artifact.plans``: a plan row added to the roadmap during the apply
@@ -2816,9 +2816,10 @@ def _split_published_apply_targets(
 
     A seed is published when the seed state records it; promotion records it
     before ``create`` can archive the copy. An existing destination alone is
-    not proof: an unpublished seed whose destination exists stays a target and
+    not proof: an unpublished seed whose default destination exists stays a target and
     refuses as a collision, so ``--apply`` never overwrites a file it did not
-    write. Deliberately not an archive-filename check, which matches another
+    write. Retained root files are not new nested-destination collisions.
+    Deliberately not an archive-filename check, which matches another
     roadmap's or a hand-written seed of the same name.
     """
     entries = _load_roadmap_seed_state(plans_dir=plans_dir, slug=slug)["seeds"]
@@ -3056,7 +3057,7 @@ def _apply_roadmap_seeds_owner(
     run_logger: Optional[RunLoggerLike] = None,
     writer_token: RoadmapWriterToken,
 ) -> RoadmapApplyResult:
-    """Promote slug-directory draft seeds into ``plan-seeds/`` after opt-in confirm.
+    """Promote draft seeds into the default seed directory after opt-in confirm.
 
     Reads the accepted version's roadmap artifact; never invokes the roadmap backend or stage
     loop. Seeds the seed state records as published are skipped, with a warning

@@ -4,7 +4,7 @@ New plan seeds default to this directory: `docs/implementation-plans/plan-seeds/
 Author seeds using [SEED_FORMAT.md](../../../SEED_FORMAT.md), then pass the exact
 path to `plan-tool create <slug> --from-existing <path>`.
 
-Existing seeds remain in the repository-root `plan-seeds/` directory. This change
+Existing root-level seeds remain in `plan-seeds/`. This change
 moves the default for new files only; it does not relocate, rename or rewrite
 existing seed files. Existing explicit paths remain valid. Annotate destination
 flags still override the default, and its report stays beside the source unless

@@ -56,7 +56,7 @@ PR #136 independently owns iteration guidance; do not absorb that work here.
 ## Review status
 
 Actual Claude Code `/code-review` rounds and dispositions follow below;
-convergence is in progress until the closure records otherwise.
+closure below records two consecutive advisory-only passes and their limits.
 
 
 ## Claude review 1
@@ -112,3 +112,42 @@ Fresh full suite at `808c80e03`: 14,715 passed, 67 skipped in 61.58s. The new
 review-2 changes are tests and explanatory strings/docstring only; no placement
 or collision logic changes after `f53201887`. One completed advisory-only review
 is recorded; independent confirmation remains pending.
+
+
+## Claude review 3 and closure
+
+Range `330441789..f08c6190f`; actual built-in `code-review` Skill, high effort,
+Sonnet 5.5, session `624aaefd-0c8a-43ab-989c-27f8c4634ecb`; CLI exits zero.
+The skill returns candidate findings; the supervising review independently checks
+them against source/base/tests and runs affected suites: 2,844 passed, 66 skipped.
+Report: `.tmp/seed-default-location.review-3.md`, with its sibling test log.
+No new blocking or medium defect; all requested invariants are independently
+confirmed. The legacy accept/apply-skip regression tests also fail under a
+mutation redirecting legacy publications into the nested directory; restored
+source precedes final validation.
+
+| Finding | Disposition |
+| --- | --- |
+| N1 low: an unrecorded root file no longer blocks a new nested promotion | Declined as intended default-new behavior: presence is not ownership, the root file stays untouched, and only the new destination collides. Clarify the collision docstring; do not invent publication from file presence. |
+| N2 low: directory-wide annotate also sees more seed Markdown | Deferred to BACKLOG #516 for input-selection policy. Recursive traversal already includes existing nested seed files; changing it is a separate behavior choice. |
+| Repeated default overwrite/partial-report/preview advisories | Retain prior dispositions; no newly verified material failure. |
+| Optional stale path vocabulary in module/function docstrings | Corrected once to default/recorded publication directory; marker and ownership semantics stay unchanged. |
+| Optional import ordering and path literals | Retain prior decisions; avoid unrelated refactor and formatting churn. |
+
+Convergence is **low-yield**, not zero-findings clean: reviews 2 and 3 are
+independent consecutive completed passes with only low/advisory findings after
+the last placement/collision logic change. Their known implications are applied
+or explicitly dispositioned. The final sweep changes explanatory prose and
+tracking only; no further full review is claimed after that sweep.
+
+Final full suite at `f08c6190f`: **14,717 passed, 67 skipped in 55.00s**.
+`git diff --check` is clean. Seed-directory changes contain only the two added
+READMEs; existing seed contents, paths and references stay in place. The tracked
+Claude skill copies byte-match canonical sources. No user-level skill refresh
+is performed from this independent branch, to avoid replacing the separately
+reviewed PR #136 iteration guidance installed in this session.
+
+The change is committed locally on `fix/seed-default-location`. It requires
+architect-tier PR review because CLAUDE.md changes its seed authoring location.
+No push, PR, automatic migration, configuration feature or merge is part of this
+user-directed atomic action.

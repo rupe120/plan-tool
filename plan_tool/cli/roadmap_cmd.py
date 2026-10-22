@@ -8,7 +8,7 @@ continues from them; a roadmap with an accepted head is refused.
 
 ``plan-tool roadmap <slug> --apply [-y]`` is a separate apply-only mode: it
 reads the accepted version's roadmap artifact, promotes slug-directory draft seeds into
-``plan-seeds/`` after opt-in confirm (or ``-y``), and prints create handoff
+the default seed directory after opt-in confirm (or ``-y``), and prints create handoff
 lines against the promoted paths. It never runs the stage table or invokes the
 backend.
 
@@ -25,7 +25,7 @@ processes every recoverable plan; with an id it processes only that plan.
 ``plan-tool roadmap <slug> --accept-seed PLAN_ID`` accepts one validated,
 directly edited digest-mismatched draft without invoking the backend. It preserves
 the draft bytes and re-syncs the promoted copy only when the seed state records
-it published; an unpublished seed's existing `plan-seeds/` file is left untouched.
+it published; an unpublished seed's existing destination file is left untouched.
 
 ``plan-tool roadmap <slug> --view {summary,walk,ledger,index,seeds,html}
 [--mode {current,review}] [--id ROW_ID] [--output PATH]`` is a third inspection

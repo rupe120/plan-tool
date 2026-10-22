@@ -13568,6 +13568,30 @@ plan-tool reconcile-code roadmap-stack-layer --all
 - **Seed:** none until #492 establishes the distinct need and representation.
 - **Origin:** Integration roadmap-to-plan pilot, 2026-10-15.
 
+**#516 — Decide which seed files directory-wide annotate includes**
+
+- **What:** directory input to `annotate` recursively includes Markdown beneath
+  seed directories, except `.seed.md` and `archive/` files. The nested seed
+  directory already contains existing briefs; new default outputs add roadmap,
+  scope-out and reground briefs plus an explanatory README to that traversal.
+- **Outcome:** a documented owner decision defines whether those files belong
+  in directory-wide annotation, with tests for the selected behavior.
+- **In scope:** annotate directory expansion and its input-selection docs.
+- **Out of scope / Non-goals:** seed migration, default placement, publication
+  ownership and changing explicitly supplied file-path inputs.
+- **Allowed behavior changes:** only the directory-selection rule the owner
+  selects; do not silently classify this as a new default-placement regression.
+- **Allowed reorganization:** none.
+- **Verification:** directory fixtures distinguish plans, briefs, README,
+  generated `.seed.md`, archives and explicit file selection.
+- **Stop / defer:** settle inclusion policy before changing filters; file other
+  output or classification changes separately.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** seed-default review 3, 2026-10-22; advisory about a pre-existing
+  recursive traversal, not evidence of data loss or a failed publication gate.
+
+---
+
 ## Public onboarding and release candidates
 
 These candidates retain clone plus editable `uv` installation. Existing arcs own

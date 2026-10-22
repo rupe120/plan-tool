@@ -3,7 +3,7 @@
 The roadmap artifacts are committed, reviewable documents.  A derived seed has
 one additional, deliberately small bit of state that is not suitable for its
 prose: whether feedback has made it stale.  This module owns that state and
-the portable marker used when a draft is promoted into ``plan-seeds/``.
+the portable marker used when a draft is promoted into its publication directory.
 
 It is a stdlib-only leaf so both the roadmap orchestrator and ``create`` can
 consult it without creating an import cycle.
@@ -55,7 +55,7 @@ class TrackedSeedLocation:
     """A roadmap seed source resolved to its lifecycle sidecar.
 
     ``via_marker`` records which of :func:`locate_tracked_seed`'s two lookup
-    strategies found it: ``True`` for a promoted ``plan-seeds/`` copy (or its
+    strategies found it: ``True`` for a promoted seed copy (or its
     archive), resolved through the durable HTML marker; ``False`` for a direct
     roadmap draft, resolved structurally by its parent directory. A promoted
     copy's own bytes are what a consumer will read, so its validity turns on

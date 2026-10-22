@@ -177,3 +177,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Public-release reference-repair correction review](2026-10-20-public-release-reference-repair-review.md) — bounded plan correction, audit qualification and execution recovery.
 
 - [Public-release snapshot execution review](2026-10-20-public-release-content-snapshot-execution-review.md) — six-step local result, two clean review passes and remaining #513 limits.
+
+- [New-seed default placement](2026-10-22-seed-default-location-code-review.md) — nested defaults, retained existing seeds, compatibility tests and Claude review dispositions.
