@@ -37,7 +37,7 @@ An explicit theme choice changes appearance and persists across reloads.
 ## Allowed reorganization
 Keep changes within the existing theme and application-shell boundaries.
 
-## Verification
+## Testing
 Check keyboard operation, both themes and preference persistence with the app's tests.
 
 ## Stop / defer
