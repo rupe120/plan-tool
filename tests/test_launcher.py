@@ -3553,9 +3553,21 @@ class TestTestAuthoringGate:
     def test_git_changed_paths_empty_outside_git(self, tmp_path: Path) -> None:
         from plan_tool.launcher import _git_changed_paths
 
-        # No `git init` — not a work tree, so the gate gets an empty set
-        # and never blocks.
+        # No git metadata means no authorship evidence, not an exemption.
         assert _git_changed_paths(tmp_path) == set()
+
+    def test_non_git_tree_cannot_certify_authorship_even_with_new_test_file(self, tmp_path):
+        p = _gate_plan_path(tmp_path, "feature", enforce=True)
+
+        def fake(prompt):
+            (tmp_path / "src.py").write_text("changed\n")
+            (tmp_path / "test_src.py").write_text("def test_ok(): assert True\n")
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        assert not result.done
+        assert result.exit_code == 1
+        assert "test-authoring gate failed" in parse_plan(p).step_by_id(1).status_note
 
     def test_git_changed_paths_handles_spaces(self, tmp_path: Path) -> None:
         """A path with a space comes through verbatim under ``-z`` (no quoting),
@@ -3673,6 +3685,86 @@ class TestTestAuthoringGate:
         err = capsys.readouterr().err
         assert "[test-authoring gate] passed" in err
         assert "tests/test_src.py" in err
+
+    @pytest.mark.parametrize("dirty", ["clean", "unstaged", "staged", "untracked"])
+    @pytest.mark.parametrize("action", ["commit-test", "commit-production", "commit-delete", "uncommitted-test"])
+    def test_committed_test_evidence_keeps_pre_call_dirty_paths_excluded(
+        self, tmp_path, dirty, action
+    ):
+        import subprocess
+
+        _git_init(tmp_path)
+        p = _gate_plan_path(tmp_path, "feature", enforce=True)
+        test = tmp_path / "tests" / "test_src.py"
+        test.parent.mkdir()
+        if dirty != "untracked":
+            test.write_text("original\n")
+        _git_commit_all(tmp_path, "baseline")
+        if dirty != "clean":
+            test.write_text("pre-call edit\n")
+        if dirty == "staged":
+            subprocess.run(["git", "add", "tests/test_src.py"], cwd=tmp_path, check=True)
+
+        def fake(prompt):
+            (tmp_path / "src.py").write_text("changed\n")
+            if action in {"commit-test", "uncommitted-test"}:
+                test.write_text("new test content\n")
+            elif action == "commit-delete" and test.exists():
+                test.unlink()
+            if action != "uncommitted-test":
+                _git_commit_all(tmp_path, "backend changes")
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        expected = dirty == "clean" and action in {"commit-test", "uncommitted-test"}
+        assert result.done is expected
+        assert result.exit_code == (0 if expected else 1)
+
+    @pytest.mark.parametrize("change_type", ["feature", "refactor"])
+    def test_new_test_committed_before_a_later_commit_still_satisfies_gate(
+        self, tmp_path, change_type
+    ):
+        _git_init(tmp_path)
+        p = _gate_plan_path(tmp_path, change_type, enforce=True)
+        _git_commit_all(tmp_path, "baseline")
+
+        def fake(prompt):
+            test = tmp_path / "tests" / "test spaced name.py"
+            test.parent.mkdir()
+            test.write_text("def test_ok(): assert True\n")
+            _git_commit_all(tmp_path, "backend authors test")
+            (tmp_path / "src.py").write_text("changed\n")
+            _git_commit_all(tmp_path, "backend changes source")
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        assert result.done
+        assert result.exit_code == 0
+
+    def test_checkout_of_existing_test_history_does_not_certify_new_authorship(self, tmp_path):
+        import subprocess
+
+        _git_init(tmp_path)
+        p = _gate_plan_path(tmp_path, "feature", enforce=True)
+        _git_commit_all(tmp_path, "baseline")
+        before = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, text=True).strip()
+        (tmp_path / "src.py").write_text("unrelated source\n")
+        (tmp_path / "test_old.py").write_text("def test_old(): assert True\n")
+        _git_commit_all(tmp_path, "existing unrelated work")
+        old_work = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=tmp_path, text=True).strip()
+        subprocess.run(["git", "checkout", "--detach", before], cwd=tmp_path, check=True, capture_output=True)
+        # Make the pre-call commit diverge from the already-authored test history.
+        (tmp_path / "README.md").write_text("current branch\n")
+        _git_commit_all(tmp_path, "current branch")
+
+        def fake(prompt):
+            subprocess.run(["git", "checkout", "--detach", old_work], cwd=tmp_path, check=True, capture_output=True)
+            return 0, "## Validation\n- ok\n## Summary\nok\n"
+
+        result = run_step(p, repo_root=tmp_path, invoker=fake)
+        assert not result.done
+        assert result.exit_code == 1
+        assert "test-authoring gate failed" in parse_plan(p).step_by_id(1).status_note
 
     def test_advances_with_root_conftest(self, tmp_path: Path) -> None:
         """A `conftest.py` at the repo root satisfies the gate (the matcher

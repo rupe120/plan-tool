@@ -1,4 +1,4 @@
-"""Working-tree reads and the partial-mutation retry guard built on them.
+"""Working-tree and commit reads, plus the partial-mutation retry guard.
 
 A stdlib-only leaf below ``shell``/``launcher`` whose one first-party import is
 ``rate_limit_loop`` (itself a stdlib-only leaf), so it forms no cycle. It exists
@@ -50,7 +50,7 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
             cwd=str(repo_root),
             stdin=subprocess.DEVNULL,
             capture_output=True,
-            text=True,
+            text=True, errors="surrogateescape",
         )
     except (FileNotFoundError, PermissionError, OSError):
         return None
@@ -78,13 +78,47 @@ def changed_paths_or_none(repo_root: Path) -> Optional[set[str]]:
 def changed_paths(repo_root: Path) -> set[str]:
     """Repo-relative changed paths, or an empty set on any git error.
 
-    Thin wrapper over :func:`changed_paths_or_none` for callers (the
-    test-authoring gate) that treat "can't tell" as "nothing changed" and so
-    never block on a non-git tree. The retry-guard uses the ``_or_none`` form
-    directly so it can fail closed instead.
+    Unreadable git supplies no authorship evidence. Retry guards use the
+    ``_or_none`` form to distinguish read failures from a clean tree.
     """
     changed = changed_paths_or_none(repo_root)
     return changed if changed is not None else set()
+
+
+def head_revision(repo_root: Path) -> Optional[str]:
+    """Return the pre-call commit, or None for unreadable/unborn repositories."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "HEAD^{commit}"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True, errors="surrogateescape",
+        )
+    except OSError:
+        return None
+    return proc.stdout.strip() if proc.returncode == 0 else None
+
+
+def committed_changed_paths(repo_root: Path, baseline: Optional[str]) -> set[str]:
+    """Added/modified paths when HEAD extends the known pre-call commit."""
+    if baseline is None:
+        return set()
+    try:
+        lineage = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", baseline, "HEAD"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True, errors="surrogateescape",
+        )
+        if lineage.returncode != 0:
+            return set()
+        proc = subprocess.run(
+            ["git", "diff", "--name-only", "-z", "--no-renames", "--no-relative",
+             "--diff-filter=ACMRT", baseline, "HEAD", "--"],
+            cwd=str(repo_root), stdin=subprocess.DEVNULL,
+            capture_output=True, text=True, errors="surrogateescape",
+        )
+    except OSError:
+        return set()
+    return set(filter(None, proc.stdout.split("\0"))) if proc.returncode == 0 else set()
 
 
 def make_partial_mutation_retry_guard(

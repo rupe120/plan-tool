@@ -91,6 +91,8 @@ from plan_tool.review_persistence import compute_plan_fingerprint
 # import cycle with ``launcher``.
 from plan_tool.git_state import (
     changed_paths_or_none,
+    committed_changed_paths,
+    head_revision,
     make_partial_mutation_retry_guard,
 )
 from plan_tool.prompt_budget import (
@@ -1082,8 +1084,8 @@ def _git_changed_paths(repo_root: Path) -> set[str]:
 
     Thin wrapper over :func:`_git_changed_paths_or_none` (rather than over the
     leaf directly) so the test-authoring gate honors the same monkeypatch seam.
-    Callers here treat "can't tell" as "nothing changed" and so never block on
-    a non-git tree; the retry-guard fails closed instead.
+    An unreadable/non-git tree supplies no authorship evidence; an enforced
+    gate therefore blocks. The retry-guard distinguishes read failures.
     """
     changed = _git_changed_paths_or_none(repo_root)
     return changed if changed is not None else set()
@@ -1935,16 +1937,14 @@ def run_step(
         if mode in MUTATING_MODES
         else {}
     )
-    # Test-authoring gate baseline: paths git already sees as changed before
-    # the call, so the post-call delta isolates what this step touched.
-    # Captured only when the gate applies, so a non-enforcing run pays no
-    # git cost.
+    # Exclude paths dirty before the call; retain HEAD for committed test edits.
     enforce_step_tests = mode in MUTATING_MODES and _step_requires_test_authoring(
         plan, step
     )
     git_test_baseline = (
         _git_changed_paths(repo_root) if enforce_step_tests else set()
     )
+    git_test_head = head_revision(repo_root) if enforce_step_tests else None
 
     # Pre-send prompt-budget advisory — fires once per invoked step, for every
     # mode that sends (run/check/security/reconcile) and independent of the run
@@ -2181,14 +2181,15 @@ def run_step(
     # test file. Runs before test_command/gate: it's the cheap check, and a
     # suite run would otherwise drop __pycache__ under tests/ into the delta.
     # Same re-read → status_note → write_plan → early-return contract as the
-    # gates below. Known limit: a porcelain set-difference can't see a step
+    # gates below. Known limit: dirty-path exclusion can't credit a step
     # that only re-edits a test left dirty by a prior step (uncommitted
     # `run --all`); `--commit` clears the tree between steps and avoids it.
     if enforce_step_tests:
+        changed = _git_changed_paths(repo_root) | committed_changed_paths(
+            repo_root, git_test_head
+        )
         touched = sorted(
-            p
-            for p in (_git_changed_paths(repo_root) - git_test_baseline)
-            if _is_test_code_path(p)
+            p for p in changed - git_test_baseline if _is_test_code_path(p)
         )
         if not touched:
             ct = step.change_type.value

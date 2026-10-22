@@ -431,15 +431,6 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct.
 - **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
 
-### Run's test-authoring gate misses tests committed inside the backend call
-
-- **Files:** `plan_tool/launcher.py` test-authoring delta gate and its existing tests.
-- **Symptom:** reproduced on `roadmap-plan-derivation` steps 1/2, native runs `2026-10-16T17-11-50+00-00-1e4c8f` and `2026-10-16T17-15-25+00-00-1abf9c`. Each starts clean; the backend creates tests and commits them before returning (commits `7bc7aff8b`, `8bc83ec59`). The gate sees no working-tree test delta and fails despite the committed test changes. Step 2's backend full suite passes 14,622 tests with 67 skipped. `run --accept --commit` certifies both through the full plan gate.
-- **Fix:** investigate including committed changes since the pre-call HEAD in authorship evidence while preserving the existing pre-call dirty-file exclusions. Confirm current test contracts before changing the gate; do not weaken test authorship or auto-accept a failed gate.
-- **Approach:** plan-tool if the evidence contract needs redesign; otherwise a bounded direct fix with a committed-delta regression.
-- **Route:** plan · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** observed 2026-10-16 during merged PR #106 implementation; repair is outside #496.
-
 ### `_code_anchor_resolves` reports an existing method, private method or nested function as not resolving in HEAD
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves` and

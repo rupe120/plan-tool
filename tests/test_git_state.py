@@ -15,6 +15,8 @@ from pathlib import Path
 from plan_tool.git_state import (
     changed_paths,
     changed_paths_or_none,
+    committed_changed_paths,
+    head_revision,
     make_partial_mutation_retry_guard,
 )
 from plan_tool.rate_limit_loop import ALWAYS_RETRY, RetryPolicy
@@ -114,6 +116,77 @@ class TestChangedPaths:
         (tmp_path / "a.txt").write_text("x\n", encoding="utf-8")
 
         assert changed_paths(tmp_path) == {"a.txt"}
+
+
+class TestCommittedChangedPaths:
+    def test_reads_only_added_modified_destinations_across_all_commits(self, tmp_path):
+        _init_git_repo(tmp_path)
+        (tmp_path / "old.py").write_text("old\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "baseline"], tmp_path)
+        baseline = head_revision(tmp_path)
+        assert baseline
+        assert committed_changed_paths(tmp_path, baseline) == set()
+        (tmp_path / "new name.py").write_text("new\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "add"], tmp_path)
+        (tmp_path / "old.py").unlink()
+        _run_git(["add", "-A"], tmp_path)
+        _run_git(["commit", "-qm", "delete"], tmp_path)
+        assert committed_changed_paths(tmp_path, baseline) == {"new name.py"}
+
+    def test_relative_diff_config_cannot_bypass_dirty_exclusion_from_subdirectory(self, tmp_path):
+        _init_git_repo(tmp_path)
+        _run_git(["config", "diff.relative", "true"], tmp_path)
+        project = tmp_path / "app"
+        test = project / "tests" / "test_x.py"
+        test.parent.mkdir(parents=True)
+        test.write_text("before\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "baseline"], tmp_path)
+        baseline = head_revision(project)
+        test.write_text("dirty before call\n")
+        dirty = changed_paths_or_none(project)
+        test.write_text("backend edit\n")
+        _run_git(["add", "."], tmp_path)
+        _run_git(["commit", "-qm", "backend"], tmp_path)
+        committed = committed_changed_paths(project, baseline)
+        assert committed == dirty == {"app/tests/test_x.py"}
+        assert committed - dirty == set()
+
+    def test_git_path_output_preserves_non_utf8_bytes_without_decoding_failure(self, tmp_path, monkeypatch):
+        import os
+        import sys
+
+        real_run = subprocess.run
+
+        def git_output(args, **kwargs):
+            if args[1] == "merge-base":
+                return subprocess.CompletedProcess(args, 0, "", "")
+            data = b"?? test_\xff.py\0" if args[1] == "status" else b"test_\xff.py\0"
+            return real_run(
+                [sys.executable, "-c", f"import sys; sys.stdout.buffer.write({data!r})"],
+                **kwargs,
+            )
+
+        monkeypatch.setattr(subprocess, "run", git_output)
+        name = os.fsdecode(b"test_\xff.py")
+        assert changed_paths_or_none(tmp_path) == {name}
+        assert committed_changed_paths(tmp_path, "revision") == {name}
+
+    def test_unavailable_baseline_or_git_returns_no_committed_evidence(self, tmp_path, monkeypatch):
+        assert head_revision(tmp_path) is None
+        assert committed_changed_paths(tmp_path, None) == set()
+        assert committed_changed_paths(tmp_path, "invalid") == set()
+        _init_git_repo(tmp_path)
+        assert head_revision(tmp_path) is None
+
+        def fail(*args, **kwargs):
+            raise OSError("unreadable git")
+
+        monkeypatch.setattr(subprocess, "run", fail)
+        assert head_revision(tmp_path) is None
+        assert committed_changed_paths(tmp_path, "revision") == set()
 
 
 # --- make_partial_mutation_retry_guard ------------------------------------

@@ -99,7 +99,8 @@ when the condition holds.
      │
      ├─[11] TEST-AUTHORING gate ........................... [BLOCK] no test file changed → status_note,
      │        SKIP-if not (enforcement-on & feature/refactor)          return rc=1, plan NOT advanced
-     │        compares git porcelain before/after the call             (non-git tree → can't tell → SKIP)
+     │        combines working-tree delta and commits since pre-call HEAD
+     │        excludes every path already dirty before the call
      │
      ├─[12] PLAN-LEVEL test_command gate ................... [BLOCK] rc≠0 → write status_note, return rc,
      │        SKIP-if plan has no `test_command:`                     plan NOT advanced
@@ -177,6 +178,25 @@ once; then `run_step()` repeats until no runnable step remains or a gate halts.
 | **Files modified** | mutating mode, if step declares files | yes | "no edits applied": none of the declared files changed (content-compared; an identical rewrite counts as unchanged); `status_note` written, rc=1, plan not advanced. Runs before the test-authoring gate so the failure is not misnamed as a missing test. `--accept` certifies a step whose files already hold the intended content (commit them first; accept needs a clean tree), but only when the plan has a `test_command` or the step has a `gate` (otherwise nothing certifies it). A directory or unreadable `files:` entry has no content digest and counts as modified |
 | **`## Validation` present** | mutating mode | no — warn | "step didn't declare what it tested" |
 | **`creates:` on disk** | mutating mode, if step has `creates:` | no — warn | "N creates entries missing"; step still advances |
+
+The test-authoring gate combines newly dirty paths with added or modified
+paths committed after the captured pre-call HEAD. Tests committed before the
+backend returns can count. Both sources use git-root-relative paths regardless
+of `diff.relative`, and both exclude every path already dirty before the call.
+Test commands and per-step gates still run afterward.
+
+The evidence has these limits:
+
+- Committed evidence requires the post-call HEAD to descend from the captured
+  commit. Checkout/reset to unrelated or older history, or amend/rebase that
+  loses that proof, supplies no committed evidence.
+- Without a readable pre-call HEAD (including an unborn repository), only
+  working-tree evidence is available. A non-git tree supplies neither source,
+  so an enforced step blocks rather than skipping the gate.
+- Unchanged committed tests and committed deletions do not count. Dirty-path
+  exclusion still applies when the backend commits its changes.
+- Importing descendant history can supply the same path delta as new backend
+  commits. This observable does not attribute authors or assess coverage quality.
 
 ### Conditional gates (only when configured)
 
