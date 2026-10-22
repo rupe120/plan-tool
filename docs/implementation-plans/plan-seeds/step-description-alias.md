@@ -8,7 +8,7 @@ New plans use `steps[].description`; existing plans using `steps[].title` remain
 
 ## In scope
 
-Step-field input aliases, authoring and serialization contracts, relevant prompts, format documentation and consumers that depend on that field. Define deterministic handling when both keys occur, including conflicting values, without silently losing step content.
+Step-field input aliases, authoring and serialization contracts, relevant prompts, format documentation and consumers that depend on that field. Narrowly amend the format policy to allow this compatible alias without a version bump or an upgrade requirement. Define deterministic handling when both keys occur, including conflicting values, without silently losing step content.
 
 ## Out of scope
 
@@ -28,7 +28,9 @@ The preferred authored step key is `description`; `title` remains accepted input
 
 Proposed dual-key policy for plan review: accept equal valid string values as one description and reject conflicting values with an actionable error. Do not silently choose one conflicting value or discard invalid input because its alias is present.
 
-The format-version decision below must be settled before `create`. Once settled, the plan owns the compatible read/write transition before new authoring emits the key. No existing plan is bulk rewritten by this effort.
+Owner decision, 2026-10-22: retain format version 1. Treat this as an additive accepted alias and preferred output spelling, with no explicit upgrade requirement. Existing absent-version and version-1 plans remain readable and writable. Revise the strict new-key break rule narrowly for this compatible alias; arbitrary unknown fields remain rejected. Document that older installations reject newly emitted `description` plans. No existing plan is bulk rewritten by this effort.
+
+Newly serialized authored plans use only `description` for step text, including ordinary rewrites of legacy inputs. Reading alone never rewrites a file. Keep internal and unrelated persisted payload contracts stable unless an alias-specific consumer genuinely requires a change.
 
 The final documentation/status step updates BACKLOG.md #517: mark it plan-authored while execution is pending, remove it only after full shipment, and retain any deferred follow-up.
 
@@ -40,11 +42,11 @@ The current `Step` model forbids unknown keys; adding only prompt wording produc
 
 Cover description-only and legacy title-only plans, agreeing and conflicting dual-key inputs, and read/write round trips. Verify affected detail, audit, run and Jira consumers retain the step text; update authoring examples and format-contract tests for the preferred spelling.
 
-Verify the selected format transition against both new plans and legacy absent/version-1 declarations, including the operator-visible result before and after any explicitly requested upgrade. The transition may not silently migrate an existing file.
+Verify new plans and legacy absent/version-1 declarations remain readable and writable without an upgrade. Reading preserves source bytes; ordinary plan writes emit the preferred key without changing step meaning. Pin rejection by an older strict reader as a documented limitation, not a promised compatibility property.
 
 ## Acceptance criteria
 
-New authoring emits the preferred step key and legacy title input preserves its meaning. Dual-key behavior is deterministic and documented. Relevant consumers retain step text, and unrelated plan/feature titles and execution semantics remain unchanged. The approved format transition has executable compatibility evidence. BACKLOG.md #517 reflects authoring versus shipment accurately.
+New authoring emits the preferred step key and legacy title input preserves its meaning. Dual-key behavior is deterministic and documented. Relevant consumers retain step text, and unrelated plan/feature titles and execution semantics remain unchanged. The unchanged-version alias policy has executable read/write compatibility evidence. BACKLOG.md #517 reflects authoring versus shipment accurately.
 
 ## Stop / defer
 
@@ -52,10 +54,16 @@ Surface any required format-version or migration decision before broadening this
 
 ## Scope guardrails
 
-This effort implements BACKLOG.md #517 only. Do not bulk migrate existing plans, rename plan/feature titles, redesign execution, or rename internal step APIs merely for terminology consistency. File unrelated findings in BACKLOG.md or BUG_BACKLOG.md rather than expanding the plan.
+This effort implements BACKLOG.md #517 only. Retain format version 1 and existing-plan read/write support without an explicit upgrade. Do not add an upgrade command or weaken unrelated version/unknown-key validation. Do not bulk migrate existing plans, rename plan/feature titles, redesign execution, or rename internal step APIs merely for terminology consistency. File unrelated findings in BACKLOG.md or BUG_BACKLOG.md rather than expanding the plan.
 
-## Decision required before creation
+## Overview
 
-DATA_CONTRACT.md's authored-plan break rule requires a version bump before any writer emits a new frontmatter key. Its current writer eligibility refuses effective-older plans, and its first-refusal obligation requires an operator-invocable upgrade route and shared compatibility preflight before affected mutating commands change state.
+Prefer the clearer step field name while retaining title input compatibility.
 
-Proposed owner decision: include format v2 plus that explicit upgrade/preflight path in #517, preserving v1 reading and leaving existing files untouched until the operator requests an upgrade. This extends the original no-migration fence only for an explicitly requested upgrade; automatic and bulk migration remain excluded. Owner confirmation is pending; do not run `create` against this draft until it is settled.
+## Problem statement
+
+Bare-plan steps use `title`, but the owner selects `description` for future authoring. A prompt-only rename would generate rejected plans, so alias acceptance must precede preferred output.
+
+## Deferred
+
+Unrelated schema and format-version redesign remain outside #517.
