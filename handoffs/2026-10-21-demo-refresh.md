@@ -1,15 +1,17 @@
 # Demonstration refresh pickup
 
-The assistant-led guides and authored reading samples support review of the
-retained dark-mode and TTRPG scenarios. **The live dark-mode rehearsal needs
-verification:** Codex cannot initialize its app-server client in the restricted
-verification runtime. Remote checkpoint publication remains pending and requires
-separate authorization through the [release handoff](2026-10-19-public-onboarding-and-release.md).
+The assistant-led guides and authored reading samples cover the retained
+dark-mode and TTRPG scenarios. All four plan steps pass their full test gates.
+The bounded live dark-mode planning/local-export rehearsal completes with
+confirmed, current advisory-only audit results and passing story lint. It does
+not implement the feature or verify browser behavior. Remote checkpoint
+publication remains pending and requires separate authorization through the
+[release handoff](2026-10-19-public-onboarding-and-release.md).
 
 The [verification record](../docs/evidence/skill-led-demo-examples-verification.md)
-owns the reviewed revision, reading checks, runtime error, fixture availability,
-and every unverified stage. Documentation readiness, a live rehearsal and remote
-publication are separate results.
+owns snapshot identities, stage outcomes, the recovered child permission failure,
+artifact hashes and remaining verification limits. Documentation readiness,
+a bounded rehearsal and remote publication are separate results.
 
 Keep `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` on both
 Bitbucket and GitHub. The [sanitized publication record](2026-10-21-sanitized-publication.md)
@@ -19,18 +21,17 @@ previous staged contents; local fixture tips below are not approved replacements
 ## Current plan pickup: use the plan-tool skill
 
 [Teach demos and examples through the plan-tool skill](../docs/implementation-plans/2-skill-led-demo-examples.md)
-provides the maintained walkthroughs and learning entry points. Steps 1–3 are
-done at the verification snapshot; this step supplies evidence and status.
-The launcher owns plan status and the post-flight check. Do not re-author the
-seed, restart the guide conversion or reopen scenario selection.
+provides the maintained walkthroughs and learning entry points. All four steps
+are done. The launcher owns plan status and the post-flight checks. Do not
+re-author the seed, restart the conversion or repeat the completed rehearsal
+merely because the original nested step could not initialize Codex.
 
-Next pickup: resolve the runtime blocker, then use the plan-tool skill to
-rehearse [the dark-mode walkthrough](../docs/demos/planning-demo.md) in an isolated
-consuming repository with working application tests. Monitor each original
-command to confirmed exit and retain actual results. Follow the
-[shared directives](../integrations/shared/DIRECTIVES.md) and
-[audit procedure](../docs/how-to/pipeline/audit.md); do not infer qualification
-or convergence from an exit code.
+Next pickup: read the final reconciliation/review evidence and prepare a bounded
+implementation pull request when authorized. The documentation plan's code
+reconciliation sweep reports no eligible code steps because all four are
+explicitly non-code; independent documentation review supplies the accuracy
+check. Follow the [shared directives](../integrations/shared/DIRECTIVES.md).
+Remote demo ref replacement remains a separate reviewed action.
 
 ### Plan scope and user review
 
@@ -42,8 +43,9 @@ The guides ask the assistant to link actual artifacts, summarize changes and
 ask for corrections or continuation at seed, bare-plan/audit and detail/audit
 boundaries. Wait for the user's response unless explicit prior delegation covers
 the transition. Export requires its separate request after detail review.
-The verification record confirms these narrative checkpoints, not actual user
-approval of nonexistent rehearsal artifacts or fresh model-audit results.
+The verification record distinguishes the narrative review checkpoints from
+assistant-reviewed artifacts in the owner-authorized batch rehearsal. It does
+not claim a person separately approved each generated rehearsal artifact.
 
 ### Authoring evidence and audit trajectory
 
@@ -98,37 +100,27 @@ continues to describe its own frozen candidate, not these later bytes.
 
 ## Verification and presentation boundary
 
-The plan parses, all three detail files carry the supported format marker, and
-the current Jira renderer produced the stories and paired handoff from explicit
-local fixture input. `plan-tool jira dark-mode-toggle --lint` exits successfully
-with three advisory warnings: the 3h, 2h and 2h stories are below its 4h soft
-decomposition floor. The prepared cards disclose that these are presentation
-fixtures. No model-generated plan, qualified bare-plan audit or qualified
-detail-grounded audit is claimed for these branches.
-
-The first full-suite run exposed a missing `## References` section in the demo
-seed. The current `create --from-existing` preflight requires it; the seed and
-all four local demo commits were refreshed, and that specific test passes. Five
-other failures came from an isolated test PATH without the installed `codex`
-executable; the focused fallback test passes with the executables on PATH. The
-final isolated run on `demo/4-jira` passes: **14,698 passed, 66 skipped in
-58.00 seconds**, using locked dependencies and the local Python 3.14 interpreter.
+Dated original-preparation provenance, 2026-10-21: the earlier fixture candidate
+parsed and carried supported detail markers; its local story lint returned three
+advisory size warnings (3h, 2h, 2h). The prepared cards labeled fixture input.
+Its isolated full suite recorded 14,698 passed and 66 skipped in 58.00s. These
+facts describe the local candidate table above, not the newly captured one-step
+live rehearsal, and do not certify the current remote checkpoint contents.
 
 ## Remaining demo verification and publication
 
-1. Resolve the Codex runtime permission blocker identified in the verification
-   record. Confirm backend availability in the consuming environment.
-2. Rehearse grounded seed → create → bare audit → detail → grounded audit with
-   actual user reviews or explicit delegation at each boundary. Retain report
-   coverage, qualification, conclusions and unresolved findings.
-3. After the separate local-export request, inspect stories and the paired
-   developer handoff; lint the actual story artifact and record warnings separately.
-4. Update the verification record with captured evidence before describing the
-   live route as verified. Recheck local checkpoint refs, stage differences,
-   bundles and old remote tips before proposing replacements.
-5. Obtain separate review and authorization for remote demo ref updates, then
+1. Review the current implementation changes and their completed-plan evidence.
+   The child initialization restriction is resolved by parent-session access;
+   planning, both audit stages, paired local export and lint have captured results.
+2. If preparing a presentation, choose captured material deliberately. The
+   bounded dependency-free rehearsal verifies the maintained workflow; it does
+   not replace the private React fixture chain or refresh remote checkpoint tips.
+3. Recheck local checkpoint refs, stage differences, private recovery bundles and
+   old remote tips before proposing replacements. Preserve the four checkpoint
+   names and distinguish captured output from authored reading samples.
+4. Obtain separate review and authorization for remote demo ref updates, then
    read both hosts back. Main, tags, visibility and organization transfer remain
-   with the release workflow.
+   with the release workflow. No fresh TTRPG run or browser interaction is claimed.
 
 Use [the planning guide](../docs/demos/planning-demo.md) for the workflow and
 [the documentation placement handoff](2026-10-21-documentation-placement-review.md)

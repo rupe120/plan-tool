@@ -1,9 +1,12 @@
 # Skill-led demo verification
 
-Documentation supports the reading journey; the live dark-mode rehearsal **needs
-verification** because the available Codex runtime cannot initialize in this
-restricted environment. Remote checkpoint publication remains separately owned
-by the [release workflow](../../handoffs/2026-10-19-public-onboarding-and-release.md).
+The assistant-led guides and authored examples support the reading journey. A
+bounded live dark-mode rehearsal completes seed → create → bare audit → detail
+→ grounded audit → local story/developer-handoff export, with confirmed audit
+coverage and passing story lint. This verifies planning and local export on one
+small repository; it does not verify feature implementation, browser behavior,
+a full TTRPG run or remote presentation checkpoints. Remote publication remains
+separately owned by the [release workflow](../../handoffs/2026-10-19-public-onboarding-and-release.md).
 
 ## Reviewed snapshot and method
 
@@ -25,12 +28,12 @@ inferred from the global `plan-tool` executable.
 | [Runbook](../../RUNBOOK.md) and the situation/resume requests | Inspect original invocation and saved results before resuming. | Narrative comparison with the [monitoring owner](../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely) preserves confirmed original-command exit, no overlapping invocation and no stopping a quiet process without authorization. |
 
 Review evidence above concerns what the guides ask the assistant and user to do.
-It is separate from model audit evidence. No actual rehearsal seed, bare plan
-or detail bundle exists here for user approval; no user approval or delegation
-across those live transitions is claimed. On resumption, present each actual
-artifact with its link and change summary, ask for corrections or continuation,
-and wait for the response unless an explicit delegation covers that transition.
-The local export still needs its separate request after detail review.
+It is separate from model audit evidence. The parent session reviews actual rehearsal seeds, plans, details and reports
+under the owner-authorized execution of this plan, whose final step includes the
+bounded planning-to-local-export rehearsal. This is explicit batch scope for
+verification, not evidence that a person separately approved each generated
+artifact. The guides retain conversational review checkpoints and wait unless
+the user explicitly delegates continuation. No remote publication is authorized.
 
 Both audit stages refer readers to the [audit procedure](../how-to/pipeline/audit.md)
 for coverage, qualification, unresolved findings and convergence, rather than
@@ -57,50 +60,85 @@ claims: candidate promotion supplies no predecessor to `check_settled_decisions`
 This is contract review only; no TTRPG generation, candidate mutation, settlement,
 materialization or fresh refusal is observed.
 
-## Runtime prerequisite and unverified stages
+## Runtime recovery and captured live rehearsal
 
-Observed commands, in order (each exits before the next):
+Dated observation, 2026-10-21 local / 2026-10-22 UTC: the nested step process
+reports an authenticated Codex login but its availability probe exits 1 with
+`failed to initialize in-process app-server client: Operation not permitted
+(os error 1)`. No model runs in that probe. The parent session then requests the
+required execution access and successfully runs the workflow below. The failure
+is specific to the restricted child context; it is not an unresolved environment
+or authentication blocker. Escalate or hand the action back to a capable parent
+before describing that kind of failure as permanently unavailable.
 
-```sh
-command -v codex
-command -v plan-tool
-codex login status
-codex --version
-codex exec --help
-codex exec --ephemeral --ignore-user-config --skip-git-repo-check \
-  -C /private/tmp -s read-only -m gpt-6.1-sol \
-  'Reply only READY. Do not use tools or read files.' < /dev/null
-```
+The rehearsal repository is `/private/tmp/plan-tool-dark-mode-rehearsal-cq7oc8wd`,
+a new Git repository with no remotes. Its initial checkpoint is `ae4c73d`; the
+reviewed seed checkpoint is `6609448`; paired export checkpoint is `9756939`.
+It contains a dependency-free HTML/module page with an existing light-theme
+initializer and a passing `node --test` baseline (Node `v22.22.0`). The product
+checkout at `2aab4c878` supplies the editable CLI; backend is Codex and every
+model-backed invocation selects `--model gpt-6.1-sol` explicitly.
 
-Provenance, 2026-10-21: both executables resolve under
-`/Users/joshrusso/.local/bin/`; login status reports `Logged in using ChatGPT`.
-Codex version is `0.163.0`. The availability probe exits **1** immediately with
-`failed to initialize in-process app-server client: Operation not permitted (os error 1)`.
-No model response, provider authentication check or plan-tool run occurs.
-This is a runtime permission blocker, not demonstrated missing credentials,
-provider quota, audit failure or a successful rehearsal. The original probe's
-shell exit is confirmed; there is no live invocation to stop or resume.
+Commands below run from that repository with closed stdin and `-y`. Each original
+invocation exits before the next starts. Commits checkpoint the seed, reviewed
+plan, detail, reports, export configuration and paired outputs.
 
-| Stage | Observed status |
+| Command / checkpoint | Observed result |
 | --- | --- |
-| Disposable consuming repository with working application tests | Not prepared; prerequisite blocked before rehearsal setup. |
-| Grounded dark-mode seed and user review | Not reached. |
-| Create and bare-plan audit/review | Not reached; no report, coverage, qualification or convergence outcome. |
-| Details and grounded audit/review | Not reached; no report, coverage, qualification or convergence outcome. |
-| Separately requested local export | Not reached; no story or paired developer handoff. |
-| Story lint and companion inspection | Not run; no available rehearsal export to inspect. |
-| Live command monitoring | Only prerequisite probe exit observed; no plan-tool lifecycle monitoring demonstrated. |
+| `create dark-mode-toggle --from-existing plan-seeds/dark-mode-toggle.md --iterate` | Direct route; one feature step. Headless create omits an unqualified test command. Session review adds the already-passing `node --test` before the bare audit. |
+| `completeness-audit dark-mode-toggle --iterate --commit --audit-passes 1` | 0 of 1 detailed; `advisory-only`, confirmed, current; `confirmation_kind=confirmed-dry`, `budget_limited=false`; zero conceptual and deterministic findings. |
+| `detail dark-mode-toggle --commit` | One run-grade file; its automatic detail-grounded audit reports zero conceptual findings and confirmed coverage. |
+| `completeness-audit dark-mode-toggle --iterate --commit` | 1 of 1 detailed; `advisory-only`, confirmed, current; confirmed-dry and not budget limited. Reuses the fresh conceptual audit without another model call. |
+| `jira dark-mode-toggle` | One 8h draft story `DEMO-S1` covering step 1 and a paired developer handoff. Local configuration uses the `DEMO` epic and `THEME` display tag; no real Jira key is configured or created. |
+| `jira --lint --input <actual-story-path>` | Pass: one story checked; no lint warning. |
+| `node --test` | One baseline test passes before and after planning/export. Application, HTML and test files have no diff from `6609448`. The feature remains unimplemented. |
 
-Resume in an environment permitting the authenticated backend to initialize,
-then follow [the landed dark-mode walkthrough](../demos/planning-demo.md).
-Keep the disposable repository, manifest, artifacts and audit history outside
-this product repository. Record tool/application revisions, backend/model,
-actual commands and exits, user review decisions, report identities, coverage,
-qualification and unresolved findings. Inspect both outputs against
-[Jira output pair](../../JIRA_FORMAT.md#output-pair) and
-[paired developer handoff](../../JIRA_FORMAT.md#paired-developer-handoff), then
-run `plan-tool jira --lint --input <actual-story-path>` through `cmd_jira_lint`.
-Record failures and advisory warnings separately from audit conclusions.
+Both audit stages retain one INFO, limited-confidence granularity advisory:
+step 1 touches three allegedly unrelated areas (`app.mjs`, `index.html`,
+`theme.mjs`). Session review keeps them together because they deliver the same
+small theme outcome; this advisory does not block and is not a conceptual gap.
+Do not relabel the report clean or split the feature to silence the heuristic.
+The bare completeness/detail apply routes remain withheld at 0 of 1 coverage.
+
+Inspecting the export confirms a binding plan path with step outcome and intent,
+followed by an explicitly non-binding suggested implementation route. Both files
+carry the same companion fingerprint
+`604b80ea780b36bbb66d19a77ae56e9b9679e8e15774097b2cf9b0bf69d90465`.
+The story keeps the light fallback, accessible control and reload persistence;
+the handoff preserves the plan's scope and acceptance criteria. Node success
+checks the baseline only, not the unimplemented acceptance behaviors.
+
+### Retained identities
+
+Paths below are relative to the rehearsal root. The bundle
+`.tmp/skill-led-demo-examples.rehearsal.bundle` retains its committed files
+locally, and `.tmp/skill-led-demo-examples.rehearsal-location.txt` records the
+root. These temporary paths may disappear; the stage outcomes, qualification,
+limitations and identities in this record remain the durable summary.
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `docs/implementation-plans/2-dark-mode-toggle.md` | `3b6510ab5a8d0e3d5c465c9aa39da713f399cb9ead4ce6f5a4466e25e20530b7` |
+| `docs/implementation-plans/plan-details/dark-mode-toggle/01-extend-light-only-initialization.md` | `f92a6bf20dc673bfbff93529f50b776b477d23f0c2f19abd855b07ab07d3fbf3` |
+| `docs/implementation-plans/plan-details/dark-mode-toggle/reports/20261022-001947-completeness.md` | `c2ac45755c376a45e1bd2e331274f9649313a5f3aa173969bbad43ceb706c1ef` |
+| `docs/implementation-plans/plan-details/dark-mode-toggle/reports/20261022-002656-completeness.md` | `7368f477920daa532cdba7deb9babd18e2320630097a22cd0d1465011dac9377` |
+| `docs/implementation-plans/plan-details/dark-mode-toggle/jira-stories.md` | `b73f564d7206f8272d9a2e7e80df4c2e4ab9d008ae89f46428dab4eff7c114ed` |
+| `docs/implementation-plans/jira-handoffs/dark-mode-toggle/jira-stories.developer-handoff.md` | `de3bcda2aff96ffc3c9b741dceafe05b8129302428b028f0b1c89c777604b2b8` |
+
+The detail automatic audit and Jira export warn that a model-call usage sink is
+missing. Saved artifacts and stage outcomes exist; usage/cost is not inferred.
+Existing bug-backlog entries own that instrumentation gap.
+
+## Skill observations
+
+All three shipped skill routers carry the same stale quick recipes: the
+“complete as possible” path skips the bare audit, the summary says detail
+iteration defaults on, and failed-step recovery says to mark the step done
+manually. The actual run follows the canonical directives: both audit gates,
+one-shot detail, and tool-mediated `run --accept` if recovery is needed.
+The confirmed instruction contradictions are filed separately in
+[the bug backlog](../../BUG_BACKLOG.md#installed-skill-quick-recipes-contradict-the-required-audit-order-detail-default-and-failed-step-recovery);
+no skill behavior or router content changes in this conversion.
 
 ## Retained artifacts and repository checks
 
