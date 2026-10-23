@@ -692,3 +692,131 @@ def test_major_collection_must_retain_breaking_category_or_restore_inputs(repo):
 def test_unknown_bump_cannot_silently_become_patch():
     with pytest.raises(release.ReleaseError, match="unknown release bump"):
         release.next_version((1, 2, 3), "typo")
+
+
+@pytest.fixture
+def publication(repo: Repo, tmp_path: Path) -> tuple[Repo, Path]:
+    repo.write("CHANGELOG.md", CHANGELOG + "\n<a id='changelog-0.1.0'></a>\n## 0.1.0\n")
+    repo.commit_all("Release 0.1.0")
+    repo.git("switch", "-c", "main")
+    repo.git("tag", "-d", "v0.1.0")
+    remote = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "--bare", "-q", str(remote)], check=True)
+    repo.git("remote", "add", "origin", str(remote))
+    repo.git("push", "origin", "main")
+    return repo, remote
+
+
+def test_publish_creates_only_release_tag_and_retry_is_idempotent(publication):
+    repo, remote = publication
+    head = repo.head()
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+    assert repo.git("cat-file", "-t", "v0.1.0").strip() == "tag"
+    assert repo.git("ls-remote", str(remote), "refs/tags/v0.1.0^{}").split()[0] == head
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+    assert repo.head() == head and not repo.dirty()
+
+
+def test_publish_dry_run_changes_neither_local_nor_remote_tags(publication):
+    repo, remote = publication
+    release.publish(repo.path, remote="origin", dry_run=True)
+    assert not repo.git("tag", "--list", "v0.1.0").strip()
+    assert not repo.git("ls-remote", str(remote), "refs/tags/*").strip()
+
+
+@pytest.mark.parametrize("condition", ["branch", "dirty", "main-drift", "lock", "notes", "fragments", "local-tag", "remote-tag", "push-urls"])
+def test_publish_refuses_invalid_release_without_remote_mutation(publication, condition):
+    repo, remote = publication
+    if condition == "branch":
+        repo.git("switch", "release-branch")
+    elif condition == "dirty":
+        repo.write("untracked.txt", "pending")
+    elif condition == "main-drift":
+        repo.write("new.txt", "change")
+        repo.commit_all("Further change")
+    elif condition in {"lock", "notes", "fragments"}:
+        if condition == "lock":
+            repo.write("uv.lock", UV_LOCK.replace("0.1.0", "0.2.0"))
+        elif condition == "notes":
+            repo.write("CHANGELOG.md", CHANGELOG)
+        else:
+            repo.fragment("pending.md", "Fixed")
+        repo.commit_all("Invalid release")
+        repo.git("push", "origin", "main")
+    elif condition == "local-tag":
+        repo.git("tag", "v0.1.0", "HEAD~1")
+    elif condition == "remote-tag":
+        repo.git("tag", "v0.1.0", "HEAD~1")
+        repo.git("push", "origin", "refs/tags/v0.1.0")
+        repo.git("tag", "-d", "v0.1.0")
+    else:
+        repo.git("config", "--add", "remote.origin.pushurl", str(remote))
+        repo.git("config", "--add", "remote.origin.pushurl", str(remote) + "-other")
+    before = repo.git("ls-remote", str(remote))
+    with pytest.raises(release.ReleaseError):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("ls-remote", str(remote)) == before
+
+
+def test_publish_keeps_local_tag_after_failed_push_for_retry(publication, monkeypatch):
+    repo, _ = publication
+    original = release._git
+    def fail_push(root, *args):
+        if args[0] == "push":
+            raise release.ReleaseError("push rejected")
+        return original(root, *args)
+    monkeypatch.setattr(release, "_git", fail_push)
+    with pytest.raises(release.ReleaseError, match="push rejected"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("rev-parse", "v0.1.0^{}").strip() == repo.head()
+    monkeypatch.setattr(release, "_git", original)
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+
+
+@pytest.mark.parametrize("already_remote", [False, True])
+def test_publish_preserves_existing_matching_lightweight_tags(publication, already_remote):
+    repo, remote = publication
+    repo.git("tag", "v0.1.0")
+    if already_remote:
+        repo.git("push", "origin", "refs/tags/v0.1.0")
+        repo.git("tag", "-d", "v0.1.0")
+    release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("ls-remote", str(remote), "refs/tags/v0.1.0").split()[0] == repo.head()
+    assert not repo.git("ls-remote", str(remote), "refs/tags/v0.1.0^{}").strip()
+
+
+def test_publish_requires_exact_main_ref_not_a_suffix_match(publication, monkeypatch):
+    repo, _ = publication
+    original = release._git
+    def decoy_main(root, *args):
+        if args[0] == "ls-remote" and args[-1] == "refs/heads/main":
+            return f"{repo.head()}\trefs/heads/decoy/refs/heads/main\n"
+        return original(root, *args)
+    monkeypatch.setattr(release, "_git", decoy_main)
+    with pytest.raises(release.ReleaseError, match="HEAD must equal"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert not repo.git("tag", "--list", "v0.1.0").strip()
+
+
+@pytest.mark.parametrize("argv", [["--publish", "--minor"], ["--remote", "origin"]])
+def test_publication_arguments_cannot_accidentally_prepare_a_release(argv):
+    with pytest.raises(SystemExit) as exc:
+        release.main(argv)
+    assert exc.value.code == 2
+
+
+def test_publish_reports_failed_readback_and_preserves_local_tag(publication, monkeypatch):
+    repo, _ = publication
+    original = release._git
+    tag_reads = 0
+    def missing_readback(root, *args):
+        nonlocal tag_reads
+        if args[0] == "ls-remote" and args[-1].endswith("^{}"):
+            tag_reads += 1
+            if tag_reads == 2:
+                return ""
+        return original(root, *args)
+    monkeypatch.setattr(release, "_git", missing_readback)
+    with pytest.raises(release.ReleaseError, match="cannot verify remote"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("rev-parse", "v0.1.0^{}").strip() == repo.head()
