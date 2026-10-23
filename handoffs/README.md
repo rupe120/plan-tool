@@ -210,3 +210,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Roadmap plan-row selector documentation](2026-10-23-roadmap-plan-id-selector.md) — existing row IDs before seeds, separate create semantics, corrected starting-point guidance and low-yield Claude Code reviews.
 
 - [Demo workflow alignment](2026-10-23-demo-workflow-alignment.md) — preferred sample fields, accepted-head scaffold timing, bounded promotion requests, readiness review and low-yield Claude Code evidence.
+
+- [Roadmap plan breakdown review](2026-10-23-roadmap-plan-breakdown.md) — stage-4 plan-list responsibilities, comparison with seed decomposition, named-evidence review and explicit assessment scope.
