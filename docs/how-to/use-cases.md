@@ -370,6 +370,7 @@ The [generated command reference](../cli/roadmap.md) lists flags and refusals.
 
 | You're starting from… | Start with |
 | --- | --- |
+| A single obvious edit | Skip plan-tool: edit directly, test and [review to convergence](../../integrations/shared/DIRECTIVES.md#direct-changes-get-the-same-loop). |
 | A project-sized concept, before you have a seed | Ask for brief and roadmap review; `roadmap <slug> --from-existing <concept.md>`, then review the mapping, materialize selected seeds and review them before `create`; see [seed preparation](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them) |
 | A rough idea (1–2 sentences) | Ask for a grounded seed and review it, then `create <slug> --from-existing <seed>` |
 | Nothing — author interactively | Ask for framing and seed review, or use the operator wizard: `create <slug>` |
@@ -378,7 +379,7 @@ The [generated command reference](../cli/roadmap.md) lists flags and refusals.
 | An old plan + current code | Ask for carryover assessment and seed review; `annotate <old-plan>` → `create … --from-existing <seed>` |
 | A plan file another tool wrote | Ask for grounding and review; `register <path>`, then both audit gates before separately requested execution |
 | A small change you want straight to Jira stories | Use the reviewed authoring route, then request local stories and their developer handoff (§ 9 → § 4) |
-| A small change you want built and reconciled | Use the reviewed authoring route, then request execution and post-run reconciliation/review (§ 9 → § 3) |
+| A small change that needs a durable plan and implementation checks | Use the reviewed authoring route, then request execution and post-run reconciliation/review (§ 9 → § 3) |
 
 For the full flag-level reference, see [`../reference/commands.md`](../reference/commands.md) and the
 generated per-command pages under [`docs/cli/`](../cli/README.md).

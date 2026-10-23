@@ -193,7 +193,9 @@ substituting the plan-tool source tree.
 Implement **directly** when the change fits in one step, the acceptance
 criteria are obvious, you can name the tests it affects, and no design
 choice is open. Examples: a surgical bug fix, a single-file refactor, a flag
-default flip.
+default flip. Direct work skips plan-tool's plan-authoring and execution
+pipeline; edit the files yourself or with an assistant, then test and review
+through the [direct review loop](#driving-a-change-to-done).
 
 Write a **plan** when the change spans modules, needs its acceptance
 criteria discovered, has visible phases, or involves a decision worth a

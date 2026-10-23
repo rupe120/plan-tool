@@ -16,6 +16,9 @@ For source installation, version selection and dependency/skill refresh, use
 
 ## Author and run a plan
 
+For a single obvious edit, skip plan-tool: edit, test and review directly.
+See the [direct review loop](../../integrations/shared/DIRECTIVES.md#direct-changes-get-the-same-loop).
+
 1. Choose a starting input in [Choose a starting point](choose-a-starting-point.md).
 2. Follow the assistant-guided workflow in [Your first plan](../../README.md#your-first-plan).
 3. Use [Common workflows](common-workflows.md) when a stage needs its options or
@@ -32,7 +35,6 @@ For a project-sized concept, start with
 | Detail | [Detail](pipeline/detail.md) |
 | Audit | [Audit](pipeline/audit.md) |
 | Run | [Run](pipeline/run.md) |
-| Small direct delivery | [Direct pipeline](pipeline/direct-pipeline.md) |
 
 ## Recovery guides
 
