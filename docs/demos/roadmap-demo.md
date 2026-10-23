@@ -233,6 +233,8 @@ status alone cannot demonstrate the fence.
 There is no promised unlock or supported un-settle sequence in this demo. Do
 not edit immutable artifacts or promise that repeating the request will succeed.
 
+<a id="6-phase-3--promote-the-draft-seeds"></a>
+
 ## 6. Phase 3 — materialize and review seeds; optionally promote
 
 > Inspect the accepted `04-roadmap` mapping and draft states, showing which
