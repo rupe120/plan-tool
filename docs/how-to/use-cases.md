@@ -157,6 +157,9 @@ a CI gate. See [README → jira](../reference/commands.md#cli-usage) and
 > Inspect this unexecuted plan and current code, then refresh its grounding and show proposed changes for review; do not implement it.
 
 A plan you wrote weeks ago is still open, but the codebase has changed under it.
+Use this route before execution. For work already produced by `run` or Jira
+stories, preserve plan authority and use code reconciliation or
+[annotate for the next iteration](#6-start-the-next-iteration-from-whats-already-built).
 
 ```bash
 plan-tool reconcile-plan my-feature --refresh   # cheap: skips Claude on no drift
@@ -165,7 +168,9 @@ plan-tool reconcile-plan my-feature             # full plan-vs-code pass
 
 `--refresh` compares a tracked fingerprint of the code against now and only
 spends a Claude call when something actually drifted. You get a plan that
-re-fits the repo instead of one that quietly went stale. See
+re-fits the repo instead of one that quietly went stale. Commit and review
+plan changes, then repeat the applicable bare-plan or detail-grounded audit
+before continuing; reconciliation does not certify either gate. See
 [README → Audit a plan's quality](common-workflows.md#3-audit-a-plans-quality).
 
 ### 6. Start the next iteration from what's already built
@@ -251,7 +256,9 @@ Use the same [reviewed authoring route](#7-drive-a-plan-to-actually-correct-not-
 as a larger feature, then choose [execution](#3-execute-a-plan-locally-one-step-at-a-time)
 or [local Jira export](#4-hand-the-work-off-as-jira-stories). A small scope can
 have fewer steps without removing either audit gate or the user's review points.
-For a single obvious edit, use the direct-change route instead of creating a plan.
+For a single obvious edit, use a direct change with
+[its review loop](../../integrations/shared/DIRECTIVES.md#direct-changes-get-the-same-loop)
+instead of creating a plan.
 
 **Legacy compatibility only:** `direct-jira` and `direct-run` remain available
 but are deprecated and scheduled for removal with `completeness-apply`
@@ -287,7 +294,8 @@ section contract is in
 Two limits worth knowing before you commit: the jira-grade audit is
 **report-only** (no findings sidecar, so no `completeness-apply`, no
 `--iterate`, no `convergence` history for that run — you read the report and fix
-by hand), and `direct-jira` / `direct-run` have no grade selector yet.
+through the driving session). Deprecated direct pipelines are not an
+alternative for new workflows.
 
 ### 11. Ground a project-sized concept before you write a seed
 
