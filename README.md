@@ -11,7 +11,7 @@ implementation, execute reviewed steps or export Jira stories, and check the
 resulting code against the plan.
 
 It is most useful when work spans dependent changes, multiple sessions, or team
-handoffs. Small, straightforward edits can stay lightweight.
+handoffs. Small, straightforward edits can skip plan-tool.
 
 The mission and the grounding principles the codebase is built to obey live in [`MISSION.md`](MISSION.md). New here, or unsure whether your work is a good fit? [`docs/how-to/use-cases.md`](docs/how-to/use-cases.md) is the situation-first guide — when to use the tool and which path to take.
 
@@ -84,8 +84,9 @@ install or authenticate that backend.
 
 ## Your first plan
 
-Open the repository you want to change in your assistant. Choose a small,
-independently testable change and ask:
+For a first exercise, choose a small, independently testable feature to learn
+the planning workflow. For a single obvious edit, skip plan-tool: edit, test
+and review directly. Open the repository in your assistant and ask:
 
 > Inspect this repository and draft a grounded seed for [describe a small feature],
 > with an explicit scope fence and verified references. Use the plan-tool skill
