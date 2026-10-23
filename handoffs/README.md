@@ -198,3 +198,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Post-1.0 release versioning](2026-10-22-post-1-release-versioning-code-review.md) — explicit Breaking notes, major/minor/patch derivation, retained release guards and independent review convergence.
 
 - [Release 1.1.0 preparation](2026-10-22-release-1.1.0.md) — fragment coverage, green tests, two independent artifact reviews, and pending Jira/tag publication prerequisites.
+
+- [Use-case guidance correction](2026-10-23-use-case-guidance.md) — supported assistant routes, both audit gates, explicit CI failure flags, current seed preparation and independent Claude Code review dispositions.
