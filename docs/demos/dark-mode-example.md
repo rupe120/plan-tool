@@ -61,11 +61,11 @@ it waits for a response unless explicit prior delegation covers plan creation.
 intent: Let users choose a readable theme and retain that choice across reloads.
 steps:
   - id: 1
-    title: Add a persistent theme preference
+    description: Add a persistent theme preference
     intent: Keep the selected appearance after reload.
     change_type: feature
   - id: 2
-    title: Expose an accessible theme toggle
+    description: Expose an accessible theme toggle
     intent: Let users change the selected appearance from the application shell.
     change_type: feature
     depends_on: [1]

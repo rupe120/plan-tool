@@ -60,7 +60,7 @@ The nearest Git root scopes discovery; no registration or manually created
 `.plan-tool/` directory is needed. Use specifically named local logs such as
 `.tmp/ttrpg-demo.roadmap-stage-run.log`.
 
-### Phase 0b — the scaffold, authored after stage 3
+### Phase 0b — the scaffold, authored after accepted roadmap publication
 
 Run this after Phase 1 exposes the accepted component artifact, never before.
 The first run publishes an accepted head only after all four stages pass.
@@ -116,7 +116,7 @@ plans and do not enter the plan manifest.
 | `01-domain` | Secret entity versus note field; marginalia ownership and anchors | Are the domain boundaries faithful to the brief? |
 | `02-constraints` | Security priority and explicit tradeoffs for a small-group app | Do priorities reflect what the project will spend? |
 | `03-components` | Visibility ownership across notes, graph and marginalia | Are seams and rejected alternatives explained? |
-| `04-roadmap` | Ordered slices, non-goals and explicit AI deferrals | Which plans belong, and which should wait? |
+| `04-roadmap` | Plan IDs, cohesive outcomes, scope fences, producer/consumer ownership, dependencies and explicit AI deferrals | Does each plan have a necessary bounded outcome and an owned path to acceptance? |
 
 Use summary, walk, ledger, index, seeds or HTML views as appropriate. The
 [immutable authority contract](../../ROADMAP_FORMAT.md#immutable-candidate-version-authority)
@@ -233,18 +233,24 @@ status alone cannot demonstrate the fence.
 There is no promised unlock or supported un-settle sequence in this demo. Do
 not edit immutable artifacts or promise that repeating the request will succeed.
 
-## 6. Phase 3 — promote the draft seeds
+## 6. Phase 3 — materialize and review seeds; optionally promote
 
 > Inspect the accepted `04-roadmap` mapping and draft states, showing which
-> version supplies them. Ask which rows I want materialized, then materialize
+> version supplies them. Explain that a fresh roadmap has plan rows and declared
+> paths but no seed files yet. Ask which rows I want materialized, then materialize
 > only those eligible drafts. An active candidate must not silently supply their
 > content. Link each selected seed, summarize scope, prerequisites, proof
 > obligations, non-goals and Stack context, and ask for corrections or continuation.
 > Wait for my review before `create`; materialization is not content approval.
 
-> For reviewed current drafts, show the promotion preview and destination paths.
-> Ask whether to authorize the copy to the reported promotion destinations or use the current drafts
-> directly. After an authorized copy, link the seeds and ordered create handoff.
+> For reviewed current drafts, explain that promotion is optional and applies
+> across the roadmap's promotion targets, not just the rows selected for this
+> demo. Inspect the full target set and states before proposing a copy. If it
+> includes unreviewed or missing drafts, report them and offer direct use of the
+> selected current drafts; do not expand materialization or review without my
+> authorization. Show the preview and reported destinations when promotion is
+> appropriate, then ask whether to authorize the copy or use drafts directly.
+> After an authorized copy, link the seeds and ordered create handoff.
 > Promotion does not approve the seed content or accept a roadmap candidate.
 
 [Promote accepted draft seeds, or create directly from them](../how-to/roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
@@ -253,7 +259,9 @@ owns materialization, reviewed digest acceptance and optional copying.
 accepted `04-roadmap.md`, before its seed file necessarily exists. It does not
 create an implementation plan or assign a new name. With no ID it processes
 all recoverable drafts. Substitute the selected row's actual ID for the
-placeholder; later create uses the reviewed seed's reported path.
+placeholder. Later create handoffs reuse that row ID as the plan slug and use
+its reviewed seed path. Take the repo-relative path from materialization or
+promotion output; do not treat a slug-relative artifact path as repo-relative.
 Supporting commands also include `--apply` for preview, and
 `--apply -y` only for an authorized unattended copy. Choose one reviewed source
 per plan: its current slug-relative draft or promoted copy. Do not hand-edit the
@@ -277,7 +285,9 @@ rather than forcing the illustrative name `ttrpg-note-visibility`.
 > Run the bare audit next, then bring the plan and its audit back for review
 > before authoring details.
 
-Supporting command: `plan-tool create <plan-id> --from-existing <reviewed-seed>`.
+Supporting command: `plan-tool create <roadmap-plan-id> --from-existing <reported-seed-path>`.
+Substitute the selected existing roadmap row ID and its reviewed repo-relative
+seed path; this command creates the implementation plan.
 Create defaults to iteration; retain it.
 
 ### Phase 5 — audit the bare plan, before detail
