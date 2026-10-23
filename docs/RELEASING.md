@@ -83,12 +83,26 @@ label.
    the categories it derived the bump from, and commits `pyproject.toml`,
    `uv.lock`, `CHANGELOG.md`, and the deleted fragments as `Release X.Y.Z`. A
    failure before the commit restores those paths to HEAD.
-3. Push the branch and open a pull request. After it merges, tag the merge
-   commit `vX.Y.Z` (under a squash merge, the new commit on `main`). Pushing the
-   tag is a separate step that needs the maintainer's go-ahead; the script never
-   tags or pushes.
+3. Push the branch and open a pull request. After it merges, update local
+   `main` to the merge commit (or squash commit). With the maintainer's go-ahead,
+   run `uv run scripts/release.py --publish --dry-run`, then
+   `uv run scripts/release.py --publish`. This explicit publication command
+   creates an annotated `vX.Y.Z` when absent, pushes only that tag, and verifies
+   the remote target. Existing matching tags, including lightweight tags, are
+   preserved as they are. Preparation never publishes a tag.
 
-The script refuses, with a message, in these cases:
+   Publication requires a clean `main` matching the destination's remote main,
+   matching package/lock/changelog versions, and no pending fragments. Existing
+   tags at another commit are refused; matching published tags are an idempotent
+   success. A failed push retains the local tag so the same command can retry.
+   Use `--remote NAME` to select a configured remote (default `origin`). One
+   push destination is required; publish and verify each host separately.
+   The target is current main: run publication immediately after the release
+   merge, before subsequent changes. The script does not identify the release
+   PR from Git history. This verifies repository artifacts, not Jira coverage
+   or release approval.
+
+Release preparation refuses, with a message, in these cases:
 
 | It refuses when | Do this |
 | --- | --- |
@@ -119,7 +133,8 @@ without it:
    deletes the fragments it consumed. `changelog.d/README.md` stays.
 4. Commit `pyproject.toml`, `uv.lock`, `CHANGELOG.md`, and the deleted
    fragments as `Release X.Y.Z`.
-5. Tag that commit `vX.Y.Z`, with the same go-ahead rule for pushing the tag.
+5. Merge the release through a PR, then use `--publish` on updated `main`
+   with the same go-ahead rule for pushing the tag.
 
 `plan-tool --version` prints a build's version. In a clone it reads
 `[project].version` from `pyproject.toml`, so a bump shows without reinstalling
@@ -133,7 +148,7 @@ version: `v0.1.0` or a later one.
 | Not decided | Why |
 | --- | --- |
 | Publishing to PyPI or an internal index | Installation stays clone-based; a published package needs its own decisions on naming, credentials, and support. |
-| Tagging and pushing from the script, or running it from a pipeline | The tag needs the maintainer's go-ahead. A pipeline that pushes a release branch needs a stored access token; add it when a one-click release is wanted. |
+| Running release publication from a pipeline | The explicit `--publish` command needs the maintainer's go-ahead. Automated approval and credentials remain separate work. |
 | A Fix Version and a `next` release in Jira | The release check above uses resolution dates and `changelog.d/`. Add a Fix Version when someone must ask, after the fact, which release shipped a ticket ([`docs/TRACKING.md`](TRACKING.md#deliberately-not-configured)). |
 | Backport branches for old tags | Not needed until a team stays on an old tag; decide when one does. |
 

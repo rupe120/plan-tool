@@ -2,11 +2,11 @@
 """Cut a release commit: derive the next version from the pending changelog fragments.
 
     uv run scripts/release.py [--minor] [--dry-run]
+    uv run scripts/release.py --publish [--remote NAME] [--dry-run]
 
-Runs the release-commit step of docs/RELEASING.md, which owns the bump rule,
-the refusals, and what the script deliberately leaves out (tagging and pushing).
-It never tags or pushes, and restores the four release paths to HEAD on any
-failure before the commit.
+Runs the release-commit step of docs/RELEASING.md; --publish tags and pushes
+an already merged release on main. Release preparation restores its four paths
+to HEAD on failure before the commit. Publication preserves local tags on failure.
 
 The fragment parse mirrors scriv's markdown parser because scriv consumes the
 fragments; after `scriv collect`, its output categories are compared with the
@@ -249,18 +249,87 @@ def cut(root: Path, *, force_minor: bool, dry_run: bool, tool: ToolRunner = run_
         raise
     print(
         f"\nCommitted Release {new}. Push this branch and open a pull request; after it merges,\n"
-        f"tag the merge commit `v{new}`; pushing the tag needs the maintainer's go-ahead (docs/RELEASING.md)."
+        f"run `uv run scripts/release.py --publish` on updated main with the maintainer's go-ahead (docs/RELEASING.md)."
     )
     return 0
 
 
+def publish(root: Path, *, remote: str, dry_run: bool) -> int:
+    """Publish only the current merged release tag to one remote destination."""
+    current, _, _ = _read_version(root)
+    tag = f"v{current}"
+    ref = f"refs/tags/{tag}"
+    if _git(root, "status", "--porcelain").strip():
+        raise ReleaseError("uncommitted changes; publish from a clean main branch")
+    if not _git_ok(root, "symbolic-ref", "--quiet", "HEAD") or _git(
+        root, "symbolic-ref", "--short", "HEAD"
+    ).strip() != "main":
+        raise ReleaseError("publish requires the merged release on main")
+    head = _git(root, "rev-parse", "HEAD").strip()
+    destinations = _git(root, "remote", "get-url", "--push", "--all", remote).splitlines()
+    if len(destinations) != 1:
+        raise ReleaseError("publish requires one push destination; publish each host separately")
+    destination = destinations[0]
+    if destination.startswith("-"):
+        raise ReleaseError("invalid push destination")
+    remote_main = dict(
+        reversed(line.split()) for line in _git(root, "ls-remote", destination, "refs/heads/main").splitlines()
+    )
+    if remote_main.get("refs/heads/main") != head:
+        raise ReleaseError("HEAD must equal the destination's main; fetch and update main first")
+    try:
+        lock = tomllib.loads((root / "uv.lock").read_text(encoding="utf-8"))
+        versions = [p.get("version") for p in lock.get("package", []) if p.get("name") == "plan-tool"]
+        notes = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        raise ReleaseError(f"cannot read release artifacts: {exc}") from None
+    if versions != [current] or f"<a id='changelog-{current}'></a>" not in notes:
+        raise ReleaseError("package version, lockfile and changelog must describe the same release")
+    if fragment_paths(root):
+        raise ReleaseError("pending fragments: publish the release before further changes")
+    if _git_ok(root, "show-ref", "--verify", "--quiet", ref):
+        if _git(root, "rev-parse", f"{ref}^{{}}").strip() != head:
+            raise ReleaseError(f"local {tag} points elsewhere; no tag is overwritten")
+    existing = dict(
+        reversed(line.split()) for line in _git(root, "ls-remote", destination, ref, f"{ref}^{{}}").splitlines()
+    )
+    target = existing.get(f"{ref}^{{}}", existing.get(ref))
+    if target is not None:
+        if target != head:
+            raise ReleaseError(f"remote {tag} points elsewhere; no tag is overwritten")
+        print(f"{tag} already published at {head}")
+        return 0
+    print(f"Publish {tag} at {head} to {remote}")
+    if dry_run:
+        return 0
+    if not _git_ok(root, "show-ref", "--verify", "--quiet", ref):
+        _git(root, "tag", "-a", tag, head, "-m", f"plan-tool {current}")
+    # Preserve the local tag if push or read-back fails; retries re-check both ends.
+    _git(root, "push", destination, f"{ref}:{ref}")
+    published = dict(
+        reversed(line.split()) for line in _git(root, "ls-remote", destination, ref, f"{ref}^{{}}").splitlines()
+    )
+    if published.get(f"{ref}^{{}}", published.get(ref)) != head:
+        raise ReleaseError(f"cannot verify remote {tag}; inspect the destination before retrying")
+    print(f"Verified {tag} at {head} on {remote}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Derive the next version and commit the release.")
+    parser = argparse.ArgumentParser(description="Prepare a release commit or publish a merged release tag.")
+    parser.add_argument("--publish", action="store_true", help="tag and push the merged current release on main")
+    parser.add_argument("--remote", default=None, help="publication remote (default: origin)")
     parser.add_argument("--minor", action="store_true", help="raise a patch bump to a minor bump")
-    parser.add_argument("--dry-run", action="store_true", help="print the derived version and change nothing")
+    parser.add_argument("--dry-run", action="store_true", help="preview preparation or publication without changing anything")
     args = parser.parse_args(argv)
+    if args.publish and args.minor:
+        parser.error("--publish cannot be combined with --minor")
+    if args.remote is not None and not args.publish:
+        parser.error("--remote requires --publish")
     try:
         root = Path(_git(Path.cwd(), "rev-parse", "--show-toplevel").strip())
+        if args.publish:
+            return publish(root, remote=args.remote or "origin", dry_run=args.dry_run)
         return cut(root, force_minor=args.minor, dry_run=args.dry_run)
     except ReleaseError as exc:
         print(f"release: {exc}", file=sys.stderr)
