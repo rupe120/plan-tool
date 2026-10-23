@@ -2,6 +2,7 @@
 """Cut a release commit: derive the next version from the pending changelog fragments.
 
     uv run scripts/release.py [--minor] [--dry-run]
+    uv run scripts/release.py --publish [--remote NAME] [--dry-run]
 
 Runs the release-commit step of docs/RELEASING.md; --publish tags and pushes
 an already merged release on main. Release preparation restores its four paths
@@ -271,8 +272,10 @@ def publish(root: Path, *, remote: str, dry_run: bool) -> int:
     destination = destinations[0]
     if destination.startswith("-"):
         raise ReleaseError("invalid push destination")
-    remote_main = _git(root, "ls-remote", destination, "refs/heads/main").split()
-    if not remote_main or remote_main[0] != head:
+    remote_main = dict(
+        reversed(line.split()) for line in _git(root, "ls-remote", destination, "refs/heads/main").splitlines()
+    )
+    if remote_main.get("refs/heads/main") != head:
         raise ReleaseError("HEAD must equal the destination's main; fetch and update main first")
     try:
         lock = tomllib.loads((root / "uv.lock").read_text(encoding="utf-8"))
@@ -313,7 +316,7 @@ def publish(root: Path, *, remote: str, dry_run: bool) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Derive the next version and commit the release.")
+    parser = argparse.ArgumentParser(description="Prepare a release commit or publish a merged release tag.")
     parser.add_argument("--publish", action="store_true", help="tag and push the merged current release on main")
     parser.add_argument("--remote", default=None, help="publication remote (default: origin)")
     parser.add_argument("--minor", action="store_true", help="raise a patch bump to a minor bump")

@@ -87,8 +87,9 @@ label.
    `main` to the merge commit (or squash commit). With the maintainer's go-ahead,
    run `uv run scripts/release.py --publish --dry-run`, then
    `uv run scripts/release.py --publish`. This explicit publication command
-   creates an annotated `vX.Y.Z`, pushes only that tag, and verifies the remote
-   target. Preparation never publishes a tag.
+   creates an annotated `vX.Y.Z` when absent, pushes only that tag, and verifies
+   the remote target. Existing matching tags, including lightweight tags, are
+   preserved as they are. Preparation never publishes a tag.
 
    Publication requires a clean `main` matching the destination's remote main,
    matching package/lock/changelog versions, and no pending fragments. Existing
@@ -96,9 +97,12 @@ label.
    success. A failed push retains the local tag so the same command can retry.
    Use `--remote NAME` to select a configured remote (default `origin`). One
    push destination is required; publish and verify each host separately.
-   This verifies repository artifacts, not Jira coverage or release approval.
+   The target is current main: run publication immediately after the release
+   merge, before subsequent changes. The script does not identify the release
+   PR from Git history. This verifies repository artifacts, not Jira coverage
+   or release approval.
 
-The script refuses, with a message, in these cases:
+Release preparation refuses, with a message, in these cases:
 
 | It refuses when | Do this |
 | --- | --- |

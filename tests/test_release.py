@@ -771,3 +771,52 @@ def test_publish_keeps_local_tag_after_failed_push_for_retry(publication, monkey
     assert repo.git("rev-parse", "v0.1.0^{}").strip() == repo.head()
     monkeypatch.setattr(release, "_git", original)
     assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+
+
+@pytest.mark.parametrize("already_remote", [False, True])
+def test_publish_preserves_existing_matching_lightweight_tags(publication, already_remote):
+    repo, remote = publication
+    repo.git("tag", "v0.1.0")
+    if already_remote:
+        repo.git("push", "origin", "refs/tags/v0.1.0")
+        repo.git("tag", "-d", "v0.1.0")
+    release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("ls-remote", str(remote), "refs/tags/v0.1.0").split()[0] == repo.head()
+    assert not repo.git("ls-remote", str(remote), "refs/tags/v0.1.0^{}").strip()
+
+
+def test_publish_requires_exact_main_ref_not_a_suffix_match(publication, monkeypatch):
+    repo, _ = publication
+    original = release._git
+    def decoy_main(root, *args):
+        if args[0] == "ls-remote" and args[-1] == "refs/heads/main":
+            return f"{repo.head()}\trefs/heads/decoy/refs/heads/main\n"
+        return original(root, *args)
+    monkeypatch.setattr(release, "_git", decoy_main)
+    with pytest.raises(release.ReleaseError, match="HEAD must equal"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert not repo.git("tag", "--list", "v0.1.0").strip()
+
+
+@pytest.mark.parametrize("argv", [["--publish", "--minor"], ["--remote", "origin"]])
+def test_publication_arguments_cannot_accidentally_prepare_a_release(argv):
+    with pytest.raises(SystemExit) as exc:
+        release.main(argv)
+    assert exc.value.code == 2
+
+
+def test_publish_reports_failed_readback_and_preserves_local_tag(publication, monkeypatch):
+    repo, _ = publication
+    original = release._git
+    tag_reads = 0
+    def missing_readback(root, *args):
+        nonlocal tag_reads
+        if args[0] == "ls-remote" and args[-1].endswith("^{}"):
+            tag_reads += 1
+            if tag_reads == 2:
+                return ""
+        return original(root, *args)
+    monkeypatch.setattr(release, "_git", missing_readback)
+    with pytest.raises(release.ReleaseError, match="cannot verify remote"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("rev-parse", "v0.1.0^{}").strip() == repo.head()
