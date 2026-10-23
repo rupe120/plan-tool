@@ -61,7 +61,7 @@ point of writing it this way. Four staged Claude calls then produce four
 artifacts, published as one immutable version under
 `<plans-dir>/roadmaps/my-project/`. Stage 4 declares each plan
 row's draft destination but does not create seed files; materialize drafts
-explicitly after reviewing the mapping:
+explicitly after reviewing the mapping.
 
 | Artifact | What it fixes |
 | --- | --- |
@@ -135,16 +135,20 @@ consumed/archived seed at its original path and writes a diff report. Until
 then, `create --from-existing` asks for an explicit confirmation before
 continuing with an invalidated roadmap seed.
 
-**Materialize and review seeds before ordinary plan authoring.** After reviewing
+### Materialize and review seeds before ordinary plan authoring
+
+Preserve reviewed hand edits with `--accept-seed PLAN_ID` before any further
+`--materialize`, which can replace unaccepted edits. After reviewing
 `04-roadmap.md`, materialize all recoverable drafts, or select one actual plan
 ID with `--materialize PLAN_ID`:
 
 ```bash
 plan-tool roadmap my-project --materialize
-plan-tool roadmap my-project --view summary
+plan-tool roadmap my-project --view seeds
 ```
 
-Inspect the resulting paths and state. Review each seed's scope, references,
+Use the materialization output for paths and `--view seeds` for per-plan state.
+Review each seed's scope, references,
 `## Stack` and sibling prerequisites before using it; materialization does not
 approve a seed. If you hand-edit a draft, review the edit and use
 `--accept-seed PLAN_ID` to record its digest before promotion or create. The
@@ -160,7 +164,8 @@ plan-tool create first-plan --from-existing docs/implementation-plans/roadmaps/m
 ```
 
 Alternatively, after reviewing the drafts to be promoted, preview and confirm
-promotion, then create from the copied seed:
+promotion, then copy the create handoff it prints for the actual destination.
+For a new publication with default directories:
 
 ```bash
 plan-tool roadmap my-project --apply
