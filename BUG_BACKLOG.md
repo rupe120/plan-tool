@@ -1056,14 +1056,23 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
-### Common-workflows roadmap examples point new users at seeds that do not exist
+### README roadmap handoff examples omit materialization before create
 
-- **Files:** `docs/how-to/common-workflows.md`, roadmap overview and seed handoff examples (around lines 61–63 and 139–147).
-- **Symptom:** the guide describes stage 4 as producing draft seeds automatically and uses root `plan-seeds/` or legacy `seeds/` paths. New roadmaps require explicit materialization, and new promotion defaults to `docs/implementation-plans/plan-seeds/`; copied create commands can name nonexistent files.
-- **Fix:** align these examples with `docs/how-to/roadmap.md` section 7 and `plan_tool/seed_paths.py`, retaining recorded legacy destinations. Show materialization, seed review and the actual reported draft path before create.
+- **Files:** `README.md`, roadmap handoff near the “Then it's the ordinary pipeline” paragraph.
+- **Symptom:** the overview implies a full stage run supplies create-ready seeds, then shows apply/create without materialization and names legacy `seeds/<plan>.md`. Fresh roadmaps contain mapping rows but no draft files until explicit materialization.
+- **Fix:** show materialization and seed review before optional promotion or direct draft consumption; use reported paths and retain legacy destinations. Match `docs/how-to/roadmap.md` section 7.
 - **Approach:** direct; **Readiness:** ready; **Tier:** working.
-- **Scope contract:** documentation only in this guide's roadmap overview and seed examples; no runtime/default changes or wider roadmap redesign. Verify command/path claims against source and check affected links. Stop if a source-contract disagreement requires a design decision.
-- **Evidence:** two independent Claude Code reviews of the 2026-10-23 use-case guidance correction confirm these lines predate that change; see `handoffs/2026-10-23-use-case-guidance.md`.
+- **Scope contract:** README roadmap handoff only; no runtime/default changes or redesign. Verify examples against current command reference and seed guide; stop on a source-contract disagreement.
+- **Evidence:** source comparison during the common-workflows seed-example review, recorded in `handoffs/2026-10-23-roadmap-seed-examples.md`.
+
+### Roadmap promotion summary names the nested destination even for legacy publications
+
+- **Files:** `plan_tool/cli/roadmap_cmd.py:_render_apply_outcome`; `tests/cli/test_roadmap_cmd.py`.
+- **Symptom:** the success summary always says promotion goes to `docs/implementation-plans/plan-seeds/`, while detailed rows and create handoffs use each real destination. A legacy recorded publication can retain root `plan-seeds/`, making the summary misleading.
+- **Fix:** render a destination-neutral summary or derive it from actual promotion results; preserve detailed paths and all publication semantics. Cover legacy and nested outcomes.
+- **Approach:** direct; **Readiness:** ready; **Tier:** working.
+- **Scope contract:** rendered promotion summary and focused tests only; no seed moves, storage/provenance changes or path-policy redesign. Verify existing rendering tests before applying a fix.
+- **Evidence:** `_render_apply_outcome` contains the unconditional nested-path string; `plan_tool/seed_paths.py:published_seeds_dir` retains legacy roots. Static confirmation only; this task changes no runtime code.
 
 ## ROADMAP
 
