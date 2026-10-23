@@ -202,3 +202,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Release tag publication](2026-10-23-release-tag-publication.md) — explicit post-merge publication, verified Bitbucket 1.0.0/1.1.0 tags, isolated Git tests and two final Claude Code reviews.
 
 - [Use-case guidance correction](2026-10-23-use-case-guidance.md) — supported assistant routes, both audit gates, explicit CI failure flags, current seed preparation and independent Claude Code review dispositions.
+
+- [Roadmap seed examples](2026-10-23-roadmap-seed-examples.md) — explicit materialization, reviewed source alternatives, retained legacy paths and low-yield Claude Code review evidence.
