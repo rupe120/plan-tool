@@ -136,7 +136,7 @@ For direct command operation, use the [decision flow](#decision-flow),
 
 | Step | What it does |
 | --- | --- |
-| **`roadmap`** | *(optional, project-sized)* Stage a concept brief into four gated architecture artifacts, then emit one draft `create` seed per plan it proposes. |
+| **`roadmap`** | *(optional, project-sized)* Stage a concept brief into four gated architecture artifacts; materialize and review selected draft seeds separately before `create`. |
 | **`create`** | Author a plan from prose (`--from`) or an existing draft (`--from-existing`). |
 | **`detail`** | Draft per-step detail files and wire each step's `detail:` pointer. |
 | **audit** | `completeness-audit` checks coverage + concepts; `reconcile-plan` re-fits a stale plan to current code. |
