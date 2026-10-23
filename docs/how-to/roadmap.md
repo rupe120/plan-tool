@@ -8,7 +8,9 @@ Recipes and recovery live in [`RUNBOOK.md`](../../RUNBOOK.md); the artifact sche
 
 ## Command sequence at a glance
 
-These are not commands to run blindly as one script. The two promotion forms and the two seed paths are alternatives: use the form that matches the handoff you want.
+Replace `<roadmap-plan-id>` with an existing `plans[].id` from the accepted
+`04-roadmap.md`; substitute its actual reported seed paths for the draft and
+promoted path placeholders. These are not commands to run blindly as one script. The two promotion forms and the two seed paths are alternatives: use the form that matches the handoff you want.
 
 ```bash
 plan-tool roadmap my-project --from-existing docs/concepts/my-project.md
@@ -23,14 +25,14 @@ plan-tool roadmap my-project --propose-candidate
 plan-tool roadmap my-project --reopen-ledger-feedback ITEM_ID
 plan-tool roadmap my-project --settle-decision domain:<decision-id> --settlement-evidence domain:<feedback-id> --confirm-decision-settlement
 plan-tool roadmap my-project --materialize
-plan-tool roadmap my-project --materialize my-first-plan
-plan-tool roadmap my-project --accept-seed my-first-plan
+plan-tool roadmap my-project --materialize <roadmap-plan-id>
+plan-tool roadmap my-project --accept-seed <roadmap-plan-id>
 plan-tool roadmap my-project --apply
 plan-tool roadmap my-project --apply -y
-plan-tool create my-first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/my-first-plan.md
-plan-tool detail my-first-plan
-plan-tool completeness-audit my-first-plan
-plan-tool run my-first-plan --commit
+plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
+plan-tool detail <roadmap-plan-id>
+plan-tool completeness-audit <roadmap-plan-id>
+plan-tool run <roadmap-plan-id> --commit
 ```
 
 ---
@@ -551,7 +553,11 @@ removal record citing the feedback row. Feedback proposes; the reviewer decides.
 
 Stage 4 publishes the plan mapping but materializes no drafts, so every plan
 starts as `missing`. Materialize all recoverable drafts before promotion, or
-name one plan to materialize only its draft. Materialization produces a draft;
+select one existing `plans[].id` from the accepted `04-roadmap.md` to materialize
+only that row's draft. Substitute that ID for `<roadmap-plan-id>` in these
+examples; it is not a seed filename or a newly assigned plan name. The row and
+its declared `draft_seed_path` exist before any seed file. Omitting the ID
+processes all recoverable drafts. Materialization produces a draft;
 it does not review or approve it. The seed carries the selected row’s supplied
 responsibilities, sibling prerequisites, eventual proof obligations, and local
 References. A sibling prerequisite provides context for this plan; it does not
@@ -559,7 +565,7 @@ authorize absorbing the sibling’s work.
 
 ```bash
 plan-tool roadmap my-project --materialize
-plan-tool roadmap my-project --materialize my-first-plan
+plan-tool roadmap my-project --materialize <roadmap-plan-id>
 ```
 
 If a reviewer hand-edits a draft, it classifies `digest-mismatched` even when
@@ -568,7 +574,7 @@ the edit is otherwise well-formed. After reviewing that edit, preserve it with
 `current` without invoking the backend.
 
 ```bash
-plan-tool roadmap my-project --accept-seed my-first-plan
+plan-tool roadmap my-project --accept-seed <roadmap-plan-id>
 ```
 
 Every draft includes a tool-written `## Stack` section listing the accepted
@@ -600,13 +606,13 @@ and create a plan from it directly. The ordered handoff uses this form only for
 plan rows whose drafts classify `current`.
 
 ```bash
-plan-tool create my-first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/my-first-plan.md
+plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
 ```
 
 After promotion, use the corresponding copied seed.
 
 ```bash
-plan-tool create my-first-plan --from-existing docs/implementation-plans/plan-seeds/my-first-plan.md
+plan-tool create <roadmap-plan-id> --from-existing <reported-promoted-path>
 ```
 
 Choose one source for a plan: the slug-relative draft or its promoted copy.
@@ -645,15 +651,15 @@ proof obligations while authoring implementation detail. Audit the completed
 plan, then execute it in its declared order.
 
 ```bash
-plan-tool detail my-first-plan
+plan-tool detail <roadmap-plan-id>
 ```
 
 ```bash
-plan-tool completeness-audit my-first-plan
+plan-tool completeness-audit <roadmap-plan-id>
 ```
 
 ```bash
-plan-tool run my-first-plan --commit
+plan-tool run <roadmap-plan-id> --commit
 ```
 
 The roadmap's decision fence should travel into the seed, but `create` should still ground the plan against the current repository. In the measurement behind this walkthrough, a brief-only plan found more current PostgreSQL RLS caveats than the frozen roadmap rationale. Carry forward the settled decision; let later commands re-ground the supporting reasons.

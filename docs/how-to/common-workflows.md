@@ -140,7 +140,10 @@ continuing with an invalidated roadmap seed.
 Preserve reviewed hand edits with `--accept-seed PLAN_ID` before any further
 `--materialize`, which can replace unaccepted edits. After reviewing
 `04-roadmap.md`, materialize all recoverable drafts, or select one actual plan
-ID with `--materialize PLAN_ID`:
+row ID with `--materialize <roadmap-plan-id>`. This is an existing
+`plans[].id` in the accepted `04-roadmap.md`, not a seed filename or a new plan
+name. The row exists before its seed does; omit the ID to process all
+recoverable drafts:
 
 ```bash
 plan-tool roadmap my-project --materialize
@@ -155,21 +158,21 @@ approve a seed. If you hand-edit a draft, review the edit and use
 [seed preparation guide](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
 owns state handling and recovery.
 
-Choose one source for each plan. Replace `first-plan` below with an actual
-reviewed plan ID and use the draft or publication path reported by the tool.
-With the default plans directory, a materialized draft can feed create directly:
+Choose one source for each plan. Substitute the existing roadmap plan ID for
+`<roadmap-plan-id>` and the actual reported paths for the path placeholders.
+A materialized, reviewed draft can feed create directly:
 
 ```bash
-plan-tool create first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/first-plan.md
+plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
 ```
 
 Alternatively, after reviewing the drafts to be promoted, preview and confirm
 promotion, then copy the create handoff it prints for the actual destination.
-For a new publication with default directories:
+Using the reported promotion destination:
 
 ```bash
 plan-tool roadmap my-project --apply
-plan-tool create first-plan --from-existing docs/implementation-plans/plan-seeds/first-plan.md
+plan-tool create <roadmap-plan-id> --from-existing <reported-promoted-path>
 ```
 
 `--apply` runs no stages and invokes no backend; it previews, confirms (or

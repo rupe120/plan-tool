@@ -243,13 +243,18 @@ not edit immutable artifacts or promise that repeating the request will succeed.
 > Wait for my review before `create`; materialization is not content approval.
 
 > For reviewed current drafts, show the promotion preview and destination paths.
-> Ask whether to authorize the copy into `plan-seeds/` or use the current drafts
+> Ask whether to authorize the copy to the reported promotion destinations or use the current drafts
 > directly. After an authorized copy, link the seeds and ordered create handoff.
 > Promotion does not approve the seed content or accept a roadmap candidate.
 
 [Promote accepted draft seeds, or create directly from them](../how-to/roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
 owns materialization, reviewed digest acceptance and optional copying.
-Supporting commands are `--materialize PLAN_ID`, `--apply` for preview, and
+`--materialize <roadmap-plan-id>` selects an existing `plans[].id` from the
+accepted `04-roadmap.md`, before its seed file necessarily exists. It does not
+create an implementation plan or assign a new name. With no ID it processes
+all recoverable drafts. Substitute the selected row's actual ID for the
+placeholder; later create uses the reviewed seed's reported path.
+Supporting commands also include `--apply` for preview, and
 `--apply -y` only for an authorized unattended copy. Choose one reviewed source
 per plan: its current slug-relative draft or promoted copy. Do not hand-edit the
 tool-written Stack section; change accepted commitments through feedback.

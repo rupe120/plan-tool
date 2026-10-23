@@ -673,11 +673,13 @@ continuing with an invalidated roadmap seed.
 stage run refuses once the head exists; use the ledger routes above.
 
 **Materialize and review seeds before plan authoring.** Review `04-roadmap`
-and select a plan ID; replace `first-plan` below with that actual ID. On a
-fresh roadmap, materialize the selected draft and inspect its state:
+and select an existing `plans[].id` from its accepted mapping. Substitute that
+ID for `<roadmap-plan-id>` below; it selects a row, not a new plan name or seed
+filename. Before first materialization, the row exists but its seed file does
+not. Omitting the ID processes all recoverable drafts. On a fresh roadmap:
 
 ```bash
-plan-tool roadmap my-project --materialize first-plan
+plan-tool roadmap my-project --materialize <roadmap-plan-id>
 plan-tool roadmap my-project --view seeds
 ```
 
@@ -688,10 +690,11 @@ regenerating. See the [seed preparation guide](docs/how-to/roadmap.md#7-promote-
 for state handling and recovery.
 
 Choose one create source: the reviewed draft at its reported path, or an
-optional promoted copy. With default directories, the direct-draft route is:
+optional promoted copy. For direct draft consumption, substitute the actual
+materialized path for `<reported-draft-path>`:
 
 ```bash
-plan-tool create first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/first-plan.md
+plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
 ```
 
 For optional promotion, first materialize and review every draft it would

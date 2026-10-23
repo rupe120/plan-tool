@@ -206,3 +206,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Roadmap seed examples](2026-10-23-roadmap-seed-examples.md) — explicit materialization, reviewed source alternatives, retained legacy paths and low-yield Claude Code review evidence.
 
 - [README roadmap seed handoff](2026-10-23-readme-roadmap-seeds.md) — explicit materialization and review, corrected overview tables, and two final independent Claude Code reviews.
+
+- [Roadmap plan-row selector documentation](2026-10-23-roadmap-plan-id-selector.md) — existing row IDs before seeds, separate create semantics, corrected starting-point guidance and low-yield Claude Code reviews.
