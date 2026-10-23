@@ -120,5 +120,12 @@ domain or trade-offs.
 plan-tool roadmap my-project --from-existing path/to/brief.md
 ```
 
-`roadmap` produces staged architecture artifacts and draft plan seeds. Follow
-the [roadmap walkthrough](roadmap.md) and [TTRPG demo](../demos/roadmap-demo.md) before creating the emitted plans.
+`roadmap` publishes four staged architecture artifacts, including the plan
+mapping in the accepted `04-roadmap.md`. Review that mapping, then materialize
+selected draft seeds and review them before separately creating plans. A fresh
+stage run creates neither seed files nor implementation plans.
+
+`--materialize <roadmap-plan-id>` selects an existing `plans[].id` in that
+mapping; it is not a seed filename or a new plan name. Omit the ID to process
+all recoverable drafts. Follow the [roadmap walkthrough](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
+and [TTRPG demo](../demos/roadmap-demo.md) for seed review and the later create route.
