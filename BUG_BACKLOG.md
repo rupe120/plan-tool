@@ -1056,6 +1056,15 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
+### Common-workflows roadmap examples point new users at seeds that do not exist
+
+- **Files:** `docs/how-to/common-workflows.md`, roadmap overview and seed handoff examples (around lines 61–63 and 139–147).
+- **Symptom:** the guide describes stage 4 as producing draft seeds automatically and uses root `plan-seeds/` or legacy `seeds/` paths. New roadmaps require explicit materialization, and new promotion defaults to `docs/implementation-plans/plan-seeds/`; copied create commands can name nonexistent files.
+- **Fix:** align these examples with `docs/how-to/roadmap.md` section 7 and `plan_tool/seed_paths.py`, retaining recorded legacy destinations. Show materialization, seed review and the actual reported draft path before create.
+- **Approach:** direct; **Readiness:** ready; **Tier:** working.
+- **Scope contract:** documentation only in this guide's roadmap overview and seed examples; no runtime/default changes or wider roadmap redesign. Verify command/path claims against source and check affected links. Stop if a source-contract disagreement requires a design decision.
+- **Evidence:** two independent Claude Code reviews of the 2026-10-23 use-case guidance correction confirm these lines predate that change; see `handoffs/2026-10-23-use-case-guidance.md`.
+
 ## ROADMAP
 
 Owner-tracked. The `roadmap` verb is experimental work the

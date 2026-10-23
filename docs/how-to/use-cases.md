@@ -31,7 +31,7 @@ scoped, and verifiable.
 | Work grounded in a **real repo** the tool can read and check against. | Pure research or design with no code to ground against (use a research tool). |
 | A plan you'll **keep around** while the code moves underneath it. | A decision you'll act on once and never revisit. |
 | Work you want to **hand off as Jira stories** with estimates and dependencies. | Ad-hoc tasks that don't need tracking. |
-| A draft (yours or an AI's) you want **pinned to reality** before trusting it. | A plan you've already verified by hand and just want to execute. |
+| A draft (yours or an AI's) you want **pinned to reality** before trusting it. | Work that needs no durable plan or handoff. |
 
 Rule of thumb: if the cost of a wrong or stale plan is real — wasted
 implementation, a misled teammate, a missed edge case — the tool earns its
@@ -51,6 +51,9 @@ continuation and waits for your response unless explicit prior delegation covers
 it. Status inspection alone authorizes no implementation. For resumption, inspect
 the original invocation and reports first; choose the next incomplete stage within
 the requested scope only after confirmed command exit, using its recorded outcome.
+Commit a clean checkpoint before each long-running command; commit judged
+corrections before re-auditing. Supporting command blocks show the route, not
+permission to skip the review boundaries above.
 See [monitoring and recovery](../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely).
 
 ### 1. Turn a rough idea into a buildable plan
@@ -61,7 +64,7 @@ You have a feature in your head or a sentence in a ticket, and you want an
 ordered plan a developer can build from.
 
 ```bash
-plan-tool create my-feature --from-existing plan-seeds/my-feature.md --iterate
+plan-tool create my-feature --from-existing docs/implementation-plans/plan-seeds/my-feature.md --iterate
 plan-tool completeness-audit my-feature --iterate --commit  # bare audit, then review
 plan-tool detail my-feature --commit                       # after plan review
 plan-tool completeness-audit my-feature --iterate --commit  # grounded audit, then review
@@ -93,7 +96,10 @@ plan-tool reconcile-plan my-feature     # pin every step to the current code
 will tell you if it's really several plans in a trench coat), then
 `reconcile-plan` checks each step against the live tree and edits the plan to
 match. You get a draft that's been ground against reality instead of taken on
-faith. See [README → Decision flow](../../README.md#decision-flow).
+faith. Reconciliation does not replace either audit gate: follow
+[the reviewed authoring sequence](#7-drive-a-plan-to-actually-correct-not-just-generated),
+audit the bare plan before details, then audit the complete bundle before
+separately requested execution or export. See [README → Decision flow](../../README.md#decision-flow).
 
 ### 3. Execute a plan locally, one step at a time
 
@@ -136,12 +142,13 @@ with estimates and dependencies.
 ```bash
 plan-tool jira my-feature --max-hours 8
 # in CI, after stories merge and steps are flipped to done:
-plan-tool verify-all --rollup my-feature
+plan-tool verify-all --rollup --fail-on-findings my-feature
 ```
 
 `jira` exports the steps as stories; as they merge, you flip each step's
 `status:` to `done`, and `verify-all` in CI catches drift between the plan and
-the merged code (non-zero exit on a real mismatch). You get a clean handoff plus
+the merged code (`--fail-on-findings` makes blocking findings fail CI;
+without it, a completed verification exits 0 even with findings). You get a clean handoff plus
 a CI gate. See [README → jira](../reference/commands.md#cli-usage) and
 [verify-all](common-workflows.md#5-verify-all--ci-gate-after-the-jira-branch-conditional).
 
@@ -150,6 +157,9 @@ a CI gate. See [README → jira](../reference/commands.md#cli-usage) and
 > Inspect this unexecuted plan and current code, then refresh its grounding and show proposed changes for review; do not implement it.
 
 A plan you wrote weeks ago is still open, but the codebase has changed under it.
+Use this route before execution. For work already produced by `run` or Jira
+stories, preserve plan authority and use code reconciliation or
+[annotate for the next iteration](#6-start-the-next-iteration-from-whats-already-built).
 
 ```bash
 plan-tool reconcile-plan my-feature --refresh   # cheap: skips Claude on no drift
@@ -158,7 +168,9 @@ plan-tool reconcile-plan my-feature             # full plan-vs-code pass
 
 `--refresh` compares a tracked fingerprint of the code against now and only
 spends a Claude call when something actually drifted. You get a plan that
-re-fits the repo instead of one that quietly went stale. See
+re-fits the repo instead of one that quietly went stale. Commit and review
+plan changes, then repeat the applicable bare-plan or detail-grounded audit
+before continuing; reconciliation does not certify either gate. See
 [README → Audit a plan's quality](common-workflows.md#3-audit-a-plans-quality).
 
 ### 6. Start the next iteration from what's already built
@@ -232,30 +244,27 @@ Use the default report for review and `--json` when another tool needs the same
 analysis. See the generated [`telemetry` command reference](../cli/telemetry.md)
 for the complete command contract and flags.
 
-### 9. Run the whole pipeline in one command for a small change
+### 9. Prepare a small change for execution or local export
 
-**Deprecated, going away (BACKLOG #367).** `direct-jira` and `direct-run`
-exist only to chain `completeness-apply`'s gap-by-gap apply, which is
-retiring: reviewing the whole saved report at once beats walking it one
-finding at a time, and the slow pace obscures whether the plan is actually
-converging. String `create → detail → …` together by hand instead, hand-
-applying `completeness-audit`'s conceptual findings between stages.
+> Use the plan-tool skill to prepare a grounded seed for this small change.
+> Link the seed, plan and bare audit, then details and grounded audit for review
+> at each boundary. After I approve the bundle, ask whether to execute it or
+> export local stories and their paired developer handoff. Monitor commands to
+> completion and report the actual results; do not publish tracker issues.
 
-You have a small change — a handful of steps, one or two Jira stories — and
-stringing `create → detail → … → jira`/`run` together by hand is more ceremony
-than the work deserves.
+Use the same [reviewed authoring route](#7-drive-a-plan-to-actually-correct-not-just-generated)
+as a larger feature, then choose [execution](#3-execute-a-plan-locally-one-step-at-a-time)
+or [local Jira export](#4-hand-the-work-off-as-jira-stories). A small scope can
+have fewer steps without removing either audit gate or the user's review points.
+For a single obvious edit, use a direct change with
+[its review loop](../../integrations/shared/DIRECTIVES.md#direct-changes-get-the-same-loop)
+instead of creating a plan.
 
-```bash
-plan-tool direct-jira my-small-change --from-existing seed.md   # → Jira-sized stories
-plan-tool direct-run my-small-change --from-existing seed.md    # → committed + reconciled code
-```
-
-`direct-jira` chains `create → detail → completeness-apply → jira`; `direct-run`
-chains `create → detail → completeness-apply → run --commit → reconcile-code`.
-Same gated stages, one process. If `create` produces a plan too large (or a
-multi-plan split), the verb stops and points you at the full step-by-step
-pipeline instead of one-shotting an over-large concept. See
-[README → Direct pipeline](../reference/commands.md#cli-usage).
+**Legacy compatibility only:** `direct-jira` and `direct-run` remain available
+but are deprecated and scheduled for removal with `completeness-apply`
+(BACKLOG #376). They chain gap-by-gap automatic application and are not the
+route for new assistant-driven workflows. See the
+[command reference](../reference/commands.md#cli-usage) for existing invocations.
 
 ### 10. Use an existing compact Jira-grade bundle
 
@@ -285,7 +294,8 @@ section contract is in
 Two limits worth knowing before you commit: the jira-grade audit is
 **report-only** (no findings sidecar, so no `completeness-apply`, no
 `--iterate`, no `convergence` history for that run — you read the report and fix
-by hand), and `direct-jira` / `direct-run` have no grade selector yet.
+through the driving session). Deprecated direct pipelines are not an
+alternative for new workflows.
 
 ### 11. Ground a project-sized concept before you write a seed
 
@@ -304,101 +314,43 @@ means inventing all of it in your head first.
 plan-tool roadmap my-project --from-existing path/to/concept.md
 ```
 
-The stage run is first-run only. It holds each gate-clean stage in a resume
-directory, so a run that stops part-way resumes from the first missing or
-failing stage when you repeat the command with the same brief; a changed brief
-is refused with its remedy. Once all four stages pass, it publishes one
-immutable version and the accepted head. A roadmap that already has an accepted
-head refuses a stage run: route semantic changes through ledger feedback and
-candidate review, or a successor roadmap lineage.
+Review the accepted roadmap's four artifacts before selecting plans:
 
-**Worked end to end on a real run**, including automated plan derivation and
-the manual fallback from artifacts to seeds:
-[`docs/how-to/roadmap.md`](roadmap.md).
+| Artifact | What to review |
+| --- | --- |
+| `01-domain.md` | Entities, business rules and workflows |
+| `02-constraints.md` | Quality-attribute priorities and the constraints that serve them |
+| `03-components.md` | Component responsibilities and domain/constraint coverage |
+| `04-roadmap.md` | Plan boundaries, ordering and dependencies |
 
-`roadmap` sits one rung above `create`. It writes four gated artifacts plus
-draft seeds into one immutable version under `docs/implementation-plans/roadmaps/<slug>/`: **`01-domain.md`** — entities,
-business rules, and workflows, each workflow and rule naming the entity ids it
-touches — **`02-constraints.md`**, where every quality attribute carries
-exactly one disposition (`prioritized`, `traded-away`, or `not-load-bearing` —
-a real answer, not an omission) plus the constraints that discharge them,
-anchored to ids `01-domain.md` defines — **`03-components.md`**, which
-divides the domain into logical components grounded in those entity ids,
-applies patterns, and discharges prioritized constraints — and
-**`04-roadmap.md`**, which maps components to an ordered plan list with draft
-seeds at each row's `draft_seed_path`. Claude runs only
-*inside* a stage; the checks between stages are deterministic, and a failing
-gate retries that stage with the violations quoted back instead of letting bad
-output reach the next one.
+The initial run checkpoints passed stages for recovery and publishes an
+immutable version and accepted head only after all four pass. An existing
+accepted head changes through reviewer ledger feedback and candidate review;
+repeating the stage command does not regenerate it. A successful exit does
+not mean pending decisions are settled.
 
-Applying a feedback row invalidates derived seeds without replacing their
-current bytes. Run `plan-tool roadmap my-project --refresh-seeds` to regenerate
-them against current code, restore any archived copy, and save the difference
-report. Until then, `create --from-existing` requires a confirmation before it
-continues with an invalidated seed.
+Stage 4 supplies the plan mapping. Materialize selected draft seeds with
+`roadmap my-project --materialize PLAN_ID`, then review their scope and
+references before `create`. Materialization does not approve a seed. New seed
+promotion with `roadmap my-project --apply` defaults to
+`docs/implementation-plans/plan-seeds/`; existing recorded legacy destinations
+stay in place. Promotion is optional: `create --from-existing` can consume a
+reviewed draft at its reported path. Continue through the ordinary bare-plan
+and detail-grounded audit gates for each selected plan.
 
-The verb is **non-interactive** during stage runs — no confirm, no prompt, no
-`-y` (except under `--apply`, where `-y` is the second opt-in for seed
-promotion). Where a stage
-must guess at a load-bearing tradeoff it records the guess as a decision row
-marked `pending`, and that is the review channel: read the artifact and accept
-or reject the guess (accepting a decision means settling it: `plan-tool
-roadmap <slug> --settle-decision <artifact>:<decision-id> --settlement-evidence
-<artifact>:<feedback-id> --confirm-decision-settlement`, citing a live
-feedback row that approves it).
+Use the [TTRPG runbook](../demos/roadmap-demo.md) for assistant requests, and the
+[roadmap walkthrough](roadmap.md) for commands, retained real-run observations
+and these procedures:
 
-**To change a published roadmap, say what is wrong in your own words.** Submit
-a ledger item naming a design row or the artifact as a whole, then propose a
-candidate:
+- [Recover an interrupted initial run](roadmap.md#3-recover-from-a-stage-run-that-didnt-finish).
+- [Inspect accepted artifacts and review views](roadmap.md#4-inspect-the-roadmap-without-calling-the-backend).
+- [Settle a pending decision with evidence](roadmap.md#5-settle-a-pending-decision).
+- [Submit feedback and review a candidate](roadmap.md#6-turn-reviewer-ledger-feedback-into-a-candidate).
+- [Materialize, review and optionally promote seeds](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them).
 
-```bash
-plan-tool roadmap my-project --submit-feedback fb-gift-cards-are-out-of-scope --feedback-target domain:row:gift-card --feedback-request 'Gift cards are a later product decision. Drop the entity.'
-plan-tool roadmap my-project --propose-candidate
-```
-
-The model may propose a response but may not close, defer, or delete your
-request; reviewers make those changes through `--close-feedback`,
-`--defer-feedback`, and `--reopen-ledger-feedback`. A candidate changes nothing
-until it is approved and promoted; see
-[`docs/how-to/roadmap.md`](roadmap.md) § 6.
-
-A completed run exits 0 even with `pending` decisions and feedback awaiting
-review still on disk. There are two non-zero exits: **1** when a stage spends
-its retry budget (backend failure, unparseable reply, or gate violations
-alike), and **2** for a pre-flight failure before any stage runs — an
-unreadable or changed brief, a roadmap that already has an accepted head, or a
-folder holding pre-head state.
-
-**Where the arc stops today.** Four stages ship: `01-domain.md`,
-`02-constraints.md`, `03-components.md`, `04-roadmap.md`, and draft seeds under
-the slug directory. Stage 4 writes the plan mapping, emits draft seeds, and
-prints runnable `create --from-existing` lines. Optional `roadmap <slug> --apply`
-promotes drafts into `plan-seeds/`; it is not required to run `create` against
-slug-relative draft paths. Manual seed authoring remains a fallback — see
-walkthrough § 5. Arc position **05** (framework lenses) remains unauthored
-(BACKLOG #208). When `create --from-existing` returns a `SplitProposal` instead
-of a plan, stdout recommends `roadmap` as the structured decomposition path
-(recommend-only; no slug or brief operands). `roadmap <slug> --view summary`
-is the compact review starting point once the artifacts are written; it names
-attention items and their drill-down commands. `roadmap <slug> --view
-{walk,ledger,index}` reads the full relationships back when needed, and
-`roadmap <slug> --view html` writes one self-contained, print-formatted page
-(to `<roadmap-dir>/review.html` by default, or `--output <path>`) carrying
-every row of all four artifacts, each resolvable reference linking to the
-row it names and each dangling or ambiguous one visibly marked, opening with
-an ER-style diagram of the domain entities and their reference fields — the
-form to reach for when the task is reading the design rather than auditing its
-state. They are backend-free deterministic renderings: `html` writes its
-derived page, while the other views write no output file. All remain distinct
-from `--apply` (which mutates `plan-seeds/`) and from `create` (which consumes
-a seed).
-
-See [`ROADMAP_FORMAT.md`](../../ROADMAP_FORMAT.md) for the artifact schema — including
-the feedback row's keys, its lifecycle states, and what each one means — the
-generated [`roadmap` command reference](../cli/roadmap.md) for the full flag
-list, and
-[RUNBOOK → redirecting a proposal with feedback](../../RUNBOOK.md#redirecting-a-proposal-with-feedback)
-for the end-to-end loop.
+The [roadmap format](../../ROADMAP_FORMAT.md) owns immutable artifacts; the
+[feedback format](../../ROADMAP_FEEDBACK_FORMAT.md) owns mutable reviewer input.
+The [generated command reference](../cli/roadmap.md) lists flags and refusals.
 
 ## When *not* to use it
 
@@ -406,8 +358,9 @@ for the end-to-end loop.
   than to make. Just make it.
 - **No repo to ground against.** The whole value is checking the plan against
   live code. Pure research or greenfield-with-no-code gets little benefit.
-- **A plan you've already verified by hand** and only want to run — skip the
-  audits and go straight to `run`.
+- **An already audited plan bundle.** Resume at execution when both audit
+  gates cover the current committed bundle and the user authorizes execution.
+  Informal manual verification does not replace those gates.
 - **You want the model to write code freely.** This tool deliberately scopes and
   gates generation; if you want unconstrained output, you don't want this.
 - **Throwaway work.** Spikes and experiments you'll delete don't need a durable,
@@ -417,15 +370,15 @@ for the end-to-end loop.
 
 | You're starting from… | Start with |
 | --- | --- |
-| A project-sized concept, before you have a seed | Ask for brief and roadmap review; `roadmap <slug> --from-existing <concept.md>` (writes four artifacts and draft seeds; review mapping, then run the printed `create --from-existing` lines — optionally `roadmap --apply` to promote into `plan-seeds/`; see walkthrough § 5) |
+| A project-sized concept, before you have a seed | Ask for brief and roadmap review; `roadmap <slug> --from-existing <concept.md>`, then review the mapping, materialize selected seeds and review them before `create`; see [seed preparation](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them) |
 | A rough idea (1–2 sentences) | Ask for a grounded seed and review it, then `create <slug> --from-existing <seed>` |
 | Nothing — author interactively | Ask for framing and seed review, or use the operator wizard: `create <slug>` |
 | A rich draft (yours or an AI's) | Ask for grounding and input review, then `create <slug> --from-existing <path>` |
 | A draft already in `## Steps` layout | `create <slug> --from-existing <path>` (skips the step-decomposition call) |
 | An old plan + current code | Ask for carryover assessment and seed review; `annotate <old-plan>` → `create … --from-existing <seed>` |
 | A plan file another tool wrote | Ask for grounding and review; `register <path>`, then both audit gates before separately requested execution |
-| A small change you want straight to Jira stories | `direct-jira <slug> --from-existing <path>` (deprecated, BACKLOG #367 — see § 9) |
-| A small change you want built and reconciled | `direct-run <slug> --from-existing <path>` (deprecated, BACKLOG #367 — see § 9) |
+| A small change you want straight to Jira stories | Use the reviewed authoring route, then request local stories and their developer handoff (§ 9 → § 4) |
+| A small change you want built and reconciled | Use the reviewed authoring route, then request execution and post-run reconciliation/review (§ 9 → § 3) |
 
 For the full flag-level reference, see [`../reference/commands.md`](../reference/commands.md) and the
 generated per-command pages under [`docs/cli/`](../cli/README.md).

@@ -403,11 +403,12 @@ for how gates run.
 Primary use case: the team ships Jira stories, flips each step's
 `status:` to `done` in the plan frontmatter as stories merge, and CI
 runs `verify-all` to catch drift between the plan and the merged code.
-Non-zero exit on any FAIL gives CI a clean gate.
+Pass `--fail-on-findings` to make a `[FAIL]` verdict fail CI. Without it,
+a completed verification exits 0 even with findings.
 
 ```bash
-plan-tool verify-all --rollup my-plan                     # done-step rollup against code
-plan-tool verify-all --rollup my-plan --deep              # per-acceptance-bullet drill-down
+plan-tool verify-all --rollup --fail-on-findings my-plan  # done-step rollup against code
+plan-tool verify-all --rollup --fail-on-findings my-plan --deep  # per-acceptance-bullet drill-down
 ```
 
 Emits `[OK]` / `[WARN]` / `[FAIL]` per done step. Read-only — `verify-all`
