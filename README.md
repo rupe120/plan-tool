@@ -136,7 +136,7 @@ For direct command operation, use the [decision flow](#decision-flow),
 
 | Step | What it does |
 | --- | --- |
-| **`roadmap`** | *(optional, project-sized)* Stage a concept brief into four gated architecture artifacts, then emit one draft `create` seed per plan it proposes. |
+| **`roadmap`** | *(optional, project-sized)* Stage a concept brief into four gated architecture artifacts; materialize and review selected draft seeds separately before `create`. |
 | **`create`** | Author a plan from prose (`--from`) or an existing draft (`--from-existing`). |
 | **`detail`** | Draft per-step detail files and wire each step's `detail:` pointer. |
 | **audit** | `completeness-audit` checks coverage + concepts; `reconcile-plan` re-fits a stale plan to current code. |
@@ -177,7 +177,7 @@ for the full lifecycle contract.
 | [A canonical plan-shaped draft](docs/how-to/choose-a-starting-point.md#start-from-a-canonical-plan-shaped-draft) | `create <slug> --from-existing <path>` | Step decomposition skips its model call. |
 | [An old plan plus current code](docs/how-to/choose-a-starting-point.md#start-the-next-iteration-from-an-old-plan) | `annotate <old-plan-path>` | `annotate` emits a seed for the next `create`. |
 | [Several old plans or notes](docs/how-to/choose-a-starting-point.md#assess-several-old-plans-or-notes) | `annotate <path-or-glob>...` | Reports show carryover coverage and grounding. |
-| [A project-sized concept](docs/how-to/choose-a-starting-point.md#stage-a-project-sized-concept) | `roadmap <slug> --from-existing <brief.md>` | `roadmap` emits staged artifacts and draft seeds. |
+| [A project-sized concept](docs/how-to/choose-a-starting-point.md#stage-a-project-sized-concept) | `roadmap <slug> --from-existing <brief.md>` | `roadmap` publishes staged artifacts; review the mapping, then materialize and review selected seeds. |
 
 ## Table of contents
 
@@ -599,8 +599,8 @@ plan-tool roadmap my-project --from-existing docs/concepts/my-project.md
 The input is one markdown brief in your own words — say the scale and load
 shape, say what already went wrong, and leave open calls open. Four staged
 Claude calls then publish one immutable roadmap version under
-`<plans-dir>/roadmaps/my-project/`, plus one draft seed per proposed plan under
-`seeds/`. The version holds four artifacts:
+`<plans-dir>/roadmaps/my-project/`. Stage 4 declares draft seed destinations;
+seed files require explicit materialization. The version holds four artifacts:
 
 | Artifact | What it fixes |
 | --- | --- |
@@ -672,18 +672,39 @@ continuing with an invalidated roadmap seed.
 **A roadmap with an accepted head changes through feedback and review.** A
 stage run refuses once the head exists; use the ledger routes above.
 
-**Then it's the ordinary pipeline.** A full run prints one ordered
-`create --from-existing` line per plan row:
+**Materialize and review seeds before plan authoring.** Review `04-roadmap`
+and select a plan ID; replace `first-plan` below with that actual ID. On a
+fresh roadmap, materialize the selected draft and inspect its state:
 
 ```bash
-plan-tool roadmap my-project --apply     # optional: promote accepted drafts into docs/implementation-plans/plan-seeds/
-plan-tool create first-plan --from-existing docs/implementation-plans/plan-seeds/first-plan.md
+plan-tool roadmap my-project --materialize first-plan
+plan-tool roadmap my-project --view seeds
 ```
 
-`--apply` runs no stages and invokes no backend — it previews, confirms (or
-`-y`), and copies. You can skip it and point `create` straight at a
-`seeds/<plan>.md` path. Order the seeds by dependency yourself; inter-plan
-assumptions live in the `04-roadmap` artifact and in each seed's scope fence.
+Review the reported seed's scope, references and sibling prerequisites before
+create. Materialization produces a draft, not approval. For an existing
+hand-edited draft, preserve reviewed edits with `--accept-seed PLAN_ID` before
+regenerating. See the [seed preparation guide](docs/how-to/roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
+for state handling and recovery.
+
+Choose one create source: the reviewed draft at its reported path, or an
+optional promoted copy. With default directories, the direct-draft route is:
+
+```bash
+plan-tool create first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/first-plan.md
+```
+
+For optional promotion, first materialize and review every draft it would
+promote. Run `plan-tool roadmap my-project --apply`, then use the create
+handoff it prints. Promotion
+previews, confirms (or `-y`), and copies without stages or a backend call. New
+copies default to `docs/implementation-plans/plan-seeds/`; recorded legacy
+publication and draft paths remain supported. Use the reported path rather
+than moving files, and do not create the same plan from both sources.
+
+Follow the roadmap's plan ordering and preserve inter-plan assumptions in each
+seed's scope fence. Continue through bare-plan audit/review before details and
+detail-grounded audit/review before separately requested execution or export.
 
 **Read it back with `--view summary`.** The compact summary shows artifact
 health, design and review counts, plan review-context coverage, seed lifecycle,

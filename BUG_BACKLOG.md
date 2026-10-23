@@ -1056,14 +1056,14 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** PR #107 branch-wide `/code-review`, 2026-10-16; accepted then as a known limit, filed 2026-10-19 after reproducing the whole-block duplication. Closed with BACKLOG #496.
 
-### README roadmap handoff examples omit materialization before create
+### Starting-point guide implies roadmap stages emit seeds and plans
 
-- **Files:** `README.md`, roadmap handoff near the “Then it's the ordinary pipeline” paragraph.
-- **Symptom:** the overview implies a full stage run supplies create-ready seeds, then shows apply/create without materialization and names legacy `seeds/<plan>.md`. Fresh roadmaps contain mapping rows but no draft files until explicit materialization.
-- **Fix:** show materialization and seed review before optional promotion or direct draft consumption; use reported paths and retain legacy destinations. Match `docs/how-to/roadmap.md` section 7.
+- **Files:** `docs/how-to/choose-a-starting-point.md`, “Stage a project-sized concept”.
+- **Symptom:** the guide says roadmap produces draft seeds and refers to emitted plans. Stage 4 publishes a plan mapping; draft files require explicit materialization and plan authoring remains a separate reviewed create route.
+- **Fix:** describe artifact review, selected-seed materialization and seed review before create; retain links to the detailed roadmap guide and demo.
 - **Approach:** direct; **Readiness:** ready; **Tier:** working.
-- **Scope contract:** README roadmap handoff only; no runtime/default changes or redesign. Verify examples against current command reference and seed guide; stop on a source-contract disagreement.
-- **Evidence:** source comparison during the common-workflows seed-example review, recorded in `handoffs/2026-10-23-roadmap-seed-examples.md`.
+- **Scope contract:** this guide's roadmap entry only; no runtime/default changes or lifecycle redesign. Verify against `docs/how-to/roadmap.md` section 7 and the generated CLI reference; stop on a source-contract disagreement.
+- **Evidence:** both final README seed-handoff reviews confirm this pre-existing sibling-page statement; see `handoffs/2026-10-23-readme-roadmap-seeds.md`.
 
 ### Roadmap promotion summary names the nested destination even for legacy publications
 
