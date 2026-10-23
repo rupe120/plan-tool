@@ -11,6 +11,25 @@ Source-of-truth references are inline; see the [source map](#source-map).
 > (the `status:` / `current` markers), so a re-invocation simply resolves the
 > next runnable step.
 
+## Before execution
+
+Complete the bare-plan and detail-grounded audits, review the bundle, and obtain
+approval to implement. In a repository with `origin`, the default merge check
+expects the plan and every step's detail file on the remote default branch:
+
+1. Commit the reviewed planning bundle on a planning branch and merge it through
+   the repository's normal review process.
+2. Fetch `origin`, then create an implementation branch from the updated default
+   branch. The default branch can be `main`, `master`, or another configured name.
+3. Run the plan with `--commit` to checkpoint each green step. After the last
+   step, run `reconcile-code <name> --all` and review the code to convergence.
+
+`run` refuses execution on the default branch or when planning artifacts are
+missing from its remote copy. Changed artifacts produce a warning. Repositories
+without `origin` skip this check; unverifiable remote state warns and proceeds.
+The CLI reference documents the explicit merge-check overrides; resolve an
+unexpected refusal before choosing an override.
+
 ## TL;DR
 
 - **Two entry paths, one core.** A single-step `run` (`plan-tool run <name>`

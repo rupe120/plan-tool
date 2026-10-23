@@ -11,8 +11,8 @@ This page covers the practical side. For the *why* behind the process, read
 ## The short version
 
 1. **Set up:** clone, `uv sync`, install the git hooks.
-2. **Pick something** from [`BACKLOG.md`](BACKLOG.md) or
-   [`BUG_BACKLOG.md`](BUG_BACKLOG.md).
+2. **Pick a ready Jira ticket** using [Picking work](#picking-work).
+   Backlog files hold discovery and triage records.
 3. **Choose the route:** a direct edit, or a `plan-tool` plan.
 4. **Work on a branch,** and commit before every `plan-tool` call.
 5. **[Converge](docs/GLOSSARY.md#convergence-and-converged):** run the
@@ -41,14 +41,17 @@ work reaches a roadmap, persisted contract, or recovery question.
 
 ## Develop and test
 
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
+and authenticate for repository access before cloning. See
+[Install and update](docs/how-to/install-and-update.md) for source/version options.
+
 ```bash
-# Substitute the public HTTPS repository URL.
-git clone "<public-repository-url>"
+git clone git@bitbucket.org:protagona/plan-tool.git
 cd plan-tool
 uv sync
 uv run pytest tests/ -q -n auto                  # the full suite, in parallel (a minute or two)
 uv run pytest -m "not integration" tests/ -q     # the fast loop while you work
-uv run pytest tests/test_review.py::TestSomething -q   # one class or test
+uv run pytest tests/test_parser.py -q            # one focused test module
 ./scripts/hooks/install.sh                       # the pre-push + pre-commit hooks (please do)
 ```
 
@@ -365,7 +368,7 @@ A plan-route ticket has two review moments:
    file counts). It builds `IPPT-123-plan` and `IPPT-123-code` from the
    branch's total change since its merge-base with `origin/main`, one snapshot
    commit each. Push both, open a pull request for each with `bkt pr create`
-   ([`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-pull-requests-with-bkt)),
+   ([`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-bitbucket-pull-requests-with-bkt)),
    and lead both titles with the ticket key. The pre-push hook runs the suite on each push.
 
 Merge the code pull request first when the plan branch marks steps done, so
