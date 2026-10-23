@@ -37,6 +37,8 @@ After detail review, choose a separate request:
 | Execution | “Execute the reviewed plan, reconcile code against it and review changes to convergence; report results.” |
 | Local export | “Export local stories and their paired developer handoff; link both and summarize validation for review. Leave tracker publication for a separate request.” |
 
+Before execution, follow the [merge and branch prerequisites](pipeline/run.md#before-execution).
+
 Quiet output and backend completion do not prove command exit. Follow
 [monitoring and recovery](../../integrations/shared/DIRECTIVES.md#monitor-command-liveness-and-recover-safely)
 before resuming; do not overlap invocations. The sections below retain direct

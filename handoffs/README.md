@@ -212,3 +212,5 @@ future tool-decision route (its successor-slug rule moved to
 - [Demo workflow alignment](2026-10-23-demo-workflow-alignment.md) — preferred sample fields, accepted-head scaffold timing, bounded promotion requests, readiness review and low-yield Claude Code evidence.
 
 - [Roadmap plan breakdown review](2026-10-23-roadmap-plan-breakdown.md) — stage-4 plan-list responsibilities, comparison with seed decomposition, named-evidence review and explicit assessment scope.
+
+- [General onboarding documentation](2026-10-23-general-onboarding-docs.md) — concise README routing, execution prerequisites, usable frontmatter, contributor setup and verification.
