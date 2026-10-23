@@ -6,6 +6,37 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.1.0'></a>
+## 1.1.0 — 2026-10-22
+
+### Added
+
+- The release script supports versions 1.0 and later. Explicit Breaking changelog sections select a major release and stay in release notes; compatible changes select minor or patch. Before 1.0, Breaking selects minor, and `--minor` never lowers a major bump.
+
+### Changed
+
+- Newly generated seeds default to `docs/implementation-plans/plan-seeds/`. Existing seed files and recorded legacy publication locations remain in place; explicit destinations still take precedence.
+
+- New and rewritten plans use step `description`; legacy step `title` remains accepted. Matching dual-key strings are accepted, while conflicting or invalid values are rejected. Plan format stays v1 with no explicit upgrade required; older installations that do not recognize `description` cannot read the new output (BACKLOG #517).
+
+### Fixed
+
+- The run test-authoring gate recognizes new or modified tests committed by the backend during a step. Files already dirty before the call remain excluded, and test execution gates still apply.
+
+- Concept synchronization preserves unowned H1 headings and content after owned decision sections. Section replacement uses the reader's H1/H2 boundaries, including fence-safe handling and LF/CRLF/CR source offsets.
+
+- Concept synchronization no longer normalizes existing LF, CRLF and CR body newlines when reading plans. Scope-out failure rollback restores the original plan newline bytes and matching provenance.
+
+- Run help and warnings identify retained loop flags as compatibility options and direct reconciliation through supported commands, rather than suggesting iteration loops that do not execute.
+
+- Scope-out recovery preserves concurrent plan/concept edits, restores only its own published bytes, and reports incomplete rollback with affected paths. Publication is durable, retains existing file modes and symlink targets, and detail undo refuses occupied destinations.
+
+- Default annotate output refuses existing seeds and colliding source names, and preserves files created concurrently. Explicit output destinations retain their existing replacement behavior.
+
+- Rewriting a plan preserves its body bytes, including CRLF and CR line endings, while retaining concurrent-edit protection (BACKLOG #517).
+
+- `plan-tool validate` names preferred step `description` and accepted legacy `title` in missing-field and typo diagnostics, and points plan-level `description` to the step where it belongs. Validation rules and exit codes are unchanged.
+
 <a id='changelog-1.0.0'></a>
 ## 1.0.0 — 2026-10-21
 
