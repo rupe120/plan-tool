@@ -59,8 +59,9 @@ Feed it one markdown brief, written in your own words. Say the scale and load
 shape, say what already went wrong, and leave open calls open — that's the
 point of writing it this way. Four staged Claude calls then produce four
 artifacts, published as one immutable version under
-`<plans-dir>/roadmaps/my-project/`, plus one draft seed per proposed plan under
-`seeds/`:
+`<plans-dir>/roadmaps/my-project/`. Stage 4 declares each plan
+row's draft destination but does not create seed files; materialize drafts
+explicitly after reviewing the mapping:
 
 | Artifact | What it fixes |
 | --- | --- |
@@ -134,19 +135,47 @@ consumed/archived seed at its original path and writes a diff report. Until
 then, `create --from-existing` asks for an explicit confirmation before
 continuing with an invalidated roadmap seed.
 
-**Then it's the ordinary pipeline.** A full run prints one ordered
-`create --from-existing` line per plan row:
+**Materialize and review seeds before ordinary plan authoring.** After reviewing
+`04-roadmap.md`, materialize all recoverable drafts, or select one actual plan
+ID with `--materialize PLAN_ID`:
 
 ```bash
-plan-tool roadmap my-project --apply     # optional: promote accepted drafts into plan-seeds/
-plan-tool create first-plan --from-existing plan-seeds/first-plan.md
+plan-tool roadmap my-project --materialize
+plan-tool roadmap my-project --view summary
 ```
 
-`--apply` runs no stages and invokes no backend — it previews, confirms (or
-`-y`), and copies. You can skip it and point `create` straight at a
-`seeds/<plan>.md` path instead. Order the seeds by dependency yourself;
-inter-plan assumptions live in `04-roadmap.md` and in each seed's scope
-fence.
+Inspect the resulting paths and state. Review each seed's scope, references,
+`## Stack` and sibling prerequisites before using it; materialization does not
+approve a seed. If you hand-edit a draft, review the edit and use
+`--accept-seed PLAN_ID` to record its digest before promotion or create. The
+[seed preparation guide](roadmap.md#7-promote-accepted-draft-seeds-or-create-directly-from-them)
+owns state handling and recovery.
+
+Choose one source for each plan. Replace `first-plan` below with an actual
+reviewed plan ID and use the draft or publication path reported by the tool.
+With the default plans directory, a materialized draft can feed create directly:
+
+```bash
+plan-tool create first-plan --from-existing docs/implementation-plans/roadmaps/my-project/plan-seed-drafts/first-plan.md
+```
+
+Alternatively, after reviewing the drafts to be promoted, preview and confirm
+promotion, then create from the copied seed:
+
+```bash
+plan-tool roadmap my-project --apply
+plan-tool create first-plan --from-existing docs/implementation-plans/plan-seeds/first-plan.md
+```
+
+`--apply` runs no stages and invokes no backend; it previews, confirms (or
+`-y`), and copies current drafts. New publications default to
+`docs/implementation-plans/plan-seeds/`; existing recorded legacy destinations
+remain in place. Existing legacy draft paths also remain supported; use their
+reported path rather than moving files. Do not run both create alternatives
+for the same plan. Follow `04-roadmap.md` ordering and preserve inter-plan
+assumptions in each seed's scope fence. Continue through bare-plan review and
+audit before details, then detail-grounded review and audit before separately
+requested execution or export.
 
 **Read it back with `--view summary`.** The compact summary shows artifact
 health, design and review counts, plan review-context coverage, seed
