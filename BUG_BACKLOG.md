@@ -284,9 +284,9 @@ Durable re-open conditions for retired items are recorded in
     `[accepted-roadmap-source]`.
 
   The same citation also breaks a roadmap with no leftovers. A stage run
-  publishes only the version store and the accepted head
-  (`ROADMAP_FORMAT.md` § "What writes them"), so in a roadmap created that way a bare
-  `04-roadmap.md` names no file at all. That case follows from the design and
+  publishes no top-level `0N-*.md` files (`ROADMAP_FORMAT.md` § "What writes
+  them"), so in a roadmap created that way a bare `04-roadmap.md` names no
+  file at all. That case follows from the design and
   has not been observed in a run; the stale-copy case above is the observed
   one.
 - **Cause (verified in code):** promotion is meant to change only the
