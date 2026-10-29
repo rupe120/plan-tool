@@ -108,6 +108,7 @@ steps:
   change_type: feature
   depends_on:
   - 1
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/05-make-captured-audit-inputs-fingerprints.md
   description: Make captured audit inputs, fingerprints, normalization, freshness,
     and reuse run-grade-only. Preserve supported run-grade revision records and fingerprint
     behavior, including supported older revision versions; retain only the historical
