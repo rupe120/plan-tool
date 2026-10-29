@@ -314,7 +314,9 @@ Durable re-open conditions for retired items are recorded in
   seed. The seed leaves them out (decided 2026-10-29); closing them needs a
   `create` prompt rule or a post-synthesis check.
 - **Workaround:** hand-edit the plan's roadmap citations to the accepted
-  version's `.roadmap-versions/<id>/0N-*.md` paths, then re-audit. Deleting
+  version's repo-relative paths, e.g.
+  `docs/implementation-plans/roadmaps/<slug>/.roadmap-versions/<id>/04-roadmap.md`,
+  then re-audit. Deleting
   the top-level files alone (the documented hand conversion, which the
   2026-10-10 warning prompts) is not enough: the bare names then name no file.
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
