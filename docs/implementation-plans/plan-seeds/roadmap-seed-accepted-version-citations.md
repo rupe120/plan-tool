@@ -3,7 +3,7 @@
 This file is a `plan-tool create` input. Use it via:
 
 ```
-plan-tool create roadmap-seed-accepted-version-citations --from-existing plan-seeds/roadmap-seed-accepted-version-citations.md
+plan-tool create roadmap-seed-accepted-version-citations --from-existing docs/implementation-plans/plan-seeds/roadmap-seed-accepted-version-citations.md
 ```
 
 It is **not** itself a plan — `plan-tool create` consumes the prose below and
@@ -26,20 +26,29 @@ copy left beside the accepted head.
 ## In scope
 
 - The draft-seed contract: the `## References` rule in
-  `plan_tool/prompts/roadmap-seed.md` names the accepted version's artifacts
-  instead of bare `01-domain.md` … `04-roadmap.md` filenames. The model also
-  writes a `source_artifacts` frontmatter key into some draft seeds; the
-  provenance schema does not name it (`roadmap_components` and
-  `cross_cutting` are the only keys), so the schema ignores it. `create`
-  decides whether it is dropped or made to follow the same citation form.
-- The path from a draft seed into a plan: `create --from-existing` carries
-  the citation unchanged, and the audit's inputs resolve it to the accepted
-  version's member file.
-- Draft seeds already written with bare names, which must keep grounding to
-  the accepted version rather than fail.
+  `plan_tool/prompts/roadmap-seed.md` cites the accepted version's member
+  files by their version-store paths instead of bare `01-domain.md` …
+  `04-roadmap.md` filenames. The seed writer is given those paths; it does
+  not derive them.
+- Draft seeds already written with bare names: `create --from-existing`
+  rewrites their bare `0N-*.md` citations to the accepted version's paths
+  when it carries the seed into a plan, so they keep grounding on accepted
+  content rather than fail.
+- `source_artifacts`, deliberately departing from the source entry's Fix,
+  which renders that key in the new form too. The prompt never asks for the
+  key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and
+  `cross_cutting` are the only keys), so `References` stays the one citation
+  surface. The plan records whether `create` drops a stray `source_artifacts`
+  key or leaves it inert.
 
 ## Out of scope / Non-goals
 
+- Any change to the completeness audit or its prompts. A path citation
+  needs no translation at read time: the audit model opens the file the
+  citation names.
+- Plans already created from bare-name seeds. Deliberately not migrated:
+  their citations are corrected by hand or by re-running `create` from the
+  seed.
 - Making promotion rewrite or refresh the top-level `0N-*.md` files. That
   restores the two-copy design `docs/implementation-plans/2-roadmap-versioned-from-birth.md`
   removed, and the top-level files stay inert by design.
@@ -54,9 +63,10 @@ copy left beside the accepted head.
 
 ## Allowed behavior changes
 
-Only these: a newly written draft seed names accepted-version artifacts in
-`References`, and `create` and the audit resolve those
-names. No other `roadmap`, `create`, or audit behavior changes.
+Only these: a newly written draft seed cites version-store paths in
+`References`, and `create --from-existing` rewrites a legacy seed's bare
+`0N-*.md` citations to the accepted version's paths when an accepted head
+exists. No other `roadmap`, `create`, or audit behavior changes.
 
 ## Allowed reorganization
 
@@ -67,41 +77,42 @@ None.
 - **Settled: the seed writer owns the fix.** Promotion changes only the
   accepted-head selector, and that stays so. The defect is the citation
   contract, so the contract changes, and no command is taught to find a
-  "better" copy of a bare name.
-- **Settled: one resolution rule.** A citation form is chosen once, either a
-  version-store path or the version id plus the member name. Everything that
-  reads a citation resolves it through the existing accepted-version lookup
-  (`load_accepted_version` in `plan_tool/roadmap_versions.py`), and no second
-  resolver is written.
-- **Decision for `create` to settle, with the choice recorded in the plan:**
-  which of those two citation forms is stored. Prefer the one that survives a
-  later promotion of a newer head unchanged, because a plan cites the version
-  it was derived from.
+  "better" copy of a bare name at read time.
+- **Settled: the citation form is the version-store path** of the member
+  file, e.g. `.roadmap-versions/<version-id>/04-roadmap.md` under the roadmap
+  slug. Rejected: the version id plus the member name. The audit model opens
+  files by path and has no roadmap resolution, so that form would need a
+  resolver at read time; a path needs none. The plan fixes whether the path
+  is repo-relative or relative to the roadmap folder and records the choice.
+- **Settled: one lookup, no second resolver.** Both the seed writer's paths
+  and `create`'s legacy rewrite come from `load_accepted_version` and
+  `stored_artifact_path` in `plan_tool/roadmap_versions.py`.
 - **Guarantee: "the audit never grounds on a top-level copy of a cited roadmap
-  artifact."** Mechanism: the cited name resolves to a version-store file
-  before the audit reads it. Owner: the citation-resolution step. Order: the
-  draft-seed contract changes first, then `create` carries it, then the audit
-  resolves it, then the legacy-seed fallback.
-- **Legacy seeds:** a bare `0N-*.md` citation in an existing draft seed
-  resolves through the accepted head when one exists. With no head, the
-  existing behavior is unchanged.
+  artifact."** Mechanism: every roadmap citation in a derived plan is a
+  version-store path. Owner: the seed writer for new seeds, `create` for
+  legacy seeds. Order: the draft-seed contract changes first, then the legacy
+  rewrite in `create`.
+- **Legacy seeds:** a legacy seed does not record the version it came from,
+  so `create` cites the version accepted when it runs. With no accepted head,
+  the existing behavior is unchanged.
 
 ## Testing
 
 - A roadmap with an accepted head and a stale top-level `04-roadmap.md`: a
-  draft seed written by the changed contract cites the accepted version, and
-  the audit input for the derived plan contains the accepted content, not the
-  stale text.
-- A legacy draft seed with bare names, in the same roadmap, resolves to the
-  accepted version.
+  draft seed written by the changed contract cites version-store paths, and
+  every roadmap citation in the plan `create` derives from it names a
+  version-store file holding the accepted content. None names a top-level
+  file.
+- A legacy draft seed with bare names, in the same roadmap: the derived
+  plan's citations are the accepted version's paths.
 - A roadmap with no accepted head keeps its current behavior.
 - `uv run pytest tests/ -q -n auto` is green, including the doc-drift guards
   for `ROADMAP_FORMAT.md`.
 
 ## Acceptance criteria
 
-- No path from draft seed to plan to audit input reads a top-level `0N-*.md`
-  while an accepted head exists.
+- While an accepted head exists, no roadmap citation in a plan derived from
+  a draft seed names a top-level `0N-*.md`.
 - A seed written before the change still grounds against the accepted version.
 - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" states the new
   citation form, and the roadmap-seed prompt agrees with it.
@@ -117,12 +128,14 @@ or a change to the immutable version layout. File any adjacent finding in
 
 ## Risks
 
-- A citation form that embeds the version id goes stale when a newer head is
-  promoted. That is intended: the plan cites the version it was derived from.
-  The plan must say so, so an audit does not report it as a defect.
-- Changing a prompt contract can leave the prompt and `ROADMAP_FORMAT.md`
-  disagreeing. Sweep all three by vocabulary, not only by
-  identifier.
+- A version-store path goes stale when a newer head is promoted. That is
+  intended: the plan cites the version it was derived from. The plan must say
+  so, so an audit does not report it as a defect.
+- Changing a prompt contract can leave its descriptions disagreeing. Sweep
+  all three by vocabulary, not only by identifier:
+  `plan_tool/prompts/roadmap-seed.md`, `ROADMAP_FORMAT.md` § "Draft seeds
+  under the roadmap slug", and `docs/how-to/roadmap.md` § 1's leftover-files
+  paragraph, which describes a reader opening a bare `04-roadmap.md`.
 
 ## References
 
