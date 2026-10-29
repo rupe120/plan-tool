@@ -26,11 +26,15 @@ detail has no artifact, selector, reader, or schema anywhere in the tree.
 
 ## In scope
 
-- `plan_tool/jira_grade.py` (confirmed still live, 2026-09-28).
+- `plan_tool/jira_grade.py`.
 - Jira-grade paths in `plan_tool/detail_artifacts.py`.
 - Reader selectors in `jira`, `run`, `completeness-audit`
   (`plan_tool/cli/completeness_cmd.py`'s `GRADE_JIRA`/`JIRA_GRADE_VALUES`
-  branches, confirmed still live), and `convergence`.
+  branches), `convergence`, and `gate-status`, plus the retired writer's
+  `detail --grade` selector.
+- Grade-dependent saved-audit selection, freshness, and fingerprints. Existing
+  run-grade records remain usable; legacy Jira-grade evidence cannot certify
+  a run-grade bundle and is not migrated into run-grade evidence.
 - Their tests, and the related format/CLI documentation.
 
 ## Out of scope / Non-goals
@@ -51,8 +55,7 @@ selector is allowed.
 
 Only removals and the smallest dependency cleanup the selected policy
 requires. That includes relocating `fenced_spans`, which `plan_tool/review.py`
-imports for two non-Jira-grade parsers (`_find_redirect_heading`,
-`_split_audit_fix`). It is **not** a drop-in for
+imports for non-Jira-grade finding parsers. It is **not** a drop-in for
 `scope_fence._fenced_code_spans`: `review.py` deliberately accepts fences
 indented past three spaces (pinned by
 `test_indented_citation_fence_protects_the_boundary`), and `fenced_spans`
@@ -61,13 +64,33 @@ reads a line that opens with an inline code span as an unclosed fence, which
 the second explicitly, rather than silently inheriting whichever one the
 new location happens to have.
 
-## Verification
+## Testing
 
 - `plan-tool jira <plan>` exports concise stories and the paired developer
   handoff from a run-grade bundle.
 - No CLI or direct reader accepts a Jira-grade selector or artifact.
 - Live plan details contain no Jira-grade bundle.
+- Run-grade saved evidence retains its supported behavior; legacy Jira-grade
+  evidence cannot satisfy the remaining run-grade audit gate.
+- Finding annotations retain their fence-aware parsing behavior after the
+  helper relocation, including the deliberate indented-fence exemption.
 - The full suite is green.
+
+## Acceptance criteria
+
+Only run-grade detail can enter authoring, execution, audit, and Jira export.
+The selectors and legacy lane are absent, Jira story export and its paired
+developer handoff retain their contracts, and the verification above passes.
+The final docs/status step removes BACKLOG #308's promotion stub only when
+the full retirement ships and leaves #149's separate re-baseline deferred.
+
+## Scope guardrails
+
+This is the full retirement tracked by BACKLOG #308 / IPPT-17. Do not add a
+compatibility reader, artifact migration, replacement grade, output redesign,
+or compact-schema re-baseline. Preserve the run-grade authoring contract and
+Jira story/developer-handoff output contract. Move only dependencies that
+block deletion of the legacy lane; leave unrelated consolidation separate.
 
 ## Stop / defer
 
@@ -87,9 +110,14 @@ re-baseline into this seed).
   (`GRADE_JIRA`, `JIRA_GRADE_VALUES`) — the reader selectors to remove.
 - `plan_tool/review.py` — imports `fenced_spans` from `jira_grade.py`; the
   relocation target this seed's "Allowed reorganization" names.
+- `plan_tool/review_persistence.py:AuditInputSnapshot.capture` and
+  `normalize_audit_revision` — grade-dependent captured inputs and saved evidence.
+- `plan_tool/cli/gate_status_cmd.py:register` and
+  `plan_tool/cli/convergence_cmd.py:register` — diagnostic selectors.
 - `JIRA_FORMAT.md`, `DETAIL_FORMAT.md` — the format docs to update.
 
 ## Backlog reconciliation
 
 `BACKLOG.md`'s `#308` entry is already a promotion stub pointing at IPPT-17.
-No further backlog edit is required when this plan ships.
+The resulting plan includes a final docs/status step that removes that stub
+only after full shipment; plan authoring alone leaves it in place.
