@@ -66,6 +66,7 @@ steps:
   change_type: feature
   depends_on:
   - 1
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/03-remove-run-detail-grade-alternate.md
   description: Remove run --detail-grade, alternate-detail loading, run-jira prompt
     selection, and the Jira-grade merge-guard exception. Keep both single-step and
     sweep execution on their existing run-grade paths, including missing-detail handling,
