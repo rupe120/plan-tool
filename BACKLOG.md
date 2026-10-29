@@ -1130,9 +1130,11 @@ working straight down the tiers.
     - **A core skill and per-phase skills** under each of
       `integrations/{claude,codex,cursor}/`. The core keeps invocation,
       headless form, backend selection, discovery and the decision table, plus
-      the short existing rules every phase shares (ask on product and scope
-      questions, record each answer as a dated decision line in the plan).
-      Deliberately not a new "validate before committing" rule: today's
+      the short existing rules every phase shares, moved verbatim rather than
+      paraphrased: § "Pause on a product question — ask, don't infer"
+      (including recording each answer as one decision line with its date and
+      the audit report id) and the override rule in § "Before applying
+      anything: audit the why, not the what". Deliberately not a new "validate before committing" rule: today's
       `DIRECTIVES.md` has none, and this entry adds no rules.
     - **Phase skills with narrow, non-overlapping
       `description`/`when_to_use`/`paths` triggers,** each of which tells the
@@ -1153,16 +1155,16 @@ working straight down the tiers.
       (`backlog-arc-installed-skill.md` § "Decision gates").
     - Rewording or adding rules. Content moves between files; the rules stay
       the same.
+    - Changing what the machine-local `~/.claude/directives/plan-tool.md`
+      symlink and the project-`CLAUDE.md` pointer reach. Both keep resolving
+      to complete content, which constrains the shared-sources decision
+      below.
     - The model-selection pointer (#425), the router-table template (#388),
       seed-authoring guidance (#377) and capture rules (#378, #379), beyond
       putting each in the right phase file.
   - **Allowed behavior changes:**
     - The installed skill becomes several skills.
     - A session triggered for one phase gets that phase's rules loaded.
-    - Deliberately not a change: the machine-local
-      `~/.claude/directives/plan-tool.md` symlink and the project-`CLAUDE.md`
-      pointer path keep resolving to complete content. This constrains the
-      shared-sources decision below.
   - **Allowed reorganization:** splitting `integrations/shared/DIRECTIVES.md`
     by phase is the reorganization this entry exists for. The blocker it fixes
     is the evidence under **Why**: rules a session never loads don't govern it.
@@ -1190,10 +1192,9 @@ working straight down the tiers.
   - **What the core carries.**
   - **Whether the shared sources stay one file split by markers** (one file
     stays easy to read whole) or become separate files. Either way the
-    write-once property has to hold. Separate files also need a complete
-    target for the single `~/.claude/directives/plan-tool.md` symlink and the
-    project-`CLAUDE.md` pointer, such as a generated whole file or an index
-    that names every phase file.
+    write-once property has to hold, and so does the symlink constraint under
+    Out of scope. With separate files, that means a generated whole file or
+    an index naming every phase file.
 - **Dependencies:** #370, shipped 2026-09-16, is the base this changes.
   Coordinate with #388, router-template ownership, and #425, which edits the
   same routers. Neither has to land first.
