@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-retire-jira-grade-detail.md`.
+> Preserved here for history; do not edit.
+
 # Plan seed: retire legacy Jira-grade detail artifacts and readers
 
 This file is a `plan-tool create` input. Use it via:
