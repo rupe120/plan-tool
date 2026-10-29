@@ -1,7 +1,7 @@
 {
   "plan_slug": "retire-jira-grade-detail",
-  "grounded_at": "2026-10-29T14:32:52Z",
-  "plan_fingerprint": "000af2066c00902a430417963fe23548f2fd1912dc0226264934f82886f23858",
+  "grounded_at": "2026-10-29T19:34:26Z",
+  "plan_fingerprint": "f10d252971203316f8751879e38f02a0e5a29e3f80546fcdb6525e985f704a59",
   "code_fingerprint": {
     "BACKLOG.md": "2cf33631b90625a8525625716c78b947d7c0d2dc29b8a4522296541ed8e19fea",
     "CAPABILITIES.md": "0c1b5fee60d61f87ba6d3aa1cfdf6eeebc25d6bddc5da09c9c8076ae4d988119",
@@ -66,6 +66,15 @@
     "tests/test_review.py": "ba125fb15098706b0ec5a9d084026bbe86daf7bc12bfd2a695ead6eb562a6e74",
     "tests/test_review_persistence.py": "355891c6ebc15db5df10f3e5d87e05945aa8cc5a24722815ae5a2e249044c945"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "8b812b28cedb676b4e52b4da383623cadcbfae1a3af9d15b05d207fcecf3505e",
+    "2": "b66d672034c7f0c9a74b28066065e86d72d356e273ed79d4e0161cd7d9b8e4ec",
+    "3": "6aa412eccf2106efa716deefe4d31f90a6f8a97e811a8cfc96db10c6cfb2fc5c",
+    "4": "0ef89a5b25455729c3a786b7c6779c02b8d624350943228be9371e9a1609e499",
+    "5": "b13111db468774dc32f643b34ca790421ae9e0bf473d0a5653f1d7eadab590ee",
+    "6": "adc4dff90b2212663765eca4180b9f1d5cf3380b3574b42ac66ea1e20f5a7d69",
+    "7": "c0f9734bdee617c0d93cf84f0a61fce96989f3664698cfb5a8fc16d4c2bc09bc",
+    "8": "9181c847dcb01a0baafd92b06d215f85700c1abeacf0f74497f7e98efba610d3"
+  },
   "schema_version": 1
 }
