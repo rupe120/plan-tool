@@ -169,6 +169,7 @@ steps:
   - 3
   - 4
   - 6
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/07-delete-jira-grade-py-its-remaining.md
   description: Delete jira_grade.py and its remaining schema tests, and remove Jira-grade
     path derivation from detail_artifacts.py after all consumers stop importing them.
     Remove obsolete schema references in roadmap_gates.py without changing its validation
