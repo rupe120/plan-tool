@@ -42,6 +42,7 @@ steps:
   change_type: feature
   depends_on:
   - 1
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/02-remove-detail-grade-remaining-jira.md
   description: Remove detail --grade and the remaining Jira-grade authoring functions
     and prompt; authoring already rejects that grade, so preserve the existing run-grade
     route rather than adding another rejection layer. Remove direct writer selectors
