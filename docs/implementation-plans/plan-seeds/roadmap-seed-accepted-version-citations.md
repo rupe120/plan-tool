@@ -31,22 +31,32 @@ stale-copy case.
 
 ## In scope
 
-- The draft-seed contract: the `## References` rule in
-  `plan_tool/prompts/roadmap-seed.md` cites the accepted version's member
-  files by their version-store paths instead of bare `01-domain.md` …
-  `04-roadmap.md` filenames. The seed writer is given those paths; it does
-  not derive them.
-- The draft-seed References gate (`VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE`
-  in `plan_tool/roadmap_gates.py`). Today it accepts a bare filename and its
-  message tells the bounded retry to "add the literal filename", which
-  steers the seed writer back to the old form. The gate requires the
-  version-store path and its message names that path.
+- The draft-seed contract: `plan_tool/prompts/roadmap-seed.md` has the seed
+  name the accepted version's member files by their version-store paths
+  everywhere in the seed body, not only in `## References`, instead of bare
+  `01-domain.md` … `04-roadmap.md` filenames. `create` copies the seed's
+  body sections into the plan, so a bare name in Architecture or Risks
+  reaches the audit as surely as one in References. The seed writer is given
+  those paths; it does not derive them.
+- The draft-seed gates in `plan_tool/roadmap_gates.py`:
+  - The References gate (`VIOLATION_MISSING_DRAFT_SEED_ARTIFACT_REFERENCE`)
+    requires the version-store path. Today it accepts a bare filename, and
+    its message tells the bounded retry to "add the literal filename", which
+    steers the seed writer back to the old form. Its message names the path.
+  - A bare `0N-*.md` name anywhere in the seed body, outside fenced code, is
+    a violation. Bare means not the final component of a version-store path,
+    so the paths the contract requires never trip it. This is a plain
+    presence check: it rejects every bare
+    occurrence and never has to judge whether one is a citation or a
+    mention. Fenced code is excluded with the same scanner the References
+    gate uses (`extract_h2_sections`, `strip_fenced_code=True`, in
+    `plan_tool/scope_fence.py`).
 - Legacy draft seeds with bare names: `create --from-existing` rewrites them
   under a fixed rule (Architecture, "Legacy seeds").
 - `source_artifacts`, deliberately departing from the source entry's Fix,
   which renders that key in the new form too. The prompt never asks for the
   key, and `parse_draft_seed_provenance` ignores it (`roadmap_components` and
-  `cross_cutting` are the only keys), so `References` stays the one citation
+  `cross_cutting` are the only keys), so the seed body stays the one citation
   surface. The plan records whether `create` drops a stray `source_artifacts`
   key or leaves it inert.
 
@@ -55,11 +65,12 @@ stale-copy case.
 - Any change to the completeness audit or its prompts. A path citation
   needs no translation at read time: the audit model opens the file the
   citation names.
-- Roadmap file names that the model writes into plan sections other than
-  `References` during `create`. The plan carries `References` from the
-  seed, and the guarantee covers that section only. Deliberately not
-  policed elsewhere: telling a citation from a mention in free prose is the
-  positional boundary this repo refuses.
+- Bare roadmap file names in new prose that `create`'s model writes while
+  synthesizing the plan, as opposed to sections it copies from the seed.
+  Nothing deterministic writes that prose, so closing it needs a `create`
+  prompt rule or a post-synthesis check: new `create` behavior this seed
+  does not allow. Decided 2026-10-29: deferred, recorded as a follow-up on
+  the source `BUG_BACKLOG.md` entry.
 - Plans already created from bare-name seeds. Deliberately not migrated:
   their citations are corrected by hand or by re-running `create` from the
   seed.
@@ -79,11 +90,13 @@ stale-copy case.
 
 Only these:
 
-- A newly written draft seed cites version-store paths in `References`.
-- The References gate requires those paths, and its message names them.
-- `create --from-existing` rewrites the bare `0N-*.md` citations in a
-  qualifying legacy seed's `References` section to the accepted version's
-  paths.
+- A newly written draft seed names roadmap files by version-store path
+  throughout its body.
+- The References gate requires those paths and its message names them, and
+  a bare `0N-*.md` name anywhere in the seed body outside fenced code is a
+  gate violation.
+- `create --from-existing` rewrites every bare `0N-*.md` name outside fenced
+  code in a qualifying legacy seed's body to the accepted version's paths.
 
 No other `roadmap`, `create`, or audit behavior changes.
 
@@ -113,9 +126,9 @@ None.
   mapping, read from `VERSION_ARTIFACT_INVENTORY`'s `member_name` entries
   (`stored_artifact_path` takes a key, and today only key-to-name exists).
 - **Guarantee: "the audit never grounds on a top-level copy of a cited roadmap
-  artifact."** Mechanism: every roadmap citation in a derived plan's
-  `References` is a version-store path. Owner: the seed writer and the
-  References gate for new seeds, `create` for qualifying legacy seeds.
+  artifact."** Mechanism: every roadmap file name that a derived plan carries
+  from its seed is a version-store path. Owner: the seed writer and the
+  draft-seed gates for new seeds, `create` for qualifying legacy seeds.
   Order: the draft-seed contract and gate change first, then the legacy
   rewrite in `create`.
 - **Legacy seeds.** The rewrite applies only when all of these hold:
@@ -123,8 +136,9 @@ None.
   - its seed-state status is `current`;
   - the roadmap has an accepted head.
 
-  It touches only the `## References` section, as `extract_h2_sections`
-  (`plan_tool/scope_fence.py`) reads it, and only bare `0N-*.md` names there.
+  It rewrites every bare `0N-*.md` name in the seed body outside fenced
+  code, found with the same fence-aware scanner as the gate, and nothing
+  else.
   Seed state records no source version, but every applied revision marks all
   tracked seeds invalidated (`ROADMAP_FORMAT.md` § "Invalidation and explicit
   refresh"). So a `current` seed was written against the accepted head, and
@@ -138,20 +152,22 @@ None.
 ## Testing
 
 - A roadmap with an accepted head and a stale top-level `04-roadmap.md`: a
-  draft seed written by the changed contract cites repo-relative
-  version-store paths in `References`, and every `References` citation in the
-  plan `create` derives from it names an existing version-store file holding
-  the accepted content. None names a top-level file.
+  draft seed written by the changed contract names repo-relative
+  version-store paths throughout, and every roadmap file name the derived
+  plan carries from it names an existing version-store file holding the
+  accepted content. None names a top-level file.
 - The References gate rejects a draft seed that cites a bare filename, and
   its message names the version-store path.
-- A `current` legacy seed with bare names, in the same roadmap: the derived
-  plan's `References` cites the accepted version's paths. A bare name in
-  another section of the seed is left unchanged.
+- The body gate rejects a seed with a bare `04-roadmap.md` in Architecture
+  or Risks, and accepts the same name inside a fenced code block.
+- A `current` legacy seed with bare names in References and in Architecture,
+  in the same roadmap: the derived plan carries the accepted version's paths
+  in both sections, and a bare name inside fenced code is left unchanged.
 - An invalidated legacy seed is not rewritten and still gets the
   explicit-continue prompt.
 - A roadmap created by a stage run, with no top-level files: a new-contract
-  seed and a `current` legacy seed both yield `References` citations that
-  name existing version-store files.
+  seed and a `current` legacy seed both yield plans whose carried roadmap
+  file names point at existing version-store files.
 - An untracked seed, and a roadmap with no accepted head, keep their current
   behavior.
 - `uv run pytest tests/ -q -n auto` is green, including the doc-drift guards
@@ -159,14 +175,14 @@ None.
 
 ## Acceptance criteria
 
-- While an accepted head exists, no `References` citation in a plan derived
+- While an accepted head exists, no roadmap file name that a plan carries
   from a new-contract or `current` legacy draft seed names a top-level
-  `0N-*.md`.
+  `0N-*.md`, in any section.
 - A `current` seed written before the change still grounds against the
   accepted version, and an invalidated one is routed to regeneration rather
   than re-pointed.
 - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug" states the new
-  citation form, and the roadmap-seed prompt and the References gate agree
+  citation form, and the roadmap-seed prompt and both draft-seed gates agree
   with it.
 - Backlog reconciliation: the final step removes the originating
   `BUG_BACKLOG.md` entry only after full shipment, and leaves or updates any
@@ -187,7 +203,7 @@ adjacent finding in `BUG_BACKLOG.md` or `BACKLOG.md`; do not absorb it here.
 - Changing a prompt contract can leave its descriptions disagreeing. Sweep
   every one by vocabulary, not only by identifier:
   - `plan_tool/prompts/roadmap-seed.md`;
-  - the References gate's message in `plan_tool/roadmap_gates.py`;
+  - both draft-seed gates' messages in `plan_tool/roadmap_gates.py`;
   - `ROADMAP_FORMAT.md` § "Draft seeds under the roadmap slug";
   - `docs/how-to/roadmap.md` § 1's leftover-files paragraph, which describes
     a reader opening a bare `04-roadmap.md`;

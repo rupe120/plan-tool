@@ -295,11 +295,13 @@ Durable re-open conditions for retired items are recorded in
   to the files the versioned-from-birth plan declared inert. No path (seed
   writer, `create`, or the audit inputs) translates a roadmap citation to
   the accepted version.
-- **Fix:** roadmap seed citations name the accepted version: the seed
-  writer renders `References` and `source_artifacts` as version-store paths
-  (or the version id plus the member name), and `create` keeps them. This
-  changes the draft-seed contract, so it goes through the plan pipeline.
-  Shipped 2026-10-10 as a separate direct change: a stderr warning naming
+- **Fix:** roadmap seed citations name the accepted version by repo-relative
+  version-store path throughout the seed body, the draft-seed gates require
+  it, and `create` carries it. This changes the draft-seed contract, so it
+  goes through the plan pipeline. Seed:
+  `docs/implementation-plans/plan-seeds/roadmap-seed-accepted-version-citations.md`
+  (plan not yet created), which settles the form, the legacy-seed rule and
+  the `source_artifacts` departure. Shipped 2026-10-10 as a separate direct change: a stderr warning naming
   leftover top-level `0N-*.md` files beside an accepted head, on
   `roadmap --view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and
   `--apply`. Deliberately not warned: `create --from-existing <seed>`, the
@@ -307,8 +309,14 @@ Durable re-open conditions for retired items are recorded in
   there.
 - **Deliberately not:** making promotion rewrite the top-level files, which
   restores the two-copy design the versioned-from-birth plan removed.
-- **Workaround:** delete the top-level `0N-*.md` files (the documented hand
-  conversion, which the warning from 2026-10-10 prompts) and re-audit.
+- **Deferred follow-up:** bare roadmap file names in new prose that
+  `create`'s model writes during synthesis, rather than copies from the
+  seed. The seed leaves them out (decided 2026-10-29); closing them needs a
+  `create` prompt rule or a post-synthesis check.
+- **Workaround:** hand-edit the plan's roadmap citations to the accepted
+  version's `.roadmap-versions/<id>/0N-*.md` paths, then re-audit. Deleting
+  the top-level files alone (the documented hand conversion, which the
+  2026-10-10 warning prompts) is not enough: the bare names then name no file.
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
