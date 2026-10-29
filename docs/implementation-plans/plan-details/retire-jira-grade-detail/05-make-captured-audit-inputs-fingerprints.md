@@ -26,7 +26,7 @@ Make saved audit inputs, revisions, fingerprints, freshness checks, and reuse op
 
 ## Input
 
-- **Captured audit inputs:** `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, `AuditInputSnapshot.revision`, and `_audit_input_fingerprint` define the immutable prompt inputs and revision identity. The retained capture selects the run-grade `Step.detail` resolution through `plan_tool/detail_artifacts.py:resolve_detail_artifact`.
+- **Captured audit inputs:** `plan_tool/review_persistence.py:AuditInputSnapshot` (its `capture` method), `AuditInputSnapshot.revision`, and `_audit_input_fingerprint` define the immutable prompt inputs and revision identity. The retained capture selects the run-grade `Step.detail` resolution through `plan_tool/detail_artifacts.py:resolve_detail_artifact`.
 
 - **Persisted revision shape:** `plan_tool/review_persistence.py:normalize_audit_revision` reads revision versions 1 through 3 and normalizes omitted historical optional digests. Existing supported run-grade records must remain usable without rewriting them.
 
@@ -50,7 +50,7 @@ Make saved audit inputs, revisions, fingerprints, freshness checks, and reuse op
 
 ## Implementation
 
-- **Make run grade the only live audit-input selection.** Update `plan_tool/review_persistence.py:AuditInputSnapshot.capture` and `_audit_input_fingerprint` so captured details always come from the existing run-grade pointer-or-canonical resolution. Remove the Jira-derived path branch and avoid retaining a public grade selector that implies a supported alternate input.
+- **Make run grade the only live audit-input selection.** Update `plan_tool/review_persistence.py:AuditInputSnapshot` (its `capture` method) and `_audit_input_fingerprint` so captured details always come from the existing run-grade pointer-or-canonical resolution. Remove the Jira-derived path branch and avoid retaining a public grade selector that implies a supported alternate input.
 
 - **Keep the revision identity stable for supported records.** Preserve the existing run-grade output of `plan_tool/fingerprint.py:audit_input_detail_revision`, `audit_input_detail_fingerprint`, and `audit_input_revision`, including revision versions 1 through 3 decoding in `plan_tool/review_persistence.py:normalize_audit_revision`. Older records that omit later optional digests must normalize as they do today when their detail grade is run.
 

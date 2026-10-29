@@ -193,6 +193,9 @@ steps:
   - docs/how-to/pipeline/detail.md
   - docs/how-to/pipeline/run.md
   - docs/how-to/pipeline/audit.md
+  - RUNBOOK.md
+  - docs/reference/contracts/process.md
+  - docs/explanations/nondeterministic-plan-design.md
   - docs/cli/detail.md
   - docs/cli/run.md
   - docs/cli/jira.md
@@ -227,7 +230,7 @@ Legacy Jira-grade artifacts and selectors remain alongside the run-grade detail 
 
 Remove `plan_tool/jira_grade.py`, Jira-grade paths in `plan_tool/detail_artifacts.py`, and reader selectors in `jira`, `run`, `completeness-audit`, `convergence`, and `gate-status`, together with the retired writer's `detail --grade` selector. This includes `plan_tool/cli/completeness_cmd.py`'s `GRADE_JIRA`/`JIRA_GRADE_VALUES` branches and the diagnostic selectors at `plan_tool/cli/gate_status_cmd.py:register` and `plan_tool/cli/convergence_cmd.py:register`. Remove live legacy bundles without touching canonical details or archived evidence.
 
-Remove grade-dependent saved-audit selection, freshness, and fingerprints while preserving supported run-grade records. `plan_tool/review_persistence.py:AuditInputSnapshot.capture` and `normalize_audit_revision` are the named captured-input and saved-evidence anchors. Legacy Jira-grade evidence cannot certify a run-grade bundle and is not migrated into run-grade evidence.
+Remove grade-dependent saved-audit selection, freshness, and fingerprints while preserving supported run-grade records. `plan_tool/review_persistence.py:AuditInputSnapshot` (its `capture` method) and `normalize_audit_revision` are the named captured-input and saved-evidence anchors. Legacy Jira-grade evidence cannot certify a run-grade bundle and is not migrated into run-grade evidence.
 
 Relocate `fenced_spans` because `plan_tool/review.py` uses it for non-Jira-grade finding parsers. It is not a drop-in for `scope_fence._fenced_code_spans`: preserve acceptance of fences indented past three spaces, pinned by `test_indented_citation_fence_protects_the_boundary`. The relocation preserves its current handling of a line that opens with an inline code span; correcting that behavior is a separate bug fix.
 
@@ -253,7 +256,7 @@ block deletion of the legacy lane; leave unrelated consolidation separate.
   (`GRADE_JIRA`, `JIRA_GRADE_VALUES`) — the reader selectors to remove.
 - `plan_tool/review.py` — imports `fenced_spans` from `jira_grade.py`; the
   relocation target this seed's "Allowed reorganization" names.
-- `plan_tool/review_persistence.py:AuditInputSnapshot.capture` and
+- `plan_tool/review_persistence.py:AuditInputSnapshot` (its `capture` method) and
   `normalize_audit_revision` — grade-dependent captured inputs and saved evidence.
 - `plan_tool/cli/gate_status_cmd.py:register` and
   `plan_tool/cli/convergence_cmd.py:register` — diagnostic selectors.

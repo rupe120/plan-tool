@@ -36,6 +36,9 @@ The code retirement from steps 2 through 7 removes Jira-grade selectors, readers
 - **New files:** None.
 
 - **Existing files (edits only):**
+  - `RUNBOOK.md` — Remove retired grade selection from the convergence procedure.
+  - `docs/reference/contracts/process.md` — Remove selected-grade and legacy-reader claims while preserving the story/handoff output contract.
+  - `docs/explanations/nondeterministic-plan-design.md` — Remove the live compact-detail capability claim; retain dated evidence supporting the design guidance.
   - `DETAIL_FORMAT.md` — Replace the two-grade description and compact-contract section with the canonical run-grade detail schema; retain source-of-truth and format-version guidance.
   - `JIRA_FORMAT.md` — State that Jira export always grounds stories and the handoff on declared run-grade detail; retain paired-export paths, provenance, publication, and story contracts.
   - `CAPABILITIES.md` — Remove retired Jira-grade surfaces and describe the retained run-grade behavior for authoring, completeness, execution, and export.
