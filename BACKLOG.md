@@ -1078,6 +1078,125 @@ working straight down the tiers.
   Claude backend because no plan-tool skill was available in Integration.
 - **Status:** not started.
 
+**#518 — An installed plan-tool skill is one router plus a 1,399-line reference, so a driving session reads fragments of it and skips phase rules such as the audit stopping rule**
+
+- **Labels:** Route `plan` · Readiness `decision-needed` · Tier `architect` ·
+  Principle `converge-on-correct-plan`
+- **What:** split the single installed skill into a small core skill plus one
+  skill per pipeline phase (authoring, auditing, running and the post-run
+  tail, roadmap). Each phase skill's body carries that phase's rules
+  directly, so the skill the host invokes for a phase loads the rules for that
+  phase. Today the router loads and the rules sit in a sibling
+  `DIRECTIVES.md` that the session has to choose to read.
+- **Why:** measured 2026-10-28 in a consuming repo (discord-config), driving
+  a milestone plan through both audit gates and a post-run tail with the
+  Claude Code skill installed (`.claude/skills/plan-tool/`, identical to
+  `integrations/shared/DIRECTIVES.md`). The session read `DIRECTIVES.md` by
+  section offsets and grep hits, never whole, and broke four rules it never
+  loaded:
+  - It stopped the Gate 1 audit after round 3, whose findings were material,
+    and started `detail`. It treated § "Trajectory, stopping, and the three
+    exits"'s three-snapshot minimum window as a stopping point. The user
+    corrected it.
+  - It moved a capability out of a plan's scope on its own judgment and told
+    the user only afterwards (§ "Pause on a product question — ask, don't
+    infer"; § "Before applying anything: audit the why, not the what", the
+    override rule).
+  - It never recorded owner answers as dated decision lines in the plan.
+  - It never presented findings as the plan-gap map.
+
+  Earlier in the same session it had implemented five steps of a plan by hand
+  instead of through `run`, then marked them done. Neither `reconcile-code
+  --all` nor a code-review pass ran until a side note pointed it out
+  (§ "After `run` finishes a plan").
+
+  Two structural reasons show up for skill routing:
+  - **One description covers every phase.** The router's `description` /
+    `when_to_use` names authoring, audit, run, reconcile, roadmap and Jira
+    together, so any plan-tool intent matches the same skill and gets the
+    same thin router.
+  - **The rules arrive by optional reading.** `DIRECTIVES.md` runs from
+    § "Invocation and discovery" to § "Escape hatch" with about 30 sections.
+    A session in one phase has no cue to read the whole section it needs
+    rather than the first match.
+- **Outcome:** when a driving session invokes the plan-tool skill for a
+  phase, that phase's rules are in its context without a further read: for
+  `completeness-audit`, the two gates, the session-directed loop, the
+  plan-gap map, product questions, fix-the-class and the three exits; for
+  `run`, `--commit`, failed-step recovery and the post-run tail.
+- **Scope contract:**
+  - **In scope:**
+    - **A core skill and per-phase skills** under each of
+      `integrations/{claude,codex,cursor}/`. The core keeps invocation,
+      headless form, backend selection, discovery and the decision table, plus
+      the short rules every phase shares (ask on product and scope questions,
+      record decisions in the plan, validate a plan before committing it).
+    - **Phase skills with narrow, non-overlapping
+      `description`/`when_to_use`/`paths` triggers,** each of which tells the
+      session to load the core first.
+    - **The phase sources** in `integrations/shared/`. Each rule lives in
+      exactly one phase source, which keeps #370's write-once property.
+    - **Installing the set:** `plan-tool install-skill`
+      (`plan_tool/cli/skill_cmd.py:cmd_install_skill`) installs it for every
+      `--integration`, including `--copy` and `--user`.
+    - The install, format and help or catalog tests that pin today's
+      router-and-`DIRECTIVES.md` pair.
+  - **Out of scope / Non-goals:**
+    - Any change to plan-tool CLI subcommands or their behavior.
+    - A gate in the tool that refuses `detail` while the latest bare audit
+      has open blocking findings. That is invocation-time enforcement, which
+      #370 excluded; file it as its own entry if wanted.
+    - Drift-detection machinery on guidance content
+      (`backlog-arc-installed-skill.md` § "Decision gates").
+    - Rewording or adding rules. Content moves between files; the rules stay
+      the same.
+    - The model-selection pointer (#425), the router-table template (#388),
+      seed-authoring guidance (#377) and capture rules (#378, #379), beyond
+      putting each in the right phase file.
+  - **Allowed behavior changes:**
+    - The installed skill becomes several skills.
+    - A session triggered for one phase gets that phase's rules loaded.
+    - The machine-local `~/.claude/directives/plan-tool.md` symlink and the
+      project-`CLAUDE.md` pointer path keep resolving to complete content.
+  - **Allowed reorganization:** splitting `integrations/shared/DIRECTIVES.md`
+    by phase is the reorganization this entry exists for. The blocker it fixes
+    is the evidence under **Why**: rules a session never loads don't govern it.
+    Nothing else moves.
+  - **Verification:**
+    - Install each integration into a temporary project, with and without
+      `--copy`.
+    - Check that every rule heading in today's `DIRECTIVES.md` appears in
+      exactly one installed file.
+    - In Claude Code, confirm that asking to audit a plan triggers the audit
+      skill, and that its loaded body contains § "Trajectory, stopping, and
+      the three exits".
+    - Run the existing install and format tests, updated for the new file set.
+  - **Stop / defer:**
+    - **If a host can't route between several skills,** keep one skill for
+      that host with the phase files as references, and record which host and
+      why. Codex and Cursor routing is unverified here.
+    - **If a rule fits no single phase,** it goes in the core, not in two
+      phases.
+- **Decision needed:**
+  - **Phase boundaries.** Does reconcile join run, join audit, or get its own
+    skill?
+  - **What the core carries.**
+  - **Whether the shared sources stay one file split by markers** (one file
+    stays easy to read whole) or become separate files. Either way the
+    write-once property has to hold.
+- **Dependencies:** #370, shipped 2026-09-16, is the base this changes.
+  Coordinate with #388, router-template ownership, and #425, which edits the
+  same routers. Neither has to land first.
+- **Approach:** `plan-tool`. The change crosses three integrations, the
+  installer and the canonical directives (tier `architect`), and needs a
+  citation sweep for every `DIRECTIVES.md § ...` reference in code, docs and
+  tests.
+- **Iterate:** default recipe. Gate 1 is load-bearing, because the phase
+  boundaries are the design decision.
+- **Origin:** 2026-10-28, a driving session in discord-config. The user
+  proposed splitting the skill, not the CLI, to improve skill routing.
+- **Status:** not started.
+
 **#388 — Extract one shared template for the three SKILL.md routers' decision-tree and subcommands tables**
 
 - **What:** `integrations/claude/SKILL.md`, `integrations/codex/SKILL.md`,
