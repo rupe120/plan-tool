@@ -84,6 +84,7 @@ steps:
   change_type: feature
   depends_on:
   - 1
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/04-remove-jira-grade-direct-jira-grade.md
   description: Remove jira --grade and direct Jira-grade capture and prompt branches.
     Reuse the existing run-grade capture for concise stories and the paired developer
     handoff, preserving rendering, destinations, provenance, publication, and existing
