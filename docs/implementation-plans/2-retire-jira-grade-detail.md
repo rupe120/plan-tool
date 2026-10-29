@@ -23,6 +23,7 @@ steps:
   - tests/test_review.py
   complexity: low
   change_type: refactor
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/01-move-fenced-spans-review-py-before.md
   status: current
   description: Move fenced_spans into review.py before deleting its Jira-grade owner.
     Preserve its citation-parsing behavior, including fences indented beyond three
