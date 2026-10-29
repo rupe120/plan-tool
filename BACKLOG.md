@@ -1078,7 +1078,7 @@ working straight down the tiers.
   Claude backend because no plan-tool skill was available in Integration.
 - **Status:** not started.
 
-**#518 — An installed plan-tool skill is one router plus a 1,399-line reference, so a driving session reads fragments of it and skips phase rules such as the audit stopping rule**
+**#518 — An installed plan-tool skill is one router plus one long reference, so a driving session reads fragments of it and skips phase rules such as the audit stopping rule**
 
 - **Labels:** Route `plan` · Readiness `decision-needed` · Tier `architect` ·
   Principle `converge-on-correct-plan`
@@ -1090,8 +1090,9 @@ working straight down the tiers.
   `DIRECTIVES.md` that the session has to choose to read.
 - **Why:** measured 2026-10-28 in a consuming repo (discord-config), driving
   a milestone plan through both audit gates and a post-run tail with the
-  Claude Code skill installed (`.claude/skills/plan-tool/`, identical to
-  `integrations/shared/DIRECTIVES.md`). The session read `DIRECTIVES.md` by
+  Claude Code skill installed (`.claude/skills/plan-tool/`, whose
+  `DIRECTIVES.md` is identical to `integrations/shared/DIRECTIVES.md`, then
+  1,402 lines). The session read `DIRECTIVES.md` by
   section offsets and grep hits, never whole, and broke four rules it never
   loaded:
   - It stopped the Gate 1 audit after round 3, whose findings were material,
@@ -1129,8 +1130,10 @@ working straight down the tiers.
     - **A core skill and per-phase skills** under each of
       `integrations/{claude,codex,cursor}/`. The core keeps invocation,
       headless form, backend selection, discovery and the decision table, plus
-      the short rules every phase shares (ask on product and scope questions,
-      record decisions in the plan, validate a plan before committing it).
+      the short existing rules every phase shares (ask on product and scope
+      questions, record each answer as a dated decision line in the plan).
+      Deliberately not a new "validate before committing" rule: today's
+      `DIRECTIVES.md` has none, and this entry adds no rules.
     - **Phase skills with narrow, non-overlapping
       `description`/`when_to_use`/`paths` triggers,** each of which tells the
       session to load the core first.
@@ -1156,8 +1159,10 @@ working straight down the tiers.
   - **Allowed behavior changes:**
     - The installed skill becomes several skills.
     - A session triggered for one phase gets that phase's rules loaded.
-    - The machine-local `~/.claude/directives/plan-tool.md` symlink and the
-      project-`CLAUDE.md` pointer path keep resolving to complete content.
+    - Deliberately not a change: the machine-local
+      `~/.claude/directives/plan-tool.md` symlink and the project-`CLAUDE.md`
+      pointer path keep resolving to complete content. This constrains the
+      shared-sources decision below.
   - **Allowed reorganization:** splitting `integrations/shared/DIRECTIVES.md`
     by phase is the reorganization this entry exists for. The blocker it fixes
     is the evidence under **Why**: rules a session never loads don't govern it.
@@ -1170,6 +1175,8 @@ working straight down the tiers.
     - In Claude Code, confirm that asking to audit a plan triggers the audit
       skill, and that its loaded body contains § "Trajectory, stopping, and
       the three exits".
+    - Check that `~/.claude/directives/plan-tool.md` and the project-`CLAUDE.md`
+      pointer still reach every rule heading.
     - Run the existing install and format tests, updated for the new file set.
   - **Stop / defer:**
     - **If a host can't route between several skills,** keep one skill for
@@ -1183,7 +1190,10 @@ working straight down the tiers.
   - **What the core carries.**
   - **Whether the shared sources stay one file split by markers** (one file
     stays easy to read whole) or become separate files. Either way the
-    write-once property has to hold.
+    write-once property has to hold. Separate files also need a complete
+    target for the single `~/.claude/directives/plan-tool.md` symlink and the
+    project-`CLAUDE.md` pointer, such as a generated whole file or an index
+    that names every phase file.
 - **Dependencies:** #370, shipped 2026-09-16, is the base this changes.
   Coordinate with #388, router-template ownership, and #425, which edits the
   same routers. Neither has to land first.
