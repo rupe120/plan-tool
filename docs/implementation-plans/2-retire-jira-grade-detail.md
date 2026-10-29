@@ -204,6 +204,7 @@ steps:
   change_type: non-code
   depends_on:
   - 7
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/08-update-live-format-references.md
   description: 'Update live format references, capability entries, operator guidance,
     and generated CLI references to describe run-grade detail as the sole input. Preserve
     Jira story and handoff documentation contracts and archived historical evidence.
