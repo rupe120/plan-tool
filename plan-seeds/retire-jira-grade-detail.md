@@ -64,6 +64,15 @@ reads a line that opens with an inline code span as an unclosed fence, which
 the second explicitly, rather than silently inheriting whichever one the
 new location happens to have.
 
+## Risks
+
+Removing `jira_grade.py` can break finding parsers that use its fence helper
+without consuming Jira-grade details. Grade-dependent audit fingerprints can
+also make supported run-grade evidence stale or let retired evidence appear
+current. Preserve the helper's deliberate parsing contract and run-grade
+saved-evidence behavior while refusing retired inputs. Live legacy bundles
+must be removed without touching canonical details or archived evidence.
+
 ## Testing
 
 - `plan-tool jira <plan>` exports concise stories and the paired developer
