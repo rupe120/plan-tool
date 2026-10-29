@@ -23,6 +23,12 @@ was derived from, so a completeness audit or a reader opening a cited roadmap
 artifact reads the accepted content and never an inert top-level `0N-*.md`
 copy left beside the accepted head.
 
+This covers every roadmap, not only older folders with leftovers. A roadmap
+created by a stage run has no top-level `0N-*.md` files, because the run
+publishes only the version store and the accepted head (`ROADMAP_FORMAT.md`
+§ "What writes them"). There, a bare-name citation names no file at all. That case
+follows from the design; the observed symptom is the stale-copy case.
+
 ## In scope
 
 - The draft-seed contract: the `## References` rule in
@@ -105,6 +111,9 @@ None.
   file.
 - A legacy draft seed with bare names, in the same roadmap: the derived
   plan's citations are the accepted version's paths.
+- A roadmap created by a stage run, with no top-level files: a draft seed
+  written by the changed contract, and a legacy bare-name seed, both yield
+  plan citations that name existing version-store files.
 - A roadmap with no accepted head keeps its current behavior.
 - `uv run pytest tests/ -q -n auto` is green, including the doc-drift guards
   for `ROADMAP_FORMAT.md`.

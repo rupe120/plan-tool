@@ -282,6 +282,13 @@ Durable re-open conditions for retired items are recorded in
   - `chat-output-streaming` `20261010-010407`: `[workflow-shape]`.
   - `cdk-infrastructure-and-environments` `20261010-012103`:
     `[accepted-roadmap-source]`.
+
+  The same citation also breaks a roadmap with no leftovers. A stage run
+  publishes only the version store and the accepted head
+  (`ROADMAP_FORMAT.md` § "What writes them"), so in a roadmap created that way a bare
+  `04-roadmap.md` names no file at all. That case follows from the design and
+  has not been observed in a run; the stale-copy case above is the observed
+  one.
 - **Cause (verified in code):** promotion is meant to change only the
   selector, so the defect is not a missed refresh. It is the citation
   contract. The seed prompt binds plans to bare names that resolve on disk
