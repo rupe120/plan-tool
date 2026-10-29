@@ -144,6 +144,7 @@ steps:
   depends_on_notes:
     5: Provides run-grade-only evidence qualification and historical run-grade record
       support.
+  detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/06-remove-grade-selection-completeness.md
   description: Remove grade selection from completeness-audit, its direct review readers
     and detector dispatch, convergence, and gate-status. Ground coverage, conceptual
     prompts, reports, history, and current-stage diagnostics in the existing run-grade
