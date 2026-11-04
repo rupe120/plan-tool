@@ -55,6 +55,10 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Cleanup for focus and stability](2026-11-04-cleanup-focus-and-stability.md) —
+  recommended #376 retirement pickup, known bare-plan drift, separate audit-noise
+  fixes, and reproduction-led stability follow-ups; implementation is not started.
+
 - [Jira-grade retirement execution and review](2026-11-03-jira-grade-retirement-plan.md) — eight
   completed steps, reconciliation findings and corrections, model provenance,
   two clean independent reviews, and prepared publication branches.
