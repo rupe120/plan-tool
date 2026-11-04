@@ -5,8 +5,8 @@ dispositions — the deterministic well-formedness findings get *applied*,
 others are *deferred* (structural diagnostics that an apply pass can't
 fix, info-severity advisories, triage-deferred low-payoff edits) and both
 conceptual sources (*correctness* and *completeness*) are *reported but
-never auto-applied by design* (read-only-audit split, #85 — they are
-walked by ``completeness-apply``). Dumping all of that to the terminal
+never auto-applied by design* (read-only-audit split, #85 — the reader
+edits the relevant plan or detail files). Dumping all of that to the terminal
 buries the signal and can't be reused later.
 
 So the full detail is written to a reusable markdown artifact under
@@ -838,11 +838,7 @@ _HEADINGS: dict[str, str] = {
     "open": "Open — eligible but not reached",
 }
 
-# Intro for the dedicated ``## Conceptual correctness`` section. Correctness
-# gaps are unsound/contradictory concepts — the highest-priority findings,
-# which the ``--iterate`` loop auto-applies. They surface here, as a first-
-# class topic ahead of the completeness gaps, when the loop did not apply
-# them this run (it halted, was budget-limited, or the audit ran read-only).
+# Conceptual findings require judged edits; the audit reports them unchanged.
 CORRECTNESS_INTRO = (
     "Unsound or contradictory concepts in the plan's design — the "
     "highest-priority gaps, addressed before the completeness gaps below. "
@@ -852,13 +848,13 @@ CORRECTNESS_INTRO = (
 )
 
 # Bare-plan variant: correctness gaps are actionable without a detail bundle;
-# completeness gaps stay withheld until one exists.
+# detail-only remedies remain for detail authoring.
 CORRECTNESS_INTRO_BARE = (
     "Unsound or contradictory concepts in the plan's design — the "
     "highest-priority gaps. The audit reports these but does not apply them "
     "(read-only-audit split, #85): close each one through a session-directed "
-    "edit to the plan body. Completeness gaps below stay informational until "
-    "a detail bundle exists.\n\n"
+    "edit to the plan body. Review plan-level completeness gaps now; leave "
+    "detail-only remedies for detail authoring.\n\n"
     "    plan-tool reconcile-plan-walk {plan_name}  "
     "# optional interactive review of the saved findings"
 )
@@ -1020,11 +1016,11 @@ def diagnostic_remedies(
     if by_source.get("files-coherence"):
         n = by_source["files-coherence"]
         lines.append(
-            f"`plan-tool completeness-apply {plan_name}` also clears "
-            f"these deterministically (no claude): it adds the cited path(s) "
-            f"that resolve to real files to the step's `allowed_mentions:`. "
-            f"Citations that don't resolve to a file are likely typos — fix "
-            f"those in the detail prose. ({n} files-coherence drift(s))."
+            f"Inspect each cited path and hand-edit the detail citation or the "
+            f"step's `files:`/`allowed_mentions:` declaration as appropriate. "
+            f"A real file alone does not establish step scope or justify an "
+            f"exemption; correct typo citations in the detail prose. "
+            f"({n} files-coherence drift(s))."
         )
     if by_source.get("lessons-coverage"):
         n = by_source["lessons-coverage"]
@@ -1115,7 +1111,8 @@ def _close_conceptual_steps(
     if corr and comp:
         steps.append(
             f"Close {corr} conceptual-correctness gap(s) through a "
-            "session-directed edit first (design gaps; not auto-applied under "
+            "session-directed edit by the human or orchestrating session to the "
+            "plan or detail files first (design gaps; not auto-applied under "
             f"#85), then {comp} conceptual-completeness gap(s)."
         )
     elif corr:
@@ -1127,12 +1124,14 @@ def _close_conceptual_steps(
         )
         steps.append(
             f"Close {corr} conceptual-correctness gap(s) through a "
-            f"session-directed edit (design gaps; not auto-applied under #85){tail}."
+            "session-directed edit by the human or orchestrating session to the "
+            f"plan or detail files (design gaps; not auto-applied under #85){tail}."
         )
     elif comp:
         steps.append(
             f"Close {comp} conceptual-completeness gap(s) through a "
-            "session-directed edit (not auto-applied; each needs your judgment)."
+            "session-directed edit by the human or orchestrating session to the "
+            "plan or detail files (not auto-applied; each needs your judgment)."
         )
     if gaps.unlisted_blocking:
         steps.append(
@@ -1378,9 +1377,8 @@ def suggested_next_step_commands(
     :func:`suggested_next_steps`' prose bullet.
 
     Conceptual gaps never appear here: they are closed by a session-directed
-    edit (#367), so only :func:`suggested_next_steps`' prose carries them.
-    This block names a command only where one exists — including the
-    deterministic files-coherence clear.
+    edit, so only :func:`suggested_next_steps`' prose carries them.
+    Files-coherence remedies also remain in prose.
     """
     result = _qualified_result_payload(qualified_result)
     if _fresh_audit_required(result, verdict, is_pre_apply_checkpoint):
@@ -1404,21 +1402,18 @@ def suggested_next_step_commands(
     ):
         cmds.append(_reconcile_drift_command(plan_name))
     if blocked:
-        # `apply` can't add or restructure steps (or create files on a bare
-        # plan), so each BLOCKED finding needs a manual edit — the headline
-        # case. Name the specific step when the plan is in hand; the full
-        # `--into` syntax lives in the report so the command column stays narrow.
+        # Structural findings name the step to split; detail authoring owns files.
         if bare_plan:
             cmds.append((
                 _detail_authoring_command(plan_name),
-                "BLOCKED — author missing detail file(s) (apply can't create files)",
+                "BLOCKED — author missing detail file(s)",
             ))
         targets = _blocked_split_targets(blocked, plan)
         steps_to_split = [sid for sid, _title in targets] or [None]
         split_desc = (
             "if over-packed — split into sub-steps (see report)"
             if bare_plan
-            else "BLOCKED — split into sub-steps (apply can't; see report)"
+            else "BLOCKED — split into sub-steps (see report)"
         )
         for sid in steps_to_split:
             arg = sid if sid is not None else "N"
@@ -1429,21 +1424,7 @@ def suggested_next_step_commands(
     by_source: dict[str, int] = {}
     for r in diagnostic:
         by_source[r.source] = by_source.get(r.source, 0) + 1
-    # Conceptual gaps are closed by a session-directed edit (#367), so this
-    # command block names no conceptual walk — only the deterministic,
-    # no-claude files-coherence clear, and never the nonexistent ``--apply``
-    # flag. The prose renderer carries the hand-edit instruction instead.
-    apply_effects: list[str] = []
-    if by_source.get("files-coherence"):
-        apply_effects.append(
-            f"clear {by_source['files-coherence']} files-coherence "
-            f"drift(s) (no claude)"
-        )
-    if apply_effects:
-        cmds.append((
-            f"plan-tool completeness-apply {plan_name}",
-            "; ".join(apply_effects),
-        ))
+    # Hand-edit remedies belong in prose, never in executable command tuples.
     # Every reason to re-audit merges into one canonical row, placed where the
     # first reason arose; ``_reaudit_command`` is its only source.
     reaudit_at: int | None = None
@@ -1485,9 +1466,7 @@ def suggested_next_step_commands(
 
 
 def _anchor_value(rec: Recommendation) -> str:
-    """The ``--anchor`` value for a finding: the human-readable
-    ``[anchor-slug]`` when the audit captured one, else the hashed id.
-    ``completeness-apply --anchor`` accepts both."""
+    """Use the readable finding anchor when present, otherwise its stable id."""
     return rec.anchor or rec.id
 
 
@@ -2156,9 +2135,10 @@ def build_report_md(
         if bare_plan:
             lines.append(
                 "Coverage gaps in the plan's own ideas are reported for "
-                "visibility in this bare-plan audit. Apply actions for this "
-                "axis are withheld until a complete detail bundle exists, so "
-                "these findings are informational for now."
+                "visibility in this bare-plan audit. Review plan-level "
+                "completeness gaps now; leave detail-only remedies for detail "
+                "authoring. Correct plan contracts through a session-directed "
+                "edit before authoring details."
             )
         else:
             lines.append(WHY['advisory-conceptual'])
@@ -2311,8 +2291,7 @@ def console_summary(
     track it are unchanged.
 
     ``bundle_status`` (when provided) axis-scopes the conceptual-completeness
-    line: on a bare plan those gaps stay informational and the apply verb is
-    not named. ``None`` keeps today's output for callers not yet wired.
+    line with the existing stage bar. ``None`` retains the default output.
 
     ``audit_shape_advisory_display`` (when provided) appends the same current
     keep-or-carve advisory line the report/JSON surfaces; ``None`` omits it.
@@ -2486,7 +2465,7 @@ def write_completeness_report(
 
     When ``recommendations`` is provided, also writes a sibling JSON
     sidecar via :func:`save_review` (``kind="completeness"``) so
-    ``completeness-apply`` can walk and address the structured findings
+    readers can inspect structured findings and reuse audit evidence
     without re-running the audit. ``plan_rel_path`` is the plan's repo-
     relative posix path stored inside the sidecar; required when a
     sidecar is being written.

@@ -288,16 +288,9 @@ _SECONDARY_DISPATCH_SOURCES = frozenset({"lessons-coverage"})
 # plan-side audit findings produced by ``plan-tool detail --reconcile``
 # (they describe plan/detail-file edits); ``claude`` covers semantic
 # findings the review's Claude pass surfaces; ``plan-completeness`` covers
-# the conceptual coverage-gap findings from the completeness audit,
-# addressed via the paired ``completeness-apply`` walker.
-#
-# ``plan-correctness`` is deliberately NOT in this base set: it is
-# apply-dispatchable only in the ``completeness-apply`` walk (which gates on
-# a complete detail bundle first), passed in via ``extra_apply_sources``.
-# Keeping it out of the base set stops the kind-agnostic reconcile/review
-# walks — which can load a ``-completeness.json`` sidecar as the newest save
-# — from auto-applying a plan-level design-correctness finding and bypassing
-# that detail-bundle gate.
+# the conceptual coverage-gap findings from the completeness audit.
+# Plan-correctness requires explicit caller opt-in via extra_apply_sources;
+# generic review/reconcile walks must not auto-apply design findings.
 _APPLY_AS_FINDING_SOURCES = frozenset(
     {"detail-reconcile", "claude", "plan-completeness"}
 )
@@ -317,14 +310,8 @@ def should_apply_as_finding(
     concrete plan-file edit. The walk treats both as "auto-dispatchable
     on apply" via :func:`is_dispatchable`.
 
-    ``extra_sources`` widens the base set for a specific caller — e.g.
-    ``completeness-apply`` passes ``{"plan-correctness"}`` so it can walk
-    conceptual-correctness gaps that the generic reconcile/review walks
-    must not auto-apply (see ``_APPLY_AS_FINDING_SOURCES``). Saved audit
-    families with their own actuators, such as data-contract drift, should
-    use this opt-in only with a command-local action callback that owns the
-    mutation or redirect; the generic review-action builder is not the
-    extension point for those edits.
+    ``extra_sources`` widens the base set for a specific caller. Sources
+    with dedicated actuators require a caller-owned mutation or redirect.
 
     A structural source (:func:`plan_tool.review.is_structural` —
     ``granularity-split`` / ``structural-split``) is *never* an
@@ -380,7 +367,7 @@ def split_escalation_target(
 
     Gated on the caller opt-in exactly like ``plan-correctness``: dispatchable
     only when the caller passes ``granularity-split`` in ``extra_apply_sources``
-    (the ``completeness-apply`` lane), so a generic reconcile/review walk that
+    so a generic reconcile/review walk that
     loads a completeness sidecar as its newest save never auto-dispatches it.
 
     Keys on ``severity == "medium"`` — the mixed-step signal — never

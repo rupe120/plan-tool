@@ -1812,15 +1812,13 @@ def test_latest_blocking_severity_match_is_case_insensitive() -> None:
 
 
 def test_latest_blocking_keeps_nonstructural_source() -> None:
-    # plan-completeness is nonstructural but IS what completeness-apply's gap
-    # walk resolves — a structural source gate would wrongly drop it (review F1).
+    # Saved nonstructural findings also carry resolution evidence.
     newest = _snapshot([_finding("g", severity="critical", source="plan-completeness")])
     assert {f.id for f in _latest_blocking_findings(_hist([newest]))} == {"g"}
 
 
-def test_latest_blocking_excludes_resolved_annotations() -> None:
-    # Review finding (independent): completeness-apply rewrites the SAME report
-    # in place, keeping recommendations verbatim and only adding annotations. A
+def test_saved_apply_annotations_keep_their_history_meaning() -> None:
+    # Legacy application annotations preserve recommendations verbatim. A
     # finding marked applied or declined (decline-close) is no longer open and
     # must not drive the advisory; a drift-halt skip and open/unreached stay live.
     newest = _snapshot(

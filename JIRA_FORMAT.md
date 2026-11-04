@@ -49,7 +49,6 @@ detail is retained only as historical context. Parked (`deferred` and
 story work. When more than one committed step is broken, capture reports every
 broken step in one refusal so an operator can repair the set in one pass.
 
-`direct-jira` also consumes declared run-grade detail.
 
 ## Output pair
 

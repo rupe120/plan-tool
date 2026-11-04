@@ -2020,7 +2020,6 @@ def test_sampler_checkpoint_lifecycles_are_rejected_by_each_final_evidence_reade
 ) -> None:
     """Keep either sampler lifecycle out of every current final-evidence gate."""
     from plan_tool.cli import data_contract_cmd
-    from plan_tool.cli.completeness_phases import _saved_audit_revision_is_current
     from plan_tool.cli.data_contract_cmd import (
         _newest_saved_completeness_with_contract_payload,
         cmd_data_contract_apply,
@@ -2048,7 +2047,6 @@ def test_sampler_checkpoint_lifecycles_are_rejected_by_each_final_evidence_reade
 
     assert is_reusable_audit_sidecar(saved) is False
     assert resolve_reusable_audit("x", tmp_path, plan_path=plan_path) is None
-    assert _saved_audit_revision_is_current(saved, plan_path, tmp_path) is False
     assert _review_reuse_ineligibility(saved) is not None
     assert _direct_walk_role_ineligibility(saved) is not None
     assert load_report_history(plan_path).runs == []
@@ -2658,3 +2656,19 @@ def test_audit_helpers_reject_removed_grade_keyword(tmp_path, grade, helper):
             audit_input_fingerprint_matches_disk(
                 tmp_path / "plan.md", tmp_path, "digest", detail_grade=grade
             )
+
+
+@pytest.mark.parametrize("status", ["applied", "skip", "not-applicable", "blocked"])
+def test_saved_apply_annotations_remain_readable_without_apply_command(tmp_path, status):
+    path = save_review(
+        plan_slug="x", plan_path="plans/x.md", repo_root=tmp_path,
+        report_md="Legacy completeness-apply report", recommendations=_SAMPLE_RECS,
+    )
+    raw = json.loads(path.read_text())
+    rec_id = _SAMPLE_RECS[0].id
+    raw["annotations"] = {rec_id: {"status": status, "note": "legacy evidence", "halt_reason": ""}}
+    path.write_text(json.dumps(raw))
+    saved = load_review(path)
+    assert saved.annotations[rec_id].status == status
+    assert saved.annotations[rec_id].note == "legacy evidence"
+    assert saved.recommendations[0] == _SAMPLE_RECS[0]

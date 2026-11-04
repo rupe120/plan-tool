@@ -46,7 +46,6 @@ Audit — check the plan and code agree, or judge the plan's design; never advan
     plan-tool run <name> --mode <review>     Read-only review mode on a single step (check/optimize/document/test/security/lint).
   Completeness — judge the plan's own design (concepts, coverage):
     plan-tool completeness-audit <name>      Are the plan's concepts correct + complete + unambiguous? Deterministic checks + sampled claude audit, grounded in the detail bundle.
-    plan-tool completeness-apply <name>      DEPRECATED, going away (BACKLOG #367) — close conceptual gaps with a session-directed edit instead. Still clears files-coherence drift deterministically (adds cited real-file paths to allowed_mentions:, no claude).
     plan-tool data-contract-apply <name>     Walk saved DATA_CONTRACT.md drift findings from the most recent completeness audit; verifies saved payload freshness before editing.
     plan-tool gate-status <name> --json      Read saved audit gate verdicts without running an audit.
     plan-tool convergence <name>             Is the audit/apply loop converging? Reads saved report history; no claude, exits 0.
@@ -136,7 +135,6 @@ __all__ = [
     "cmd_verify",
     "cmd_verify_all",
     "cmd_completeness",
-    "cmd_completeness_apply",
     "cmd_data_contract_apply",
     "cmd_convergence",
     "cmd_gate_status",

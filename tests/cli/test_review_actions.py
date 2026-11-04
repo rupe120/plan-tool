@@ -1444,8 +1444,7 @@ class TestRegroundRemedyDispatch:
         rec = _stamp(_reground_rec(step_ids=(3, 4, 5)), plan)
         (tmp_path / "demo.md").unlink()  # plan gone between audit and apply
         state = WalkState()
-        # EMPTY saved fingerprint — the reconcile / completeness-apply lanes
-        # pass none. The guard must still return stale on a gone plan (parse
+        # EMPTY saved fingerprint — reconcile callers pass none. The guard must still return stale on a gone plan (parse
         # failure → stale unconditionally), or the bridge re-parses and crashes.
         action = self._build(
             tmp_path, allow_structural_remedy=True,

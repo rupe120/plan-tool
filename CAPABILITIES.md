@@ -108,7 +108,7 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
 ## Plan completeness & convergence
 
 - **id:** `plan-completeness`
-- **surfaces:** `completeness-audit`, `completeness-apply`, `data-contract-apply`, `convergence`, `gate-status`, `plan_tool/completeness_report.py`, `plan_tool/convergence_diagnosis.py`, `plan_tool/data_contract.py`
+- **surfaces:** `completeness-audit`, `data-contract-apply`, `convergence`, `gate-status`, `plan_tool/completeness_report.py`, `plan_tool/convergence_diagnosis.py`, `plan_tool/data_contract.py`
 - **principles:** `converge-on-correct-plan`, `deterministic-non-determinism`
 - `completeness-audit` grounds its audit on the canonical run-grade bundle.
 
@@ -171,12 +171,6 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
 - **principles:** `deterministic-non-determinism`, `write-for-the-human`
 - `jira` grounds stories and the paired developer handoff on one captured
   declared run-grade input snapshot; neither output is a detail input.
-
-## Direct pipeline
-
-- **id:** `direct-pipeline`
-- **surfaces:** `direct-jira`, `direct-run`, `plan_tool/cli/direct_cmd.py`
-- **principles:** `converge-on-correct-plan`, `deterministic-non-determinism`
 
 ## Plan discovery & management
 

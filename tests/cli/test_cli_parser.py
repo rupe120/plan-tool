@@ -218,3 +218,33 @@ class TestVersionFlag:
         monkeypatch.setattr(parser_module, "package_version", must_not_run)
         help_text = build_parser().format_help()
         assert "--version" in help_text
+
+
+@pytest.mark.parametrize("command", ("direct-run", "direct-jira"))
+def test_retired_direct_commands_are_rejected(command: str) -> None:
+    with pytest.raises(SystemExit) as exit_info:
+        build_parser().parse_args([command])
+    assert exit_info.value.code == 2
+
+
+def test_standalone_pipeline_commands_remain_registered() -> None:
+    import plan_tool.cli.app as app
+    from plan_tool.cli.parser import assemble
+
+    parser, dispatch = assemble(app.__doc__, app.COMMAND_MODULES)
+    commands = {"create", "detail", "jira", "run", "reconcile-code"}
+    assert commands <= _subparsers_by_name(parser).keys()
+    assert commands <= dispatch.keys()
+
+
+def test_completeness_apply_is_rejected_before_dispatch(capsys) -> None:
+    with pytest.raises(SystemExit) as exc:
+        build_parser().parse_args(["completeness-apply", "demo"])
+    assert exc.value.code == 2
+    assert "invalid choice: 'completeness-apply'" in capsys.readouterr().err
+
+
+def test_completeness_retirement_preserves_surviving_commands() -> None:
+    commands = _subparsers_by_name(build_parser())
+    assert {"completeness-audit", "data-contract-apply",
+            "review", "reconcile-plan", "reconcile-code", "reconcile-plan-walk"} <= commands.keys()

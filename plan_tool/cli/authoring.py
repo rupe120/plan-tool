@@ -956,16 +956,6 @@ def cmd_create(args: argparse.Namespace) -> int:
                 _archive_targets(result.replaced_archives, repo_root)
             )
 
-        # Opt-in hand-off: an in-process caller (the direct-pipeline verbs)
-        # sets ``_create_result_sink`` to a list to receive the CreateResult
-        # without re-discovering the plan on disk. Deposit once here so every
-        # return path below (split proposal, clean ``ok``, iteration_incomplete)
-        # carries it; failure arms above deposit nothing. Mirrors the
-        # ``_next_steps_sink`` idiom used by cmd_completeness.
-        result_sink = getattr(args, "_create_result_sink", None)
-        if isinstance(result_sink, list):
-            result_sink.append(result)
-
         if result.file_backed_route is FileBackedSourceRoute.REFUSED:
             # A post-preflight refusal selected an explicit no-plan route.
             # Restore any collision-created binding before reporting it.
@@ -1913,7 +1903,7 @@ def cmd_detail(args: argparse.Namespace) -> int:
         # self-contained design and — when iteration is enabled —
         # applies the deterministic well-formedness findings and writes the
         # completeness report; the conceptual correctness/completeness gaps
-        # are persisted unapplied for ``completeness-apply`` (#85). This closes
+        # are persisted for the reader to hand-edit in plan/detail files (#85). This closes
         # the coverage gap the per-step detail-quality loop structurally
         # can't see: detail-quality reviews one step's prose in
         # isolation, so cross-step contradictions and orphaned concepts
@@ -2261,17 +2251,10 @@ def _authoring_guidance(
 def _run_completeness_tail(
     args: argparse.Namespace, *, what: str
 ) -> _CompletenessTailOutcome:
-    """Run the conceptual completeness audit as a post-authoring tail step.
+    """Audit the authored bundle; iteration repairs deterministic findings only.
 
-    Shared by ``detail`` and ``split``: once detail files are written
-    cleanly, re-audit the whole plan and — under ``--iterate`` (the
-    default) — loop on the conceptual audit's correctness (including material
-    ambiguity) AND completeness findings, applying blocking ones to
-    convergence. ``what`` names the
-    producing command in the banner. Ordinary tail failures are best-effort
-    and never flip the caller's successful-authoring rc. A present unsupported
-    detail is the deliberate exception: it refuses instead of allowing the
-    successful write to conceal an unreadable bundle.
+    Conceptual findings remain for judged edits. Ordinary tail failures do not
+    change the authoring rc; unsupported detail formats deliberately refuse.
 
     Returns the audit's disposition next-step ``(command, description)``
     tuples plus its one final qualified result. The parent folds current
@@ -2335,29 +2318,10 @@ def _run_completeness_tail(
 
 
 def cmd_split(args: argparse.Namespace) -> int:
-    """Split one step into named sub-steps on demand, then author + audit.
+    """Split and renumber steps, author details, then audit the bundle.
 
-    The deterministic, operator-driven counterpart to ``detail --split``'s
-    reactive Claude-proposed refactor+feature pass: you name the replacement
-    steps with repeated ``--into`` titles — typically to resolve a
-    completeness ``BLOCKED`` finding that calls for a step
-    ``completeness-apply`` can't create. Renumbers + rewires the plan and
-    renames downstream detail files (via :func:`plan_tool.detail.split_step`),
-    authors each new half's detail body, then — unless ``--no-detail`` /
-    ``--no-completeness`` — loops on the **conceptual completeness audit**,
-    applying its blocking findings to convergence under ``--iterate``. That
-    audit judges the plan's own concepts on two persisted axes (design
-    *correctness*, including material ambiguity, and *completeness*); it does
-    NOT reconcile the plan against the code on disk —
-    the new steps describe unbuilt work, so ``reconcile-plan`` (plan-vs-code)
-    is offered as a follow-up next-step rather than run here. This closes the
-    BLOCKED-finding dead end end-to-end: the old guidance told you to
-    directly edit the plan, run ``detail``, then re-run the audit; this does all
-    three.
-
-    Distinguish from ``detail --split`` (reactive, in-authoring, refactor+
-    feature only) and ``reconcile-plan`` (plan-vs-code correctness, no
-    structural edits).
+    Iteration repairs deterministic findings; conceptual gaps need judged edits.
+    Code-canonical reconciliation remains a separate pre-execution action.
     """
     ctx = _load_context(args)
     path = resolve_plan_for_context(ctx, args.name)
@@ -2523,23 +2487,10 @@ def cmd_split(args: argparse.Namespace) -> int:
 
 
 def cmd_merge(args: argparse.Namespace) -> int:
-    """Fold a contiguous set of steps into one on demand, then author + audit.
+    """Merge and renumber steps, re-author detail, then audit the bundle.
 
-    The operator-driven inverse of :func:`cmd_split`: you name ``--steps`` ids
-    (at least two) to fold into a single step at the lowest id. Confirms the
-    merge at the TTY (default NO; bypassed under ``--yes`` / a non-interactive
-    stdin so an assented merge runs headlessly), then collapses + renumbers the
-    plan and renames downstream detail files, re-authors the merged step's
-    detail body from the folded members' full bodies (via
-    :func:`plan_tool.detail.merge_steps`), and — unless ``--no-detail`` /
-    ``--no-completeness`` — loops on the **conceptual completeness audit**,
-    applying its blocking findings to convergence under ``--iterate``. That
-    audit judges the plan's own concepts, not the code on disk — the merged
-    step may describe unbuilt work, so ``reconcile-plan`` (plan-vs-code) is
-    offered as a follow-up next-step rather than run here.
-
-    Distinguish from ``reconcile-plan`` (plan-vs-code correctness, no
-    structural edits) and ``cmd_split`` (the forward sibling, one step → many).
+    Iteration repairs deterministic findings; conceptual gaps need judged edits.
+    Code-canonical reconciliation remains a separate pre-execution action.
     """
     ctx = _load_context(args)
     path = resolve_plan_for_context(ctx, args.name)
@@ -3273,7 +3224,8 @@ def register(subparsers) -> dict[str, Handler]:
             "passed) applying the deterministic well-formedness "
             "findings. Conceptual ambiguity is reported with correctness, "
             "and both it and completeness gaps are persisted unapplied for "
-            "a session-directed edit (#85). "
+            "the human or orchestrating session to read and hand-edit the relevant "
+            "plan or detail files (#85). "
             "Pass this flag to suppress the tail entirely; without "
             "--iterate (the default) the tail is an audit-only report "
             "with no apply calls."

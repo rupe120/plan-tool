@@ -222,7 +222,7 @@ Habits that apply either way:
 - **Commit before every `plan-tool` call.** Each call then starts from a
   clean baseline, and `run`'s test-authoring gate depends on it. Pass
   `--commit` where the command accepts it (`run`, `detail`,
-  `completeness-audit`, `completeness-apply`, `manifest sweep`).
+  `completeness-audit`, `manifest sweep`).
 - **Long commands go in the background.** Tee them to a named log such as
   `.tmp/<slug>.<verb>.log`, and start the pipe with `set -o pipefail` so a
   failure doesn't get reported as success.

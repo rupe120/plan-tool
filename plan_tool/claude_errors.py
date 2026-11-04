@@ -830,7 +830,7 @@ MAX_RATE_LIMIT_WAIT_SECONDS = 86400
 _COUNTDOWN_TICK_SECONDS = 1.0
 
 # Serializes the interactive rate-limit prompt + key-polling wait across
-# threads. Parallel workers (`detail`/`completeness-apply --jobs N`) share
+# threads. Parallel workers (`detail --jobs N`) share
 # one process-global stdin; concurrent input()/termios access from several
 # threads corrupts the terminal. Both invoker seams (`shell.claude_invoke`
 # and `launcher.shell_invoker`) acquire this one lock so at most one worker

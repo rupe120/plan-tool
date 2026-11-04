@@ -122,8 +122,6 @@ same brief content. See
 | --- | --- |
 | `plan-tool completeness-audit <name>` | Audit the plan's design + coverage (the primary authoring audit) |
 | `plan-tool completeness-audit <name> --iterate --commit` | Converge the audit loop (gates → apply-finding → re-audit) and stage the applied edits |
-| `plan-tool completeness-apply <name>` | Apply the conceptual gaps from the last audit |
-| `plan-tool completeness-apply <name> --commit` | Apply the conceptual gaps from the last audit and stage the result |
 | `plan-tool data-contract-apply <name>` | Walk saved `DATA_CONTRACT.md` drift findings from the last audit |
 | `plan-tool reconcile-plan <name>` | Re-audit an older plan whose code may have drifted (also supplements the completeness audit) |
 | `plan-tool detail <name> --reconcile` | Fix a step's detail to match the code |
@@ -251,7 +249,7 @@ plan, audit it against the codebase, then either drive it to completion
 | --- | --- | --- | --- | --- |
 | 1 | **Discovery & inspection** | Read plan state | No | `list`, `status`, `validate` |
 | 2 | **Authoring** | Produce / restructure plan files on disk | Yes | `create`, `detail` |
-| 3 | **Plan audit** | Judge the plan's design/coverage, or fix the PLAN to match code; **never edits code, never advances step status** | Yes | `completeness-audit`, `completeness-apply`, `data-contract-apply`, `reconcile-plan`, `detail --reconcile`, `reconcile-plan-walk` |
+| 3 | **Plan audit** | Judge the plan's design/coverage, or fix the PLAN to match code; **never edits code, never advances step status** | Yes | `completeness-audit`, `data-contract-apply`, `reconcile-plan`, `detail --reconcile`, `reconcile-plan-walk` |
 | 4 | **Code audit** | Judge finished (`done`) steps, or fix the CODE to match the plan; **never edits the plan, never advances step status** | Yes | `verify-all`, `run --mode`, `reconcile-code` |
 | 5 | **Execution** | Drive code edits by running plan steps | Yes | `run`, `run --all` |
 | 6 | **Integration** | Emit artifacts for external systems | Yes | `jira`, `jira config` |
@@ -268,7 +266,6 @@ land on the plan / detail files; the codebase is read-only here.
 | Command | Posture | Question / effect |
 | --- | --- | --- |
 | `completeness-audit` | Read-only | **The primary authoring audit** — are the plan's concepts correct + complete? Sampled audit grounded in the detail bundle. Bare vs detail gates use different conceptual bars (correctness-focused at Gate 1). |
-| `completeness-apply` | Mutating | Apply the conceptual-completeness gaps from the last audit. |
 | `data-contract-apply` | Mutating | Apply saved `DATA_CONTRACT.md` documentation drift payloads from the last completeness audit. |
 | `reconcile-plan` | Mutating | Plan-wide drift: edit the PLAN to match the code (aliases `reconcile`, `review`). Reach for it mainly on **older plans the code has drifted under**, or as a code-fit supplement to `completeness-audit`. |
 | `detail --reconcile` | Mutating | Per-step: edit a step's detail to match the code (`--all` sweeps not-yet-done steps). |
@@ -1091,19 +1088,11 @@ saved sidecar's findings when fresh, so a second `--iterate` run on an unchanged
 plan+code skips the conceptual re-sample — see
 [Reusing a saved conceptual audit](#reusing-a-saved-conceptual-audit---reuse-audit).
 
-The loop iterates correctness and structural findings: each iteration
-re-runs the deterministic audit, hands open findings to claude via
-`apply-finding`, and re-audits the now-mutated artifact.
-Conceptual-*completeness* findings (orphaned concepts, uncovered risks,
-…) are deliberately excluded from this loop because a fresh conceptual
-audit always surfaces more — chasing them would never converge. Address
-those with the paired `plan-tool completeness-apply <name>` verb (see
-the "Address conceptual gaps" workflow below).
-
-When deterministic findings converge but conceptual bar blockers remain,
-the iterate loop stops with **`terminal_hand_apply`** (not `converged`) —
-hand-apply or `completeness-apply` the remaining conceptual gaps. Bare vs
-detail bars differ; see [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md).
+The audit iterate loop repairs deterministic well-formedness findings only.
+Conceptual correctness and completeness findings remain saved for judgment.
+When deterministic findings converge but conceptual stage blockers remain,
+the loop stops with **`terminal_hand_apply`**. Read the saved report, verify and judge the findings, edit the appropriate plan or detail text, commit bounded corrections, and re-run `completeness-audit --iterate --commit` against the changed snapshot.
+Bare and detail bars differ; see [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md).
 
 Reach for `completeness-audit --iterate` only as the narrow variant —
 audit-only convergence without the rest of the create/detail authoring
@@ -1158,11 +1147,6 @@ confirm — recommends only, mutating nothing; on the default
   verdict there routes through
   `plan_tool/cli/review_actions.py:_dispatch_apply_finding` to the same
   bridge — recommend-only unless the walk opts in via `allow_split`.
-- The `completeness-apply` serial walk: a saved `medium` `granularity-split`
-  MIXED-STEP finding routes through
-  `plan_tool/cli/review_actions.py:_dispatch_structural_escalation` to the
-  same bridge — recommend-only unless the walk opts in via
-  `--apply-structural` (see [Address conceptual gaps](#address-conceptual-gaps-completeness-apply)).
 
 The **`create` path surfaces no escalate-bridge recommendation yet** — its
 change-type review loop still shows the pre-existing `granularity-split`
@@ -1263,7 +1247,7 @@ Completeness reports two concept-specific sources:
   `wont_do` decision still needs review. It is advisory and cannot stand in for
   sign-off.
 
-Neither finding is eligible for `completeness-apply`: a prose editor cannot
+A prose editor cannot resolve either finding: it cannot
 choose an owner or approve a scope decision. Resolve it by editing explicit
 ownership, running `scope-review`, or making a reviewed structured scope
 decision, then re-run `plan-tool completeness-audit <name>`.
@@ -2409,14 +2393,13 @@ fills placeholder text from an archive and never looks at code.
 
 ## Workflow: completeness checks
 
-Five verbs cover the audit-then-address pairs plus the lighter checks:
+Four verbs cover the audit and repair routes plus the lighter checks:
 
 | Verb | Question | Cost |
 | --- | --- | --- |
 | `plan-tool validate <name>` | Is the frontmatter schema-valid? | Instant. Schema-only; never fails on body content. |
 | `plan-tool reconcile-plan <name>` | Are paths/deps correct? Does claude have concerns? | One claude call. Includes correctness *and* completeness findings inline. |
 | `plan-tool completeness-audit <name>` | Are there authoring gaps + conceptual coverage gaps (orphaned concepts, uncovered risks, …) that the detail bundle doesn't already resolve? | Deterministic checks instant; the conceptual audit samples claude until findings run dry (typically 2-3 calls; `--audit-samples` / `--audit-dry-rounds`). |
-| `plan-tool completeness-apply <name>` | Address the conceptual gaps from a saved audit. | One claude call per gap addressed (interactive by default). |
 | `plan-tool data-contract-apply <name>` | Address saved `DATA_CONTRACT.md` documentation drift from a saved audit. | Instant checks plus an interactive saved-finding walk; no claude call. |
 
 `completeness-audit` is the lightest non-trivial audit. Run it after
@@ -2560,97 +2543,20 @@ plan-tool completeness-audit my-feature --no-reuse-audit     # always re-audit
 plan-tool completeness-audit my-feature --reuse-audit-id 20260611-123456-completeness
 ```
 
-### Address conceptual gaps (`completeness-apply`)
+### Address conceptual gaps
 
-The audit's conceptual findings — both *correctness* (unsound or
-contradictory design) and *completeness* (orphaned concepts, uncovered
-risks, dangling acceptance criteria, missing edge-case concepts) — are
-reported but **never auto-applied by the audit's iterate loop**
-(read-only-audit split, #85). The iterate loop spends its apply budget
-only on the deterministic well-formedness findings, which genuinely
-converge; each conceptual gap is a judgment call and a fresh audit always
-surfaces more, so an apply loop over them would never converge.
-`completeness-apply` is the explicit, paired verb — the sole mutator of
-the conceptual gap map — that walks **both** sources (correctness first,
-then completeness) and applies gap-closing edits without re-running the
-audit. When `completeness-audit --iterate` stops with **`terminal_hand_apply`**
-(deterministic findings converged but the conceptual stage bar still blocks),
-this is the intended next step.
+The audit repairs deterministic well-formedness findings only. Conceptual
+correctness and completeness findings remain saved evidence for judgment.
+When `terminal_hand_apply` reports conceptual stage blockers, use this procedure:
 
-```bash
-plan-tool completeness-apply my-feature                  # interactive per-gap walk (the only mode)
-plan-tool completeness-apply my-feature --anchor cache-invalidation
-                                                          # address one gap by its [anchor-slug]
-```
+1. Read the saved report and verify findings against the plan, details, and code.
+2. Judge related findings together and surface consequential scope decisions.
+3. Edit the appropriate plan or detail text; leave implementation mechanics to detail authoring.
+4. Commit bounded corrections.
+5. Re-run `plan-tool completeness-audit <name> --iterate --commit` against the changed snapshot.
 
-The walk is always per-gap and interactive — every conceptual gap is a
-scoping judgment call, so there is no blanket auto-apply. On a
-non-interactive stdin (CI / pipe) the walk is skipped, the pending gaps are
-reported, and the command exits **2** — nothing was applied, so a script
-must not read that run as convergence. (The deterministic files-coherence
-fix is mechanical and runs unconditionally.)
-
-**Faster on many gaps: `--jobs N`.** When a saved audit has several
-independent gaps, the serial per-gap Claude round-trips dominate wall-clock.
-`completeness-apply --jobs N` (N>1) applies up to N gaps concurrently, each in
-its own isolated git worktree, then replays the results onto your tree in a
-deterministic order (correctness first), re-running any gap whose file another
-apply already touched:
-
-```bash
-plan-tool completeness-apply my-feature --jobs 4 -y   # up to 4 concurrent applies
-```
-
-`--jobs > 1` is **non-interactive** — it auto-applies every gap, so it requires
-`-y` and a **clean working tree** (the isolation worktrees are cut off HEAD, so
-uncommitted plan/detail edits would be invisible to the parallel applies;
-commit or stash first). Because parallel applies can't see each other's
-verdicts (degraded carried context), follow a `--jobs N` run with a serial
-`completeness-apply` (no `--jobs`) or a `completeness-audit` re-verify for a
-converged pass. A single `--anchor` gap has nothing to parallelize and degrades
-to the serial walk.
-
-Each finding in the saved report carries its anchor slug (e.g.
-`` `[cache-invalidation]` ``) plus the exact `--anchor` invocation —
-copy-paste from the report into the shell. The walker dispatches each
-confirmed gap through `apply_finding` (the same Claude-driven prose
-editor `reconcile-plan-walk` uses), so the propose-then-confirm flow is the
-default: Claude proposes a diff, you keep or revert. After applying,
-re-run `completeness-audit` to verify addressed gaps drop off — anchor
-slugs are stable across re-audits, so a gap that comes back unchanged
-either wasn't really addressed or the audit found a new sibling.
-
-**Correctness always renders first.** If the plan also has structural
-problems (path-style mismatch, blocked deps), those appear under a
-"Correctness (run these first)" header above the completeness sections.
-Fix structural blockers before chasing authoring gaps.
-
-**Splitting a mixed step: `--apply-structural`.** When the audit saved a
-`medium` `granularity-split` MIXED-STEP finding ("this step mixes a
-behavior-preserving refactor with new behavior"), the serial walk can route
-it to the
-[escalate-to-split bridge](#the-escalate-to-split-bridge-auto-split-or-recommend)
-instead of leaving you to edit the plan by hand:
-
-- **`--apply-structural` is the opt-in.** With it, the walk dispatches the
-  saved split finding through the bridge and, on a safe plan with an
-  interactive confirm, *applies* the 1→2 refactor+feature split. Without
-  it the finding is **recommend-only** — it prints the runnable
-  `plan-tool split <plan> --step N --into "…" --into "…"` and touches
-  nothing.
-- **Recommend-only in every unsafe or unattended path.** No
-  `--apply-structural`, under `-y`, in the `--jobs > 1` parallel lane, on
-  an unsafe plan (a non-`PENDING` step at or after the target), or a
-  declined / non-TTY confirm all recommend without mutating. Only the
-  safe + opted-in + interactively-confirmed path writes the split.
-- **Halt-on-applied.** An applied split renumbers every step from the
-  target onward, so the other saved findings now name the wrong step; the
-  walk **halts and tells you to re-audit** rather than applying stale-id
-  edits — the same halt the walk-dispatch list documents for an applied
-  merge under "Structural-directive findings".
-- **No exit-code change; no Claude on the recommend-only path.** The split
-  finding never flips `--fail-on-findings`, and when the walk only
-  recommends it spends no Claude reaching that decision.
+Preserve qualification and freshness requirements; do not resample unchanged
+text merely to obtain qualification.
 
 ### Repair data-contract docs (`data-contract-apply`)
 
@@ -2668,10 +2574,7 @@ plan-tool completeness-audit my-feature   # verify the data-contract drift dropp
 
 The command verifies the saved registry and document fingerprints before
 editing. If a payload is stale, rerun `plan-tool completeness-audit <name>` to
-refresh the payload, then apply again. `completeness-apply` stays focused on
-conceptual plan/detail gaps; when it encounters data-contract drift, it reports
-or redirects rather than acting as a data-contract batch mode. For many saved
-contract findings, walk them with `data-contract-apply` itself.
+refresh the payload, then walk it with `data-contract-apply` itself.
 
 **Concurrent-editing hazard.** `data-contract-drift` and the two
 `input-contract-references-*` checks resolve the code-owned contract
@@ -2692,8 +2595,8 @@ The intended authoring loop is a cycle:
 
 ```bash
 # Repeat until a fresh audit returns no new correctness findings:
-plan-tool completeness-audit my-feature --iterate   # surface findings
-plan-tool completeness-apply my-feature             # walk + apply the conceptual gaps
+plan-tool completeness-audit my-feature --iterate --commit   # surface findings
+# Read the saved report, judge findings, edit plan/detail text, and commit corrections.
 #   …re-run the audit, fix the next batch, re-run again…
 ```
 
@@ -2713,12 +2616,8 @@ fighting the plan's *shape*, and no amount of further apply will fix it:
   "the recommendation isn't surfaced," the next audit finds "the
   *null-recommendation* case isn't surfaced," then "it re-emits every
   iteration." Whack-a-mole, not convergence.
-- **The plan body is growing with each pass** — `completeness-apply`
-  closes a finding by *adding prose*, never by simplifying or
-  restructuring (`apply_finding` edits text; it can't delete a concern,
-  move it to another step, or re-decompose). A step whose paragraph keeps
-  accreting clauses is over-packed, and the accretion is feeding the next
-  audit more surface to find holes in.
+- **The plan body is growing with each pass** — judge whether corrections
+  serve the stated intent and remain proportional before adding more prose.
 - **A finding comes back `[BLOCKED]`** because the right fix is
   structural (split a step, author a new detail file) — the iterate loop
   has no move for that and can only report it.

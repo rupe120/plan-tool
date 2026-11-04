@@ -73,8 +73,7 @@ or acceptance criteria need more structure. See
 A **session-directed edit** is a deliberate change after the driving developer
 has read the evidence, chosen what is real and in scope, and asked the coding
 assistant to write a bounded change. The developer owns the judgment; the
-assistant may write, search, test, and review the edit. It is not an automatic
-`completeness-apply` walk. A **direct edit** is the broader term for any
+assistant may write, search, test, and review the edit. A **direct edit** is the broader term for any
 artifact change outside a `plan-tool` automatic-apply path, whether a person
 or an assistant writes it.
 

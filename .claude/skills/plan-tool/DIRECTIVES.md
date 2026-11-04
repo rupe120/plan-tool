@@ -36,6 +36,27 @@ from the repo — the repo copy is canonical and the symlink is a convenience.
 
 ---
 
+## Optional companion skills
+
+Use companion skills for expertise the consuming project needs: its language
+and framework, testing, root-cause debugging, code review, security,
+documentation, release preparation, or handoffs. Choose a focused skill for a
+recurring task; these recommendations add no package prerequisite or audit
+gate. Keep plan-tool's workflow and the repository's contracts authoritative
+under the session's instruction hierarchy.
+
+Read a candidate's instructions, scripts, dependencies, and supported tools
+before installing. Prefer skills that complement the workflow rather than
+introducing a second planner, execution loop, or automatic parallelism. Check
+conflicting advice against the repository's scope, test, and review rules.
+
+Verify discovery in the current Claude Code, Codex, or Cursor Agent CLI.
+Availability in an editor or parent session does not prove availability in a
+fresh plan-tool backend subprocess. Keep required project contracts in tracked
+guidance and plan artifacts; an optional personal skill is not their only home.
+The source repository's `docs/how-to/companion-skills.md` has the selection
+guide; `plan-tool install-skill` installs only the bundled integration.
+
 ## Invocation and discovery
 
 `plan-tool` is a global CLI (`uv tool install --editable .`). Invoke directly:
@@ -157,9 +178,8 @@ ones.
 - **Audit — completeness** (judges the plan's own design): `completeness-audit`
   → `convergence` (loop trend). `gate-status <name> --json` reads the latest
   saved final verdict per stage; it runs no audit. It cannot report an
-  invocation that writes no final sidecar, including Jira-grade audits and
-  terminal plan-quota stops. (`completeness-apply` still exists but is deprecated and
-  going away — BACKLOG #376 — see "The session-directed convergence loop" below.)
+  invocation that writes no final sidecar, including
+  terminal plan-quota stops.
 - **Audit — reconcile/verify** (plan vs. code): `reconcile-plan`
   (**pre-execution only**), `reconcile-code` (**post-execution**),
   `verify-all --rollup`, `run --mode <review>`.
@@ -360,15 +380,13 @@ file as a defect or claim its conceptual calls were detail-grounded.
 **Read a bare-plan result by axis:**
 
 - **`plan-correctness`** findings are actionable plan-body defects. Fix them.
-- **`plan-completeness`** and detail-level findings are recorded, but their
-  `completeness-apply` actions are **withheld** until the bundle is complete.
+- **`plan-completeness`** findings are recorded; medium findings on this axis
+  do not block at bare stage. Detail-level remedies belong in `detail`.
 
-A withheld command is **not** a deferral. Withholding stops an automatic walk
-from writing unreviewed detail-level content; it does not put an explicit
-plan-level contract, ordering rule, risk, acceptance criterion, or
-reader-selection decision out of reach. **When the suggested fix changes the
-plan body, step graph, or acceptance criteria, apply the compatible findings by
-hand as one bounded batch, then re-audit.**
+The bare-stage bar does not put an explicit plan-level contract, ordering rule,
+risk, acceptance criterion, or reader-selection decision out of reach.
+**When the suggested fix changes the plan body, step graph, or acceptance criteria, apply the compatible findings by
+hand as one bounded batch, commit, then re-audit.**
 
 Leave a finding for `detail` only when its remedy genuinely specifies
 implementation mechanics, a per-step detail contract, or fixture-level coverage.
@@ -447,13 +465,13 @@ mechanism produces the intended property.
 The run-grade bare-mechanism / same-finding `edit_drift` advisory helps an
 operator reconsider a likely detail-owned request. It is recommend-only, not
 causal proof or an automatic deferral, and it changes no gate, continuation,
-failure, or exit behavior. Jira-grade audits suppress this advisory; the
+failure, or exit behavior. The
 detail-grounded audit remains the stage that judges the selected mechanism.
 
 **Proceed to `detail` when** a re-audit is confirmed-dry (or confirmed-low-yield
 per the stopping rule below) against a fresh unchanged snapshot. Record the
 report path, the `N of M` detail coverage, the audit-coverage verdict
-(including a budget-limited result), and which axes were withheld. **After three
+(including a budget-limited result), and which remedies remain detail-owned. **After three
 bare rounds, proceed to `detail` when the remaining findings are D, I, or about
 text the previous round added**, and carry them as detail inputs; a fourth bare
 round on them audits your own edits (the second of the three exits below), not the plan.
@@ -461,8 +479,8 @@ round on them audits your own edits (the second of the three exits below), not t
 ## Gate 2 — the detail-grounded audit (after `detail`)
 
 Once every step has a detail file, run the **same iterative audit again** before
-implementation. This is the final gate; only here are the detail-level axes
-un-withheld. Apply its conceptual findings by the same session-directed loop below.
+implementation. This is the final, detail-grounded gate. Correct its conceptual
+findings through the same judged hand-edit loop below.
 
 ## Infrastructure plans: claim scope only for resources the plan creates
 
@@ -481,10 +499,10 @@ exception never covers a resource the plan's own code creates.
 judgment, but different conceptual blocking bars** (see below). The bare-plan
 gate is an early design gate, not a lighter one.
 
-**Withhold vs audit stage.** `DetailBundleStatus.is_bare` (withhold: which axes
-get `completeness-apply` actions) is separate from the **audit stage** that
-selects the conceptual bar. Stage is derived once per invocation by
-`derive_audit_stage`: `total == 0 → bare` even when `is_bare` is false.
+**Bundle coverage vs audit stage.** `DetailBundleStatus.is_bare` describes
+missing detail files; the **audit stage** selects the conceptual bar. Stage is
+derived once per invocation by `derive_audit_stage`: `total == 0 → bare` even
+when `is_bare` is false.
 
 ## Stage-differentiated conceptual bar (`completeness-audit`)
 
@@ -503,9 +521,8 @@ Non-conceptual findings (deterministic layer, self-consistency, etc.) always use
 
 **Mid-run steering.** When deterministic convergence finishes but conceptual bar
 blockers remain, the iterate loop stop kind becomes **`terminal_hand_apply`**
-(not `converged`). Close those gaps through a session-directed assistant edit or via
-`completeness-apply` (human at a TTY) — the iterate loop does not auto-apply
-conceptual gaps in assistant-driven mode.
+(not `converged`). Close those gaps through judged hand-edits, commit, and
+re-audit the changed snapshot. The iterate loop does not auto-apply conceptual gaps.
 
 **Finalize / CI.** Clean eligibility requires a qualifying pass-conformance
 sample that is **not** `budget_limited` ∧ bar-aware `has_blocking_findings` ∧
@@ -538,32 +555,18 @@ predicates — not a pending unification.
 
 # The session-directed convergence loop
 
-> **`completeness-apply`, `direct-jira`, and `direct-run` are deprecated and
-> going away (BACKLOG #376 in the `plan-tool` repo).** There is nothing
-> unsafe about the mechanism itself. Why: walking findings one gap at a
-> time — interactively, or via `--jobs N` — is slower than reading the whole
-> saved report and applying a bounded, judged batch of edits, and that slow,
-> piecemeal pace obscures whether the plan is actually converging (a
-> recurring gap, a self-seeded finding, an arm-clustering pattern only shows
-> up across the whole finding set and across rounds, not one gap at a time).
-> `direct-jira` and `direct-run` exist only to chain that same gap-by-gap
-> apply. Conceptual-finding application is moving entirely to whoever is
-> driving `plan-tool` — a human at a TTY, or an assistant session — who
-> already reads the whole report at once. The sections below still describe
-> today's real, working behavior and the commands still run (each now prints
-> its own deprecation warning); do not build new automation, scripts, or
-> documentation on top of them. Read the saved report and make a
-> session-directed edit to the plan/detail prose instead of reaching for
-> `completeness-apply`.
-
 This governs **both** audit gates above.
 
-## Who is driving decides how conceptual gaps get closed
+<a id="who-is-driving-decides-how-conceptual-gaps-get-closed"></a>
+
+## Close conceptual gaps through judged hand-edits
 
 `completeness-audit --iterate` converges only its **deterministic
 well-formedness** findings. The conceptual `plan-correctness` /
-`plan-completeness` gaps are persisted **unapplied**; `completeness-apply` is
-their sole mutator. *How* you close them depends on who is driving:
+`plan-completeness` gaps are persisted **unapplied**. Human operators and
+assistant sessions use the same workflow: read the saved report, verify and judge its findings, edit
+the files directly, commit, and re-audit the changed snapshot. Hand-editing
+includes assistant edits; it does not require a human to type the correction.
 
 Interpret a completed audit report as a working hypothesis before treating its
 findings as a plan-gap decision surface: verify cited code claims, group related
@@ -578,29 +581,17 @@ grade-matched audit against the changed committed snapshot to measure the
 effect. A budget-limited report alone cannot justify expanding, splitting, or
 withdrawing a plan; those scope decisions remain user-owned.
 
-- **Assistant-driven (the default whenever you auto-drive, non-interactively):**
-  do **not** invoke `completeness-apply`. It is a human-review surface and it
-  misbehaves when auto-driven — its interactive `--jobs 1 -y` walk **skips on
-  non-interactive stdin** (applies nothing, reports the pending gaps, exits 2),
-  and `--jobs N` applies every gap **without judgment**. Instead: run
-  `completeness-audit --iterate` to converge the deterministic findings, then
-  read every completed saved report. Treat budget-limited or unqualified
-  conceptual findings as hypotheses: map the in-scope plan-level gaps as below,
-  verify their code claims, and edit the plan/detail prose **yourself** where
-  the correction serves the plan intent. A qualified final is required before
-  declaring convergence, not before correcting the identified gaps. Commit the
-  correction batch and re-audit the changed snapshot, while **pausing on any
-  genuine product question rather than blind-applying** — see "Pause on a
-  product question — ask, don't infer" below for the test and the required
-  stop-and-ask.
-- **A human at a TTY:** `completeness-apply`'s interactive `--jobs 1` walk **is**
-  the intended review-and-apply path. Reserve the command for that.
+Run `completeness-audit --iterate --commit` to converge deterministic findings,
+then read every completed saved report. Map related in-scope plan-level gaps
+as below, verify their code claims, and make bounded corrections that serve
+the plan intent. Commit the correction batch and re-audit the changed snapshot.
+Pause on genuine product questions rather than blind-applying — see “Pause on
+a product question — ask, don't infer” below.
 
-The same split governs **every** interactive surface (review/reconcile walks,
-structural-escalation confirms): a human uses the walk; when you auto-drive,
-supply the session's judgment wherever the interactive path would skip or
-blind-apply. Packaged unattended pipelines (`direct-jira` / `direct-run`) are a
-distinct third mode and legitimately auto-apply — that is what they are for.
+**Surviving interactive routes retain their own workflow.** For review/reconcile
+walks and structural-escalation confirmations, a human uses the walk; an
+orchestrating session supplies judgment wherever the interactive path would
+skip or blind-apply.
 
 ## A plan's target (`run` vs `jira`) changes the remedy, not the audit bar
 
@@ -1005,9 +996,9 @@ checkpoint. Session-directed audit fixes use the same rhythm: apply batch → co
 `--commit` flag on every surface that supports it rather than relying only on
 separate mid-command commits.
 
-Only five surfaces accept `--commit` — `run`, `detail`, `completeness-audit`,
-`completeness-apply`, `manifest sweep`; don't tack it onto one that doesn't.
-Pass it by default on those five when you drive the pipeline.
+Only four surfaces accept `--commit` — `run`, `detail`, `completeness-audit`,
+`manifest sweep`/archive; don't tack it onto one that doesn't.
+Pass it by default on those four when you drive the pipeline.
 
 On `run` specifically, `--commit` commits each **green step**. This is
 load-bearing for the **test-authoring gate**, which isolates a step's coverage
@@ -1269,8 +1260,8 @@ reusing it exits immediately with "already in use". Retain the session ID for
 the saved file before triage. A quiet review remains running until it exits or
 the operator explicitly authorizes stopping it.
 
-Do **not** insert `completeness-audit` / `completeness-apply` into this tail —
-those audit the plan's own design and detail bundle, not the implementation.
+Do **not** insert `completeness-audit` into this tail —
+it audits the plan's own design and detail bundle, not the implementation.
 Both loops exit by the three exits above.
 
 ### Post-run reconcile-tail stop rule

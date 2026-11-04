@@ -434,18 +434,18 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
-### Two tests fail under full-suite load: a 5-second subprocess wait times out and one test crashes its xdist worker
+### A roadmap reader-guard test times out under full-suite load
 
-- **Files:** `tests/` — `test_reader_guard_blocks_a_writer_for_the_same_roadmap`
-  (waits 5 seconds for a spawned subprocess) and
-  `test_direct_run_broader_relocation_end_to_end` (kills its `-n 4` worker).
-- **Symptom:** in a full `-n 4` run on a loaded machine (about 550 seconds) the
-  first fails on its 5-second wait and the second crashes its worker ("node
-  down"). Both pass alone. The second crashes the same way on the commit before
-  the stream-log work (`a5a14a387`), so the load, not that change, is the cause.
-- **Fix:** none applied. Widen or poll the spawn wait in the first; find what the
-  second does that kills a worker (memory or a nested subprocess) and bound it.
-- **Approach:** direct.
+- **Files:** `tests/` — `test_reader_guard_blocks_a_writer_for_the_same_roadmap`.
+- **Symptom:** a full `-n 4` run on a loaded machine reaches the test's
+  5-second subprocess wait limit; the test passes alone.
+- **Fix:** widen or poll the subprocess wait while preserving the assertion
+  that a reader guard blocks a writer for the same roadmap.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+- **Verification:** run the focused test and the loaded parallel suite; retain
+  the guard assertion rather than accepting a timeout as success.
+- **Exclusions:** the retired direct-pipeline test has no surviving consumer;
+  do not restore it or change production reader/writer policy.
 - **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
 
 ### `_code_anchor_resolves` reports an existing method, private method or nested function as not resolving in HEAD

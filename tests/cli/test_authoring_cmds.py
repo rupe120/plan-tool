@@ -1161,18 +1161,10 @@ class TestCreateReprocessRouting:
         assert not (tmp_path / ".plan-tool").exists()
 
 
-class TestCreateResultSinkAbsent:
-    """A ``create`` run that sets no ``_create_result_sink`` is unchanged.
+class TestCreateCliAuthoring:
+    """Ordinary CLI authoring writes a plan through the backend seam."""
 
-    ``cmd_create`` deposits its ``CreateResult`` into ``args._create_result_sink``
-    only when an in-process caller set it. Ordinary CLI dispatch builds the
-    ``Namespace`` from argparse and never sets the attribute, so the deposit is
-    skipped and the run behaves exactly as before. Split-proof: the fake backend
-    is installed on ``plan_tool.shell`` (a process seam), not a ``plan_tool.cli``
-    global, and ``-y`` routes create's prompts through its silent stand-in.
-    """
-
-    def test_cmd_create_without_sink_unchanged(
+    def test_cmd_create_writes_plan_with_stubbed_backend(
         self, tmp_repo, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         import json
@@ -2586,8 +2578,8 @@ class TestDetailTailAuditFollowUp:
             return authoring._CompletenessTailOutcome(
                 [
                     (
-                        "plan-tool completeness-apply demo",
-                        "walk the current audit findings",
+                        "plan-tool completeness-audit demo --iterate",
+                        "re-audit after hand-editing the plan or detail files",
                     )
                 ],
                 self._current_result(plan_path, registered_plan.root),
@@ -2599,9 +2591,9 @@ class TestDetailTailAuditFollowUp:
         assert rc == 0
         err = capsys.readouterr().err
         assert err.count("Next steps:") == 1
-        assert "plan-tool completeness-apply demo" in err
-        assert "plan-tool completeness-audit demo" not in err
-        assert err.index("plan-tool completeness-apply demo") < err.index(
+        assert "plan-tool completeness-audit demo --iterate" in err
+        assert "plan-tool completeness-apply demo" not in err
+        assert err.index("plan-tool completeness-audit demo --iterate") < err.index(
             "plan-tool reconcile-plan demo"
         )
 
@@ -3209,8 +3201,8 @@ class TestDetailCommitCmd:
             from plan_tool.review_persistence import AuditInputSnapshot
 
             a._next_steps_sink.append((
-                "plan-tool completeness-apply demo",
-                "walk 4 conceptual gap(s) — advisory, your call",
+                "plan-tool completeness-audit demo --iterate",
+                "re-audit after reviewing the conceptual findings",
             ))
             snapshot = AuditInputSnapshot.capture(
                 tmp_repo.plans_dir / "1-demo.md", tmp_repo.root
@@ -3233,7 +3225,7 @@ class TestDetailCommitCmd:
         assert err.count("Next steps:") == 1
         # The disposition action comes before the pipeline `reconcile-plan` line.
         assert (
-            err.index("plan-tool completeness-apply demo")
+            err.index("plan-tool completeness-audit demo --iterate")
             < err.index("plan-tool reconcile-plan demo")
         )
 

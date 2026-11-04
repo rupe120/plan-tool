@@ -5,7 +5,7 @@ usage: plan-tool [-h] [--version] [--plans-dir PLANS_DIR]
                  [--fallback-backend BACKEND] [--backend BACKEND]
                  [--model MODEL] [--prompt-mode {combined,split}]
                  [--experiment-arm NAME=ARM] [-v | --debug]
-                 {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,completeness-apply,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,direct-jira,direct-run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill} ...
+                 {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill} ...
 
 plan-tool command-line entry point.
 
@@ -55,7 +55,6 @@ Audit — check the plan and code agree, or judge the plan's design; never advan
     plan-tool run <name> --mode <review>     Read-only review mode on a single step (check/optimize/document/test/security/lint).
   Completeness — judge the plan's own design (concepts, coverage):
     plan-tool completeness-audit <name>      Are the plan's concepts correct + complete + unambiguous? Deterministic checks + sampled claude audit, grounded in the detail bundle.
-    plan-tool completeness-apply <name>      DEPRECATED, going away (BACKLOG #367) — close conceptual gaps with a session-directed edit instead. Still clears files-coherence drift deterministically (adds cited real-file paths to allowed_mentions:, no claude).
     plan-tool data-contract-apply <name>     Walk saved DATA_CONTRACT.md drift findings from the most recent completeness audit; verifies saved payload freshness before editing.
     plan-tool gate-status <name> --json      Read saved audit gate verdicts without running an audit.
     plan-tool convergence <name>             Is the audit/apply loop converging? Reads saved report history; no claude, exits 0.
@@ -88,7 +87,7 @@ Setup — opt-in integration wiring (the CLI is standalone; never required).
   plan-tool install-skill [--user|--copy]  Install the bundled Claude Code / Codex / Cursor skill so an agent can drive plan-tool; symlinks into <root>/skills/plan-tool/ by default (--root .claude|.agents, --user for ~/, --copy to commit); --integration codex defaults to .agents and copies. No claude call.
 
 positional arguments:
-  {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,completeness-apply,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,direct-jira,direct-run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill}
+  {list,status,init,validate,register,deregister,sweep,withdraw,checkpoint,runs,lessons,roadmap,create,reconcile-plan,reconcile-code,reconcile-plan-walk,verify-all,completeness-audit,data-contract-apply,gate-status,convergence,telemetry,decide,jira,detail,run,suggest-gates,bench,annotate,attach-branch,detach-branch,scope-out,scope-review,split-criteria,worktree,root,split,merge,reconcile,review,reconcile-all,review-all,verify,reconcile-walk,review-walk,install-skill}
     list                list plan-tool-compatible plans
     status              show step-by-step status for a plan
     init                capture one confirmed project intent in a tracked
@@ -147,44 +146,18 @@ positional arguments:
                         the per-step detail bundle where present + code at
                         HEAD; a bare plan with no detail yet is audited at the
                         plan/concept level). Conceptual gaps are reported for
-                        a session-directed edit, not applied by a tool
-                        command. A completed audit exits 0; findings are in
-                        the report (and --json exposes stage-aware
-                        has_blocking_findings, conceptual_bar_blocking_ids,
-                        and audit_incomplete), or use --fail-on-findings to
-                        gate CI on bar-aware blockers and incomplete audit
-                        samples. With --iterate, applies the deterministic
-                        well-formedness findings and converges on them;
-                        conceptual ambiguity is reported with correctness, and
-                        both it and completeness gaps are persisted unapplied
-                        for a session-directed edit (#85).
-    completeness-apply  DEPRECATED, going away (BACKLOG #376) — walking
-                        findings one gap at a time is slow and obscures the
-                        convergence signal; read the saved report and make a
-                        session-directed edit to the plan/detail files
-                        instead. walk the conceptual gaps from the most recent
-                        saved `completeness-audit` and apply gap-closing edits
-                        via claude, one finding at a time, AND
-                        deterministically clear files-coherence drift (no
-                        claude: add cited real-file paths to the step's
-                        allowed_mentions). Walks BOTH conceptual sources —
-                        plan-correctness (including material ambiguity) first,
-                        then plan-completeness — which the audit persists
-                        unapplied (read-only-audit split, #85). Pairs with
-                        completeness-audit; does NOT re-run the audit. A
-                        current saved arm-clustering advisory prints once as a
-                        non-blocking keep-or-carve prompt before serial work
-                        or parallel worker provisioning; a stale advisory is
-                        hidden without changing the saved walk. Always
-                        interactive: one per-gap confirm so you review each
-                        conceptual issue in context (no blanket auto-apply).
-                        On a bare plan only plan-correctness gaps are walked;
-                        other saved sources are reported as withheld until
-                        detail exists. The deterministic files-coherence fix
-                        runs only when a complete detail bundle exists. On a
-                        non-interactive stdin the walk is skipped and the gaps
-                        are reported. `--anchor <slug>` (repeatable) restricts
-                        to specific gaps.
+                        a human or orchestrating session to read and hand-edit
+                        the relevant plan or detail files. A completed audit
+                        exits 0; findings are in the report (and --json
+                        exposes stage-aware has_blocking_findings,
+                        conceptual_bar_blocking_ids, and audit_incomplete), or
+                        use --fail-on-findings to gate CI on bar-aware
+                        blockers and incomplete audit samples. With --iterate,
+                        applies the deterministic well-formedness findings and
+                        converges on them; conceptual ambiguity is reported
+                        with correctness, and both it and completeness gaps
+                        are persisted unapplied for a session-directed edit
+                        (#85).
     data-contract-apply
                         walk saved DATA_CONTRACT.md drift findings from a
                         completeness audit
@@ -200,21 +173,6 @@ positional arguments:
     detail              draft developer-actionable per-step detail markdown
                         files
     run                 execute a step via claude subprocess
-    direct-jira         DEPRECATED, going away (BACKLOG #376) — exists only to
-                        chain completeness-apply's gap-by-gap apply, retiring
-                        for the same reason (slow, and obscures the
-                        convergence signal); drive create / detail / jira as
-                        separate, hand-reviewed steps instead. chain create →
-                        detail → completeness-apply → jira in one process and
-                        publish paired Jira stories plus a developer handoff
-                        (small plans only)
-    direct-run          DEPRECATED, going away (BACKLOG #376) — exists only to
-                        chain completeness-apply's gap-by-gap apply, retiring
-                        for the same reason (slow, and obscures the
-                        convergence signal); drive create / detail / run /
-                        reconcile-code as separate, hand-reviewed steps
-                        instead. chain create → detail → completeness-apply →
-                        run → reconcile-code in one process (small plans only)
     suggest-gates       propose gate: commands for a plan's remaining steps,
                         grounded in its already-built (done) steps
     bench               run the backend-quality benchmark matrix and report

@@ -258,8 +258,6 @@ from plan_tool.cli.jira_cmd import (
 )
 from plan_tool.cli import run_cmd as _run_commands
 from plan_tool.cli.run_cmd import _cmd_run_sweep, cmd_reconcile_code, cmd_run
-from plan_tool.cli import direct_cmd as _direct_commands
-from plan_tool.cli.direct_cmd import cmd_direct_jira, cmd_direct_run
 from plan_tool.cli import review_cmd as _review_commands
 from plan_tool.cli.review_cmd import (
     _prompt_reuse_saved_review,
@@ -276,7 +274,6 @@ from plan_tool.cli.completeness_cmd import (
     _finding_progress_label,
     _fmt_finding_counts,
     cmd_completeness,
-    cmd_completeness_apply,
 )
 from plan_tool.cli import data_contract_cmd as _data_contract_commands
 from plan_tool.cli.data_contract_cmd import cmd_data_contract_apply
@@ -395,7 +392,7 @@ def build_parser() -> argparse.ArgumentParser:
 # authoring verbs (create / detail), the ``jira`` integration verb, the
 # ``run`` execution verb, the ``review_cmd`` audit verbs (reconcile-plan /
 # reconcile-plan-walk / verify-all), and the ``completeness_cmd`` audit verbs
-# (completeness-audit / completeness-apply). ``app`` itself is absent: it
+# (completeness-audit). ``app`` itself is absent: it
 # registers no subparsers, and the base-parser description is threaded
 # independently from the package docstring (see ``build_parser`` / ``main``).
 COMMAND_MODULES = (
@@ -408,7 +405,6 @@ COMMAND_MODULES = (
     _authoring_commands,
     _jira_commands,
     _run_commands,
-    _direct_commands,
     _review_commands,
     _completeness_commands,
     _data_contract_commands,
@@ -449,11 +445,8 @@ _LOCKED_MUTATING_COMMANDS = frozenset(
         "run",
         "reconcile-code",
         "completeness-audit",
-        "completeness-apply",
         "data-contract-apply",
         "jira",
-        "direct-jira",
-        "direct-run",
         "scope-out",
         "scope-review",
         "lessons",

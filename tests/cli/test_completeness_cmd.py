@@ -101,7 +101,6 @@ from plan_tool.review_persistence import Annotation, load_review, plan_reports_d
 from plan_tool.cli.completeness_phases import (
     _DeterministicReport,
     _IterateOutcome,
-    _apply_files_coherence,
     _collect_data_contract_drift,
     _persist_and_present_report,
     _render_completeness_json,
@@ -3491,7 +3490,8 @@ class TestRenderGroupedReport:
         assert "Detail coverage" in md
         assert "plan-tool detail p" in suggested
         assert "plan-tool run p" not in suggested
-        assert "conceptual-completeness findings are informational" in suggested
+        assert "Review plan-level gaps now" in suggested
+        assert "leave detail-only remedies for detail authoring" in suggested
 
     def test_bare_plan_conceptual_findings_omit_apply_next_step(self) -> None:
         conceptual = [_rec("medium", source="plan-completeness")]
@@ -3516,7 +3516,8 @@ class TestRenderGroupedReport:
         assert "completeness-apply" not in suggested
         assert "plan-tool detail p" in suggested
         assert "plan-tool run p" not in suggested
-        assert "conceptual-completeness findings are informational" in suggested
+        assert "Review plan-level gaps now" in suggested
+        assert "leave detail-only remedies for detail authoring" in suggested
 
     def test_partial_detail_body_issue_omits_iterate_next_step(self) -> None:
         det = _DeterministicReport(
@@ -3556,7 +3557,8 @@ class TestRenderGroupedReport:
         assert "completeness-audit p --iterate" not in suggested
         assert "plan-tool detail p" in suggested
         assert "plan-tool run p" not in suggested
-        assert "conceptual-completeness findings are informational" in suggested
+        assert "Review plan-level gaps now" in suggested
+        assert "leave detail-only remedies for detail authoring" in suggested
 
     def test_budget_limited_emits_coverage_unconfirmed(self) -> None:
         md = _render_grouped_report(
@@ -5337,8 +5339,7 @@ class TestPersistAndPresentReport:
     ) -> None:
         # The medium mixed-step ``granularity-split`` rec rides ``smell_recs``
         # and is now persisted to the sidecar (after the correctness/conceptual/
-        # data-contract recs) so completeness-apply can replay it through the
-        # split bridge.
+        # data-contract recs) as saved evidence.
         import plan_tool.completeness_report
 
         captured: dict = {}
@@ -6677,7 +6678,7 @@ class TestResolveAuditReuse:
 
 
 # --------------------------------------------------------------------------
-# `--commit` on completeness-audit / completeness-apply
+# `--commit` on completeness-audit
 # --------------------------------------------------------------------------
 
 
@@ -6725,18 +6726,6 @@ class TestCompletenessCommitSubjects:
             "plan(demo): completeness — applied audit findings"
         )
 
-    def test_apply_subject_singular_and_plural(self) -> None:
-        from plan_tool.cli.completeness_phases import (
-            _completeness_apply_commit_subject,
-        )
-
-        assert _completeness_apply_commit_subject("demo", 1) == (
-            "plan(demo): completeness — applied 1 gap"
-        )
-        assert _completeness_apply_commit_subject("demo", 3) == (
-            "plan(demo): completeness — applied 3 gaps"
-        )
-
 
 class TestCompletenessCommitGates:
     def test_audit_commit_requires_iterate(
@@ -6770,823 +6759,16 @@ class TestCompletenessCommitGates:
         assert rc == 2
         assert "clean working tree" in capsys.readouterr().err
 
-    def test_apply_commit_dirty_tree_rejected(self, tmp_repo, capsys) -> None:
-        import shutil
 
-        from plan_tool.cli import main
+class TestBareAuditManualCorrectionGuidance:
 
-        shutil.rmtree(tmp_repo.root / ".git")
-        _init_git_repo(tmp_repo.root)
-        tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        _git_commit_all(tmp_repo.root, "init")
-        (tmp_repo.root / "stray.txt").write_text("x\n", encoding="utf-8")
 
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--commit"))
-        assert rc == 2
-        assert "clean working tree" in capsys.readouterr().err
 
 
-class TestCompletenessApplyCommit:
-    def test_apply_commit_creates_commit_after_edits(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import shutil
-        import subprocess
-        from datetime import datetime, timezone
 
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import save_review
-        from plan_tool.review_walk import WalkResult
 
-        shutil.rmtree(tmp_repo.root / ".git")
-        _init_git_repo(tmp_repo.root)
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        # Persist a completeness audit carrying one conceptual gap.
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[_rec("medium", source="plan-completeness")],
-            kind="completeness",
-            now=datetime(2026, 6, 13, 12, 0, 0, tzinfo=timezone.utc),
-        )
-        _git_commit_all(tmp_repo.root, "init")  # clean tree incl the audit
 
-        def fake_walk(saved, **kw):
-            # Simulate a gap-closing edit landing on disk.
-            (tmp_repo.plans_dir / "applied-edit.txt").write_text(
-                "edit\n", encoding="utf-8"
-            )
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        # The walk is per-finding and TTY-gated now; simulate a terminal so
-        # the (stubbed) walk runs.
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-
-        rc = main(
-            tmp_repo.argv("completeness-apply", "demo", "--commit")
-        )
-        assert rc == 0
-        log = subprocess.run(
-            ["git", "log", "--oneline", "-1"],
-            cwd=tmp_repo.root, capture_output=True, text=True,
-        ).stdout
-        assert "plan(demo): completeness — applied 1 gap" in log
-
-    def test_apply_commit_warns_when_saved_audit_gitignored(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        """Belt-and-suspenders: when the saved audit JSON sits on a
-        gitignored path, the walker's in-place annotations can't be staged
-        by ``git add -A``. The run still commits the (tracked) gap edits,
-        but warns so the dropped annotations aren't silent."""
-        import shutil
-        import subprocess
-        from datetime import datetime, timezone
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import save_review
-        from plan_tool.review_walk import WalkResult
-
-        shutil.rmtree(tmp_repo.root / ".git")
-        _init_git_repo(tmp_repo.root)
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        # Ignore every saved completeness JSON, wherever it lands.
-        (tmp_repo.root / ".gitignore").write_text(
-            "*-completeness.json\n", encoding="utf-8"
-        )
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[_rec("medium", source="plan-completeness")],
-            kind="completeness",
-            now=datetime(2026, 6, 13, 12, 0, 0, tzinfo=timezone.utc),
-        )
-        _git_commit_all(tmp_repo.root, "init")  # audit JSON is ignored, not added
-
-        def fake_walk(saved, **kw):
-            (tmp_repo.plans_dir / "applied-edit.txt").write_text(
-                "edit\n", encoding="utf-8"
-            )
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-
-        rc = main(
-            tmp_repo.argv("completeness-apply", "demo", "--commit")
-        )
-        assert rc == 0
-        err = capsys.readouterr().err
-        assert "gitignored path" in err
-        # The tracked gap edit still committed; the ignored JSON did not.
-        tracked = subprocess.run(
-            ["git", "ls-files"],
-            cwd=tmp_repo.root, capture_output=True, text=True,
-        ).stdout
-        assert "applied-edit.txt" in tracked
-        assert "-completeness.json" not in tracked
-
-
-# --- _apply_files_coherence — the deterministic files-coherence fold --------
-#
-# completeness-apply resolves the files-coherence subset the audit emits but
-# apply_finding can't (frontmatter, not prose), with no claude call. These
-# pin the helper directly: one step declaring ``src/service.py`` whose detail
-# cites two same-basename near-misses — ``src/sub/service.py`` (created →
-# resolvable → belongs in allowed_mentions) and ``src/other/service.py``
-# (never created → a typo the helper must report but never write).
-_COHERENCE_PLAN = """\
----
-title: Coherence Fold
-status: planning
-priority: low
-steps:
-  - id: 1
-    title: Touch the service
-    files:
-      - src/service.py
-    detail: plans/details/01-touch.md
----
-# Coherence Fold
-"""
-
-_COHERENCE_DETAIL = """\
-# Step 1 — Touch the service
-
-The sibling helper `src/sub/service.py` is read for context, and a stale
-reference to `src/other/service.py` lingers from a move.
-"""
-
-
-def _seed_coherence(repo):
-    """Write the plan + detail + the one real cited file; return the plan path."""
-    (repo.root / "src" / "sub").mkdir(parents=True, exist_ok=True)
-    (repo.root / "src" / "service.py").write_text("# declared\n", encoding="utf-8")
-    (repo.root / "src" / "sub" / "service.py").write_text("# real\n", encoding="utf-8")
-    (repo.plans_dir / "details").mkdir(parents=True, exist_ok=True)
-    (repo.plans_dir / "details" / "01-touch.md").write_text(
-        _COHERENCE_DETAIL, encoding="utf-8"
-    )
-    plan_path = repo.plans_dir / "1-coherence.md"
-    plan_path.write_text(_COHERENCE_PLAN, encoding="utf-8")
-    return plan_path
-
-
-def _mentions(plan_path):
-    return parse_plan(plan_path).step_by_id(1).allowed_mentions
-
-
-class TestApplyFilesCoherence:
-    def test_report_only_does_not_write(self, tmp_repo, capsys) -> None:
-        plan_path = _seed_coherence(tmp_repo)
-        added = _apply_files_coherence(plan_path, tmp_repo.root, apply=False)
-        cap = capsys.readouterr()
-        text = cap.out + cap.err
-        assert added == 0
-        assert "would add" in text
-        assert "src/sub/service.py" in text
-        assert "src/other/service.py" in text  # flagged as a typo
-        assert _mentions(plan_path) == []
-
-    def test_apply_adds_only_the_resolvable_path(self, tmp_repo, capsys) -> None:
-        plan_path = _seed_coherence(tmp_repo)
-        added = _apply_files_coherence(plan_path, tmp_repo.root, apply=True)
-        assert added == 1
-        mentions = _mentions(plan_path)
-        assert "src/sub/service.py" in mentions
-        assert "src/other/service.py" not in mentions  # typo left for prose fix
-
-    def test_apply_is_idempotent(self, tmp_repo) -> None:
-        plan_path = _seed_coherence(tmp_repo)
-        _apply_files_coherence(plan_path, tmp_repo.root, apply=True)
-        # Second run: the resolvable path is now recognized, so it's no longer
-        # drift; nothing more is added.
-        added = _apply_files_coherence(plan_path, tmp_repo.root, apply=True)
-        assert added == 0
-        assert _mentions(plan_path).count("src/sub/service.py") == 1
-
-    def test_threads_plan_path_so_canonical_only_details_are_seen(
-        self, tmp_repo
-    ) -> None:
-        """The allowed-mentions promotion resolves a canonical-only detail file
-        (``detail:`` pointer unset, file on disk) — the same set the audit that
-        emitted these findings judged."""
-        from plan_tool.detail_artifacts import derive_detail_path
-
-        plan_path = _seed_coherence(tmp_repo)
-        # Drop the pointer and move the body to the canonical path.
-        plan_path.write_text(
-            plan_path.read_text(encoding="utf-8").replace(
-                "    detail: plans/details/01-touch.md\n", ""
-            ),
-            encoding="utf-8",
-        )
-        plan = parse_plan(plan_path)
-        canonical = derive_detail_path(plan_path, plan, plan.steps[0])
-        canonical.parent.mkdir(parents=True, exist_ok=True)
-        canonical.write_text(_COHERENCE_DETAIL, encoding="utf-8")
-        added = _apply_files_coherence(plan_path, tmp_repo.root, apply=True)
-        assert added == 1
-        assert "src/sub/service.py" in _mentions(plan_path)
-
-    def test_clean_plan_writes_nothing(self, tmp_repo) -> None:
-        plan_path = _seed_coherence(tmp_repo)
-        # Pre-declare both citations: no detail_only drift remains.
-        text = plan_path.read_text(encoding="utf-8").replace(
-            "    detail: plans/details/01-touch.md\n",
-            "    allowed_mentions:\n"
-            "      - src/sub/service.py\n"
-            "      - src/other/service.py\n"
-            "    detail: plans/details/01-touch.md\n",
-        )
-        plan_path.write_text(text, encoding="utf-8")
-        added = _apply_files_coherence(plan_path, tmp_repo.root, apply=True)
-        assert added == 0
-
-
-class TestCompletenessApplyDetailBundleGate:
-    def _save_empty_completeness(self, tmp_repo, plan_path) -> None:
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[],
-            kind="completeness",
-        )
-
-    def _save_conceptual_completeness(self, tmp_repo, plan_path) -> None:
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[_rec("medium", source="plan-completeness")],
-            kind="completeness",
-        )
-
-    def _save_correctness(self, tmp_repo, plan_path, *, rec_id="corr-1") -> None:
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id=rec_id,
-                    source="plan-correctness",
-                    severity="high",
-                    step_id=None,
-                    title="design gap",
-                    body="fix the design",
-                    anchor=rec_id,
-                )
-            ],
-            kind="completeness",
-        )
-
-    def _save_both_conceptual(
-        self, tmp_repo, plan_path, *, corr_id="corr-1", comp_id="comp-1"
-    ) -> None:
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id=corr_id,
-                    source="plan-correctness",
-                    severity="high",
-                    step_id=None,
-                    title="design gap",
-                    body="fix design",
-                    anchor=corr_id,
-                ),
-                Recommendation(
-                    id=comp_id,
-                    source="plan-completeness",
-                    severity="medium",
-                    step_id=None,
-                    title="missing thing",
-                    body="add thing",
-                    anchor=comp_id,
-                ),
-            ],
-            kind="completeness",
-        )
-
-    def _save_granularity_split(self, tmp_repo, plan_path) -> None:
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id="split-1",
-                    source=GRANULARITY_SPLIT_SOURCE,
-                    severity="medium",
-                    step_id=1,
-                    title="mixed step",
-                    body="split me",
-                    anchor="split-1",
-                )
-            ],
-            kind="completeness",
-        )
-
-    def _save_data_contract(self, tmp_repo, plan_path) -> None:
-        from plan_tool.review_persistence import save_review
-
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id="dc-1",
-                    source="data-contract",
-                    severity="medium",
-                    step_id=None,
-                    title="contract drift",
-                    body="update contract",
-                    anchor="dc-1",
-                )
-            ],
-            kind="completeness",
-        )
-
-    def test_bare_plan_skips_files_coherence_writer(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_empty_completeness(tmp_repo, plan_path)
-
-        def fail_if_called(*_args, **_kwargs):
-            raise AssertionError("files-coherence writer must not run")
-
-        monkeypatch.setattr(phases, "_apply_files_coherence", fail_if_called)
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        err = capsys.readouterr().err
-        assert "skipping files-coherence apply" in err
-        assert "complete detail bundle" in err
-
-    def test_bare_plan_with_only_completeness_gaps_skips_the_walk(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_conceptual_completeness(tmp_repo, plan_path)
-
-        def fail_walk(*_args, **_kwargs):
-            raise AssertionError("conceptual walk must not run")
-
-        monkeypatch.setattr(phases, "walk_recommendations", fail_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        cap = capsys.readouterr()
-        assert "withholding" in cap.err
-        assert "plan-completeness/medium" in cap.out
-        assert "plan-tool detail demo" in cap.out
-
-    def test_bare_plan_walks_correctness_gaps(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_correctness(tmp_repo, plan_path)
-        seen: dict = {}
-
-        def fake_walk(saved, **kwargs):
-            seen["recs"] = list(saved.recommendations)
-            return WalkResult(answered=0, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert len(seen["recs"]) == 1
-        assert seen["recs"][0].source == "plan-correctness"
-
-    def test_bare_plan_withholds_completeness_gaps_from_the_walk(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_both_conceptual(tmp_repo, plan_path)
-        seen: dict = {}
-
-        def fake_walk(saved, **kwargs):
-            seen["recs"] = list(saved.recommendations)
-            return WalkResult(answered=0, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert [r.source for r in seen["recs"]] == ["plan-correctness"]
-
-    def test_bare_plan_withholds_granularity_split_from_the_walk(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_granularity_split(tmp_repo, plan_path)
-        escalate_calls: list = []
-
-        def fake_escalate(*_a, **_k):
-            escalate_calls.append(True)
-            return SimpleNamespace(outcome="applied")
-
-        monkeypatch.setattr(
-            "plan_tool.launcher.escalate_to_split", fake_escalate
-        )
-        monkeypatch.setattr(
-            phases,
-            "walk_recommendations",
-            lambda *a, **k: (_ for _ in ()).throw(
-                AssertionError("walk must not run when only split is saved")
-            ),
-        )
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(
-            tmp_repo.argv(
-                "completeness-apply", "demo", "--apply-structural"
-            )
-        )
-        assert rc == 0
-        assert escalate_calls == []
-        assert GRANULARITY_SPLIT_SOURCE in capsys.readouterr().out
-
-    def test_bare_plan_withholds_data_contract_from_the_walk(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_data_contract(tmp_repo, plan_path)
-
-        def fail_walk(*_a, **_k):
-            raise AssertionError("walk must not run when only data-contract saved")
-
-        redirect_calls: list = []
-
-        def fake_redirect(rec, **kwargs):
-            redirect_calls.append(rec.id)
-            return "redirected"
-
-        monkeypatch.setattr(
-            phases, "_data_contract_completeness_redirect", fake_redirect
-        )
-        monkeypatch.setattr(phases, "walk_recommendations", fail_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert redirect_calls == []
-        assert "data-contract/medium" in capsys.readouterr().out
-
-    def test_bare_plan_reports_withheld_gaps_with_the_detail_pointer(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_both_conceptual(tmp_repo, plan_path)
-        monkeypatch.setattr(
-            phases,
-            "walk_recommendations",
-            lambda *a, **k: WalkResult(answered=0, quit_early=False),
-        )
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        cap = capsys.readouterr()
-        assert "withholding 1 saved gap" in cap.err
-        assert "plan-completeness/medium" in cap.out
-        assert "plan-tool detail demo" in cap.out
-
-    def test_bare_plan_still_skips_files_coherence_when_the_walk_runs(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_correctness(tmp_repo, plan_path)
-
-        def fail_coherence(*_a, **_k):
-            raise AssertionError("files-coherence writer must not run")
-
-        monkeypatch.setattr(phases, "_apply_files_coherence", fail_coherence)
-        monkeypatch.setattr(
-            phases,
-            "walk_recommendations",
-            lambda *a, **k: WalkResult(answered=0, quit_early=False),
-        )
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-
-    def test_bare_plan_carried_context_keeps_the_withheld_gaps(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        import plan_tool.review as review_module
-        from plan_tool.cli import main
-        from plan_tool.launcher import ApplyFindingResult
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_both_conceptual(tmp_repo, plan_path)
-        captured: dict = {}
-        real_assemble = review_module.assemble_carried_findings
-
-        def spy_assemble(recs, **kwargs):
-            captured["titles"] = {r.title for r in recs}
-            return real_assemble(recs, **kwargs)
-
-        monkeypatch.setattr(
-            review_module, "assemble_carried_findings", spy_assemble
-        )
-
-        def fake_apply(plan_path_arg, **kwargs):
-            return ApplyFindingResult(
-                step_id=1,
-                exit_code=0,
-                verdict="NOT-APPLICABLE",
-                summary="skip",
-                diff_text="",
-                pre_snapshot={plan_path: plan_path.read_text()},
-                stdout="## Verdict\nNOT-APPLICABLE\n",
-            )
-
-        from plan_tool import launcher as launcher_module
-
-        monkeypatch.setattr(launcher_module, "apply_finding", fake_apply)
-
-        def fake_walk(saved, *, action_fn, **kwargs):
-            action_fn(saved.recommendations[0])
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert "missing thing" in captured["titles"]
-
-    def test_bare_plan_non_interactive_stdin_exits_2(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        self._save_correctness(tmp_repo, plan_path)
-
-        def fail_walk(*_a, **_k):
-            raise AssertionError("walk must not run on non-interactive stdin")
-
-        monkeypatch.setattr(phases, "walk_recommendations", fail_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: False))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 2
-        assert "non-interactive stdin" in capsys.readouterr().err
-
-    def test_bare_plan_blocked_structural_verdict_does_not_reach_the_split_bridge(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.launcher import ApplyFindingResult
-        from plan_tool.review_persistence import save_review
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id="corr-1",
-                    source="plan-correctness",
-                    severity="high",
-                    step_id=1,
-                    title="design gap",
-                    body="fix the design",
-                    anchor="corr-1",
-                )
-            ],
-            kind="completeness",
-        )
-        escalate_calls: list = []
-
-        def fake_escalate(*_a, **kwargs):
-            escalate_calls.append(kwargs)
-            return SimpleNamespace(
-                outcome="recommended",
-                recommendation=SimpleNamespace(
-                    suggested_action="plan-tool split demo --step 1"
-                ),
-            )
-
-        monkeypatch.setattr(
-            "plan_tool.launcher.escalate_to_split", fake_escalate
-        )
-
-        def fake_apply(plan_path_arg, **kwargs):
-            return ApplyFindingResult(
-                step_id=1,
-                exit_code=0,
-                verdict="BLOCKED-STRUCTURAL",
-                summary="needs split",
-                diff_text="",
-                pre_snapshot={plan_path: plan_path.read_text()},
-                stdout="## Verdict\nBLOCKED-STRUCTURAL\n",
-            )
-
-        from plan_tool import launcher as launcher_module
-
-        monkeypatch.setattr(launcher_module, "apply_finding", fake_apply)
-
-        def fake_walk(saved, *, action_fn, **kwargs):
-            for rec in saved.recommendations:
-                action_fn(rec)
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr("builtins.input", lambda *a, **k: "")
-        rc = main(
-            tmp_repo.argv(
-                "completeness-apply", "demo", "--apply-structural"
-            )
-        )
-        assert rc == 0
-        assert not escalate_calls or all(
-            call.get("allow_split") is False for call in escalate_calls
-        )
-
-    def test_fully_detailed_plan_blocked_structural_still_escalates(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.launcher import ApplyFindingResult
-        from plan_tool.review_persistence import save_review
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=[
-                Recommendation(
-                    id="corr-1",
-                    source="plan-correctness",
-                    severity="high",
-                    step_id=1,
-                    title="design gap",
-                    body="fix the design",
-                    anchor="corr-1",
-                )
-            ],
-            kind="completeness",
-        )
-        escalate_calls: list = []
-
-        def fake_escalate(*_a, **kwargs):
-            escalate_calls.append(kwargs)
-            return SimpleNamespace(
-                outcome="recommended",
-                recommendation=SimpleNamespace(
-                    suggested_action="plan-tool split demo --step 1"
-                ),
-            )
-
-        monkeypatch.setattr(
-            "plan_tool.launcher.escalate_to_split", fake_escalate
-        )
-
-        def fake_apply(plan_path_arg, **kwargs):
-            return ApplyFindingResult(
-                step_id=1,
-                exit_code=0,
-                verdict="BLOCKED-STRUCTURAL",
-                summary="needs split",
-                diff_text="",
-                pre_snapshot={plan_path: plan_path.read_text()},
-                stdout="## Verdict\nBLOCKED-STRUCTURAL\n",
-            )
-
-        from plan_tool import launcher as launcher_module
-
-        monkeypatch.setattr(launcher_module, "apply_finding", fake_apply)
-
-        def fake_walk(saved, *, action_fn, **kwargs):
-            for rec in saved.recommendations:
-                action_fn(rec)
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr("builtins.input", lambda *a, **k: "")
-        rc = main(
-            tmp_repo.argv(
-                "completeness-apply", "demo", "--apply-structural"
-            )
-        )
-        assert rc == 0
-        assert len(escalate_calls) == 1
-        assert escalate_calls[0]["allow_split"] is True
-
-    def test_fully_detailed_plan_walks_both_conceptual_sources(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        self._save_both_conceptual(tmp_repo, plan_path)
-        seen: dict = {}
-
-        def fake_walk(saved, **kwargs):
-            seen["recs"] = list(saved.recommendations)
-            return WalkResult(answered=0, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert [r.source for r in seen["recs"]] == [
-            "plan-correctness", "plan-completeness"
-        ]
-
-    def test_bare_iterate_halt_names_apply_only_for_correctness(
+    def test_bare_iterate_halt_reports_manual_correction_guidance(
         self, tmp_repo, monkeypatch, capsys
     ) -> None:
         import plan_tool.cli.completeness_phases as cphases
@@ -7677,185 +6859,6 @@ class TestCompletenessApplyDetailBundleGate:
         assert "audit sample did not qualify" in comp_err
         assert "live sample" in comp_err
         assert "completeness-apply" not in comp_err
-
-    def test_fully_detailed_plan_runs_files_coherence_writer(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.plans_dir / "1-demo.md"
-        plan_path.write_text(_COHERENCE_PLAN, encoding="utf-8")
-        (tmp_repo.plans_dir / "details").mkdir(parents=True, exist_ok=True)
-        (tmp_repo.plans_dir / "details" / "01-touch.md").write_text(
-            _COHERENCE_DETAIL, encoding="utf-8"
-        )
-        tmp_repo.plans = [plan_path]
-        tmp_repo.write_manifest()
-        self._save_empty_completeness(tmp_repo, plan_path)
-
-        calls: list[tuple[object, object, bool]] = []
-
-        def record_call(plan_path_arg, repo_root_arg, *, apply):
-            calls.append((plan_path_arg, repo_root_arg, apply))
-            return 0
-
-        monkeypatch.setattr(phases, "_apply_files_coherence", record_call)
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert calls == [(plan_path, tmp_repo.root, True)]
-        assert "skipping files-coherence apply" not in capsys.readouterr().err
-
-
-class TestCompletenessApplyRunLog:
-    """``completeness-apply`` persists a RunLogWriter for the walk's
-    apply-finding dispatches.
-
-    Regression: the apply-walk built ``_build_review_action_fn`` with no
-    ``run_logger``, so a claude failure inside the interactive walk left
-    no JSONL trace (unlike the run/detail paths). The command must now
-    open a ``completeness-apply`` run log and thread it into the action
-    so ``apply_finding`` receives a non-None ``run_logger``.
-    """
-
-    pytestmark = pytest.mark.integration
-
-    def test_apply_walk_writes_run_log_and_threads_run_logger(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        from plan_tool.cli.app import main
-        from plan_tool.launcher import ApplyFindingResult
-        from plan_tool.review import Recommendation
-        from plan_tool.review_persistence import save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo Plan")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-
-        rec = Recommendation(
-            id="plan-completeness-gap-1",
-            source="plan-completeness",
-            severity="medium",
-            step_id=1,
-            title="a conceptual gap",
-            body="close this gap",
-        )
-        save_review(
-            plan_slug="1-demo",
-            plan_path=str(plan_path),
-            repo_root=tmp_repo.root,
-            report_md="report",
-            recommendations=[rec],
-            kind="completeness",
-        )
-
-        captured: dict = {}
-
-        def fake_apply_finding(plan_path_arg, **kwargs):
-            captured["run_logger"] = kwargs.get("run_logger")
-            return ApplyFindingResult(
-                step_id=1, exit_code=0, verdict="APPLIED",
-                summary="closed the gap",
-                diff_text="--- a/x\n+++ b/x\n@@ -1 +1 @@\n-a\n+b\n",
-                pre_snapshot={plan_path: "a\n"},
-                stdout="",
-            )
-
-        from plan_tool import launcher as launcher_module
-        monkeypatch.setattr(
-            launcher_module, "apply_finding", fake_apply_finding
-        )
-
-        # The walk is per-finding and TTY-gated now (no blanket auto-apply).
-        # Simulate a terminal, drive the walk's per-gap choice to "apply"
-        # (a), and auto-confirm the keep-prompt (empty = yes).
-        import functools
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.review_walk import (
-            walk_recommendations as _real_walk,
-        )
-
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr("builtins.input", lambda *a, **k: "")
-        monkeypatch.setattr(
-            phases,
-            "walk_recommendations",
-            functools.partial(_real_walk, input_fn=lambda *a, **k: "a"),
-        )
-
-        rc = main(tmp_repo.argv("completeness-apply", "1-demo"))
-        assert rc == 0
-
-        # The apply dispatch received a live run_logger (was None before).
-        assert "run_logger" in captured
-        assert captured["run_logger"] is not None
-
-        # A completeness-apply run log landed with run_start + run_end.
-        logs = list(
-            (tmp_repo.root / ".plan-tool" / "runs").glob("*/*.jsonl")
-        )
-        assert logs, "expected a run-log JSONL under .plan-tool/runs/<slug>/"
-        events = [
-            json.loads(line)
-            for line in logs[0].read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        ]
-        assert any(
-            e.get("event") == "run_start"
-            and e.get("command") == "completeness-apply"
-            for e in events
-        )
-        assert any(e.get("event") == "run_end" for e in events)
-
-    def test_keyboard_interrupt_exits_130_after_recording_run_end(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        from plan_tool.cli.app import main
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.review import Recommendation
-        from plan_tool.review_persistence import save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo Plan")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        save_review(
-            plan_slug="1-demo",
-            plan_path=str(plan_path),
-            repo_root=tmp_repo.root,
-            report_md="report",
-            recommendations=[
-                Recommendation(
-                    id="plan-completeness-gap-1",
-                    source="plan-completeness",
-                    severity="medium",
-                    step_id=1,
-                    title="a conceptual gap",
-                    body="close this gap",
-                )
-            ],
-            kind="completeness",
-        )
-        monkeypatch.setattr("sys.stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(
-            phases,
-            "walk_recommendations",
-            lambda *_args, **_kwargs: (_ for _ in ()).throw(KeyboardInterrupt()),
-        )
-
-        with pytest.raises(SystemExit) as exc:
-            main(tmp_repo.argv("completeness-apply", "1-demo"))
-        assert exc.value.code == 130
-
-        log_path = next(
-            (tmp_repo.root / ".plan-tool" / "runs" / "demo").glob("*.jsonl")
-        )
-        events = [
-            json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()
-        ]
-        assert events[-1]["event"] == "run_end"
-        assert events[-1]["rc"] == 130
-        assert events[-1]["error"] == "interrupted"
 
 
 class TestGranularitySmellNeverGates:
@@ -7997,7 +7000,7 @@ class TestPrintAllAutoApplyDeferredHaltMessage:
             deferred_count=1,
         )
         err = capsys.readouterr().err
-        assert "conceptual completeness gap(s) require a manual plan edit" in err
+        assert "conceptual completeness gap(s) require a manual plan or detail edit" in err
 
     def test_bare_completeness_only_non_blocking_stays_informational(
         self, capsys
@@ -8083,45 +7086,6 @@ class TestEmitBarePlanBanner:
         )
         assert returned is status
         assert "BARE-PLAN AUDIT" in capsys.readouterr().err
-
-
-class TestDetailBundleStaleness:
-    """``_detail_bundle_staleness`` — apply-walk freshness gate (BACKLOG #61
-    slice 3). Flags detail files changed since the saved audit; silent for
-    legacy saves that predate the snapshot."""
-
-    def test_flags_drift_and_clean(self, tmp_repo) -> None:
-        from types import SimpleNamespace
-        from plan_tool.cli.completeness_phases import _detail_bundle_staleness
-        from plan_tool.fingerprint import compute_detail_bundle_fingerprint
-        from plan_tool.detail import derive_detail_path
-
-        plan, path = _write_and_parse(tmp_repo, _CLEAN_STEPS)
-        dp = derive_detail_path(path, plan, plan.steps[0])
-        dp.parent.mkdir(parents=True, exist_ok=True)
-        dp.write_text("## Acceptance criteria\n\noriginal\n", encoding="utf-8")
-        snapshot = compute_detail_bundle_fingerprint(plan, path, tmp_repo.root)
-        saved = SimpleNamespace(
-            detail_bundle_fingerprint=snapshot,
-            detail_bundle_fingerprint_present=True,
-        )
-        # No drift right after the snapshot.
-        assert _detail_bundle_staleness(saved, path, tmp_repo.root) == []
-        # Mutate the detail file → drift flagged.
-        dp.write_text("## Acceptance criteria\n\nCHANGED\n", encoding="utf-8")
-        drifted = _detail_bundle_staleness(saved, path, tmp_repo.root)
-        assert len(drifted) == 1
-
-    def test_empty_for_legacy_save_without_snapshot(self, tmp_repo) -> None:
-        from types import SimpleNamespace
-        from plan_tool.cli.completeness_phases import _detail_bundle_staleness
-
-        plan, path = _write_and_parse(tmp_repo, _CLEAN_STEPS)
-        saved = SimpleNamespace(
-            detail_bundle_fingerprint={},
-            detail_bundle_fingerprint_present=False,
-        )
-        assert _detail_bundle_staleness(saved, path, tmp_repo.root) == []
 
 
 class TestEffectiveAuditPasses:
@@ -9875,1472 +8839,6 @@ class TestIterateApplyTelemetryForwarding:
         ]
 
 
-@pytest.mark.integration
-class TestCarriedFindingsWiring:
-    """End-to-end: the iterate loop and the saved-audit replay walk both hand
-    ``apply_finding`` a carried set reflecting earlier applies this run."""
-
-    def _correctness_rec(self, slug: str, title: str):
-        return Recommendation(
-            id=f"corr-{slug}", source="plan-correctness", severity="high",
-            step_id=1, title=title, body=f"{slug} body", anchor=slug,
-        )
-
-    def test_high_impact_advisory_audit_finding_is_reported_but_not_in_completeness_open_set(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        """#85: the iterate loop applies only its deterministic findings — it
-        does NOT auto-apply plan-correctness (or plan-completeness). Both
-        conceptual sources are persisted to the sidecar unapplied for
-        ``completeness-apply`` to walk."""
-        from plan_tool import launcher as launcher_module
-        from plan_tool import review as review_module
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import (
-            list_saved_reviews,
-            load_review,
-        )
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-
-        a = self._correctness_rec("alpha", "alpha gap")
-        b = self._correctness_rec("beta", "beta gap")
-        comp = Recommendation(
-            id="comp-x", source="plan-completeness", severity="nit",
-            step_id=1, title="missing thing", body="comp body", anchor="comp-x",
-            impact="high", complexity="low",
-        )
-        monkeypatch.setattr(
-            review_module, "audit_plan_until_stable",
-            lambda *args, **kw: [a, b, comp],
-        )
-        monkeypatch.setattr(
-            review_module, "collect_deterministic_findings",
-            lambda *args, **kw: [],
-        )
-
-        captured: list = []
-
-        def fake_apply(plan_path, **kwargs):
-            captured.append(kwargs["finding_body"])
-            return SimpleNamespace(
-                exit_code=0, verdict="APPLIED",
-                summary="s", stdout="", diff_text="", pre_snapshot={},
-                introduced_findings=(), resolved_findings=(),
-            )
-
-        monkeypatch.setattr(launcher_module, "apply_finding", fake_apply)
-
-        rc = main(tmp_repo.argv(
-            "completeness-audit", "demo", "--iterate", "--yes",
-            "--max-iterations", "1",
-        ))
-        assert rc in (0, 1)
-        # No conceptual finding was dispatched to apply_finding by the loop.
-        assert captured == []
-        # Both conceptual sources persisted to the sidecar, unapplied.
-        saved_path = next(
-            p
-            for p in list_saved_reviews(
-                "demo", tmp_repo.root, plan_path=plan_path
-            )
-            if p.name.endswith("-completeness.json")
-        )
-        saved = load_review(saved_path)
-        sources = {r.id: r.source for r in saved.recommendations}
-        assert sources.get("corr-alpha") == "plan-correctness"
-        assert sources.get("corr-beta") == "plan-correctness"
-        assert sources.get("comp-x") == "plan-completeness"
-        assert next(r for r in saved.recommendations if r.id == "comp-x").impact == "high"
-
-    def _save_completeness(self, tmp_repo, plan_path, *, recs, annotations):
-        from plan_tool.review_persistence import save_review
-
-        return save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# report\n",
-            recommendations=recs,
-            annotations=annotations,
-            kind="completeness",
-        )
-
-    def _gap(self, slug: str, title: str):
-        return Recommendation(
-            id=f"gap-{slug}", source="plan-completeness", severity="medium",
-            step_id=1, title=title, body=f"{slug} body", anchor=slug,
-        )
-
-    def _contract(self, slug: str, title: str, *, body: str = "contract body"):
-        return Recommendation(
-            id=f"contract-{slug}",
-            source="data-contract",
-            severity="medium",
-            step_id=None,
-            title=title,
-            body=body,
-            anchor=slug,
-            suggested_action="Update DATA_CONTRACT.md",
-        )
-
-    def _write_contract_payloads(self, saved_path, payloads: dict) -> None:
-        saved_path.with_name(f"{saved_path.stem}-data-contract.json").write_text(
-            json.dumps(
-                {
-                    "kind": "data-contract",
-                    "review_id": saved_path.stem,
-                    "payloads": payloads,
-                },
-                indent=2,
-            )
-            + "\n",
-            encoding="utf-8",
-        )
-
-    def _drive_apply_walk(self, tmp_repo, monkeypatch, *, apply_stub, extra):
-        """Drive ``completeness-apply`` with the interactive walk simulated so
-        the action dispatcher (and apply stub) actually runs."""
-        import sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool import launcher as launcher_module
-        from plan_tool.cli import main
-        from plan_tool.review_walk import WalkResult
-
-        # Pretend an interactive terminal so the walk isn't skipped.
-        monkeypatch.setattr(
-            sys, "stdin", SimpleNamespace(isatty=lambda: True)
-        )
-        monkeypatch.setattr(launcher_module, "apply_finding", apply_stub)
-
-        def fake_walk(saved, *, action_fn, state, **kw):
-            for rec in saved.recommendations:
-                state.apply_skip = False
-                action_fn(rec)
-            return WalkResult(answered=len(saved.recommendations),
-                              quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        return main(tmp_repo.argv("completeness-apply", "demo", *extra))
-
-    def test_completeness_apply_builds_carried_from_full_saved_set(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        from plan_tool.review_persistence import Annotation
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        g1 = self._gap("gap-one", "first gap")
-        g2 = self._gap("gap-two", "second gap")
-        # A non-completeness finding the verb won't walk, but whose saved
-        # annotation must still seed the carried context.
-        x1 = Recommendation(
-            id="claude-x1", source="claude", severity="high", step_id=1,
-            title="legacy finding", body="x1 body", anchor="legacy",
-        )
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[g1, g2, x1],
-            annotations={
-                "claude-x1": Annotation(status="applied"),
-                g2.id: Annotation(status="skip"),
-            },
-        )
-
-        captured: list = []
-
-        def apply_stub(plan_path, **kwargs):
-            captured.append(kwargs["carried_findings"])
-            return SimpleNamespace(
-                exit_code=0, verdict="APPLIED", diff_text="", summary="",
-                stdout="", pre_snapshot={}, introduced_findings=(),
-                resolved_findings=(),
-            )
-
-        # --anchor narrows the WALK to gap-one, but the carried context must
-        # still cover the full saved set.
-        rc = self._drive_apply_walk(
-            tmp_repo, monkeypatch, apply_stub=apply_stub,
-            extra=["--anchor", "gap-one"],
-        )
-        assert rc == 0
-        assert len(captured) == 1  # only the anchored gap is walked
-        carried = captured[0]
-        titles = {c.title for c in carried}
-        assert titles == {"first gap", "second gap", "legacy finding"}
-        assert _carried_by_title(
-            carried, "legacy finding"
-        ).resolution == CARRIED_RESOLUTION_APPLIED
-        assert _carried_by_title(
-            carried, "second gap"
-        ).resolution == CARRIED_RESOLUTION_SKIPPED
-        assert _carried_by_title(
-            carried, "first gap"
-        ).resolution == CARRIED_RESOLUTION_OPEN
-
-    def test_completeness_apply_accumulates_replay_verdicts(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        g1 = self._gap("gap-one", "first gap")
-        g2 = self._gap("gap-two", "second gap")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[g1, g2], annotations={},
-        )
-
-        # first gap -> BLOCKED, second gap -> APPLIED.
-        verdicts = {"gap-one body": "BLOCKED", "gap-two body": "APPLIED"}
-        captured: list = []
-
-        def apply_stub(plan_path, **kwargs):
-            captured.append(kwargs["carried_findings"])
-            return SimpleNamespace(
-                exit_code=0,
-                verdict=verdicts[kwargs["finding_body"].splitlines()[-1]],
-                diff_text="", summary="declined", stdout="", pre_snapshot={},
-                introduced_findings=(), resolved_findings=(),
-            )
-
-        rc = self._drive_apply_walk(
-            tmp_repo, monkeypatch, apply_stub=apply_stub, extra=[],
-        )
-        assert rc == 0
-        assert len(captured) == 2
-        # The second apply's carried set reflects the first's fresh BLOCKED
-        # verdict — not derivable from the (empty) saved annotations.
-        second_carried = captured[1]
-        assert _carried_by_title(
-            second_carried, "first gap"
-        ).resolution == CARRIED_RESOLUTION_BLOCKED
-
-    def _corr(self, slug: str, title: str):
-        return Recommendation(
-            id=f"corr-{slug}", source="plan-correctness", severity="high",
-            step_id=1, title=title, body=f"{slug} body", anchor=slug,
-        )
-
-    def test_apply_walks_both_sources_correctness_first(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        """#85: the audit persists both conceptual sources unapplied; this
-        verb walks BOTH — plan-correctness before plan-completeness —
-        regardless of their saved order."""
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        # Save with completeness BEFORE correctness to prove the sort flips it.
-        comp = self._gap("comp-one", "missing thing")
-        corr = self._corr("corr-one", "design gap")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[comp, corr], annotations={},
-        )
-
-        walked: list = []
-
-        def apply_stub(plan_path, **kwargs):
-            walked.append(kwargs["finding_body"])
-            return SimpleNamespace(
-                exit_code=0, verdict="APPLIED", diff_text="", summary="",
-                stdout="", pre_snapshot={}, introduced_findings=(),
-                resolved_findings=(),
-            )
-
-        rc = self._drive_apply_walk(
-            tmp_repo, monkeypatch, apply_stub=apply_stub, extra=[],
-        )
-        assert rc == 0
-        # Both conceptual sources walked, correctness first.
-        assert [body.splitlines()[-1] for body in walked] == [
-            "corr-one body", "comp-one body",
-        ]
-        assert all("confidence: limited" in body for body in walked)
-
-    def test_apply_anchor_targets_correctness_source(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        """--anchor resolves against a plan-correctness finding too, not just
-        plan-completeness."""
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        comp = self._gap("comp-one", "missing thing")
-        corr = self._corr("corr-one", "design gap")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[comp, corr], annotations={},
-        )
-
-        walked: list = []
-
-        def apply_stub(plan_path, **kwargs):
-            walked.append(kwargs["finding_body"])
-            return SimpleNamespace(
-                exit_code=0, verdict="APPLIED", diff_text="", summary="",
-                stdout="", pre_snapshot={}, introduced_findings=(),
-                resolved_findings=(),
-            )
-
-        rc = self._drive_apply_walk(
-            tmp_repo, monkeypatch, apply_stub=apply_stub,
-            extra=["--anchor", "corr-one"],
-        )
-        assert rc == 0
-        assert len(walked) == 1
-        assert walked[0].endswith("corr-one body")
-        assert "confidence: limited" in walked[0]
-
-    def test_apply_redirects_data_contract_findings_from_saved_audit(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        contract = self._contract("contract-one", "contract drift")
-        saved_path = self._save_completeness(
-            tmp_repo, plan_path, recs=[contract], annotations={},
-        )
-        self._write_contract_payloads(
-            saved_path,
-            {contract.id: {"target": "DATA_CONTRACT.md", "operation": "add"}},
-        )
-
-        messages: list[str] = []
-
-        def apply_stub(*a, **k):  # pragma: no cover - must never be reached
-            raise AssertionError("generic apply_finding must not run")
-
-        def fake_walk(saved, *, action_fn, state, **kw):
-            messages.append(action_fn(saved.recommendations[0]))
-            return SimpleNamespace(answered=1, quit_early=False)
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool import launcher as launcher_module
-        from plan_tool.cli import main
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(launcher_module, "apply_finding", apply_stub)
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert "data-contract-apply" in messages[0]
-
-    def test_input_reference_findings_are_non_applyable_in_completeness_apply(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        contract = self._contract(
-            "input-ref", "stale ## Input reference", body="plan-detail body"
-        )
-        saved_path = self._save_completeness(
-            tmp_repo, plan_path, recs=[contract], annotations={},
-        )
-        self._write_contract_payloads(
-            saved_path,
-            {contract.id: {"target": "plan-detail", "operation": "add"}},
-        )
-
-        messages: list[str] = []
-
-        def fake_walk(saved, *, action_fn, state, **kw):
-            messages.append(action_fn(saved.recommendations[0]))
-            return SimpleNamespace(answered=1, quit_early=False)
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert "not applyable by completeness-apply" in messages[0]
-        assert "data-contract-apply" not in messages[0]
-
-    def test_apply_orders_data_contract_after_conceptual_sources(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        comp = self._gap("comp-one", "missing thing")
-        corr = self._corr("corr-one", "design gap")
-        contract = self._contract("contract-one", "contract drift")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[contract, comp, corr], annotations={},
-        )
-
-        seen: list[str] = []
-
-        def fake_walk(saved, **kw):
-            seen.extend(r.source for r in saved.recommendations)
-            return SimpleNamespace(answered=0, quit_early=False)
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        assert seen == ["plan-correctness", "plan-completeness", "data-contract"]
-
-    def test_apply_anchor_targets_data_contract_source(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        comp = self._gap("comp-one", "missing thing")
-        contract = self._contract("contract-one", "contract drift")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[comp, contract], annotations={},
-        )
-
-        seen: list[str] = []
-
-        def fake_walk(saved, **kw):
-            seen.extend(r.id for r in saved.recommendations)
-            return SimpleNamespace(answered=0, quit_early=False)
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(
-            tmp_repo.argv("completeness-apply", "demo", "--anchor", "contract-one")
-        )
-        assert rc == 0
-        assert seen == [contract.id]
-
-    def test_data_contract_routing_intent_reaches_walker_and_action_builder(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        contract = self._contract("contract-one", "contract drift")
-        self._save_completeness(
-            tmp_repo, plan_path, recs=[contract], annotations={},
-        )
-
-        build_sources: list[frozenset[str]] = []
-        walk_sources: list[frozenset[str]] = []
-
-        def fake_build(**kwargs):
-            build_sources.append(kwargs["extra_apply_sources"])
-
-            def action(rec):
-                raise AssertionError("generic builder must not handle data-contract")
-
-            return action
-
-        def fake_walk(saved, *, action_fn, state, extra_apply_sources, **kw):
-            walk_sources.append(extra_apply_sources)
-            action_fn(saved.recommendations[0])
-            return SimpleNamespace(answered=1, quit_early=False)
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(phases, "_build_review_action_fn", fake_build)
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        # Both seams share one opt-in set — now also carrying granularity-split
-        # so the completeness-apply lane can route the MIXED-STEP split.
-        _expected = frozenset(
-            {"plan-correctness", "data-contract", "granularity-split"}
-        )
-        assert build_sources == [_expected]
-        assert walk_sources == [_expected]
-
-    def test_data_contract_carried_resolution_updates_after_apply(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        contract = self._contract("contract-one", "contract drift")
-        gap = self._gap("gap-one", "first gap")
-        saved_path = self._save_completeness(
-            tmp_repo, plan_path, recs=[gap, contract], annotations={},
-        )
-        self._write_contract_payloads(
-            saved_path,
-            {contract.id: {"target": "DATA_CONTRACT.md", "operation": "add"}},
-        )
-
-        import sys as _sys
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import (
-            Annotation,
-            load_review,
-            update_annotation,
-        )
-
-        def fake_walk(saved, *, action_fn, state, **kw):
-            contract_rec = next(
-                r for r in saved.recommendations
-                if r.source == "data-contract"
-            )
-            msg = action_fn(contract_rec)
-            assert state.last_apply_verdict == "NOT-APPLICABLE"
-            annotation = Annotation(status="skip", note=msg)
-            update_annotation(saved.path, contract_rec.id, annotation)
-            saved.annotations[contract_rec.id] = annotation
-            return SimpleNamespace(answered=1, quit_early=False)
-
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-
-        rc = main(tmp_repo.argv("completeness-apply", "demo"))
-        assert rc == 0
-        saved = load_review(saved_path)
-        assert saved.annotations[contract.id].status == "skip"
-
-
-class TestCompletenessApplyParallel:
-    """``--jobs N`` (N>1) non-interactive parallel apply path (#74/B2)."""
-
-    def _save(self, tmp_repo, plan_path, recs, *, audit_shape_advisory=None):
-        from plan_tool.review_persistence import save_review
-
-        return save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root, report_md="# r\n",
-            recommendations=recs,
-            annotations={},
-            kind="completeness",
-            audit_shape_advisory=audit_shape_advisory,
-        )
-
-    def _recs(self):
-        return [
-            Recommendation(id="corr-1", source="plan-correctness",
-                           severity="high", step_id=1, title="t", body="b1",
-                           anchor="corr-1"),
-            Recommendation(id="comp-1", source="plan-completeness",
-                           severity="medium", step_id=1, title="t", body="b2",
-                           anchor="comp-1"),
-        ]
-
-    def _contract_rec(self):
-        return Recommendation(
-            id="contract-1", source="data-contract", severity="medium",
-            step_id=None, title="contract", body="contract body",
-            anchor="contract-1", suggested_action="Update DATA_CONTRACT.md",
-        )
-
-    def _setup(self, tmp_repo):
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        return plan_path, self._save(tmp_repo, plan_path, self._recs())
-
-    def test_dirty_tree_refused(self, tmp_repo, monkeypatch, capsys):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: True)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 2
-        assert "clean working tree" in capsys.readouterr().err
-
-    def test_tty_without_yes_refused(self, tmp_repo, monkeypatch, capsys):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2"))
-        assert rc == 2
-        assert "-y" in capsys.readouterr().err
-
-    def test_keyboard_interrupt_records_interrupted_run_end(
-        self, tmp_repo, monkeypatch
-    ):
-        import json
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(
-            par,
-            "run_parallel_apply",
-            lambda *_args, **_kwargs: (_ for _ in ()).throw(KeyboardInterrupt()),
-        )
-
-        with pytest.raises(SystemExit) as exc:
-            main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2", "-y"))
-        assert exc.value.code == 130
-
-        log_path = next(
-            (tmp_repo.root / ".plan-tool" / "runs" / "demo").glob("*.jsonl")
-        )
-        events = [
-            json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()
-        ]
-        assert events[-1]["event"] == "run_end"
-        assert events[-1]["rc"] == 130
-        assert events[-1]["error"] == "interrupted"
-
-    def test_single_anchor_degrades_to_serial(self, tmp_repo, monkeypatch,
-                                              capsys):
-        import sys as _sys
-
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        # Non-interactive stdin so the degraded serial walk reports + returns.
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: False))
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "--anchor", "corr-1"))
-        # The degrade decision happens before the TTY gate, so the stderr
-        # line below is the assertion that carries this test's intent; the
-        # serial walk then skips on non-interactive stdin and reports rc=2.
-        assert rc == 2
-        assert "nothing to parallelize" in capsys.readouterr().err
-
-    def test_parallel_applies_and_persists_annotations(
-        self, tmp_repo, monkeypatch, capsys
-    ):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import load_review
-
-        plan_path, saved_path = self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-
-        recs = self._recs()
-
-        def fake_run(walk_recs, **kwargs):
-            # Mirror run_parallel_apply's contract: persist each finding's
-            # disposition incrementally via the callback.
-            persist = kwargs.get("persist")
-            out = par.ReplayOutcome()
-            out.applied.append((recs[0], "APPLIED"))     # corr-1
-            if persist:
-                persist(recs[0], "applied", "APPLIED")
-            out.failed.append((recs[1], "reverted — parse"))  # comp-1
-            if persist:
-                persist(recs[1], "failed", "reverted — parse")
-            out.conflicts = 1
-            return out
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "3",
-                                "-y"))
-        assert rc == 0
-        out = capsys.readouterr().out
-        assert "1 applied, 1 failed" in out
-        assert "re-run serially on conflict" in out
-        saved = load_review(saved_path)
-        assert saved.annotations["corr-1"].status == "applied"
-        assert saved.annotations["comp-1"].status == "failed"
-
-    def test_parallel_apply_presents_fresh_arm_advice_once_before_dispatch(
-        self, tmp_repo, monkeypatch, capsys
-    ):
-        import sys as _sys
-
-        from plan_tool.audit_shapes import AuditShapeAdvisory, AuditShapeFindingEvidence
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import AuditInputSnapshot
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        plan_path.write_text(
-            plan_path.read_text(encoding="utf-8").replace(
-                "  - id: 1\n"
-                "    title: Only step\n"
-                "    detail: plans/details/01-only-step.md\n",
-                "  - id: 1\n"
-                "    title: Focused first\n"
-                "    detail: plans/details/01-only-step.md\n"
-                "  - id: 2\n"
-                "    title: Focused second\n"
-                "    detail: plans/details/02-focused-second.md\n"
-                "  - id: 3\n"
-                "    title: Focused third\n"
-                "    detail: plans/details/03-focused-third.md\n"
-                "  - id: 4\n"
-                "    title: Follow-up\n"
-                "    detail: plans/details/04-follow-up.md\n"
-                "  - id: 5\n"
-                "    title: Later work\n"
-                "    detail: plans/details/05-later-work.md\n",
-            ),
-            encoding="utf-8",
-        )
-        for step_id, slug in (
-            (2, "focused-second"),
-            (3, "focused-third"),
-            (4, "follow-up"),
-            (5, "later-work"),
-        ):
-            (tmp_repo.root / f"plans/details/{step_id:02d}-{slug}.md").write_text(
-                f"# Step {step_id}\n\n## Summary\n\nDetail.\n",
-                encoding="utf-8",
-            )
-        tmp_repo.write_manifest()
-        snapshot = AuditInputSnapshot.capture(plan_path, tmp_repo.root)
-        advisory = AuditShapeAdvisory(
-            shape_id="arm-clustering",
-            source_plan_fingerprint=snapshot.fingerprint,
-            arm_step_ids=(1, 2, 3),
-            material_finding_ids=("opaque-a", "opaque-b", "opaque-c"),
-            arm_finding_ids=("opaque-a", "opaque-b", "opaque-c"),
-            material_finding_evidence=(
-                AuditShapeFindingEvidence("opaque-a", "corr", "plan-correctness"),
-                AuditShapeFindingEvidence("opaque-b", "risk", "plan-completeness"),
-                AuditShapeFindingEvidence("opaque-c", "edge", "plan-completeness"),
-            ),
-            material_finding_count=3,
-            arm_finding_count=3,
-            committed_step_count=5,
-        )
-        self._save(
-            tmp_repo, plan_path, self._recs(), audit_shape_advisory=advisory
-        )
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-
-        seen: list[str] = []
-
-        def fake_run(walk_recs, **kwargs):
-            kwargs["pre_apply_presentation"]()
-            seen.extend(rec.id for rec in walk_recs)
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        assert main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2", "-y")) == 0
-        out = capsys.readouterr().out
-        assert out.count("arm-clustering") == 1
-        assert seen == ["corr-1", "comp-1"]
-
-    def test_parallel_apply_excludes_data_contract_findings(
-        self, tmp_repo, monkeypatch
-    ):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        recs = [self._contract_rec()] + self._recs()
-        self._save(tmp_repo, plan_path, recs)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-
-        seen: list[str] = []
-
-        def fake_run(walk_recs, **kwargs):
-            seen.extend(r.source for r in walk_recs)
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "3",
-                                "-y"))
-        assert rc == 0
-        assert seen == ["plan-correctness", "plan-completeness"]
-
-    def test_parallel_threads_run_logger(
-        self, tmp_repo, monkeypatch, capsys
-    ):
-        """The parallel path builds and threads a run_logger (was dropped),
-        so per-finding apply calls land in the run log like the serial walk."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-
-        captured: dict = {}
-
-        def fake_run(walk_recs, **kwargs):
-            captured["run_logger"] = kwargs.get("run_logger")
-            from plan_tool.telemetry import record_apply_verdict
-            record_apply_verdict(
-                tmp_repo.root, plan_slug="demo", verdict="NOT-APPLICABLE"
-            )
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        # A live writer is threaded through (None before the fix).
-        assert captured["run_logger"] is not None
-        from plan_tool.telemetry import read_decisions
-        event = [e for e in read_decisions(tmp_repo.root)
-                 if e.kind == "apply-verdict"][-1]
-        assert event.run_id == captured["run_logger"].run_id
-        from plan_tool.telemetry import record_apply_verdict
-        record_apply_verdict(
-            tmp_repo.root, plan_slug="after-command", verdict="BLOCKED"
-        )
-        assert read_decisions(tmp_repo.root)[-1].run_id == ""
-
-    def test_parallel_hoists_and_recomputes_plan_fingerprints(
-        self, tmp_repo, monkeypatch
-    ):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        import plan_tool.review_persistence as persistence
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        fingerprints = iter(["pre-dispatch", "conflict-rerun"])
-        monkeypatch.setattr(
-            persistence, "compute_plan_fingerprint", lambda path: next(fingerprints)
-        )
-        captured = {}
-
-        def fake_run(walk_recs, **kwargs):
-            captured["worker"] = kwargs["plan_fingerprint"]
-            captured["rerun"] = kwargs["compute_plan_fingerprint_fn"]()
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        assert main(tmp_repo.argv(
-            "completeness-apply", "demo", "--jobs", "2", "-y"
-        )) == 0
-        assert captured == {
-            "worker": "pre-dispatch", "rerun": "conflict-rerun"
-        }
-
-    def test_parallel_command_real_replay_binds_run_and_evaluated_fingerprints(
-        self, tmp_repo, monkeypatch
-    ):
-        import contextlib
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        import plan_tool.review_persistence as persistence
-        from plan_tool.cli import main
-        from plan_tool.telemetry import read_decisions
-
-        plan_path, _ = self._setup(tmp_repo)
-        plan_rel = plan_path.relative_to(tmp_repo.root).as_posix()
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin", SimpleNamespace(isatty=lambda: True))
-        fingerprints = iter(["pre-dispatch", "conflict-rerun"])
-        monkeypatch.setattr(
-            persistence, "compute_plan_fingerprint", lambda path: next(fingerprints)
-        )
-
-        class CanonicalPool:
-            def __init__(self, *args, **kwargs):
-                pass
-
-            def __enter__(self):
-                return self
-
-            def __exit__(self, *args):
-                return None
-
-            @contextlib.contextmanager
-            def acquire(self):
-                yield SimpleNamespace(
-                    repo_root=tmp_repo.root, plan_path=plan_path
-                )
-
-        monkeypatch.setattr(par, "WorktreePool", CanonicalPool)
-
-        def fake_apply(rec, *, plan_fingerprint, **kwargs):
-            if rec.id == "corr-1" and plan_fingerprint == "pre-dispatch":
-                stale = par.FileChange(
-                    path=plan_rel, pre="stale worker baseline", post="stale post"
-                )
-                return par.FindingApplyResult(
-                    rec=rec, verdict="APPLIED", summary="", exit_code=0,
-                    changes=(stale,), recordable_verdict="APPLIED",
-                    resolved_step_id=1, plan_fingerprint=plan_fingerprint,
-                )
-            return par.FindingApplyResult(
-                rec=rec, verdict="NOT-APPLICABLE", summary="", exit_code=0,
-                recordable_verdict="NOT-APPLICABLE", resolved_step_id=1,
-                plan_fingerprint=plan_fingerprint,
-            )
-
-        monkeypatch.setattr(par, "apply_finding_in_tree", fake_apply)
-
-        assert main(tmp_repo.argv(
-            "completeness-apply", "demo", "--jobs", "2", "-y"
-        )) == 0
-
-        events = [
-            event for event in read_decisions(tmp_repo.root)
-            if event.kind == "apply-verdict"
-        ]
-        assert {
-            (event.anchor, event.plan_fingerprint, event.context["verdict"])
-            for event in events
-        } == {
-            ("corr-1", "conflict-rerun", "NOT-APPLICABLE"),
-            ("comp-1", "pre-dispatch", "NOT-APPLICABLE"),
-        }
-        assert len({event.run_id for event in events}) == 1
-        assert events[0].run_id
-
-    def test_parallel_pre_skips_open_deferred_findings(
-        self, tmp_repo, monkeypatch, capsys
-    ):
-        """Parallel pre-skip mirrors the serial walk: only unannotated or
-        ``failed`` recs are re-walked; ``open`` (and applied/skip) pre-skip,
-        so a deferred gap is not silently re-applied by --jobs N."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import Annotation, save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        recs = self._recs()  # corr-1, comp-1
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root, report_md="# r\n",
-            recommendations=recs,
-            annotations={
-                "corr-1": Annotation(status="open"),      # deferred → skip
-                "comp-1": Annotation(status="failed"),    # failed → re-walk
-            },
-            kind="completeness",
-        )
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-
-        seen: dict = {}
-
-        def fake_run(walk_recs, **kwargs):
-            seen["ids"] = [r.id for r in walk_recs]
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        # open pre-skipped; only the failed rec is re-walked.
-        assert seen["ids"] == ["comp-1"]
-
-    def test_jobs_1_uses_interactive_walk_not_parallel(
-        self, tmp_repo, monkeypatch
-    ):
-        """--jobs 1 (default) must never enter the parallel path."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(
-            par, "run_parallel_apply",
-            lambda *a, **k: pytest.fail("parallel path must not run at jobs=1"),
-        )
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: False))
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "1"))
-        # The monkeypatched ``run_parallel_apply`` above is what proves the
-        # claim; rc=2 is the serial path's non-interactive skip, reached
-        # precisely because jobs=1 did not parallelize.
-        assert rc == 2
-
-    def test_non_tty_without_yes_refused(self, tmp_repo, monkeypatch, capsys):
-        """#74/B2 fix: --jobs>1 requires -y even non-interactively (CI/pipe);
-        it must not silently auto-mutate just because stdin isn't a TTY."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-
-        self._setup(tmp_repo)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: False))
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2"))
-        assert rc == 2
-        assert "-y" in capsys.readouterr().err
-
-    def test_already_annotated_gaps_skipped(self, tmp_repo, monkeypatch,
-                                           capsys):
-        """#74/B2 fix: a second --jobs run skips gaps already applied/skipped
-        (unless --rewalk), mirroring the serial walk's pre-skip."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import Annotation, save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        # Both gaps already answered.
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root, report_md="# r\n",
-            recommendations=self._recs(),
-            annotations={"corr-1": Annotation(status="applied"),
-                         "comp-1": Annotation(status="skip")},
-            kind="completeness",
-        )
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-        monkeypatch.setattr(
-            par, "run_parallel_apply",
-            lambda *a, **k: pytest.fail("no gaps should be dispatched"),
-        )
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        assert "already answered" in capsys.readouterr().out
-
-    def test_info_gaps_skipped_without_include_info(self, tmp_repo,
-                                                   monkeypatch):
-        """#74/B2 fix: the parallel path honors skip-info like the walk."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        info_rec = Recommendation(
-            id="info-1", source="plan-completeness", severity="info",
-            step_id=1, title="t", body="b", anchor="info-1")
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root, report_md="# r\n",
-            recommendations=[info_rec], annotations={}, kind="completeness",
-        )
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-        dispatched = []
-        monkeypatch.setattr(
-            par, "run_parallel_apply",
-            lambda recs, **k: dispatched.append(list(recs)) or par.ReplayOutcome(),
-        )
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        # The lone info gap was filtered out — nothing dispatched.
-        assert dispatched == [] or dispatched == [[]]
-
-    def test_bare_plan_parallel_lane_fans_out_only_correctness(
-        self, tmp_repo, monkeypatch
-    ):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import save_review
-
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        tmp_repo.write_manifest()
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# r\n",
-            recommendations=[
-                Recommendation(
-                    id="corr-1", source="plan-correctness", severity="high",
-                    step_id=1, title="t", body="b1", anchor="corr-1",
-                ),
-                Recommendation(
-                    id="comp-1", source="plan-completeness", severity="medium",
-                    step_id=1, title="t", body="b2", anchor="comp-1",
-                ),
-            ],
-            annotations={},
-            kind="completeness",
-        )
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-        seen: list[str] = []
-
-        def fake_run(walk_recs, **kwargs):
-            seen.extend(r.source for r in walk_recs)
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        assert seen == ["plan-correctness"]
-
-    def test_bare_plan_parallel_lane_does_not_replay_a_created_detail_file(
-        self, tmp_repo, monkeypatch
-    ):
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.review_persistence import save_review
-
-        _init_git_repo(tmp_repo.root)
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        detail_rel = "plans/details/01-only-step.md"
-        text = plan_path.read_text(encoding="utf-8")
-        plan_path.write_text(
-            text.replace(
-                "    title: Only step\n",
-                f"    title: Only step\n    detail: {detail_rel}\n",
-            ),
-            encoding="utf-8",
-        )
-        tmp_repo.write_manifest()
-        _git_commit_all(tmp_repo.root, "init")
-        save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root,
-            report_md="# r\n",
-            recommendations=[
-                Recommendation(
-                    id="corr-1", source="plan-correctness", severity="high",
-                    step_id=1, title="t", body="b1", anchor="corr-1",
-                ),
-            ],
-            annotations={},
-            kind="completeness",
-        )
-        detail_path = tmp_repo.root / detail_rel
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(_sys, "stdin",
-                            SimpleNamespace(isatty=lambda: True))
-
-        real_apply_in_tree = par.apply_finding_in_tree
-
-        def patched_apply(rec, **kwargs):
-            def fake_invoker(prompt: str) -> tuple[int, str]:
-                p = kwargs["plan_path"]
-                p.write_text(
-                    p.read_text(encoding="utf-8") + "\nApplied edit.\n",
-                    encoding="utf-8",
-                )
-                d = kwargs["repo_root"] / detail_rel
-                d.parent.mkdir(parents=True, exist_ok=True)
-                d.write_text("# unauthorized\n", encoding="utf-8")
-                return 0, "## Verdict\nAPPLIED\n"
-
-            kwargs["invoker"] = fake_invoker
-            return real_apply_in_tree(rec, **kwargs)
-
-        monkeypatch.setattr(par, "apply_finding_in_tree", patched_apply)
-        rc = main(tmp_repo.argv("completeness-apply", "demo", "--jobs", "2",
-                                "-y"))
-        assert rc == 0
-        assert "Applied edit." in plan_path.read_text(encoding="utf-8")
-        assert not detail_path.exists()
-
-
-class TestCompletenessApplyStructuralSplit:
-    """Step 4: ``--apply-structural`` wires the saved ``medium``
-    ``granularity-split`` MIXED-STEP finding into the serial walk so it reaches
-    the escalate-to-split dispatch, gated behind the flag + an interactive
-    confirm (never a blanket ``-y``, never the ``--jobs > 1`` parallel lane)."""
-
-    def _split_rec(self, *, step_id=1, severity="medium"):
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-
-        return Recommendation(
-            id=f"gsplit-{step_id}",
-            source=GRANULARITY_SPLIT_SOURCE,
-            severity=severity,
-            step_id=step_id,
-            title="step mixes a refactor with new behavior",
-            body="split the refactor half from the feature half",
-            anchor=f"gsplit-{step_id}",
-            suggested_action="plan-tool split demo --step 1",
-        )
-
-    def _save(self, tmp_repo, plan_path, recs):
-        from plan_tool.review_persistence import save_review
-
-        return save_review(
-            plan_slug="demo",
-            plan_path=plan_path.relative_to(tmp_repo.root).as_posix(),
-            repo_root=tmp_repo.root, report_md="# r\n",
-            recommendations=recs, annotations={}, kind="completeness",
-        )
-
-    def _setup(self, tmp_repo, recs):
-        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
-        _attach_minimal_detail(tmp_repo, plan_path)
-        tmp_repo.write_manifest()
-        return plan_path, self._save(tmp_repo, plan_path, recs)
-
-    def _drive(self, tmp_repo, monkeypatch, *, argv_extra, stdin_tty=True):
-        """Run completeness-apply with the serial walk stubbed to drive the
-        real ``action_fn`` over the saved split rec. Returns
-        ``(rc, escalate_calls, captured)`` — ``captured`` holds the walk's
-        ``extra_apply_sources`` and the (filtered, sorted) recommendations."""
-        import sys as _sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-        from plan_tool.review_walk import WalkResult
-
-        captured: dict = {}
-        calls: list[dict] = []
-
-        def fake_escalate(plan_path, **kwargs):
-            calls.append(kwargs)
-            return SimpleNamespace(
-                outcome="recommended", target_id=kwargs.get("step_id"),
-                recommendation=SimpleNamespace(
-                    suggested_action="plan-tool split demo --step 1 --into ..."
-                ),
-                blocking=[],
-            )
-
-        monkeypatch.setattr(
-            "plan_tool.launcher.escalate_to_split", fake_escalate
-        )
-
-        def fake_walk(saved, *, action_fn, extra_apply_sources, **kw):
-            captured["extra_apply_sources"] = extra_apply_sources
-            captured["recommendations"] = list(saved.recommendations)
-            split = next(
-                r for r in saved.recommendations
-                if r.source == GRANULARITY_SPLIT_SOURCE
-            )
-            action_fn(split)
-            return WalkResult(answered=1, quit_early=False)
-
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr(
-            _sys, "stdin", SimpleNamespace(isatty=lambda: stdin_tty)
-        )
-        rc = main(tmp_repo.argv("completeness-apply", "demo", *argv_extra))
-        return rc, calls, captured
-
-    def test_apply_structural_flag_registered(self) -> None:
-        parser = argparse.ArgumentParser()
-        sub = parser.add_subparsers(dest="cmd")
-        register(sub)
-        args = parser.parse_args(
-            ["completeness-apply", "demo", "--apply-structural"]
-        )
-        assert args.apply_structural is True
-        default = parser.parse_args(["completeness-apply", "demo"])
-        assert default.apply_structural is False
-
-    def test_medium_split_survives_saved_walk_filter(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-
-        recs = [
-            self._split_rec(step_id=1),
-            Recommendation(id="dc-1", source="data-contract", severity="medium",
-                           step_id=None, title="t", body="b", anchor="dc-1"),
-            Recommendation(id="comp-1", source="plan-completeness",
-                           severity="medium", step_id=1, title="t", body="b",
-                           anchor="comp-1"),
-            Recommendation(id="corr-1", source="plan-correctness",
-                           severity="high", step_id=1, title="t", body="b",
-                           anchor="corr-1"),
-        ]
-        self._setup(tmp_repo, recs)
-        rc, _calls, cap = self._drive(
-            tmp_repo, monkeypatch, argv_extra=["--apply-structural"]
-        )
-        assert rc == 0
-        sources = [r.source for r in cap["recommendations"]]
-        assert GRANULARITY_SPLIT_SOURCE in sources
-        # Sorts LAST — after the reversible conceptual + data-contract applies.
-        assert sources == [
-            "plan-correctness", "plan-completeness", "data-contract",
-            GRANULARITY_SPLIT_SOURCE,
-        ]
-
-    def test_walk_apply_sources_includes_granularity_split(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        import sys as _sys
-
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-        from plan_tool.review_walk import WalkResult
-
-        self._setup(tmp_repo, [self._split_rec(step_id=1)])
-        seen: dict = {}
-        real_builder = phases._build_review_action_fn
-
-        def spy_builder(**kwargs):
-            seen["builder"] = kwargs.get("extra_apply_sources")
-            return real_builder(**kwargs)
-
-        def fake_walk(saved, *, extra_apply_sources, **kw):
-            seen["walk"] = extra_apply_sources
-            return WalkResult(answered=0, quit_early=False)
-
-        monkeypatch.setattr(phases, "_build_review_action_fn", spy_builder)
-        monkeypatch.setattr(phases, "walk_recommendations", fake_walk)
-        monkeypatch.setattr(
-            _sys, "stdin", SimpleNamespace(isatty=lambda: True)
-        )
-        rc = main(
-            tmp_repo.argv("completeness-apply", "demo", "--apply-structural")
-        )
-        assert rc == 0
-        # Both seams must agree, or the walk annotates without dispatching.
-        assert GRANULARITY_SPLIT_SOURCE in seen["builder"]
-        assert GRANULARITY_SPLIT_SOURCE in seen["walk"]
-        assert seen["builder"] == seen["walk"]
-
-    def test_apply_structural_dispatches_medium_split_to_escalate(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        self._setup(tmp_repo, [self._split_rec(step_id=1)])
-        rc, calls, _cap = self._drive(
-            tmp_repo, monkeypatch, argv_extra=["--apply-structural"]
-        )
-        assert rc == 0
-        assert len(calls) == 1
-        assert calls[0]["step_id"] == 1
-        assert calls[0]["allow_split"] is True
-
-    def test_medium_split_recommend_only_without_flag(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        plan_path, _saved = self._setup(tmp_repo, [self._split_rec(step_id=1)])
-        before = plan_path.read_text(encoding="utf-8")
-        rc, calls, _cap = self._drive(
-            tmp_repo, monkeypatch, argv_extra=[]
-        )
-        assert rc == 0
-        assert len(calls) == 1
-        assert calls[0]["allow_split"] is False  # recommend-only
-        # No split landed — the plan file is unchanged.
-        assert plan_path.read_text(encoding="utf-8") == before
-
-    def test_medium_split_recommend_only_under_yes(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        self._setup(tmp_repo, [self._split_rec(step_id=1)])
-        rc, calls, _cap = self._drive(
-            tmp_repo, monkeypatch, argv_extra=["--apply-structural", "-y"]
-        )
-        assert rc == 0
-        assert len(calls) == 1
-        # A blanket -y fast-forward never auto-confirms an irreversible split.
-        assert calls[0]["allow_split"] is False
-
-    def test_medium_split_not_fanned_out_in_parallel(
-        self, tmp_repo, monkeypatch, capsys
-    ) -> None:
-        import sys as _sys
-
-        import plan_tool.cli.completeness_apply_parallel as par
-        import plan_tool.cli.completeness_phases as phases
-        from plan_tool.cli import main
-        from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-
-        # A mixed sidecar: a conceptual gap (fans out) plus a medium split
-        # (must NOT). The parallel lane runs, so the split is deferred with a
-        # visible breadcrumb rather than silently dropped.
-        recs = [
-            Recommendation(id="comp-1", source="plan-completeness",
-                           severity="medium", step_id=1, title="t", body="b",
-                           anchor="comp-1"),
-            self._split_rec(step_id=1),
-        ]
-        self._setup(tmp_repo, recs)
-        monkeypatch.setattr(phases, "working_tree_dirty", lambda root: False)
-        monkeypatch.setattr(
-            _sys, "stdin", SimpleNamespace(isatty=lambda: True)
-        )
-        seen: list[str] = []
-
-        def fake_run(walk_recs, **kw):
-            seen.extend(r.source for r in walk_recs)
-            return par.ReplayOutcome()
-
-        monkeypatch.setattr(par, "run_parallel_apply", fake_run)
-        rc = main(
-            tmp_repo.argv("completeness-apply", "demo", "--jobs", "2", "-y")
-        )
-        assert rc == 0
-        # Only the conceptual source is fanned out — the split stays serial.
-        assert GRANULARITY_SPLIT_SOURCE not in seen
-        assert seen == ["plan-completeness"]
-        # The deferral is surfaced, not silently dropped ("no silent caps").
-        assert "mixed-step split" in capsys.readouterr().err
 
 
 class TestPassConformanceAndConceptualBar:
@@ -12305,7 +9803,7 @@ class TestBarSteeringMidRun:
         corr = _rec("medium", source="plan-correctness")
         self._run(tmp_repo, monkeypatch, audit_recs=[corr])
         err = capsys.readouterr().err
-        assert "session-directed plan edit" in err
+        assert "session-directed plan or detail edit by the reader" in err
 
     def test_bare_high_completeness_bar_blocker_prints_hand_edit(
         self, tmp_repo, monkeypatch, capsys,
@@ -12313,7 +9811,7 @@ class TestBarSteeringMidRun:
         comp = _rec("high", source="plan-completeness")
         self._run(tmp_repo, monkeypatch, audit_recs=[comp])
         err = capsys.readouterr().err
-        assert "manual plan edit" in err
+        assert "manual plan or detail edit by the human or orchestrating session" in err
         assert "informational until" not in err
         assert "completeness-apply" not in err
 
@@ -12338,7 +9836,7 @@ class TestBarSteeringMidRun:
             tmp_repo, monkeypatch, audit_recs=[comp], plan_path=plan_path,
         )
         err = capsys.readouterr().err
-        assert "manual plan edit" in err
+        assert "manual plan or detail edit by the human or orchestrating session" in err
 
     def test_iterate_reuse_with_bar_blockers_remaps_terminal_hand_apply(
         self, tmp_repo, monkeypatch,
@@ -12425,7 +9923,7 @@ class TestBarSteeringMidRun:
         err = capsys.readouterr().err
         assert outcome.stop_reason == "manual_fix_blocking_findings"
         assert "self-consistency blocking" in err
-        assert "session-directed plan edit" in err
+        assert "session-directed plan or detail edit by the reader" in err
         assert "terminal_hand_apply" not in (outcome.stop_reason or "")
         # One halt, one banner: the SC note owns the halt here (stop_reason
         # is manual_fix_blocking_findings, not terminal_hand_apply), so the
@@ -13455,7 +10953,7 @@ class TestCompletenessStderrConvergenceAdvisories:
 # the loop itself (their sole remaining caller for 6 of the 18) alongside
 # them, so those 6 are no longer re-imported into completeness_cmd.py at
 # all; the other 12 still have a direct caller in completeness_cmd.py
-# (cmd_completeness / finalize_completeness_run / cmd_completeness_apply /
+# (cmd_completeness / finalize_completeness_run /
 # _resolve_audit_reuse / _completeness_has_blocking_findings) and stay
 # re-imported there as bare names.
 _RELOCATED_ITERATE_HELPER_NAMES = (
@@ -13480,23 +10978,14 @@ _LOOP_ONLY_RELOCATED_HELPER_NAMES = (
     "_print_all_auto_apply_deferred_halt_message",
     "_conceptual_completeness_manual_fix_note",
 )
-# _resolution_for_verdict's last completeness_cmd.py caller was the
-# completeness-apply dispatch tail (not the --iterate loop); step 5 moved
-# that tail into completeness_phases.py, so completeness_cmd.py has no
-# reason left to re-import it either -- same end state as the loop-only
-# helpers above, different mover.
-_APPLY_WALK_ONLY_RELOCATED_HELPER_NAMES = (
+# Shared verdict interpretation remains owned by the phase module.
+_VERDICT_HELPER_NAMES = (
     "_resolution_for_verdict",
 )
 
 
 class TestRelocatedIterateHelperOwnership:
-    """Pins which module owns the 19 --iterate-loop/apply-walk helpers
-    relocated by steps 1-2 and 5 of the cli-layering plan: they are DEFINED
-    in ``completeness_phases.py``. 11 of the 19 are also RE-IMPORTED (bare
-    name) into ``completeness_cmd.py`` for a surviving direct caller there;
-    the other 8 (6 loop-only from step 2, plus ``_resolution_for_verdict``
-    from step 5) are no longer attributes of ``completeness_cmd`` at all."""
+    """Pin surviving phase helper ownership and command re-exports."""
 
     def test_relocated_iterate_helpers_are_defined_in_completeness_phases(
         self,
@@ -13531,18 +11020,16 @@ class TestRelocatedIterateHelperOwnership:
             # weight this check would miss if it only asserted presence.
             assert not hasattr(completeness_cmd, name), name
 
-    def test_apply_walk_only_helpers_are_defined_in_completeness_phases_only(
+    def test_shared_verdict_helpers_remain_defined_in_completeness_phases_only(
         self,
     ) -> None:
         import plan_tool.cli.completeness_cmd as completeness_cmd
         import plan_tool.cli.completeness_phases as completeness_phases
 
-        for name in _APPLY_WALK_ONLY_RELOCATED_HELPER_NAMES:
+        for name in _VERDICT_HELPER_NAMES:
             phases_fn = getattr(completeness_phases, name)
             assert phases_fn.__module__ == "plan_tool.cli.completeness_phases", name
-            # Its only remaining caller (the completeness-apply dispatch
-            # tail) moved into completeness_phases.py in step 5, so
-            # completeness_cmd.py has no reason left to re-import it.
+            # Surviving phase callers own verdict interpretation.
             assert not hasattr(completeness_cmd, name), name
 
     def test_run_iterate_convergence_loop_is_defined_in_completeness_phases(
@@ -14306,3 +11793,115 @@ class TestRunGradeAuditPersistence:
         assert saved.qualified_result["audit_revision"]["detail_grade"] == "run"
         assert saved.qualified_result["coverage"] == "confirmed"
         assert saved.is_pre_apply_checkpoint is False
+
+
+def test_retired_apply_handler_and_walk_helpers_are_absent() -> None:
+    import importlib.util
+    import plan_tool.cli as cli
+    import plan_tool.cli.completeness_cmd as cmd
+    import plan_tool.cli.completeness_phases as phases
+
+    assert not hasattr(cli, "cmd_completeness_apply")
+    assert not hasattr(cmd, "cmd_completeness_apply")
+    for name in ("_resolve_saved_completeness_audit", "_resolve_apply_walk_targets",
+                 "_run_apply_walk", "_apply_walk_recs_parallel", "_apply_files_coherence",
+                 "_completeness_apply_commit_subject", "_detail_bundle_staleness"):
+        assert not hasattr(phases, name), name
+    assert importlib.util.find_spec("plan_tool.cli.completeness_apply_parallel") is None
+    assert callable(phases._run_iterate_convergence_loop)
+
+
+def test_files_coherence_findings_do_not_promote_allowed_mentions(
+    registered_plan, monkeypatch, capsys
+) -> None:
+    import plan_tool.review as review
+    from plan_tool.cli import main
+
+    _prepare_clean_demo_plan(registered_plan)
+    path = registered_plan.plans_dir / "1-demo.md"
+    before = path.read_bytes()
+    finding = review.FilesCoherenceIssue(
+        step_id=1, kind="detail_only", path="src/helper.py", near_match="src/main.py",
+    )
+    monkeypatch.setattr(review, "check_files_coherence", lambda *_a, **_k: [finding])
+    _stub_clean_completeness_audit(monkeypatch)
+    assert main(registered_plan.argv("completeness-audit", "demo")) == 0
+    assert "src/helper.py" in capsys.readouterr().out
+    assert path.read_bytes() == before
+
+
+@pytest.mark.integration
+class TestConceptualAuditReportPersistence:
+    def _correctness_rec(self, slug: str, title: str):
+        return Recommendation(
+            id=f"corr-{slug}", source="plan-correctness", severity="high",
+            step_id=1, title=title, body=f"{slug} body", anchor=slug,
+        )
+
+    def test_iterate_keeps_conceptual_axes_unapplied_and_preserves_high_impact(
+        self, tmp_repo, monkeypatch
+    ) -> None:
+        """#85: the iterate loop applies only its deterministic findings — it
+        does NOT auto-apply plan-correctness (or plan-completeness). Both
+        conceptual sources are persisted to the sidecar unapplied for
+        judged edits by the driving session."""
+        from plan_tool import launcher as launcher_module
+        from plan_tool import review as review_module
+        from plan_tool.cli import main
+        from plan_tool.review_persistence import (
+            list_saved_reviews,
+            load_review,
+        )
+
+        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
+        tmp_repo.write_manifest()
+
+        a = self._correctness_rec("alpha", "alpha gap")
+        b = self._correctness_rec("beta", "beta gap")
+        comp = Recommendation(
+            id="comp-x", source="plan-completeness", severity="nit",
+            step_id=1, title="missing thing", body="comp body", anchor="comp-x",
+            impact="high", complexity="low",
+        )
+        monkeypatch.setattr(
+            review_module, "audit_plan_until_stable",
+            lambda *args, **kw: [a, b, comp],
+        )
+        monkeypatch.setattr(
+            review_module, "collect_deterministic_findings",
+            lambda *args, **kw: [],
+        )
+
+        captured: list = []
+
+        def fake_apply(plan_path, **kwargs):
+            captured.append(kwargs["finding_body"])
+            return SimpleNamespace(
+                exit_code=0, verdict="APPLIED",
+                summary="s", stdout="", diff_text="", pre_snapshot={},
+                introduced_findings=(), resolved_findings=(),
+            )
+
+        monkeypatch.setattr(launcher_module, "apply_finding", fake_apply)
+
+        rc = main(tmp_repo.argv(
+            "completeness-audit", "demo", "--iterate", "--yes",
+            "--max-iterations", "1",
+        ))
+        assert rc == 0
+        # No conceptual finding was dispatched to apply_finding by the loop.
+        assert captured == []
+        # Both conceptual sources persisted to the sidecar, unapplied.
+        saved_path = next(
+            p
+            for p in list_saved_reviews(
+                "demo", tmp_repo.root, plan_path=plan_path
+            )
+            if p.name.endswith("-completeness.json")
+        )
+        saved = load_review(saved_path)
+        sources = {r.id: r.source for r in saved.recommendations}
+        assert sources.get("corr-alpha") == "plan-correctness"
+        assert sources.get("corr-beta") == "plan-correctness"
+        assert sources.get("comp-x") == "plan-completeness"
+        assert next(r for r in saved.recommendations if r.id == "comp-x").impact == "high"

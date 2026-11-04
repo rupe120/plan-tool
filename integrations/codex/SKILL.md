@@ -91,8 +91,8 @@ interactive step-by-step fallback.
 **Multi-step `run`: pass `--commit`.** It commits each green step, keeping the
 tree clean before the next one starts — without it, an earlier step's dirty
 files can mask a later step's test-authoring gate and wrongly block
-advancement. Only `run`, `detail`, `completeness-audit`, `completeness-apply`,
-and `manifest sweep` accept it — don't tack it onto a command that doesn't
+advancement. Only `run`, `detail`, `completeness-audit`,
+and `manifest sweep`/archive accept it — don't tack it onto a command that doesn't
 (see [DIRECTIVES.md](DIRECTIVES.md) for the full mechanics). `--commit` refuses a
 dirty tree, so a step that fails its own tests is recovered by hand, not re-run —
 see DIRECTIVES.md's "When a `run` step's own tests fail".
@@ -128,7 +128,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 | "run several steps of X in a row" | `plan-tool run X --all --commit` (or step-by-step, `--commit` each time) — keeps the tree clean between steps |
 | "a `run` step failed its own tests / the test-authoring gate blocked a step whose tests exist" | Do not hand-fix and bare re-run or use `--skip-merge-check`. For a confirmed test defect, fix it, run the full suite and commit code/tests without the plan. Then `plan-tool run X --step N --accept --commit` runs the acceptance gates and advances only on success; continue remaining steps with `run --commit`. Never hand-edit the status. If the implementation itself is wrong or no test/gate can certify acceptance, follow DIRECTIVES.md’s “When a `run` step’s own tests fail.” |
 | "the plan finished running / every step is green" | not done yet — drive `reconcile-code` to convergence, then `/code-review` to convergence; see DIRECTIVES.md's session-directed convergence loop |
-| "completeness flagged a plan-correctness/plan-completeness gap" (session-driven) | do **not** run `completeness-apply` — apply it by hand; see DIRECTIVES.md's session-directed convergence loop |
+| "completeness flagged a plan-correctness/plan-completeness gap" | Read the saved report, verify and judge the findings, edit the files directly, commit, and re-audit the changed snapshot; see DIRECTIVES.md's session-directed convergence loop |
 | "fix the bare-audit findings" | triage each finding first: R roadmap conflict, B plan contract, P owner decision, D detail mechanism, I settled by code or spike, T tool artifact. Edit the plan body only for B, from the finding's plan-altitude restatement, not its `Fix` line; see DIRECTIVES.md's Gate 1 |
 | "audit plan X" after hand edits | parse every edited plan's YAML frontmatter first (`: ` inside a plain scalar breaks it); an audit exit code 2 is a failed run, so read its log |
 
@@ -149,7 +149,7 @@ directives for judged corrections, user review and continuation.
 | **Annotate** (forward seed) | `annotate <path-or-glob>...` — judge old plans against current code, emit `<stem>.annotated.md` (verbatim + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED/NEEDS-REVIEW plus grounding) and a carryover `<stem>.seed.md` for the next `create --from-existing`; batch runs end with a coverage/grounding summary table; read-only on sources except opt-in `--archive` (numbered on archive collisions). `--iterate` is rejected; iterate the follow-up `create`, not annotate. | Yes |
 | **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip `codex exec` on no drift) | Yes (walk/refresh-no-drift: no) |
 | **Audit · verify** (read-only) | `verify-all <name> --rollup` (verdict), `verify-all <name> --mode <m>` (sweep), `run <name> --mode <review>` | Yes |
-| **Audit · completeness** (design) | `completeness-audit <name>`, `completeness-apply <name>` (interactive-review surface — see DIRECTIVES.md's session-directed convergence loop before calling it from a session) | Yes |
+| **Audit · completeness** (design) | `completeness-audit <name>` (read the saved report, judge and hand-edit conceptual corrections, commit, and re-audit) | Yes |
 | **Execution** | `run <name>` (advances plan state on success) | Yes (one per step) |
 | **Workspaces** | `worktree add <plan> [--clone]`, `worktree list`, `worktree remove <plan> [--force]`, `worktree prune` — an isolated worktree (or `--clone`) per plan for parallel runs; caveats (`worktree_base`, clone cleanup outside plan-tool, per-branch/`gc`, orphan branch) in docs/OPERATIONS.md's Worktrees section / RUNBOOK.md's parallel-worktrees workflow section (in the plan-tool repo) | No |
 | **Integration** | `jira <name>`, `jira config`, `jira --lint` (read-only artifact lint; no codex / no epic assignment) | jira yes (`--lint`: no) |

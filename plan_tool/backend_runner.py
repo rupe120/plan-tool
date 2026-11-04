@@ -149,7 +149,7 @@ class InterruptSource(str, Enum):
 # `contextvars.copy_context()` snapshot taken *after* the cell is set, share
 # the same cell object and can mutate its contents. A plain ContextVar value
 # would not work in either direction: a shared module value would race across
-# concurrent calls (`completeness-apply --jobs N`, `detail --jobs N`), while a
+# concurrent calls (`detail --jobs N`), while a
 # monitor thread's own `.set()` would never be visible back to the caller
 # (its context is a copy). Mutating a shared cell threads the needle.
 _termination_reason_var: contextvars.ContextVar[Optional[list]] = (

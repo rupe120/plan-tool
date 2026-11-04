@@ -83,7 +83,6 @@ backend seam (the seam swaps argv/parsing under the same `invoker`):
 | `detail.py` → lesson extraction (`lessons_invoker=None` falls back to `shell.claude_invoke`) | `None` (off) | **`extract_lessons=False` is the default** — the seam is only live when a test opts in. Pass `extract_lessons=False` explicitly (the file convention), OR rely on the autouse `_stub_lessons_extraction` fixture in `test_detail.py`. |
 | `detail.py` → post-write convergence calls `apply_finding` | `shell_invoker` | Stub `detail_module.apply_finding` (same pattern as `create_module`). |
 | `launcher.py` → `run_step(invoker=...)` / `apply_finding(invoker=...)` | `shell_invoker` | Pass `invoker=` explicitly, OR `monkeypatch.setattr(launcher, "apply_finding", ...)` at the call site's module. |
-| `cli/completeness_apply_parallel.py` → `apply_finding_in_tree(invoker=...)` → `apply_finding` (`completeness-apply --jobs N`) | `shell_invoker` | `monkeypatch.setattr(launcher, "apply_finding", ...)`, OR stub `completeness_apply_parallel.run_parallel_apply` / `apply_finding_in_tree` to bypass the pool entirely. |
 | `cli/completeness_phases.py` → `_collect_purity_split_findings` → `detail.collect_detail_quality_findings(invoker=...)` (the per-step MIXED-STEP purity pass in `completeness-audit`'s deterministic phase) | `shell_detail_invoker` | `monkeypatch.setattr(detail_module, "collect_detail_quality_findings", lambda *a, **k: [])`. Fires for **any detailed code step**, so any test driving `completeness-audit` / `completeness-audit` on a plan with a detailed code step must stub it (bare/undetailed/non-code/done steps spend nothing). See `test_review.py::TestCmdCompleteness._stub_plan_audit_invoker`. |
 | `roadmap.py` → `run_roadmap(invoker=...)` | `shell_roadmap_invoker` | Pass `invoker=lambda p: (0, '<closed stage operations JSON>')` for an enrolled predecessor with open feedback; assert its prompt excludes unrelated artifact bytes. Use a fail-on-call invoker for a feedback-free re-gate, which must not invoke or write. Drive the loop with an injected `stages=` table and temporary prompt directory containing `roadmap-stage-feedback-revision.md` plus its shared `roadmap-revision.md` guidance. |
 | `roadmap.py` → `materialize_plan_seed(invoker=...)` / `refresh_roadmap_seeds(invoker=...)` | `shell_roadmap_invoker` | Pass `invoker=lambda p: (0, "<draft seed text>")` beginning with valid provenance frontmatter. Test one candidate's retry and failure behavior through `materialize_plan_seed`; test source-order batch rows, outcomes, reports, and cleanup through `refresh_roadmap_seeds`, all under a temporary repository root. |
@@ -146,14 +145,6 @@ still catches every leak — it fires per-spawn on `backend.registered_binaries(
 regardless of thread. The neutralization recipe is unchanged: override the one
 `invoker=` seam (and `foundational_invoker` for a sweep-enabled test) and all
 workers use the fake. See the `detail` command for the `--jobs > 1` mechanics.
-
-`completeness-apply --jobs N` (`N > 1`) drives the *same* `apply_finding`
-`shell_invoker` seam concurrently, one worker per isolated git worktree
-(`cli/completeness_apply_parallel.py`). Neutralize it the same way — override
-`launcher.apply_finding` — or stub the module's `run_parallel_apply` /
-`apply_finding_in_tree` to skip worktree provisioning entirely in a unit test;
-the real worktree pool is covered by `@pytest.mark.integration` tests in
-`test_completeness_apply_parallel.py`.
 
 **Prompt-mode A/B.** The `create`/`detail` SPLIT-arm rows above are the
 opt-in side of a combined-vs-split A/B (`PLAN_TOOL_PROMPT_MODE`, default

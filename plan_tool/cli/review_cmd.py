@@ -911,7 +911,7 @@ def cmd_review_walk(args: argparse.Namespace) -> int:
     kind-agnostic) without re-spending a claude call. Same per-rec
     apply/skip/note/run/quit loop that :func:`cmd_review` and
     :func:`cmd_reconcile_code` run inline; this verb is the standalone apply
-    entry point — the reconcile-family counterpart to ``completeness-apply``.
+    entry point for saved reconcile findings.
 
     Loads the newest saved final review for ``<name>`` by default,
     skipping unreadable, checkpoint, and unknown-role sidecars;

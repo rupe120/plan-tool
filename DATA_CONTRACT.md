@@ -240,8 +240,7 @@ Completeness audits also persist the `medium` mixed-refactor-plus-feature
 (MIXED-STEP) `granularity-split` finding (`source="granularity-split"`, with
 `step_id` set to the mixed step) into `recommendations`, alongside the
 correctness/completeness/data-contract findings. This is the one advisory smell
-that reaches the sidecar: `completeness-apply` replays it through the
-`escalate_to_split` bridge (the split bridge). The `info` deterministic split recs, the
+that reaches the sidecar. The `info` deterministic split recs, the
 `granularity-merge` recs, and the repo-structural smells stay advisory-only
 (report render, not persisted), and this finding never flips the exit code.
 
@@ -1757,9 +1756,6 @@ accurate — no readable baseline existed either way.
 `launcher.py:apply_finding` boundary by default. Interactive review defers a
 successful verdict until the operator keeps a non-empty edit, but records an
 observed `INVOCATION-FAILED` before returning through its failure path.
-`completeness-apply --jobs N`
-suppresses every isolated worker write and makes canonical
-`completeness_apply_parallel.py:replay_results` the sole durable owner.
 
 Context keys:
 
@@ -1776,20 +1772,6 @@ the apply loop, not re-read per finding); **no `code_fingerprint` map** is carri
 at this per-finding site (dozens of lines each carrying a large map would be
 wasteful volume).
 
-Parallel replay uses only canonical join keys: canonical repository and plan
-slug, the launcher's resolved step id, the finding anchor (or `""`), the active
-command run id, and the fingerprint of the plan state the selected apply
-evaluated. Non-conflicting workers share the one pre-dispatch fingerprint. A
-conflict discards the stale worker outcome and recomputes the fingerprint before
-the fresh canonical rerun; only that rerun can be recorded.
-
-Canonical replay makes at most one best-effort append attempt for an accepted,
-recordable result. A swallowed recorder failure can therefore leave zero rows;
-delivery is not exactly-once. Pre-skipped findings, setup and pre-invocation
-parse failures, `APPLIED` with an empty landed diff, and edits rejected and
-restored by the parse gate emit no event. Annotation persistence and telemetry
-remain independent best-effort actions.
-
 `UNKNOWN` means an accepted exit-`0` response emitted no recognized verdict token
 (a response-contract violation). `INVOCATION-FAILED` means a primary or auto-fix
 follow-up invocation returned non-zero or raised before providing a usable
@@ -1798,10 +1780,6 @@ when its backend stats self-report `is_error`; telemetry follows the response
 the host accepted. `dry_run` performs no invocation and records nothing. Failure
 rows use the same plan slug, step id, anchor, plan fingerprint, and ambient
 `run_id`; detailed exit and exception data remains in the run-log.
-Deferred workers transport this failure token and the resolved step even when
-the invocation raises. The launcher first restores every tracked file and marks
-the transported outcome with restoration safety; incomplete restoration
-propagates as a batch abort and is never selected for replay.
 
 #### Escalate-to-split outcome
 

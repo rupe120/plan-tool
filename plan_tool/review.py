@@ -461,8 +461,7 @@ class Recommendation:
     # sluggless audit bullets). :func:`audit_plan_until_stable` feeds
     # the accumulated slugs back into later passes' prompts so a
     # re-found concept re-uses its slug instead of minting a semantic
-    # duplicate, and ``completeness-apply --anchor`` accepts it as a
-    # readable alternative to the hashed id.
+    # duplicate.
     anchor: Optional[str] = None
     # Precise-staleness signature (BACKLOG #93). SHA-256 digest of the
     # directive's own target steps' ``(id → title + change_type)`` identity,

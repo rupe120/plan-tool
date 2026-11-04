@@ -1515,13 +1515,9 @@ def _latest_blocking_findings(history: ReportHistory) -> tuple[RunFinding, ...]:
 
     Lets the render flag run-readiness the verdict can't: the loop signal reads
     ``converging`` even when the newest audit just surfaced a fresh critical.
-    Excludes findings the newest run's annotations mark resolved
-    (:func:`_is_resolved_in_run`) — ``completeness-apply`` rewrites the same
-    report in place, keeping ``recommendations`` verbatim and only adding
-    annotations, so presence alone overstates what is open. Filtered on
-    severity only (not :data:`STRUCTURAL_SOURCES`): ``plan-completeness`` is
-    nonstructural yet is the source ``completeness-apply``'s gap walk resolves,
-    so a structural source gate would drop the very findings this flags.
+    Saved annotations retain resolved/open meaning independently of the writer.
+    Filter by severity only: nonstructural plan-completeness findings also
+    carry resolution evidence.
     """
     if not history.runs:
         return ()
@@ -1545,8 +1541,8 @@ def _open_medium_plus(
     Uses the same stage-differentiated blocking bar ``completeness-audit``
     does (``classify_domain`` defaults to the old blanket-block behavior);
     reads each report's saved annotation rather than raw recommendation
-    presence, since an apply walk's applied/declined findings are no longer
-    open evidence. See docs/how-to/pipeline/audit.md § "Stage bar and mid-run steering".
+    presence: legacy sidecars' applied/declined annotations close findings.
+    See docs/how-to/pipeline/audit.md § "Stage bar and mid-run steering".
     """
     return tuple(
         finding

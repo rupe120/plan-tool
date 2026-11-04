@@ -1613,9 +1613,7 @@ def test_no_renderer_names_an_apply_command_for_conceptual_gaps() -> None:
 
 
 def test_next_step_commands_are_command_description_tuples() -> None:
-    """#367: conceptual gaps emit no command, so an advisory-only run yields an
-    empty block. The (command, description) tuple shape stays exercised by the
-    deterministic files-coherence clear, which is still a real command."""
+    """Manual remedies leave only executable command/description tuples."""
     assert [c for c, _ in _cmds(
         advisory_conceptual=[_rec("cc", "plan-completeness")]
     )] == ["plan-tool completeness-audit p --iterate"]
@@ -1623,14 +1621,8 @@ def test_next_step_commands_are_command_description_tuples() -> None:
         deferred=[_rec("fc", "files-coherence", "info",
                        suggested_action="add path")],
     )
-    # A completed empty set: the apply row is followed by the shared stage row.
-    assert cmds[0] == (
-        "plan-tool completeness-apply p",
-        "clear 1 files-coherence drift(s) (no claude)",
-    )
-    assert [c for c, _ in cmds] == [
-        "plan-tool completeness-apply p", "plan-tool run p",
-    ]
+    assert cmds == [("plan-tool run p", "no gaps left — execute the next runnable step")]
+
 
 
 def test_next_step_commands_emit_no_conceptual_command() -> None:
@@ -1672,15 +1664,7 @@ def test_next_step_commands_order_urgent_first() -> None:
     )
     verbs = [c for c, _ in cmds]
     assert verbs[0].startswith("plan-tool split p")
-    # completeness-apply now names ONLY the deterministic files-coherence
-    # clear — #367 moved conceptual gaps to a session-directed edit — emitted
-    # exactly once, and never with a nonexistent `--apply` flag.
-    apply_cmds = [c for c in verbs if c == "plan-tool completeness-apply p"]
-    assert len(apply_cmds) == 1
-    assert not any("--apply" in c for c in verbs)
-    apply_desc = next(d for c, d in cmds if c == "plan-tool completeness-apply p")
-    assert "files-coherence" in apply_desc
-    assert "conceptual gap(s)" not in apply_desc
+    assert not any("completeness-apply" in c for c in verbs)
     assert any("completeness-audit p --iterate" in c for c in verbs)
     # Commands stay short (no inline `--into "<a>"` syntax) so the aligned
     # column doesn't blow out; the full split form lives in the report.
@@ -1727,7 +1711,7 @@ def test_next_step_commands_detailed_plan_keeps_detail_level_actions() -> None:
         bundle_status=SimpleNamespace(is_bare=False),
     )
     verbs = [cmd for cmd, _desc in cmds]
-    assert "plan-tool completeness-apply p" in verbs
+    assert "plan-tool completeness-apply p" not in verbs
     assert "plan-tool detail p" in verbs
 
 
@@ -2005,13 +1989,12 @@ def test_completeness_json_keeps_qualified_result_additive(capsys) -> None:
     assert payload["qualified_result"] == result
 
 
-# ---------- JSON sidecar for completeness-apply ----------
+# ---------- JSON sidecar for saved findings ----------
 
 def test_write_report_emits_json_sidecar_when_recommendations_given(
     tmp_path: Path,
 ) -> None:
-    """`completeness-apply` reads the sidecar to walk gaps without
-    re-running the audit; the audit writer must produce it."""
+    """Saved readers load structured findings without rerunning the audit."""
     from plan_tool.review_persistence import load_review
 
     recs = [_rec("cache-invalidation", "plan-completeness", "medium")]
@@ -2467,11 +2450,11 @@ def test_report_bare_plan_omits_conceptual_apply_address() -> None:
         bundle_status=SimpleNamespace(is_bare=True),
     )
     assert "Address: `plan-tool completeness-apply" not in md
-    assert "Apply actions for this axis are withheld until a complete detail bundle exists" in md
-    assert "informational for now" in md
+    assert "Review plan-level completeness gaps now" in md
+    assert "leave detail-only remedies for detail authoring" in md
 
 
-def test_report_bare_plan_withheld_paragraph_names_the_completeness_axis() -> None:
+def test_report_bare_plan_guidance_keeps_plan_contract_edits_actionable() -> None:
     rec = _rec("cache-invalidation", "plan-completeness", "medium")
     md = build_report_md(
         plan_title="T", plan_name="1-my-plan", iterate_enabled=False,
@@ -2480,7 +2463,7 @@ def test_report_bare_plan_withheld_paragraph_names_the_completeness_axis() -> No
         grouped_report_md="G",
         bundle_status=SimpleNamespace(is_bare=True),
     )
-    assert "Apply actions for this axis are withheld" in md
+    assert "Correct plan contracts through a session-directed edit before authoring details" in md
     assert "Apply actions are withheld until a complete detail bundle exists" not in md
 
 
@@ -4536,12 +4519,11 @@ def test_console_summary_counts_only_blocking_correctness_as_fix_first(tmp_path)
 _FILES_COHERENCE = _rec("fc", "files-coherence", "info", suggested_action="add path")
 
 
-def test_empty_set_with_a_files_coherence_apply_row_still_appends_the_stage() -> None:
-    """The apply row never suppresses the stage for a completed empty set: the
-    console list and the prose agree the stage is offered."""
+def test_files_coherence_hand_edit_preserves_the_existing_stage_suggestion() -> None:
+    """Manual diagnostic remedies preserve the completed empty verdict's stage."""
     out = _all_reader_output(_EMPTY_SET, deferred=[_FILES_COHERENCE])
     assert [c for c, _ in out["cmds"]] == [
-        "plan-tool completeness-apply p", "plan-tool run p",
+        "plan-tool run p",
     ]
     assert "`plan-tool run p`" in out["steps"][-1]
 
@@ -4927,3 +4909,22 @@ def test_write_report_preserves_markdown_and_qualified_sidecar_replacement_guard
         )
     assert load_review(report.with_suffix(".json")).qualified_result["headline"] == "clean"
     assert len(list(report.parent.glob("*.json"))) == 1
+
+
+def test_files_coherence_remedy_requires_reviewing_the_citation_and_scope() -> None:
+    from plan_tool.completeness_report import diagnostic_remedies
+
+    remedy = " ".join(diagnostic_remedies([
+        _rec("real", "files-coherence", "info", suggested_action="add real.py"),
+        _rec("typo", "files-coherence", "info", suggested_action="fix typo.py"),
+    ], "p"))
+    assert "Inspect each cited path" in remedy
+    assert "hand-edit the detail citation" in remedy
+    assert "`files:`/`allowed_mentions:`" in remedy
+    assert "does not establish step scope or justify an exemption" in remedy
+    assert "correct typo citations" in remedy
+    assert "completeness-apply" not in remedy
+
+
+def test_files_coherence_hand_edit_never_becomes_a_command_tuple() -> None:
+    assert _cmds(deferred=[_FILES_COHERENCE]) == _cmds()

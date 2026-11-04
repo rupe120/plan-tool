@@ -808,7 +808,7 @@ def test_completeness_persists_mixed_step_split_documented() -> None:
     section = _section(_doc_text(), "Saved review sidecar")
     assert "granularity-split" in section
     assert "mixed" in section.lower()
-    assert "split bridge" in section.lower()
+    assert "recommendations" in section
 
 
 def test_create_granularity_decisions_documented() -> None:
@@ -938,17 +938,12 @@ def test_apply_verdict_context_keys_documented() -> None:
     assert "zero-exit response" in text
 
 
-def test_apply_verdict_parallel_ownership_documented() -> None:
+def test_apply_verdict_preserves_tokens_without_retired_replay_writer() -> None:
     text = _section(_doc_text(), "Apply verdict")
-    for phrase in (
-        "replay_results",
-        "suppresses every isolated worker write",
-        "discards the stale worker outcome",
-        "at most one best-effort append attempt",
-        "parse gate emit no event",
-        "restoration safety",
-    ):
-        assert phrase in text
+    for token in ("APPLIED", "NOT-APPLICABLE", "BLOCKED", "BLOCKED-STRUCTURAL",
+                  "UNKNOWN", "INVOCATION-FAILED"):
+        assert f'`"{token}"`' in text
+    assert "replay_results" not in text
 
 
 def test_escalate_split_decision_documented() -> None:

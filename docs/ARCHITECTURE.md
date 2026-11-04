@@ -48,13 +48,11 @@ group; the layering rules are in [`CLAUDE.md`](../CLAUDE.md) § "Architecture"
 | `authoring.py` | The plan-writing verbs (`create`, `detail`, …). |
 | `bench_cmd.py` | `bench run` / `bench report`. |
 | `checkpoints.py` | `checkpoint`, the on-disk resume cache. |
-| `completeness_cmd.py` | `completeness-audit` / `completeness-apply`. |
-| `completeness_phases.py` | The `--iterate` loop and apply dispatch behind `completeness-audit` — an orchestrator, the one exception to thin handlers. |
-| `completeness_apply_parallel.py` | The parallel `completeness-apply --jobs N` path. |
+| `completeness_cmd.py` | `completeness-audit`. |
+| `completeness_phases.py` | The `--iterate` loop and deterministic repair behind `completeness-audit` — an orchestrator, the one exception to thin handlers. |
 | `convergence_cmd.py` | `convergence`. |
 | `data_contract_cmd.py` | `data-contract-apply`, the interactive walk over saved data-contract drift findings. |
 | `decision_cmd.py` | `decide`, the explicit decomposition-decision recorder. |
-| `direct_cmd.py` | `direct-jira` / `direct-run`. |
 | `gate_status_cmd.py` | `gate-status`, saved final completeness verdicts via `gate_status.py`. |
 | `gates_cmd.py` | `suggest-gates`. |
 | `gitcommit.py` | Shared git-commit plumbing for the opt-in `--commit` flags. |
@@ -165,56 +163,30 @@ convergence loop.
 
 ### Detail-bundle state guides the audit route
 
-For a bare or partially detailed plan, the audit keeps only routes that can
-operate on the existing artifact. A bare-plan BLOCKED result leads with
-`plan-tool detail`; `_blocked_next_step` offers `plan-tool split` second.
+Bare-plan correctness findings remain actionable against the plan body.
+Material plan-level contracts and acceptance criteria receive judged edits before
+`detail`; implementation mechanics remain detail-owned. Bare-stage completeness
+medium findings are advisory; the complete detail bundle receives another audit.
 
-| Finding or writer | Route on a bare or partial bundle | Reason |
-| --- | --- | --- |
-| Conceptual `plan-correctness` | Keeps the `completeness-apply` route for plan-body design gaps, including material ambiguity and target prose that has no detail file. | The plan body exists. |
-| Conceptual `plan-completeness`, `DETAIL_LEVEL_FINDING_SOURCES`, and files coherence | Stays withheld. | A completeness action can only target what exists. |
+### Audit discovers; operators judge conceptual corrections
 
-### Audit discovers; apply mutates
-
-`completeness-audit --iterate` applies only deterministic well-formedness
-findings. It persists both conceptual sources, `plan-correctness` and
-`plan-completeness`, to the sidecar without applying them. The audit spends no
-mutation tokens on conceptual gaps while it discovers them; the apply phase
-uses the persisted gap map deliberately.
-
-`completeness-apply` is the sole mutator for those sources. Its
-`review_walk.py` `_APPLY_AS_FINDING_SOURCES` dispatch walks correctness first,
-then completeness. `plan-correctness` is dispatchable only there, passed as
-`extra_apply_sources` after its detail-bundle gate; generic reconcile and
-review walks must not auto-apply it.
-
-### Parallel apply isolates then replays
-
-`completeness-apply --jobs N` (`N > 1`) treats the saved gap map as static
-input and uses `cli/completeness_apply_parallel.py` for wall-clock parallelism:
-
-1. A plan-mutation-free worker runs `apply_finding` in its own isolated Git
-   worktree off `HEAD`, so the route requires a clean tree.
-2. A `ThreadPoolExecutor` dispatches workers with B1-style failure isolation.
-3. `replay_results` writes captured content to the canonical tree in serial,
-   deterministic `(source, severity, id)` order, re-running a finding when an
-   earlier replay touched its file.
-
-`--jobs > 1` is non-interactive and requires `-y`; `--jobs 1` remains the
-default interactive walk.
+`completeness-audit --iterate` repairs only deterministic well-formedness
+findings. It saves conceptual `plan-correctness` and `plan-completeness`
+findings without applying them. Humans and orchestrating sessions review the
+saved report, verify findings, make judged edits, commit bounded corrections,
+and re-audit the changed snapshot. Generic review and reconcile walks retain
+their own application contracts.
 
 ### Completeness orchestration
 
 `cli/completeness_phases.py` is the non-CLI logic layer behind
-`completeness_cmd.py`'s two thin handlers, `cmd_completeness` and
-`cmd_completeness_apply`. It is a cycle-free leaf that the command module
+`completeness_cmd.py`'s audit handler, `cmd_completeness`. It is a cycle-free leaf that the command module
 calls, never the reverse.
 
 | Responsibility | Implementation boundary |
 | --- | --- |
-| Iteration | `_run_iterate_convergence_loop` and its 18 private helpers, including `_fmt_finding_counts`, `_sampled_bundle_status`, and `compute_conceptual_bar_blocking_ids`. `completeness_cmd.py` keeps its one qualified `completeness_phases._run_iterate_convergence_loop(...)` call because the test suite wholesale-monkeypatches that seam. |
-| Apply dispatch | `_resolve_apply_walk_targets` → `_run_apply_walk`; the latter delegates `--jobs N > 1` work to `_apply_walk_recs_parallel`. |
-| Rendering and saved inputs | `_render_completeness_json`, `_render_grouped_report`, `_persist_and_present_report`, `_resolve_saved_completeness_audit`, and `_load_saved_data_contract_payloads`. |
+| Iteration | `_run_iterate_convergence_loop` and its private helpers, including `_fmt_finding_counts`, `_sampled_bundle_status`, and `compute_conceptual_bar_blocking_ids`. `completeness_cmd.py` keeps its one qualified `completeness_phases._run_iterate_convergence_loop(...)` call because the test suite wholesale-monkeypatches that seam. |
+| Rendering and saved inputs | `_render_completeness_json`, `_render_grouped_report`, `_persist_and_present_report`. |
 
 `completeness_cmd.py` re-imports every name needed by a surviving local caller
 or external consumer, including `app.py`'s package-surface re-export and
@@ -230,7 +202,7 @@ direct test imports.
 
 ## Escalate-to-split bridge
 
-**Escalate-to-split bridge (`launcher.py:escalate_to_split`).** The single seam from a recognized mixed/structural step (a behavior-preserving refactor fused with new behavior — the one shape `apply_finding` can't fix) to either an *applied* refactor+feature 1→2 split or a `structural-split` *recommendation*; a sibling of the validation primitives above, not a pipeline stage. Decision rule: it applies only when all of **safe** (no downstream `DONE` step blocks the split — a `CURRENT` step is "next runnable" and renumbers cleanly) + caller **`allow_split`** + an interactive **confirm `yes`** hold; every other path (unattended, unsafe, non-TTY, declined) recommends only, and the default path spends no Claude — encoding the two invariants *always surface the more-correct plan* and *never mutate structure unattended*. Its contract is a frozen `EscalateResult` whose `outcome` is one of `applied` / `recommended` / `unsafe` / `proposal-unusable` / `step-missing` (only `applied` mutates), and the seam re-parses the plan from disk on every call. Three callers wire it: the `detail` Phase-B purity check plus convergence loop (`detail.py:generate_detail`), the interactive review/reconcile apply walk (`cli/review_actions.py:_dispatch_structural_escalation`, the arm `_dispatch_apply_finding` delegates to on a `BLOCKED-STRUCTURAL` verdict), and the `completeness-apply` serial walk, where a persisted `medium` `granularity-split` MIXED-STEP finding dispatches through that same `_dispatch_structural_escalation`, gated by `--apply-structural` (recommend-only otherwise); the `create` convergence loop (`create.py:create_plan`) does not yet route through it (create-side trigger deferred). The four structural dispatchers built by `cli/review_actions.py`'s `_build_review_action_fn` single-source their `WalkState` side-effect tail through `review_walk.py:apply_structural_outcome` / `StructuralOutcomeEffects`, and the three bridge dispatchers share its `structural_apply_allowed` gate (file-check stays out of the gate — it inverts the `yes_to_all` rule; escalation's drift `refresh_snapshot` stays inline). Two routing tokens steer it: the `structural-split` recommendation source in `review.py` (classified by `STRUCTURAL_SOURCES` / `is_structural`, deliberately kept out of `APPLY_ELIGIBLE_SOURCES`) and the `BLOCKED-STRUCTURAL` apply verdict parsed by `launcher.py:parse_apply_verdict`.
+**Escalate-to-split bridge (`launcher.py:escalate_to_split`).** The single seam from a recognized mixed/structural step (a behavior-preserving refactor fused with new behavior — the one shape `apply_finding` can't fix) to either an *applied* refactor+feature 1→2 split or a `structural-split` *recommendation*; a sibling of the validation primitives above, not a pipeline stage. Decision rule: it applies only when all of **safe** (no downstream `DONE` step blocks the split — a `CURRENT` step is "next runnable" and renumbers cleanly) + caller **`allow_split`** + an interactive **confirm `yes`** hold; every other path (unattended, unsafe, non-TTY, declined) recommends only, and the default path spends no Claude — encoding the two invariants *always surface the more-correct plan* and *never mutate structure unattended*. Its contract is a frozen `EscalateResult` whose `outcome` is one of `applied` / `recommended` / `unsafe` / `proposal-unusable` / `step-missing` (only `applied` mutates), and the seam re-parses the plan from disk on every call. Two callers wire it: the `detail` Phase-B purity check plus convergence loop (`detail.py:generate_detail`) and the interactive review/reconcile apply walk (`cli/review_actions.py:_dispatch_structural_escalation`, the arm `_dispatch_apply_finding` delegates to on a `BLOCKED-STRUCTURAL` verdict); the `create` convergence loop (`create.py:create_plan`) does not yet route through it (create-side trigger deferred). The four structural dispatchers built by `cli/review_actions.py`'s `_build_review_action_fn` single-source their `WalkState` side-effect tail through `review_walk.py:apply_structural_outcome` / `StructuralOutcomeEffects`, and the three bridge dispatchers share its `structural_apply_allowed` gate (file-check stays out of the gate — it inverts the `yes_to_all` rule; escalation's drift `refresh_snapshot` stays inline). Two routing tokens steer it: the `structural-split` recommendation source in `review.py` (classified by `STRUCTURAL_SOURCES` / `is_structural`, deliberately kept out of `APPLY_ELIGIBLE_SOURCES`) and the `BLOCKED-STRUCTURAL` apply verdict parsed by `launcher.py:parse_apply_verdict`.
 
 ## Granularity advisor
 
@@ -273,8 +245,7 @@ identity, hardlinks and extended metadata are not preserved.
 
 ## Decision telemetry
 
-**Decision telemetry (`plan_tool/telemetry.py`).** A **stdlib-only leaf** (imports nothing first-party, so any module — including cycle-sensitive leaves — can record without a cycle) and tolerant reader. `record_decision` appends one locked `DecisionEvent` per line to `.plan-tool/telemetry/decisions.jsonl` (gitignored, local); recording is best-effort and must never break the observed command. Telemetry stores code state as a compact equality digest, while grounding and saved-review flows retain full path/hash maps where they need per-path comparison. A create assessment owns its shared code-state snapshot and its child outcomes join through one assessment occurrence ID. `plan_tool/launcher.py:apply_finding` classifies apply results, including unusable primary and auto-fix follow-up responses. Speculative parallel workers suppress durable writes and `plan_tool/cli/completeness_apply_parallel.py:replay_results` records only the canonical landed result; interactive review defers successful verdicts until the operator keeps the edit but records invocation failures on early failure paths. `plan_tool/telemetry_analysis.py:analyze_decisions` then computes advisory outcomes on read. Schema in `DATA_CONTRACT.md` (drift-guarded).
-
+**Decision telemetry (`plan_tool/telemetry.py`).** A **stdlib-only leaf** (imports nothing first-party, so any module — including cycle-sensitive leaves — can record without a cycle) and tolerant reader. `record_decision` appends one locked `DecisionEvent` per line to `.plan-tool/telemetry/decisions.jsonl` (gitignored, local); recording is best-effort and must never break the observed command. Telemetry stores code state as a compact equality digest, while grounding and saved-review flows retain full path/hash maps where they need per-path comparison. A create assessment owns its shared code-state snapshot and its child outcomes join through one assessment occurrence ID. `plan_tool/launcher.py:apply_finding` classifies apply results, including unusable primary and auto-fix follow-up responses. Interactive review defers successful verdicts until the operator keeps the edit but records invocation failures on early failure paths. `plan_tool/telemetry_analysis.py:analyze_decisions` then computes advisory outcomes on read. Schema in `DATA_CONTRACT.md` (drift-guarded).
 ## Data contract registry
 
 **Data contract registry (`data_contract.py`).** The code-owned registry backing `DATA_CONTRACT.md`'s drift guard (`tests/test_data_contract.py`): `persisted_dataclass_contracts` / `json_object_contracts` name every persisted dataclass, sidecar JSON object, and durable config file, discovering their fields from the live runtime classes rather than hand-copying them, so the registry can't silently drift from the code it describes. `intentional_exclusions` records fields deliberately left out of a contract (with a reason, mirroring the `ALLOWED_DUPLICATE_GROUPS` pattern elsewhere); `check_input_contract_references` verifies a contract's cited code anchors (`file:symbol`) actually resolve; `registry_fingerprint` / `contract_fingerprint` / `make_drift_record` support the fingerprint-gated drift check itself.

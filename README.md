@@ -441,10 +441,7 @@ Audit the bare plan before details, then audit the complete detail bundle
 before execution or export. The [audit guide](docs/how-to/pipeline/audit.md)
 explains saved reports, qualified results and judged session-directed fixes.
 
-`completeness-apply`, `direct-run` and `direct-jira` are deprecated. Assistants
-read the whole report and make bounded, judged edits. The legacy
-`completeness-apply` command has an interactive walk and a `--jobs > 1`
-automatic path; see its [reference](docs/cli/completeness-apply.md).
+Read the saved report, verify and judge the findings, edit the appropriate plan or detail text, commit bounded corrections, and re-run `completeness-audit --iterate --commit` against the changed snapshot.
 
 <a id="0-roadmap--stage-a-project-sized-concept-optional"></a>
 

@@ -49,7 +49,6 @@ plan-tool annotate <path-or-glob>... [--output-dir <dir>] [--report-dir <dir>] [
 
 # Audit — judge the plan's design/coverage, then reconcile drift (reconcile-plan is mainly for older/stale plans, or a supplement).
 plan-tool completeness-audit <name> [--json] [--iterate | --no-iterate] [--max-iterations N] [--iteration-budget SECONDS]
-plan-tool completeness-apply <name> [--id STEM] [--anchor SLUG] [--rewalk] [--include-info]   # DEPRECATED, going away (BACKLOG #376) -- read the saved report and make a session-directed edit instead
 plan-tool data-contract-apply <name> [--id STEM] [--anchor SLUG] [--rewalk] [--include-info]   # interactive walk for saved DATA_CONTRACT.md drift findings
 plan-tool reconcile-plan <name> [--step N | --all] [--dry-run] [--refresh] [--no-heuristic] [--no-allow-missing-parent]   # --all is the default; --refresh is cheap
 
@@ -65,10 +64,6 @@ plan-tool verify-all <name> --mode <m> [--max-steps N] [--dry-run]
 plan-tool jira <name> [--max-hours N] [--format markdown|json] [--output PATH] [--handoff-output PATH] [--adopt-existing] [--no-write] [--stdout]
 plan-tool jira <name> --lint [--format markdown|json]          # lint the conventional jira-stories artifact without invoking Claude
 plan-tool jira --lint --input <path>                           # lint an existing markdown/json export directly
-
-# Direct pipeline — DEPRECATED, going away (BACKLOG #376); drive create/detail/run/jira as separate, developer-reviewed steps instead.
-plan-tool direct-jira [slug] [--from <description> | --from-existing <path>] [--output-dir <dir>] [--iterate | --no-iterate] [-y]   # create → detail → apply → jira
-plan-tool direct-run  [slug] [--from <description> | --from-existing <path>] [--output-dir <dir>] [--iterate | --no-iterate] [-y]   # create → detail → apply → run → reconcile
 
 # Inspect & manage state.
 plan-tool list
@@ -161,22 +156,6 @@ Here's what they do, grouped the same way as the cheat sheet above.
   just report them without writing. `--all-steps` proposes speculative
   gates even when nothing has been built yet.
 
-#### Direct pipeline
-
-**Deprecated, going away (BACKLOG #376).** Both commands exist only to chain
-`completeness-apply`'s gap-by-gap apply, which is retiring for the same
-reason: it's slower than a whole-report review, and the slow pace obscures
-whether the plan is actually converging. Drive the stages separately by
-hand instead.
-
-- `direct-jira` chains `create` → `detail` → `completeness-apply` →
-  `jira`. If `create` produces an over-large or split plan, it stops
-  with exit code 0 and steers you toward the full pipeline instead.
-- `direct-run` chains `create` → `detail` → `completeness-apply` →
-  `run --all --commit` → `reconcile-code`, committing the authoring
-  artifacts and each green step as it goes. It needs a clean working
-  tree to start.
-
 #### Inspect
 
 - `validate` is niche — it's a frontmatter-schema check only. Reach for
@@ -193,7 +172,7 @@ every subcommand:
 
 | Placeholder | Meaning | Where it appears |
 | --- | --- | --- |
-| `<name>` | **Existing** registered plan, resolved by slug (`my-feature`), filename stem (`1-my-feature`), or filename (`my-feature.md`). Priority prefixes are tried automatically. | `status`, `validate`, `run`, `reconcile-plan`, `reconcile-plan-walk`, `verify-all`, `completeness-audit`, `completeness-apply`, `data-contract-apply`, `jira`, `detail` |
+| `<name>` | **Existing** registered plan, resolved by slug (`my-feature`), filename stem (`1-my-feature`), or filename (`my-feature.md`). Priority prefixes are tried automatically. | `status`, `validate`, `run`, `reconcile-plan`, `reconcile-plan-walk`, `verify-all`, `completeness-audit`, `data-contract-apply`, `jira`, `detail` |
 | `<slug>` | Canonical lowercase-dashes plan slug (no priority prefix, no `.md` suffix). Used when there's no other form to resolve from — either the plan doesn't exist yet, or the on-disk directory is keyed by slug. | `create <slug>`, `checkpoint clear <slug>`, `runs clear <slug>`, `--slug` filter on `runs list` / `runs profile` |
 | `<slug>/<checkpoint>` | Checkpoint identifier. `<slug>` is the plan slug; `<checkpoint>` is the per-plan name shown in the `name` column of `plan-tool checkpoint list` (e.g. `detail-step-02`, `create-initial-steps`). | `checkpoint show` |
 | `<slug>/<run_id>` | Run identifier. `<slug>` is the plan slug; `<run_id>` is the timestamp-derived id shown by `plan-tool runs list` (e.g. `2026-05-14T12-34-56-9f3a1c`). | `runs show`, `runs diff` |
