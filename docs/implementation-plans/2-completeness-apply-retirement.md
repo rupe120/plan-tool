@@ -174,6 +174,7 @@ steps:
   depends_on_notes:
     2: direct pipeline surfaces no longer exist to document
     3: completeness-apply and its parallel module no longer exist to document
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/05-remove-retired-command-instructions.md
   description: Remove retired-command instructions from the reference, workflow, and
     demo docs and delete docs/how-to/pipeline/direct-pipeline.md, leaving historical
     plans, reports, and docs/history/backlog-decisions.md as written
