@@ -607,6 +607,32 @@ def test_report_explains_why_conceptual_not_addressed() -> None:
     assert "GROUPED" in md   # grouped report embedded
 
 
+@pytest.mark.parametrize("iterate_enabled", [False, True])
+def test_embedded_correctness_appears_once_and_standalone_keeps_findings(
+    iterate_enabled,
+) -> None:
+    rec = _rec("unique-correctness", "plan-correctness", "high")
+    det = _DeterministicReport(None, [], [], [], [], [], [])
+    options = dict(
+        correctness_recs=[rec], conceptual_recs=[], audit_recs=[rec],
+        iterate_enabled=iterate_enabled,
+    )
+    plan = SimpleNamespace(title="Demo")
+    args = SimpleNamespace(name="demo")
+    standalone = _render_grouped_report(plan, args, det, **options)
+    embedded = _render_grouped_report(plan, args, det, **options, embedded=True)
+    md = build_report_md(
+        plan_title="Demo", plan_name="demo", iterate_enabled=iterate_enabled,
+        stop_reason="converged", iterations=0, applied=[], deferred=[],
+        advisory_conceptual=[], open_findings=[], correctness=[rec],
+        grouped_report_md=embedded,
+    )
+    assert standalone.count(rec.body) == 1
+    assert rec.body not in embedded
+    assert md.count(rec.body) == 1
+    assert "see the dedicated section above" in embedded
+
+
 def test_report_correctness_not_double_counted_as_open() -> None:
     """#85: correctness gaps are surfaced via the ``correctness`` bucket only.
     The caller passes open_findings=[] for them, so the disposition summary
@@ -4928,3 +4954,14 @@ def test_files_coherence_remedy_requires_reviewing_the_citation_and_scope() -> N
 
 def test_files_coherence_hand_edit_never_becomes_a_command_tuple() -> None:
     assert _cmds(deferred=[_FILES_COHERENCE]) == _cmds()
+
+
+def test_empty_embedded_correctness_has_no_dangling_section_reference() -> None:
+    out = _render_grouped_report(
+        SimpleNamespace(title="Demo"), SimpleNamespace(name="demo"),
+        _DeterministicReport(None, [], [], [], [], [], []),
+        correctness_recs=[], conceptual_recs=[], audit_recs=[],
+        iterate_enabled=False, embedded=True,
+    )
+    assert "see the dedicated section above" not in out
+    assert "none — paths resolve, deps coherent, concepts sound" in out

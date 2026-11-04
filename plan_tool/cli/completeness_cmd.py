@@ -610,8 +610,7 @@ def finalize_completeness_run(
             return outcome.early_exit_code
         return rc
 
-    grouped_md = _render_grouped_report(
-        plan, args, det,
+    grouped_options = dict(
         correctness_recs=correctness_recs,
         conceptual_recs=conceptual_recs,
         audit_recs=audit_recs,
@@ -623,6 +622,10 @@ def finalize_completeness_run(
         qualified_result=_qualified_result,
         verdict=blocking_verdict,
     )
+    grouped_md = _render_grouped_report(plan, args, det, **grouped_options)
+    embedded_grouped_md = _render_grouped_report(
+        plan, args, det, **grouped_options, embedded=True,
+    )
     skip_sidecar_write = reused_audit_recs is not None and not budget.enabled
     report_path = _persist_and_present_report(
         plan, path, args, ctx,
@@ -631,6 +634,7 @@ def finalize_completeness_run(
         correctness_recs=correctness_recs,
         conceptual_recs=conceptual_recs,
         grouped_md=grouped_md,
+        embedded_grouped_md=embedded_grouped_md,
         smell_recs=det.smell_recs,
         data_contract_recs=det.data_contract_recs,
         data_contract_payloads=det.data_contract_payloads,
