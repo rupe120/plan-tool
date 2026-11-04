@@ -282,17 +282,26 @@ Durable re-open conditions for retired items are recorded in
   - `chat-output-streaming` `20261010-010407`: `[workflow-shape]`.
   - `cdk-infrastructure-and-environments` `20261010-012103`:
     `[accepted-roadmap-source]`.
+
+  The same citation also breaks a roadmap with no leftovers. A stage run
+  publishes no top-level `0N-*.md` files (`ROADMAP_FORMAT.md` § "What writes
+  them"), so in a roadmap created that way a bare `04-roadmap.md` names no
+  file at all. That case follows from the design and
+  has not been observed in a run; the stale-copy case above is the observed
+  one.
 - **Cause (verified in code):** promotion is meant to change only the
   selector, so the defect is not a missed refresh. It is the citation
   contract. The seed prompt binds plans to bare names that resolve on disk
   to the files the versioned-from-birth plan declared inert. No path (seed
   writer, `create`, or the audit inputs) translates a roadmap citation to
   the accepted version.
-- **Fix:** roadmap seed citations name the accepted version: the seed
-  writer renders `References` and `source_artifacts` as version-store paths
-  (or the version id plus the member name), and `create` keeps them. This
-  changes the draft-seed contract, so it goes through the plan pipeline.
-  Shipped 2026-10-10 as a separate direct change: a stderr warning naming
+- **Fix:** roadmap seed citations name the accepted version by repo-relative
+  version-store path throughout the seed body, the draft-seed gates require
+  it, and `create` carries it. This changes the draft-seed contract, so it
+  goes through the plan pipeline. Seed:
+  `docs/implementation-plans/plan-seeds/roadmap-seed-accepted-version-citations.md`
+  (plan not yet created), which settles the form, the legacy-seed rule and
+  the `source_artifacts` departure. Shipped 2026-10-10 as a separate direct change: a stderr warning naming
   leftover top-level `0N-*.md` files beside an accepted head, on
   `roadmap --view`, `--materialize`, `--refresh-seeds`, `--accept-seed`, and
   `--apply`. Deliberately not warned: `create --from-existing <seed>`, the
@@ -300,8 +309,16 @@ Durable re-open conditions for retired items are recorded in
   there.
 - **Deliberately not:** making promotion rewrite the top-level files, which
   restores the two-copy design the versioned-from-birth plan removed.
-- **Workaround:** delete the top-level `0N-*.md` files (the documented hand
-  conversion, which the warning from 2026-10-10 prompts) and re-audit.
+- **Deferred follow-up:** bare roadmap file names in new prose that
+  `create`'s model writes during synthesis, rather than copies from the
+  seed. The seed leaves them out (decided 2026-10-29); closing them needs a
+  `create` prompt rule or a post-synthesis check.
+- **Workaround:** hand-edit the plan's roadmap citations to the accepted
+  version's repo-relative paths, e.g.
+  `docs/implementation-plans/roadmaps/<slug>/.roadmap-versions/<id>/04-roadmap.md`,
+  then re-audit. Deleting
+  the top-level files alone (the documented hand conversion, which the
+  2026-10-10 warning prompts) is not enough: the bare names then name no file.
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** Integration `integration-aidlc-mvp` bare audits, 2026-10-10.
 
