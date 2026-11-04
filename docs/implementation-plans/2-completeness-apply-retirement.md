@@ -141,6 +141,7 @@ steps:
     2: direct-run/direct-jira are gone, so the carve-out has nothing left to describe
     3: completeness-apply is gone, so the human-vs-session split collapses to hand-apply
       only
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/04-rewrite-driving-directives-so-hand.md
   description: 'Rewrite the driving directives so hand-applying conceptual findings
     is the only path: drop the human-at-a-TTY completeness-apply branch, the direct-run/direct-jira
     unattended carve-out, and completeness-apply from the --commit surface list in
