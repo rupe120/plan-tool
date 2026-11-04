@@ -1,11 +1,11 @@
 ---
 title: Completeness Apply Retirement
-intent: '`plan-tool` will no longer auto-apply a conceptual (`plan-correctness` /
-  `plan-completeness`) finding anywhere. `completeness-apply` — its interactive walk
+intent: '`plan-tool` retires the dedicated conceptual (`plan-correctness` /
+  `plan-completeness`) application commands. `completeness-apply` — its interactive walk
   and its `--jobs N` blind-apply mode — and `direct-run` / `direct-jira`, which exist
-  only to chain that auto-apply into an unattended pipeline, are retired. Every conceptual
-  finding is reported for whatever is driving `plan-tool` — a human at a TTY, or an
-  orchestrating Codex/Claude Code session — to read and hand-edit. Existing saved
+  only to chain that auto-apply into an unattended pipeline, are retired. Completeness-audit conceptual
+  findings are reported for whatever is driving `plan-tool` — a human at a TTY, or an
+  orchestrating Codex/Claude Code session — to read and hand-edit. Create/detail deterministic repair and existing reconcile and review routes stay unchanged. Existing saved
   reports, run logs, and legacy artifacts remain readable.'
 status: planning
 priority: medium
@@ -14,12 +14,12 @@ risk_profile_rationale: Risk declaration uses standard because --yes does not ac
   model risk proposals.
 test_command: uv run pytest tests/ -q -n auto
 enforce_step_tests: true
-source_seed: plan-seeds/completeness-apply-retirement.md
+source_seed: plan-seeds/archive/completeness-apply-retirement.replaced.md
 steps:
 - id: 1
   title: Point completeness reports, audit stop messages, and help text at hand-editing
-    instead of completeness-apply, reusing the existing jira-grade hand-fix wording
-    for every grade
+    instead of completeness-apply, retaining the surviving conceptual hand-edit guidance
+    and replacing remaining retired-command remedies
   intent: Every saved report and audit message tells the reader to read the findings
     and edit the plan or detail files themselves, so no guidance points at a command
     that is about to disappear.
@@ -72,8 +72,8 @@ steps:
     the allowed_mentions files-coherence writer, the --commit commit, parallel replay
     overwrite/restore, and worktree/branch cleanup; apply_finding and its other callers
     stay unchanged; existing saved annotations, sidecars, and run logs stay readable)
-  intent: No tool command applies a plan-correctness or plan-completeness finding
-    anymore, while pre-change reports, sidecars, and run logs still load through their
+  intent: No dedicated completeness application command remains; preserved create, detail,
+    review, reconcile, and benchmark callers keep their behavior, while reports still load through their
     existing readers.
   files:
   - plan_tool/cli/completeness_cmd.py
@@ -119,7 +119,7 @@ steps:
   title: 'Rewrite the driving directives so hand-applying conceptual findings is the
     only path: drop the human-at-a-TTY completeness-apply branch, the direct-run/direct-jira
     unattended carve-out, and completeness-apply from the --commit surface list in
-    CLAUDE.md, DIRECTIVES.md, and both SKILL.md files'
+    CLAUDE.md, DIRECTIVES.md, and all three backend SKILL.md files'
   intent: Sessions and operators driving plan-tool get one consistent instruction
     — read the report and edit by hand — and no retained rationale still argues for
     a removed command, such as the bare-stage non-block justified by completeness-apply
@@ -129,6 +129,7 @@ steps:
   - integrations/shared/DIRECTIVES.md
   - integrations/claude/SKILL.md
   - integrations/codex/SKILL.md
+  - integrations/cursor/SKILL.md
   complexity: medium
   change_type: non-code
   depends_on:
@@ -149,8 +150,8 @@ steps:
   - docs/ARCHITECTURE.md
   - docs/GATES.md
   - docs/how-to/pipeline/audit.md
-  - docs/reference/COMMANDS.md
-  - USE_CASES.md
+  - docs/reference/commands.md
+  - docs/how-to/use-cases.md
   - RUNBOOK.md
   - CONTRIBUTING.md
   - README.md
@@ -158,8 +159,8 @@ steps:
   - docs/how-to/pipeline/detail.md
   - docs/how-to/recovery/README.md
   - docs/TRACKING.md
-  - docs/how-to/roadmap-demo.md
-  - DEMO-BAKING.md
+  - docs/demos/roadmap-demo.md
+  - docs/GLOSSARY.md
   - docs/how-to/pipeline/direct-pipeline.md
   complexity: high
   change_type: non-code
@@ -170,7 +171,7 @@ steps:
     2: direct pipeline surfaces no longer exist to document
     3: completeness-apply and its parallel module no longer exist to document
 - id: 6
-  title: 'Close BACKLOG #367 as shipped by completeness-apply-retirement, retire or
+  title: 'Close BACKLOG #376 as shipped by completeness-apply-retirement, retire or
     trim backlog entries that exist only for the removed commands, and file follow-ups
     for the now-unreachable granularity-split walk opt-in and stale .plan-tool/lessons/project.md
     entries, leaving #369 exactly as it is'
@@ -186,7 +187,7 @@ steps:
   - 4
   - 5
   depends_on_notes:
-    3: 'the last code removal has landed, so #367 is fully shipped'
+    3: 'the last code removal has landed, so #376 is fully shipped'
     4: directive sweep complete
     5: reference-doc sweep complete
 ---
@@ -217,8 +218,8 @@ up across the whole finding set and across rounds, not one gap at a time.
 The driving human or session already reads the whole report at once (this
 repo's own `CLAUDE.md` § "Distinguish a Claude-session-driven run from a
 human operator" already prescribes hand-apply for a session), so this plan
-makes that the only apply path there is: nothing in the tool applies a
-conceptual finding gap-by-gap anymore, for a human or a session.
+makes session-directed edits the supported path for completeness-audit
+conceptual findings. The explicitly excluded callers below keep their behavior.
 
 ## Problem statement
 
@@ -246,8 +247,8 @@ docs already use for the session-driven path.
 
 `plan_tool/launcher.py:apply_finding` — the underlying mutator — is untouched
 by this effort. It has callers outside `completeness-apply`/`direct-run`/
-`direct-jira` (create's own `--iterate`, detail's own `--iterate`,
-`run --mode reconcile`/`reconcile-plan-walk`/`detail --reconcile`), and this
+`direct-jira` (create's own `--iterate`, detail's own `--iterate`, generic review,
+benchmark fixtures, and `run --reconcile`/`reconcile-plan-walk`/`detail --reconcile`), and this
 plan makes no claim about whether those callers share the same gap-by-gap
 pace and convergence-signal cost. BACKLOG #369 inventories them separately;
 until that inventory ships, this plan changes none of their behavior.
@@ -259,7 +260,7 @@ under a new name or flag.
 
 ## References
 
-- `BACKLOG.md` #367 — the owner-confirmed decision this seed elaborates,
+- `BACKLOG.md` #376 — the owner-confirmed decision this seed elaborates,
   including the direct-run/direct-jira retire-outright disposition and its
   rationale.
 - `BACKLOG.md` #369 — the separate, non-removing inventory of
@@ -280,11 +281,21 @@ under a new name or flag.
 
 See the `steps:` block in the frontmatter.
 
+## Scope guardrails
+
+Retire only `completeness-apply`, `direct-run`, `direct-jira`, their exclusive
+machinery, and their live guidance. Preserve deterministic repair, existing
+review/reconcile behavior, benchmark fixtures, audit blocking and exit-code
+policy, and legacy readers. Do not introduce a renamed private conceptual
+auto-apply route, a workflow engine, or historical-artifact migrations. File
+adjacent findings in the backlog rather than expanding this plan.
+
 ## Out of scope
 
 `apply_finding`'s use inside create's own `--iterate`, detail's own
 `--iterate`, `completeness-audit`'s own deterministic well-formedness
-auto-fix, and `run --mode reconcile`/`reconcile-plan-walk`/`detail --reconcile`
+auto-fix, generic review, benchmark fixtures, and
+`run --reconcile`/`reconcile-plan-walk`/`detail --reconcile`
 (BACKLOG #369's territory — this plan does not presume they share the same
 problem and does not change them). Rewriting or migrating historical saved
 reports merely to remove `completeness-apply` vocabulary from their own text.
@@ -295,7 +306,7 @@ abstraction. Reader-only documentation for surfaces this plan does not touch.
 
 Removing `direct-run`/`direct-jira` removes the only unattended small-run path
 those two commands offered; this is the owner-confirmed, intended effect
-(BACKLOG #367), not an oversight to mitigate. The larger risk is a hidden
+(BACKLOG #376), not an oversight to mitigate. The larger risk is a hidden
 consumer surviving the sweep: `plan_tool/launcher.py:apply_finding` is a
 shared engine, so a naive removal that deletes `cmd_completeness_apply`
 without also removing `direct_cmd.py`'s calls into it, or that leaves a
@@ -326,16 +337,17 @@ from before this change still read correctly. Run the full suite
 - `plan-tool completeness-apply`, `plan-tool direct-run`, and
   `plan-tool direct-jira` are no longer recognized subcommands, at every flag
   combination they previously accepted.
-- No production code path constructs an unattended, unjudged application of a
-  conceptual finding; `apply_finding` remains reachable only through
-  interactive human/session-driven paths this plan does not remove.
+- No production caller retains or privately re-creates the retired
+  completeness-apply authority. Existing create/detail deterministic repair,
+  review/reconcile routes, and benchmark fixtures retain their behavior; shared
+  `apply_finding` caller inventory remains #369 work.
 - Saved-report continuation guidance, `docs/cli/`, and every doc/prompt named
   In scope describe hand-applying conceptual findings as the only path, with
   no reference to the retired commands remaining in live (non-historical)
   prose.
 - Legacy saved reports, run logs, and detail-bundle artifacts remain readable
   unchanged.
-- BACKLOG #367 is marked shipped/removed with this plan's name, and BACKLOG
+- BACKLOG #376 is marked shipped/removed with this plan's name, and BACKLOG
   #369 is left exactly as it was (unassigned, independent).
 - Focused tests and the full suite are green.
 

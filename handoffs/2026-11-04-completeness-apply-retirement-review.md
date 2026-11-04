@@ -1,0 +1,52 @@
+# Completeness apply retirement pickup
+
+The current effort prepares the existing #376 plan for review before implementation.
+The branch is `plan/completeness-apply-retirement-refresh`. No execution is authorized
+by the pickup handoff; the next gate is the bare-plan audit, then detail authoring
+and the detail-grounded audit. #369 remains independent and unchanged.
+
+## Grounding and site inventory
+
+Defect class: the parked retirement plan carries stale owners and overbroad
+authority claims that conflict with #376's explicit exclusions.
+
+The 2026-11-04 identifier search uses `cmd_completeness_apply`, `apply_finding(`,
+`completeness-apply`, `direct-run`, `direct-jira`, and their underscore forms.
+The vocabulary search uses conceptual application, unattended, parallel replay,
+and blind apply across production code, integrations, and live documentation.
+
+| Sites | Disposition and reason |
+| --- | --- |
+| `cli/completeness_cmd.py`, apply-only helpers in `cli/completeness_phases.py`, `cli/completeness_apply_parallel.py` | Retire command-exclusive application machinery. |
+| `cli/direct_cmd.py` | Retire both command chains; these are the external callers of `cmd_completeness_apply`. |
+| `cli/app.py`, `cli/parser.py`, `cli/__init__.py`, capability catalog and generated CLI pages/help | Remove retired registrations, exports, locks, and references. |
+| `completeness_report.py`, `cli/authoring.py`, completeness output | Preserve conceptual hand-edit guidance; replace surviving retired-command remedies. |
+| `create.py`, `detail.py`, deterministic iterate in `cli/completeness_phases.py` | Preserve repair authority; excluded by #376. |
+| `cli/review_actions.py` and the shared `launcher.py:apply_finding` | Preserve generic review/reconcile authority; #369 owns further inventory. |
+| `bench.py:_run_apply` | Preserve isolated benchmark fixtures; this is not a hidden completeness-command continuation. |
+| Shared review, convergence, backend, error, and commit helpers | Remove only retired-command branches; preserve shared contracts and legacy readers. |
+| `CLAUDE.md`, shared directives, Claude/Codex/Cursor skills | Rewrite live retired-command instructions in execution step 4; CLAUDE rule changes require architect-tier PR review. |
+| Current command/use-case/demo guides, glossary, architecture, gates, README, contributing, testing, runbook, Jira/data contracts | Sweep live instructions in execution steps 3–5. Use lowercase `docs/reference/commands.md`, `docs/how-to/use-cases.md`, and `docs/demos/roadmap-demo.md`. |
+| Historical plans, archived seed, evidence, saved reports, sidecars, run logs | Retain as provenance and compatibility data; no vocabulary migration. |
+| Unrelated unattended roadmap, scope-out, reground, worktree, lessons, and rate-limit behavior | Retain; vocabulary overlap does not put these in scope. |
+
+The seed resolves to `plan-seeds/archive/completeness-apply-retirement.replaced.md`;
+its archived do-not-edit instruction stays intact. The existing plan is the live
+scope owner with BACKLOG #376; no replacement seed or competing plan is needed.
+
+## Review evidence
+
+2026-11-04 command:
+`uv run plan-tool --backend codex --model gpt-6.1-sol reconcile-plan completeness-apply-retirement --all --no-walk -y < /dev/null`.
+It completes with report
+`docs/implementation-plans/plan-details/completeness-apply-retirement/reports/20261104-130427.json`.
+The semantic review identifies obsolete step-5 paths, incorrect #367 ownership,
+and removed Jira-grade wording. Its heuristic already-built suggestions are
+token matches, contradicted by the semantic review and live command definitions;
+no step status changes follow from them.
+
+The bounded correction aligns intent and acceptance criteria with the preserved
+caller exclusions, corrects the seed/backlog/doc paths, and adds Cursor guidance
+and the glossary to the existing sweep. The property is that retiring three
+commands cannot silently widen into retiring unrelated application authorities.
+No production code changes accompany this correction.
