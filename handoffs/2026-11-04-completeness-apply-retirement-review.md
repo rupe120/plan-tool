@@ -1,9 +1,10 @@
 # Completeness apply retirement pickup
 
-The current effort prepares the existing #376 plan for review before implementation.
-The branch is `plan/completeness-apply-retirement-refresh`. No execution is authorized
-by the pickup handoff; the next gate is the bare-plan audit, then detail authoring
-and the detail-grounded audit. #369 remains independent and unchanged.
+The existing #376 plan has six authored details and confirmed bare and
+detail-grounded audit coverage. The next action is scope review before
+implementation. The branch is `plan/completeness-apply-retirement-refresh`.
+No execution is authorized by the pickup handoff. #369 remains independent
+and unchanged.
 
 ## Grounding and site inventory
 
@@ -64,3 +65,38 @@ there are no findings on that axis to carry into detail. The sole heuristic
 preserves rather than delivers; it requires no plan expansion. No correction
 loop is necessary and unchanged-plan resampling serves no purpose. Detail may
 proceed; this does not certify the unauthored detail bundle.
+
+## Detail gate and review scope
+
+2026-11-04 authoring command:
+`uv run plan-tool --backend codex --model gpt-6.1-sol detail completeness-apply-retirement --commit -y < /dev/null`.
+All six details are authored in one-shot mode and committed per step. The
+automatic conceptual tail saves `reports/20261104-132734-completeness.md`:
+zero correctness/completeness findings, confirmed coverage, current revision,
+detail stage. Deterministic checks also report zero findings.
+
+The required iterative gate uses the fresh conceptual evidence rather than
+resampling unchanged text:
+`uv run plan-tool --backend codex --model gpt-6.1-sol completeness-audit completeness-apply-retirement --iterate --commit --audit-passes 1 --reuse-audit -y < /dev/null`.
+The final report is `reports/20261104-140106-completeness.md`: 6/6 detailed,
+zero open findings, confirmed coverage, current revision, advisory-only result.
+Conceptual-call reuse is explicit; no edits or applies occur. The same
+non-blocking claim-vs-delivery heuristic remains, with the bare-gate disposition
+above. No three-snapshot remediation trajectory is needed: there is no
+conceptual correction loop to assess.
+
+| Execution step | Scope for review |
+| --- | --- |
+| 1 | Retain hand-edit guidance and replace remaining retired-command remedies. |
+| 2 | Remove both direct command chains and their exclusive wiring. |
+| 3 | Remove completeness-apply and exclusive serial/parallel machinery; preserve shared behavior and readers. |
+| 4 | Align shared directives and all three backend skills; obtain architect-tier review for CLAUDE rule changes. |
+| 5 | Sweep live reference/workflow/demo guidance; retain historical artifacts. |
+| 6 | Remove #376 only on shipment, trim obsolete backlog requests, file the two bounded follow-ups, preserve #369 exactly. |
+
+The details keep generic review/reconcile authority, benchmark fixtures,
+deterministic repair, schemas, blocking predicates, and exit codes outside the
+removal. No production implementation or runtime tests accompany this planning
+work. Implementation requires the scope-review boundary in the source pickup
+handoff; once authorized, follow the plan PR and normal execution/reconcile/review
+gates rather than running immediately from a tool's printed next-step suggestion.

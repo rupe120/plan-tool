@@ -1307,8 +1307,10 @@ working straight down the tiers.
 - **Evidence:** the parked bare plan is
   `docs/implementation-plans/2-completeness-apply-retirement.md`; the existing
   deprecation warnings are interim mitigation only.
-- **Route:** `plan`; **Readiness:** ready from `detail`; **Status:** parked bare,
-  0/6 detailed and no execution started.
+- **Route:** `plan`; **Readiness:** ready for plan review; **Status:** 6/6
+  detailed, bare and detail-grounded audits have confirmed coverage with no
+  conceptual findings; no execution started. Review evidence:
+  `handoffs/2026-11-04-completeness-apply-retirement-review.md`.
 
 **#369 — Inventory other `apply_finding` authorities separately from #376**
 
