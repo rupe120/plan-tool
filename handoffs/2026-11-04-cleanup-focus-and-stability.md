@@ -1,7 +1,6 @@
 # Cleanup for focus and stability
 
-BACKLOG #376 is shipped. The next pickup is the separately tracked reporting
-and citation defects; the backlog remains the queue and scope owner.
+BACKLOG #376 is shipped. The next pickup is the separately tracked citation defect; the backlog remains the queue and scope owner.
 
 | Item | Current state |
 | --- | --- |
@@ -26,7 +25,7 @@ plan or fold them into the shipped retirement.
 
 | Priority | Backlog work | Pickup route |
 | --- | --- | --- |
-| 1 | Duplicated conceptual-correctness findings | Verify `completeness_report.py:build_report_md` and existing rendering tests. Render each finding once while preserving correctness in standalone grouped reports. Use a focused direct fix and the review convergence loop. |
+| Complete locally | Duplicated conceptual-correctness findings | Embedded checkpoint and final reports render conceptual correctness once; standalone grouped output retains the findings. See validation below. |
 | 2 | Valid class-method citations reported missing | Verify `data_contract.py:_module_level_symbol_exists` and supported dotted-symbol tests. Resolve valid class-method citations while preserving rejection of absent symbols. Bare-filename guessing and prose-negation inference remain separate design questions. |
 | 3 | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | Reproduce surviving reports before selecting a fix. Do not stabilize tests for retired commands, widen timeouts, or alter initialization speculatively. |
 
@@ -47,3 +46,28 @@ The [plan review record](2026-11-04-completeness-apply-retirement-review.md)
 retains bare/detail audit provenance; do not repeat design auditing or mutate
 the executed plan toward its implementation. The [Jira-grade retirement ledger](2026-11-03-jira-grade-retirement-plan.md)
 is provenance for the preceding retirement, not current publication instructions.
+
+## Single-render report fix
+
+The 2026-11-04 direct fix separates embedded grouped rendering from standalone
+console rendering at both production call sites: the pre-apply checkpoint and
+final report writer. The enclosing report owns conceptual-correctness bullets;
+the embedded group points there only when findings exist. Deterministic path
+and dependency diagnostics remain in that group. Empty reports have no dangling
+section pointer. Persisted findings and audit policy retain their contracts.
+
+Identifier searches cover `_render_grouped_report`, `build_report_md`, and both
+persistence callers; vocabulary searches cover correctness sections, grouped
+reports, and duplicate findings. Existing standalone multiline-body coverage
+remains. New assertions cover single rendering in both iteration modes, the
+checkpoint artifact, and the empty-state exception. Restoring the duplicate
+loop makes both single-render cases fail; the source is restored immediately.
+Focused validation passes 1,110 tests. Full regression validation passes
+14,705 tests with 67 skipped in 62.41 seconds. `git diff --check` passes.
+The resolved bug entry is removed from `BUG_BACKLOG.md`.
+
+The first Codex review confirms the test fixture mistake (`_corr_rec` produces
+`granularity-split`), corrected with an explicit conceptual-correctness fixture.
+The confirmation Codex review reports no findings and independently passes
+all 1,110 focused tests. The direct-change review loop converges. Review and
+full-suite logs are transient under `/private/tmp/completeness-report-single-render.*`.

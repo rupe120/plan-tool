@@ -1056,25 +1056,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-10-02, tracing the warning in the `candidate-narrative-review-evidence`
   `create` log.
 
-### A completeness report prints every conceptual-correctness finding twice, once in its own section and again in the embedded grouped report
-
-- **Files:** `plan_tool/completeness_report.py:build_report_md` (the
-  `## Conceptual correctness — fix these first` section at `:1914` and the
-  `## Full grouped report` embed at `:2065`), and
-  `plan_tool/cli/completeness_phases.py:_render_grouped_report` (`:1601`),
-  whose `### Correctness (run these first)` block renders the same set.
-- **Symptom:** in Integration's
-  `plan-details/chat-output-streaming/reports/20261010-140834-completeness.md`,
-  lines 40 and 76 are the same `[message-delivery-state-finality]` finding,
-  word for word. A reader counts two findings where there is one, and a
-  session triaging the report can apply the same edit twice.
-- **Fix:** render each finding once. The grouped report embedded by
-  `build_report_md` omits its correctness block and points to the top-level
-  section; the standalone grouped report keeps it.
-- **Approach:** direct.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
-
 ### A partially edited protected References block is restored as a second full copy
 
 - **Files:** `plan_tool/create.py` — `_restore_materialized_evidence_sections` (the `References` branch) and `_references_present`; the render-time check in the plan-body renderer uses the same predicate. Existing tests start at `tests/test_create.py:23762`.
