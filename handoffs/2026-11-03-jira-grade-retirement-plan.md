@@ -3,14 +3,20 @@
 | Item | Current state |
 | --- | --- |
 | Work | BACKLOG #308 / IPPT-17; retire legacy Jira-grade detail inputs and selectors |
-| Branch | `plan/IPPT-17-retire-jira-grade-detail` |
+| PR branch | `IPPT-17-retirement-plan-pr`, based on `origin/main` |
 | Plan | [Retire Jira Grade Detail](../docs/implementation-plans/2-retire-jira-grade-detail.md), eight steps, all detailed |
 | Latest audited snapshot | `09596f729`; report/checkpoint commit `de15e59a8` |
 | Latest result | Clean, confirmed coverage, current revision, detail stage, zero findings |
-| Next action | Review the plan bundle; publish and merge its plan PR before implementation |
-| Implementation/publication | No implementation, branch push, or PR creation in this session |
+| Next action | Review and merge the plan PR before implementation |
+| Implementation | No implementation; this PR contains planning artifacts and companion-skills guidance |
 
 ## Settled scope
+
+PR preparation copies this session's commits onto `origin/main`, excluding
+unrelated release commits inherited by the original branch. The local branch
+`plan/IPPT-17-retire-jira-grade-detail` preserves the original audit snapshots;
+the reports below identify those original commits. Plan and detail content
+remains identical on the PR branch. The user authorizes PR publication.
 
 Remove `detail --grade`, `jira --grade`, `completeness-audit --grade`,
 `convergence --grade`, `gate-status --grade`, and `run --detail-grade`,
