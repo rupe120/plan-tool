@@ -14,6 +14,9 @@ measured outcomes and [explanations](../explanations/README.md) for rationale.
 For source installation, version selection and dependency/skill refresh, use
 [Install and update](install-and-update.md).
 
+For optional skills to support the work itself, use
+[Choose companion skills](companion-skills.md).
+
 ## Author and run a plan
 
 For a single obvious edit, skip plan-tool: edit, test and review directly.

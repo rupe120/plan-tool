@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-f6fcc0ec": {
+      "code_anchor": "plan_tool/review_persistence.py:AuditInputSnapshot.capture",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/retire-jira-grade-detail/05-make-captured-audit-inputs-fingerprints.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/retire-jira-grade-detail/05-make-captured-audit-inputs-fingerprints.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261029-193426-completeness"
+}

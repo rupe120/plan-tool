@@ -55,6 +55,10 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Jira-grade retirement plan](2026-11-03-jira-grade-retirement-plan.md) — eight
+  detailed steps, clean final audit, model provenance, and companion-skills docs;
+  plan review precedes implementation.
+
 - [Skill-router recipe repair review](2026-10-21-skill-router-recipes-code-review.md) — router instruction fixes, parser/installer evidence and review dispositions.
 
 - [Skill-led demo conversion review](2026-10-21-skill-led-demo-examples-code-review.md) — completed execution, live rehearsal, two independent review verdicts and the separately tracked skill issue.
