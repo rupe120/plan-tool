@@ -4,7 +4,7 @@ title: Retire Jira Grade Detail
 intent: 'One implementation-detail input remains for Jira export: run-grade detail
   produces concise Jira stories and the paired developer handoff. Jira-grade detail
   has no artifact, selector, reader, or schema anywhere in the tree.'
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -24,7 +24,7 @@ steps:
   complexity: low
   change_type: refactor
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/01-move-fenced-spans-review-py-before.md
-  status: current
+  status: done
   description: Move fenced_spans into review.py before deleting its Jira-grade owner.
     Preserve its citation-parsing behavior, including fences indented beyond three
     spaces, matching delimiter lengths, CRLF offsets, unclosed fences, and the current
@@ -43,12 +43,13 @@ steps:
   depends_on:
   - 1
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/02-remove-detail-grade-remaining-jira.md
+  status: done
   description: Remove detail --grade and the remaining Jira-grade authoring functions
     and prompt; authoring already rejects that grade, so preserve the existing run-grade
     route rather than adding another rejection layer. Remove direct writer selectors
     as well. Retire Jira-grade overwrite and archive paths; preserve run-grade detail
-    replacement, split migration and rollback renames, orphan archiving, temporary-input
-    deletion, and saved-output writes. Add unit coverage for unchanged run-grade behavior
+    replacement, split migration and rollback renames, orphan archiving, and saved-output
+    writes. Add unit coverage for unchanged run-grade behavior
     and class-marked integration coverage for rejected CLI selectors.
 - id: 3
   intent: Execution always uses the supported run-grade detail and its existing safeguards.
@@ -67,6 +68,7 @@ steps:
   depends_on:
   - 1
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/03-remove-run-detail-grade-alternate.md
+  status: done
   description: Remove run --detail-grade, alternate-detail loading, run-jira prompt
     selection, and the Jira-grade merge-guard exception. Keep both single-step and
     sweep execution on their existing run-grade paths, including missing-detail handling,
@@ -85,6 +87,7 @@ steps:
   depends_on:
   - 1
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/04-remove-jira-grade-direct-jira-grade.md
+  status: done
   description: Remove jira --grade and direct Jira-grade capture and prompt branches.
     Reuse the existing run-grade capture for concise stories and the paired developer
     handoff, preserving rendering, destinations, provenance, publication, and existing
@@ -109,6 +112,7 @@ steps:
   depends_on:
   - 1
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/05-make-captured-audit-inputs-fingerprints.md
+  status: done
   description: Make captured audit inputs, fingerprints, normalization, freshness,
     and reuse run-grade-only. Preserve supported run-grade revision records and fingerprint
     behavior, including supported older revision versions; retain only the historical
@@ -145,6 +149,7 @@ steps:
     5: Provides run-grade-only evidence qualification and historical run-grade record
       support.
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/06-remove-grade-selection-completeness.md
+  status: done
   description: Remove grade selection from completeness-audit, its direct review readers
     and detector dispatch, convergence, and gate-status. Ground coverage, conceptual
     prompts, reports, history, and current-stage diagnostics in the existing run-grade
@@ -170,6 +175,7 @@ steps:
   - 4
   - 6
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/07-delete-jira-grade-py-its-remaining.md
+  status: done
   description: Delete jira_grade.py and its remaining schema tests, and remove Jira-grade
     path derivation from detail_artifacts.py after all consumers stop importing them.
     Remove obsolete schema references in roadmap_gates.py without changing its validation
@@ -210,6 +216,7 @@ steps:
   depends_on:
   - 7
   detail: docs/implementation-plans/plan-details/retire-jira-grade-detail/08-update-live-format-references.md
+  status: done
   description: 'Update live format references, capability entries, operator guidance,
     and generated CLI references to describe run-grade detail as the sole input. Preserve
     Jira story and handoff documentation contracts and archived historical evidence.

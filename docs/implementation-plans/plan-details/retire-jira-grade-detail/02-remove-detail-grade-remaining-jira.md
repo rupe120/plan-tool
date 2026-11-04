@@ -4,7 +4,7 @@
 
 ## Summary
 
-Remove the Jira-grade authoring path from `plan_tool/detail.py`, including its prompt renderer, writer dispatch, and grade selectors. Remove `detail --grade` from `plan_tool/cli/authoring.py` so argparse rejects the old selector instead of routing it to a second rejection layer. Delete `plan_tool/prompts/detail-jira.md` and retire tests that exercise compact-detail authoring. Preserve the run-grade writer and its replacement, migration, rollback, orphan-archive, temporary-input cleanup, and saved-output behavior.
+Remove the Jira-grade authoring path from `plan_tool/detail.py`, including its prompt renderer, writer dispatch, and grade selectors. Remove `detail --grade` from `plan_tool/cli/authoring.py` so argparse rejects the old selector instead of routing it to a second rejection layer. Delete `plan_tool/prompts/detail-jira.md` and retire tests that exercise compact-detail authoring. Preserve the run-grade writer and its replacement, migration, rollback, orphan-archive, and saved-output behavior.
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ Remove the Jira-grade authoring path from `plan_tool/detail.py`, including its p
 
 - **Remove the unreachable Jira authoring lane.** Delete Jira-only authoring surfaces such as `render_jira_detail_prompt`, `_generate_jira_detail`, and the Jira-specific authoring branches in `_author_detail_step`. Remove associated direct path selection through `derive_jira_detail_path` from this module. Keep Jira-grade parsing or reading behavior only where it serves a surviving non-authoring consumer; this step must not add a replacement authoring route or a compatibility writer.
 
-- **Keep the run-grade writer lifecycle intact.** Preserve the canonical run-grade path derived through `plan_tool/detail_artifacts.py:derive_detail_path`, the existing replacement behavior, split migration and rollback renames, `plan_tool/detail.py:_archive_existing_detail`, `plan_tool/detail.py:_archive_orphan_details`, temporary input cleanup, checkpoint handling, and saved-output writes. Removing Jira branches must not alter the ordering that keeps an old run-grade artifact recoverable while its replacement becomes canonical.
+- **Keep the run-grade writer lifecycle intact.** Preserve the canonical run-grade path derived through `plan_tool/detail_artifacts.py:derive_detail_path`, the existing replacement behavior, split migration and rollback renames, `plan_tool/detail.py:_archive_existing_detail`, `plan_tool/detail.py:_archive_orphan_details`, checkpoint handling, and saved-output writes. Removing Jira branches must not alter the ordering that keeps an old run-grade artifact recoverable while its replacement becomes canonical.
 
 - **Remove CLI selection instead of retaining a custom refusal.** In `plan_tool/cli/authoring.py:register`, remove the `--grade` argument from the `detail` parser. Remove `_detail_grade`, `_reject_disabled_detail_authoring_grade`, the disabled-authoring message import, and downstream grade forwarding from `cmd_detail`. The intended rejected behavior is argparse’s normal unknown-option error before context loading, run-log creation, or detail generation—not another authoring-layer rejection.
 
@@ -48,14 +48,17 @@ Remove the Jira-grade authoring path from `plan_tool/detail.py`, including its p
 
 - **Avoid widening into reader retirement.** Existing Jira-grade detail reading, export, audit, run, or diagnostic selectors are outside this step’s declared files and must remain untouched. Do not change the run-grade detail contract, Jira story rendering, or developer-handoff output.
 
+Run-grade invocation passes prompt text directly to `claude_invoke`; no temporary-input lifecycle is part of this route. This corrects the detail claim to the existing implementation.
+
 ## Tests
 
 ### Tests for this step
 
+- `tests/test_detail.py::test_orphan_sweep_archives_only_stale_same_step_files` — Unit coverage that archives stale same-step siblings while preserving canonical and other-step files.
+
 - `tests/test_detail.py::test_generate_detail_replaces_existing_run_grade_detail_and_preserves_archive` — Assert forced run-grade replacement writes the canonical detail, keeps the plan pointer on that file, and archives the prior run-grade content.
 - `tests/test_detail.py::test_generate_detail_archives_run_grade_orphans_without_moving_the_canonical_output` — Assert stale same-step run-grade siblings move to `archive/` while the newly written canonical detail remains in place.
 - `tests/test_detail.py::test_generate_detail_preserves_run_grade_split_migration_and_rollback_renames` — Assert the existing split and rollback recovery path still restores or migrates run-grade detail artifacts correctly.
-- `tests/test_detail.py::test_generate_detail_cleans_temporary_input_after_run_grade_write` — Assert the retained run-grade path removes only its temporary input after a successful saved-output write.
 - `tests/test_detail.py::test_jira_grade_authoring_symbols_are_not_exposed` — Assert retired Jira prompt/writer entry points are no longer imported or exercised by the detail authoring module.
 - `tests/cli/test_authoring_cmds.py::TestDetailSelectorRemoval::test_detail_rejects_removed_grade_selector` — Class-marked integration test that `plan-tool detail … --grade jira` exits with argparse’s usage error before invoking authoring.
 - `tests/cli/test_authoring_cmds.py::TestDetailSelectorRemoval::test_detail_without_grade_keeps_run_grade_generator_contract` — Class-marked integration test that ordinary `detail` still reaches the run-grade generation and completeness-tail route.
@@ -69,7 +72,7 @@ Every listed test must be green before this step is finished.
 - `plan_tool/detail.py` exposes no Jira-grade detail authoring prompt renderer, direct Jira writer, or grade selector for its authoring flow.
 - `plan_tool/prompts/detail-jira.md` is absent.
 - Ordinary `plan-tool detail <plan>` continues to author run-grade detail and run its existing completion flow.
-- Forced run-grade replacement, split migration and rollback renames, orphan archiving, temporary-input deletion, and durable saved-output behavior remain covered and green.
+- Forced run-grade replacement, split migration and rollback renames, orphan archiving, and durable saved-output behavior remain covered and green.
 - The focused unit tests in `tests/test_detail.py` and class-marked integration tests in `tests/cli/test_authoring_cmds.py` pass.
 
 ## References
