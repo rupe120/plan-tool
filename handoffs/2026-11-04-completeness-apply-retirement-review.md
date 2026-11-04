@@ -1,10 +1,11 @@
 # Completeness apply retirement pickup
 
-The existing #376 plan has six authored details and confirmed bare and
-detail-grounded audit coverage. The next action is scope review before
-implementation. The branch is `plan/completeness-apply-retirement-refresh`.
-No execution is authorized by the pickup handoff. #369 remains independent
-and unchanged.
+The #376 plan and six authored details ship through merged plan PR #162;
+implementation and status ship through merged PRs #163 and #164. This record
+retains the pre-execution audit evidence. Current pickup and closure live in
+[the implementation ledger](2026-11-04-completeness-apply-retirement-implementation.md)
+and [cleanup pickup](2026-11-04-cleanup-focus-and-stability.md). Do not repeat
+this authoring sequence against the executed plan. #369 stays independent.
 
 ## Grounding and site inventory
 
@@ -97,6 +98,5 @@ conceptual correction loop to assess.
 The details keep generic review/reconcile authority, benchmark fixtures,
 deterministic repair, schemas, blocking predicates, and exit codes outside the
 removal. No production implementation or runtime tests accompany this planning
-work. Implementation requires the scope-review boundary in the source pickup
-handoff; once authorized, follow the plan PR and normal execution/reconcile/review
-gates rather than running immediately from a tool's printed next-step suggestion.
+work. The merged implementation ledger owns execution, reconciliation, review,
+and shipment evidence; these audit results certify the authored bundle only.

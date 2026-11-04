@@ -448,30 +448,21 @@ Durable re-open conditions for retired items are recorded in
   do not restore it or change production reader/writer policy.
 - **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
 
-### `_code_anchor_resolves` reports an existing method, private method or nested function as not resolving in HEAD
+### `_code_anchor_resolves` does not resolve function-local function citations
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves` and
   `_module_level_symbol_exists`.
-- **Symptom:** a detail citation `path:Class.method` (or `path:Class._private`,
-  or a function nested in another) is reported as `code anchor … does not
-  resolve in HEAD` unless the owner is a registered data contract. The check
-  accepts only a one-part symbol that exists at module level, so any two-part
-  symbol falls through to the failure branch even when the class and method
-  exist. In one detail bundle (Integration `construction-batch-driver`, Gate 2 round
-  1), 19 such citations were flagged as blocking structural findings, and each
-  named a method that exists at the cited path (for example
-  `RoadmapDriver.start`, `_Reader.text`).
-- **Fix:** resolve a two-part symbol by finding the top-level class, then a
-  `def` or `async def` inside it. Keep reporting a symbol that is genuinely
-  absent. This extends the resolver fix already tracked for bare-filename and
-  negated-existence citations in the entry above.
-- **Deliberately not:** resolving names that are keys in a runtime dict or
-  built by registration; those keep failing, and an author cites them in
-  prose.
-- **Approach:** direct; a bounded change in one function with a test per shape.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
-- **Origin:** 2026-10-19, Integration `construction-batch-driver` Gate 2 audit. The
-  workaround was to cite the path and the symbol in separate spans.
+- **Symptom:** a recognized two-part citation `path:outer.inner` fails even
+  when `inner` is defined directly inside the module-level function `outer`.
+  Ordinary class-method citations resolve; function-local definitions remain
+  outside that resolver's supported set.
+- **Fix:** select whether direct function-local definitions are supported,
+  then pin that boundary without inferring runtime registration or dict keys.
+  Three-part symbol paths remain outside the citation grammar; grammar
+  expansion is separate work.
+- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
+- **Origin:** 2026-10-19 Integration `construction-batch-driver` citation report;
+  nested-function portion retained separately from the class-method fix.
 
 ### Onboarding and installed skill instructions conflict with canonical audit and iteration rules
 
@@ -1055,25 +1046,6 @@ Durable re-open conditions for retired items are recorded in
   `_caller_outside_shell` test is the precedent.
 - **Origin:** 2026-10-02, tracing the warning in the `candidate-narrative-review-evidence`
   `create` log.
-
-### A completeness report prints every conceptual-correctness finding twice, once in its own section and again in the embedded grouped report
-
-- **Files:** `plan_tool/completeness_report.py:build_report_md` (the
-  `## Conceptual correctness — fix these first` section at `:1914` and the
-  `## Full grouped report` embed at `:2065`), and
-  `plan_tool/cli/completeness_phases.py:_render_grouped_report` (`:1601`),
-  whose `### Correctness (run these first)` block renders the same set.
-- **Symptom:** in Integration's
-  `plan-details/chat-output-streaming/reports/20261010-140834-completeness.md`,
-  lines 40 and 76 are the same `[message-delivery-state-finality]` finding,
-  word for word. A reader counts two findings where there is one, and a
-  session triaging the report can apply the same edit twice.
-- **Fix:** render each finding once. The grouped report embedded by
-  `build_report_md` omits its correctness block and points to the top-level
-  section; the standalone grouped report keeps it.
-- **Approach:** direct.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 ### A partially edited protected References block is restored as a second full copy
 
