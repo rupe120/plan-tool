@@ -196,6 +196,8 @@ steps:
   - RUNBOOK.md
   - docs/reference/contracts/process.md
   - docs/explanations/nondeterministic-plan-design.md
+  - plan-seeds/disable-jira-grade-detail-authoring.md
+  - .plan-tool/lessons/project.md
   - docs/cli/detail.md
   - docs/cli/run.md
   - docs/cli/jira.md

@@ -36,6 +36,8 @@ The code retirement from steps 2 through 7 removes Jira-grade selectors, readers
 - **New files:** None.
 
 - **Existing files (edits only):**
+  - `plan-seeds/disable-jira-grade-detail-authoring.md` — Retire the superseded writer-only brief from active authoring inputs; preserve any needed provenance as explicitly historical evidence.
+  - `.plan-tool/lessons/project.md` — Remove stale instructions to author, route, execute, or audit Jira-grade detail; preserve general lessons that still apply to the supported workflow.
   - `RUNBOOK.md` — Remove retired grade selection from the convergence procedure.
   - `docs/reference/contracts/process.md` — Remove selected-grade and legacy-reader claims while preserving the story/handoff output contract.
   - `docs/explanations/nondeterministic-plan-design.md` — Remove the live compact-detail capability claim; retain dated evidence supporting the design guidance.
@@ -65,6 +67,8 @@ The code retirement from steps 2 through 7 removes Jira-grade selectors, readers
 - **Keep Jira output separate from Jira-grade detail.** Update `JIRA_FORMAT.md` around “Which detail bundle grounds the export” so `plan_tool/jira.py:capture_companion_export_input` always captures supported run-grade detail. Preserve the paired-story and developer-handoff snapshot, destination, provenance, adoption, and publication rules; do not redesign either output.
 
 - **Sweep live operator instructions by behavior, not only flag names.** Remove references to compact bundles, explicit grade selection, legacy readers, alternate preflights, and grade-specific audit evidence from the declared live guides. Replace them with the normal run-grade command only where a command example remains useful. Keep the existing run-grade audit, execution, and detail workflow ordering intact.
+
+- **Sweep active authoring guidance too.** Include the declared seed and project lessons in the identifier and vocabulary searches. Retire the superseded writer-only seed from active inputs and remove stale lesson directives rather than allowing them to teach removed behavior. Preserve applicable general lessons and historical evidence; do not bulk-rewrite unrelated plans or archived seeds.
 
 - **Keep archived evidence intact.** Do not rewrite historical evidence or fixtures merely because they mention the retired lane. In `CLAUDE.md` and `integrations/shared/DIRECTIVES.md`, retain dated or otherwise necessary historical context only when it still explains a current rule; remove stale live claims that present retired behavior as available.
 
