@@ -1,12 +1,14 @@
 ---
+format_version: 1
 title: Completeness Apply Retirement
-intent: '`plan-tool` retires the dedicated conceptual (`plan-correctness` /
-  `plan-completeness`) application commands. `completeness-apply` — its interactive walk
-  and its `--jobs N` blind-apply mode — and `direct-run` / `direct-jira`, which exist
-  only to chain that auto-apply into an unattended pipeline, are retired. Completeness-audit conceptual
-  findings are reported for whatever is driving `plan-tool` — a human at a TTY, or an
-  orchestrating Codex/Claude Code session — to read and hand-edit. Create/detail deterministic repair and existing reconcile and review routes stay unchanged. Existing saved
-  reports, run logs, and legacy artifacts remain readable.'
+intent: '`plan-tool` retires the dedicated conceptual (`plan-correctness` / `plan-completeness`)
+  application commands. `completeness-apply` — its interactive walk and its `--jobs
+  N` blind-apply mode — and `direct-run` / `direct-jira`, which exist only to chain
+  that auto-apply into an unattended pipeline, are retired. Completeness-audit conceptual
+  findings are reported for whatever is driving `plan-tool` — a human at a TTY, or
+  an orchestrating Codex/Claude Code session — to read and hand-edit. Create/detail
+  deterministic repair and existing reconcile and review routes stay unchanged. Existing
+  saved reports, run logs, and legacy artifacts remain readable.'
 status: planning
 priority: medium
 risk_profile: standard
@@ -17,9 +19,6 @@ enforce_step_tests: true
 source_seed: plan-seeds/archive/completeness-apply-retirement.replaced.md
 steps:
 - id: 1
-  title: Point completeness reports, audit stop messages, and help text at hand-editing
-    instead of completeness-apply, retaining the surviving conceptual hand-edit guidance
-    and replacing remaining retired-command remedies
   intent: Every saved report and audit message tells the reader to read the findings
     and edit the plan or detail files themselves, so no guidance points at a command
     that is about to disappear.
@@ -38,12 +37,12 @@ steps:
   - tests/test_cli.py
   complexity: high
   change_type: feature
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/01-point-completeness-reports-audit-stop.md
   status: current
+  description: Point completeness reports, audit stop messages, and help text at hand-editing
+    instead of completeness-apply, retaining the surviving conceptual hand-edit guidance
+    and replacing remaining retired-command remedies
 - id: 2
-  title: Retire the direct-run and direct-jira commands by deleting plan_tool/cli/direct_cmd.py
-    and its parser, dispatch, lock-set, capability, and reference entries (its mid-chain
-    authoring and applied-gap commits and relocated-root dirt guard retire with it;
-    create, detail, jira, run, and reconcile-code keep their own write paths unchanged)
   intent: The direct pipelines exist only to chain unattended conceptual auto-apply,
     and retiring them first leaves cmd_completeness_apply with no caller outside its
     own command.
@@ -65,16 +64,14 @@ steps:
   - tests/test_cli.py
   complexity: medium
   change_type: feature
+  description: Retire the direct-run and direct-jira commands by deleting plan_tool/cli/direct_cmd.py
+    and its parser, dispatch, lock-set, capability, and reference entries (its mid-chain
+    authoring and applied-gap commits and relocated-root dirt guard retire with it;
+    create, detail, jira, run, and reconcile-code keep their own write paths unchanged)
 - id: 3
-  title: Retire the completeness-apply command, both its interactive walk and its
-    --jobs N parallel lane, by deleting cmd_completeness_apply, its apply-walk helpers
-    in completeness_phases.py, and plan_tool/cli/completeness_apply_parallel.py (retires
-    the allowed_mentions files-coherence writer, the --commit commit, parallel replay
-    overwrite/restore, and worktree/branch cleanup; apply_finding and its other callers
-    stay unchanged; existing saved annotations, sidecars, and run logs stay readable)
-  intent: No dedicated completeness application command remains; preserved create, detail,
-    review, reconcile, and benchmark callers keep their behavior, while reports still load through their
-    existing readers.
+  intent: No dedicated completeness application command remains; preserved create,
+    detail, review, reconcile, and benchmark callers keep their behavior, while reports
+    still load through their existing readers.
   files:
   - plan_tool/cli/completeness_cmd.py
   - plan_tool/cli/completeness_phases.py
@@ -115,11 +112,14 @@ steps:
       leaves no dangling pointer
     2: removes direct_cmd.py, the only caller of cmd_completeness_apply outside its
       own command
+  description: Retire the completeness-apply command, both its interactive walk and
+    its --jobs N parallel lane, by deleting cmd_completeness_apply, its apply-walk
+    helpers in completeness_phases.py, and plan_tool/cli/completeness_apply_parallel.py
+    (retires the allowed_mentions files-coherence writer, the --commit commit, parallel
+    replay overwrite/restore, and worktree/branch cleanup; apply_finding and its other
+    callers stay unchanged; existing saved annotations, sidecars, and run logs stay
+    readable)
 - id: 4
-  title: 'Rewrite the driving directives so hand-applying conceptual findings is the
-    only path: drop the human-at-a-TTY completeness-apply branch, the direct-run/direct-jira
-    unattended carve-out, and completeness-apply from the --commit surface list in
-    CLAUDE.md, DIRECTIVES.md, and all three backend SKILL.md files'
   intent: Sessions and operators driving plan-tool get one consistent instruction
     — read the report and edit by hand — and no retained rationale still argues for
     a removed command, such as the bare-stage non-block justified by completeness-apply
@@ -139,10 +139,11 @@ steps:
     2: direct-run/direct-jira are gone, so the carve-out has nothing left to describe
     3: completeness-apply is gone, so the human-vs-session split collapses to hand-apply
       only
+  description: 'Rewrite the driving directives so hand-applying conceptual findings
+    is the only path: drop the human-at-a-TTY completeness-apply branch, the direct-run/direct-jira
+    unattended carve-out, and completeness-apply from the --commit surface list in
+    CLAUDE.md, DIRECTIVES.md, and all three backend SKILL.md files'
 - id: 5
-  title: Remove retired-command instructions from the reference, workflow, and demo
-    docs and delete docs/how-to/pipeline/direct-pipeline.md, leaving historical plans, reports,
-    and docs/history/backlog-decisions.md as written
   intent: No live doc tells a reader to run completeness-apply, direct-run, or direct-jira,
     or describes them as current architecture, while the doc-reading suites (test_roadmap_format.py,
     test_model_specs.py) stay green.
@@ -170,11 +171,10 @@ steps:
   depends_on_notes:
     2: direct pipeline surfaces no longer exist to document
     3: completeness-apply and its parallel module no longer exist to document
+  description: Remove retired-command instructions from the reference, workflow, and
+    demo docs and delete docs/how-to/pipeline/direct-pipeline.md, leaving historical
+    plans, reports, and docs/history/backlog-decisions.md as written
 - id: 6
-  title: 'Close BACKLOG #376 as shipped by completeness-apply-retirement, retire or
-    trim backlog entries that exist only for the removed commands, and file follow-ups
-    for the now-unreachable granularity-split walk opt-in and stale .plan-tool/lessons/project.md
-    entries, leaving #369 exactly as it is'
   intent: 'The backlog records the retirement as shipped, stops tracking work on commands
     that no longer exist, and keeps #369''s separate apply_finding inventory independent.'
   files:
@@ -190,6 +190,10 @@ steps:
     3: 'the last code removal has landed, so #376 is fully shipped'
     4: directive sweep complete
     5: reference-doc sweep complete
+  description: 'Close BACKLOG #376 as shipped by completeness-apply-retirement, retire
+    or trim backlog entries that exist only for the removed commands, and file follow-ups
+    for the now-unreachable granularity-split walk opt-in and stale .plan-tool/lessons/project.md
+    entries, leaving #369 exactly as it is'
 ---
 # Completeness Apply Retirement
 
