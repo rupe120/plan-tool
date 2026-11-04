@@ -7,7 +7,7 @@
 | Plan | [Retire Jira Grade Detail](../docs/implementation-plans/2-retire-jira-grade-detail.md), eight steps, all detailed |
 | Plan-design audit snapshot | `09596f729`; report/checkpoint commit `de15e59a8` |
 | Plan-design result | Clean, confirmed coverage, current revision, detail stage, zero findings |
-| Next action | Approve publication of the prepared code and plan-status pull requests; merge code first |
+| Next action | Review code PR #160 and plan-status PR #161; merge code first |
 | Implementation | All eight steps green at `a7c140541`; reconciliation triaged and two independent clean reviews complete |
 | Latest logic correction | `a6387f9aa`, remaining audit-selector removal; full suite 14,915 passed, 67 skipped |
 
@@ -139,9 +139,10 @@ local diff inspection and tests complete without that external integration.
 The required split prepares `IPPT-17-code` (implementation, tests, live docs,
 release fragment, backlog and review ledger) and `IPPT-17-plan` (completed
 statuses, corrected detail claim, retained reconcile reports and retired seed).
-Both target `main`; merge the code pull request first. Neither pull request is
-opened without the per-branch confirmation required by
-`integrations/shared/DIRECTIVES.md` § Opening Bitbucket pull requests with bkt.
+Both target `main`. The user authorizes both publications;
+[code PR #160](https://bitbucket.org/protagona/plan-tool/pull-requests/160) and
+[plan-status PR #161](https://bitbucket.org/protagona/plan-tool/pull-requests/161)
+are open. Merge #160 first.
 The breaking-change notice is `changelog.d/IPPT-17.md`. BACKLOG #308 / IPPT-17's
 shipped stub is removed; BACKLOG #149 remains deferred.
 
