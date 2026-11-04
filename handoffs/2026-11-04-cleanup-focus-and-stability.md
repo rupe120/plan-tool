@@ -1,6 +1,6 @@
 # Cleanup for focus and stability
 
-BACKLOG #376 is shipped. The next pickup is the separately tracked citation defect; the backlog remains the queue and scope owner.
+BACKLOG #376 is shipped. The next pickup is the separately tracked full-suite stability work; the backlog remains the queue and scope owner.
 
 | Item | Current state |
 | --- | --- |
@@ -26,7 +26,7 @@ plan or fold them into the shipped retirement.
 | Priority | Backlog work | Pickup route |
 | --- | --- | --- |
 | Complete locally | Duplicated conceptual-correctness findings | Embedded checkpoint and final reports render conceptual correctness once; standalone grouped output retains the findings. See validation below. |
-| 2 | Valid class-method citations reported missing | Verify `data_contract.py:_module_level_symbol_exists` and supported dotted-symbol tests. Resolve valid class-method citations while preserving rejection of absent symbols. Bare-filename guessing and prose-negation inference remain separate design questions. |
+| Complete locally | Valid class-method citations reported missing | Direct normal, private, and async methods resolve; registry field validation stays authoritative. Nested functions retain a separate backlog entry. |
 | 3 | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | Reproduce surviving reports before selecting a fix. Do not stabilize tests for retired commands, widen timeouts, or alter initialization speculatively. |
 
 Read each current `BUG_BACKLOG.md` entry before editing. Search by identifier
@@ -71,3 +71,28 @@ The first Codex review confirms the test fixture mistake (`_corr_rec` produces
 The confirmation Codex review reports no findings and independently passes
 all 1,110 focused tests. The direct-change review loop converges. Review and
 full-suite logs are transient under `/private/tmp/completeness-report-single-render.*`.
+
+## Class-method citation fix
+
+Ordinary Python anchors resolve direct method definitions on a module-level
+class, including private and async methods. The shared AST helper keeps its
+module-symbol behavior. Registered contract owners continue field and owner-path
+validation before AST fallback. Runtime dict keys, absent members, and methods
+on a different class do not resolve. Citation grammar, path guessing, and
+prose-negation interpretation retain their contracts. Nested-function support
+remains a separate decision in `BUG_BACKLOG.md`.
+
+Identifier searches cover both symbol helpers and their callers; vocabulary
+searches cover dotted symbols, methods, missing anchors, and registered fields.
+The pre-edit tests pin missing module symbols and registry fields but carry no
+class-method case. The new matrix covers ten recognized symbol shapes; a
+separate test pins registry precedence. Disabling method resolution fails the
+normal/private/async cases. Bypassing the registry fails its carve-out test.
+Both mutations are restored immediately. Focused new tests: 11 passed. Full
+suite: 14,716 passed, 67 skipped in 74.71 seconds. `git diff --check` passes.
+
+The first Codex review confirms that a three-part test is outside the existing
+citation grammar, so that test is removed rather than expanding the grammar.
+The confirmation Codex review finds no actionable regressions and independently
+passes all 206 data-contract tests. The direct-change review loop converges.
+Transient review and validation logs use `/private/tmp/class-method-citations.*`.

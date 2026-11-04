@@ -231,6 +231,10 @@ These promises excuse an absent path only: undeclared and edit-only missing
 paths still produce findings. `data_contract.py:check_input_contract_references`
 and `data_contract.py:_code_anchor_resolves` continue ordinary symbol validation
 for existing files, even when an eligible plan declares the file for creation.
+Ordinary Python anchors accept module-level symbols and direct class methods
+(`Class.method`, including private and async methods). They do not infer runtime
+members, inherited methods, or nested-function paths. Registered contract owners
+retain registry-based field and owner-path validation.
 Accepting an absent path establishes neither delivery nor future symbol
 existence nor agreement between sibling contracts. Stale Input references
 remain ordinary repair findings, without structured documentation payloads or
