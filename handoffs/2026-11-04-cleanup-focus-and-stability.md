@@ -1,6 +1,7 @@
 # Cleanup for focus and stability
 
-BACKLOG #376 is shipped. The next pickup is the separately tracked full-suite stability work; the backlog remains the queue and scope owner.
+BACKLOG #376 and the report/citation fixes in PR #165 are shipped. The user
+defers full-suite stability work; continue from the live BUG queue.
 
 | Item | Current state |
 | --- | --- |
@@ -27,7 +28,8 @@ plan or fold them into the shipped retirement.
 | --- | --- | --- |
 | Complete locally | Duplicated conceptual-correctness findings | Embedded checkpoint and final reports render conceptual correctness once; standalone grouped output retains the findings. See validation below. |
 | Complete locally | Valid class-method citations reported missing | Direct normal, private, and async methods resolve; registry field validation stays authoritative. Nested functions retain a separate backlog entry. |
-| 3 | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | Reproduce surviving reports before selecting a fix. Do not stabilize tests for retired commands, widen timeouts, or alter initialization speculatively. |
+| Deferred by user | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | No failure reproduces in the current environment. Investigation evidence is committed at `fd07b7734` on `investigate/full-suite-stability`; no initialization or timeout change is selected. |
+| Complete locally | Same-batch added row self-reference | Endpoint lookup accepts exact typed self-references; the row still needs independent grounding in reached predecessor context. |
 
 Read each current `BUG_BACKLOG.md` entry before editing. Search by identifier
 and vocabulary, verify reported bugs against existing tests, fix the invariant
@@ -96,3 +98,36 @@ citation grammar, so that test is removed rather than expanding the grammar.
 The confirmation Codex review finds no actionable regressions and independently
 passes all 206 data-contract tests. The direct-change review loop converges.
 Transient review and validation logs use `/private/tmp/class-method-citations.*`.
+
+## Same-batch self-reference fix
+
+The first bounded BUG item reproduces through the existing
+`parse_candidate_delta` / `materialize_candidate` test helpers. A new entity
+that cites itself is refused even with an outgoing or incoming connection to a
+reached predecessor. Endpoint lookup excludes the owning operation although it
+is also the exact endpoint producer.
+
+Pre-edit identifier searches cover `_same_batch_added_endpoint_identity` and
+both consumers (`_validate_relation_authority`, `_refuse_unanchored_additions`).
+Vocabulary searches cover self-references, owner/endpoint comparisons, reached
+anchors, and mutually citing additions in source, tests, and `ROADMAP_FORMAT.md`.
+The shared helper is the sole matching exclusion; the fixed-point reachability
+rules and the single-feedback opt-out remain intact.
+
+The fix deletes the owning-operation exclusion and retains exact type,
+artifact, row-id, uniqueness, and candidate-membership checks. Six regression
+cases cover outgoing grounding, incoming grounding, and self-only refusal in
+both operation orders. All six fail against the original implementation; all
+189 candidate tests pass after the fix. The code review finds no actionable
+issues and independently passes all 189 tests. The format doc and changelog
+state the self-reference/grounding boundary.
+
+The source bug entry is removed. Its endpoint-kind observation is already
+covered by an existing exhaustive test; its unproven removed-relation concern
+is retired with an exact reopen condition in `docs/history/backlog-decisions.md`.
+No removed-relation policy or endpoint table changes accompany this fix.
+Full regression validation passes: 14,722 passed, 67 skipped in 75.05 seconds.
+Temporarily marking every added row reached makes both self-only cases fail;
+the source is restored immediately, then all 189 candidate tests pass again.
+`git diff --check` passes. Transient evidence uses
+`/private/tmp/same-batch-self-reference.*`.

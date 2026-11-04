@@ -1539,7 +1539,9 @@ grows to include added rows by these rules, and only these:
 
 Every relation an added row owns must also end at a reached row. A group of
 added rows that only cite each other is not reached, in any artifact; one member
-grounded by a rule above grounds the rest of the group. An incoming relation
+grounded by a rule above grounds the rest of the group. A batch-added row may
+cite itself as an exact typed endpoint, but that self-reference alone does not
+make the row reached. An incoming relation
 from another *added* row never grounds a row by itself (the owner must be
 reached first through a rule above). Single-feedback candidates cannot cite an
 added row at all, so only the outgoing-to-predecessor rule applies to them.
