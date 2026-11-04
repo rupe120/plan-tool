@@ -34,25 +34,22 @@ one large step across several stories **only when each slice is independently
 shippable**; every story declares the plan step ids it covers. The plan must be
 assigned to an epic in `jira-config.json` (see `plan_tool/jira_config.py`).
 
-### Which detail bundle grounds the export (`--grade`)
+### Which detail bundle grounds the export
 
-By default the export is grounded on the **run-grade** detail bundle: it embeds
-each step's `steps[].detail` body in the prompt and links those paths in the
-output. `--grade jira` grounds it on the **jira-grade** bundle under
-`plan-details/<plan_slug>/jira/` instead — the compact five-section contract
-documented in `DETAIL_FORMAT.md`. The grade selects one source for all three
-surfaces at once: the prompt bodies, the markdown `## Plan details` links, and
-the JSON `plan_detail_paths`.
+The export always grounds stories and the developer handoff on declared
+run-grade detail (`steps[].detail`; see `DETAIL_FORMAT.md`). The captured
+bodies, Markdown `## Plan details` links, and JSON `plan_detail_paths` all
+refer to that same input snapshot.
 
 **It fails before the backend call, and it never falls back.** Every committed
-step that is not `done` must have the selected grade's structurally valid
+step that is not `done` must have structurally valid run-grade
 detail. A present detail is validated even for `done` steps; a missing `done`
 detail is retained only as historical context. Parked (`deferred` and
 `wont_do`) steps never require detail and stay handoff history rather than
 story work. When more than one committed step is broken, capture reports every
 broken step in one refusal so an operator can repair the set in one pass.
 
-`direct-jira` has no grade selector and always runs at the run-grade default.
+`direct-jira` also consumes declared run-grade detail.
 
 ## Output pair
 
@@ -71,7 +68,7 @@ stem — same convention as detail files. Path computed by
 ## Paired developer handoff
 
 Every `plan-tool jira <plan>` invocation writes a Markdown developer handoff
-with the story export. The paired export captures the plan, selected detail,
+with the story export. The paired export captures the plan, declared run-grade detail,
 declared files, and both generated destinations exactly once
 (`capture_companion_export_input()` in `plan_tool/jira.py`), so the story and
 the handoff always describe one snapshot rather than two independent reads.
@@ -87,13 +84,9 @@ the handoff always describe one snapshot rather than two independent reads.
 exactly one final suffix removed (`jira-stories.md` and `jira-stories.json`
 both yield `jira-stories`; `release.v1.json` yields `release.v1`; a
 suffix-free basename is unchanged). The story and handoff destinations must
-differ from each other, from the plan source file, and from every run- or
-Jira-grade detail artifact (`derive_detail_path()` / `derive_jira_detail_path()`
-in `plan_tool/detail_artifacts.py` — any step, either grade, not just what
-this export selected). The handoff additionally may never land inside any
-plan's `plan-details/<slug>/` bundle, and neither generated file may land
-inside a `plan-details/<slug>/jira/` legacy Jira-grade detail bundle
-(see `DETAIL_FORMAT.md`). `plan-tool jira` rejects a
+differ from each other, from the plan source file, and from every run-grade
+detail artifact (`derive_detail_path()` in `plan_tool/detail_artifacts.py`,
+including absent artifacts for any step). `plan-tool jira` rejects a
 destination that fails any of these checks before invoking a model or writing
 anything (`_companion_target_preflight()`).
 
@@ -177,7 +170,7 @@ regenerates both files.
 
 Both generated files carry the same `CompanionProvenance` block (an HTML
 comment in Markdown, one JSON key in JSON — see `plan_tool/jira_handoff.py`):
-the provenance/story/handoff contract revisions, the selected grade, the
+the provenance/story/handoff contract revisions, the `selected_grade` provenance field (always `run`), the
 source plan's repo-relative path, the selected detail source path per step,
 the (story path, handoff path, format) pair identity, and a SHA-256
 fingerprint over every value that can change either rendered file — plan body
@@ -208,8 +201,7 @@ advisory, printed for a person to act on, and never changes the exit code
 
 The handoff is a terminal, generated artifact — never an input to `detail`
 authoring, `completeness-audit`, `reconcile-plan`/`reconcile-code`, or plan
-mutation of any kind, and it never overwrites a legacy Jira-grade detail bundle
-under `plan-details/<slug>/jira/` (see `DETAIL_FORMAT.md` for that contract).
+mutation of any kind.
 A developer who wants a specified, run-grade-consumable implementation
 contract authors it with `plan-tool detail <plan>`; `plan-tool jira` generates
 the handoff and never authors detail.
@@ -410,8 +402,7 @@ backend                        (or `unspecified` when not provided)
   generated, because it is the one token a person types — and it is dropped
   entirely while the key is blank.
 - `## Plan details` links each covered step to its detail file
-  (`DETAIL_FORMAT.md`) — the run-grade file by default, the `jira/` artifact
-  under [`--grade jira`](#which-detail-bundle-grounds-the-export---grade).
+  (`DETAIL_FORMAT.md`) — the declared run-grade file.
 - `## Layer` prints the raw `layer` value; the matching tag (`[BE]` above) rides
   on the `## Title` line, as does the plan tag (`[<plan-tag>]`, dropped
   entirely when blank) — see [Plan tag](#plan-tag). `## Testing recommendation` renders for a
@@ -550,9 +541,7 @@ against the plan on the post-jira branch.
 - `SEED_FORMAT.md` — authoring directives for the seed the source plan was
   created from.
 - `PLAN_FORMAT.md` — the plan file these stories are derived from.
-- `DETAIL_FORMAT.md` — the per-step detail files linked in `## Plan details`,
-  and the jira-grade section contract `--grade jira` requires, including the
-  legacy Jira-grade detail bundle the paired export may never enter.
+- `DETAIL_FORMAT.md` — the run-grade per-step detail contract linked in `## Plan details`.
 - `RUNBOOK.md` — the operational jira workflow walkthrough.
 - `docs/cli/jira.md` — the generated `plan-tool jira` flag reference,
   including `--handoff-output` and `--adopt-existing`.

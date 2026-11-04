@@ -266,37 +266,6 @@ but are deprecated and scheduled for removal with `completeness-apply`
 route for new assistant-driven workflows. See the
 [command reference](../reference/commands.md#cli-usage) for existing invocations.
 
-### 10. Use an existing compact Jira-grade bundle
-
-You want each step described as **what changes, why, and how you know it
-worked** — a brief a ticket reader and an implementer can both act on — rather
-than the run-grade file's call sites, exact edits, and test rosters.
-
-```bash
-plan-tool jira my-feature --grade jira              # stories grounded on it
-plan-tool run my-feature --detail-grade jira        # execute from it
-plan-tool completeness-audit my-feature --grade jira  # audit against its contract
-```
-
-New Jira-grade detail authoring is disabled: use `plan-tool detail my-feature`
-for new run-grade detail. Existing compact bundles remain legacy inputs in
-their own `jira/` subdirectory; the run-grade bundle and every `detail:`
-pointer stay untouched. `plan-tool jira` produces stories and the generated
-developer handoff, which is terminal output rather than a replacement for a
-detail bundle.
-
-Each consumer **fails loudly** rather than falling back: a step whose jira-grade
-artifact is missing or off-contract stops the export or the run before any
-backend call, so you never get output silently grounded on the other grade. The
-section contract is in
-[`../../DETAIL_FORMAT.md`](../../DETAIL_FORMAT.md#jira-grade--the-compact-contract).
-
-Two limits worth knowing before you commit: the jira-grade audit is
-**report-only** (no findings sidecar, so no `completeness-apply`, no
-`--iterate`, no `convergence` history for that run — you read the report and fix
-through the driving session). Deprecated direct pipelines are not an
-alternative for new workflows.
-
 ### 11. Ground a project-sized concept before you write a seed
 
 > Inspect the repository and help prepare a grounded concept brief for review.

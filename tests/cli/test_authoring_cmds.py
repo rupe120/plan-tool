@@ -48,8 +48,6 @@ from plan_tool.create import (
     SplitProposal,
     SplitProposalEntry,
 )
-from plan_tool.detail import JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE
-from plan_tool.jira_grade import GRADE_RUN
 from plan_tool.roadmap_artifacts import (
     COMPONENTS_FILENAME,
     CONSTRAINTS_FILENAME,
@@ -2779,7 +2777,6 @@ class TestDetailTailAuditFollowUp:
             "demo",
             path=plan_path,
             repo_root=registered_plan.root,
-            detail_grade=GRADE_RUN,
             tail_outcome=authoring._CompletenessTailOutcome(
                 [("unsafe command", "must not survive")], result
             ),
@@ -2806,7 +2803,6 @@ class TestDetailTailAuditFollowUp:
             "demo",
             path=plan_path,
             repo_root=registered_plan.root,
-            detail_grade=GRADE_RUN,
             tail_outcome=authoring._CompletenessTailOutcome([], result),
         )
         assert follow_up[0][0] == "plan-tool completeness-audit demo --iterate"
@@ -5013,24 +5009,24 @@ class TestStampGrounding:
 
 
 # --------------------------------------------------------------------------
-# detail --grade routing + disabled compact authoring
+# Detail authoring selector removal
 # --------------------------------------------------------------------------
 #
-# Run-grade remains the authoring default. The CLI refuses the retained Jira
-# grade selector before it opens a run log or calls the generator.
+# Argparse rejects retired selectors before authoring starts.
 
 
-class TestDetailGradeRouting:
+@pytest.mark.integration
+class TestDetailSelectorRemoval:
     @staticmethod
     def _patch_capture(monkeypatch: pytest.MonkeyPatch) -> dict:
-        """Patch ``authoring.generate_detail`` to record the ``grade`` kwarg."""
+        """Record the selector-free generator contract."""
         import plan_tool.cli.authoring as authoring
 
         calls: dict = {}
 
         def fake_generate_detail(plan_path, **kwargs):
             calls["called"] = True
-            calls["grade"] = kwargs.get("grade")
+            calls["kwargs"] = kwargs
             return []
 
         monkeypatch.setattr(authoring, "generate_detail", fake_generate_detail)
@@ -5042,7 +5038,7 @@ class TestDetailGradeRouting:
         calls = self._patch_capture(monkeypatch)
         rc = main(registered_plan.argv("detail", "demo"))
         assert rc == 0
-        assert calls["grade"] == GRADE_RUN
+        assert "grade" not in calls["kwargs"]
 
     @pytest.mark.parametrize(
         "extra_args",
@@ -5060,7 +5056,7 @@ class TestDetailGradeRouting:
             ("--commit",),
         ],
     )
-    def test_grade_jira_rejects_every_authoring_route_before_context_or_run_log(
+    def test_detail_rejects_removed_grade_selector(
         self,
         extra_args: tuple[str, ...],
         registered_plan,
@@ -5075,18 +5071,17 @@ class TestDetailGradeRouting:
             "_load_context",
             lambda _args: pytest.fail("Jira-grade refusal must precede context loading"),
         )
-        rc = main(
-            registered_plan.argv(
+        with pytest.raises(SystemExit) as exc:
+            main(registered_plan.argv(
                 "detail", "missing-plan", "--grade", "jira", *extra_args
-            )
-        )
-        assert rc == 2
+            ))
+        assert exc.value.code == 2
         err = capsys.readouterr().err
-        assert err.strip() == f"error: {JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE}"
+        assert "unrecognized arguments: --grade jira" in err
         assert "called" not in calls
         assert not (registered_plan.root / ".plan-tool" / "runs").exists()
 
-    def test_run_grade_still_runs_the_completeness_tail(
+    def test_detail_without_grade_keeps_run_grade_generator_contract(
         self, registered_plan, monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         import plan_tool.cli.authoring as authoring
@@ -5095,6 +5090,7 @@ class TestDetailGradeRouting:
         tail_calls: list[int] = []
 
         def fake_generate_detail(plan_path, **kwargs):
+            assert "grade" not in kwargs
             written = Path(plan_path).parent / "detail.md"
             written.write_text("x\n", encoding="utf-8")
             return [
@@ -5474,7 +5470,7 @@ class TestAuthoringGuidanceNotCurrentVerdict:
         import plan_tool.cli.authoring as authoring
 
         return authoring._fresh_completeness_audit_follow_up(
-            "demo", detail_grade=GRADE_RUN, verdict=verdict,
+            "demo", verdict=verdict,
             artifacts_moved=moved,
         )
 
@@ -5591,7 +5587,6 @@ class TestAuthoringGuidanceNotCurrentVerdict:
 
         _command, why = authoring._fresh_completeness_audit_follow_up(
             "demo",
-            detail_grade=GRADE_RUN,
             bare_plan=True,
             verdict=blocking_verdict_from_gate(
                 ["a"], untrusted_cause=UNTRUSTED_PERSISTENT

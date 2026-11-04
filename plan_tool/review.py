@@ -55,19 +55,8 @@ from plan_tool.convergence import is_blocking_impact
 from plan_tool.detail_artifacts import (
     DetailArtifactResolution,
     DetailFormatError,
-    derive_jira_detail_path,
     require_supported_detail_format_version,
     resolve_detail_artifact,
-)
-from plan_tool.jira_grade import (
-    GRADE_JIRA,
-    GRADE_RUN,
-    JIRA_GRADE_REQUIRED_H2S,
-    JIRA_GRADE_VALUES,
-    fenced_spans,
-    is_known_grade,
-    unknown_grade_message,
-    validate_jira_grade_body,
 )
 from plan_tool.locator import slug_from_filename
 from plan_tool.pathutil import normalize_declared_path
@@ -82,10 +71,6 @@ from plan_tool.parser import (
     split_body_sections,
 )
 from plan_tool.scope_fence import _excise_fenced_code, _fenced_code_spans
-# ``clip_text_to_byte_budget`` is reached across the module boundary on
-# purpose: the jira-grade bundle embeds whole artifacts and needs the same
-# UTF-8-safe byte clip + truncation marker the excerpt builders use, not a
-# second copy.
 from plan_tool.prompt_excerpt import build_prompt_excerpt, clip_text_to_byte_budget
 from plan_tool.run_log import hash_prompt
 from plan_tool.progress import ProgressReporter, StderrReporter
@@ -501,6 +486,33 @@ def confidence_value(confidence: Optional[str]) -> str:
     return confidence if confidence is not None else "unknown"
 
 
+# Citation fences protect model output at any indentation, beyond Markdown limits.
+_FENCE_MARKER_RE = re.compile(r"^[ \t]*(`{3,}|~{3,})")
+
+
+def fenced_spans(text: str) -> list[tuple[int, int]]:
+    """Return citation-fence offsets, retaining line endings and unclosed tails."""
+    spans: list[tuple[int, int]] = []
+    fence_char: Optional[str] = None
+    fence_len = 0
+    span_start = 0
+    pos = 0
+    for line in text.splitlines(keepends=True):
+        match = _FENCE_MARKER_RE.match(line)
+        if match:
+            run = match.group(1)
+            char, length = run[0], len(run)
+            if fence_char is None:
+                fence_char, fence_len, span_start = char, length, pos
+            elif char == fence_char and length >= fence_len:
+                spans.append((span_start, pos + len(line)))
+                fence_char = None
+        pos += len(line)
+    if fence_char is not None:
+        spans.append((span_start, len(text)))
+    return spans
+
+
 def indent_bullet_body(body: str) -> str:
     """A finding body for the tail of a markdown bullet, continuation lines
     indented two spaces under it.
@@ -508,7 +520,7 @@ def indent_bullet_body(body: str) -> str:
     The model quotes plan text in fenced blocks, so a body spans lines at
     whatever indentation it chose. A column-0 fence would end the list item and
     one indented four or more spaces past the item reads as an indented code
-    block. Fence delimiter lines (found by :func:`fenced_spans`, the repo's one
+    block. Fence delimiter lines (found by :func:`fenced_spans`, the citation
     scanner) are therefore set to the bullet's margin, and every other
     continuation line is dedented by their common margin, so relative
     indentation inside a fence survives. Blank lines stay empty and the text is
@@ -916,19 +928,12 @@ class DetailBodyIssue:
     one of the seven required tokens (Summary / Table of Contents / Why
     / Files / Implementation / Tests / Acceptance). ``detail_path`` is
     repo-relative.
-
-    ``message`` carries a ready-written defect line for a producer whose
-    finding does not reduce to "section X missing" — the jira-grade
-    contract's wrong-schema verdict, for instance, names the whole body's
-    mistake rather than one heading. Renderers prefer it when set; the
-    run-grade producers leave it ``None`` and render as before.
     """
 
     step_id: int
-    kind: str  # "missing" | "placeholder" | a jira-grade contract kind
+    kind: str  # "missing" | "placeholder"
     section: str
     detail_path: str
-    message: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -1878,7 +1883,6 @@ def _read_detail_body(
     *,
     plan: Optional[Plan] = None,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> str:
     """Return a step's on-disk detail body (``""`` when absent/unreadable).
 
@@ -1886,23 +1890,7 @@ def _read_detail_body(
     the text: supply ``plan`` and ``plan_path`` to include a step whose
     pointer is unset but whose canonical file is on disk. Reads plan-artifact
     markdown only.
-
-    ``detail_grade`` selects which artifact is the step's body. At jira grade
-    the path is :func:`derive_jira_detail_path` plus an ``is_file()`` check —
-    there is no pointer axis at that grade — and a miss returns ``""`` rather
-    than falling back to the run-grade body, so a plan-altitude check under
-    jira grade never mixes the other grade's bytes into its verdict.
     """
-    if _is_jira_grade_bundle(detail_grade):
-        if plan is None or plan_path is None:
-            return ""
-        path = derive_jira_detail_path(plan_path, plan, step)
-        if not path.is_file():
-            return ""
-        try:
-            return path.read_text(encoding="utf-8", errors="replace")[:max_bytes]
-        except OSError:
-            return ""
     resolved = _resolve_detail_body(
         plan, step, repo_root, max_bytes, plan_path=plan_path
     )
@@ -2010,17 +1998,7 @@ def _prose_symbols(text: str) -> set[str]:
     return {s.lower() for s in _derive_symbols(text)}
 
 
-# Which detail-body H2s carry a step's own claim prose, per grade. Run grade's
-# acceptance surface is ``## Acceptance criteria`` (token ``acceptance``) with
-# ``## Overview`` beside it; the jira-grade contract has neither — its
-# acceptance surface is ``## Done when`` (token ``done``). Reading the run-grade
-# keys against a jira body would find nothing and silently drop the claim side
-# of every plan-altitude check. The *plan-body* claim scan is grade-independent
-# and keeps its own keys.
-_DETAIL_CLAIM_SECTION_KEYS = {
-    GRADE_RUN: ("acceptance", "overview"),
-    GRADE_JIRA: ("done",),
-}
+_DETAIL_CLAIM_SECTION_KEYS = ("acceptance", "overview")
 
 
 def build_plan_footprint(
@@ -2030,7 +2008,6 @@ def build_plan_footprint(
     plan_path: Optional[Path] = None,
     plan_sections: Optional[dict[str, str]] = None,
     max_bytes: int = _MAX_DETAIL_PARSE_BYTES,
-    detail_grade: str = GRADE_RUN,
 ) -> PlanFootprint:
     """Gather the plan's declared deliverables and everything it references.
 
@@ -2044,17 +2021,10 @@ def build_plan_footprint(
     examples, but not just claim prose) so an in-scope consumer that names a
     deliverable by symbol still suppresses the orphan check; over-suppression
     is the intended conservative direction.
-
-    ``detail_grade`` selects which per-step artifact is read as "the detail
-    body" and, with it, which H2s hold that step's claim prose
-    (:data:`_DETAIL_CLAIM_SECTION_KEYS`). The declared side and the plan-body
-    claim scan are grade-independent.
     """
     from plan_tool.detail import extract_path_mentions, parse_detail_file_sections
 
-    detail_claim_keys = _DETAIL_CLAIM_SECTION_KEYS[
-        GRADE_JIRA if _is_jira_grade_bundle(detail_grade) else GRADE_RUN
-    ]
+    detail_claim_keys = _DETAIL_CLAIM_SECTION_KEYS
     # Declared side (zero I/O) — single-sourced with the claim-vs-delivery consumer.
     declared_paths_by_step, declared_symbols_by_step = _declared_footprint(plan)
     referenced_paths_by_step: dict[int, frozenset[str]] = {}
@@ -2066,7 +2036,7 @@ def build_plan_footprint(
         # Referenced side: path mentions (whole body) and symbol tokens.
         body = _read_detail_body(
             step, repo_root, max_bytes,
-            plan=plan, plan_path=plan_path, detail_grade=detail_grade,
+            plan=plan, plan_path=plan_path,
         )
         # A fenced sample remains an exact consumption citation. Keep it on the
         # conservative referenced side, but exclude it from claim prose below.
@@ -2544,92 +2514,6 @@ def check_detail_coverage(
     return issues
 
 
-def check_jira_grade_bundle(
-    plan: Plan, plan_path: Path, repo_root: Path
-) -> tuple[list[DetailCoverageIssue], list[DetailBodyIssue]]:
-    """Audit the jira-grade detail bundle: coverage, then contract.
-
-    The jira-grade counterpart to :func:`check_detail_coverage` and
-    :func:`check_detail_body_completeness`, which read run-grade bodies under
-    the seven-section contract and therefore do not run at this grade.
-    Returns ``(coverage_issues, body_issues)`` so each lands in the bucket its
-    run-grade sibling fills — the buckets carry the grouped-report rendering,
-    the ``--json`` payload, and the blocking gate, and both arms block through
-    that gate exactly as it stands (``kind="missing_on_disk"`` for coverage;
-    the whole body bucket is blocking).
-
-    ``done`` steps are exempt from both arms, matching
-    :func:`check_detail_coverage`: the artifact briefs a step before it runs,
-    so its absence is moot once the step is built.
-
-    **Coverage fires only on a partially authored bundle** — at least one
-    non-``done`` step has an artifact and at least one does not. Zero
-    artifacts is a *bare* plan, a valid early-pipeline audit target that the
-    bare-plan machinery already reports; emitting a blocking coverage finding
-    for the same state would give one plan two opposite verdicts under one
-    grade. This mirrors the run-grade precedent, where an un-authored plan
-    audits clean on coverage because ``step.detail`` is unset.
-
-    Contract findings come from
-    :func:`plan_tool.jira_grade.validate_jira_grade_body` — the single
-    authority for the compact schema — and carry its message verbatim,
-    including the targeted wrong-schema line for a run-grade body parked at a
-    jira-grade path.
-    """
-    candidates = [s for s in plan.steps if s.status != StepStatus.DONE]
-    resolved = [
-        (step, derive_jira_detail_path(plan_path, plan, step))
-        for step in candidates
-    ]
-    present = [(step, path) for step, path in resolved if path.is_file()]
-    missing = [(step, path) for step, path in resolved if not path.is_file()]
-
-    coverage: list[DetailCoverageIssue] = []
-    if present and missing:
-        coverage = [
-            DetailCoverageIssue(
-                step_id=step.id,
-                kind="missing_on_disk",
-                detail_path=_repo_relative_posix(path, repo_root),
-            )
-            for step, path in missing
-        ]
-
-    body_issues: list[DetailBodyIssue] = []
-    for step, path in present:
-        rel = _repo_relative_posix(path, repo_root)
-        try:
-            text = path.read_text(encoding="utf-8", errors="replace")
-        except OSError as exc:
-            body_issues.append(
-                DetailBodyIssue(
-                    step_id=step.id,
-                    kind="unreadable",
-                    section="",
-                    detail_path=rel,
-                    message=f"jira-grade artifact could not be read ({exc})",
-                )
-            )
-            continue
-        for finding in validate_jira_grade_body(text):
-            if not finding.blocking:
-                continue
-            body_issues.append(
-                DetailBodyIssue(
-                    step_id=step.id,
-                    kind=finding.kind,
-                    # The compact contract's defects name a whole body (wrong
-                    # schema) or a heading the message already spells out, so
-                    # ``message`` is the display surface and ``section`` stays
-                    # empty rather than inventing a run-grade section token.
-                    section="",
-                    detail_path=rel,
-                    message=finding.message,
-                )
-            )
-    return coverage, body_issues
-
-
 def _is_scannable_path(path: str) -> bool:
     """True when ``heuristic_already_done`` would open ``path`` — i.e. its
     extension is in :data:`_SCANNABLE_EXTS` (code/prose/config).
@@ -2772,7 +2656,7 @@ def _is_plan_authoring_path(path: str) -> bool:
     implementation_plans_path`` pins a ``plan-details/<slug>/reports/*.json``
     path classifying ``"docs"``. Only a numbered step file
     (:func:`~plan_tool.detail_artifacts.derive_detail_path`:
-    ``plan-details/<slug>/[jira/]<NN>-<slug>.md``) is excluded: a finding
+    ``plan-details/<slug>/<NN>-<slug>.md``) is excluded: a finding
     citing one is about the plan/detail bundle under audit -- the subject of
     a conceptual finding, not supporting docs. The plan file itself has no
     fixed path convention across repos and isn't detected here; a finding
@@ -3662,18 +3546,12 @@ def _deliverable_deferred(
     *,
     plan: Optional[Plan] = None,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> bool:
     """True when the step defers *this deliverable's* wiring (condition 4).
 
     Plan-level deferral is matched on explicit **path only** (``plan_deferred_paths``
     is shared across steps, so a coincidental symbol match would over-fire); the
     step's *own* deferred sections match path or path-derived symbol.
-
-    Both grades carry a fence section this reads: run grade's optional
-    ``## Deferred`` (token ``deferred``) and the jira-grade contract's required
-    ``## Out of scope`` (token ``out``), so ``detail_grade`` only has to point
-    the read at the right artifact.
     """
     from plan_tool.detail import extract_path_mentions, parse_detail_file_sections
 
@@ -3682,7 +3560,7 @@ def _deliverable_deferred(
 
     body = _read_detail_body(
         step, repo_root, max_bytes,
-        plan=plan, plan_path=plan_path, detail_grade=detail_grade,
+        plan=plan, plan_path=plan_path,
     )
     if not body:
         return False
@@ -3707,7 +3585,6 @@ def detect_orphaned_deliverable(
     plan_name: str,
     plan_path: Optional[Path] = None,
     max_bytes: int = _MAX_DETAIL_PARSE_BYTES,
-    detail_grade: str = GRADE_RUN,
 ) -> list[Recommendation]:
     """Flag a step that ships a deliverable nothing consumes and defers its wiring.
 
@@ -3740,12 +3617,6 @@ def detect_orphaned_deliverable(
     and reads only plan/detail markdown, never a source file.
 
     ``source="orphaned-deliverable"``, ``severity="medium"``, ``step_id=<step>``.
-
-    The question it asks is plan-altitude, so it runs at **every** grade;
-    ``detail_grade`` only decides which per-step artifact supplies conditions
-    2-4. Getting that wrong is not a degradation but a silent disabling:
-    condition 4 is a required trip condition, so a check reading the wrong
-    grade's bodies emits nothing at all.
     """
     from plan_tool.detail import extract_path_mentions
 
@@ -3755,7 +3626,6 @@ def detect_orphaned_deliverable(
     footprint = build_plan_footprint(
         plan, repo_root, plan_path=plan_path,
         plan_sections=plan_sections, max_bytes=max_bytes,
-        detail_grade=detail_grade,
     )
     plan_deferred_text = "\n".join(
         text
@@ -3807,7 +3677,6 @@ def detect_orphaned_deliverable(
                 max_bytes,
                 plan=plan,
                 plan_path=plan_path,
-                detail_grade=detail_grade,
             ):
                 continue
             recs.append(
@@ -3920,16 +3789,6 @@ def detect_claim_vs_delivery(
     on, so a token appearing only there is never flagged. Reuses step 3's
     :func:`build_plan_footprint` declared side as the delivered set and matches
     each artifact-shaped claim token against it (exact or fuzzy).
-
-    Stays **advisory** (``severity="info"``, ``source="claim-vs-delivery"``,
-    ``step_id=None``): fuzzy prose matching is the dominant false-positive risk,
-    so it rides the non-blocking ``smell_recs`` bucket via
-    :func:`collect_smell_findings` and never flips an exit code. Reads the plan
-    body plus the zero-I/O declared side (:func:`_declared_footprint`) — it
-    opens no detail file at either grade, and no source file: it confirms a
-    claim maps to a
-    *declared* deliverable, not that the deliverable works (``#66``'s job).
-    Returns ``[]`` when ``plan_path`` is unavailable (no plan body to read).
     """
     from plan_tool.detail import extract_path_mentions
 
@@ -4052,83 +3911,24 @@ def detect_self_referential_features(
     return recs
 
 
-# The grade axis as a policy over the registry: every entry carries one of
-# these, and the dispatch reads it. Grade is *data on an entry*, never a branch
-# at a call site — a check whose class is wrong is one edited literal, not a
-# restructure, and a check with no class is caught by a single guard.
-#
-# ``grade-independent`` — the question the detector asks does not depend on
-#   which detail contract is on disk (plan structure, declared paths, deps,
-#   plan-body sections). Skipping one at jira grade would weaken the audit.
-# ``run-grade-only`` — the detector reads run-grade detail bodies under the
-#   seven-section contract, so at jira grade it would judge the wrong bytes.
-# ``jira-grade-only`` — the detector supplies what the run-grade readers no
-#   longer produce once they are withheld.
-DETECTOR_GRADE_INDEPENDENT = "grade-independent"
-DETECTOR_GRADE_RUN_ONLY = "run-grade-only"
-DETECTOR_GRADE_JIRA_ONLY = "jira-grade-only"
-
-DETECTOR_GRADE_CLASSES: frozenset[str] = frozenset(
-    {
-        DETECTOR_GRADE_INDEPENDENT,
-        DETECTOR_GRADE_RUN_ONLY,
-        DETECTOR_GRADE_JIRA_ONLY,
-    }
-)
-
-# Which detail grades each class runs at.
-_DETECTOR_GRADE_RUNS_AT: dict[str, frozenset[str]] = {
-    DETECTOR_GRADE_INDEPENDENT: frozenset(JIRA_GRADE_VALUES),
-    DETECTOR_GRADE_RUN_ONLY: frozenset({GRADE_RUN}),
-    DETECTOR_GRADE_JIRA_ONLY: frozenset({GRADE_JIRA}),
-}
-
-
 @dataclass(frozen=True)
 class DetectorContext:
-    """Everything a deterministic completeness detector reads.
-
-    One envelope rather than one uniform detector signature: each registry
-    entry adapts it to the call shape its detector already has, so routing a
-    detector through the registry can never change its call semantics.
-
-    ``detail_grade`` is for the grade-independent detectors that still read a
-    per-step body — they run at every grade but must read the selected one.
-    Grade *selection* is the registry's job (:meth:`DetectorRegistry.for_grade`),
-    not an entry's.
-    """
+    """Inputs shared by deterministic completeness detectors."""
 
     plan: Plan
     repo_root: Path
     plan_name: str
     plan_path: Optional[Path] = None
-    detail_grade: str = GRADE_RUN
 
 
 @dataclass(frozen=True)
 class DetectorEntry:
-    """One individually-dispatchable deterministic detector.
-
-    ``consumes`` names entries whose results this one reads; the registry
-    hands them in so a consumer can never be run without its producer having
-    run first. ``finding_sources`` declares which ``Recommendation.source``
-    values the detector can mint (empty for detectors returning issue records
-    rather than recommendations) — :data:`SELF_CONSISTENCY_SMELL_DETECTORS` is
-    derived from it, so the self-consistency membership can't drift from
-    :data:`SELF_CONSISTENCY_SOURCES`.
-
-    ``grade`` is the entry's class on the detail-grade axis, one of
-    :data:`DETECTOR_GRADE_CLASSES`. It defaults to ``None`` — not to
-    ``grade-independent`` — so an entry added without a deliberate
-    classification is *unclassified* rather than silently admitted to every
-    grade; :meth:`DetectorRegistry.for_grade` refuses to dispatch it.
-    """
+    """One deterministic detector with explicit producer dependencies and finding sources."""
 
     key: str
     call: Callable[[DetectorContext, Mapping[str, object]], object]
     consumes: tuple[str, ...] = ()
     finding_sources: tuple[str, ...] = ()
-    grade: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -4174,27 +3974,6 @@ class DetectorRegistry:
             entries = entries + other.entries
         return DetectorRegistry(entries)
 
-    def for_grade(self, detail_grade: str) -> DetectorRegistry:
-        """The entries ``detail_grade`` admits, order preserved.
-
-        The whole grade policy: filter the table, then dispatch it unchanged.
-        An entry with no grade class raises rather than defaulting into the
-        run — a detector nobody classified must not decide for itself which
-        grade's artifacts it judges.
-        """
-        if not is_known_grade(detail_grade):
-            raise ValueError(unknown_grade_message(detail_grade))
-        kept: list[DetectorEntry] = []
-        for entry in self.entries:
-            runs_at = _DETECTOR_GRADE_RUNS_AT.get(entry.grade or "")
-            if runs_at is None:
-                raise ValueError(
-                    f"detector {entry.key!r} has no grade class "
-                    f"(expected one of {', '.join(sorted(DETECTOR_GRADE_CLASSES))})"
-                )
-            if detail_grade in runs_at:
-                kept.append(entry)
-        return DetectorRegistry(tuple(kept))
 
     def run_all(self, ctx: DetectorContext) -> dict[str, object]:
         """Run every entry once, in order, keyed by entry key."""
@@ -4212,7 +3991,6 @@ PLAN_WELL_FORMEDNESS_DETECTORS = DetectorRegistry(
         DetectorEntry(
             "file-existence",
             lambda ctx, results: check_file_existence(ctx.plan, ctx.repo_root),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "path-style-mismatch",
@@ -4220,66 +3998,42 @@ PLAN_WELL_FORMEDNESS_DETECTORS = DetectorRegistry(
                 results["file-existence"], ctx.repo_root
             ),
             consumes=("file-existence",),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "deps",
             lambda ctx, results: validate_deps(ctx.plan),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "body-completeness",
             lambda ctx, results: check_body_completeness(ctx.plan_path),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
-        # Run-grade only for a specific reason beyond "it reads a run-grade
-        # body": it emits ``missing_on_disk`` into the same bucket and under
-        # the same kind the jira coverage arm uses, so running it at jira grade
-        # would let a run-grade *pointer* defect flip the blocking gate on a
-        # jira-grade audit and put both grades under one heading.
         DetectorEntry(
             "detail-coverage",
             lambda ctx, results: check_detail_coverage(
                 ctx.plan, ctx.plan_path, ctx.repo_root
             ),
-            grade=DETECTOR_GRADE_RUN_ONLY,
         ),
         DetectorEntry(
             "detail-body-completeness",
             lambda ctx, results: check_detail_body_completeness(
                 ctx.plan, ctx.repo_root, plan_path=ctx.plan_path
             ),
-            grade=DETECTOR_GRADE_RUN_ONLY,
-        ),
-        # What the two run-grade detail readers above no longer produce once
-        # they are withheld: jira-grade coverage plus the compact contract.
-        DetectorEntry(
-            "jira-grade-bundle",
-            lambda ctx, results: check_jira_grade_bundle(
-                ctx.plan, ctx.plan_path, ctx.repo_root
-            ),
-            grade=DETECTOR_GRADE_JIRA_ONLY,
         ),
         DetectorEntry(
             "files-coherence",
             lambda ctx, results: check_files_coherence(
                 ctx.plan, ctx.repo_root, plan_path=ctx.plan_path
             ),
-            grade=DETECTOR_GRADE_RUN_ONLY,
         ),
         DetectorEntry(
             "lessons-coverage",
             lambda ctx, results: check_lessons_coverage(
                 ctx.plan, ctx.repo_root
             ),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
     )
 )
 
-# ``check_input_contract_references``' two branches as two entries: the
-# plan-body ``## Input`` anchor and the per-step detail-body loop live in
-# different grade classes, so the battery must be able to address them apart.
 INPUT_CONTRACT_DETECTORS = DetectorRegistry(
     (
         DetectorEntry(
@@ -4287,14 +4041,12 @@ INPUT_CONTRACT_DETECTORS = DetectorRegistry(
             lambda ctx, results: check_plan_input_contract_references(
                 ctx.plan, ctx.plan_path, ctx.repo_root
             ),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "input-contract-references-steps",
             lambda ctx, results: check_step_input_contract_references(
                 ctx.plan, ctx.plan_path, ctx.repo_root
             ),
-            grade=DETECTOR_GRADE_RUN_ONLY,
         ),
     )
 )
@@ -4307,7 +4059,6 @@ SMELL_DETECTORS = DetectorRegistry(
             "feature-refs",
             lambda ctx, results: validate_feature_refs(ctx.plan),
             finding_sources=("feature-ref",),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "suppression-shape",
@@ -4318,7 +4069,6 @@ SMELL_DETECTORS = DetectorRegistry(
                 plan_path=ctx.plan_path,
             ),
             finding_sources=(SUPPRESSION_SHAPE_SOURCE,),
-            grade=DETECTOR_GRADE_RUN_ONLY,
         ),
         DetectorEntry(
             "self-referential-features",
@@ -4326,12 +4076,7 @@ SMELL_DETECTORS = DetectorRegistry(
                 ctx.plan, ctx.repo_root, plan_name=ctx.plan_name
             ),
             finding_sources=("self-referential",),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
-        # Plan-altitude: it reads the plan body's ``## Acceptance criteria``
-        # against every step's declared ``creates:``/``files:`` and opens no
-        # detail file at all, so it needs no grade parameter — only a class
-        # saying it runs at both.
         DetectorEntry(
             "claim-vs-delivery",
             lambda ctx, results: detect_claim_vs_delivery(
@@ -4341,7 +4086,6 @@ SMELL_DETECTORS = DetectorRegistry(
                 plan_path=ctx.plan_path,
             ),
             finding_sources=(CLAIM_VS_DELIVERY_SOURCE,),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
         DetectorEntry(
             "concept-coverage",
@@ -4354,16 +4098,11 @@ SMELL_DETECTORS = DetectorRegistry(
                 CONCEPT_LEGACY_STALE_SOURCE,
                 CONCEPT_BUCKET_MISSING_SOURCE,
             ),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
-        # Frontmatter-only, so it asks the same question at both grades — and
-        # appended last so no existing finding's position in the rendered
-        # smell list moves.
         DetectorEntry(
             "intent-presence",
             lambda ctx, results: check_intent_presence(ctx.plan),
             finding_sources=(INTENT_PRESENCE_SOURCE,),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
     )
 )
@@ -4372,10 +4111,6 @@ SMELL_DETECTORS = DetectorRegistry(
 # computed fresh rather than partitioned off the smell fan-out.
 SELF_CONSISTENCY_DETECTORS = DetectorRegistry(
     (
-        # Plan-altitude too, but it *does* read a per-step body (conditions
-        # 2-4), so the context's grade rides in. Classifying it run-grade-only
-        # would drop a blocking check at jira grade for a reason that does not
-        # apply — a plan shipping a deliverable nothing consumes would pass.
         DetectorEntry(
             "orphaned-deliverable",
             lambda ctx, results: detect_orphaned_deliverable(
@@ -4383,10 +4118,8 @@ SELF_CONSISTENCY_DETECTORS = DetectorRegistry(
                 ctx.repo_root,
                 plan_name=ctx.plan_name,
                 plan_path=ctx.plan_path,
-                detail_grade=ctx.detail_grade,
             ),
             finding_sources=(ORPHANED_DELIVERABLE_SOURCE,),
-            grade=DETECTOR_GRADE_INDEPENDENT,
         ),
     )
 )
@@ -4409,7 +4142,6 @@ def collect_smell_findings(
     *,
     plan_name: str,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> list[Recommendation]:
     """Dispatch :data:`SMELL_DETECTORS` into one flat list.
 
@@ -4429,20 +4161,15 @@ def collect_smell_findings(
     ``plan_path`` is optional so a caller holding only a parsed :class:`Plan`
     still works: without it the claim-vs-delivery check has no plan body to
     read and yields nothing, but the other detectors run unchanged.
-
-    ``detail_grade`` selects the table through
-    :meth:`DetectorRegistry.for_grade`, so a detector that reads run-grade
-    bodies is skipped at jira grade instead of judging the wrong bytes.
     """
     ctx = DetectorContext(
         plan=plan,
         repo_root=repo_root,
         plan_name=plan_name,
         plan_path=plan_path,
-        detail_grade=detail_grade,
     )
     recs: list[Recommendation] = []
-    for found in SMELL_DETECTORS.for_grade(detail_grade).run_all(ctx).values():
+    for found in SMELL_DETECTORS.run_all(ctx).values():
         recs.extend(found)
     return recs
 
@@ -4454,7 +4181,6 @@ def _self_consistency_from_smells(
     *,
     plan_name: str,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> list[Recommendation]:
     """The self-consistency battery given already-computed ``smell_recs``.
 
@@ -4464,22 +4190,18 @@ def _self_consistency_from_smells(
     :data:`SELF_CONSISTENCY_DETECTORS`' ``orphaned-deliverable`` recs.
     Single source for the membership shared by
     :func:`collect_self_consistency_findings` and ``_run_deterministic_checks``.
-
-    ``detail_grade`` selects the table and rides in on the context, matching
-    the grade the caller already dispatched ``smell_recs`` at.
     """
     ctx = DetectorContext(
         plan=plan,
         repo_root=repo_root,
         plan_name=plan_name,
         plan_path=plan_path,
-        detail_grade=detail_grade,
     )
     recs = [
         rec for rec in smell_recs if rec.source in SELF_CONSISTENCY_SOURCES
     ]
     for found in (
-        SELF_CONSISTENCY_DETECTORS.for_grade(detail_grade).run_all(ctx).values()
+        SELF_CONSISTENCY_DETECTORS.run_all(ctx).values()
     ):
         recs.extend(found)
     return recs
@@ -4491,33 +4213,17 @@ def collect_self_consistency_findings(
     *,
     plan_name: str,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> list[Recommendation]:
-    """The blocking-capable self-consistency battery, computed independently.
-
-    Deterministic (no claude): dispatches only the registry entries that can
-    mint a :data:`SELF_CONSISTENCY_SOURCES` finding — not the whole
-    :data:`SMELL_DETECTORS` table, whose other detectors would be computed and
-    discarded. Both this and the gate's :func:`_self_consistency_from_smells`
-    draw membership from the same entries and the same source set — and both
-    filter through ``for_grade(detail_grade)`` — so they cannot diverge;
-    ``TestCollectSelfConsistencyFindings`` pins the parity. The
-    ``--iterate`` loop calls this so its blocking signal agrees with the
-    finalize gate. Deliberately **not** folded into
-    :func:`collect_deterministic_findings` — that feeds ``apply_finding``'s
-    pre/post delta, and these non-appliable findings would corrupt it.
-    See BUG_BACKLOG (``--iterate`` converged-vs-rc mismatch).
-    """
+    """The blocking-capable self-consistency battery, computed independently."""
     ctx = DetectorContext(
         plan=plan,
         repo_root=repo_root,
         plan_name=plan_name,
         plan_path=plan_path,
-        detail_grade=detail_grade,
     )
     recs: list[Recommendation] = []
     for found in (
-        SELF_CONSISTENCY_SMELL_DETECTORS.for_grade(detail_grade)
+        SELF_CONSISTENCY_SMELL_DETECTORS
         .run_all(ctx)
         .values()
     ):
@@ -4525,7 +4231,7 @@ def collect_self_consistency_findings(
             rec for rec in found if rec.source in SELF_CONSISTENCY_SOURCES
         )
     for found in (
-        SELF_CONSISTENCY_DETECTORS.for_grade(detail_grade).run_all(ctx).values()
+        SELF_CONSISTENCY_DETECTORS.run_all(ctx).values()
     ):
         recs.extend(found)
     return recs
@@ -7245,13 +6951,7 @@ def _split_triage_tags(
     return impact, complexity, cleaned
 
 
-# plan-audit.md requires a verbatim citation to be fenced so a citation
-# containing literal marker/heading text below can't be mistaken for the
-# real boundary -- see CLAUDE.md's "heading-anchored sub-blocks". Span
-# detection is :func:`plan_tool.jira_grade.fenced_spans` (round 5: a
-# from-scratch regex here reinvented that mechanism with regressions --
-# no length-matching, no tilde fences, no CRLF safety, and an unclosed
-# fence paired with an unrelated later one instead of spanning to EOF).
+# Fenced citations cannot supply live annotation boundaries.
 
 
 def _outside_fences(
@@ -7431,31 +7131,18 @@ def _enforce_high_impact_severity(
     return severity, False
 
 
-def _is_jira_grade_bundle(detail_grade: str) -> bool:
-    """True when the audit bundle resolves at jira grade.
-
-    Raises ``ValueError`` on an unknown token rather than falling through
-    to run grade — a silent fall-through would ground the audit on the
-    other contract's bytes without saying so.
-    """
-    if not is_known_grade(detail_grade):
-        raise ValueError(unknown_grade_message(detail_grade))
-    return detail_grade == GRADE_JIRA
-
-
 def _format_audit_detail_bundle(
     plan: Plan,
     plan_path: Path,
     repo_root: Path,
     *,
     max_file_bytes: int,
-    detail_grade: str = GRADE_RUN,
     audit_input_snapshot=None,
 ) -> str:
     """Render each step's detail file under a ``### Step NN — <title>``
     header, capped at ``max_file_bytes``.
 
-    At run grade (the default) the on-disk detail file resolves through
+    The on-disk detail file resolves through
     :func:`plan_tool.detail_artifacts.resolve_detail_artifact` — the
     ``step.detail`` pointer (repo-relative) when set, the canonical path
     when unset — so a freshly-authored bundle still surfaces even
@@ -7463,17 +7150,7 @@ def _format_audit_detail_bundle(
     symbol-aware excerpt. Steps with no file on disk render a one-line note
     rather than a blank, so the audit can tell "no detail authored yet"
     from "detail says nothing about it."
-
-    At jira grade the artifact is the canonical
-    :func:`plan_tool.detail_artifacts.derive_jira_detail_path` plus an
-    ``is_file()`` check — ``step.detail`` is never read, and a body that
-    fails the jira-grade section contract renders a one-line note in place
-    of its content so off-contract bytes never reach the prompt as
-    jira-grade grounding. Neither miss falls back to the run-grade body. A
-    conforming artifact is embedded **whole** — its sections *are* the
-    contract, so excerpting one of them would hide the rest.
     """
-    jira_grade = _is_jira_grade_bundle(detail_grade)
     out: list[str] = []
     for step in plan.steps:
         header = f"### Step {step.id:02d} — {step.title}"
@@ -7490,10 +7167,6 @@ def _format_audit_detail_bundle(
                 if captured_detail.resolution == "pointer"
                 else _repo_relative_posix(path, repo_root)
             )
-        elif jira_grade:
-            path = derive_jira_detail_path(plan_path, plan, step)
-            on_disk = path.is_file()
-            rel_path = _repo_relative_posix(path, repo_root)
         else:
             resolution = resolve_detail_artifact(plan_path, plan, step, repo_root)
             path = resolution.path
@@ -7517,24 +7190,6 @@ def _format_audit_detail_bundle(
             except OSError as exc:
                 out.append(f"{header}\n\n_(unreadable: {exc})_\n")
                 continue
-        if jira_grade:
-            off_contract = [
-                f.message for f in validate_jira_grade_body(text) if f.blocking
-            ]
-            if off_contract:
-                out.append(
-                    f"{header}\n\n_(`{rel_path}` does not meet the jira-grade "
-                    f"contract, so its body is not shown: "
-                    f"{'; '.join(off_contract)})_\n"
-                )
-                continue
-            # Embed the artifact whole. The sections *are* the contract, so a
-            # symbol-scoped excerpt would drop all but the matched one and the
-            # framing's coverage question would be unanswerable from the
-            # bundle. The byte cap stays as a backstop.
-            body, _ = clip_text_to_byte_budget(text, max_bytes=max_file_bytes)
-            out.append(f"{header}\n\n{body}\n")
-            continue
         require_supported_detail_format_version(text, path=path)
         candidates = _derive_symbols(step.title)
         _merge_candidate_symbols(candidates, _derive_file_path_symbols(rel_path))
@@ -7586,24 +7241,11 @@ def audit_detail_bundle_status(
     plan_path: Path,
     repo_root: Path,
     *,
-    detail_grade: str = GRADE_RUN,
     audit_input_snapshot=None,
 ) -> DetailBundleStatus:
-    """Report which steps have a detail file on disk at audit time.
+    """Report detail presence using the same pointer/canonical resolution as the prompt.
 
-    Mirrors :func:`_format_audit_detail_bundle`'s path resolution at the
-    same ``detail_grade`` — ``resolve_detail_artifact`` at run grade,
-    ``derive_jira_detail_path`` at jira grade — so the reported grounding
-    status matches which artifacts the rendered bundle actually read. Pure
-    and cheap: the CLI calls it to decide whether to print the bare-plan
-    banner, and :func:`render_plan_audit_prompt` calls it to condition the
-    prompt.
-
-    Presence only, at either grade. An on-disk jira artifact whose body is
-    off-contract counts as detailed here; the bundle renders a note naming
-    the contract failure in place of its body.
-    """
-    jira_grade = _is_jira_grade_bundle(detail_grade)
+    Captured inputs take precedence over disk so coverage describes the sampled bundle."""
     detailed: list[int] = []
     bare: list[int] = []
     for step in plan.steps:
@@ -7614,8 +7256,6 @@ def audit_detail_bundle_status(
         )
         if captured_detail is not None:
             on_disk = captured_detail.state != "missing"
-        elif jira_grade:
-            on_disk = derive_jira_detail_path(plan_path, plan, step).is_file()
         else:
             on_disk = resolve_detail_artifact(
                 plan_path, plan, step, repo_root
@@ -7687,42 +7327,11 @@ _RUN_GRADE_BUNDLE_FRAMING = (
     "These are the per-step detail files a developer will implement against."
 )
 
-# The jira-grade framing. The framing moves with the bundle: pointed at the
-# compact contract, run-grade framing turns every implementation fact that
-# contract sheds into an apparent gap, so the judge is told which contract
-# applies. Section names come from ``jira_grade`` so the two can't drift.
-_JIRA_GRADE_BUNDLE_FRAMING = f"""These are the per-step **jira-grade** detail artifacts. Under this grade
-the "implementation bundle" named above is this bundle: a compact
-{len(JIRA_GRADE_REQUIRED_H2S)}-section contract per step — \
-{", ".join(f"`## {name}`" for name in JIRA_GRADE_REQUIRED_H2S)} — stating
-what each step is for and where its edges are, not how to build it.
 
-**This qualifies the Completeness rule above.** "Unresolved anywhere in
-the bundle" still holds, but the bundle is those sections: a missing file
-list, approach, design sketch, or test roster is the contract working as
-designed, **not** a completeness gap. Judge coverage against what the
-sections are for — whether each step's intent, the change it makes, its
-constraints, its acceptance surface, and its fence are each resolved
-somewhere in the bundle or the plan body. Never ask a jira-grade artifact
-for the implementation facts it deliberately leaves out.
-
-A step whose artifact does not meet that contract shows a note in place
-of its body: judge that step from the plan body, the same way you judge a
-step with no artifact."""
-
-
-def _format_bundle_framing_block(detail_grade: str) -> str:
-    """The prompt's detail-bundle framing for ``detail_grade``.
-
-    Selecting the format contract the judge applies is half of grounding —
-    the other half is which bytes :func:`_format_audit_detail_bundle`
-    resolves. Both move together or the audit judges one grade's artifacts
-    under the other's rules.
-    """
+def _format_bundle_framing_block() -> str:
+    """Return the conceptual framing for the run-grade detail bundle."""
     return (
-        _JIRA_GRADE_BUNDLE_FRAMING
-        if _is_jira_grade_bundle(detail_grade)
-        else _RUN_GRADE_BUNDLE_FRAMING
+        _RUN_GRADE_BUNDLE_FRAMING
     )
 
 
@@ -7965,7 +7574,6 @@ def render_plan_audit_prompt(
     repo_root: Path,
     carried_findings: Sequence[CarriedFinding] = (),
     collect_blocks: Optional[list[tuple[str, int]]] = None,
-    detail_grade: str = GRADE_RUN,
     audit_input_snapshot=None,
 ) -> Optional[str]:
     """Render ``prompts/plan-audit.md`` for this plan.
@@ -7978,11 +7586,6 @@ def render_plan_audit_prompt(
     implementation bundle) via :func:`_format_audit_detail_bundle` so the
     conceptual audit can see what the design already specifies and stop
     re-flagging gaps the detail files already cover.
-
-    ``detail_grade`` selects that bundle *and* the framing the judge reads
-    it under (:func:`_format_bundle_framing_block`), so a compact
-    jira-grade bundle is never judged against the run-grade contract's
-    expectations. The default reproduces the run-grade prompt exactly.
 
     ``carried_findings`` — accumulated findings from earlier passes —
     renders the convergence-guidance block
@@ -8014,7 +7617,6 @@ def render_plan_audit_prompt(
         plan,
         plan_path,
         repo_root,
-        detail_grade=detail_grade,
         audit_input_snapshot=audit_input_snapshot,
     )
     detail_bundle_status_rendered = _format_detail_bundle_status_block(status)
@@ -8023,7 +7625,6 @@ def render_plan_audit_prompt(
         plan_path,
         repo_root,
         max_file_bytes=_MAX_PROMPT_FILE_BYTES,
-        detail_grade=detail_grade,
         audit_input_snapshot=audit_input_snapshot,
     )
     scope_contract_rendered = _format_scope_contract_block(
@@ -8063,7 +7664,7 @@ def render_plan_audit_prompt(
     return template.safe_substitute(
         plan_title=plan.title,
         plan_body_block=body,
-        detail_bundle_framing_block=_format_bundle_framing_block(detail_grade),
+        detail_bundle_framing_block=_format_bundle_framing_block(),
         detail_bundle_status_block=detail_bundle_status_rendered,
         detail_files_block=detail_files_rendered,
         carried_findings_block=_format_carried_findings_block(
@@ -8284,17 +7885,10 @@ def check_plan_audit(
     invoker: Optional[PlanAuditInvoker] = None,
     log_file=None,
     carried_findings: Sequence[CarriedFinding] = (),
-    detail_grade: str = GRADE_RUN,
     audit_input_snapshot=None,
     _sample_evidence_out: Optional[list[_AuditSampleEvidence]] = None,
 ) -> list[Recommendation]:
     """Audit the plan's concepts for correctness, completeness, and clarity.
-
-    The prompt is grounded in the per-step detail bundle (and permits
-    Read/Grep of the repo at HEAD) via :func:`render_plan_audit_prompt`,
-    so the audit stops re-flagging gaps a detail file already specifies.
-    ``detail_grade`` picks which grade's bundle — and which format
-    contract — that grounding uses.
 
     One claude call (a second, only when the first response omits a
     required ``## … findings`` heading — see
@@ -8346,7 +7940,6 @@ def check_plan_audit(
         plan_path,
         repo_root=repo_root,
         carried_findings=carried_findings,
-        detail_grade=detail_grade,
         audit_input_snapshot=audit_input_snapshot,
     )
     if prompt is None:
@@ -8914,17 +8507,12 @@ def audit_plan_until_stable(
     reporter: Optional[ProgressReporter] = None,
     run_logger=None,
     budget_report: Optional[dict] = None,
-    detail_grade: str = GRADE_RUN,
     advisory_out: Optional[list[Optional[AuditShapeAdvisory]]] = None,
     audit_input_snapshot=None,
     resumed_out: Optional[list[bool]] = None,
 ) -> list[Recommendation]:
     """Run :func:`check_plan_audit` repeatedly and union the findings by
     stable id, capturing the conceptual layer's stable set in one report.
-
-    ``detail_grade`` rides through to every pass's
-    :func:`render_plan_audit_prompt`, so all passes in one audit ground on
-    the same grade's bundle under that grade's contract.
 
     Each *pass* is a full, independent audit over the whole plan + code at
     HEAD; extra passes re-roll the LLM's non-determinism, not the inputs.
@@ -8984,21 +8572,18 @@ def audit_plan_until_stable(
     if resumed_out is not None:
         resumed_out[:] = [False]
     supplied_snapshot = audit_input_snapshot is not None
-    advisory_invalid = detail_grade != GRADE_RUN
+    advisory_invalid = False
     if audit_input_snapshot is None:
-        # Direct callers retain the existing capture behavior. Completeness
-        # supplies its pre-sampled capture so prompt bytes and saved evidence
-        # stay one identity across both grades.
         try:
             from plan_tool.review_persistence import AuditInputSnapshot
 
             audit_input_snapshot = AuditInputSnapshot.capture(
-                plan_path, repo_root, detail_grade=detail_grade
+                plan_path, repo_root
             )
         except Exception:  # noqa: BLE001 — normal audit remains best-effort
             advisory_invalid = True
     if audit_input_snapshot is not None:
-        if audit_input_snapshot.detail_grade != detail_grade:
+        if audit_input_snapshot.detail_grade != "run":
             raise ValueError("audit input snapshot grade does not match audit grade")
         plan = audit_input_snapshot.plan
     elif supplied_snapshot:
@@ -9252,7 +8837,6 @@ def audit_plan_until_stable(
                 plan_path,
                 repo_root=repo_root,
                 collect_blocks=blocks,
-                detail_grade=detail_grade,
                 audit_input_snapshot=audit_input_snapshot,
             )
             if base_prompt is not None:
@@ -9373,7 +8957,6 @@ def audit_plan_until_stable(
                 # re-found concepts and concentrates on the gaps earlier
                 # passes have not yet covered.
                 carried_findings=carried,
-                detail_grade=detail_grade,
                 audit_input_snapshot=audit_input_snapshot,
                 _sample_evidence_out=sample_evidence,
             )

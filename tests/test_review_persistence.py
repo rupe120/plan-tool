@@ -2437,7 +2437,9 @@ def test_audit_revision_round_trips_and_legacy_stays_unknown(tmp_path: Path) -> 
     assert current_raw["version"] == 4
     assert "audit_revision" not in current_raw
     assert current_raw["qualified_result"]["audit_revision"] == snapshot.revision
+    archived_bytes = current.read_bytes()
     assert load_review(current).audit_revision == snapshot.revision
+    assert current.read_bytes() == archived_bytes
     assert load_review(legacy).audit_revision is None
     update_annotation(current, "example", Annotation(status="skip"))
     updated = load_review(current)
@@ -2451,8 +2453,9 @@ def test_audit_revision_round_trips_and_legacy_stays_unknown(tmp_path: Path) -> 
     assert updated.qualified_result["revision_status"] == "current"
 
 
-def test_v2_audit_revision_normalizes_to_an_absent_project_context(
-    tmp_path: Path,
+@pytest.mark.parametrize("version", [1, 2, 3])
+def test_supported_v1_v2_and_v3_run_grade_revisions_normalize_with_historical_optional_digests(
+    tmp_path: Path, version: int,
 ) -> None:
     """Older sampled reports stay reusable until a profile supplies new input."""
     from plan_tool.review_persistence import AuditInputSnapshot
@@ -2468,8 +2471,11 @@ def test_v2_audit_revision_normalizes_to_an_absent_project_context(
     )
     snapshot = AuditInputSnapshot.capture(plan_path, tmp_path)
     legacy_v2 = dict(snapshot.revision)
-    legacy_v2["version"] = 2
-    del legacy_v2["project_context_digest"]
+    legacy_v2["version"] = version
+    if version < 3:
+        del legacy_v2["project_context_digest"]
+    if version < 2:
+        del legacy_v2["source_seed_digest"]
 
     assert rp.normalize_audit_revision(legacy_v2) == snapshot.revision
 
@@ -2573,3 +2579,82 @@ def test_save_review_rejects_invalid_stage_for_completeness(tmp_path: Path) -> N
             report_md="report", recommendations=_SAMPLE_RECS,
             kind="completeness", audit_stage="bogus",
         )
+
+
+@pytest.mark.parametrize("damage", ["jira", "malformed", "boolean-version", "jira-resolution"])
+def test_rejected_revision_cannot_fall_back_to_legacy_provenance(tmp_path, damage):
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    plan_path = tmp_path / "demo.md"
+    plan_path.write_text("---\ntitle: Demo\nstatus: planning\npriority: medium\nsteps:\n  - id: 1\n    title: First\n---\n# Demo\n")
+    revision = AuditInputSnapshot.capture(plan_path, tmp_path).revision
+    path = rp.save_review(
+        plan_slug="demo", plan_path="demo.md", repo_root=tmp_path,
+        report_md="report", recommendations=[], kind="completeness",
+        qualified_result={"headline": "clean", "stage": "bare", "coverage": "confirmed",
+                          "revision_status": "current", "audit_revision": revision},
+    )
+    payload = json.loads(path.read_text())
+    bad = dict(revision)
+    if damage == "jira":
+        bad["detail_grade"] = "jira"
+    elif damage == "malformed":
+        bad.pop("plan_digest")
+    elif damage == "boolean-version":
+        bad["version"] = True
+    else:
+        bad["details"] = [dict(revision["details"][0], resolution="jira")]
+    payload["qualified_result"]["audit_revision"] = bad
+    payload["audit_revision"] = revision
+    path.write_text(json.dumps(payload))
+    archived_bytes = path.read_bytes()
+    saved = rp.load_review(path)
+    assert saved.report_md == "report"
+    assert saved.audit_revision is None
+    assert rp.project_saved_completeness_result(saved, plan_path, tmp_path).view_revision_status == "unavailable"
+    assert path.read_bytes() == archived_bytes
+    assert rp.normalize_audit_revision(bad) is None
+
+
+@pytest.mark.parametrize("grade", ["run", "jira", "malformed", "null"])
+def test_sampler_checkpoint_rejects_explicit_invalid_revision_before_resume(tmp_path, grade):
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    plan_path = _plan_abs(tmp_path)
+    plan_path.parent.mkdir(parents=True, exist_ok=True)
+    plan_path.write_text("---\ntitle: Demo\nstatus: planning\npriority: medium\nsteps:\n  - id: 1\n    title: First\n---\n")
+    revision = AuditInputSnapshot.capture(plan_path, tmp_path).revision
+    path = save_sampler_checkpoint(
+        plan_slug="x", plan_path=_PLAN_REL, repo_root=tmp_path,
+        report_md="checkpoint", recommendations=[],
+        sampler_state={"lifecycle": "in-progress"}, checkpoint_audit_revision=revision,
+    )
+    payload = json.loads(path.read_text())
+    if grade == "jira":
+        payload["checkpoint_audit_revision"]["detail_grade"] = "jira"
+    elif grade == "malformed":
+        payload["checkpoint_audit_revision"].pop("plan_digest")
+    elif grade == "null":
+        payload["checkpoint_audit_revision"] = None
+    path.write_text(json.dumps(payload))
+    archived_bytes = path.read_bytes()
+    assert load_sampler_checkpoint(plan_path).status == ("valid" if grade == "run" else "not-sampler")
+    assert load_review(path).is_in_progress_sampler_checkpoint is (grade == "run")
+    assert path.read_bytes() == archived_bytes
+
+
+@pytest.mark.parametrize("grade", ["run", "jira"])
+@pytest.mark.parametrize("helper", ["capture", "freshness"])
+def test_audit_helpers_reject_removed_grade_keyword(tmp_path, grade, helper):
+    from plan_tool.review_persistence import (
+        AuditInputSnapshot,
+        audit_input_fingerprint_matches_disk,
+    )
+
+    with pytest.raises(TypeError, match="detail_grade"):
+        if helper == "capture":
+            AuditInputSnapshot.capture(tmp_path / "plan.md", tmp_path, detail_grade=grade)
+        else:
+            audit_input_fingerprint_matches_disk(
+                tmp_path / "plan.md", tmp_path, "digest", detail_grade=grade
+            )

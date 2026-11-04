@@ -131,7 +131,6 @@ from plan_tool.create import (
 from plan_tool.fileio import durable_create_text
 from plan_tool.detail import (
     DetailError,
-    JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE,
     _confirm_merge,
     generate_detail,
     merge_steps,
@@ -142,11 +141,6 @@ from plan_tool.detail_artifacts import DetailFormatError
 from plan_tool.scope_fence import _fenced_code_spans, _strip_frontmatter
 from plan_tool.fingerprint import compute_code_fingerprint
 from plan_tool.grounding import write_grounding
-from plan_tool.jira_grade import (
-    GRADE_DEFAULT,
-    GRADE_JIRA,
-    JIRA_GRADE_VALUES,
-)
 from plan_tool.locator import (
     find_umbrella_root,
     load_manifest_plan_paths,
@@ -1134,7 +1128,6 @@ def cmd_create(args: argparse.Namespace) -> int:
         # follow-up suggestions, so this block is the happy-path hint.
         next_steps = _authoring_audit_follow_up(
             args.slug,
-            detail_grade=GRADE_DEFAULT,
             bare_plan=True,
         )
         next_steps.extend(
@@ -1558,24 +1551,6 @@ def _cmd_create_reprocess(args: argparse.Namespace) -> int:
     return 0
 
 
-def _detail_grade(args: argparse.Namespace) -> str:
-    """Which detail grade this ``detail`` invocation authors.
-
-    Read through ``getattr`` because hand-built namespaces are a repo-wide
-    test idiom and the packaged pipelines reach ``cmd_detail`` with a copied
-    namespace — the default keeps every such caller on run grade.
-    """
-    return getattr(args, "grade", GRADE_DEFAULT)
-
-
-def _reject_disabled_detail_authoring_grade(detail_grade: str) -> Optional[int]:
-    """Reject the retired compact-detail writer before opening a run log."""
-    if detail_grade == GRADE_JIRA:
-        error(JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE)
-        return 2
-    return None
-
-
 def cmd_detail(args: argparse.Namespace) -> int:
     """Draft developer-actionable per-step detail markdown (authoring).
 
@@ -1600,10 +1575,6 @@ def cmd_detail(args: argparse.Namespace) -> int:
 
     See ``docs/reference/contracts/process.md`` for the detail-grade authority boundary.
     """
-    detail_grade = _detail_grade(args)
-    disabled_grade_rc = _reject_disabled_detail_authoring_grade(detail_grade)
-    if disabled_grade_rc is not None:
-        return disabled_grade_rc
 
     ctx = _load_context(args)
     path = resolve_plan_for_context(ctx, args.name)
@@ -1772,7 +1743,6 @@ def cmd_detail(args: argparse.Namespace) -> int:
             "commit": getattr(args, "commit", False),
             "detail_only": getattr(args, "detail_only", False),
             "jobs": jobs,
-            "grade": detail_grade,
             "recover_refused": recover_refused,
         },
     )
@@ -1874,7 +1844,6 @@ def cmd_detail(args: argparse.Namespace) -> int:
                 allow_split=getattr(args, "split", False),
                 jobs=effective_jobs,
                 commit_step=_commit_step_cb,
-                grade=detail_grade,
                 recovery_only=recover_refused,
             )
         except DetailFormatError as exc:
@@ -1997,7 +1966,6 @@ def cmd_detail(args: argparse.Namespace) -> int:
                 args.name,
                 path=path,
                 repo_root=ctx.repo_root,
-                detail_grade=detail_grade,
                 tail_outcome=completeness_tail,
             )
             _print_next_steps(
@@ -2034,7 +2002,6 @@ def cmd_detail(args: argparse.Namespace) -> int:
         elif rc == 0 and not wrote and not args.dry_run:
             next_steps = _authoring_audit_follow_up(
                 args.name,
-                detail_grade=detail_grade,
             )
             if skipped and all("already exists" in reason for _, reason in skipped):
                 info(
@@ -2144,7 +2111,6 @@ def _coerce_completeness_tail_outcome(value: object) -> _CompletenessTailOutcome
 def _fresh_completeness_audit_follow_up(
     plan_name: str,
     *,
-    detail_grade: str,
     bare_plan: bool = False,
     verdict: BlockingVerdict = ABSENT_BLOCKING_VERDICT,
     artifacts_moved: bool = False,
@@ -2155,14 +2121,12 @@ def _fresh_completeness_audit_follow_up(
     ``artifacts_moved`` makes it read ``stale-revision``. See
     docs/how-to/pipeline/audit.md § "Authoring follow-up after a tail audit"."""
     audit_kind = "bare-plan " if bare_plan else ""
-    result_name = (
-        "Jira-grade result" if detail_grade == GRADE_JIRA else "audit result"
-    )
+    result_name = "audit result"
     if verdict.state == BLOCKING_STATE_ABSENT or (
         not artifacts_moved and verdict.is_completed_empty_set
     ):
         command, _why = _reaudit_command(
-            plan_name, ABSENT_BLOCKING_VERDICT, detail_grade=detail_grade
+            plan_name, ABSENT_BLOCKING_VERDICT
         )
         return (
             command,
@@ -2174,7 +2138,7 @@ def _fresh_completeness_audit_follow_up(
         verdict = blocking_verdict_from_gate(
             (), (), untrusted_cause=UNTRUSTED_STALE_REVISION
         )
-    command, why = _reaudit_command(plan_name, verdict, detail_grade=detail_grade)
+    command, why = _reaudit_command(plan_name, verdict)
     kind = f" ({audit_kind.strip()} audit)" if audit_kind else ""
     return command, f"no current qualified {result_name} exists; {why}{kind}"
 
@@ -2184,11 +2148,10 @@ def _tail_result_freshness(
     *,
     path: Path,
     repo_root: Path,
-    detail_grade: str,
 ) -> str:
     """Classify a final tail result against the bundle on disk, with at most
-    one capture: ``"current"`` (proves it), ``"moved"`` (its recorded revision
-    for this grade differs from the files now), or ``"unproven"``.
+    one capture: ``"current"`` (proves it), ``"moved"`` (its run-grade revision
+    differs from the files now), or ``"unproven"``.
 
     A missing or malformed result, another detail grade, or a capture that
     fails is ``"unproven"``, never ``"moved"``: that is
@@ -2199,11 +2162,11 @@ def _tail_result_freshness(
     if normalized is None:
         return _FRESHNESS_UNPROVEN
     revision = normalized["audit_revision"]
-    if revision is None or revision["detail_grade"] != detail_grade:
+    if revision is None or revision["detail_grade"] != "run":
         return _FRESHNESS_UNPROVEN
     try:
         current = AuditInputSnapshot.capture(
-            path, repo_root, detail_grade=detail_grade
+            path, repo_root
         ).revision
     except Exception:  # noqa: BLE001 -- authoring guidance must fail closed
         return _FRESHNESS_UNPROVEN
@@ -2226,7 +2189,6 @@ _FRESHNESS_UNPROVEN = "unproven"
 def _authoring_audit_follow_up(
     plan_name: str,
     *,
-    detail_grade: str,
     path: Path | None = None,
     repo_root: Path | None = None,
     tail_outcome: _CompletenessTailOutcome | None = None,
@@ -2235,7 +2197,6 @@ def _authoring_audit_follow_up(
     """Keep only current final tail guidance; otherwise lead with fresh audit."""
     return _authoring_guidance(
         plan_name,
-        detail_grade=detail_grade,
         path=path,
         repo_root=repo_root,
         tail_outcome=tail_outcome,
@@ -2246,7 +2207,6 @@ def _authoring_audit_follow_up(
 def _authoring_guidance(
     plan_name: str,
     *,
-    detail_grade: str,
     path: Path | None = None,
     repo_root: Path | None = None,
     tail_outcome: _CompletenessTailOutcome | None = None,
@@ -2262,7 +2222,6 @@ def _authoring_guidance(
             tail_outcome.final_result,
             path=path,
             repo_root=repo_root,
-            detail_grade=detail_grade,
         )
         if tail_outcome is not None and path is not None and repo_root is not None
         else _FRESHNESS_UNPROVEN
@@ -2273,7 +2232,6 @@ def _authoring_guidance(
             [
                 _fresh_completeness_audit_follow_up(
                     plan_name,
-                    detail_grade=detail_grade,
                     bare_plan=bare_plan,
                     verdict=(
                         tail_outcome.blocking_verdict
@@ -2295,7 +2253,6 @@ def _authoring_guidance(
         next_stage_command(
             plan_name,
             bundle_status,
-            detail_grade=detail_grade,
             verdict=tail_outcome.blocking_verdict,
         )
     ]
@@ -2529,7 +2486,6 @@ def cmd_split(args: argparse.Namespace) -> int:
                     ),
                     *_authoring_audit_follow_up(
                         args.name,
-                        detail_grade=GRADE_DEFAULT,
                     ),
                 ],
             )
@@ -2540,7 +2496,6 @@ def cmd_split(args: argparse.Namespace) -> int:
                 args.name,
                 path=path,
                 repo_root=ctx.repo_root,
-                detail_grade=GRADE_DEFAULT,
                 tail_outcome=completeness_tail,
             )
             _print_next_steps(
@@ -2734,7 +2689,6 @@ def cmd_merge(args: argparse.Namespace) -> int:
                     ),
                     *_authoring_audit_follow_up(
                         args.name,
-                        detail_grade=GRADE_DEFAULT,
                     ),
                 ],
             )
@@ -2745,7 +2699,6 @@ def cmd_merge(args: argparse.Namespace) -> int:
                 args.name,
                 path=path,
                 repo_root=ctx.repo_root,
-                detail_grade=GRADE_DEFAULT,
                 tail_outcome=completeness_tail,
             )
             _print_next_steps(
@@ -3256,18 +3209,6 @@ def register(subparsers) -> dict[str, Handler]:
             "target, then a fresh `completeness-audit` once every target is "
             "repaired. Ordinary --force re-authoring, merge, and forced "
             "review regeneration are unaffected — none of them set this."
-        ),
-    )
-    p_detail.add_argument(
-        "--grade",
-        choices=JIRA_GRADE_VALUES,
-        default=GRADE_DEFAULT,
-        dest="grade",
-        help=(
-            f"detail authoring grade (default: {GRADE_DEFAULT}). Only the "
-            f"run grade can author new detail. `{GRADE_JIRA}` remains accepted "
-            "solely to return a clear retirement error; existing Jira-grade "
-            "details remain readable only through explicit consumer selectors."
         ),
     )
     p_detail.add_argument(

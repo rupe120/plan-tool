@@ -63,12 +63,6 @@ from plan_tool.jira_config import (
     validate_plan_tag,
     write_jira_config,
 )
-from plan_tool.jira_grade import (
-    GRADE_DEFAULT,
-    GRADE_JIRA,
-    GRADE_RUN,
-    JIRA_GRADE_VALUES,
-)
 from plan_tool.locator import (
     ManifestError,
     PlanToolContext,
@@ -102,11 +96,6 @@ def cmd_jira(args: argparse.Namespace) -> int:
     Writes to ``<plan-dir>/plan-details/<plan-slug>/jira-stories.{md,json}``
     by default. ``--no-write`` falls back to stdout-only.
 
-    ``--grade jira`` grounds the stories on the jira-grade detail bundle
-    instead of the run-grade ``Step.detail`` files, and hard-fails when
-    that bundle is incomplete or off-contract — see
-    :func:`plan_tool.jira.export_jira`.
-
     Every export pairs the story source with a generated Markdown developer
     handoff from one captured input snapshot — see
     :func:`plan_tool.jira.export_jira` and ``docs/cli/jira.md``.
@@ -130,20 +119,6 @@ def cmd_jira(args: argparse.Namespace) -> int:
     # backwards compatibility with ``plan-tool jira <plan-name>``.
     if args.name == "config":
         return cmd_jira_config(args)
-    # ``getattr`` default, not ``args.grade``: hand-built namespaces are a
-    # repo-wide test idiom and ``cmd_direct_jira`` stages one with no
-    # ``grade`` attribute, so the unattended pipeline stays run-grade
-    # without an edit there.
-    grade = getattr(args, "grade", GRADE_DEFAULT)
-    if args.lint and grade != GRADE_RUN:
-        # Lint judges the story artifact, not the detail bundle. Rejecting
-        # beats ignoring: a selected-then-ignored grade is the same silent
-        # mismatch the grade exists to make loud.
-        error(
-            f"jira --lint has no detail grade to select (--grade {grade}); "
-            "lint reads the exported story artifact, not the detail bundle"
-        )
-        return 2
     if args.lint:
         return cmd_jira_lint(args)
     if args.name is None:
@@ -167,7 +142,6 @@ def cmd_jira(args: argparse.Namespace) -> int:
         path=path,
         story_output_path=output_path,
         handoff_output=handoff_output,
-        grade=grade,
         epic=epic,
         plan_tag=plan_tag,
         adopt_existing=adopt_existing,
@@ -261,7 +235,6 @@ def _cmd_jira_paired_export(
     path: Path,
     story_output_path: Optional[Path],
     handoff_output: Optional[str],
-    grade: str,
     epic: Epic,
     plan_tag: str,
     adopt_existing: bool,
@@ -291,7 +264,6 @@ def _cmd_jira_paired_export(
                 epic=epic,
                 story_output_path=resolved_story_path,
                 handoff_output_path=resolved_handoff_path,
-                grade=grade,
                 format=args.format,
                 max_hours=args.max_hours,
                 plan_tag=plan_tag,
@@ -322,7 +294,6 @@ def _cmd_jira_paired_export(
             epic=epic,
             story_output_path=resolved_story_path,
             handoff_output_path=resolved_handoff_path,
-            grade=grade,
             format=args.format,
             max_hours=args.max_hours,
             plan_tag=plan_tag,
@@ -1229,18 +1200,6 @@ def register(subparsers) -> dict[str, Handler]:
         choices=("markdown", "json"),
         default="markdown",
         help="output format (default: markdown, paste-ready into JIRA)",
-    )
-    p_jira.add_argument(
-        "--grade",
-        choices=JIRA_GRADE_VALUES,
-        default=GRADE_DEFAULT,
-        help=(
-            f"which detail bundle grounds the stories (default: {GRADE_DEFAULT}). "
-            f"`{GRADE_JIRA}` reads the compact jira-grade artifacts under "
-            "plan-details/<plan_slug>/jira/ and fails before any backend call "
-            "when one is missing (on a committed step that isn't done) or off-contract "
-            "— the run-grade detail file is never substituted."
-        ),
     )
     p_jira.add_argument(
         "--output",

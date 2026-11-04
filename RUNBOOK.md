@@ -2804,14 +2804,11 @@ operator judgment from the re-decompose section above).
 
 ```bash
 plan-tool convergence my-feature
-plan-tool convergence my-feature --grade jira   # match a jira-grade completeness-audit
 ```
 
 It spends **zero Claude**, writes no run-log entry, mutates nothing, and
 **always exits 0** — there is no `--fail-on-findings` and no `--min-runs`.
-`--grade` selects which detail bundle resolves the plan's bare/detail audit
-stage — match whichever grade `completeness-audit` was run at, or the two
-commands can disagree about a plan audited only at jira grade.
+The declared run-grade detail bundle determines the bare/detail audit stage.
 
 It prints a three-state headline:
 

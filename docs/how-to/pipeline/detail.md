@@ -16,16 +16,13 @@ are inline.
   a **per-step convergence loop** that tightens the freshly-written body via
   `detail-quality` review + `apply_finding` until findings stabilize.
 - Each step is processed independently and in order.
-- Every step authored **at the default run grade** gets a
+- Every authored step gets a
   **refactor-vs-feature purity self-check**; a mixed step is warned and, with
   `--split` (default on), offered an interactive split. The check runs only at
   author time — re-author with `--force` to apply it to an existing file (see
   [Reprocessing](#reprocessing-a-detailed-step)).
 - With `--lessons` (**off by default**), a second pass after each run-grade
   write **distills lessons** from the body into the shared lessons store.
-- `--grade jira` is retained only to fail with a clear authoring-retirement
-  error. Existing Jira-grade files remain explicit legacy-reader inputs; they
-  do not enter this authoring flow.
 
 ## High-level flow
 
@@ -178,16 +175,6 @@ runnable", not mid-execution, and renumbers cleanly); downstream detail files
 are renamed to their new ids (`_migrate_downstream_details_after_split`).
 `--no-split` reduces this to detection-only.
 
-## Retired Jira-grade authoring selector (`--grade jira`)
-
-`plan-tool detail <name> --grade jira` returns the stable retirement error
-before it loads a plan, invokes a model, opens a checkpoint or run log, or
-writes an artifact. The retained compact schema and explicit reader selectors
-apply only to existing legacy files; see
-[`DETAIL_FORMAT.md`](../../../DETAIL_FORMAT.md#jira-grade--the-compact-contract).
-`plan-tool jira` produces the separate generated developer handoff and is not a
-detail-authoring route.
-
 ## Lessons capture
 
 **Off by default; `--lessons` opts in.** When on, a second claude call
@@ -284,10 +271,6 @@ Re-author a step when:
 | Prompt render                        | `plan_tool/detail.py` (`render_detail_prompt`)                  |
 | Response parse                       | `plan_tool/detail.py` (`parse_detail_response`)                 |
 | Output path / slug derivation        | `plan_tool/detail_artifacts.py` (`derive_detail_path`, `derive_step_slug`), re-exported by `plan_tool/detail.py` |
-| Jira-grade contract (sections + gates) | `plan_tool/jira_grade.py` (`JIRA_GRADE_REQUIRED_H2S`, `validate_jira_grade_body`, `check_plain_english`) |
-| Jira-grade prompt / render / parse    | `plan_tool/prompts/detail-jira.md`, `plan_tool/detail.py` (`render_jira_detail_prompt`, `parse_jira_detail_response`) |
-| Jira-grade output path                | `plan_tool/detail_artifacts.py` (`derive_jira_detail_path`)     |
-| Grade selection + rejected flags      | `plan_tool/cli/authoring.py` (`_detail_grade`, `_reject_detail_grade_conflicts`) |
 | Frontmatter wiring                   | `plan_tool/detail.py` (`update_step_detail_field`)              |
 | Convergence loop                     | `plan_tool/detail.py` (`collect_detail_quality_findings`), `plan_tool/convergence.py` |
 | Detail-quality review prompt         | `plan_tool/prompts/detail-quality.md`                           |

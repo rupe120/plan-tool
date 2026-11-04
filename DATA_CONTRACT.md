@@ -274,7 +274,7 @@ supported set — `SCHEMA_VERSION` plus the additive variants listed above.
 | `audit_coverage` | yes, optional (completeness sidecars only) | canonical conceptual-audit coverage provenance; valid values follow the public `coverage` contract below without `evidence_status`; a terminal plan quota stop remains unconfirmed recovery evidence and never writes an ordinary final findings sidecar, so it is not reusable; absent or malformed legacy values are unknown, never a clean verdict |
 | `is_pre_apply_checkpoint` | yes, optional (producer output: version-4 completeness sidecars only; annotation rewrites can preserve an unknown marker on another kind or version) | the saved-review role: `True` = a confirmed pre-apply audit checkpoint (crash-recovery evidence, not a converged result), `False` = an ordinary final artifact, `None` = unknown metadata no reader may trust as final |
 | `sampler_state` | yes, optional (stable sampler checkpoint only) | sampler recovery mapping, separate from audit evidence; its `lifecycle` is `"in-progress"` for a resumable boundary or `"terminal-residue"` for non-resumable diagnostic residue |
-| `plan_mass` | yes, optional | #238 plan-mass snapshot (see below); `None` for a sidecar saved before this field existed, a jira-grade audit, or a pre-apply checkpoint (`completeness_phases.py` computes it only for the final-report path) |
+| `plan_mass` | yes, optional | #238 plan-mass snapshot (see below); `None` for a sidecar saved before this field existed or a pre-apply checkpoint (`completeness_phases.py` computes it only for the final-report path) |
 | `audit_stage` | yes, optional (completeness sidecars only) | the bare/detail bar under which the completeness audit ran (`"bare"` or `"detail"`); absent or malformed legacy values load as `None` and are excluded from compatible-pass windows |
 | qualified audit result | yes (version-4 completeness sidecars, as JSON `qualified_result`) | immutable final audit decision object with `headline`, `stage`, `coverage`, `revision_status`, and nullable nested `audit_revision`; final sidecars require the object and recovery checkpoints store JSON `null` |
 | `checkpoint_audit_revision` | yes, optional (version-4 confirmed completeness checkpoints only) | immutable captured plan/detail revision for recovery evidence; separate from the nested final-result revision because a checkpoint has `qualified_result: null` and is never reusable or applicable |
@@ -331,6 +331,22 @@ non-boolean `"unknown"` marker — a durable unknown representation, since any
 non-boolean value re-reads as unknown in every version — so an annotation walk
 can never turn an untrusted sidecar into an ordinary final one.
 
+### Run-grade-only saved audit evidence
+
+New audit captures and detail-bundle fingerprints select run-grade detail through
+pointer-or-canonical resolution. Revision versions 1, 2, and 3 remain supported
+only for run-grade records. Historical decoding fills absent v1
+`source_seed_digest` and v1/v2 `project_context_digest` with `None` in memory;
+reads never rewrite archived sidecars. The established run-grade digest framing
+and code-fingerprint behavior remain unchanged.
+
+Explicit retired Jira-grade evidence and malformed revisions are unavailable for
+freshness, reuse, and checkpoint resume. Rejected provenance cannot fall back to
+another revision field or qualify as missing legacy evidence. A surrounding
+saved review remains inspectable. Absent checkpoint provenance remains a legacy
+state; an explicitly invalid checkpoint revision cannot resume. Final-review and
+active sampler-checkpoint writes retain durable replacement semantics.
+
 ### Qualified audit result (`qualified_result`)
 
 The object records what the audit concluded at audit time. It is immutable
@@ -342,8 +358,8 @@ rewrite the stored result. `headline` is exactly
 `revision_status` is `current`, `stale`, `unknown-legacy`, or `not-sampled`.
 
 `audit_revision` is `null` exactly when all three qualifiers are
-`not-sampled`; otherwise it records the grade-selected audited plan digest,
-detail-bundle digest, detail list, and `detail_grade`. A later plan/detail
+`not-sampled`; otherwise it records the audited plan digest, run-grade
+detail-bundle digest, detail list, and literal `detail_grade: "run"`. A later plan/detail
 mismatch projects `view_revision_status: "stale"`; a capture failure projects
 `"unknown"`; a result without an audit revision projects `"not-sampled"`.
 Project code, prompts, lessons, configuration, and audit history remain live
@@ -352,9 +368,9 @@ result data stays inspectable but is unavailable for a completeness walk.
 
 ### Saved gate verdict (`gate-status`, version 1)
 
-`plan-tool gate-status <name> --json [--grade run|jira]` reads saved final
+`plan-tool gate-status <name> --json` reads saved final
 completeness results without running an audit, calling a backend, or writing
-state. It emits JSON with or without `--json`; `--grade` defaults to `run`.
+state. It emits JSON with or without `--json` and reads only run-grade evidence.
 A completed read exits 0 regardless of its verdict. Resolution failures remain
 command errors.
 
@@ -362,22 +378,19 @@ command errors.
 | --- | --- |
 | `version` | integer `1` |
 | `plan`, `plan_path` | plan slug and repository-relative POSIX path (absolute for an external plan) |
-| `detail_grade` | selected `run` or `jira` grade |
-| `current_stage` | current grade-selected `bare` or `detail` stage; `null` when derivation fails |
+| `detail_grade` | literal `"run"` |
+| `current_stage` | current `bare` or `detail` stage; `null` when derivation fails |
 | `stages` | object with exactly `bare` and `detail` keys |
 
 Each stage is `null` when no eligible result exists. Selection uses the existing
 newest-first sidecar listing and final-role eligibility predicate. It skips
 unloadable sidecars, checkpoints, unknown roles, missing qualified results,
-`not-sampled` results, and results from another grade. The newest eligible
+`not-sampled` results, and retired or malformed provenance. The newest eligible
 result per stage wins even when stale; readers never fall back to an older
 current result to obtain convergence.
 
-This is a view of saved final evidence, not of the latest invocation. Jira-grade
-audits deliberately write no final findings sidecar; ordinary Jira audit history
-therefore leaves both stage values `null` under `--grade jira`. Grade selection
-still prevents any foreign-grade sidecar from substituting for the requested
-grade. A terminal `plan-quota` stop also withholds its final sidecar. Neither a
+This is a view of saved final evidence, not of the latest invocation. A terminal
+`plan-quota` stop withholds its final sidecar. Neither a
 markdown-only report nor a recovery checkpoint replaces an older eligible final
 result: the command returns that older evidence, or `null` if none exists. It
 cannot distinguish “never audited” from “audited without a final sidecar”.
@@ -394,7 +407,7 @@ cannot distinguish “never audited” from “audited without a final sidecar�
 `awaiting-human-action` never means converged. Confirmation kind alone does not
 determine convergence. To read the current gate, select `stages[current_stage]`
 and read its `converged` field; a null stage or result means no verdict is
-available. Plan or grade-selected detail edits invalidate freshness without
+available. Plan or run-grade detail edits invalidate freshness without
 changing saved evidence. This document restates the existing qualified
 result policy; it introduces no audit, continuation, or exit-code gate.
 
@@ -716,8 +729,6 @@ Top-level shape:
 | `checks` | deterministic and conceptual finding groups |
 | `coverage` | conceptual-audit pass budget and confidence signal |
 | `qualified_result` | additive final decision object with `headline`, `stage`, `coverage`, immutable audit-time `revision_status`, and nullable nested `audit_revision`; it is `null` only when a caller renders recovery-only rather than a final result |
-| `detail_grade` | which detail bundle grounded the audit (`"jira"`). Present **only** under a non-default `--grade`, so a run-grade payload is unchanged |
-| `detail_bundle_fingerprint` | the artifact→digest map the audit read, as grounding provenance. Emitted under the same non-default-grade condition as `detail_grade` (`{}` when no artifact was on disk) |
 | `audit_shape_advisory` | present only for a current run-grade saved advisory; its additive object contains `shape_id`, source fingerprint, resolved arm step ids/titles, counts, and axis-grouped anchor slugs (never finding prose or opaque finding ids) |
 | `has_blocking_findings` | `True` when blocking findings are present under the stage bar (conceptual recs use `is_blocking_finding` at the hoisted `stage`; deterministic arms unchanged); process rc remains 0 unless `--fail-on-findings` is set |
 | `stage` | `"bare"` or `"detail"` — the hoisted audit stage that selected the conceptual bar |
@@ -731,7 +742,7 @@ Every recommendation-derived object in `checks` carries `confidence` as the
 raw `supported`, `limited`, or legacy-normalized `unknown` value. The human
 rendering's `confidence: <value>` label is not part of this JSON field.
 
-`qualified_result.audit_revision` identifies the plan, grade-selected detail
+`qualified_result.audit_revision` identifies the plan, run-grade detail
 bundle, and the optional inputs the audit sampled: (v2, BACKLOG #162) the
 plan's `source_seed` file as `source_seed_digest`, and (v3) the confirmed
 project context as `project_context_digest`. Either digest is `null` when its

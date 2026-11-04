@@ -389,7 +389,7 @@ competes for the next session?"
 | **Next (evidence-gated)** | `quality-bench-01` (#216), position 01 | Preserve its noise-floor question, but first perform one disposable current-model observation rather than build its runner/CLI. A fresh plan is justified only if that exercise demonstrates a durable replay surface is needed. `roadmap-05` (#208) remains unauthored until a named framework-specific roadmap need exists. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
-| **Blocked** | #194 on #193 · #199 on #198 · `detail-verbosity-compact-summary` on #308 re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
+| **Blocked** | #194 on #193 · #199 on #198 · `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
 | **Parked / defer** | #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · convergence evidence #256 (labelled-corpus prerequisite) · #260 (needs a concrete misleading-output fixture) · concept residue #126–#134 · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
@@ -398,7 +398,7 @@ competes for the next session?"
 |---|---|---|
 | `lessons-reuse-instrumentation` | 9 | Next — pairs with lessons integrity work |
 | `jira-sweep-deterministic` | 9 | Next — export-leg hygiene; `jira-sweep-verify-code-truth` waits on it |
-| `detail-verbosity-compact-summary` | 6 | Blocked — re-baseline after #308 removes the Jira-grade schema authority |
+| `detail-verbosity-compact-summary` | 6 | Blocked — re-baseline on run-grade-owned schema authority |
 | `deferred-scan-digest` | 11 | Next — deferred-work triage surface |
 | `deferred-select-promote` | 9 | Next — the promote half of the same surface |
 | `security-check-command` | 10 | **Parked** — open design issues recorded in the plan |
@@ -420,7 +420,7 @@ competes for the next session?"
   determinism risk; the cheap slice A1/C1/C2 and the authoring-only B slice
   have shipped, and `CLAUDE.md` § "Architecture" sets the burden of proof any
   new in-process fan-out must clear).
-- **T5 — export leg / UX / hygiene / cosmetic:** **#308** (retire legacy Jira-grade detail), **#107** (deferred pending a demonstrated export blocker), **#49**, **#102**,
+- **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#49**, **#102**,
   **#43**, **#54**, **#55**, **#56**, **#36** (theoretical), **#89** (commit-hygiene
   coverage — observed orphaning gap on `reconcile-code`, see its entry's
   "Evidence it recurs"), **#366** (theoretical — aidlc-workflows
@@ -5560,7 +5560,7 @@ separate)**
   facts; keep heuristic signals advisory and pin both plain-English and
   precision-preserving technical fixtures.
 - **Dependencies:** complements #149 (compact structure). Jira-grade detail is
-  retired by #308, so this entry applies only to supported run-grade detail.
+  retired, so this entry applies only to supported run-grade detail.
 - **Scope contract:**
   - **Outcome:** newly authored plan detail is clear, direct plain English while
     retaining the actionable technical facts needed to implement and verify it.
@@ -5574,7 +5574,7 @@ separate)**
   - **Allowed behavior changes:** new detail output and clarity findings may be
     more concise and less prescriptive; existing read compatibility remains.
   - **Allowed reorganization:** only the prompt/quality helpers required to
-    share one rubric across supported detail grades.
+    use one rubric for supported run-grade detail.
   - **Verification:** tests demonstrate that clear detail passes, jargon-heavy or
     overly dense surrounding prose gets a targeted clarity finding, and every
     technical anchor/constraint stays byte-for-byte present through the rewrite.
@@ -5589,7 +5589,7 @@ separate)**
   rubric explicitly includes **conciseness** (prose to the point, not
   verbose) alongside plain English, both aimed at descriptions only — code
   anchors and examples are never reduced; (2) the then-supported Jira-grade
-  authoring lane applied this rubric at birth. That lane is retired by #308;
+  authoring lane applied this rubric at birth. That lane is retired;
   this entry now owns only existing run-grade surfaces. Extending the same
   rubric to **plan-body
   prose** (`create` output) is outside this entry's fence — promote it to
@@ -5604,8 +5604,8 @@ separate)**
   Tests/Deferred), spending no Claude and always exiting 0. (2) A **compact
   required detail schema** that changes what `detail` authors by default:
   merge Summary+Why into a single `Intent` and drop the Table of Contents.
-  **Blocked by #308:** this plan's current compact-schema authority is the
-  retiring Jira-grade lane. Do not preserve `plan_tool/jira_grade.py` as an
+  **Deferred for run-grade re-baseline:** this plan's compact-schema authority
+  names the retired Jira-grade lane. Do not preserve `plan_tool/jira_grade.py` as an
   alias source. Re-baseline the compact-schema phase on a run-grade-owned
   contract before execution; a complexity gate can then keep `low` steps
   always-compact while `medium`/`high` may expand only the section carrying
@@ -5636,8 +5636,7 @@ separate)**
   **incomplete** (steps 1–3 detailed, 4–6 pending) and it is **not yet
   registered** in `.plan-tool/plans.json`. When the plan ships, its final step
   removes/marks this entry and updates #49's seven-section language if that
-  entry remains open. **Blocked 2026-09-02:** #308 removes the former
-  Jira-grade schema authority. Re-baseline the WIP plan and its incomplete
+  entry remains open. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
   detail bundle before phase B runs; it must not retain the removed module as
   a compatibility dependency. The terminal companion in #293 is a separate
   projected handoff, not this entry's target surface.
@@ -10074,8 +10073,6 @@ longer describes current work. It is retained only as dated carve-out context.
   out-of-scope-for-that-pass rather than refused. Remapped from a colliding
   local `#313` during the 2026-08-26 merge that kept origin/main's `#313`
   for the long-running-process exposure.
-
-**#308 — Retire legacy Jira-grade detail artifacts and readers** → promoted to IPPT-17 (2026-09-28)
 
 **#406 — `roadmap_diff.py`/`roadmap_compare_run.py` import `plan_tool.roadmap`, contradicting the documented read-only layering**
 

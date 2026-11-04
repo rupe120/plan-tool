@@ -160,7 +160,6 @@ convergence loop.
 | Concern | Owner | Boundary |
 | --- | --- | --- |
 | Shared validation | `review.py`, `gates.py`, `scope_guard.py`, `drift_detection.py` | `run` pre/post-flight, review findings, Jira parsing, the run-grade seven-section `detail` response, and `create` re-parsing from disk. |
-| Grade selection | The detail readers | Existing Jira-grade files retain their closed five-section validation only at explicit reader boundaries; `detail --grade jira` rejects before authoring. |
 | Iterative repair | `convergence.py`, `auto_reconcile.py` | Under `--iterate`, `create`, `detail`, and `completeness-audit` loop their supported gates → `apply_finding` → re-audit. |
 | Bundle-aware audit | `completeness_report.py` | `audit_detail_bundle_status` and `DetailBundleStatus.is_bare` feed `next_step_gaps`, which splits the gaps to close from the advisory ones by the blocking verdict. |
 
@@ -332,7 +331,7 @@ copies (an explicit `--root .claude` is still honored).
 
 ## Jira export
 
-**Jira export (`jira_grade.py`, `jira_config.py`).** `jira_grade.py` is the single authority for the legacy **jira-grade** detail contract — the five-section alternative (`Intent`, `Change`, `Constraints`, `Done when`, `Out of scope`) to the default run-grade seven-section body. `detail --grade jira` is disabled; existing artifacts remain selected through `jira --grade jira`, `run --detail-grade jira`, and `completeness-audit --grade`. `parse_jira_grade_sections` / `validate_jira_grade_body` / `load_jira_grade_detail` give those readers one shared, loudly-rejecting contract rather than each re-deriving the schema; `check_plain_english` is the deterministic prose gate applied to the text between code anchors. `jira_config.py` reads/writes the export-time config at `docs/implementation-plans/jira-config.json` — the epic catalog (`Epic`: uppercase `key`, name, optional real JIRA id) and the plan→epic assignment map `jira` export consults to pick which epic prefixes a plan's exported story ids (`AUTH-S1`, …). Schema for both in `JIRA_FORMAT.md`.
+**Jira export (`jira.py`, `jira_config.py`).** `jira.py` captures declared run-grade detail for concise stories and the paired developer handoff. `jira_config.py` reads/writes the export-time config at `docs/implementation-plans/jira-config.json` — the epic catalog (`Epic`: uppercase `key`, name, optional real JIRA id) and the plan→epic assignment map `jira` export consults to pick which epic prefixes a plan's exported story ids (`AUTH-S1`, …). Schema for both in `JIRA_FORMAT.md`.
 
 ## Roadmap
 

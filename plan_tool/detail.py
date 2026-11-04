@@ -78,24 +78,12 @@ from plan_tool.detail_artifacts import (
     _line_terminator,
     _plan_slug,
     derive_detail_path,
-    derive_jira_detail_path,
     derive_step_slug,
     find_unreferenced_detail_for_step,
     locate_detail_format_carrier,
     render_detail_format_version_marker,
     require_supported_detail_format_version,
     strip_detail_format_version_marker,
-)
-# The jira-grade contract authority. A stdlib-only leaf, so it is safe at
-# module load; the reverse edge (``jira_grade`` importing ``detail``) never
-# exists — see that module's docstring.
-from plan_tool.jira_grade import (
-    GRADE_JIRA,
-    GRADE_RUN,
-    JIRA_GRADE_REQUIRED_H2S,
-    JiraGradeFinding,
-    check_plain_english,
-    validate_jira_grade_body,
 )
 # The plan scope-fence renderer and its section-recognition rules live in the
 # ``plan_tool.scope_fence`` leaf (shared with ``create``, and with ``renderer``
@@ -395,12 +383,6 @@ def _find_real_deferrals_match(stripped: str) -> Optional["re.Match[str]"]:
 # the on-disk detail files themselves (``derive_detail_path``).
 _DETAIL_CHECKPOINT_NAME = "detail-step-{step_id:02d}"
 
-# Checkpoint namespace for jira-grade bodies. Distinct from the run-grade
-# name because ``_detail_step_input_hash`` keys on step shape and not on
-# grade — sharing one namespace would let a jira-grade run resume a cached
-# run-grade body straight into a jira-grade write (and vice versa).
-_JIRA_DETAIL_CHECKPOINT_NAME = "jira-detail-step-{step_id:02d}"
-
 # Appended to the prompt on retry. Spells out exactly what the parser
 # (``parse_detail_response``) needs so claude can self-correct without
 # having to re-derive the contract from the original template. Keep this
@@ -453,48 +435,6 @@ _REPROMPT_SUFFIX = (
     "an empty array when no signed-off concept is deferred.\n"
 )
 
-# The jira-grade counterpart to ``_REPROMPT_SUFFIX``. Spells the closed
-# five-section contract instead of run-grade's seven, and says outright that
-# nothing is stubbed in. The rejected attempt's blocking findings go *above*
-# it (see :func:`_jira_retry_suffix`), so the sentence-length and filler
-# thresholds stay stated once — in ``plan_tool.jira_grade`` — and reach the
-# model as the specific lines it tripped rather than a re-copied number.
-_JIRA_REPROMPT_SUFFIX = (
-    "\n\n---\n\n"
-    "**Your previous response did not meet the jira-grade contract.** "
-    "Re-emit the detail file with these constraints, no commentary about "
-    "this notice:\n\n"
-    "1. The very first character of the response must be `#` (the H1 "
-    "title). No preamble, no apology, no ```` ``` ```` fences.\n"
-    "2. Emit exactly these five H2 headings, in this order "
-    "(case-insensitive, trailing words allowed — `## Done when "
-    "(acceptance)` satisfies `## Done when`):\n"
-    + "".join(f"   - `## {name}`\n" for name in JIRA_GRADE_REQUIRED_H2S)
-    + "3. Emit no other `##` heading. The schema is closed: no Summary, "
-    "Table of Contents, Files, Implementation, Tests, Acceptance criteria, "
-    "References, or Deferred section. Use `###` inside a section instead.\n"
-    "4. Give every one of the five sections a body. An empty section is "
-    "rejected and nothing is stubbed in for you.\n"
-    "5. Write plain, short sentences and cut filler phrases.\n"
-)
-
-
-def _jira_retry_suffix(findings: Sequence[JiraGradeFinding]) -> str:
-    """The jira-grade reprompt: what was rejected, then the contract.
-
-    Findings lead and ``_JIRA_REPROMPT_SUFFIX`` closes, so the retry prompt
-    always ends on the five required H2s. An unparseable envelope carries no
-    findings, and the suffix stands alone.
-    """
-    if not findings:
-        return _JIRA_REPROMPT_SUFFIX
-    lines = "".join(f"- {finding.message}\n" for finding in findings)
-    return (
-        f"\n\n---\n\n**What the gate rejected:**\n\n{lines}"
-        + _JIRA_REPROMPT_SUFFIX
-    )
-
-
 class DetailError(Exception):
     """Raised when the detail pipeline can't produce a usable result."""
 
@@ -510,20 +450,6 @@ def _reject_unmatched_plan_fence(plan_path: Path) -> None:
             f"{plan_path}: unmatched opening code fence; add a matching closing fence "
             "before authoring detail."
         )
-
-
-JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE = (
-    "Jira-grade detail authoring is disabled; author new run-grade detail with "
-    "`plan-tool detail <plan>`. Existing Jira-grade details remain available "
-    "to explicit readers; `plan-tool jira` produces the generated developer "
-    "handoff."
-)
-
-
-def _raise_if_jira_detail_authoring_requested(grade: str) -> None:
-    """Refuse the retired compact-detail writer before it can mutate state."""
-    if grade == GRADE_JIRA:
-        raise DetailError(JIRA_DETAIL_AUTHORING_DISABLED_MESSAGE)
 
 
 # --- A/B prompt-mode text (combined = legacy default, split = lifted-out) ---
@@ -1062,83 +988,6 @@ def render_detail_prompt(
             project_context_rendered
         ),
         risk_context_block=risk_context_block,
-    )
-
-
-def render_jira_detail_prompt(
-    plan: Plan,
-    step: Step,
-    *,
-    repo_root: Path,
-    output_path: Optional[Path] = None,
-    scope_fence_block: str = "",
-    max_file_bytes: int = _MAX_PROMPT_FILE_BYTES,
-    collect_blocks: Optional[list[tuple[str, int]]] = None,
-    project_context: Optional[str] = None,
-) -> str:
-    """Render ``prompts/detail-jira.md`` for one step.
-
-    Much smaller than :func:`render_detail_prompt`: plan metadata, the step,
-    its declared file contents, the pinned output path, the scope fence, and
-    the closed five-section contract. No siblings, no lessons, no concept
-    scope, no deferral envelope — the jira lane authors a summary, not an
-    implementation spec.
-
-    ``scope_fence_block`` is the same block :func:`render_detail_prompt`
-    takes. This lane needs it most: its required ``## Intent`` section asks
-    the author to state a step's purpose, which the fence is what carries.
-
-    ``output_path`` is named in the prompt as the path plan-tool will write
-    the response to, with the same "do not write any file yourself"
-    instruction :func:`render_detail_prompt` documents: the subprocess runs
-    under ``acceptEdits`` and would otherwise strand an orphan at a path
-    derived from its own title.
-    """
-    template_path = prompts_dir() / "detail-jira.md"
-    template = Template(template_path.read_text(encoding="utf-8"))
-
-    files_contents_block = _format_files_contents_block(
-        step, repo_root, max_file_bytes=max_file_bytes
-    )
-    project_context_rendered = (
-        project_profile_context(repo_root)
-        if project_context is None
-        else project_context
-    )
-    if collect_blocks is not None:
-        collect_blocks.append(
-            ("file-contents", len(files_contents_block.encode("utf-8")))
-        )
-        if project_context_rendered:
-            collect_blocks.append(
-                ("project-context", len(project_context_rendered.encode("utf-8")))
-            )
-
-    return template.safe_substitute(
-        output_path_block=_format_output_path_block(
-            _repo_relative(output_path, repo_root) if output_path else ""
-        ),
-        plan_title=plan.title,
-        plan_status=plan.status.value,
-        plan_priority=plan.priority.value,
-        step_id=str(step.id),
-        step_title=step.title,
-        step_complexity=(step.complexity.value if step.complexity else "unknown"),
-        step_depends_on=(
-            ", ".join(str(d) for d in step.depends_on)
-            if step.depends_on
-            else "(none)"
-        ),
-        step_files_block=_format_step_files_block(step),
-        files_contents_block=files_contents_block,
-        scope_fence_block=(
-            scope_fence_block.strip()
-            if scope_fence_block.strip()
-            else "_no plan-level guardrails or scope fence_"
-        ),
-        project_context_block=render_project_context_block(
-            project_context_rendered
-        ),
     )
 
 
@@ -2450,75 +2299,6 @@ def stamp_detail_format_version_marker(body: str) -> str:
 
 
 @dataclass(frozen=True)
-class JiraDetailParse:
-    """The jira-grade authoring gate's verdict on one claude response.
-
-    ``body`` is the publishable Markdown when every blocking check passed,
-    else ``None``. ``findings`` carries what blocked it — empty when the
-    response had no ``#`` heading at all, so there was nothing to validate.
-    """
-
-    body: Optional[str]
-    findings: tuple[JiraGradeFinding, ...] = ()
-
-
-def parse_jira_detail_response(raw: str) -> JiraDetailParse:
-    """Pull a jira-grade detail body out of a claude response and gate it.
-
-    Same envelope leniency as :func:`parse_detail_response` — preamble
-    before the first unfenced ``#`` is skipped and bare outer fences are
-    removed without truncating nested content — then
-    ``plan_tool.jira_grade``'s closed
-    validator and plain-English gate decide. Both sets of *blocking*
-    findings reject: the authoring retry loop is exactly the audience the
-    prose gate's blocking findings are written for (read-time consumers in
-    ``jira`` / ``run`` check structure only).
-
-    **No stub synthesis.** Run-grade parsing fills in one missing section;
-    fabricating one of five here would invent a fifth of the artifact.
-
-    The envelope cleanup recognizes a matching whole-reply wrapper before it
-    uses :func:`parse_detail_response`'s fence helper, so nested examples stay
-    content.
-    """
-    text = raw.strip()
-    if not text:
-        return JiraDetailParse(body=None)
-
-    lines = _strip_bare_fence_lines(
-        _strip_whole_bare_fence_wrapper(text.splitlines(keepends=True))
-    )
-
-    fenced_spans = _fenced_code_spans("".join(lines)).spans
-    offset = 0
-    first_heading = None
-    for index, line in enumerate(lines):
-        if line.lstrip().startswith("#") and not any(
-            start <= offset < end for start, end in fenced_spans
-        ):
-            first_heading = index
-            break
-        offset += len(line)
-    if first_heading is None:
-        return JiraDetailParse(body=None)
-    text = "\n".join("".join(lines[first_heading:]).splitlines()).strip()
-    if not text:
-        return JiraDetailParse(body=None)
-
-    blocking = tuple(
-        finding
-        for finding in (
-            *validate_jira_grade_body(text),
-            *check_plain_english(text),
-        )
-        if finding.blocking
-    )
-    if blocking:
-        return JiraDetailParse(body=None, findings=blocking)
-    return JiraDetailParse(body=text)
-
-
-@dataclass(frozen=True)
 class DetailDeferral:
     """A body-section bucket a detail step routes to ``## Deferred``.
 
@@ -2848,7 +2628,6 @@ def _author_step_detail(
     plan: Optional[Plan] = None,
     candidate_buckets: Optional[dict[str, str]] = None,
     require_deferral_envelope: bool = False,
-    grade: str = GRADE_RUN,
 ) -> _StepAuthoringOutcome:
     """Turn one step into a written detail file — the concurrency-safe unit.
 
@@ -2870,21 +2649,14 @@ def _author_step_detail(
     ``discard_checkpoint`` runs in the caller only after the plan pointer is
     set. Behavior at the single-threaded path is byte-for-byte unchanged.
 
-    Only run-grade authoring reaches this worker. Jira-grade calls fail before
-    parsing, invoking, or writing so existing compact artifacts stay read-only.
     """
-    _raise_if_jira_detail_authoring_requested(grade)
     _reject_unmatched_plan_fence(plan_path)
-    is_jira = grade == GRADE_JIRA
     step_purity_findings: "list[Recommendation]" = []
     body: Optional[str]
     parsed_deferrals: tuple[DetailDeferral, ...]
     if cached is not None:
         raw = cached.payload
-        if is_jira:
-            body = parse_jira_detail_response(raw).body
-            parsed_deferrals = ()
-        elif not require_deferral_envelope:
+        if not require_deferral_envelope:
             parsed_cached = parse_structured_detail_response(raw)
             if parsed_cached is not None:
                 body = (
@@ -3008,10 +2780,7 @@ def _author_step_detail(
         raw = ""
         body = None
         parsed_deferrals = ()
-        # Grade picks the reprompt contract. On the jira path the rejected
-        # attempt's blocking findings are folded in below, so attempt 2 sees
-        # what it actually tripped.
-        retry_suffix = _JIRA_REPROMPT_SUFFIX if is_jira else _REPROMPT_SUFFIX
+        retry_suffix = _REPROMPT_SUFFIX
         repair_body: Optional[str] = None
         rejected_raw = ""
         repair_purity_findings: "list[Recommendation]" = []
@@ -3071,56 +2840,46 @@ def _author_step_detail(
                 if repair_body is not None else raw
             )
             purity_candidate: "list[Recommendation]" = []
-            if is_jira:
-                # No purity strip on this path: the jira prompt never asks for
-                # the self-check block, and the closed schema rejects it if a
-                # model volunteers one — so there is nothing to strip and no
-                # MIXED-STEP finding to carry.
-                jira_parse = parse_jira_detail_response(raw)
-                body = jira_parse.body
-                parsed_deferrals = ()
-                retry_suffix = _jira_retry_suffix(jira_parse.findings)
-            else:
-                # Defensive purity strip. The authoring prompt no longer asks
-                # for the ``## Structural findings`` self-check — the
-                # ``detail-quality`` pass owns mixed-step detection now — but a
-                # model may still volunteer the block, so strip it BEFORE
-                # parsing the body (it must never land in the written file) and
-                # surface any MIXED-STEP it carries. Captured only on the
-                # attempt that parses (so it matches the body actually written).
-                purity_candidate = (
-                    repair_purity_findings if repair_body is not None
-                    else parse_mixed_step_findings(raw, step, plan_slug)
-                )
-                parsed_raw = _strip_structural_findings_preserving_deferrals(
-                    parsed_raw
-                )
-                if not require_deferral_envelope:
-                    parsed = parse_structured_detail_response(parsed_raw)
-                    if parsed is not None:
-                        body = parsed.body if not parsed.deferrals else None
-                    elif f"<!-- {_DETAIL_DEFERRALS_MARKER}" in parsed_raw:
-                        body = None
-                    else:
-                        body = parse_detail_response(parsed_raw)
-                    parsed_deferrals = ()
+            # Defensive purity strip. The authoring prompt no longer asks
+            # for the ``## Structural findings`` self-check — the
+            # ``detail-quality`` pass owns mixed-step detection now — but a
+            # model may still volunteer the block, so strip it BEFORE
+            # parsing the body (it must never land in the written file) and
+            # surface any MIXED-STEP it carries. Captured only on the
+            # attempt that parses (so it matches the body actually written).
+            purity_candidate = (
+                repair_purity_findings if repair_body is not None
+                else parse_mixed_step_findings(raw, step, plan_slug)
+            )
+            parsed_raw = _strip_structural_findings_preserving_deferrals(
+                parsed_raw
+            )
+            if not require_deferral_envelope:
+                parsed = parse_structured_detail_response(parsed_raw)
+                if parsed is not None:
+                    body = parsed.body if not parsed.deferrals else None
+                elif f"<!-- {_DETAIL_DEFERRALS_MARKER}" in parsed_raw:
+                    body = None
                 else:
-                    parsed = (
-                        parse_structured_detail_response(
-                            parsed_raw, step=step, plan=plan,
-                            candidate_buckets=candidate_buckets,
-                        ) if repair_reply_valid else None
-                    )
-                    body = parsed.body if parsed is not None else None
-                    parsed_deferrals = (
-                        parsed.deferrals if parsed is not None else ()
-                    )
+                    body = parse_detail_response(parsed_raw)
+                parsed_deferrals = ()
+            else:
+                parsed = (
+                    parse_structured_detail_response(
+                        parsed_raw, step=step, plan=plan,
+                        candidate_buckets=candidate_buckets,
+                    ) if repair_reply_valid else None
+                )
+                body = parsed.body if parsed is not None else None
+                parsed_deferrals = (
+                    parsed.deferrals if parsed is not None else ()
+                )
             if body is not None:
                 step_purity_findings = purity_candidate
                 raw = parsed_raw
                 break
             if (
-                attempt == 1 and require_deferral_envelope and not is_jira
+                attempt == 1 and require_deferral_envelope
             ):
                 repair_body = _body_for_deferrals_repair(parsed_raw)
                 if repair_body is not None:
@@ -3208,11 +2967,7 @@ def _author_step_detail(
                     written=False,
                     skipped_reason=(
                         (
-                            "claude's response failed the jira-grade gate "
-                            "(the five required H2 sections, closed to any "
-                            "other, plus the plain-English rules) "
-                            if is_jira
-                            else "claude returned an unparseable response "
+                            "claude returned an unparseable response "
                             "(missing required H2 sections, or no `#` "
                             "heading) "
                         )
@@ -3274,8 +3029,7 @@ def _author_step_detail(
     # Stamp before the write, not inside the try below: this is a pure string
     # operation on ``body`` (no I/O to fail), so running it first means a
     # stamp failure can never leave a prior file archived with nothing written
-    # in its place. Only run-grade authoring reaches this function (jira-grade
-    # is rejected at entry), so every write here carries the current marker.
+    # in its place. Every write carries the current marker.
     body = stamp_detail_format_version_marker(body)
 
     try:
@@ -3761,292 +3515,6 @@ def _generate_detail_concurrent(
     return results, mixed_steps
 
 
-def _generate_jira_detail(
-    plan_path: Path,
-    plan: Plan,
-    *,
-    repo_root: Path,
-    step_id: Optional[int],
-    force: bool,
-    dry_run: bool,
-    invoker: DetailInvoker,
-    reporter: Optional[ProgressReporter],
-    resume: bool,
-    prompt_fn: Optional[Callable[[str], str]],
-    run_logger: Optional[RunLogWriter],
-    commit_step: Optional[Callable[[int, str], None]],
-) -> "list[DetailResult]":
-    """Reject the retired compact-detail writer.
-
-    The legacy implementation remains below this guard; direct callers cannot
-    reach its prompt, checkpoint, or write logic.
-    """
-    _raise_if_jira_detail_authoring_requested(GRADE_JIRA)
-    if step_id is not None:
-        try:
-            target_steps: "list[Step]" = [plan.step_by_id(step_id)]
-        except KeyError as exc:
-            raise DetailError(str(exc)) from exc
-    else:
-        target_steps = list(plan.steps)
-
-    if reporter is None:
-        reporter = StderrReporter()
-    if prompt_fn is None:
-        import builtins
-        prompt_fn = builtins.input
-
-    plan_slug = _plan_slug(plan_path)
-    project_context = project_profile_context(repo_root)
-
-    # Pre-scan checkpoints once so the [N/M] denominator counts real
-    # invocations. The namespace is jira's own (see
-    # ``_JIRA_DETAIL_CHECKPOINT_NAME``), and a cached payload that no longer
-    # meets the jira contract is dropped rather than resumed into a write.
-    cached_by_id: dict[int, Optional[Checkpoint]] = {}
-    for s in target_steps:
-        if force or not resume:
-            cached_by_id[s.id] = None
-            continue
-        scan_ckpt_name = _JIRA_DETAIL_CHECKPOINT_NAME.format(step_id=s.id)
-        scan_ckpt_path = checkpoint_path(repo_root, plan_slug, scan_ckpt_name)
-        scan_ckpt = load_if_valid(
-            scan_ckpt_path,
-            expected_input_hash=_detail_step_input_hash(
-                plan_path, s, project_context=project_context
-            ),
-        )
-        if (
-            scan_ckpt is not None
-            and parse_jira_detail_response(scan_ckpt.payload).body is None
-        ):
-            scan_ckpt = None
-        cached_by_id[s.id] = scan_ckpt
-        if run_logger is not None and scan_ckpt is not None:
-            run_logger.checkpoint_hit(
-                scan_ckpt_name,
-                scan_ckpt.input_hash,
-                len(scan_ckpt.payload.encode("utf-8")),
-                step_id=s.id,
-                path=_repo_relative(scan_ckpt_path, repo_root),
-                created_at=scan_ckpt.created_at,
-            )
-
-    invoke_targets = [
-        s for s in target_steps
-        if (force or not derive_jira_detail_path(plan_path, plan, s).exists())
-        and cached_by_id[s.id] is None
-    ]
-    invoke_total = 0 if dry_run else len(invoke_targets)
-    invoke_idx = 0
-
-    results: "list[DetailResult]" = []
-    for step in target_steps:
-        output_path = derive_jira_detail_path(plan_path, plan, step)
-
-        # The skip rule is the artifact alone: no ``step.detail`` read. Same
-        # interactive replace as the run-grade path — a non-TTY caller
-        # auto-declines, keeping the idempotent skip for scripted runs. The
-        # "already exists" substring is load-bearing (``cmd_detail`` reads it).
-        if not force and output_path.exists():
-            if not _confirm_replace(
-                prompt_fn,
-                step_id=step.id,
-                step_title=step.title,
-                output_path=output_path,
-            ):
-                results.append(
-                    DetailResult(
-                        step_id=step.id,
-                        output_path=output_path,
-                        written=False,
-                        skipped_reason=(
-                            "already exists (user declined replace; pass "
-                            "--force to skip the prompt and overwrite)"
-                        ),
-                    )
-                )
-                continue
-
-        budget_blocks: "list[tuple[str, int]]" = []
-        prompt = render_jira_detail_prompt(
-            plan,
-            step,
-            repo_root=repo_root,
-            output_path=output_path,
-            # Per-step: the fence carries this step's own ``intent``.
-            scope_fence_block=render_scope_fence(
-                plan_path,
-                plan_intent=plan.intent or "",
-                step_intent=step.intent or "",
-            ),
-            collect_blocks=budget_blocks,
-            project_context=project_context,
-        )
-
-        if dry_run:
-            _print_detail_budget_breakdown(
-                step,
-                estimate_prompt_budget(
-                    len(prompt.encode("utf-8")),
-                    context_window=active_context_window(),
-                    blocks=budget_blocks,
-                ),
-            )
-            results.append(
-                DetailResult(
-                    step_id=step.id,
-                    output_path=output_path,
-                    written=False,
-                    prompt=prompt,
-                )
-            )
-            continue
-
-        phase_name = f"jira-detail-step-{step.id:02d}"
-        phase_t0 = time.monotonic()
-        phase_outcome = "success"
-        phase_reason = ""
-        phase_cached = False
-        if run_logger is not None:
-            run_logger.phase_start(
-                phase_name, step_id=step.id, step_title=step.title,
-            )
-        try:
-            input_hash = _detail_step_input_hash(
-                plan_path, step, project_context=project_context
-            )
-            ckpt_name = _JIRA_DETAIL_CHECKPOINT_NAME.format(step_id=step.id)
-            ckpt_path = checkpoint_path(repo_root, plan_slug, ckpt_name)
-            cached: Optional[Checkpoint] = cached_by_id[step.id]
-            if cached is not None:
-                try:
-                    created_at = datetime.fromisoformat(cached.created_at)
-                    age_seconds = (
-                        datetime.now(timezone.utc) - created_at
-                    ).total_seconds()
-                except ValueError:
-                    age_seconds = 0.0
-                if not _confirm_resume(
-                    prompt_fn,
-                    step_id=step.id,
-                    step_title=step.title,
-                    checkpoint_age_seconds=age_seconds,
-                ):
-                    declined_path = _repo_relative(ckpt_path, repo_root)
-                    try:
-                        discard_checkpoint(ckpt_path)
-                    except OSError as exc:
-                        tool(
-                            f"failed to discard declined checkpoint "
-                            f"{ckpt_path} ({exc}); next run may re-prompt "
-                            "against the same stale body"
-                        )
-                    else:
-                        if run_logger is not None:
-                            run_logger.checkpoint_discard(
-                                ckpt_name,
-                                "user_declined_resume",
-                                step_id=step.id,
-                                path=declined_path,
-                            )
-                    cached = None
-                    invoke_total += 1
-            phase_cached = cached is not None
-
-            outcome = _author_step_detail(
-                step,
-                prompt=prompt,
-                output_path=output_path,
-                cached=cached,
-                input_hash=input_hash,
-                ckpt_path=ckpt_path,
-                ckpt_name=ckpt_name,
-                plan_slug=plan_slug,
-                phase_name=phase_name,
-                invoke_idx=invoke_idx,
-                invoke_total=invoke_total,
-                reporter=reporter,
-                run_logger=run_logger,
-                invoker=invoker,
-                repo_root=repo_root,
-                plan_path=plan_path,
-                # The prompt-mode A/B describes run-grade authoring, so the
-                # jira lane contributes no arm and captures no scenario.
-                capture_scenarios=False,
-                arm=None,
-                foundational_invoker=None,
-                budget_blocks=budget_blocks,
-                grade=GRADE_JIRA,
-            )
-            invoke_idx = outcome.invoke_idx
-            handle = outcome.handle
-            if not outcome.succeeded:
-                results.append(outcome.result)
-                phase_outcome = outcome.phase_outcome
-                phase_reason = outcome.phase_reason
-                continue
-
-            # The artifact is on disk and no pointer has to catch up with it,
-            # so the "claude succeeded but the file isn't durable yet" hedge
-            # is spent right here.
-            try:
-                discard_checkpoint(ckpt_path)
-            except OSError as exc:
-                tool(
-                    f"failed to discard checkpoint {ckpt_path} "
-                    f"({exc}); next run may waste a hash-match read"
-                )
-            else:
-                if run_logger is not None:
-                    run_logger.checkpoint_discard(
-                        ckpt_name,
-                        "durable_write",
-                        step_id=step.id,
-                        path=_repo_relative(ckpt_path, repo_root),
-                    )
-
-            # Path-relative, so this sweeps only stale ``NN-*.md`` siblings
-            # inside ``jira/`` — a run-grade file is never moved.
-            for dest in _archive_orphan_details(output_path, step.id):
-                tool(f"archived orphan jira-grade detail to {dest}")
-
-            handle.complete(outcome.elapsed, outcome.raw_bytes)
-            results.append(
-                DetailResult(
-                    step_id=step.id,
-                    output_path=output_path,
-                    written=True,
-                )
-            )
-            # Per-step commit, same rule as the run-grade loop: skip once an
-            # earlier step failed and left debris, because ``git add -A``
-            # would fold it into this step's commit.
-            _prior_failure = any(
-                (not r.written)
-                and "already exists" not in (r.skipped_reason or "")
-                for r in results
-            )
-            if commit_step is not None and not _prior_failure:
-                commit_step(step.id, step.title)
-        finally:
-            if run_logger is not None:
-                extra: dict[str, object] = {
-                    "step_id": step.id,
-                    "cached": phase_cached,
-                }
-                if phase_reason:
-                    extra["reason"] = phase_reason
-                run_logger.phase_end(
-                    phase_name,
-                    duration_ms=int((time.monotonic() - phase_t0) * 1000),
-                    outcome=phase_outcome,
-                    **extra,
-                )
-
-    return results
-
-
 def _parse_detail_plan_and_dispatch(
     plan_path: Path,
     *,
@@ -4064,10 +3532,8 @@ def _parse_detail_plan_and_dispatch(
     allow_split: bool,
     jobs: int,
     commit_step: Optional[Callable[[int, str], None]],
-    grade: str,
 ) -> _RunGradeDetailDispatch:
     """Validate run-grade modes and hand parsed input to setup."""
-    _raise_if_jira_detail_authoring_requested(grade)
     # Defensive floor: the CLI rejects ``< 1``; anything slipping through runs
     # serially rather than raising or auto-resolving a worker count.
     if jobs < 1:
@@ -5965,14 +5431,12 @@ def generate_detail(
     jobs: int = 1,
     commit_step: Optional[Callable[[int, str], None]] = None,
     prior_body: str = "",
-    grade: str = GRADE_RUN,
     recovery_only: bool = False,
 ) -> list[DetailResult]:
     """Author run-grade detail bodies and update their plan pointers.
 
     See ``DETAIL_FORMAT.md`` and ``docs/DETAIL_FLOW.md`` for the execution contract.
     """
-    _raise_if_jira_detail_authoring_requested(grade)
     _reject_unmatched_plan_fence(plan_path)
     dispatch = _parse_detail_plan_and_dispatch(
         plan_path,
@@ -5990,7 +5454,6 @@ def generate_detail(
         allow_split=allow_split,
         jobs=jobs,
         commit_step=commit_step,
-        grade=grade,
     )
     plan = dispatch.plan
     jobs = dispatch.jobs

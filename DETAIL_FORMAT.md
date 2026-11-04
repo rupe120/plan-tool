@@ -2,12 +2,9 @@
 
 > **Source of truth:** this doc is reference reading for humans and coding
 > agents — the tool does **not** load it at runtime. The enforced contract
-> lives in code, per grade: the **run grade** in `_REQUIRED_H2_TOKENS` and
+> lives in code: `_REQUIRED_H2_TOKENS` and
 > `parse_detail_response` (`plan_tool/detail.py`, prompt
-> `plan_tool/prompts/detail.md`); the **jira grade** in
-> `plan_tool/jira_grade.py` (`JIRA_GRADE_REQUIRED_H2S`,
-> `validate_jira_grade_body`, prompt `plan_tool/prompts/detail-jira.md`). The
-> run grade's format-version marker (below) is written by
+> `plan_tool/prompts/detail.md`). The format-version marker (below) is written by
 > `stamp_detail_format_version_marker` (`plan_tool/detail.py`) and read back
 > by `require_supported_detail_format_version`
 > (`plan_tool/detail_artifacts.py`, re-exported from `plan_tool/detail.py`).
@@ -18,30 +15,14 @@ The on-disk schema for a step's **detail file** — the per-step markdown that
 prompt. The plan file (`PLAN_FORMAT.md`) is the machine-readable source of
 truth; a detail file is the human- and agent-facing deep-dive for one step.
 
-## Grades
-
-A step can carry a run-grade detail artifact and may retain a legacy Jira-grade
-artifact from an earlier authoring run:
-
-| Grade | Contract | Creation status | Lives at |
-|---|---|---|---|
-| `run` (default) | the seven-section schema below | `plan-tool detail <name>` | `plan-details/<plan_slug>/<NN>-<step_slug>.md` |
-| `jira` (legacy) | the [compact five-section contract](#jira-grade--the-compact-contract) | New creation is disabled; explicit readers may consume existing files. | `plan-details/<plan_slug>/jira/<NN>-<step_slug>.md` |
-
-Everything up to [Jira grade](#jira-grade--the-compact-contract) documents the
-**run** grade, which stays the default and the canonical artifact: it is what
-`steps[].detail` points at and what every command reads unless a grade selector
-says otherwise.
-
 ## What writes detail
 
 `plan-tool detail <plan>` (orchestrator `plan_tool/detail.py`, CLI
 `plan_tool/cli/authoring.py`). One Claude call per step, retried up to twice
 (`_MAX_INVOKE_ATTEMPTS`) when the response fails the parse gate. The plan's
 `steps[].detail` frontmatter field is updated to point at the written file.
-It writes only run-grade detail. `detail --grade jira` fails before parsing,
-loading the plan, or writing an artifact; a later removal will decide the fate
-of legacy Jira-grade files and readers. After a response parses, the writer
+Run-grade detail is the sole supported input, selected by `steps[].detail`.
+After a response parses, the writer
 stamps the current format-version marker (below) into the body, replacing
 anything the model proposed there, before the file is written to disk.
 
@@ -330,7 +311,7 @@ response before it is written:
      truncating real content instead of being rejected. The two cases are
      indistinguishable from the text alone without a nesting-aware
      scanner, which this codebase does not have (round 12 verified the
-     one candidate for reuse, `jira_grade.fenced_spans`, does not handle
+     one candidate for reuse, the then-located `jira_grade.fenced_spans`, does not handle
      nesting correctly either). Given that, marker search always fails
      closed: a sentinel-wrapped response containing a same-length nested
      example fence now correctly rejects (triggers a retry) rather than
@@ -411,99 +392,6 @@ default-off and explicit-on; all green before finishing.
 - `load_config()` returns `branch_awareness_enabled=False` when the key is absent
 - setting the key to `true` round-trips through write/read
 ```
-
-## Jira grade — the compact contract
-
-The legacy compact grade states **what changes, why, and how you know it
-worked**, shedding the implementation facts the run grade commits to (call
-sites, exact edits, test rosters). `plan-tool detail <name> --grade jira` no
-longer creates it. Existing files remain available only to explicit readers:
-`jira --grade jira`, `run --detail-grade jira`, and
-`completeness-audit --grade jira`; each fails rather than falling back to run
-grade. Jira-grade files carry no [format version marker](#format-version-marker)
-— the marker is run-grade only.
-
-### Path convention
-
-```
-<plan_dir>/plan-details/<plan_slug>/jira/<NN>-<step_slug>.md
-```
-
-Computed by `derive_jira_detail_path()` (`plan_tool/detail_artifacts.py`). Same
-`plan_slug` / `NN` / `step_slug` derivation as the run grade — only the `jira/`
-directory differs, so the two grades can never resolve to one path.
-
-The subdirectory is structural, not cosmetic: it puts the artifact outside the
-run-grade orphan sweep, outside exact-name detail adoption, and outside the
-structural verbs' renumber migration — all of which glob the run-grade directory
-or walk `steps[].detail` pointers.
-
-**There is no pointer axis.** `steps[].detail` stays **run-grade-only**; no
-frontmatter field points at a jira artifact, so resolution is the derivation
-above plus an on-disk check. One consequence is a known limit: because nothing
-points at them, jira artifacts are **not renumbered** when a split, merge, or
-scope-out renumbers steps, and a stale `NN-` prefix then reads as a missing
-artifact. That fails loudly at read time (below), never silently.
-
-### Section schema
-
-```markdown
-# <Step title>              ← H1 title
-
-## Intent                   ← required. Why the step exists.
-## Change                   ← required. What to build.
-## Constraints              ← required. Rules the change must obey.
-## Done when                ← required. The acceptance surface.
-## Out of scope             ← required. The fence — what not to build.
-```
-
-Canonical token list: `JIRA_GRADE_REQUIRED_H2S` in `plan_tool/jira_grade.py`.
-
-- **Matching mirrors the run grade's convention** — case-insensitive on the
-  **first word**, trailing words allowed, so `## Done when (acceptance)`
-  satisfies `## Done when`. Section order is not enforced.
-- **The schema is closed.** Unlike the run grade, which preserves any extra H2,
-  an **unknown top-level H2 is blocking** — as are a missing, duplicated, or
-  empty-bodied required section. A closed set is what makes a run-grade or
-  hybrid body fail *structurally* instead of passing on a five-heading subset.
-  H3s inside a section are unconstrained, and a `## ` line inside a fenced code
-  block stays content.
-- **A run-grade body parked at a jira path is named as such.** When required
-  sections are missing *and* three or more run-grade headings are present, the
-  report short-circuits to one `wrong-schema` finding — naming the actual
-  mistake beats five missing-section lines. A conforming body with one or two
-  strays still gets the precise per-heading findings.
-- **An unterminated code fence blocks on its own** — every heading below it is
-  invisible to the checker, so it is reported instead of its symptoms.
-
-### The two gates, split by audience
-
-`plan_tool/jira_grade.py` runs two deterministic gates (no Claude — both are
-pure functions of the text), and they do **not** have the same audience:
-
-| Gate | Function | Who it blocks |
-|---|---|---|
-| Section contract | `validate_jira_grade_body` | everyone — authoring **and** every read-time consumer |
-| Plain English | `check_plain_english` | the **authoring retry loop only** |
-
-So a hand-edited artifact can never fail an export or a run on prose style:
-read-time consumers (`load_jira_grade_detail`) validate **structure only**. The
-prose gate's blocking findings — a denylisted filler phrase, a sentence past the
-word cap measured *after* code anchors are stripped — exist to make the
-authoring call try again. Its shape heuristics (dense clauses, an over-long
-section) are advisory even there. Neither gate ever rewrites text.
-
-### How consumers read it
-
-Every consumer resolves the derived path, requires the file, and validates the
-body; **the run-grade file is never substituted** for a missing or off-contract
-jira artifact, and no placeholder body is produced. What each does with a
-failure is documented with that command:
-
-- `plan-tool jira <name> --grade jira` → `JIRA_FORMAT.md`
-- `plan-tool run <name> --detail-grade jira` → `docs/how-to/pipeline/run.md`
-- `plan-tool completeness-audit <name> --grade jira` → `docs/how-to/pipeline/audit.md`
-- the authoring lane itself → `docs/how-to/pipeline/detail.md`
 
 ## See also
 

@@ -33,7 +33,6 @@ from plan_tool.completeness_report import (
     write_completeness_report,
 )
 from plan_tool.parser import parse_plan
-from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN
 from plan_tool.review import Recommendation
 from plan_tool.review_persistence import (
     compute_plan_fingerprint,
@@ -1532,58 +1531,6 @@ def _cmds(**kw):
     return suggested_next_step_commands(**base)
 
 
-def test_next_stage_command_preserves_jira_grade() -> None:
-    bare = SimpleNamespace(is_bare=True)
-    complete = SimpleNamespace(is_bare=False)
-
-    clear = blocking_verdict_from_gate([])
-    assert next_stage_command(
-        "p", bare, detail_grade=GRADE_JIRA, verdict=clear
-    )[0] == "plan-tool detail p --grade jira"
-    assert next_stage_command(
-        "p", complete, detail_grade=GRADE_JIRA, verdict=clear
-    )[0] == "plan-tool jira p --grade jira"
-    assert next_stage_command("p", complete, verdict=clear)[0] == (
-        "plan-tool run p"
-    )
-
-
-def test_suggested_next_steps_preserves_jira_grade_at_stage_transition() -> None:
-    bare = _steps(
-        plan_name="demo",
-        iterate_enabled=False,
-        bundle_status=SimpleNamespace(is_bare=True),
-        detail_grade=GRADE_JIRA,
-    )
-    complete = _steps(
-        plan_name="demo",
-        iterate_enabled=False,
-        bundle_status=SimpleNamespace(is_bare=False),
-        detail_grade=GRADE_JIRA,
-    )
-
-    assert "plan-tool detail demo --grade jira" in bare[0]
-    assert "plan-tool jira demo --grade jira" in complete[0]
-
-
-def test_bare_blocked_guidance_preserves_jira_grade() -> None:
-    applied = [
-        AppliedOutcome(
-            rec=_rec("a", "plan-correctness", "medium"),
-            verdict="BLOCKED",
-            summary="requires a new detail file",
-        )
-    ]
-    kwargs = dict(
-        applied=applied,
-        bundle_status=SimpleNamespace(is_bare=True),
-        detail_grade=GRADE_JIRA,
-    )
-
-    assert "plan-tool detail p --grade jira" in _steps(**kwargs)[0]
-    assert _cmds(**kwargs)[0][0] == "plan-tool detail p --grade jira"
-
-
 def test_next_step_gaps_close_only_ids_in_a_set_verdict_and_list_the_rest_as_advisory() -> None:
     corr = _rec("pc", "plan-correctness", "high")
     comp = _rec("cc", "plan-completeness", "high")
@@ -1651,7 +1598,7 @@ def test_no_renderer_names_an_apply_command_for_conceptual_gaps() -> None:
     )
     cases = [
         dict(bundle_status=SimpleNamespace(is_bare=True)),
-        dict(detail_grade=GRADE_JIRA),
+        dict(),
         dict(bundle_status=SimpleNamespace(is_bare=False)),
         dict(bundle_status=None),
     ]
@@ -1769,19 +1716,6 @@ def test_next_step_commands_bare_plan_correctness_still_omits_detail_authoring()
     verbs = [c for c, _ in cmds]
     assert "plan-tool completeness-apply p" not in verbs
     assert "plan-tool detail p" not in verbs
-
-
-def test_jira_grade_withholds_correctness_apply_on_a_bare_plan() -> None:
-    kw = dict(
-        correctness=[_rec("pc", "plan-correctness", "high")],
-        advisory_conceptual=[_rec("cc", "plan-completeness")],
-        bundle_status=SimpleNamespace(is_bare=True),
-        detail_grade=GRADE_JIRA,
-    )
-    assert not any("completeness-apply" in s for s in _steps(**kw))
-    assert not any(
-        c == "plan-tool completeness-apply p" for c, _ in _cmds(**kw)
-    )
 
 
 def test_next_step_commands_detailed_plan_keeps_detail_level_actions() -> None:
@@ -3506,13 +3440,6 @@ def test_pending_decision_sources_membership() -> None:
     }
 
 
-# ---------- operator guidance under jira grade ----------
-#
-# A jira-grade audit writes no findings sidecar, so every apply verb the
-# guidance names would resolve to the newest *run-grade* save and silently
-# walk the wrong grade. The guidance is bounded to prose: no finding,
-# severity, source, bucket, or blocking-gate change comes with it.
-
 from plan_tool.completeness_report import (  # noqa: E402
     diagnostic_remedies,
 )
@@ -3531,85 +3458,6 @@ def _guidance_args(**overrides):
     return base
 
 
-def test_suggested_next_steps_grade_jira_withholds_apply_bullets() -> None:
-    args = _guidance_args(
-        advisory_conceptual=[_rec("c", "plan-completeness")],
-        open_findings=[_rec("o", "plan-correctness")],
-        verdict=blocking_verdict_from_gate(["c", "k"]),
-    )
-    jira = suggested_next_steps(
-        **args, iterate_enabled=False,
-        correctness=[_rec("k", "plan-correctness")],
-        detail_grade=GRADE_JIRA,
-    )
-    joined = "\n".join(jira)
-    assert "completeness-apply" not in joined
-    assert "--iterate" not in joined
-    # The reader is not left without an action.
-    assert "session-directed edit" in joined
-
-    run = suggested_next_steps(
-        **args, iterate_enabled=False,
-        correctness=[_rec("k", "plan-correctness")],
-    )
-    run_joined = "\n".join(run)
-    assert "session-directed edit" in run_joined
-    assert "completeness-apply" not in run_joined
-    assert "--max-iterations N" in run_joined
-
-
-def test_suggested_next_step_commands_grade_jira_withholds_apply() -> None:
-    args = _guidance_args(
-        advisory_conceptual=[_rec("c", "plan-completeness")],
-        deferred=[_rec("f", "files-coherence", "info")],
-        open_findings=[_rec("o", "plan-correctness")],
-    )
-    jira = suggested_next_step_commands(**args, detail_grade=GRADE_JIRA)
-    # Jira grade names no apply verb; the completed empty set offers the stage.
-    assert [cmd for cmd, _ in jira] == ["plan-tool jira demo --grade jira"]
-    run = suggested_next_step_commands(**args)
-    assert any("completeness-apply" in cmd for cmd, _ in run)
-
-
-def test_diagnostic_remedies_grade_jira_withholds_apply() -> None:
-    diagnostics = [_rec("f", "files-coherence", "info")]
-    assert diagnostic_remedies(diagnostics, "demo", detail_grade=GRADE_JIRA) == []
-    assert any(
-        "completeness-apply" in line
-        for line in diagnostic_remedies(diagnostics, "demo")
-    )
-
-
-def test_diagnostic_remedies_preserve_jira_grade_for_detail_coverage() -> None:
-    diagnostics = [_rec("d", "detail-coverage", "high")]
-
-    remedies = diagnostic_remedies(diagnostics, "demo", detail_grade=GRADE_JIRA)
-
-    assert remedies[0].startswith("`plan-tool detail demo --grade jira`")
-
-
-def test_report_grade_jira_address_lines_replaced() -> None:
-    kwargs = dict(
-        plan_title="T", plan_name="demo", iterate_enabled=False,
-        stop_reason=None, iterations=0, applied=[], deferred=[],
-        advisory_conceptual=[_rec("c", "plan-completeness")],
-        open_findings=[], grouped_report_md="G",
-        correctness=[_rec("k", "plan-correctness")],
-        verdict=blocking_verdict_from_gate(["c", "k"]),
-    )
-    jira = build_report_md(**kwargs, detail_grade=GRADE_JIRA)
-    # Both apply-verb header blocks and the per-finding Address: lines go,
-    # replaced by one session-directed instruction — no --anchor-shaped substitute.
-    assert "completeness-apply" not in jira
-    assert "reconcile-plan-walk" not in jira
-    assert "--anchor" not in jira
-    assert "Address:" not in jira
-    assert "no findings sidecar" in jira
-    # The findings themselves are untouched.
-    assert "body c" in jira
-    assert "body k" in jira
-
-
 def test_report_default_grade_prose_unchanged() -> None:
     kwargs = dict(
         plan_title="T", plan_name="demo", iterate_enabled=False,
@@ -3620,7 +3468,7 @@ def test_report_default_grade_prose_unchanged() -> None:
     )
     # An explicit run grade and an omitted one render byte-for-byte alike.
     assert build_report_md(**kwargs) == build_report_md(
-        **kwargs, detail_grade="run"
+        **kwargs
     )
     md = build_report_md(**kwargs)
     assert "session-directed edit" in md
@@ -4351,7 +4199,7 @@ _STAGE_MARKERS = (
 
 
 def _all_reader_output(
-    verdict, *, is_bare=False, grade=GRADE_RUN, advisory=(), correctness=(),
+    verdict, *, is_bare=False, advisory=(), correctness=(),
     deferred=(),
 ):
     bundle = SimpleNamespace(is_bare=is_bare)
@@ -4360,15 +4208,15 @@ def _all_reader_output(
     steps = suggested_next_steps(
         plan_name="p", iterate_enabled=False, applied=[], deferred=list(deferred),
         advisory_conceptual=advisory, open_findings=[], bundle_status=bundle,
-        detail_grade=grade, verdict=verdict, correctness=correctness,
+         verdict=verdict, correctness=correctness,
     )
     cmds = suggested_next_step_commands(
         plan_name="p", applied=[], deferred=list(deferred),
         advisory_conceptual=advisory,
-        open_findings=[], bundle_status=bundle, detail_grade=grade,
+        open_findings=[], bundle_status=bundle,
         verdict=verdict, correctness=correctness,
     )
-    stage = next_stage_command("p", bundle, detail_grade=grade, verdict=verdict)
+    stage = next_stage_command("p", bundle, verdict=verdict)
     summary = console_summary(
         plan_name="p", iterate_enabled=False, stop_reason=None, iterations=0,
         applied=[], deferred=[], advisory_conceptual=advisory,
@@ -4395,21 +4243,15 @@ def test_empty_set_verdict_offers_stage_transition_at_run_grade() -> None:
     assert any("No gaps left" in s for s in out["steps"])
 
 
-def test_empty_set_verdict_offers_stage_transition_at_jira_grade() -> None:
-    out = _all_reader_output(_EMPTY_SET, grade=GRADE_JIRA)
-    assert out["stage"][0] == f"plan-tool jira p --grade {GRADE_JIRA}"
-
-
 def test_empty_set_verdict_on_bare_plan_offers_detail_authoring() -> None:
     out = _all_reader_output(_EMPTY_SET, is_bare=True)
     assert out["stage"][0] == "plan-tool detail p"
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("is_bare", [True, False])
-def test_nonempty_set_verdict_never_says_no_gaps_remain(grade, is_bare) -> None:
+def test_nonempty_set_verdict_never_says_no_gaps_remain( is_bare) -> None:
     out = _all_reader_output(
-        blocking_verdict_from_gate(["a", "b"]), is_bare=is_bare, grade=grade
+        blocking_verdict_from_gate(["a", "b"]), is_bare=is_bare
     )
     assert not _offers_stage(out)
     assert out["stage"][0].startswith("plan-tool completeness-audit p")
@@ -4484,7 +4326,6 @@ def _assert_advisory_rows_offer_only_the_stage(out: dict) -> None:
 
 
 @pytest.mark.parametrize("is_bare", [True, False])
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize(
     "verdict,expect_stage",
     [
@@ -4497,9 +4338,9 @@ def _assert_advisory_rows_offer_only_the_stage(out: dict) -> None:
     ],
 )
 def test_four_readers_agree_on_blocking_state(
-    verdict, expect_stage, grade, is_bare
+    verdict, expect_stage, is_bare
 ) -> None:
-    out = _all_reader_output(verdict, is_bare=is_bare, grade=grade)
+    out = _all_reader_output(verdict, is_bare=is_bare)
     assert _offers_stage(out) is expect_stage
     stage_cmd = out["stage"][0]
     assert stage_cmd.startswith("plan-tool completeness-audit") is not expect_stage
@@ -4572,15 +4413,14 @@ _AGREEMENT_STAGES = {
 }
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("stage,is_bare", list(_AGREEMENT_STAGES.items()))
 @pytest.mark.parametrize("kind", list(_AGREEMENT_KINDS))
 def test_four_readers_agree_across_stage_grade_finding_kind_and_verdict(
-    kind, stage, is_bare, grade
+    kind, stage, is_bare
 ) -> None:
     verdict, correctness, advisory, blocking_count, offers = _AGREEMENT_KINDS[kind]
     out = _all_reader_output(
-        verdict, is_bare=is_bare, grade=grade,
+        verdict, is_bare=is_bare,
         correctness=correctness, advisory=advisory,
     )
     assert _offers_stage(out) is offers
@@ -4594,9 +4434,7 @@ def test_four_readers_agree_across_stage_grade_finding_kind_and_verdict(
         # Every non-clear state ends both command lists with the re-audit; the
         # run lane always iterates, the jira lane never does.
         assert next_cmd == (
-            "plan-tool completeness-audit p --grade jira"
-            if grade == GRADE_JIRA
-            else "plan-tool completeness-audit p --iterate"
+            "plan-tool completeness-audit p --iterate"
         )
     else:
         assert not [c for c, _ in out["cmds"] if "completeness-audit" in c]
@@ -4639,18 +4477,6 @@ def test_blocking_completeness_gap_on_bare_plan_is_counted_though_its_action_is_
     assert "blocking  1 gap(s)" in out["summary"]
 
 
-def test_jira_grade_blocking_gap_withholds_stage_though_findings_are_withheld() -> None:
-    """At jira grade no findings sidecar is written, so correctness gaps are
-    not itemized there; the verdict still holds back the stage."""
-    out = _all_reader_output(
-        blocking_verdict_from_gate(["plan-correctness-high"]),
-        grade=GRADE_JIRA,
-        correctness=[_CORRECTNESS_GAP],
-    )
-    assert not _offers_stage(out)
-    assert any(s.startswith("Close 1 conceptual gap(s)") for s in out["steps"])
-
-
 def test_advisory_only_findings_are_listed_without_any_blocking_line() -> None:
     out = _all_reader_output(
         blocking_verdict_from_gate([]), advisory=[_ADVISORY_GAP]
@@ -4659,32 +4485,6 @@ def test_advisory_only_findings_are_listed_without_any_blocking_line() -> None:
     _assert_advisory_rows_offer_only_the_stage(out)
     assert "blocking  0 gap(s)" in out["summary"]
     assert "advisory  1 conceptual gap(s)" in out["summary"]
-
-
-@pytest.mark.parametrize(
-    ("state", "grade", "expected"),
-    (
-        ("set", GRADE_RUN, "plan-tool completeness-audit p --iterate"),
-        ("set", GRADE_JIRA, "plan-tool completeness-audit p --grade jira"),
-        ("incomplete", GRADE_RUN, "plan-tool completeness-audit p --iterate"),
-        ("incomplete", GRADE_JIRA, "plan-tool completeness-audit p --grade jira"),
-        ("absent", GRADE_RUN, "plan-tool completeness-audit p --iterate"),
-        ("absent", GRADE_JIRA, "plan-tool completeness-audit p --grade jira"),
-    ),
-)
-def test_every_reaudit_carries_the_audit_grade_and_jira_never_iterates(
-    state: str, grade: str, expected: str
-) -> None:
-    """The plan's re-audit rule: run lane re-audits with --iterate after an edit
-    closes an open set; jira always names --grade jira and never --iterate."""
-    from plan_tool.completeness_report import BlockingVerdict, next_stage_command
-
-    verdict = BlockingVerdict(
-        state=state, blocking_ids=("g1",) if state == "set" else ()
-    )
-    assert next_stage_command(
-        "p", SimpleNamespace(is_bare=False), detail_grade=grade, verdict=verdict
-    )[0] == expected
 
 
 def test_advisory_only_gaps_are_listed_and_the_stage_is_still_offered() -> None:
@@ -4700,9 +4500,7 @@ def test_advisory_only_gaps_are_listed_and_the_stage_is_still_offered() -> None:
     assert not any("No gaps left" in step for step in steps)
 
 
-@pytest.mark.parametrize("grade", (GRADE_RUN, GRADE_JIRA))
 def test_unqualified_result_reaudit_carries_the_grade_and_names_deterministic_blockers(
-    grade: str,
 ) -> None:
     from plan_tool.completeness_report import BlockingVerdict
 
@@ -4711,12 +4509,10 @@ def test_unqualified_result_reaudit_carries_the_grade_and_names_deterministic_bl
         blocking_deterministic=(_rec("sc", "intent", "medium"),),
     )
     unqualified = {"headline": "no-qualified-current-evidence", "coverage": "unconfirmed"}
-    steps = _steps(verdict=verdict, qualified_result=unqualified, detail_grade=grade)
-    cmds = _cmds(verdict=verdict, qualified_result=unqualified, detail_grade=grade)
+    steps = _steps(verdict=verdict, qualified_result=unqualified)
+    cmds = _cmds(verdict=verdict, qualified_result=unqualified)
     expected = (
-        "plan-tool completeness-audit p --grade jira"
-        if grade == GRADE_JIRA
-        else "plan-tool completeness-audit p --iterate"
+        "plan-tool completeness-audit p --iterate"
     )
     assert any("blocking `intent` finding" in step for step in steps)
     assert any(f"`{expected}`" in step for step in steps)
@@ -4750,45 +4546,33 @@ def test_empty_set_with_a_files_coherence_apply_row_still_appends_the_stage() ->
     assert "`plan-tool run p`" in out["steps"][-1]
 
 
-def test_empty_set_at_jira_grade_offers_only_the_jira_stage_beside_diagnostics() -> None:
-    out = _all_reader_output(_EMPTY_SET, grade=GRADE_JIRA, deferred=[_FILES_COHERENCE])
-    assert [c for c, _ in out["cmds"]] == ["plan-tool jira p --grade jira"]
-
-
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("state", ["incomplete", "absent"])
 def test_untrusted_verdict_with_nothing_listed_says_no_verdict_and_never_close(
-    state, grade
+    state
 ) -> None:
     """Nothing is listed to close, so no step may tell the operator to close
     anything; the only offer is the one re-audit, in the audit's grade."""
-    out = _all_reader_output(BlockingVerdict(state), grade=grade)
+    out = _all_reader_output(BlockingVerdict(state))
     assert not any(s.startswith("Close ") for s in out["steps"])
     reaudit = out["stage"][0]
     assert [c for c, _ in out["cmds"]] == [reaudit]
     assert reaudit == (
-        "plan-tool completeness-audit p --grade jira"
-        if grade == GRADE_JIRA
-        else "plan-tool completeness-audit p --iterate"
+        "plan-tool completeness-audit p --iterate"
     )
     assert len([s for s in out["steps"] if "completeness-audit" in s]) == 1
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
-def test_console_list_keeps_exactly_one_reaudit_row_in_the_stronger_form(grade) -> None:
+def test_console_list_keeps_exactly_one_reaudit_row_in_the_stronger_form() -> None:
     """A concept-link row, an unreached-findings row, and the verdict re-audit
     collapse to one row: ``--iterate`` at run grade, ``--grade jira`` at jira."""
     cmds = _cmds(
         deferred=[_rec("cv", "concept-coverage", "medium")],
         open_findings=[_rec("o", "plan-correctness", "high")],
         verdict=blocking_verdict_from_gate(["x"]),
-        detail_grade=grade,
     )
     rows = [c for c, _ in cmds if c.startswith("plan-tool completeness-audit p")]
     assert rows == [
-        "plan-tool completeness-audit p --grade jira"
-        if grade == GRADE_JIRA
-        else "plan-tool completeness-audit p --iterate"
+        "plan-tool completeness-audit p --iterate"
     ]
 
 
@@ -4801,17 +4585,16 @@ def test_deterministic_blocker_is_named_when_the_verdict_is_untrusted() -> None:
     assert [c for c, _ in out["cmds"]] == ["plan-tool completeness-audit p --iterate"]
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("is_bare", [True, False])
 @pytest.mark.parametrize("cause", [UNTRUSTED_TRANSIENT, UNTRUSTED_PERSISTENT])
 def test_incomplete_verdict_still_reads_fix_these_first_and_never_advisory(
-    cause, is_bare, grade
+    cause, is_bare
 ) -> None:
     """Amendment 1: a HIGH correctness gap from a cut-short run is a gap to
     close in every reader, not an advisory listing."""
     out = _all_reader_output(
         blocking_verdict_from_gate(["plan-correctness-high"], untrusted_cause=cause),
-        is_bare=is_bare, grade=grade, correctness=[_CORRECTNESS_GAP],
+        is_bare=is_bare, correctness=[_CORRECTNESS_GAP],
     )
     assert any(s.startswith("Close 1 conceptual") for s in out["steps"])
     assert not any("advisory (outside the blocking set)" in s for s in out["steps"])
@@ -4819,9 +4602,7 @@ def test_incomplete_verdict_still_reads_fix_these_first_and_never_advisory(
     assert "correctness 1 conceptual gap(s)" in out["summary"]
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 def test_persistent_cause_prescribes_triage_where_transient_prescribes_the_plain_reaudit(
-    grade,
 ) -> None:
     """Amendment 3: the cause is carried on the verdict and read only by the
     shared next-command function. A persistent cause's one next step is hand
@@ -4829,7 +4610,7 @@ def test_persistent_cause_prescribes_triage_where_transient_prescribes_the_plain
     command is identical, so there is still exactly one next command."""
     outs = {
         cause: _all_reader_output(
-            blocking_verdict_from_gate(["x"], untrusted_cause=cause), grade=grade
+            blocking_verdict_from_gate(["x"], untrusted_cause=cause)
         )
         for cause in (UNTRUSTED_TRANSIENT, UNTRUSTED_PERSISTENT)
     }
@@ -4843,8 +4624,7 @@ def test_persistent_cause_prescribes_triage_where_transient_prescribes_the_plain
         assert out["steps"][-1].count("completeness-audit p") == 1
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
-def test_merged_reaudit_row_is_built_at_the_source_and_keeps_every_reason(grade) -> None:
+def test_merged_reaudit_row_is_built_at_the_source_and_keeps_every_reason() -> None:
     """Amendment 9: concept-link, unreached-findings, and the verdict reasons
     merge into the one ``_reaudit_command`` row, blocking count included."""
     from plan_tool.completeness_report import _reaudit_command
@@ -4858,17 +4638,15 @@ def test_merged_reaudit_row_is_built_at_the_source_and_keeps_every_reason(grade)
         deferred=[_rec("cv", "concept-coverage", "medium")],
         open_findings=[_rec("o", "plan-correctness", "high")],
         verdict=verdict,
-        detail_grade=grade,
     )
     rows = [row for row in cmds if row[0].startswith("plan-tool completeness-audit p")]
-    expected = _reaudit_command("p", verdict, detail_grade=grade, also=reasons)
-    if grade == GRADE_JIRA:  # unreached-findings is a run-grade-only reason
-        expected = _reaudit_command("p", verdict, detail_grade=grade, also=reasons[:1])
+    expected = _reaudit_command("p", verdict, also=reasons)
+    pass
     assert rows == [expected]
     description = rows[0][1]
     assert "1 blocking gap(s)" in description
     assert reasons[0] in description
-    assert (reasons[1] in description) is (grade == GRADE_RUN)
+    assert reasons[1] in description
 
 
 @pytest.mark.parametrize(
@@ -4939,8 +4717,6 @@ def test_reaudit_command_stale_revision_names_fresh_audit_not_triage() -> None:
     assert command == "plan-tool completeness-audit p --iterate"
     assert "fresh audit" in reason
     assert "reproduces" not in reason and "triage" not in reason
-    jira_command, _ = _reaudit_command("p", verdict, detail_grade="jira")
-    assert jira_command == "plan-tool completeness-audit p --grade jira"
 
 
 def test_reaudit_command_transient_and_persistent_texts_unchanged() -> None:
@@ -5052,3 +4828,102 @@ def test_stale_demoted_gaps_read_as_unverified_not_as_non_blocking() -> None:
         blocking_verdict_from_gate([]), advisory=[_ADVISORY_GAP]
     )
     assert "outside the blocking set" in ordinary["summary"]
+
+
+@pytest.mark.parametrize("damage", ["jira", "malformed"])
+def test_resolve_reusable_audit_rejects_retired_or_malformed_revision_without_fallback(tmp_path, damage):
+    plan_path = _write_reusable_plan(tmp_path)
+    _save_completeness_sidecar(
+        tmp_path, plan_path, recs=[], now=_T0.replace(year=_T0.year - 1)
+    )
+    sidecar = _save_completeness_sidecar(tmp_path, plan_path, recs=[], now=_T0)
+    payload = json.loads(sidecar.read_text())
+    revision = dict(payload["audit_revision"])
+    if damage == "jira":
+        revision["detail_grade"] = "jira"
+    else:
+        revision.pop("details")
+    payload["audit_revision"] = revision
+    sidecar.write_text(json.dumps(payload))
+    archived_bytes = sidecar.read_bytes()
+    audit = resolve_reusable_audit("demo", tmp_path, plan_path=plan_path)
+    assert audit is None or not audit.fresh
+    assert sidecar.read_bytes() == archived_bytes
+
+
+@pytest.mark.parametrize("boundary", ["plan", "detail", "seed", "project-context", "code"])
+def test_reusable_audit_preserves_each_input_freshness_boundary(tmp_path, monkeypatch, boundary):
+    from plan_tool import project_profile
+
+    plan_path = _write_reusable_plan(tmp_path)
+    seed = tmp_path / "seed.md"
+    seed.write_text("# Seed\n")
+    plan_path.write_text(plan_path.read_text().replace("status: planning", "source_seed: seed.md\nstatus: planning"))
+    monkeypatch.setattr(project_profile, "project_profile_context", lambda root: "context")
+    _save_completeness_sidecar(tmp_path, plan_path, recs=[], now=_T0)
+    if boundary == "project-context":
+        monkeypatch.setattr(project_profile, "project_profile_context", lambda root: "changed context")
+    else:
+        path = {
+            "plan": plan_path,
+            "detail": tmp_path / "plans/plan-details/demo/01-stub.md",
+            "seed": seed,
+            "code": tmp_path / "src/foo.py",
+        }[boundary]
+        path.write_text(path.read_text() + "\n# changed\n")
+    audit = resolve_reusable_audit("demo", tmp_path, plan_path=plan_path)
+    assert audit is not None
+    # Code remains live explanation context, separate from prompt-input identity.
+    assert audit.fresh is (boundary == "code")
+    assert audit.code_match is (boundary != "code")
+
+
+def test_reaudit_command_keeps_iterate_for_the_only_supported_bundle():
+    from plan_tool.completeness_report import _reaudit_command, ABSENT_BLOCKING_VERDICT
+
+    assert _reaudit_command("p", ABSENT_BLOCKING_VERDICT)[0] == "plan-tool completeness-audit p --iterate"
+
+
+@pytest.mark.parametrize("bare", [True, False])
+def test_report_next_steps_never_emit_retired_grade_commands(bare):
+    bundle = SimpleNamespace(is_bare=bare)
+    commands = _cmds(bundle_status=bundle, verdict=_EMPTY_SET)
+    prose = _steps(bundle_status=bundle, verdict=_EMPTY_SET)
+    expected = "plan-tool detail p" if bare else "plan-tool run p"
+    assert commands[-1][0] == expected
+    assert expected in prose[-1]
+    assert all("--grade" not in c for c, _ in commands)
+    assert all("jira-grade" not in line and "--grade" not in line for line in prose)
+
+
+def test_write_report_preserves_markdown_and_qualified_sidecar_replacement_guards(tmp_path, monkeypatch):
+    import os
+    from plan_tool.review_persistence import AuditInputSnapshot, load_review
+
+    plan_path = tmp_path / "1-demo.md"
+    _write_minimal_plan(plan_path)
+    revision = AuditInputSnapshot.capture(plan_path, tmp_path).revision
+    replaced = []
+    real_replace = os.replace
+
+    def replace(source, destination):
+        replaced.append(Path(destination))
+        return real_replace(source, destination)
+
+    monkeypatch.setattr(os, "replace", replace)
+    report = write_completeness_report(
+        plan_path, "# Qualified report\n", repo_root=tmp_path, recommendations=[],
+        plan_rel_path=plan_path.name, qualified_result={
+            "headline": "clean", "stage": "bare", "coverage": "confirmed",
+            "revision_status": "current", "audit_revision": revision,
+        },
+    )
+    assert report in replaced and report.with_suffix(".json") in replaced
+    assert load_review(report.with_suffix(".json")).qualified_result["headline"] == "clean"
+    with pytest.raises(ValueError, match="qualified_result is not a valid completeness result"):
+        write_completeness_report(
+            plan_path, "# Unqualified report\n", repo_root=tmp_path, recommendations=[],
+            plan_rel_path=plan_path.name, qualified_result={"headline": "clean"},
+        )
+    assert load_review(report.with_suffix(".json")).qualified_result["headline"] == "clean"
+    assert len(list(report.parent.glob("*.json"))) == 1

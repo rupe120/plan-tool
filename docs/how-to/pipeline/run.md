@@ -49,9 +49,6 @@ unexpected refusal before choosing an override.
   Every audit mode (`check`, `optimize`, `document`, `test`, `security`,
   `lint`, and the `--reconcile` code-audit path) short-circuits right after
   the claude call: report only, plan untouched.
-- **Grade is a separate axis from mode.** `--detail-grade` picks which detail
-  *artifact* the step executes from; it changes no gate above. See
-  [Executing from the jira-grade bundle](#executing-from-the-jira-grade-bundle---detail-grade-jira).
 - **`--dry-run` skips everything past prompt render.** It prints the prompt
   and exits 0 — no claude call, no gates, no advancement.
 - **Flags add gates, they don't remove them.** `--commit` adds a clean-tree
@@ -273,7 +270,7 @@ file was authored; the green suite certifies. It makes no judgment on whether
 the fix is right; the gate results are the binary fact. It writes no run log: a
 run log records backend calls, and the plan edit and its commit are the record.
 It cannot be combined with `--all`, `--reconcile`, `--dry-run`, `--archive`,
-`--detail-grade`, or a review `--mode`; `--iterate` warns that it has no effect.
+a review `--mode`; `--iterate` warns that it has no effect.
 
 ### Gates that *don't* run in audit modes
 
@@ -309,65 +306,6 @@ To skip it once, pass `--skip-merge-check`. To turn it off for a repository, set
 config), or set `PLAN_TOOL_REQUIRE_MERGED_PLAN=0`. Implementation:
 `plan_tool/plan_merge_guard.py` (`check_plan_merged`) and
 `plan_tool/cli/run_cmd.py` (`_preflight_merged_plan_guard`).
-
-## Executing from the jira-grade bundle (`--detail-grade jira`)
-
-`--detail-grade` selects which detail artifact grounds the implementation
-prompt. It is an **input axis, deliberately separate from `--mode`**: the mode
-stays `run` at every grade, so the lifecycle (mark-done, advance, the
-test-authoring gate) and the `--all` sweep's mode allowlist are untouched. It is
-**execution-only** — combining it with a review `--mode` or with `--reconcile`
-is rejected up front (rc=2).
-
-Under `jira`, `render_prompt` renders `prompts/run-jira.md` instead of
-`prompts/run.md` and loads the step body from the `jira/` artifact
-(`load_jira_grade_step_detail`) rather than `Step.detail`. The contract those
-five sections must satisfy lives in
-[`DETAIL_FORMAT.md`](../../../DETAIL_FORMAT.md#jira-grade--the-compact-contract).
-
-**Two gate placements, both blocking, and neither is a warn** — one in the CLI
-ahead of the gauntlet, one inside it:
-
-```
-  cmd_run / _cmd_run_sweep, before run_step()
-     │
-     ├─ JIRA-GRADE PREFLIGHT ............................. [BLOCK] rc=2, one message naming
-     │     SKIP-if --detail-grade run                              every in-scope step whose
-     │     runs BEFORE the run log opens, and under --dry-run      artifact is missing/off-contract
-     │     scope: the step --step N resolves to, or every
-     │            non-done step for --all
-     v
-  run_step()
-     …
-     ├─[4] render prompt
-     │        JIRA-GRADE DEEP GATE (the prompt_build phase) [BLOCK] DetailGradeError re-raised as
-     │        SKIP-if --detail-grade run                            LauncherError → rc=2; reached
-     │                                                              before the invoker AND before
-     │                                                              the --dry-run branch at [5]
-```
-
-Both route through `load_jira_grade_step_detail`, so the aggregated preflight
-and the render-time gate cannot disagree about what a usable artifact is. The
-preflight lands **before the run log opens**, so a broken bundle leaves no ghost
-run dir; the deep gate sits **before** the `--dry-run` short-circuit at step
-[5], so no grade can print a prompt built from an artifact it never validated.
-
-Scope note: the preflight checks the steps this invocation would actually
-execute — at or inside the bundle-coverage rule the export and audit apply — so
-`run` never rejects a bundle they accept. An explicitly requested `done` step is
-still checked (a step with no body cannot execute) but reported as an execution
-problem, since coverage exempts `done` steps.
-
-**The permissive missing-detail helpers are skipped**, not merely quieter: the
-run-grade warn-and-confirm path reads `Step.detail` and recommends authoring it,
-which is both the wrong check and the wrong shape — warn-and-proceed is exactly
-the silent fallback this grade forbids. The hard preflight replaces it at both
-scopes.
-
-**The grade travels with the run.** It lands in the run log's `flags` as
-`detail_grade` and in the resume command `_build_run_resume_command` prints, so
-a rate-limit stop resumes at the same grade instead of silently reverting to
-run-grade bodies.
 
 ## Why the ordering matters
 
@@ -557,10 +495,6 @@ file). `tail -f` follows a running call.
 | Sweep loop + commit/archive     | `plan_tool/cli/run_cmd.py` (`_cmd_run_sweep`, `_commit_green_step`, `_archive_on_completion`) |
 | Core step execution + gates     | `plan_tool/launcher.py` (`run_step`)                             |
 | Pre-flight path check           | `plan_tool/launcher.py` (`preflight_step_paths`)                 |
-| Detail-grade selection + rejects| `plan_tool/cli/run_cmd.py` (`_detail_grade`, `_reject_detail_grade_conflicts`) |
-| Jira-grade preflight (aggregated)| `plan_tool/cli/run_cmd.py` (`_preflight_jira_grade_details`)    |
-| Jira-grade render gate + template| `plan_tool/renderer.py` (`render_prompt`, `load_jira_grade_step_detail`, `DetailGradeError`), `plan_tool/prompts/run-jira.md` |
-| Jira-grade section contract     | `plan_tool/jira_grade.py`; schema in [`../DETAIL_FORMAT.md`](../../../DETAIL_FORMAT.md#jira-grade--the-compact-contract) |
 | Test / per-step gate runner     | `plan_tool/launcher.py` (`_run_test_gate`)                       |
 | Step resolution + advancement   | `plan_tool/launcher.py` (`resolve_step`, `mark_done_and_advance`, `_persist_step_completion`) |
 | Findings verdict (audit modes)  | `plan_tool/launcher.py` (`summarize_findings`, `format_findings_verdict`) |

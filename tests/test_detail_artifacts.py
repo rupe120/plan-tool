@@ -239,7 +239,7 @@ class TestSharedResolver:
     """`detail_artifacts.resolve_detail_artifact`: reports the three facts
     (pointer_set, path, on_disk) each consumer maps to its own policy."""
 
-    def test_resolver_state_matrix(self, tmp_path: Path) -> None:
+    def test_resolver_state_matrix_preserves_pointer_and_canonical_behavior(self, tmp_path: Path) -> None:
         from plan_tool.detail_artifacts import resolve_detail_artifact
 
         plan_path = tmp_path / "2-foo.md"
@@ -249,6 +249,8 @@ class TestSharedResolver:
         s4 = Step(id=4, title="Document flow")
         plan = _plan_with_steps([s1, s2, s3, s4])
         _write(tmp_path / "docs/details/s1.md", "# s1")
+        _write(derive_detail_path(plan_path, plan, s1), "# canonical decoy")
+        _write(derive_detail_path(plan_path, plan, s2), "# canonical decoy")
         canonical3 = _write(
             derive_detail_path(plan_path, plan, s3), "# s3 canonical"
         )
@@ -644,3 +646,22 @@ class TestUpgradeDetailBodyToCurrent:
 
         with pytest.raises(NotImplementedError):
             upgrade_detail_body_to_current(body)
+
+
+def test_retired_jira_grade_module_is_absent() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    assert not (repo_root / "plan_tool" / "jira_grade.py").exists()
+    assert not (repo_root / "tests" / "test_jira_grade.py").exists()
+
+
+def test_detail_artifacts_has_no_jira_path_derivation() -> None:
+    from plan_tool import detail_artifacts
+
+    assert not hasattr(detail_artifacts, "derive_jira_detail_path")
+    assert not hasattr(detail_artifacts, "_JIRA_GRADE_DIRNAME")
+
+
+def test_no_live_jira_grade_detail_bundles_exist() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    live_details = repo_root / "docs" / "implementation-plans" / "plan-details"
+    assert list(live_details.glob("*/jira")) == []

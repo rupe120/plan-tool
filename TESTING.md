@@ -398,3 +398,11 @@ See also:
 - `BACKLOG.md` — the forward-looking feature backlog with triage notes.
   Lesson-7 test-coverage follow-ups are tracked under Bucket D
   (process / hygiene) when they're worth doing.
+
+### Run-grade detail retirement coverage
+
+Run `tests/test_jira.py` to verify captured run-grade input, shared story/handoff
+provenance, and rejection before publication. Run `tests/test_review_persistence.py`
+to verify archived-source mismatches and sampler checkpoints cannot certify final
+audit evidence. The full suite includes both integration paths; keep real backend
+calls stubbed through the invoker seams above.

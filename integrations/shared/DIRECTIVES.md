@@ -178,7 +178,7 @@ ones.
 - **Audit — completeness** (judges the plan's own design): `completeness-audit`
   → `convergence` (loop trend). `gate-status <name> --json` reads the latest
   saved final verdict per stage; it runs no audit. It cannot report an
-  invocation that writes no final sidecar, including Jira-grade audits and
+  invocation that writes no final sidecar, including
   terminal plan-quota stops. (`completeness-apply` still exists but is deprecated and
   going away — BACKLOG #376 — see "The session-directed convergence loop" below.)
 - **Audit — reconcile/verify** (plan vs. code): `reconcile-plan`
@@ -468,7 +468,7 @@ mechanism produces the intended property.
 The run-grade bare-mechanism / same-finding `edit_drift` advisory helps an
 operator reconsider a likely detail-owned request. It is recommend-only, not
 causal proof or an automatic deferral, and it changes no gate, continuation,
-failure, or exit behavior. Jira-grade audits suppress this advisory; the
+failure, or exit behavior. The
 detail-grounded audit remains the stage that judges the selected mechanism.
 
 **Proceed to `detail` when** a re-audit is confirmed-dry (or confirmed-low-yield

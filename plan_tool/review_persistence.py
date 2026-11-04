@@ -36,9 +36,10 @@ from plan_tool.review import (
     RECOMMENDATION_SEVERITIES,
     recommendation_from_persisted_mapping,
 )
-from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN, is_known_grade
 from plan_tool.schema import Plan
 from plan_tool.scope_fence import _fenced_code_spans, _strip_frontmatter
+
+GRADE_RUN = "run"
 
 
 # Keep ordinary review writes byte-compatible with the established v1 payload.
@@ -133,7 +134,7 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
     if not isinstance(value, dict):
         return None
     version = value.get("version")
-    if version not in (1, 2, 3):
+    if type(version) is not int or version not in (1, 2, 3):
         return None
     expected_keys = {
         "version", "detail_grade", "plan_digest", "detail_bundle_digest", "details",
@@ -149,8 +150,7 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
         value.get("project_context_digest") if version >= 3 else None
     )
     if (
-        not isinstance(value["detail_grade"], str)
-        or not is_known_grade(value["detail_grade"])
+        value["detail_grade"] != GRADE_RUN
         or not isinstance(value["plan_digest"], str)
         or not value["plan_digest"]
         or not isinstance(value["detail_bundle_digest"], str)
@@ -184,7 +184,7 @@ def normalize_audit_revision(value: object) -> Optional[dict[str, object]]:
             or not isinstance(step_id, int)
             or step_id in step_ids
             or not isinstance(detail["resolution"], str)
-            or not detail["resolution"]
+            or detail["resolution"] not in {"pointer", "canonical"}
             or not isinstance(detail["path"], str)
             or not detail["path"]
             or not isinstance(state, str)
@@ -468,7 +468,7 @@ def _normalize_checkpoint_role(
 
 @dataclass(frozen=True)
 class AuditInputDetail:
-    """One grade-selected detail artifact captured for an audit prompt."""
+    """One run-grade detail artifact captured for an audit prompt."""
 
     step_id: int
     resolution: str
@@ -483,7 +483,7 @@ class AuditInputSnapshot:
 
     The conceptual audit takes this one snapshot before sampling. It parses the
     same captured plan text that it fingerprints, one confirmed project
-    context block, and the selected-grade detail resolver for each declared
+    context block, and the run-grade detail resolver for each declared
     step, including pointer-missing and unreadable states. This is deliberately
     narrower than
     ``compute_plan_fingerprint``:
@@ -507,23 +507,22 @@ class AuditInputSnapshot:
     # repositories without a valid profile, preserving legacy fingerprints.
     project_context: str = ""
 
+    def __post_init__(self) -> None:
+        if self.detail_grade != GRADE_RUN:
+            raise ValueError("audit inputs require run-grade detail")
+
     @classmethod
     def capture(
         cls,
         plan_path: Path,
         repo_root: Path,
-        *,
-        detail_grade: str = GRADE_RUN,
     ) -> "AuditInputSnapshot":
         from plan_tool.detail_artifacts import (
-            derive_jira_detail_path,
             resolve_detail_artifact,
         )
         from plan_tool.parser import _split_frontmatter, parse_plan_text
         from plan_tool.project_profile import project_profile_context
 
-        if not is_known_grade(detail_grade):
-            raise ValueError(f"unknown detail grade: {detail_grade!r}")
         plan_bytes = plan_path.read_bytes()
         plan_text = plan_bytes.decode("utf-8")
         plan = parse_plan_text(plan_text)
@@ -537,19 +536,11 @@ class AuditInputSnapshot:
         _reject_unmatched_audit_fence(plan_text, plan_path)
         details: list[AuditInputDetail] = []
         for step in plan.steps:
-            if detail_grade == GRADE_JIRA:
-                selected = derive_jira_detail_path(plan_path, plan, step)
-                selected_path = str(selected.resolve(strict=False))
-                branch = "jira"
-                on_disk = selected.is_file()
-            else:
-                resolution = resolve_detail_artifact(
-                    plan_path, plan, step, repo_root
-                )
-                selected = resolution.path
-                selected_path = str(selected.resolve(strict=False))
-                branch = "pointer" if resolution.pointer_set else "canonical"
-                on_disk = resolution.on_disk
+            resolution = resolve_detail_artifact(plan_path, plan, step, repo_root)
+            selected = resolution.path
+            selected_path = str(selected.resolve(strict=False))
+            branch = "pointer" if resolution.pointer_set else "canonical"
+            on_disk = resolution.on_disk
             if not on_disk:
                 details.append(
                     AuditInputDetail(step.id, branch, selected_path, "missing")
@@ -582,11 +573,10 @@ class AuditInputSnapshot:
             plan_body=plan_body,
             details=tuple(details),
             fingerprint=_audit_input_fingerprint(
-                plan_bytes, details, detail_grade,
+                plan_bytes, details,
                 source_seed_bytes=source_seed_bytes,
                 project_context=project_context,
             ),
-            detail_grade=detail_grade,
             source_seed_bytes=source_seed_bytes,
             project_context=project_context,
         )
@@ -595,10 +585,10 @@ class AuditInputSnapshot:
         return next((item for item in self.details if item.step_id == step_id), None)
 
     def matches_disk(self, plan_path: Path, repo_root: Path) -> bool:
-        """Whether current selected-grade inputs exactly match this capture."""
+        """Whether current run-grade inputs exactly match this capture."""
         try:
             return self.fingerprint == self.capture(
-                plan_path, repo_root, detail_grade=self.detail_grade
+                plan_path, repo_root
             ).fingerprint
         except Exception:  # noqa: BLE001 — freshness is advisory fail-closed
             return False
@@ -661,7 +651,6 @@ def _read_source_seed_bytes(plan: Plan, repo_root: Path) -> Optional[bytes]:
 def _audit_input_fingerprint(
     plan_bytes: bytes,
     details: list[AuditInputDetail] | tuple[AuditInputDetail, ...],
-    detail_grade: str = GRADE_RUN,
     *,
     source_seed_bytes: Optional[bytes] = None,
     project_context: str = "",
@@ -678,7 +667,7 @@ def _audit_input_fingerprint(
         h.update(b"\0")
 
     add("audit-input-v3", b"")
-    add("detail-grade", detail_grade.encode("utf-8"))
+    add("detail-grade", b"run")
     add("plan", plan_bytes)
     for detail in details:
         add("step", str(detail.step_id).encode("ascii"))
@@ -696,14 +685,14 @@ def _audit_input_fingerprint(
 
 
 def audit_input_fingerprint_matches_disk(
-    plan_path: Path, repo_root: Path, fingerprint: str, *, detail_grade: str = GRADE_RUN
+    plan_path: Path, repo_root: Path, fingerprint: str
 ) -> bool:
     """Recompute audit freshness through the same capture/resolver path."""
     if not isinstance(fingerprint, str) or not fingerprint:
         return False
     try:
         return AuditInputSnapshot.capture(
-            plan_path, repo_root, detail_grade=detail_grade
+            plan_path, repo_root
         ).fingerprint == fingerprint
     except Exception:  # noqa: BLE001 — a bad current input is simply stale
         return False
@@ -932,8 +921,15 @@ class SavedReview:
         return getattr(self, "_qualified_result", None)
 
     @property
+    def audit_revision_rejected(self) -> bool:
+        """Whether explicit invalid evidence forbids provenance fallback."""
+        return getattr(self, "_audit_revision_rejected", False)
+
+    @property
     def audit_revision(self) -> Optional[dict[str, object]]:
         """Return final, checkpoint, or earlier-v4 audit provenance."""
+        if self.audit_revision_rejected:
+            return None
         result = self.qualified_result
         if result is not None:
             return result["audit_revision"]
@@ -954,6 +950,7 @@ class SavedReview:
         """Return whether this is a resumable sampler recovery boundary."""
         return (
             self.kind == "completeness"
+            and not self.audit_revision_rejected
             and self.schema_version == _AUDIT_REVISION_SCHEMA_VERSION
             and self.is_pre_apply_checkpoint is True
             and self.qualified_result is None
@@ -988,16 +985,18 @@ def project_saved_completeness_result(
 ) -> SavedCompletenessResultView:
     """Project current plan/detail freshness without changing saved evidence."""
     result = saved.qualified_result
-    if saved.kind != "completeness" or not isinstance(result, dict):
+    if saved.audit_revision_rejected or saved.kind != "completeness" or not isinstance(result, dict):
         return SavedCompletenessResultView(None, "unavailable")
     audit_revision = result["audit_revision"]
+    if audit_revision is not None and normalize_audit_revision(audit_revision) is None:
+        return SavedCompletenessResultView(result, "unavailable")
     if audit_revision is None:
         return SavedCompletenessResultView(result, "not-sampled")
     if plan_path is None:
         return SavedCompletenessResultView(result, "unknown")
     try:
         current = AuditInputSnapshot.capture(
-            plan_path, repo_root, detail_grade=audit_revision["detail_grade"]
+            plan_path, repo_root
         )
     except Exception:  # noqa: BLE001 — saved evidence must fail closed
         return SavedCompletenessResultView(result, "unknown")
@@ -1753,6 +1752,14 @@ def load_review(path: Path) -> SavedReview:
         audit_stage=audit_stage,
         checkpoint_audit_revision=checkpoint_audit_revision,
     )
+    saved._audit_revision_rejected = (
+        any(
+            normalize_audit_revision(data[key]) is None
+            for key in ("audit_revision", "checkpoint_audit_revision")
+            if key in data
+        )
+        or (data.get("qualified_result") is not None and qualified_result is None)
+    )
     saved._qualified_result = qualified_result
     saved._legacy_audit_revision = legacy_audit_revision
     return saved
@@ -1779,6 +1786,7 @@ def load_sampler_checkpoint(plan_path: Path) -> SamplerCheckpointLoad:
         saved.kind != "completeness"
         or saved.is_pre_apply_checkpoint is not True
         or saved.sampler_state is None
+        or saved.audit_revision_rejected
     ):
         return SamplerCheckpointLoad("not-sampler")
     return SamplerCheckpointLoad("valid", saved)

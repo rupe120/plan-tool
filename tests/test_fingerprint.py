@@ -4,6 +4,8 @@ both the completeness and reconcile families compute against.
 
 from __future__ import annotations
 
+import pytest
+
 import hashlib
 from pathlib import Path
 
@@ -266,73 +268,14 @@ def test_detail_bundle_fingerprint_omits_bare_step(tmp_path: Path) -> None:
     assert "docs/details/step-2.md" not in fp
 
 
-def _write_jira_artifact(plan_path: Path, plan: Plan, step: Step, body: str) -> Path:
-    """Write ``body`` at ``step``'s canonical jira-grade path; return it."""
-    from plan_tool.detail_artifacts import derive_jira_detail_path
-
-    path = derive_jira_detail_path(plan_path, plan, step)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body, encoding="utf-8")
-    return path
-
-
-def test_detail_bundle_fingerprint_grade_jira_keys(tmp_path: Path) -> None:
-    """At jira grade the keys are the on-disk ``jira/`` artifacts; a step with
-    no artifact contributes none."""
-    from plan_tool.fingerprint import compute_detail_bundle_fingerprint
-
-    plan = Plan(
-        title="Demo",
-        status="planning",
-        priority="medium",
-        steps=[
-            Step(id=1, title="Alpha", detail="docs/details/step-1.md"),
-            Step(id=2, title="Beta"),  # no jira artifact written
-        ],
-    )
-    plan_path = _seed_code_files(tmp_path)
-    written = _write_jira_artifact(plan_path, plan, plan.steps[0], "## Intent\n")
-    fp = compute_detail_bundle_fingerprint(
-        plan, plan_path, tmp_path, detail_grade="jira"
-    )
-    rel = written.relative_to(tmp_path).as_posix()
-    assert fp == {rel: hashlib.sha256(b"## Intent\n").hexdigest()}
-    assert "docs/plans/plan-details/demo/jira/02-beta.md" not in fp
-
-
-def test_detail_bundle_fingerprint_grade_jira_ignores_pointer(
-    tmp_path: Path,
-) -> None:
-    """``step.detail`` plays no part at jira grade — the run-grade file it
-    points at is hashed neither instead of nor alongside the artifact."""
-    from plan_tool.fingerprint import compute_detail_bundle_fingerprint
-
-    plan = _fingerprint_plan()  # step 1, detail=docs/details/step-1.md
-    plan_path = _seed_code_files(tmp_path)  # writes that run-grade detail file
-    fp = compute_detail_bundle_fingerprint(
-        plan, plan_path, tmp_path, detail_grade="jira"
-    )
-    # The pointer target exists on disk yet contributes nothing, and no
-    # jira artifact was written, so the map is empty.
-    assert fp == {}
-
-
-def test_detail_bundle_fingerprint_default_unchanged(tmp_path: Path) -> None:
-    """The default call still returns the run-grade pointer map, even when a
-    jira artifact sits beside it."""
+def test_run_grade_detail_bundle_fingerprint_preserves_pointer_resolution(tmp_path):
     from plan_tool.fingerprint import compute_detail_bundle_fingerprint
 
     plan = _fingerprint_plan()
     plan_path = _seed_code_files(tmp_path)
-    _write_jira_artifact(plan_path, plan, plan.steps[0], "## Intent\n")
-    expected = {"docs/details/step-1.md": hashlib.sha256(b"# detail").hexdigest()}
-    assert compute_detail_bundle_fingerprint(plan, plan_path, tmp_path) == expected
-    assert (
-        compute_detail_bundle_fingerprint(
-            plan, plan_path, tmp_path, detail_grade="run"
-        )
-        == expected
-    )
+    assert compute_detail_bundle_fingerprint(plan, plan_path, tmp_path) == {
+        "docs/details/step-1.md": hashlib.sha256(b"# detail").hexdigest()
+    }
 
 
 # --- compute_purity_cache_key -------------------------------------------
@@ -734,3 +677,11 @@ def test_purity_cache_key_returns_digest_and_components(tmp_path: Path) -> None:
     assert key == key.lower()
     assert all(c in "0123456789abcdef" for c in key)
     assert isinstance(comps, PurityKeyComponents)
+
+
+def test_audit_input_revision_rejects_retired_snapshot_instead_of_relabeling_it():
+    from types import SimpleNamespace
+    from plan_tool.fingerprint import audit_input_revision
+
+    with pytest.raises(ValueError, match="run-grade"):
+        audit_input_revision(SimpleNamespace(detail_grade="jira"))

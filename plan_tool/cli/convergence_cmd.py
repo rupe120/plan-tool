@@ -31,18 +31,13 @@ from plan_tool.convergence_diagnosis import (
     render_audit_evidence_ledger,
     render_diagnosis,
 )
-from plan_tool.jira_grade import GRADE_DEFAULT, JIRA_GRADE_VALUES
+
 from plan_tool.locator import resolve_plan_for_context
 from plan_tool.review_persistence import compute_plan_fingerprint, list_report_artifacts
 
 
-def _current_audit_stage(ctx, path, *, detail_grade: str) -> str | None:
+def _current_audit_stage(ctx, path) -> str | None:
     """The plan's *current* bare/detail audit stage, or ``None`` on failure.
-
-    ``detail_grade`` must match the grade the operator wants to agree with
-    (``completeness-audit --grade``'s default is run grade) -- a plan
-    audited only at jira grade has no run-grade detail files, so resolving
-    at the wrong grade silently reads it as bare.
 
     Best-effort: this diagnostic's contract is to always exit 0 and never
     require a valid plan parse (unlike ``completeness-audit``, which needs
@@ -57,7 +52,7 @@ def _current_audit_stage(ctx, path, *, detail_grade: str) -> str | None:
     try:
         plan = parse_plan(path)
         bundle_status = audit_detail_bundle_status(
-            plan, path, ctx.repo_root, detail_grade=detail_grade
+            plan, path, ctx.repo_root
         )
         return derive_audit_stage(bundle_status)
     except Exception:
@@ -72,33 +67,22 @@ def cmd_convergence(args: argparse.Namespace) -> int:
     ``insufficient-history`` / ``converging``). Read-only: no Claude call, no
     mutation, no run-log entry. An unresolvable ``name`` still surfaces a
     non-zero error from name resolution upstream.
-
-    Diagnoses against the plan's *current* bare/detail audit stage
-    (:func:`_current_audit_stage`) using the same stage-differentiated
-    blocking bar ``completeness-audit`` uses, so the two commands agree on
-    whether a still-open medium conceptual finding counts as blocking.
-    ``--grade`` selects which detail bundle to resolve the stage against —
-    match whichever grade ``completeness-audit`` was run at, or the two
-    commands can disagree about a plan audited only at jira grade. Falls
-    back to :func:`~plan_tool.convergence_diagnosis.diagnose_convergence`'s
-    blanket-blocking defaults when the stage can't be determined.
     """
     ctx = _load_context(args)
     path = resolve_plan_for_context(ctx, args.name)
     artifact_paths = list_report_artifacts(path)
     saved_reviews = load_saved_reviews(path, artifact_paths=artifact_paths)
     history = load_report_history(path, saved_reviews=saved_reviews)
-    audit_stage = _current_audit_stage(ctx, path, detail_grade=args.grade)
+    audit_stage = _current_audit_stage(ctx, path)
     if audit_stage is None:
         diagnosis = diagnose_convergence(
-            history, mechanism_advisory_grade=args.grade
+            history
         )
     else:
         diagnosis = diagnose_convergence(
             history,
             audit_stage=audit_stage,
             classify_domain=lambda f: f.domain or "unknown",
-            mechanism_advisory_grade=args.grade,
         )
     diagnosis_output = render_diagnosis(diagnosis)
     ledger_output = render_audit_evidence_ledger(
@@ -140,17 +124,5 @@ def register(subparsers) -> dict[str, Handler]:
     p.add_argument(
         "name",
         help="plan name — slug, filename stem (e.g. 1-my-feature), or filename.md",
-    )
-    p.add_argument(
-        "--grade",
-        choices=JIRA_GRADE_VALUES,
-        default=GRADE_DEFAULT,
-        dest="grade",
-        help=(
-            f"which detail bundle to resolve the bare/detail audit stage "
-            f"against (default: {GRADE_DEFAULT}) — match whichever grade "
-            "`completeness-audit` was run at, or the two commands can "
-            "disagree about a plan audited only at jira grade"
-        ),
     )
     return {"convergence": cmd_convergence}

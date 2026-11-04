@@ -417,53 +417,6 @@ class TestRunStep:
         assert reloaded.step_by_id(4).status == StepStatus.PENDING  # NOT promoted
 
 
-_JIRA_GRADE_BODY = """## Intent
-
-Prove run executes from the compact artifact. JIRA_BODY_MARKER_QQQ
-
-## Change
-
-Read the jira-grade artifact instead of Step.detail.
-
-## Constraints
-
-Never substitute the run-grade body.
-
-## Done when
-
-The invoked prompt carries this body.
-
-## Out of scope
-
-The reconcile lane.
-"""
-
-_RUN_GRADE_AT_JIRA_PATH = """## Summary
-
-Wrong schema for this path.
-
-## Why
-
-It is the run-grade contract.
-
-## Files (creates vs edits)
-
-- `a.py`
-
-## Implementation
-
-Do it.
-
-## Tests
-
-Test it.
-
-## Acceptance criteria
-
-- Works.
-"""
-
-
 # A plan carrying both fence halves: two intents plus the guardrail sections.
 _FENCED_PLAN = """---
 title: Fenced Launcher Test
@@ -477,7 +430,7 @@ steps:
     status: current
   - id: 2
     title: Third
-    intent: STEP_TWO_INTENT_MARKER — wire the jira template
+    intent: STEP_TWO_INTENT_MARKER — wire the run prompt
     depends_on: [1]
 ---
 
@@ -497,189 +450,6 @@ def _write_fenced_plan(tmp_path: Path, yaml: str = _FENCED_PLAN) -> Path:
     p = tmp_path / "plan.md"
     p.write_text(yaml, encoding="utf-8")
     return p
-
-
-class TestRunStepJiraGrade:
-    """The opt-in jira-grade execution lane: public mode stays ``run``."""
-
-    def _jira_path(self, plan_path: Path, *, step_id: int, slug: str) -> Path:
-        return (
-            plan_path.parent
-            / "plan-details"
-            / plan_path.stem
-            / "jira"
-            / f"{step_id:02d}-{slug}.md"
-        )
-
-    def _write_artifact(self, plan_path: Path, body: str) -> Path:
-        # Step 2 of ``_PLAN`` is titled "Second" → slug ``second``.
-        path = self._jira_path(plan_path, step_id=2, slug="second")
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(body, encoding="utf-8")
-        return path
-
-    def test_jira_grade_happy_path_advances(
-        self, plan_path: Path, tmp_path: Path
-    ) -> None:
-        self._write_artifact(plan_path, _JIRA_GRADE_BODY)
-        seen: list[str] = []
-
-        def fake_invoker(prompt: str) -> tuple[int, str]:
-            seen.append(prompt)
-            return (0, "")
-
-        result = run_step(
-            plan_path,
-            repo_root=tmp_path,
-            invoker=fake_invoker,
-            detail_grade="jira",
-        )
-        assert result.exit_code == 0
-        assert result.done is True
-        assert result.advanced_to == 3
-        assert "JIRA_BODY_MARKER_QQQ" in seen[0]
-
-        reloaded = parse_plan(plan_path)
-        assert reloaded.step_by_id(2).status == StepStatus.DONE
-        assert reloaded.step_by_id(3).status == StepStatus.CURRENT
-
-    def test_jira_grade_missing_artifact_no_invoke(
-        self, plan_path: Path, tmp_path: Path
-    ) -> None:
-        calls: list[str] = []
-
-        def fake_invoker(prompt: str) -> tuple[int, str]:
-            calls.append(prompt)
-            return (0, "")
-
-        with pytest.raises(LauncherError) as excinfo:
-            run_step(
-                plan_path,
-                repo_root=tmp_path,
-                invoker=fake_invoker,
-                detail_grade="jira",
-            )
-        assert "02-second.md" in str(excinfo.value)
-        assert calls == []
-        assert parse_plan(plan_path).step_by_id(2).status == StepStatus.CURRENT
-
-    def test_jira_grade_invalid_artifact_no_invoke(
-        self, plan_path: Path, tmp_path: Path
-    ) -> None:
-        self._write_artifact(plan_path, _RUN_GRADE_AT_JIRA_PATH)
-        calls: list[str] = []
-
-        def fake_invoker(prompt: str) -> tuple[int, str]:
-            calls.append(prompt)
-            return (0, "")
-
-        with pytest.raises(LauncherError) as excinfo:
-            run_step(
-                plan_path,
-                repo_root=tmp_path,
-                invoker=fake_invoker,
-                detail_grade="jira",
-            )
-        assert "run-grade body at a jira-grade path" in str(excinfo.value)
-        assert calls == []
-        assert parse_plan(plan_path).step_by_id(2).status == StepStatus.CURRENT
-
-    def test_jira_grade_dry_run_still_validates(
-        self, plan_path: Path, tmp_path: Path, capsys
-    ) -> None:
-        with pytest.raises(LauncherError):
-            run_step(
-                plan_path,
-                repo_root=tmp_path,
-                invoker=lambda _: (0, ""),
-                dry_run=True,
-                detail_grade="jira",
-            )
-        assert "Launcher Test" not in capsys.readouterr().out
-
-    def test_jira_grade_rejected_with_review_mode(
-        self, plan_path: Path, tmp_path: Path
-    ) -> None:
-        self._write_artifact(plan_path, _JIRA_GRADE_BODY)
-        calls: list[str] = []
-
-        def fake_invoker(prompt: str) -> tuple[int, str]:
-            calls.append(prompt)
-            return (0, "")
-
-        with pytest.raises(LauncherError) as excinfo:
-            run_step(
-                plan_path,
-                repo_root=tmp_path,
-                mode="check",
-                invoker=fake_invoker,
-                detail_grade="jira",
-            )
-        assert "execution only" in str(excinfo.value)
-        assert calls == []
-
-    def test_jira_grade_appends_test_directive(
-        self, tmp_path: Path, capsys
-    ) -> None:
-        p = tmp_path / "plan.md"
-        p.write_text(
-            "---\n"
-            "title: Directive Test\n"
-            "status: in-progress\n"
-            "priority: medium\n"
-            "enforce_step_tests: true\n"
-            "steps:\n"
-            "  - id: 1\n"
-            "    title: Second\n"
-            "    change_type: feature\n"
-            "    status: current\n"
-            "---\n",
-            encoding="utf-8",
-        )
-        path = (
-            p.parent / "plan-details" / "plan" / "jira" / "01-second.md"
-        )
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(_JIRA_GRADE_BODY, encoding="utf-8")
-
-        run_step(
-            p,
-            repo_root=tmp_path,
-            invoker=lambda _: (0, ""),
-            dry_run=True,
-            detail_grade="jira",
-        )
-        out = capsys.readouterr().out
-        assert "JIRA_BODY_MARKER_QQQ" in out
-        assert _test_directive(ChangeType.FEATURE).strip() in out
-
-    def test_jira_grade_run_prompt_carries_the_fence(
-        self, tmp_path: Path
-    ) -> None:
-        p = _write_fenced_plan(tmp_path)
-        path = self._jira_path(p, step_id=1, slug="second")
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(_JIRA_GRADE_BODY, encoding="utf-8")
-        seen: list[str] = []
-
-        run_step(
-            p,
-            repo_root=tmp_path,
-            invoker=lambda prompt: seen.append(prompt) or (0, ""),
-            detail_grade="jira",
-        )
-        assert "PLAN_INTENT_MARKER" in seen[0]
-        assert "STEP_ONE_INTENT_MARKER" in seen[0]
-        assert "OUT_OF_SCOPE_MARKER" in seen[0]
-
-    def test_run_step_default_grade_unchanged(
-        self, plan_path: Path, tmp_path: Path
-    ) -> None:
-        # No jira artifact on disk: the default grade neither looks for one
-        # nor fails, and the run advances exactly as before.
-        result = run_step(plan_path, repo_root=tmp_path, invoker=lambda _: (0, ""))
-        assert result.done is True
-        assert result.advanced_to == 3
 
 
 class TestRunStepPromptBudget:
@@ -716,6 +486,20 @@ class TestRunStepPromptBudget:
             return budget
 
         monkeypatch.setattr(_launcher, "maybe_warn_prompt_budget", spy)
+
+    def test_run_step_default_prompt_budget_measures_embedded_run_grade_detail(
+        self, tmp_path: Path, monkeypatch
+    ) -> None:
+        body = "Declared execution detail: café"
+        path = self._plan_with_detail(tmp_path, body=body)
+        warns = []
+        self._spy_warn(monkeypatch, warns)
+        prompts = []
+        run_step(path, repo_root=tmp_path, invoker=lambda p: prompts.append(p) or (0, ""))
+        embedded_detail = (tmp_path / "details/01-only.md").read_text()
+        assert embedded_detail in prompts[0]
+        assert dict(warns[0]["kwargs"]["blocks"])["step detail"] == len(embedded_detail.encode("utf-8"))
+        assert warns[0]["total_bytes"] == _streaming_prompt_bytes(prompts[0])
 
     def test_run_step_warns_before_invoke(
         self, plan_path: Path, tmp_path: Path, monkeypatch
@@ -10573,7 +10357,6 @@ class TestRunReconcileInlineApply:
             invoker=lambda _: (0, "## Findings\n\n_(none)_\n"),
         )
         assert result.exit_code == 0
-
 
 
 def test_streaming_spawn_uses_active_spawn_cwd(

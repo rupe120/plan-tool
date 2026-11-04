@@ -18,18 +18,8 @@ from typing import Optional
 
 from plan_tool.detail_artifacts import (
     DetailFormatError,
-    derive_jira_detail_path,
     require_supported_detail_format_version,
     resolve_detail_artifact,
-)
-from plan_tool.jira_grade import (
-    GRADE_JIRA,
-    GRADE_RUN,
-    JIRA_GRADE_REQUIRED_H2S,
-    JiraGradeContractError,
-    is_known_grade,
-    load_jira_grade_detail,
-    unknown_grade_message,
 )
 from plan_tool.scope_fence import _fenced_code_spans, _strip_frontmatter, render_scope_fence
 from plan_tool.schema import Plan, Step
@@ -44,8 +34,7 @@ _PROMPTS_DIR = Path(__file__).parent / "prompts"
 # Lead-in for the scope-fence block, held here rather than in the templates so
 # it disappears with the block. It has to name the *source*, not just claim
 # authority: the fence's own headings sit at the same level as the template's
-# ``## Files in scope`` / ``## What to do``, and a jira-grade artifact carries
-# its own step-scoped ``## Out of scope`` a few lines above. Pinned by test —
+# ``## Files in scope`` / ``## What to do``. Pinned by test —
 # it is the only prose the run lane mints for the fence.
 _SCOPE_FENCE_LEAD_IN = (
     "**Scope fence (authoritative, from the plan).** These sections state "
@@ -53,29 +42,8 @@ _SCOPE_FENCE_LEAD_IN = (
     "will not build. They bind this step. Do not widen past them."
 )
 
-# Template key for an execution rendered from the jira-grade artifact. An
-# internal key, deliberately not a public ``--mode`` value: mode carries the
-# lifecycle (``MUTATING_MODES``, the sweep's allowlist, the test-authoring
-# gate), grade only selects the prompt and the detail source.
-_JIRA_GRADE_RUN_TEMPLATE = "run-jira"
-
-# Remediation appended to every jira-grade load failure. States the durable
-# contract rather than a command, so it stays true however the artifacts are
-# authored.
-_JIRA_GRADE_REMEDIATION = (
-    "A jira-grade artifact is markdown with exactly these sections: "
-    + ", ".join("## " + name for name in JIRA_GRADE_REQUIRED_H2S)
-    + ". The run-grade detail file is never substituted."
-)
-
-
 class DetailGradeError(Exception):
-    """A grade-selected detail artifact is missing, unreadable, or off-contract.
-
-    Raised instead of degrading into placeholder prose: an explicit grade
-    selection that silently rendered the other grade's body would misreport
-    which contract the step ran against.
-    """
+    """A detail artifact or plan fence cannot be rendered safely."""
 
 
 def _reject_unmatched_plan_fence(plan_path: Path) -> None:
@@ -101,21 +69,11 @@ def render_prompt(
     extra_vars: Optional[dict[str, str]] = None,
     collect_blocks: Optional[list[tuple[str, int]]] = None,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> str:
     """Render the prompt for a single step execution.
 
     Loads `prompts/<mode>.md`, substitutes plan + step variables, returns the
     rendered string. Raises FileNotFoundError if the template doesn't exist.
-
-    ``detail_grade`` selects which detail artifact grounds the prompt. The
-    default (``run``) reads ``Step.detail`` with its permissive missing-file
-    prose. ``jira`` derives the compact jira-grade artifact from
-    ``plan_path``, validates it against the jira-grade section contract, and
-    raises :class:`DetailGradeError` on any failure — it never falls back to
-    the run-grade body. Under ``jira`` the execution mode also renders a
-    grade-specific template; every other mode keeps the ``prompts/<mode>.md``
-    lookup.
 
     ``extra_vars`` (when provided) merges into the substitution map AFTER
     the standard variables, so callers can override or supplement the
@@ -128,17 +86,10 @@ def render_prompt(
     already built — so the prompt-budget advisory sizes its breakdown without a
     second file read. Purely additive: ``None`` leaves behavior unchanged.
     """
-    if not is_known_grade(detail_grade):
-        raise DetailGradeError(unknown_grade_message(detail_grade))
     if plan_path is not None and mode == "run":
         _reject_unmatched_plan_fence(plan_path)
 
-    template_key = (
-        _JIRA_GRADE_RUN_TEMPLATE
-        if detail_grade == GRADE_JIRA and mode == "run"
-        else mode
-    )
-    template_path = _PROMPTS_DIR / f"{template_key}.md"
+    template_path = _PROMPTS_DIR / f"{mode}.md"
     if not template_path.is_file():
         raise FileNotFoundError(
             f"no prompt template for mode '{mode}' at {template_path}"
@@ -152,7 +103,6 @@ def render_prompt(
         repo_root=repo_root,
         collect_blocks=collect_blocks,
         plan_path=plan_path,
-        detail_grade=detail_grade,
     )
     if extra_vars:
         variables.update(extra_vars)
@@ -166,7 +116,6 @@ def _build_variables(
     repo_root: Path,
     collect_blocks: Optional[list[tuple[str, int]]] = None,
     plan_path: Optional[Path] = None,
-    detail_grade: str = GRADE_RUN,
 ) -> dict[str, str]:
     done_count = plan.done_count
     try:
@@ -182,14 +131,9 @@ def _build_variables(
     else:
         step_files = "(no files declared for this step)"
 
-    if detail_grade == GRADE_JIRA:
-        step_detail = load_jira_grade_step_detail(
-            plan, step, plan_path=plan_path, repo_root=repo_root
-        )
-    else:
-        step_detail = _load_detail(
-            step, repo_root=repo_root, plan=plan, plan_path=plan_path
-        )
+    step_detail = _load_detail(
+        step, repo_root=repo_root, plan=plan, plan_path=plan_path
+    )
 
     lessons_section = _load_lessons_section(plan, repo_root=repo_root)
     # Per-step, never cached on the plan: the fence carries this step's own
@@ -235,44 +179,6 @@ def _display_path(path: Path, repo_root: Path) -> str:
         return path.resolve().relative_to(repo_root.resolve()).as_posix()
     except (OSError, ValueError):
         return path.as_posix()
-
-
-def load_jira_grade_step_detail(
-    plan: Plan, step: Step, *, plan_path: Optional[Path], repo_root: Path
-) -> str:
-    """Read ``step``'s jira-grade artifact, raising on anything short of it.
-
-    The no-silent-fallback loader the jira grade is built around: derive the
-    canonical path, require it on disk, and validate the body against the
-    jira-grade section contract. Any failure raises
-    :class:`DetailGradeError` naming the derived path — the run-grade
-    ``Step.detail`` body is never substituted and no placeholder prose is
-    produced.
-
-    Structural findings only: prose style is authoring-loop machinery and
-    never blocks a read (see :mod:`plan_tool.jira_grade`'s audience split).
-
-    Shared with ``run``'s CLI preflight so the aggregated pre-run check and
-    the render-time gate can never disagree about what a usable artifact is.
-    """
-    if plan_path is None:
-        raise DetailGradeError(
-            "rendering at jira grade needs the plan file path to derive the "
-            "artifact location; pass plan_path="
-        )
-    path = derive_jira_detail_path(plan_path, plan, step)
-    rel = _display_path(path, repo_root)
-    if not path.is_file():
-        raise DetailGradeError(
-            f"step {step.id} ({step.title}): no jira-grade detail artifact "
-            f"at `{rel}`. {_JIRA_GRADE_REMEDIATION}"
-        )
-    try:
-        return load_jira_grade_detail(path)
-    except JiraGradeContractError as exc:
-        raise DetailGradeError(
-            f"step {step.id} ({step.title}): {exc}\n{_JIRA_GRADE_REMEDIATION}"
-        ) from exc
 
 
 def _load_detail(

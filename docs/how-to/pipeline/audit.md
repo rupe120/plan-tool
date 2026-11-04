@@ -30,9 +30,6 @@ code requires the plan to be re-grounded; post-execution reconciliation uses
   per-step detail bundle**, with Read/Grep access to the repo at HEAD, so a
   gap a detail file already specifies is not re-flagged. Run first: it gets
   the plan's own house in order before `reconcile` compares it to the code.
-  `--grade jira` grounds the same audit on the compact bundle instead —
-  report-only, and narrower in what it will do (see
-  [Auditing against the jira-grade bundle](#auditing-against-the-jira-grade-bundle---grade-jira)).
 - **`reconcile`** — plan-vs-code fit audit. **One claude call** plus deterministic
   primitives. Answers "does the plan still match the code it would edit?", saves a
   walkable artifact, and walks each finding through `apply_finding`.
@@ -256,7 +253,7 @@ bare-mechanism recommendation, composed with `edit_drift` when the same current
 finding matches the prior-apply comparison. The signal helps an operator
 reconsider a likely detail-owned request; it is neither causal proof nor an
 automatic deferral. It changes no finding gate, continuation, failure, or exit
-behavior. Jira-grade audits suppress this advisory.
+behavior.
 
 **Terminal plan-quota coverage.** After a typed terminal `PLAN_QUOTA` result,
 `audit_plan_until_stable` stops later conceptual passes. It records the actual
@@ -286,7 +283,7 @@ concise iterate output, JSON, and `completeness-apply` render the same keep-or-
 carve prompt only when that dedicated fingerprint still matches current disk. A
 human may continue with the arm; that explicitly overrides the non-blocking
 signal. The advisory never enters source filters, annotations, workers, or the
-apply queue. Jira-grade audits neither create nor render it.
+apply queue.
 
 **Severity-aware low-yield convergence (BACKLOG #125).** A pass is only
 *productive* (resets the dry streak) if it clears `new_threshold` **and** at
@@ -473,10 +470,7 @@ The readers are `next_stage_command`, `suggested_next_steps`,
 `plan_tool/completeness_report.py`, plus `_render_grouped_report` in
 `plan_tool/cli/completeness_phases.py`. The `detail` / `split` / merge parents
 in `plan_tool/cli/authoring.py` (`_CompletenessTailOutcome`) drop `run` for the
-same reason. At `--grade jira` the re-audit command is
-`completeness-audit <plan> --grade jira`; see "Next steps name no verb this
-grade cannot serve" under
-[Auditing against the jira-grade bundle](#auditing-against-the-jira-grade-bundle---grade-jira).
+same reason.
 
 Unchanged: the stage bar stays in `is_blocking_finding`, the stage stays
 `derive_audit_stage`'s, and `--json`, `--fail-on-findings`, and exit codes are
@@ -491,11 +485,11 @@ by comparing the result's recorded audit revision with the files now on disk
 
 | Evidence | Row says |
 | --- | --- |
-| The recorded revision for this grade no longer matches the files | `stale-revision`: "no current audit evidence for this text — run a fresh audit". Whatever the original cause, and its deterministic blockers are not counted (they were computed on the old text) |
-| The revision matches, or nothing can be compared (no result, another detail grade, or a capture that failed) | The verdict's own cause and count: `transient`, `persistent`, or a `set` verdict's gaps and failing checks |
+| The recorded run-grade revision no longer matches the files | `stale-revision`: "no current audit evidence for this text — run a fresh audit". Whatever the original cause, and its deterministic blockers are not counted (they were computed on the old text) |
+| The revision matches, or nothing can be compared (no result, a capture that failed) | The verdict's own cause and count: `transient`, `persistent`, or a `set` verdict's gaps and failing checks |
 | An empty set that could not be proven current, or an `absent` verdict | The fixed "no current qualified audit result exists; run a fresh audit" row |
 
-A missing result, another grade, or a failed capture is not evidence that the
+A missing result, retired-grade evidence, or a failed capture is not evidence that the
 files moved, so none is called stale. A failed capture is `unknown` in
 `project_saved_completeness_result` (what `status` and `list` show); the
 authoring tail agrees with it.
@@ -531,7 +525,7 @@ The result records separate facts; neither substitutes for the others:
   reporting `unconfirmed` coverage.
 - **Audit-time plan/detail revision** is the immutable
   `qualified_result.revision_status` plus `qualified_result.audit_revision`.
-  The revision identifies the plan and the detail bundle selected for its grade
+  The revision identifies the plan and the declared run-grade detail bundle
   when the audit completed.
 
 An absent, skipped, or pre-capture-failed audit explicitly records
@@ -546,7 +540,7 @@ explicit.
 The conceptual audit intentionally reads live project context — code, prompts,
 lessons, configuration, and prior audits — so it can explain why an issue
 matters in this project. That context is explanation context, not an asserted
-frozen input set. Only the audited plan and grade-selected detail revision say
+frozen input set. Only the audited plan and run-grade detail revision say
 what the saved result is about. A later change to either makes the result
 noncurrent; a later change to live context alone neither claims to invalidate
 the saved result nor reproduces it.
@@ -584,7 +578,6 @@ The empty result and every row have a local next action:
 | Ledger result | Meaning | Rendered next action |
 |---|---|---|
 | `no-saved-audits` | No saved completeness-audit artifacts are present. | `Run a completeness audit to save structured evidence.` |
-| `report-only` | A completeness Markdown report has no matching JSON sidecar. Jira-grade reports intentionally have this form. | `Inspect the saved artifact or run a fresh completeness audit.` |
 | `orphan-sidecar` | A readable `kind="completeness"` JSON sidecar has no matching Markdown report. | `Inspect the saved artifact or run a fresh completeness audit.` |
 | `malformed-sidecar` | A JSON sidecar is unreadable or its saved kind is not `completeness`, with or without a matching Markdown report. | `Inspect the saved artifact or run a fresh completeness audit.` |
 | `checkpoint` | A complete saved pair is a confirmed pre-apply checkpoint, so it is not an ordinary final. | `Inspect the saved artifact or run a fresh completeness audit.` |
@@ -652,7 +645,7 @@ legacy-readable. A pre-v4 reader rejects v4 rather than silently dropping
 `qualified_result.audit_revision` remain audit-time facts; reading a saved
 record later does not recalculate or replace them. The read-time
 `view_revision_status` compares only the saved audit revision's plan and
-grade-selected detail bundle with disk. It is a current-artifact view, not a
+declared run-grade detail bundle with disk. It is a current-artifact view, not a
 second audit and not a verdict on live context. An annotation rewrite preserves
 the v4 payload and result fields. Neither it nor a later view may downgrade the
 sidecar, rewrite the saved result, or make a checkpoint, legacy payload,
@@ -746,88 +739,18 @@ direct-walk, reuse, or history input.
 final report; checkpoints never enter that handoff. A create, detail, split, or
 merge tail retains result-aware guidance only when that final result has
 confirmed coverage, an audit-time current plan/detail revision, and an exact
-current match for the same plan, selected detail bundle, and grade. The eligible
+current match for the same plan and declared run-grade detail bundle. The eligible
 headlines are `awaiting-human-action`, `advisory-only`, and `clean`.
 
 When the result is absent, is a checkpoint, says
 `no-qualified-current-evidence`, lacks confirmed/current/matching plan-detail
-evidence, or uses another grade, authoring leads with a fresh grade-matched
+evidence, or carries retired detail-grade evidence, authoring leads with a fresh run-grade
 `completeness-audit` instead. This transport selects existing guidance; it does
 not rebuild the audit policy or promote a saved finding into current evidence.
 
-### Auditing against the jira-grade bundle (`--grade jira`)
-
-`--grade` selects **which detail bundle grounds the audit** and **which contract
-the judge is told to apply**. Under `jira` the audit reads the compact artifacts
-under `plan-details/<plan_slug>/jira/` — contract in
-[`DETAIL_FORMAT.md`](../../../DETAIL_FORMAT.md#jira-grade--the-compact-contract) — so
-an absent file list or test roster is not read as a gap, and the run-grade
-detail file is never substituted. The deterministic battery is filtered on the
-same axis: run-grade detail readers are skipped, grade-independent checks all
-still run, and a jira-bundle check supplies the coverage and contract findings
-in their place, blocking through the unmodified gate.
-
-**Audit-and-report only.** Three surfaces are refused or forced off up front,
-each because it acts on the *other* grade's bundle:
-
-| Surface | At jira grade |
-|---|---|
-| `--iterate` | **rejected** (rc=2) — the loop's applies act on the run-grade bundle |
-| `--reuse-audit` / `--reuse-audit-id` | **rejected** (rc=2) — every saved sidecar is run-grade-grounded, and its freshness verdict reads only plan+code fingerprints, so reuse would silently substitute the other grade's judgments |
-| MIXED-STEP purity pass | **forced off** — the verdict is defined on run-grade implementation prose, so `--purity` is ignored here (it is off by default at every grade) |
-
-Unprompted reuse is likewise skipped rather than offered, for the same reason an
-explicit request is rejected.
-
-**A separate evidence lane.** Jira-grade output is supported only by a fresh
-audit of its selected compact bundle: run `plan-tool completeness-audit <name>
---grade jira` when current Jira-grade evidence is needed. A run-grade sidecar
-never substitutes for that evidence. Keep the Jira lane report-only: do not
-reuse a sidecar, iterate, or offer `cmd_completeness_apply()` for Jira-grade
-findings.
-
-**No findings sidecar is written.** The markdown report is still saved; only the
-JSON sidecar is withheld, because a saved audit carries no grade marker and
-every consumer reads one as run-grade-grounded. The saved Markdown appears in
-the convergence command's evidence ledger as `report-only`, but it has no
-convergence-history entry, reusable sidecar, or effect on a convergence
-verdict. The run says so on stderr (`_warn_sidecar_suppressed`) rather than
-leaving it to a reference doc. The plan-mass snapshot is also skipped at jira
-grade (detail files live at a different path). A grade-marked sidecar is a
-persisted-schema change tracked in `BACKLOG.md`.
-
-**How a broken artifact reads in the report:**
-
-- **Missing** → the step is treated as **bare** (judged at the plan/concept
-  level, no detail body to ground against) and a coverage finding names the
-  **derived** path — at this grade nothing is *declared*, since there is no
-  pointer axis.
-- **Mislabeled / off-contract** → a blocking section-contract finding, and the
-  body is **never embedded** in the audit prompt. The report says so in the
-  grade's own words: the schema is closed, so a body that adds, drops, empties,
-  or repeats a section fails it.
-
-**Provenance, not just a flag.** The report opens by naming the grade it was
-judged at and closes with a `### Grounding` block listing each artifact read
-and its digest, so no finding is reported without binding it to the bytes that
-were judged. The bundle *directory* is named by the run's stderr grounding
-line (`_jira_grounding_line`), not in the saved report. The grade is also an axis on the detail-bundle
-fingerprint. On `--json`, the same provenance rides out as `detail_grade` and
-`detail_bundle_fingerprint` (see [`DATA_CONTRACT.md`](../../../DATA_CONTRACT.md)).
-
-**Next steps name no verb this grade cannot serve.** With no sidecar to walk,
-the report never suggests `completeness-apply` or `--iterate`; jira-grade gaps
-are read and corrected through a session-directed edit, and a missing artifact points at authoring one at
-the derived path under the compact contract. The `intent-presence` check is
-grade-independent — it reads frontmatter only, so no bundle can change its
-answer — and therefore runs and blocks at both grades; it fits this rule rather
-than excepting it, since its remedy is a direct edit at either grade.
-
-> The code-aware "do the changes fulfill the plan's acceptance criteria?" check
-> (Fulfillment axis, `check_criteria_fulfillment` / `prompts/criteria-fulfillment.md`)
-> is **not** part of this flow — it belongs to `verify`. `completeness-audit` reads
-> code only to ground its design findings, never to judge whether shipped code
-> delivers the criteria.
+> The code-aware fulfillment check (`check_criteria_fulfillment`) belongs to
+> `verify`. `completeness-audit` reads code to ground design findings, not to
+> judge whether shipped code delivers the criteria.
 
 ## `reconcile` — plan-vs-code fit (one claude call)
 
@@ -909,14 +832,12 @@ for the code-is-truth vs plan-is-truth split.
 | Standalone convergence diagnosis + ledger render | `plan_tool/cli/convergence_cmd.py` (`cmd_convergence`); `plan_tool/convergence_diagnosis.py` (`diagnose_convergence`, `render_diagnosis`) |
 | Intent-presence detector          | `plan_tool/review.py` (`check_intent_presence`, `is_usable_intent`, `INTENT_PRESENCE_SOURCE`, its `triage_reason` branch) |
 | Self-consistency partition + next steps | `plan_tool/review.py` (`SELF_CONSISTENCY_SOURCES`), `plan_tool/cli/completeness_phases.py` (the `### Self-consistency` render and its next-steps line) |
-| Detail-grade selection + rejects  | `plan_tool/cli/completeness_phases.py` (`_completeness_detail_grade`); `plan_tool/cli/completeness_cmd.py` (`_reject_grade_conflicts`, `_jira_grounding_line`, `_warn_sidecar_suppressed`) |
-| Grade-aware battery + report      | `plan_tool/cli/completeness_phases.py` (`deterministic_detector_registry`, `_render_grouped_report`, `_render_completeness_json`) |
+| Deterministic battery + report      | `plan_tool/cli/completeness_phases.py` (`deterministic_detector_registry`, `_render_grouped_report`, `_render_completeness_json`) |
 | Advisory presentation             | `plan_tool/completeness_report.py` (`prepare_audit_shape_advisory_display`, shared markdown/console/JSON renderers), `plan_tool/cli/completeness_apply_parallel.py` (`run_parallel_apply` parent-side handoff) |
 | Report assembly                   | `plan_tool/completeness_report.py` (`build_report_md`) |
 | Bare-plan conceptual apply fence  | `plan_tool/completeness_report.py` (`next_step_gaps`, `_blocked_next_step`, `DETAIL_LEVEL_FINDING_SOURCES`); `plan_tool/review.py` (`audit_detail_bundle_status`, `DetailBundleStatus`) |
 | Conceptual gap apply walk         | `plan_tool/cli/completeness_cmd.py` (`cmd_completeness_apply`) |
-| Jira-grade section contract       | `plan_tool/jira_grade.py`; schema in [`../DETAIL_FORMAT.md`](../../../DETAIL_FORMAT.md#jira-grade--the-compact-contract) |
-| Detail-bundle fingerprint (grade axis) | `plan_tool/fingerprint.py` (`compute_detail_bundle_fingerprint`) |
+| Run-grade detail-bundle fingerprint | `plan_tool/fingerprint.py` (`compute_detail_bundle_fingerprint`) |
 | Audit stage derivation            | `plan_tool/cli/completeness_phases.py` (`derive_audit_stage`) |
 | Stage conceptual bar              | `plan_tool/convergence.py` (`is_blocking_finding`, `STAGE_BARE`, `STAGE_DETAIL`); `plan_tool/review.py` (`classify_finding_domain`) |
 | Conceptual bar blocking set       | `plan_tool/cli/completeness_phases.py` (`compute_conceptual_bar_blocking_ids`); `plan_tool/completeness_report.py` (`BlockingVerdict`, `blocking_verdict_from_gate`); `plan_tool/cli/completeness_cmd.py` (`_completeness_has_blocking_findings`) |

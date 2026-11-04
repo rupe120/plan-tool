@@ -62,7 +62,7 @@ from plan_tool.jira import (
     story_id_prefix,
 )
 
-from plan_tool.detail_artifacts import derive_detail_path, derive_jira_detail_path
+from plan_tool.detail_artifacts import derive_detail_path
 from plan_tool.jira_config import Epic
 from plan_tool.jira_handoff import (
     PROVENANCE_FORMAT_REVISION,
@@ -3291,13 +3291,7 @@ class TestCaptureCompanionExportInput:
     def test_companion_capture_exempts_a_done_step_with_a_dangling_detail_pointer(
         self, tmp_path: Path
     ) -> None:
-        # A run-grade step.detail pointer to a file that has since been
-        # deleted or moved is functionally "no detail" from the caller's
-        # done/non-done rule's perspective -- _capture_jira_grade_step_detail
-        # already treats its own equivalent "not on disk" case as
-        # _DETAIL_STATE_MISSING precisely so a done step is exempted; the
-        # run-grade path must match instead of hard-rejecting the whole
-        # export regardless of status.
+        # Done steps may retain a pointer to detail that is no longer on disk.
         plan_path = tmp_path / "1-companion.md"
         plan_path.write_text(
             "---\n"
@@ -3459,7 +3453,7 @@ class TestCaptureCompanionExportInput:
         assert [s.id for s in capture.committed_steps] == [1]
         assert capture.parked_step_history[0].id == 2
 
-    def test_companion_capture_keeps_jira_grade_selection_without_run_grade_fallback(
+    def test_companion_capture_uses_declared_run_grade_detail_for_story_and_handoff(
         self, tmp_path: Path
     ) -> None:
         plan_path = tmp_path / "1-companion.md"
@@ -3479,8 +3473,6 @@ class TestCaptureCompanionExportInput:
         run_detail = tmp_path / "plan-details" / "companion" / "run.md"
         run_detail.parent.mkdir(parents=True, exist_ok=True)
         run_detail.write_text(_RUN_GRADE_BODY, encoding="utf-8")
-        # Deliberately no jira-grade artifact at
-        # plan-details/companion/jira/01-ship-the-thing.md.
 
         capture = capture_companion_export_input(
             plan_path,
@@ -3490,11 +3482,13 @@ class TestCaptureCompanionExportInput:
                 plan_path, None, format="markdown"
             ),
             handoff_output_path=_companion_handoff_target(tmp_path),
-            grade="jira",
         )
 
-        assert capture.committed_steps[0].detail.state == _DETAIL_STATE_MISSING
-        assert capture.committed_steps[0].detail.text is None
+        assert capture.committed_steps[0].detail.state == _DETAIL_STATE_PRESENT
+        assert capture.committed_steps[0].detail.text == _RUN_GRADE_BODY
+        from plan_tool.jira import _build_handoff_render_input, render_companion_export_prompt
+        assert _RUN_GRADE_BODY in render_companion_export_prompt(capture)
+        assert _build_handoff_render_input(capture, repo_root=tmp_path).grade == "run"
 
     def test_companion_capture_preserves_existing_ticket_state_and_key_ownership(
         self, tmp_path: Path
@@ -3607,14 +3601,14 @@ class TestCaptureCompanionExportInput:
         assert capture.target_preflight.handoff_target.exists is False
         assert capture.target_preflight.handoff_target.sha256 is None
 
-    def test_companion_target_preflight_rejects_any_grade_detail_before_rendering(
+    def test_companion_target_preflight_rejects_run_grade_detail_before_rendering(
         self, tmp_path: Path
     ) -> None:
         plan_path = _write_companion_plan(tmp_path)
         plan = parse_plan(plan_path)
         step = plan.step_by_id(1)
         colliding_run_path = derive_detail_path(plan_path, plan, step)
-        colliding_jira_path = derive_jira_detail_path(plan_path, plan, step)
+        colliding_handoff_path = derive_detail_path(plan_path, plan, step)
         handoff_target = _companion_handoff_target(tmp_path)
 
         with pytest.raises(JiraError):
@@ -3634,10 +3628,8 @@ class TestCaptureCompanionExportInput:
                 story_output_path=derive_jira_output_path(
                     plan_path, None, format="markdown"
                 ),
-                # A jira-grade artifact path, even though this call uses the
-                # (default) run grade — collision is checked across both
-                # grades regardless of which one is selected.
-                handoff_output_path=colliding_jira_path,
+                # The handoff must also leave the run detail untouched.
+                handoff_output_path=colliding_handoff_path,
             )
 
     def test_target_preflight_is_not_a_handoff_render_input(
@@ -3683,7 +3675,7 @@ class TestCaptureCompanionExportInput:
 class TestCaptureStepDetailFormatVersion:
     """The run-grade capture's format-version check sits alongside its
     sibling ``OSError``/fence/missing-section ``JiraError`` raises; the
-    jira-grade capture is a different artifact class and stays unaffected."""
+    invalid detail cannot enter the export snapshot."""
 
     def test_run_grade_export_refuses_an_unsupported_detail_marker(
         self, tmp_path: Path
@@ -3704,42 +3696,6 @@ class TestCaptureStepDetailFormatVersion:
 
         with pytest.raises(JiraError, match="999"):
             _capture_run_grade_step_detail(step, tmp_path)
-
-    def test_jira_grade_export_ignores_the_run_grade_marker(
-        self, tmp_path: Path
-    ) -> None:
-        """Negative control: ``_capture_jira_grade_step_detail`` is a
-        different artifact class and is unaffected by this change."""
-        from plan_tool.jira import _capture_jira_grade_step_detail
-
-        plan_path = tmp_path / "1-demo.md"
-        plan_path.write_text(
-            "---\n"
-            "title: Demo\n"
-            "status: in-progress\n"
-            "priority: medium\n"
-            "steps:\n"
-            "  - id: 1\n"
-            "    title: Build the parser\n"
-            "    status: current\n"
-            "---\n\n# Demo\n",
-            encoding="utf-8",
-        )
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        jira_path = derive_jira_detail_path(plan_path, plan, step)
-        jira_path.parent.mkdir(parents=True, exist_ok=True)
-        jira_path.write_text(
-            "## Intent\n\nShip the parser.\n\n"
-            "## Change\n\nAdd the parser class.\n\n"
-            "## Constraints\n\nNo public API change.\n\n"
-            "## Done when\n\nThe parser imports.\n\n"
-            "## Out of scope\n\nThe renderer.\n",
-            encoding="utf-8",
-        )
-
-        result = _capture_jira_grade_step_detail(plan_path, plan, step, tmp_path)
-        assert result.state == _DETAIL_STATE_PRESENT
 
 
 class TestRegenerateCompanionStories:
@@ -4837,39 +4793,6 @@ class TestPairedJiraExport:
                 repo_root=tmp_path,
             )
 
-    def test_target_preflight_rejects_a_case_variant_jira_lane_target_without_crashing(
-        self, tmp_path: Path
-    ) -> None:
-        # A target that lands inside the jira-grade authoring lane only via
-        # a case-insensitive match on `plan-details` (default macOS/Windows)
-        # must still be rejected cleanly with a JiraError, not crash: parts
-        # extraction after the containment check must use the same
-        # case-safe comparison the containment check itself used, not a
-        # plain case-sensitive relative_to() that only matches one of the
-        # two branches _is_within can take.
-        from plan_tool.jira import _companion_target_preflight
-
-        plan_path = _write_companion_plan(tmp_path)
-        case_variant_story = (
-            plan_path.parent / "PLAN-DETAILS" / "companion" / "jira" / "story.md"
-        )
-        handoff_target = _companion_handoff_target(tmp_path)
-
-        capture = capture_companion_export_input(
-            plan_path,
-            repo_root=tmp_path,
-            epic=_DEFAULT_EPIC,
-            story_output_path=case_variant_story,
-            handoff_output_path=handoff_target,
-        )
-
-        with pytest.raises(JiraError, match="jira-grade authoring lane"):
-            _companion_target_preflight(
-                capture,
-                story_output_path=case_variant_story,
-                handoff_output_path=handoff_target,
-                repo_root=tmp_path,
-            )
 
     def test_existing_legacy_story_source_requires_explicit_adoption(
         self, tmp_path: Path
@@ -5197,7 +5120,7 @@ class TestPairedJiraExport:
         assert not story_target.exists()
         assert not handoff_target.exists()
 
-    def test_companion_publication_uses_one_captured_snapshot_and_complete_provenance_for_both_sources(
+    def test_run_grade_paired_export_preserves_matching_provenance(
         self, tmp_path: Path
     ) -> None:
         plan_path = tmp_path / "1-companion.md"
@@ -5445,29 +5368,28 @@ class TestPairedJiraExport:
                 invoker=never_invoke,
             )
 
-    def test_companion_target_preflight_rejects_any_grade_detail_before_model_or_renderer(
+    def test_companion_target_preflight_rejects_run_grade_detail_collision_before_model_or_renderer(
         self, tmp_path: Path
     ) -> None:
         def never_invoke(prompt: str) -> str:
             raise AssertionError("must not invoke the model on an unsafe target")
 
-        # (a) A destination colliding with an *unselected*-grade detail
-        # artifact is rejected — capture_companion_export_input's own
+        # (a) A destination colliding with a run-detail artifact is
+        # rejected — capture_companion_export_input's own
         # preflight fires before invocation or either renderer runs.
         detail_dir = tmp_path / "detail_collision"
         detail_dir.mkdir()
         plan_path = _write_companion_plan(detail_dir)
         plan = parse_plan(plan_path)
         step = plan.step_by_id(1)
-        jira_grade_path = derive_jira_detail_path(plan_path, plan, step)
+        run_detail_path = derive_detail_path(plan_path, plan, step)
         with pytest.raises(JiraError):
             export_jira(
                 plan_path,
                 repo_root=detail_dir,
                 epic=_DEFAULT_EPIC,
-                story_output_path=jira_grade_path,
+                story_output_path=run_detail_path,
                 handoff_output_path=_companion_handoff_target(detail_dir),
-                grade="run",
                 invoker=never_invoke,
             )
 
@@ -5490,26 +5412,6 @@ class TestPairedJiraExport:
                 invoker=never_invoke,
             )
 
-        # (c) Either generated target inside the jira-grade authoring lane
-        # is rejected.
-        lane_dir = tmp_path / "lane"
-        lane_dir.mkdir()
-        plan_path_c = _write_companion_plan(lane_dir)
-        with pytest.raises(JiraError):
-            export_jira(
-                plan_path_c,
-                repo_root=lane_dir,
-                epic=_DEFAULT_EPIC,
-                story_output_path=(
-                    lane_dir
-                    / "plan-details"
-                    / "companion"
-                    / "jira"
-                    / "jira-stories.md"
-                ),
-                handoff_output_path=_companion_handoff_target(lane_dir),
-                invoker=never_invoke,
-            )
 
     def test_companion_final_raw_content_change_aborts_unstarted_replacements(
         self, tmp_path: Path
@@ -5556,7 +5458,7 @@ class TestPairedJiraExport:
             original_handoff_text + "\n<!-- concurrent edit -->\n"
         )
 
-    def test_companion_second_final_replace_failure_reports_target_and_cleans_staging(
+    def test_companion_second_final_replace_failure_reports_partial_pair_and_cleans_staging(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         plan_path = _write_companion_plan(tmp_path)
@@ -5729,3 +5631,32 @@ def test_export_accepts_rewritten_description_plan_without_changing_story_title(
     )
     assert text in prompts[0]
     assert "Story title" in target.read_text()
+
+
+@pytest.mark.parametrize("invalid_detail", [
+    _RUN_GRADE_BODY.replace("# Build the parser", "# Build the parser\n<!-- plan-tool:detail-format-version: 999 -->"),
+    _RUN_GRADE_BODY.replace("## Tests", "## Checks"),
+    _RUN_GRADE_BODY + "\n```\n",
+])
+def test_run_grade_export_rejects_invalid_detail_before_invoker_or_target_write(
+    tmp_path: Path, invalid_detail: str,
+) -> None:
+    plan_path = _write_companion_plan(tmp_path)
+    plan_path.write_text(plan_path.read_text().replace(
+        "    status: done", "    status: current\n    intent: Ship the thing\n    detail: detail.md"
+    ))
+    (tmp_path / "detail.md").write_text(invalid_detail)
+    story = derive_jira_output_path(plan_path, None, format="markdown")
+    handoff = _companion_handoff_target(tmp_path)
+
+    def never_invoke(prompt: str) -> str:
+        raise AssertionError("invalid run detail must fail before model invocation")
+
+    with pytest.raises(JiraError):
+        export_jira(
+            plan_path, repo_root=tmp_path, epic=_DEFAULT_EPIC,
+            story_output_path=story, handoff_output_path=handoff,
+            invoker=never_invoke,
+        )
+    assert not story.exists()
+    assert not handoff.exists()

@@ -39,7 +39,7 @@ from plan_tool.detail_artifacts import (
 from plan_tool.locator import slug_from_filename
 from plan_tool.fileio import durable_write_text
 from plan_tool.fingerprint import compute_code_fingerprint, diff_code_fingerprint
-from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN
+
 from plan_tool.parser import ParseError, ValidationError, parse_plan
 from plan_tool.schema import ChangeType, StepScope
 from plan_tool.telemetry import read_step_provenance_titles
@@ -180,14 +180,9 @@ def _verdict_offers_stage(verdict) -> bool:
 
 
 def _reaudit_command(
-    plan_name: str, verdict, *, detail_grade: str = GRADE_RUN, also=()
+    plan_name: str, verdict, *, also=()
 ) -> tuple[str, str]:
-    """The one re-audit a reader names; it carries the audit's grade.
-
-    Run grade always passes ``--iterate`` (repo mandate); jira grade never does.
-    The description states why the verdict is open, merged with any ``also``
-    reasons a reader adds. A persistent untrusted cause (re-auditing unchanged
-    text reproduces it) prescribes hand triage before the re-audit."""
+    """Return the iterative re-audit command and its qualification-aware guidance."""
     reasons: list[str] = []
     if not _verdict_offers_stage(verdict):
         count = verdict.blocking_count if isinstance(verdict, BlockingVerdict) else 0
@@ -213,7 +208,7 @@ def _reaudit_command(
             reasons.append(f"{lead}the audit stopped early — re-audit to continue")
     reasons.extend(also)
     command = f"plan-tool completeness-audit {plan_name}"
-    command += f" --grade {GRADE_JIRA}" if detail_grade == GRADE_JIRA else " --iterate"
+    command += " --iterate"
     return command, "; ".join(reasons)
 
 
@@ -297,10 +292,8 @@ def _blocking_deterministic_steps(verdict, *, covered_sources=()) -> list[str]:
     ]
 
 
-def _detail_authoring_command(plan_name: str, *, detail_grade: str) -> str:
-    """Return the detail writer command for the selected artifact grade."""
-    if detail_grade == GRADE_JIRA:
-        return f"plan-tool detail {plan_name} --grade {GRADE_JIRA}"
+def _detail_authoring_command(plan_name: str) -> str:
+    """Return the supported detail authoring command."""
     return f"plan-tool detail {plan_name}"
 
 
@@ -389,7 +382,6 @@ def prepare_audit_shape_advisory_display(
     plan,
     plan_path: Path,
     repo_root: Path,
-    detail_grade: str = GRADE_RUN,
 ) -> Optional[AuditShapeAdvisoryDisplay]:
     """Return a renderable advisory only when its captured inputs are current.
 
@@ -400,9 +392,7 @@ def prepare_audit_shape_advisory_display(
     ungrounded shape advice.
     """
     if (
-        detail_grade != GRADE_RUN
-        or advisory is None
-        or not is_advisory_emitter_eligible(advisory.shape_id)
+        (advisory is None) or (not is_advisory_emitter_eligible(advisory.shape_id))
     ):
         return None
 
@@ -679,7 +669,7 @@ def resolve_reusable_audit(
     sidecar resolves.
 
     This is the pure read/verdict half of reuse. It compares the saved
-    grade-aware audit revision with one current capture, then exposes the
+    run-grade audit revision with one current capture, then exposes the
     legacy code fingerprint separately for report metadata. It issues zero
     Claude calls and does not prompt, warn, or touch the CLI.
 
@@ -719,6 +709,8 @@ def resolve_reusable_audit(
             # Treat unreadable sidecars like unsafe roles so a bad newer file
             # cannot block reuse of an older final report.
             continue
+        if is_reusable_audit_sidecar(loaded) and loaded.audit_revision_rejected:
+            return None
         if is_reusable_audit_sidecar(loaded):
             saved = loaded
             break
@@ -726,7 +718,7 @@ def resolve_reusable_audit(
         return None
 
     # --- Audited plan/detail verdict -----------------------------------
-    # A saved audit is current only when the exact selected-grade plan/detail
+    # A saved audit is current only when the exact run-grade plan/detail
     # capture still matches. Generic plan/code fingerprints remain available
     # as legacy report metadata; they do not claim to freeze live context.
     audit_revision_match = False
@@ -739,7 +731,6 @@ def resolve_reusable_audit(
                 current_snapshot = AuditInputSnapshot.capture(
                     plan_path,
                     repo_root,
-                    detail_grade=saved.audit_revision["detail_grade"],
                 )
             if current_snapshot.detail_grade != saved.audit_revision["detail_grade"]:
                 current_snapshot = None
@@ -872,21 +863,6 @@ CORRECTNESS_INTRO_BARE = (
     "# optional interactive review of the saved findings"
 )
 
-# The jira-grade intro for both conceptual header blocks
-# (:data:`CORRECTNESS_INTRO` and ``WHY['advisory-conceptual']``). Since #367
-# none of the three names an apply verb — conceptual gaps are closed by
-# whoever drives plan-tool — so this no longer exists to avoid a wrong-grade
-# sidecar; it is simply the jira-grade wording of the same instruction.
-# Deliberately no ``--anchor``-shaped substitute: there is nothing for an
-# anchor to address.
-_HAND_FIX_INTRO = (
-    "Close these through a session-directed edit: read the findings below and "
-    "edit the plan or detail prose yourself, then commit and re-audit the "
-    "changed snapshot. Conceptual gaps are closed by whoever is driving "
-    "plan-tool — a human at a TTY, or an orchestrating session — not by a "
-    "tool command."
-)
-
 
 @dataclass
 class AppliedOutcome:
@@ -949,7 +925,6 @@ def _blocked_next_step(
     plan,
     *,
     bare_plan: bool = False,
-    detail_grade: str = GRADE_RUN,
 ) -> str:
     """The headline BLOCKED bullet, rendered as a multi-line block: a
     one-line headline, then one concrete ``split`` command per flagged
@@ -962,7 +937,7 @@ def _blocked_next_step(
     ``split`` stays as the secondary over-packed-step option."""
     n = len(blocked)
     targets = _blocked_split_targets(blocked, plan)
-    detail_command = _detail_authoring_command(plan_name, detail_grade=detail_grade)
+    detail_command = _detail_authoring_command(plan_name)
     if bare_plan:
         lines = [
             f"{n} finding(s) came back **BLOCKED** — `apply` can't create "
@@ -1014,10 +989,7 @@ def _blocked_next_step(
 
 def diagnostic_remedies(
     diagnostics: list[Recommendation],
-    plan_name: str,
-    *,
-    detail_grade: str = GRADE_RUN,
-) -> list[str]:
+    plan_name: str) -> list[str]:
     """One tailored remedy line per *source* present in ``diagnostics``.
 
     Structural diagnostics aren't fungible: a files-coherence drift wants
@@ -1029,20 +1001,15 @@ def diagnostic_remedies(
     the reader ran ``detail`` and it no-op'd. This names **only** the
     fixes that actually apply, so ``plan-tool detail`` appears solely when
     a detail file is genuinely missing or unreferenced.
-
-    At jira grade the ``completeness-apply`` files-coherence remedy is
-    withheld: that verb resolves its target through the newest saved sidecar,
-    which this grade does not write.
     """
     by_source: dict[str, int] = {}
     for r in diagnostics:
         by_source[r.source] = by_source.get(r.source, 0) + 1
-    jira_grade = detail_grade == GRADE_JIRA
     lines: list[str] = []
     if by_source.get("detail-coverage"):
         n = by_source["detail-coverage"]
         lines.append(
-            f"`{_detail_authoring_command(plan_name, detail_grade=detail_grade)}` "
+            f"`{_detail_authoring_command(plan_name)}` "
             f"— reattach/author "
             f"{n} missing or unreferenced detail file(s). The default run "
             f"skips steps whose detail file already exists, so it reattaches "
@@ -1050,7 +1017,7 @@ def diagnostic_remedies(
             f"touching your other steps; pass `--force` only to deliberately "
             f"overwrite an existing detail file."
         )
-    if by_source.get("files-coherence") and not jira_grade:
+    if by_source.get("files-coherence"):
         n = by_source["files-coherence"]
         lines.append(
             f"`plan-tool completeness-apply {plan_name}` also clears "
@@ -1118,30 +1085,20 @@ def next_stage_command(
     plan_name: str,
     bundle_status,
     *,
-    detail_grade: str = GRADE_RUN,
     verdict=ABSENT_BLOCKING_VERDICT,
 ) -> tuple[str, str]:
     """Return the only valid post-audit stage transition.
 
     Anything but a completed empty-set ``verdict`` returns the re-audit."""
     if not _verdict_offers_stage(verdict):
-        return _reaudit_command(plan_name, verdict, detail_grade=detail_grade)
-    jira_grade = detail_grade == GRADE_JIRA
+        return _reaudit_command(plan_name, verdict)
     if bool(getattr(bundle_status, "is_bare", False)):
         return (
-            _detail_authoring_command(plan_name, detail_grade=detail_grade),
+            _detail_authoring_command(plan_name),
             (
-                "no plan-level gaps remain — author the jira-grade detail "
-                "bundle before export"
-                if jira_grade
-                else "no plan-level gaps remain — author the detail bundle "
+                "no plan-level gaps remain — author the detail bundle "
                 "before execution"
             ),
-        )
-    if jira_grade:
-        return (
-            f"plan-tool jira {plan_name} --grade {GRADE_JIRA}",
-            "no gaps left — export the jira-grade bundle as stories",
         )
     return (
         f"plan-tool run {plan_name}",
@@ -1150,16 +1107,9 @@ def next_stage_command(
 
 
 def _close_conceptual_steps(
-    gaps: NextStepGaps, *, jira_grade: bool, bare_plan: bool = False
+    gaps: NextStepGaps, *, bare_plan: bool = False
 ) -> list[str]:
     """Prose bullets for the conceptual gaps the verdict says to close."""
-    if jira_grade:
-        n = gaps.close_conceptual_count + gaps.unlisted_blocking
-        return [
-            f"Close {n} conceptual gap(s) through a session-directed edit — a "
-            "jira-grade audit writes no findings sidecar, so no apply verb "
-            "can replay them."
-        ] if n else []
     steps = []
     corr, comp = len(gaps.close_correctness), len(gaps.close_completeness)
     if corr and comp:
@@ -1224,12 +1174,12 @@ def _fresh_audit_required(result, verdict, is_pre_apply_checkpoint: bool) -> boo
 
 
 def reaudit_step(
-    plan_name: str, verdict, *, detail_grade: str, also=()
+    plan_name: str, verdict, *, also=()
 ) -> str:
     """The one closing prose step for a verdict that offers no stage: the
     command plus its description from :func:`_reaudit_command`."""
     command, why = _reaudit_command(
-        plan_name, verdict, detail_grade=detail_grade, also=also
+        plan_name, verdict, also=also
     )
     return f"`{command}` — {why}; no stage transition is offered while the blocking verdict is open or unavailable."
 
@@ -1246,7 +1196,6 @@ def suggested_next_steps(
     code_drifted: bool = False,
     bundle_status=None,
     correctness: list[Recommendation] = (),
-    detail_grade: str = GRADE_RUN,
     qualified_result=_QUALIFIED_RESULT_UNSET,
     is_pre_apply_checkpoint: bool = False,
     verdict=ABSENT_BLOCKING_VERDICT,
@@ -1277,16 +1226,10 @@ def suggested_next_steps(
     its last save) prepends a ``reconcile-plan`` rebase bullet as the most
     urgent step — but only when a critical/high finding is also present, so a
     docs-only staleness or a clean re-audit stays quiet (BACKLOG #65).
-
-    At jira grade the ``--iterate --max-iterations N`` open-findings bullet is
-    withheld (``--iterate`` is rejected at that grade). Conceptual gaps are
-    always closed by a session-directed edit (#367);
-    :func:`next_step_gaps` splits close from advisory by the verdict alone, so
-    every reader agrees on which gaps to close.
     """
     result = _qualified_result_payload(qualified_result)
     if _fresh_audit_required(result, verdict, is_pre_apply_checkpoint):
-        command, _note = _reaudit_command(plan_name, verdict, detail_grade=detail_grade)
+        command, _note = _reaudit_command(plan_name, verdict)
         return [
             *_blocking_deterministic_steps(verdict),
             f"`{command}` — run a fresh audit before reusing or applying saved "
@@ -1294,7 +1237,6 @@ def suggested_next_steps(
         ]
     blocked = [a for a in applied if a.verdict == "BLOCKED"]
     bare_plan = bool(getattr(bundle_status, "is_bare", False))
-    jira_grade = detail_grade == GRADE_JIRA
     gaps = next_step_gaps(
         verdict, correctness=correctness, advisory_conceptual=advisory_conceptual
     )
@@ -1324,11 +1266,10 @@ def suggested_next_steps(
                 plan_name,
                 plan,
                 bare_plan=bare_plan,
-                detail_grade=detail_grade,
             )
         )
     steps.extend(
-        _close_conceptual_steps(gaps, jira_grade=jira_grade, bare_plan=bare_plan)
+        _close_conceptual_steps(gaps, bare_plan=bare_plan)
     )
     if gaps.advisory_count:
         steps.append(_advisory_conceptual_step(gaps, bare_plan=bare_plan))
@@ -1339,7 +1280,7 @@ def suggested_next_steps(
         )
     if diagnostic:
         remedies = diagnostic_remedies(
-            diagnostic, plan_name, detail_grade=detail_grade
+            diagnostic, plan_name
         )
         if not remedies:
             steps.append(
@@ -1360,14 +1301,14 @@ def suggested_next_steps(
                 f"Resolve {len(diagnostic)} structural diagnostic(s) "
                 f"directly:\n{body}"
             )
-    if open_findings and not jira_grade:
+    if open_findings:
         steps.append(
             f"`plan-tool completeness-audit {plan_name} --iterate "
             f"--max-iterations N` — {len(open_findings)} eligible finding(s) "
             f"weren't reached before the loop stopped."
         )
     next_command, next_description = next_stage_command(
-        plan_name, bundle_status, detail_grade=detail_grade, verdict=verdict
+        plan_name, bundle_status, verdict=verdict
     )
     if not _verdict_offers_stage(verdict):
         steps.extend(
@@ -1376,7 +1317,7 @@ def suggested_next_steps(
                 covered_sources={r.source for r in (*diagnostic, *concept_links)},
             )
         )
-        steps.append(reaudit_step(plan_name, verdict, detail_grade=detail_grade))
+        steps.append(reaudit_step(plan_name, verdict))
         return steps
     if not steps and bare_detail_diagnostic_count:
         steps.append(
@@ -1410,7 +1351,6 @@ def suggested_next_step_commands(
     code_drifted: bool = False,
     bundle_status=None,
     correctness: list[Recommendation] = (),
-    detail_grade: str = GRADE_RUN,
     qualified_result=_QUALIFIED_RESULT_UNSET,
     is_pre_apply_checkpoint: bool = False,
     verdict=ABSENT_BLOCKING_VERDICT,
@@ -1444,11 +1384,10 @@ def suggested_next_step_commands(
     """
     result = _qualified_result_payload(qualified_result)
     if _fresh_audit_required(result, verdict, is_pre_apply_checkpoint):
-        command, _note = _reaudit_command(plan_name, verdict, detail_grade=detail_grade)
+        command, _note = _reaudit_command(plan_name, verdict)
         return [(command, "fresh audit required before reuse or apply")]
     blocked = [a for a in applied if a.verdict == "BLOCKED"]
     bare_plan = bool(getattr(bundle_status, "is_bare", False))
-    jira_grade = detail_grade == GRADE_JIRA
     concept_links = [
         r for r in deferred if deferred_kind(r) == "concept-link"
     ]
@@ -1471,7 +1410,7 @@ def suggested_next_step_commands(
         # `--into` syntax lives in the report so the command column stays narrow.
         if bare_plan:
             cmds.append((
-                _detail_authoring_command(plan_name, detail_grade=detail_grade),
+                _detail_authoring_command(plan_name),
                 "BLOCKED — author missing detail file(s) (apply can't create files)",
             ))
         targets = _blocked_split_targets(blocked, plan)
@@ -1495,7 +1434,7 @@ def suggested_next_step_commands(
     # no-claude files-coherence clear, and never the nonexistent ``--apply``
     # flag. The prose renderer carries the hand-edit instruction instead.
     apply_effects: list[str] = []
-    if by_source.get("files-coherence") and not jira_grade:
+    if by_source.get("files-coherence"):
         apply_effects.append(
             f"clear {by_source['files-coherence']} files-coherence "
             f"drift(s) (no claude)"
@@ -1514,13 +1453,13 @@ def suggested_next_step_commands(
         reaudit_also.append(
             f"assign or structurally defer {len(concept_links)} concept(s)"
         )
-    if by_source.get("detail-coverage") and not jira_grade:
+    if by_source.get("detail-coverage"):
         cmds.append((
             f"plan-tool detail {plan_name}",
             f"reattach/author {by_source['detail-coverage']} missing "
             f"detail file(s)",
         ))
-    if open_findings and not jira_grade:
+    if open_findings:
         if reaudit_at is None:
             reaudit_at = len(cmds)
         reaudit_also.append(
@@ -1532,12 +1471,12 @@ def suggested_next_step_commands(
         cmds.insert(
             reaudit_at,
             _reaudit_command(
-                plan_name, verdict, detail_grade=detail_grade, also=reaudit_also
+                plan_name, verdict, also=reaudit_also
             ),
         )
     if _verdict_offers_stage(verdict) and include_stage:
         stage = next_stage_command(
-            plan_name, bundle_status, detail_grade=detail_grade, verdict=verdict
+            plan_name, bundle_status, verdict=verdict
         )
         # A bare plan's BLOCKED row may already name this same command.
         if stage[0] not in {c for c, _ in cmds}:
@@ -1652,13 +1591,6 @@ _INERT_STEP_PHRASES: tuple[str, ...] = (
     "no behavior changes",
 )
 
-# Deliberately a local declaration, not imported from ``jira_grade``'s
-# identical-pattern private ``_SENTENCE_SPLIT_RE`` — a leading-underscore
-# name is an internal contract of its own module, and reaching across a
-# module boundary for it couples this file to jira_grade's private
-# internals for one two-line regex. Not caught by tests/test_duplication.py
-# either (its detector matches ≥4-line function bodies, not a single
-# constant assignment).
 _SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
 
 
@@ -2034,7 +1966,6 @@ def build_report_md(
     code_drifted: bool = False,
     halt_reason: Optional[str] = None,
     bundle_status=None,
-    detail_grade: str = GRADE_RUN,
     audit_shape_advisory_display: Optional[AuditShapeAdvisoryDisplay] = None,
     plan_mass: Optional[PlanMass] = None,
     plan_mass_first_step_count: Optional[int] = None,
@@ -2067,12 +1998,6 @@ def build_report_md(
     list leads with a ``reconcile-plan`` rebase bullet (BACKLOG #65). False
     (the default) renders byte-identically to before.
 
-    ``detail_grade`` replaces the two apply-verb header blocks and the
-    per-finding ``Address:`` lines with a session-directed-edit instruction at
-    jira grade, where
-    no findings sidecar exists for an apply verb to read. The default renders
-    byte-identically to before.
-
     ``plan_mass`` (when passed) inserts a ``## Plan mass`` section (#238) —
     via :func:`render_plan_mass_section` — after ``## Halt`` / the audit
     shape advisory and before ``## Applied this run``.
@@ -2082,7 +2007,6 @@ def build_report_md(
     for ``plan_mass`` omits the section entirely, rendering byte-identically
     to before.
     """
-    jira_grade = detail_grade == GRADE_JIRA
     ts = (now or datetime.now(timezone.utc)).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines: list[str] = []
     lines.append(f"# Completeness report: {plan_title}")
@@ -2205,9 +2129,7 @@ def build_report_md(
         bare_plan = bool(getattr(bundle_status, "is_bare", False))
         lines.append("## Conceptual correctness — fix these first")
         lines.append("")
-        if jira_grade:
-            intro = _HAND_FIX_INTRO
-        elif bare_plan:
+        if bare_plan:
             intro = CORRECTNESS_INTRO_BARE.format(plan_name=plan_name)
         else:
             intro = CORRECTNESS_INTRO.format(plan_name=plan_name)
@@ -2238,8 +2160,6 @@ def build_report_md(
                 "axis are withheld until a complete detail bundle exists, so "
                 "these findings are informational for now."
             )
-        elif jira_grade:
-            lines.append(_HAND_FIX_INTRO)
         else:
             lines.append(WHY['advisory-conceptual'])
         lines.append("")
@@ -2336,7 +2256,6 @@ def build_report_md(
         code_drifted=code_drifted,
         bundle_status=bundle_status,
         correctness=correctness or (),
-        detail_grade=detail_grade,
         qualified_result=qualified_result,
         is_pre_apply_checkpoint=is_pre_apply_checkpoint,
         verdict=verdict,
@@ -2695,7 +2614,7 @@ def write_completeness_report(
                     from plan_tool.review import audit_detail_bundle_status
 
                     bundle_status = audit_detail_bundle_status(
-                        parsed_plan, plan_path, repo_root, detail_grade=GRADE_RUN
+                        parsed_plan, plan_path, repo_root
                     )
                     resolved_audit_stage = derive_audit_stage(bundle_status)
                 except (

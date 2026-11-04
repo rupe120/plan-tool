@@ -101,20 +101,16 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
 ## Plan authoring
 
 - **id:** `plan-authoring`
-- **surfaces:** `create`, `detail`, `plan_tool/create.py`, `plan_tool/detail.py`, `plan_tool/jira_grade.py`
+- **surfaces:** `create`, `detail`, `plan_tool/create.py`, `plan_tool/detail.py`
 - **principles:** `converge-on-correct-plan`, `deterministic-non-determinism`
-- `detail` authors the run-grade seven-section file. Jira-grade files retain
-  their compact contract in `DETAIL_FORMAT.md` as legacy explicit-reader
-  inputs; `detail --grade jira` is disabled.
+- `detail` authors the sole supported detail input, the run-grade file described in `DETAIL_FORMAT.md`.
 
 ## Plan completeness & convergence
 
 - **id:** `plan-completeness`
 - **surfaces:** `completeness-audit`, `completeness-apply`, `data-contract-apply`, `convergence`, `gate-status`, `plan_tool/completeness_report.py`, `plan_tool/convergence_diagnosis.py`, `plan_tool/data_contract.py`
 - **principles:** `converge-on-correct-plan`, `deterministic-non-determinism`
-- `completeness-audit --grade jira` grounds the same audit on the jira-grade
-  bundle, judged against that contract; report-only (no findings sidecar, so no
-  apply walk or convergence entry for that run).
+- `completeness-audit` grounds its audit on the canonical run-grade bundle.
 
 ## Code reconciliation
 
@@ -153,10 +149,8 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
 - **id:** `step-execution`
 - **surfaces:** `run`, `suggest-gates`, `plan_tool/launcher.py`, `plan_tool/renderer.py`
 - **principles:** `converge-on-correct-plan`, `deterministic-non-determinism`
-- `run --detail-grade jira` executes a step from the jira-grade artifact
-  instead. Grade is an input axis, not a mode: the lifecycle and every gate are
-  unchanged, and a missing or off-contract artifact blocks before any backend
-  call rather than falling back to the run-grade body.
+- `run` executes a step from its declared run-grade detail under the execution
+  lifecycle and gates.
 
 ## Structural remedies
 
@@ -175,10 +169,8 @@ serves, or a malformed entry. The catalog is authored and maintained by hand.
 - **id:** `jira-export`
 - **surfaces:** `jira`, `plan_tool/jira.py`
 - **principles:** `deterministic-non-determinism`, `write-for-the-human`
-- `jira --grade jira` grounds the stories on the jira-grade bundle — prompt
-  bodies, detail links, and JSON paths together — failing before the backend
-  call on any step it cannot ground. `direct-jira` stays on the run-grade
-  default.
+- `jira` grounds stories and the paired developer handoff on one captured
+  declared run-grade input snapshot; neither output is a detail input.
 
 ## Direct pipeline
 
