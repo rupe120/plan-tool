@@ -36,6 +36,27 @@ from the repo — the repo copy is canonical and the symlink is a convenience.
 
 ---
 
+## Optional companion skills
+
+Use companion skills for expertise the consuming project needs: its language
+and framework, testing, root-cause debugging, code review, security,
+documentation, release preparation, or handoffs. Choose a focused skill for a
+recurring task; these recommendations add no package prerequisite or audit
+gate. Keep plan-tool's workflow and the repository's contracts authoritative
+under the session's instruction hierarchy.
+
+Read a candidate's instructions, scripts, dependencies, and supported tools
+before installing. Prefer skills that complement the workflow rather than
+introducing a second planner, execution loop, or automatic parallelism. Check
+conflicting advice against the repository's scope, test, and review rules.
+
+Verify discovery in the current Claude Code, Codex, or Cursor Agent CLI.
+Availability in an editor or parent session does not prove availability in a
+fresh plan-tool backend subprocess. Keep required project contracts in tracked
+guidance and plan artifacts; an optional personal skill is not their only home.
+The source repository's `docs/how-to/companion-skills.md` has the selection
+guide; `plan-tool install-skill` installs only the bundled integration.
+
 ## Invocation and discovery
 
 `plan-tool` is a global CLI (`uv tool install --editable .`). Invoke directly:

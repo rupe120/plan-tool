@@ -40,6 +40,10 @@ you. The CLI provides the persisted plans, audit reports and execution state.
 repository you want to work on. Planning runs in that consuming repository;
 keep the installation clone for the tool itself.
 
+Add optional [companion skills](docs/how-to/companion-skills.md) for the
+project's stack, testing, debugging, review, or release work. The guide covers
+selection and compatibility across Claude Code, Codex, and Cursor.
+
 ## Install
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
