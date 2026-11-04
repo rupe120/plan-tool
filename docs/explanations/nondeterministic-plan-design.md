@@ -73,8 +73,7 @@ When a design needs "the tool decides X" and X is a judgment, take the
 highest rung that answers the question:
 
 1. **Restructure so the question disappears** — shrink the fact surface
-   instead of judging it (the #164 altitude lever: jira-grade detail exists
-   so stale-implementation-fact findings cannot occur).
+   instead of judging it. Keep the artifact sufficient to ground its consumers.
 2. **Mechanical check** — extract the deterministically checkable subclass:
    path/symbol resolution, promised-vs-consumed contracts across steps,
    duplicate placements. Every class moved out of the sampled audit is

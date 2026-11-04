@@ -16,10 +16,9 @@ def build_gate_status(
     plan_path: Path,
     repo_root: Path,
     *,
-    detail_grade: str,
     current_stage: str | None,
 ) -> dict[str, object]:
-    """Select the newest final result per stage within the requested grade."""
+    """Select the newest qualified reusable run-grade result per stage."""
     slug = slug_from_filename(plan_path)
     stages: dict[str, object] = {"bare": None, "detail": None}
     for path in list_saved_reviews(slug, repo_root, plan_path=plan_path):
@@ -30,10 +29,16 @@ def build_gate_status(
         if not is_reusable_audit_sidecar(saved):
             continue
         result = saved.qualified_result
-        if result is None or result["stage"] not in stages:
+        if (
+            result is None
+            or result["stage"] not in stages
+            or result["headline"] not in {"clean", "advisory-only", "awaiting-human-action"}
+            or result["coverage"] != "confirmed"
+            or result["revision_status"] != "current"
+        ):
             continue
         revision = result["audit_revision"]
-        if revision is None or revision["detail_grade"] != detail_grade:
+        if revision is None or revision["detail_grade"] != "run":
             continue
         stage = result["stage"]
         if stages[stage] is not None:
@@ -60,7 +65,6 @@ def build_gate_status(
         "version": 1,
         "plan": slug,
         "plan_path": display_path,
-        "detail_grade": detail_grade,
         "current_stage": current_stage,
         "stages": stages,
     }

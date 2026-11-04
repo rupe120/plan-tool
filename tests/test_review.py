@@ -20,6 +20,7 @@ from plan_tool.parser import ParseError
 from plan_tool.parser import ValidationError as ParserValidationError
 from plan_tool.progress import NullReporter, ProgressReporter, StepHandle
 from plan_tool.review import (
+    fenced_spans,
     APPLY_ELIGIBLE_SOURCES,
     CARRIED_RESOLUTION_APPLIED,
     CARRIED_RESOLUTION_OPEN,
@@ -93,7 +94,6 @@ from plan_tool.granularity import (
     GranularityEvidence,
     assess_granularity,
 )
-from plan_tool.jira_grade import GRADE_JIRA
 from plan_tool.schema import Plan, PlanStatus, Priority, Step, StepStatus
 
 
@@ -3342,8 +3342,6 @@ class TestHeuristicDetailCrossCheck:
 
 
 # --- Step 3: --no-heuristic flag ------------------------------------------
-
-
 
 
 class TestReviewPlanNoHeuristic:
@@ -12675,29 +12673,6 @@ class TestAuditPromptIntentBlock:
             is None
         )
 
-    def test_intent_block_renders_the_same_at_jira_grade(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import render_plan_audit_prompt
-
-        plan_path = self._write_plan(
-            tmp_path,
-            plan_intent="Grade-independent purpose",
-            step_intent="Same block either grade",
-        )
-        plan = parse_plan(plan_path)
-        run_prompt = render_plan_audit_prompt(
-            plan, plan_path, repo_root=tmp_path
-        )
-        jira_prompt = render_plan_audit_prompt(
-            plan, plan_path, repo_root=tmp_path, detail_grade=GRADE_JIRA
-        )
-        assert run_prompt is not None and jira_prompt is not None
-        block = _format_intent_block(plan)
-        assert block
-        assert block in run_prompt
-        assert block in jira_prompt
 
     def test_dollar_sign_in_an_intent_reaches_the_prompt_literally(
         self, tmp_path: Path
@@ -14076,7 +14051,8 @@ class TestApplyTriage:
         """A finding is never both apply-eligible and structural-split;
         the sets evolve independently (step 2 widens STRUCTURAL_SOURCES)."""
         from plan_tool.review import (
-            APPLY_ELIGIBLE_SOURCES,
+            fenced_spans,
+    APPLY_ELIGIBLE_SOURCES,
             STRUCTURAL_SOURCES,
         )
 
@@ -14536,7 +14512,6 @@ class TestCheckTestStrategyAlignment:
         )
         # Opt-in: no classified step at all → no findings, hence no nudge.
         assert check_test_strategy_alignment(plan) == []
-
 
 
     def test_alignment_detail_contradiction_skipped_when_no_detail_file(
@@ -15940,46 +15915,6 @@ class TestCollectSelfConsistencyFindings:
     via ``_self_consistency_from_smells``) so the loop can't falsely converge
     while the gate flips rc — the BUG_BACKLOG defect this closes."""
 
-    def test_dispatches_detectors_at_the_requested_grade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        """The grade reaches the detectors, not just the registry filter.
-
-        Filtering the registry by grade while building a ``DetectorContext``
-        without it dispatches grade-aware detectors at run grade, so the loop
-        and the finalize gate read different bodies — the exact divergence the
-        class docstring says this battery exists to prevent.
-        """
-        import plan_tool.review as review_mod
-
-        plan, plan_path = _write_orphan_plan(
-            tmp_path,
-            [
-                {
-                    "id": 1,
-                    "title": "build it",
-                    "files": ["foo.py"],
-                    "status": "current",
-                },
-            ],
-        )
-        seen: list[str] = []
-        original = review_mod.detect_orphaned_deliverable
-
-        def spy(*args, **kwargs):
-            seen.append(kwargs.get("detail_grade", "MISSING"))
-            return original(*args, **kwargs)
-
-        monkeypatch.setattr(review_mod, "detect_orphaned_deliverable", spy)
-        review_mod.collect_self_consistency_findings(
-            plan,
-            tmp_path,
-            plan_name="p",
-            plan_path=plan_path,
-            detail_grade=GRADE_JIRA,
-        )
-        assert seen, "spy must be reached, else this test proves nothing"
-        assert seen == [GRADE_JIRA]
 
     def test_includes_orphaned_deliverable(self, tmp_path: Path) -> None:
         # The fixture declares no intent, so the two intent recs ride the same
@@ -17616,266 +17551,6 @@ class TestBareAltitudeTwoStageReplay:
             assert route["detail_stage"]["may_check_selected_mechanism"] is True
 
 
-_JIRA_GRADE_BODY = (
-    "## Intent\n\nShip the alpha path.\n\n"
-    "## Change\n\nAdd the alpha handler.\n\n"
-    "## Constraints\n\nNo public API change.\n\n"
-    "## Done when\n\nThe alpha handler returns 200.\n\n"
-    "## Out of scope\n\nThe beta path.\n"
-)
-
-_RUN_GRADE_BODY_AT_JIRA_PATH = (
-    "## Summary\n\nA run-grade body.\n\n"
-    "## Why\n\nBecause.\n\n"
-    "## Files\n\n- `alpha.py`\n\n"
-    "## Implementation\n\nDo it.\n"
-)
-
-
-class TestJiraGradeAuditBundle:
-    """The completeness audit's ``detail_grade`` axis: which artifacts ground
-    the prompt, and which format contract frames them."""
-
-    def _write_plan(self, tmp_path: Path, *, run_detail: bool = True) -> Path:
-        detail_line = "    detail: details/01-a.md\n" if run_detail else ""
-        (tmp_path / "details").mkdir(exist_ok=True)
-        (tmp_path / "details" / "01-a.md").write_text(
-            "## Summary\n\nRUN-GRADE-ONLY-MARKER\n", encoding="utf-8"
-        )
-        plan_path = tmp_path / "1-graded.md"
-        plan_path.write_text(
-            "---\n"
-            "title: Graded Plan\n"
-            "status: in-progress\n"
-            "priority: medium\n"
-            "steps:\n"
-            "  - id: 1\n"
-            "    title: Ship alpha\n"
-            "    status: pending\n"
-            f"{detail_line}"
-            "  - id: 2\n"
-            "    title: Ship beta\n"
-            "    status: pending\n"
-            "    depends_on: [1]\n"
-            "---\n\n"
-            f"{_FULL_BODY_SECTIONS}",
-            encoding="utf-8",
-        )
-        return plan_path
-
-    def _write_jira_artifact(self, plan_path: Path, plan, step, body: str) -> Path:
-        from plan_tool.detail_artifacts import derive_jira_detail_path
-
-        path = derive_jira_detail_path(plan_path, plan, step)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(body, encoding="utf-8")
-        return path
-
-    def test_format_audit_detail_bundle_grade_jira_resolves_jira_paths(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import _format_audit_detail_bundle
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        artifact = self._write_jira_artifact(
-            plan_path, plan, plan.steps[0], _JIRA_GRADE_BODY
-        )
-        assert artifact.parent.name == "jira"
-        rendered = _format_audit_detail_bundle(
-            plan, plan_path, tmp_path, max_file_bytes=4096, detail_grade="jira"
-        )
-        # Every section of the contract reaches the prompt — the sections
-        # together *are* the contract, so none may be excerpted away.
-        for section in (
-            "## Intent",
-            "## Change",
-            "## Constraints",
-            "## Done when",
-            "## Out of scope",
-        ):
-            assert section in rendered
-        # ``step.detail`` points at a real run-grade file that must not be read.
-        assert "RUN-GRADE-ONLY-MARKER" not in rendered
-
-    def test_format_audit_detail_bundle_grade_jira_missing_is_bare_note(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import _format_audit_detail_bundle
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)  # no jira artifact written for either step
-        rendered = _format_audit_detail_bundle(
-            plan, plan_path, tmp_path, max_file_bytes=4096, detail_grade="jira"
-        )
-        assert rendered.count("_(no detail file on disk)_") == 2
-        # No fallback to the run-grade body even though step 1's pointer
-        # resolves to a file that exists.
-        assert "RUN-GRADE-ONLY-MARKER" not in rendered
-
-    def test_format_audit_detail_bundle_grade_jira_mislabeled_not_embedded(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import _format_audit_detail_bundle
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        self._write_jira_artifact(
-            plan_path, plan, plan.steps[0], _RUN_GRADE_BODY_AT_JIRA_PATH
-        )
-        rendered = _format_audit_detail_bundle(
-            plan, plan_path, tmp_path, max_file_bytes=4096, detail_grade="jira"
-        )
-        assert "does not meet the jira-grade contract" in rendered
-        assert "run-grade body at a jira-grade path" in rendered
-        # The off-contract body itself never reaches the prompt.
-        assert "A run-grade body." not in rendered
-        assert "## Implementation" not in rendered
-
-    def test_audit_bundle_at_jira_grade_ignores_the_run_grade_marker(
-        self, tmp_path: Path
-    ) -> None:
-        """A jira-grade artifact judged only by ``validate_jira_grade_body`` —
-        an embedded run-grade format-version marker (even an unsupported
-        one) must never reach the run-grade gate, since that gate is only
-        wired into the run-grade branch of ``_format_audit_detail_bundle``."""
-        from plan_tool.detail_artifacts import render_detail_format_version_marker
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import _format_audit_detail_bundle
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        body_with_marker = (
-            f"# Step\n{render_detail_format_version_marker(999)}\n\n"
-            + _RUN_GRADE_BODY_AT_JIRA_PATH
-        )
-        self._write_jira_artifact(plan_path, plan, plan.steps[0], body_with_marker)
-
-        rendered = _format_audit_detail_bundle(
-            plan, plan_path, tmp_path, max_file_bytes=4096, detail_grade="jira"
-        )
-        assert "does not meet the jira-grade contract" in rendered
-        assert "run-grade body at a jira-grade path" in rendered
-        assert "A run-grade body." not in rendered
-        assert "## Implementation" not in rendered
-        assert "999" not in rendered
-
-    def test_audit_detail_bundle_status_grade_jira(self, tmp_path: Path) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import audit_detail_bundle_status
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        self._write_jira_artifact(
-            plan_path, plan, plan.steps[0], _JIRA_GRADE_BODY
-        )
-        jira_status = audit_detail_bundle_status(
-            plan, plan_path, tmp_path, detail_grade="jira"
-        )
-        assert jira_status.detailed_step_ids == (1,)
-        assert jira_status.bare_step_ids == (2,)
-        # Run grade classifies the same plan differently — step 1's pointer is
-        # what counts there, and no jira artifact enters the decision.
-        run_status = audit_detail_bundle_status(plan, plan_path, tmp_path)
-        assert run_status.detailed_step_ids == (1,)
-        assert run_status.bare_step_ids == (2,)
-
-    def test_audit_detail_bundle_status_grade_jira_ignores_pointer(
-        self, tmp_path: Path
-    ) -> None:
-        """A step with a run-grade pointer but no jira artifact is bare at
-        jira grade — presence is decided by the jira path alone."""
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import audit_detail_bundle_status
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        status = audit_detail_bundle_status(
-            plan, plan_path, tmp_path, detail_grade="jira"
-        )
-        assert status.detailed_step_ids == ()
-        assert status.bare_step_ids == (1, 2)
-        assert status.is_fully_bare is True
-
-    def test_unknown_grade_rejected_not_defaulted(self, tmp_path: Path) -> None:
-        """An unrecognized grade raises instead of silently reading the
-        run-grade bundle."""
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import audit_detail_bundle_status
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        with pytest.raises(ValueError, match="unknown detail grade"):
-            audit_detail_bundle_status(
-                plan, plan_path, tmp_path, detail_grade="epic"
-            )
-
-    def test_render_plan_audit_prompt_default_grade_unchanged(
-        self, tmp_path: Path
-    ) -> None:
-        """The framing became a template variable; the run-grade substitution
-        reproduces the previous prompt text exactly, in place."""
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import render_plan_audit_prompt
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        self._write_jira_artifact(
-            plan_path, plan, plan.steps[0], _JIRA_GRADE_BODY
-        )
-        prompt = render_plan_audit_prompt(plan, plan_path, repo_root=tmp_path)
-        assert prompt is not None
-        assert (
-            "## Detail files (implementation bundle)\n\n"
-            "These are the per-step detail files a developer will implement "
-            "against.\n"
-        ) in prompt
-        assert "${detail_bundle_framing_block}" not in prompt
-        # The jira artifact sitting beside the plan changes nothing by default.
-        assert "Ship the alpha path." not in prompt
-        assert "RUN-GRADE-ONLY-MARKER" in prompt
-        explicit_run = render_plan_audit_prompt(
-            plan, plan_path, repo_root=tmp_path, detail_grade="run"
-        )
-        assert explicit_run == prompt
-
-    def test_render_plan_audit_prompt_grade_jira_framing(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.parser import parse_plan
-        from plan_tool.review import render_plan_audit_prompt
-
-        plan_path = self._write_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        self._write_jira_artifact(
-            plan_path, plan, plan.steps[0], _JIRA_GRADE_BODY
-        )
-        prompt = render_plan_audit_prompt(
-            plan, plan_path, repo_root=tmp_path, detail_grade="jira"
-        )
-        assert prompt is not None
-        # The run-grade framing literal is gone.
-        assert (
-            "These are the per-step detail files a developer will implement "
-            "against."
-        ) not in prompt
-        # The jira framing names the contract and its sections...
-        assert "jira-grade" in prompt
-        for section in ("`## Intent`", "`## Done when`", "`## Out of scope`"):
-            assert section in prompt
-        # ...states that a missing implementation fact is not a gap...
-        assert "**not** a completeness gap" in prompt
-        # ...and qualifies the earlier Completeness rule it would otherwise
-        # be read under.
-        assert "qualifies the Completeness rule above" in prompt
-        # Grounding follows the framing: jira bytes in, run-grade bytes out.
-        assert "Ship the alpha path." in prompt
-        assert "RUN-GRADE-ONLY-MARKER" not in prompt
-
-
 class TestAuditDetailBundleFormatVersion:
     """The plan-audit prompt's run-grade grounding refuses an unsupported
     or malformed detail-format-version marker before it reaches the
@@ -19144,235 +18819,6 @@ class TestCodeSplitReconcileLaneIntegration:
         assert "granularity-split" in saved.read_text(encoding="utf-8")
 
 
-# --- Jira-grade bundle check ---------------------------------------------
-
-
-def _jira_grade_plan(tmp_path: Path, steps_yaml: str) -> Path:
-    """A minimal plan whose jira-grade artifacts derive under
-    ``plan-details/jira-bundle/jira/``."""
-    plan_path = tmp_path / "1-jira-bundle.md"
-    plan_path.write_text(
-        "---\n"
-        "title: Jira Bundle\n"
-        "status: planning\n"
-        "priority: low\n"
-        f"{steps_yaml}"
-        "---\n"
-        "\n"
-        "# Body\n",
-        encoding="utf-8",
-    )
-    return plan_path
-
-
-_CONFORMING_JIRA_BODY = (
-    "## Intent\n\nShip it.\n\n"
-    "## Change\n\nAdd the handler.\n\n"
-    "## Constraints\n\nNo API change.\n\n"
-    "## Done when\n\nThe handler returns 200.\n\n"
-    "## Out of scope\n\nThe beta path.\n"
-)
-
-# A run-grade body parked at a jira-grade path — the mistake the contract
-# names in one line instead of five missing-section lines.
-_RUN_GRADE_BODY_AT_JIRA_PATH = (
-    "## Summary\n\ns\n\n## Why\n\nw\n\n## Files\n\nf\n\n"
-    "## Implementation\n\ni\n\n## Tests\n\nt\n"
-)
-
-
-def _write_jira_grade_artifact(plan_path: Path, plan, step, body: str) -> Path:
-    from plan_tool.detail_artifacts import derive_jira_detail_path
-
-    path = derive_jira_detail_path(plan_path, plan, step)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body, encoding="utf-8")
-    return path
-
-
-class TestCheckJiraGradeBundle:
-    """``check_jira_grade_bundle`` — coverage on a partial bundle, contract on
-    every present artifact, and the ``done``-step exemption."""
-
-    _TWO_STEPS = (
-        "steps:\n"
-        "  - id: 1\n    title: First\n"
-        "  - id: 2\n    title: Second\n"
-    )
-
-    def test_conforming_bundle_is_clean(self, tmp_path: Path) -> None:
-        from plan_tool.review import check_jira_grade_bundle
-
-        plan_path = _jira_grade_plan(tmp_path, self._TWO_STEPS)
-        plan = parse_plan(plan_path)
-        for step in plan.steps:
-            _write_jira_grade_artifact(
-                plan_path, plan, step, _CONFORMING_JIRA_BODY
-            )
-        assert check_jira_grade_bundle(plan, plan_path, tmp_path) == ([], [])
-
-    def test_zero_artifacts_is_bare_not_blocked(self, tmp_path: Path) -> None:
-        # A plan with no jira artifacts at all is a valid early-pipeline audit
-        # target; the bare-plan machinery carries it. A blanket coverage
-        # finding would give one plan two opposite verdicts under one grade —
-        # and would fire on the very first audit anyone runs.
-        from plan_tool.review import check_jira_grade_bundle
-
-        plan_path = _jira_grade_plan(tmp_path, self._TWO_STEPS)
-        plan = parse_plan(plan_path)
-        assert check_jira_grade_bundle(plan, plan_path, tmp_path) == ([], [])
-
-    def test_partial_bundle_reports_the_missing_artifact(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.review import check_jira_grade_bundle
-
-        plan_path = _jira_grade_plan(tmp_path, self._TWO_STEPS)
-        plan = parse_plan(plan_path)
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[0], _CONFORMING_JIRA_BODY
-        )
-        coverage, body = check_jira_grade_bundle(plan, plan_path, tmp_path)
-        assert body == []
-        assert [(i.step_id, i.kind) for i in coverage] == [
-            (2, "missing_on_disk")
-        ]
-        assert coverage[0].detail_path.endswith(
-            "plan-details/jira-bundle/jira/02-second.md"
-        )
-
-    def test_wrong_schema_body_carries_the_targeted_message(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.review import check_jira_grade_bundle
-
-        plan_path = _jira_grade_plan(
-            tmp_path, "steps:\n  - id: 1\n    title: First\n"
-        )
-        plan = parse_plan(plan_path)
-        artifact = _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[0], _RUN_GRADE_BODY_AT_JIRA_PATH
-        )
-        coverage, body = check_jira_grade_bundle(plan, plan_path, tmp_path)
-        assert coverage == []
-        assert len(body) == 1
-        issue = body[0]
-        assert issue.kind == "wrong-schema"
-        assert issue.message.startswith("run-grade body at a jira-grade path")
-        assert issue.detail_path == str(artifact.relative_to(tmp_path))
-
-    def test_done_step_is_exempt_from_both_arms(self, tmp_path: Path) -> None:
-        # Mirrors ``check_detail_coverage``'s deliberate skip: the artifact
-        # briefs a step before it runs, so its absence is moot once built.
-        from plan_tool.review import check_jira_grade_bundle
-
-        steps = (
-            "steps:\n"
-            "  - id: 1\n    title: First\n    status: done\n"
-            "  - id: 2\n    title: Second\n"
-        )
-        plan_path = _jira_grade_plan(tmp_path, steps)
-        plan = parse_plan(plan_path)
-        # Step 1 has no artifact at all, and step 2's is conforming.
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[1], _CONFORMING_JIRA_BODY
-        )
-        assert check_jira_grade_bundle(plan, plan_path, tmp_path) == ([], [])
-        # Even an off-contract body on the done step stays exempt.
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[0], _RUN_GRADE_BODY_AT_JIRA_PATH
-        )
-        assert check_jira_grade_bundle(plan, plan_path, tmp_path) == ([], [])
-
-    def test_findings_are_blocking_through_the_unmodified_gate(
-        self, tmp_path: Path
-    ) -> None:
-        """Both arms block by *carrier and kind*, not severity — the gate reads
-        ``kind == "missing_on_disk"`` on coverage and treats the whole body
-        bucket as blocking, and neither record carries a severity at all."""
-        from plan_tool.cli.completeness_cmd import (
-            _completeness_has_blocking_findings,
-        )
-        from plan_tool.convergence import STAGE_DETAIL
-        from plan_tool.review import check_jira_grade_bundle
-
-        def _blocking(coverage, body) -> bool:
-            return _completeness_has_blocking_findings(
-                path_style_hint=None,
-                dep_issues=[],
-                body_issues=[],
-                detail_cov_issues=coverage,
-                detail_body_issues=body,
-                lessons_issues=[],
-                audit_stage=STAGE_DETAIL,
-                data_contract_recs=[],
-                self_consistency_recs=[],
-                purity_coverage_recs=[],
-            )
-
-        plan_path = _jira_grade_plan(tmp_path, self._TWO_STEPS)
-        plan = parse_plan(plan_path)
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[0], _CONFORMING_JIRA_BODY
-        )
-        assert _blocking(*check_jira_grade_bundle(plan, plan_path, tmp_path))
-
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[1], _RUN_GRADE_BODY_AT_JIRA_PATH
-        )
-        coverage, body = check_jira_grade_bundle(plan, plan_path, tmp_path)
-        assert coverage == []  # bundle is now complete…
-        assert body  # …but off-contract
-        assert _blocking(coverage, body)
-
-
-class TestDetailBodyIssueMessageSlot:
-    def test_message_defaults_none_and_leaves_run_grade_unchanged(
-        self, tmp_path: Path
-    ) -> None:
-        # Every existing construction is positional/keyword-compatible and the
-        # run-grade producers leave the slot unset.
-        assert DetailBodyIssue(1, "missing", "Why", "d/01.md").message is None
-        body = "## Summary\n\ns\n"
-        detail = tmp_path / "01.md"
-        detail.write_text(body, encoding="utf-8")
-        plan_path = _write_completeness_plan(
-            tmp_path, body="", extra_step_yaml="    detail: 01.md\n"
-        )
-        issues = check_detail_body_completeness(parse_plan(plan_path), tmp_path)
-        assert issues
-        assert all(i.message is None for i in issues)
-
-
-class TestJiraGradeFootprintAxis:
-    """``build_plan_footprint`` at jira grade reads the jira artifact, and maps
-    its claim prose onto the section that contract actually has."""
-
-    def test_claim_prose_comes_from_done_when_at_jira_grade(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool.review import build_plan_footprint
-
-        plan_path = _jira_grade_plan(
-            tmp_path, "steps:\n  - id: 1\n    title: First\n"
-        )
-        plan = parse_plan(plan_path)
-        _write_jira_grade_artifact(
-            plan_path, plan, plan.steps[0],
-            _CONFORMING_JIRA_BODY.replace(
-                "The handler returns 200.", "`src/claimed_widget.py` exists."
-            ),
-        )
-        jira = build_plan_footprint(
-            plan, tmp_path, plan_path=plan_path, detail_grade="jira"
-        )
-        assert "src/claimed_widget.py" in jira.claim_paths
-        # The run-grade read finds no artifact at all, so no claim prose —
-        # which is exactly why the axis has to be threaded.
-        run = build_plan_footprint(plan, tmp_path, plan_path=plan_path)
-        assert "src/claimed_widget.py" not in run.claim_paths
-
-
 def merge_bridge_reauthor_context_fixture() -> Recommendation:
     """BACKLOG #91 code-logic pin: plan-level behavioral medium, no target file."""
     return Recommendation(
@@ -20347,3 +19793,122 @@ def test_review_prompt_keeps_step_text_after_description_round_trip(tmp_path):
     plan = parse_plan_text("---\ntitle: Plan\nstatus: planning\npriority: medium\nsteps:\n- id: 1\n  title: Exact step text\n---\n")
     rewritten = parse_plan_text(render_plan_text(plan, ""))
     assert "Exact step text" in render_review_prompt(rewritten, tmp_path)
+
+
+class TestFencedSpans:
+    """Citation fences preserve review annotation boundaries."""
+
+    def test_fenced_spans_returns_original_text_offsets_for_closed_fence(self) -> None:
+        text = "before\n```\ncode\n```\nafter\n"
+        spans = fenced_spans(text)
+        assert spans == [(7, 20)]
+        assert text[spans[0][0] : spans[0][1]] == "```\ncode\n```\n"
+
+    def test_fenced_spans_unclosed_fence_spans_to_end_of_text(self) -> None:
+        """An unclosed fence must span to EOF, not pair with an unrelated
+        later fence elsewhere in the same text (the round-5 regression the
+        old regex-based mechanism had: it paired an unclosed citation fence
+        with a later, unrelated fence in the ### Fix suggestion)."""
+        text = "before\n```\nnever closes\n"
+        spans = fenced_spans(text)
+        assert spans == [(7, len(text))]
+
+    def test_tilde_fence_recognized(self) -> None:
+        text = "before\n~~~\ncode\n~~~\nafter\n"
+        assert fenced_spans(text) == [(7, 20)]
+
+    def test_fenced_spans_requires_matching_delimiter_character_and_length(self) -> None:
+        text = "before\n```\ncode\n~~~\nstill inside\n```\nafter\n"
+        spans = fenced_spans(text)
+        assert len(spans) == 1
+        assert spans[0] == (7, len(text) - len("after\n"))
+
+    def test_nested_shorter_run_does_not_close_a_longer_fence_early(self) -> None:
+        """CommonMark's closing-length rule: a citation nesting a same-
+        character run no longer than the opener's fence can't close it."""
+        text = "before\n````\nouter\n```\ninner-fake-close\n````\nafter\n"
+        spans = fenced_spans(text)
+        assert len(spans) == 1
+        assert text[spans[0][0] : spans[0][1]] == (
+            "````\nouter\n```\ninner-fake-close\n````\n"
+        )
+
+    def test_fenced_spans_preserves_crlf_offsets(self) -> None:
+        text = "before\r\n```\r\ncode\r\n```\r\nafter\r\n"
+        spans = fenced_spans(text)
+        assert len(spans) == 1
+        assert text[spans[0][0] : spans[0][1]] == "```\r\ncode\r\n```\r\n"
+
+    def test_fenced_spans_recognizes_fence_indented_beyond_three_spaces(self) -> None:
+        """Deliberately more lenient than CommonMark's 3-space limit: this
+        parses a model's own citation protocol, not rendered markdown, so a
+        missed fence (false negative) is the unsafe direction."""
+        text = "before\n      ```\n      code\n      ```\nafter\n"
+        spans = fenced_spans(text)
+        assert len(spans) == 1
+
+    def test_no_fence_returns_empty(self) -> None:
+        assert fenced_spans("just plain prose, no backticks at all\n") == []
+
+
+class TestCitationInlineFenceContract:
+    def test_fenced_spans_preserves_current_leading_inline_backtick_span_treatment(self) -> None:
+        # Citation safety treats a leading triple-backtick inline span as an opener.
+        text = "before\n```inline``` prose\n### Fix\nprotected\n"
+        assert fenced_spans(text) == [(7, len(text))]
+
+
+@pytest.fixture
+def run_grade_audit_bundle(tmp_path):
+    from plan_tool.detail_artifacts import derive_detail_path
+
+    path = tmp_path / "1-demo.md"
+    path.write_text(
+        "---\ntitle: Demo\nstatus: planning\npriority: medium\nsteps:\n"
+        "  - id: 1\n    title: First\n    detail: declared.md\n"
+        "  - id: 2\n    title: Second\n---\n# Demo\n"
+    )
+    plan = parse_plan(path)
+    pointer = tmp_path / "declared.md"
+    canonical = derive_detail_path(path, plan, plan.steps[1])
+    canonical.parent.mkdir(parents=True, exist_ok=True)
+    pointer.write_text("## Summary\n\nDeclared detail evidence.\n")
+    canonical.write_text("## Summary\n\nCanonical detail evidence.\n")
+    return plan, path, pointer, canonical
+
+
+def test_audit_detail_bundle_reads_declared_run_grade_detail(run_grade_audit_bundle):
+    from plan_tool.review import _format_audit_detail_bundle
+
+    plan, path, _pointer, _canonical = run_grade_audit_bundle
+    bundle = _format_audit_detail_bundle(plan, path, path.parent, max_file_bytes=4096)
+    assert "Declared detail evidence." in bundle
+    assert "Canonical detail evidence." in bundle
+
+
+def test_audit_detail_bundle_status_matches_run_grade_bundle_resolution(run_grade_audit_bundle):
+    from plan_tool.review import _format_audit_detail_bundle, audit_detail_bundle_status
+    from plan_tool.review_persistence import AuditInputSnapshot
+
+    plan, path, pointer, canonical = run_grade_audit_bundle
+    snapshot = AuditInputSnapshot.capture(path, path.parent)
+    pointer.unlink()
+    canonical.unlink()
+    captured = audit_detail_bundle_status(plan, path, path.parent, audit_input_snapshot=snapshot)
+    current = audit_detail_bundle_status(plan, path, path.parent)
+    assert captured.detailed_step_ids == (1, 2)
+    assert current.bare_step_ids == (1, 2)
+    bundle = _format_audit_detail_bundle(
+        plan, path, path.parent, max_file_bytes=4096, audit_input_snapshot=snapshot
+    )
+    assert "Declared detail evidence." in bundle and "Canonical detail evidence." in bundle
+
+
+def test_plan_audit_prompt_uses_run_grade_bundle_framing(run_grade_audit_bundle):
+    from plan_tool.review import render_plan_audit_prompt, _RUN_GRADE_BUNDLE_FRAMING
+
+    plan, path, _pointer, _canonical = run_grade_audit_bundle
+    prompt = render_plan_audit_prompt(plan, path, repo_root=path.parent)
+    assert _RUN_GRADE_BUNDLE_FRAMING in prompt
+    assert "jira-grade" not in prompt
+    assert "Declared detail evidence." in prompt

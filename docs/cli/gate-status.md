@@ -3,7 +3,7 @@
 ## Usage
 
 ```
-plan-tool gate-status [-h] [--json] [--grade {run,jira}] name
+plan-tool gate-status [-h] [--json] name
 ```
 
 ## Arguments
@@ -17,4 +17,3 @@ plan-tool gate-status [-h] [--json] [--grade {run,jira}] name
 | Option | Default | Description |
 | --- | --- | --- |
 | `--json` | off | accepted for explicit JSON requests; output is always JSON |
-| `--grade` `{run|jira}` | `run` | select saved results and current stage for this detail grade (default: run) |

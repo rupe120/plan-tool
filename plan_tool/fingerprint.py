@@ -5,7 +5,7 @@ in-scope *code* surface into a reproducible map so a later run can tell
 whether the code drifted since a saved audit. This module owns that
 producer so neither family imports the other to reach it — it depends
 only on the stdlib plus the ``scope_guard``/``drift_detection``/``schema``/
-``detail_artifacts``/``jira_grade`` leaves, keeping the import graph acyclic.
+``detail_artifacts`` leaves, keeping the import graph acyclic.
 """
 
 from __future__ import annotations
@@ -15,17 +15,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from plan_tool.detail_artifacts import (
-    derive_jira_detail_path,
-    resolve_detail_artifact,
-)
+from plan_tool.detail_artifacts import resolve_detail_artifact
 from plan_tool.drift_detection import compute_content_hash
-from plan_tool.jira_grade import (
-    GRADE_JIRA,
-    GRADE_RUN,
-    is_known_grade,
-    unknown_grade_message,
-)
 from plan_tool.schema import Plan, Step
 from plan_tool.scope_guard import compute_drift_watched_paths
 
@@ -42,6 +33,8 @@ def audit_input_detail_revision(snapshot) -> list[dict[str, object]]:
     A revision therefore changes when the audit's selected artifact changes,
     even when neither state has bytes to hash.
     """
+    if snapshot.detail_grade != "run":
+        raise ValueError("audit inputs require run-grade detail")
     entries: list[dict[str, object]] = []
     for detail in snapshot.details:
         entry: dict[str, object] = {
@@ -100,7 +93,7 @@ def audit_input_revision(snapshot) -> dict[str, object]:
     project_context = snapshot.project_context
     return {
         "version": 3,
-        "detail_grade": snapshot.detail_grade,
+        "detail_grade": "run",
         "plan_digest": _audit_input_digest(snapshot.plan_bytes),
         "detail_bundle_digest": _audit_input_digest(detail_encoded),
         "details": detail_revision,
@@ -186,47 +179,13 @@ def compute_detail_bundle_fingerprint(
     plan: Plan,
     plan_path: Path,
     repo_root: Path,
-    *,
-    detail_grade: str = GRADE_RUN,
 ) -> dict[str, str]:
-    """Hash each step's on-disk detail file into a reproducible
-    ``{repo-relative-posix-path: sha256-hex}`` map — the detail-bundle
-    snapshot the completeness audit grounds on (BACKLOG #61).
-
-    ``detail_grade`` selects which bundle is hashed, mirroring the audit's
-    own bundle reader so the snapshot matches what the audit actually saw:
-
-    - ``run`` (default) resolves through
-      :func:`plan_tool.detail_artifacts.resolve_detail_artifact` (the
-      ``step.detail`` pointer, else the canonical path).
-    - ``jira`` derives each step's compact artifact with
-      :func:`plan_tool.detail_artifacts.derive_jira_detail_path` and reads
-      no ``step.detail`` pointer — there is no pointer axis at that grade.
-
-    Only files present on disk contribute a key; a **bare** step (no detail
-    file at the selected grade) contributes none — its absence *is* the
-    bare-state signal. Each survivor is digested with
-    :func:`compute_content_hash`; the map is built in sorted order so it
-    reproduces byte-for-byte. Content is hashed as found: an off-contract
-    jira-grade body still contributes its digest, because this is a
-    which-bytes-did-we-see record, not a validator.
-
-    The per-step counterpart to the combined ``compute_plan_fingerprint``
-    digest — granular enough that a later apply can re-validate *which*
-    detail file drifted since the audit.
-    """
-    if not is_known_grade(detail_grade):
-        raise ValueError(unknown_grade_message(detail_grade))
+    """Hash present run-grade details using pointer-or-canonical resolution."""
     root = repo_root.resolve()
-    if detail_grade == GRADE_JIRA:
-        paths = [
-            derive_jira_detail_path(plan_path, plan, step) for step in plan.steps
-        ]
-    else:
-        paths = [
-            resolve_detail_artifact(plan_path, plan, step, repo_root).path
-            for step in plan.steps
-        ]
+    paths = [
+        resolve_detail_artifact(plan_path, plan, step, repo_root).path
+        for step in plan.steps
+    ]
     fingerprint: dict[str, str] = {}
     for path in sorted(paths):
         digest = compute_content_hash(path)

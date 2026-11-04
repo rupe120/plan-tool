@@ -23,7 +23,6 @@ from plan_tool.convergence import (
     is_blocking_finding,
 )
 from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-from plan_tool.jira_grade import GRADE_RUN
 from plan_tool.locator import slug_from_filename
 from plan_tool.review import (
     Recommendation,
@@ -1413,24 +1412,16 @@ def classify_edit_drift(
 def classify_bare_mechanism_advisory(
     history: ReportHistory,
     *,
-    grade: str = GRADE_RUN,
     passes: tuple[CompatiblePass, ...] | None = None,
 ) -> tuple[RunFinding, ...]:
-    """Return current, open bare correctness findings likely owned by detail.
-
-    The newest collapsed logical pass is the only advisory source. Its
-    immutable captured grade must be run grade; legacy, Jira-grade, and an
-    operator-selected Jira convergence view remain silent.
-    """
-    if grade != GRADE_RUN:
-        return ()
+    """Return open bare correctness findings from current completed run-grade evidence."""
     collapsed_passes = (
         build_collapsed_completeness_passes(history) if passes is None else passes
     )
     if not collapsed_passes:
         return ()
     newest = collapsed_passes[-1]
-    if newest.audit_stage != STAGE_BARE or newest.audit_revision_grade != GRADE_RUN:
+    if newest.audit_stage != STAGE_BARE or newest.audit_revision_grade != "run":
         return ()
     return tuple(
         finding
@@ -1638,7 +1629,6 @@ def diagnose_convergence(
     window: int = WINDOW_SIZE,
     audit_stage: str = STAGE_DETAIL,
     classify_domain: Optional[Callable[[RunFinding], str]] = None,
-    mechanism_advisory_grade: str = GRADE_RUN,
 ) -> ConvergenceDiagnosis:
     """The entry point: a three-state verdict over a plan's report history.
 
@@ -1668,7 +1658,6 @@ def diagnose_convergence(
     cannot disagree on the same history. Pass an explicit callback (e.g.
     keyed off :attr:`RunFinding.domain`) to agree with what
     ``completeness-audit`` currently reports as blocking for the same plan.
-    ``mechanism_advisory_grade`` gates only bare-mechanism presentation.
     """
     domain_fn = classify_domain or (lambda f: getattr(f, "domain", None) or "unknown")
     collapsed_passes = build_collapsed_completeness_passes(history)
@@ -1682,7 +1671,7 @@ def diagnose_convergence(
         passes=collapsed_passes,
     )
     bare_mechanism_findings = classify_bare_mechanism_advisory(
-        history, grade=mechanism_advisory_grade, passes=collapsed_passes
+        history, passes=collapsed_passes
     )
     series_runs = partition_series(history)
     if not series_runs:

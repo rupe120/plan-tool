@@ -47,12 +47,10 @@ from plan_tool.cli.run_cmd import (
     _build_run_resume_command,
     _commit_green_step,
     _confirm_missing_step_details,
-    _detail_grade,
     _green_commit_subject,
     _load_run_prefs,
     _open_plan_entries,
     _preflight_branch_guard,
-    _preflight_jira_grade_details,
     _prompt_run_scope,
     _record_sweep_halt,
     _save_run_prefs,
@@ -141,32 +139,6 @@ def _all_done_plan(repo_root: Path) -> Path:
         encoding="utf-8",
     )
     return path
-
-
-class TestGradeFlagSuffix:
-    """Every printed `plan-tool run` line carries the active grade.
-
-    A hint that drops it sends the operator to a run rendering from the
-    other contract's body — the mismatch `_build_run_resume_command`
-    already guards against.
-    """
-
-    @staticmethod
-    def _args(grade: str) -> argparse.Namespace:
-        return argparse.Namespace(name="p", grade=grade, detail_grade=grade)
-
-    def test_default_grade_adds_nothing(self) -> None:
-        assert run_cmd._grade_flag_suffix(self._args("run")) == ""
-
-    def test_non_default_grade_is_carried(self) -> None:
-        assert run_cmd._grade_flag_suffix(self._args("jira")) == (
-            " --detail-grade jira"
-        )
-
-    def test_missing_attribute_falls_back_to_default(self) -> None:
-        # Hand-built namespaces are a repo-wide test idiom; a missing
-        # attribute must not raise inside a console print path.
-        assert run_cmd._grade_flag_suffix(argparse.Namespace(name="p")) == ""
 
 
 class TestSweepFlagGates:
@@ -1745,9 +1717,8 @@ class TestPreflightMergedPlanGuard:
     def _patch(monkeypatch: pytest.MonkeyPatch, *, check, current: str | None = "feature", required: bool = True) -> dict:
         calls = {"check": 0}
 
-        def _check(_root, _plan, grade="run"):
+        def _check(_root, _plan):
             calls["check"] += 1
-            calls["grade"] = grade
             return check
 
         monkeypatch.setattr(run_cmd, "require_merged_plan", lambda _root: required)
@@ -1816,12 +1787,6 @@ class TestPreflightMergedPlanGuard:
         assert self._run(tmp_path) is None
         assert "edited after the plan merged" in capsys.readouterr().err
 
-    def test_the_check_is_told_which_detail_grade_the_run_will_read(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        calls = self._patch(monkeypatch, check=MergeCheck(default_ref="origin/main"))
-        assert self._run(tmp_path, detail_grade="jira") is None
-        assert calls["grade"] == "jira"
 
     def test_a_merged_plan_off_the_default_branch_proceeds_silently(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
@@ -1880,8 +1845,31 @@ class TestPreflightMergedPlanGuardCallSite:
         assert seen == []
 
 
+@pytest.mark.integration
 class TestRunHelpSurface:
     """The step's gate: ``run --help`` advertises ``--switch-branch``."""
+
+    def test_run_parser_rejects_removed_detail_grade_for_single_step_execution(
+        self, monkeypatch, capsys
+    ) -> None:
+        from plan_tool.cli import main
+
+        def unexpected(*args, **kwargs):
+            pytest.fail("Rejected options must not open a run log or execute")
+
+        monkeypatch.setattr(run_cmd.RunLogWriter, "start", unexpected)
+        monkeypatch.setattr(run_cmd, "run_step", unexpected)
+        with pytest.raises(SystemExit) as exc:
+            main(["run", "feature", "--detail-grade", "jira"])
+        assert exc.value.code == 2
+        assert "unrecognized arguments: --detail-grade jira" in capsys.readouterr().err
+
+    def test_run_help_omits_removed_detail_grade(self) -> None:
+        from plan_tool.cli import build_parser
+
+        parser = build_parser()
+        subparsers = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
+        assert "--detail-grade" not in subparsers.choices["run"].format_help()
 
     def test_run_help_advertises_switch_branch(self) -> None:
         from plan_tool.cli import build_parser
@@ -1972,413 +1960,6 @@ class TestKeyboardInterruptExitCode:
         run_end = next(e for e in events if e.get("event") == "run_end")
         assert run_end["rc"] == 130
         assert run_end["error"] == "interrupted"
-
-
-# --------------------------------------------------------------------------
-# ``--detail-grade``: the opt-in jira-grade execution lane
-# --------------------------------------------------------------------------
-
-_JIRA_ARTIFACT = """## Intent
-
-Ground a run on the compact artifact.
-
-## Change
-
-Read this body instead of the run-grade detail file.
-
-## Constraints
-
-Never substitute the run-grade body.
-
-## Done when
-
-The step executes from this artifact.
-
-## Out of scope
-
-The reconcile lane.
-"""
-
-
-def _graded_plan(repo_root: Path) -> Path:
-    """A three-step plan: step 1 done, steps 2–3 still to run."""
-    path = repo_root / "feature.md"
-    path.write_text(
-        "---\n"
-        "title: Feature\n"
-        "status: planning\n"
-        "priority: low\n"
-        "steps:\n"
-        "  - id: 1\n"
-        "    title: first step\n"
-        "    status: done\n"
-        "  - id: 2\n"
-        "    title: second step\n"
-        "    status: current\n"
-        "  - id: 3\n"
-        "    title: third step\n"
-        "    depends_on: [2]\n"
-        "---\n",
-        encoding="utf-8",
-    )
-    return path
-
-
-def _write_jira_artifact(
-    plan_path: Path, step_id: int, slug: str, body: str = _JIRA_ARTIFACT
-) -> Path:
-    path = (
-        plan_path.parent
-        / "plan-details"
-        / plan_path.stem
-        / "jira"
-        / f"{step_id:02d}-{slug}.md"
-    )
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body, encoding="utf-8")
-    return path
-
-
-def _read_run_start_flags(repo_root: Path, slug: str) -> dict:
-    """The ``flags`` payload of the single run log written under ``slug``."""
-    logs = sorted((repo_root / ".plan-tool" / "runs" / slug).glob("*.jsonl"))
-    assert logs, "no run log was written"
-    for line in logs[0].read_text(encoding="utf-8").splitlines():
-        event = _json.loads(line)
-        if event.get("event") == "run_start":
-            return event.get("flags") or {}
-    raise AssertionError("no run_start event in the run log")
-
-
-class TestDetailGradeFlagSurface:
-    """Registration and the argument-validation rejections."""
-
-    def _args(self, repo: Path, **ov) -> argparse.Namespace:
-        base = dict(
-            plans_dir=repo,
-            manifest=None,
-            repo_root=repo,
-            name="feature",
-            step=None,
-            all=False,
-            reconcile=False,
-            mode="run",
-            iterate=False,
-            dry_run=False,
-            yes=True,
-            no_save=False,
-            no_walk=False,
-            allow_missing_parent=False,
-            archive=False,
-            commit=False,
-            switch_branch=False,
-            detail_grade="jira",
-            max_iterations=10,
-            iteration_budget=900,
-            max_stall_rounds=2,
-        )
-        base.update(ov)
-        return argparse.Namespace(**base)
-
-    def test_detail_grade_flag_registered(self) -> None:
-        from plan_tool.cli import build_parser
-
-        parser = build_parser()
-        run_parser = None
-        for action in parser._actions:
-            if isinstance(action, argparse._SubParsersAction):
-                run_parser = action.choices["run"]
-                break
-        assert run_parser is not None
-        flag = next(
-            a for a in run_parser._actions if a.dest == "detail_grade"
-        )
-        assert flag.option_strings == ["--detail-grade"]
-        assert tuple(flag.choices) == ("run", "jira")
-        assert flag.default == "run"
-
-    def test_detail_grade_jira_review_mode_rejected_rc2(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        _graded_plan(tmp_path)
-        rc = run_cmd.cmd_run(self._args(tmp_path, mode="check"))
-        assert rc == 2
-        assert "execution only" in capsys.readouterr().err
-        assert not (tmp_path / ".plan-tool" / "runs").exists()
-
-    def test_detail_grade_jira_reconcile_rejected_rc2(
-        self, tmp_path: Path, capsys: pytest.CaptureFixture[str]
-    ) -> None:
-        _graded_plan(tmp_path)
-        rc = run_cmd.cmd_run(self._args(tmp_path, reconcile=True))
-        assert rc == 2
-        assert "--reconcile" in capsys.readouterr().err
-        assert not (tmp_path / ".plan-tool" / "runs").exists()
-
-    def test_default_grade_leaves_review_mode_alone(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        _graded_plan(tmp_path)
-        monkeypatch.setattr(run_cmd, "run_step", lambda *a, **k: _FakeRunResult())
-        rc = run_cmd.cmd_run(
-            self._args(tmp_path, mode="check", detail_grade="run")
-        )
-        assert rc == 0
-
-
-class TestJiraGradePreflight:
-    """The aggregated artifact check that runs before any backend call."""
-
-    def test_jira_preflight_aggregates_all_broken_steps(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        problem = _preflight_jira_grade_details(
-            plan_path, repo_root=tmp_path, step_id=None, all_steps=True
-        )
-        assert problem is not None
-        assert "02-second-step.md" in problem
-        assert "03-third-step.md" in problem
-        assert "2 steps" in problem
-
-    def test_jira_preflight_silent_when_every_step_covered(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(plan_path, 3, "third-step")
-        assert (
-            _preflight_jira_grade_details(
-                plan_path, repo_root=tmp_path, step_id=None, all_steps=True
-            )
-            is None
-        )
-
-    def test_jira_preflight_explicit_done_step_without_artifact(
-        self, tmp_path: Path
-    ) -> None:
-        # Bundle coverage exempts ``done`` steps, so a bundle covering only
-        # steps 2–3 is complete — but ``--step 1`` still cannot execute.
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(plan_path, 3, "third-step")
-
-        problem = _preflight_jira_grade_details(
-            plan_path, repo_root=tmp_path, step_id=1, all_steps=False
-        )
-        assert problem is not None
-        assert "01-first-step.md" in problem
-        assert "bundle is not at fault" in problem
-        assert "incomplete" not in problem
-
-        # The sweep's own scope is unaffected...
-        assert (
-            _preflight_jira_grade_details(
-                plan_path, repo_root=tmp_path, step_id=None, all_steps=True
-            )
-            is None
-        )
-        # ...and the export accepts the very same bundle, so the two
-        # consumers stay in agreement about it: capture_companion_export_input's
-        # real per-step capture exempts the done step (its caller only
-        # rejects _DETAIL_STATE_MISSING for a non-done step) and validates
-        # steps 2-3's artifacts cleanly.
-        from plan_tool.jira import (
-            _capture_jira_grade_step_detail,
-            _DETAIL_STATE_MISSING,
-            _DETAIL_STATE_PRESENT,
-        )
-
-        plan = parse_plan(plan_path)
-        step_1, step_2, step_3 = plan.steps
-        assert (
-            _capture_jira_grade_step_detail(plan_path, plan, step_1, tmp_path).state
-            == _DETAIL_STATE_MISSING
-        )
-        for step in (step_2, step_3):
-            assert (
-                _capture_jira_grade_step_detail(plan_path, plan, step, tmp_path).state
-                == _DETAIL_STATE_PRESENT
-            )
-
-    def test_jira_preflight_rejects_wrong_schema_body(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(
-            plan_path,
-            3,
-            "third-step",
-            body="## Summary\n\nx\n\n## Why\n\ny\n\n## Tests\n\nz\n",
-        )
-        problem = _preflight_jira_grade_details(
-            plan_path, repo_root=tmp_path, step_id=None, all_steps=True
-        )
-        assert problem is not None
-        assert "run-grade body at a jira-grade path" in problem
-
-    def test_cmd_run_jira_preflight_returns_rc2_without_invoking(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        _graded_plan(tmp_path)
-
-        def boom(*_a, **_k):
-            raise AssertionError("run_step must not be reached")
-
-        monkeypatch.setattr(run_cmd, "run_step", boom)
-        rc = run_cmd.cmd_run(
-            TestDetailGradeFlagSurface()._args(tmp_path, step=2)
-        )
-        assert rc == 2
-        assert "02-second-step.md" in capsys.readouterr().err
-        assert not (tmp_path / ".plan-tool" / "runs").exists()
-
-    def test_cmd_run_jira_preflight_fires_under_dry_run(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        _graded_plan(tmp_path)
-
-        def boom(*_a, **_k):
-            raise AssertionError("run_step must not be reached")
-
-        monkeypatch.setattr(run_cmd, "run_step", boom)
-        rc = run_cmd.cmd_run(
-            TestDetailGradeFlagSurface()._args(tmp_path, step=2, dry_run=True)
-        )
-        assert rc == 2
-
-
-class TestDetailGradeDurability:
-    """Resume command + run-log flags carry the grade."""
-
-    def _resume_args(self, **ov) -> argparse.Namespace:
-        base = dict(
-            commit=False,
-            all=False,
-            step=None,
-            archive=False,
-            dry_run=False,
-            allow_missing_parent=False,
-        )
-        base.update(ov)
-        return argparse.Namespace(**base)
-
-    def test_resume_command_includes_detail_grade(self) -> None:
-        set_active_backend(CODEX_BACKEND)
-        cmd = _build_run_resume_command(
-            self._resume_args(detail_grade="jira"), "feature"
-        )
-        assert cmd == (
-            "plan-tool --backend codex run feature --detail-grade jira"
-        )
-
-    def test_resume_command_omits_default_grade(self) -> None:
-        set_active_backend(CODEX_BACKEND)
-        cmd = _build_run_resume_command(
-            self._resume_args(detail_grade="run"), "feature"
-        )
-        assert "--detail-grade" not in cmd
-
-    def test_hand_built_namespace_defaults_to_run_grade(self) -> None:
-        # The ``_sweep_args`` idiom (and ``direct-run``'s copied namespace)
-        # carries no ``detail_grade`` attribute — that must read as run grade,
-        # never raise.
-        args = _sweep_args()
-        assert not hasattr(args, "detail_grade")
-        assert _detail_grade(args) == "run"
-        set_active_backend(CODEX_BACKEND)
-        assert "--detail-grade" not in _build_run_resume_command(args, "demo")
-
-    def test_run_log_flags_include_detail_grade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        monkeypatch.setattr(run_cmd, "run_step", lambda *a, **k: _FakeRunResult())
-        rc = run_cmd.cmd_run(
-            TestDetailGradeFlagSurface()._args(tmp_path, step=2)
-        )
-        assert rc == 0
-        flags = _read_run_start_flags(tmp_path, "feature")
-        assert flags["detail_grade"] == "jira"
-        assert flags["mode"] == "run"
-
-    def test_sweep_run_log_flags_include_detail_grade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(plan_path, 3, "third-step")
-        monkeypatch.setattr(run_cmd, "run_step", lambda *a, **k: _FakeRunResult())
-        rc = _cmd_run_sweep(
-            _sweep_args(detail_grade="jira", max_steps=1),
-            ctx=_ctx(tmp_path),
-            plan_path=plan_path,
-        )
-        assert rc == 0
-        flags = _read_run_start_flags(tmp_path, "demo")
-        assert flags["detail_grade"] == "jira"
-        assert flags["all"] is True
-
-    def test_sweep_threads_detail_grade_to_run_step(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(plan_path, 3, "third-step")
-        seen: list[str] = []
-
-        def fake_run_step(*_a, **kwargs):
-            seen.append(kwargs["detail_grade"])
-            return _FakeRunResult()
-
-        monkeypatch.setattr(run_cmd, "run_step", fake_run_step)
-        rc = _cmd_run_sweep(
-            _sweep_args(detail_grade="jira", max_steps=1),
-            ctx=_ctx(tmp_path),
-            plan_path=plan_path,
-        )
-        assert rc == 0
-        assert seen == ["jira"]
-
-    def test_sweep_rejects_broken_bundle_before_any_run_log(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        plan_path = _graded_plan(tmp_path)
-
-        def boom(*_a, **_k):
-            raise AssertionError("run_step must not be reached")
-
-        monkeypatch.setattr(run_cmd, "run_step", boom)
-        rc = _cmd_run_sweep(
-            _sweep_args(detail_grade="jira"),
-            ctx=_ctx(tmp_path),
-            plan_path=plan_path,
-        )
-        assert rc == 2
-        assert "02-second-step.md" in capsys.readouterr().err
-        assert not (tmp_path / ".plan-tool" / "runs").exists()
-
-    def test_jira_grade_sweep_skips_run_grade_detail_warning(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
-        capsys: pytest.CaptureFixture[str],
-    ) -> None:
-        # The run-grade warn/confirm helpers read ``Step.detail`` and
-        # recommend authoring it — the wrong artifact at this grade.
-        plan_path = _graded_plan(tmp_path)
-        _write_jira_artifact(plan_path, 2, "second-step")
-        _write_jira_artifact(plan_path, 3, "third-step")
-        monkeypatch.setattr(run_cmd, "run_step", lambda *a, **k: _FakeRunResult())
-        rc = _cmd_run_sweep(
-            _sweep_args(detail_grade="jira", max_steps=1),
-            ctx=_ctx(tmp_path),
-            plan_path=plan_path,
-        )
-        assert rc == 0
-        assert "has no detail file" not in capsys.readouterr().err
 
 
 # --- ``run --accept``: certify a hand-fixed step with no backend call -------
@@ -2529,11 +2110,9 @@ class TestRunAccept:
         [
             {"all": True}, {"reconcile": True}, {"dry_run": True},
             {"archive": True}, {"mode": "check"}, {"step": None},
-            {"detail_grade": "jira"},
         ],
         ids=[
             "all", "reconcile", "dry-run", "archive", "review-mode", "no-step",
-            "detail-grade",
         ],
     )
     def test_flag_combinations_that_imply_a_backend_call_are_refused(
@@ -2793,3 +2372,21 @@ class TestRunAccept:
         ).stdout.strip()
         assert "step 1 green" in subject
         assert not _working_tree_dirty(tmp_path)
+
+
+@pytest.mark.integration
+class TestRunAllSweep:
+    def test_run_parser_rejects_removed_detail_grade_for_sweep_execution(
+        self, monkeypatch, capsys
+    ) -> None:
+        from plan_tool.cli import main
+
+        def unexpected(*args, **kwargs):
+            pytest.fail("Rejected options must not open a run log or start a sweep")
+
+        monkeypatch.setattr(run_cmd.RunLogWriter, "start", unexpected)
+        monkeypatch.setattr(run_cmd, "_cmd_run_sweep", unexpected)
+        with pytest.raises(SystemExit) as exc:
+            main(["run", "feature", "--all", "--detail-grade", "jira"])
+        assert exc.value.code == 2
+        assert "unrecognized arguments: --detail-grade jira" in capsys.readouterr().err

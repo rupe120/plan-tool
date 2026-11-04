@@ -75,7 +75,7 @@ from plan_tool.convergence import (
     touch,
 )
 from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
-from plan_tool.jira_grade import GRADE_DEFAULT, GRADE_JIRA, GRADE_RUN
+
 from plan_tool.parser import (
     ParseError,
     UnsupportedPlanFormatVersionError,
@@ -1576,7 +1576,6 @@ def write_pre_apply_audit_checkpoint(
     audit_recs: list,
     budget: dict,
     bundle_status,
-    detail_grade: str = GRADE_RUN,
     code_drifted: bool = False,
     audit_shape_advisory=None,
     audit_input_snapshot=None,
@@ -1599,7 +1598,6 @@ def write_pre_apply_audit_checkpoint(
     conceptual_recs = [r for r in audit_recs if r.source == "plan-completeness"]
     det = _run_deterministic_checks(
         plan, path, ctx, plan_name=args.name, quiet=True,
-        detail_grade=detail_grade,
     )
     from plan_tool.completeness_report import prepare_audit_shape_advisory_display
 
@@ -1608,7 +1606,6 @@ def write_pre_apply_audit_checkpoint(
         plan=plan,
         plan_path=path,
         repo_root=ctx.repo_root,
-        detail_grade=detail_grade,
     )
     grouped_md = _render_grouped_report(
         plan, args, det,
@@ -1618,7 +1615,6 @@ def write_pre_apply_audit_checkpoint(
         iterate_enabled=True,
         bundle_status=bundle_status,
         budget=normalized_audit_coverage,
-        detail_grade=detail_grade,
         audit_shape_advisory_display=advisory_display,
         resumed_from_sampler_checkpoint=resumed_from_sampler_checkpoint,
         is_pre_apply_checkpoint=True,
@@ -1646,7 +1642,6 @@ def write_pre_apply_audit_checkpoint(
         quiet_presentation=True,
         suppress_plan_mass=True,
         bundle_status=bundle_status,
-        detail_grade=detail_grade,
         audit_shape_advisory=audit_shape_advisory,
         audit_shape_advisory_display=advisory_display,
         audit_coverage=normalized_audit_coverage,
@@ -1964,21 +1959,8 @@ def _granularity_findings(det_ctx) -> list:
 
 
 def _unfiltered_battery_detectors():
-    """The battery's own registry entries, every grade, split around the two
-    fan-outs.
-
-    Returns ``(pre, post)``: the entries dispatched before
-    ``collect_smell_findings`` and the ones dispatched after the
-    self-consistency partition, so the whole battery keeps its established call
-    order. The two entries this module owns rather than ``review`` are
-    ``granularity`` (see :func:`_granularity_findings`) and
-    ``data-contract-drift`` (whose adapter lives here; ``review`` can't import
-    a CLI module). Being two registries, a ``post`` entry can't declare
-    ``consumes`` on a ``pre`` key — such an entry fails at construction rather
-    than reading an absent result.
-    """
+    """Return detector tables before and after the smell/self-consistency fan-outs."""
     from plan_tool.review import (
-        DETECTOR_GRADE_INDEPENDENT,
         DetectorEntry,
         DetectorRegistry,
         INPUT_CONTRACT_DETECTORS,
@@ -1990,9 +1972,6 @@ def _unfiltered_battery_detectors():
             DetectorEntry(
                 "granularity",
                 lambda det_ctx, results: _granularity_findings(det_ctx),
-                # Reads plan structure only (titles, change types, deps) — no
-                # detail artifact at either grade.
-                grade=DETECTOR_GRADE_INDEPENDENT,
             ),
         )
     )
@@ -2005,7 +1984,6 @@ def _unfiltered_battery_detectors():
                 ),
                 # Compares the code-owned registry to DATA_CONTRACT.md; the
                 # plan's detail bundle is not an input.
-                grade=DETECTOR_GRADE_INDEPENDENT,
             ),
         )
     )
@@ -2015,25 +1993,14 @@ def _unfiltered_battery_detectors():
     )
 
 
-def _battery_detectors(detail_grade: str = GRADE_RUN):
-    """:func:`_unfiltered_battery_detectors`, filtered to ``detail_grade``.
-
-    One filter per registry, applied where the battery reaches for its table —
-    so the grade policy is data on an entry plus this one call, never a branch
-    at a detector's call site.
-    """
+def _battery_detectors():
+    """Return the retained detector tables in their established call order."""
     pre, post = _unfiltered_battery_detectors()
-    return pre.for_grade(detail_grade), post.for_grade(detail_grade)
+    return pre, post
 
 
 def all_deterministic_detectors():
-    """Every deterministic detector, every grade, in call order.
-
-    The unfiltered table the grade policy filters and the grade-class guard
-    reads: an entry no grade admits is still visible here, so a missing or
-    misspelled class is caught rather than silently vanishing from both
-    filtered views.
-    """
+    """Return every retained deterministic detector in call order."""
     from plan_tool.review import (
         SELF_CONSISTENCY_DETECTORS,
         SMELL_DETECTORS,
@@ -2043,19 +2010,13 @@ def all_deterministic_detectors():
     return pre.chain(SMELL_DETECTORS, SELF_CONSISTENCY_DETECTORS, post)
 
 
-def deterministic_detector_registry(detail_grade: str = GRADE_RUN):
-    """The deterministic detectors ``detail_grade`` runs, in call order.
-
-    :func:`all_deterministic_detectors` filtered by grade class. The default
-    keeps run grade, which is what the battery dispatches unless ``--grade
-    jira`` was passed.
-    """
-    return all_deterministic_detectors().for_grade(detail_grade)
+def deterministic_detector_registry():
+    """Return the complete run-grade deterministic detector registry."""
+    return all_deterministic_detectors()
 
 
 def _run_deterministic_checks(
     plan, path, ctx, *, plan_name: str, quiet: bool, run_purity: bool = False,
-    detail_grade: str = GRADE_RUN,
 ) -> _DeterministicReport:
     """Run the deterministic well-formedness battery and bundle its seven
     issue lists plus the advisory smell bucket.
@@ -2089,13 +2050,6 @@ def _run_deterministic_checks(
     purity pass fires at most once per audit — both call sites are ``quiet``
     under ``--iterate``, so ``quiet`` can't tell them apart. The registry's
     detectors stay no-claude regardless.
-
-    ``detail_grade`` is the grade policy over that same registry: each entry
-    carries a grade class, and the table is filtered before dispatch. At jira
-    grade the run-grade detail readers are withheld and
-    ``check_jira_grade_bundle`` supplies coverage and contract findings in
-    their place, landing in the same two buckets so the renderers, the
-    ``--json`` payload, and the blocking gate need no grade branch.
     """
     from plan_tool.review import (
         DetectorContext,
@@ -2127,16 +2081,13 @@ def _run_deterministic_checks(
         repo_root=ctx.repo_root,
         plan_name=plan_name,
         plan_path=path,
-        detail_grade=detail_grade,
     )
-    pre_detectors, post_detectors = _battery_detectors(detail_grade)
+    pre_detectors, post_detectors = _battery_detectors()
 
     # 1) Correctness primitives, then completeness primitives. ``plan_path``
     # rides in on the context, so the detail checks judge a step whose
     # ``detail:`` pointer is unset but whose canonical file is on disk — the
-    # same set the audit prompt's detail bundle renders. Every read is
-    # ``.get``-guarded: which keys the filtered table produced is the grade
-    # policy's business, not each reader's.
+    # same set the audit prompt's detail bundle renders.
     detector_results = pre_detectors.run_all(det_ctx)
     path_style_hint = detector_results["path-style-mismatch"]
     dep_issues = detector_results["deps"]
@@ -2147,13 +2098,6 @@ def _run_deterministic_checks(
     )
     files_coh_issues = detector_results.get("files-coherence", [])
     lessons_issues = detector_results["lessons-coverage"]
-    # The jira-grade arm fills the same two buckets its run-grade counterparts
-    # would have, so nothing downstream needs a grade branch.
-    jira_bundle = detector_results.get("jira-grade-bundle")
-    if jira_bundle is not None:
-        jira_cov_issues, jira_body_issues = jira_bundle
-        detail_cov_issues += jira_cov_issues
-        detail_body_issues += jira_body_issues
 
     # 2) Advisory smells — surfaced in the report only. Deliberately left
     # out of the deterministic-count tail below: smells are advisory and
@@ -2165,7 +2109,6 @@ def _run_deterministic_checks(
     granularity_recs = detector_results["granularity"]
     smell_recs = collect_smell_findings(
         plan, ctx.repo_root, plan_name=plan_name, plan_path=path,
-        detail_grade=detail_grade,
     ) + granularity_recs
     # The one claude-judged addition: per-step MIXED-STEP purity findings.
     # Gated off ``run_purity`` (not ``quiet``) so it fires once per audit,
@@ -2203,7 +2146,6 @@ def _run_deterministic_checks(
     # untouched); stays out of the advisory ``smell_recs`` bucket and ``_det_total``.
     self_consistency_recs = _self_consistency_from_smells(
         smell_recs, plan, ctx.repo_root, plan_name=plan_name, plan_path=path,
-        detail_grade=detail_grade,
     )
     smell_recs = [
         r for r in smell_recs if r.source not in SELF_CONSISTENCY_SOURCES
@@ -2234,9 +2176,7 @@ def _run_deterministic_checks(
     data_contract_recs, data_contract_payloads = detector_results[
         "data-contract-drift"
     ]
-    # Both arms of the ``## Input`` contract check, plan body first — two
-    # entries rather than one so each is separately addressable, and so the
-    # plan-body arm keeps running at a grade that withholds the detail loop.
+    # Check plan-body input contracts before per-step input contracts.
     input_contract_issues = list(
         detector_results.get("input-contract-references-plan", [])
     ) + list(detector_results.get("input-contract-references-steps", []))
@@ -2305,7 +2245,7 @@ def _run_deterministic_checks(
 
 
 def emit_bare_plan_banner(
-    plan, plan_path, repo_root, *, detail_grade=GRADE_RUN, bundle_status=None,
+    plan, plan_path, repo_root, *, bundle_status=None,
 ):
     """Print the bare-plan audit banner when ≥1 step lacks a detail file.
 
@@ -2316,15 +2256,12 @@ def emit_bare_plan_banner(
     Returns the :class:`DetailBundleStatus` so callers can phrase the
     grounding line honestly (a fully-bare plan grounds on the plan body +
     code at HEAD, not the detail bundle). (BACKLOG #61.)
-
-    ``detail_grade`` decides which artifacts count as a step's detail, so
-    bareness is reported against the bundle the audit will actually read.
     """
     if bundle_status is None:
         from plan_tool.review import audit_detail_bundle_status
 
         status = audit_detail_bundle_status(
-            plan, plan_path, repo_root, detail_grade=detail_grade
+            plan, plan_path, repo_root
         )
     else:
         status = bundle_status
@@ -2374,15 +2311,13 @@ def _sample_conceptual_audit(
     max_passes: int,
     dry_rounds: int,
     budget_report=None,
-    detail_grade: str = GRADE_RUN,
     advisory_out=None,
     bundle_status=None,
     audit_input_snapshot=None,
     require_audit_input_snapshot: bool = False,
     resumed_from_checkpoint_out=None,
 ) -> list:
-    """Run the conceptual audit (in audit-only mode), grounded in the
-    per-step detail bundle at ``detail_grade``.
+    """Run the conceptual audit against the captured run-grade bundle.
 
     The plan is read (and the repo at HEAD via Read/Grep) and judged on two
     axes — correctness (sound, internally consistent ideas) and
@@ -2393,9 +2328,6 @@ def _sample_conceptual_audit(
     ``audit_plan_until_stable`` the monkeypatch seam the domain suites drive
     through ``main()``. Not called when the iterate loop already audited
     (the orchestrator reuses that result).
-
-    ``detail_grade`` selects which grade's bundle grounds the prompt (and
-    which format contract frames it); the default keeps run grade.
     """
     from plan_tool.review import (
         audit_plan_until_stable,
@@ -2412,7 +2344,6 @@ def _sample_conceptual_audit(
 
     emit_bare_plan_banner(
         plan, path, ctx.repo_root,
-        detail_grade=detail_grade,
         bundle_status=bundle_status,
     )
     print(
@@ -2443,7 +2374,6 @@ def _sample_conceptual_audit(
             dry_rounds=dry_rounds,
             reporter=StderrReporter(),
             budget_report=budget,
-            detail_grade=detail_grade,
             advisory_out=captured_advisory,
             audit_input_snapshot=audit_input_snapshot,
             resumed_out=sampler_resumed,
@@ -2593,16 +2523,6 @@ def _effective_audit_passes(args) -> int:
     if val is not None:
         return val
     return 3
-
-
-def _completeness_detail_grade(args) -> str:
-    """Which detail grade this audit grounds on.
-
-    Read through ``getattr`` because hand-built namespaces are a repo-wide
-    test idiom and packaged pipelines reach ``cmd_completeness`` with a
-    copied namespace — the default keeps every such caller on run grade.
-    """
-    return getattr(args, "grade", GRADE_DEFAULT)
 
 
 def _coverage_input_from_reusable_audit(coverage) -> dict:
@@ -2955,7 +2875,6 @@ def _run_iterate_convergence_loop(
     audit_input_snapshot=None,
     audit_capture_failed: bool = False,
     sampled_audit_stage: str | None = None,
-    detail_grade: str = GRADE_RUN,
     reused_audit_recs=None,
     reused_audit_advisory=None,
     reused_audit_coverage=None,
@@ -2994,7 +2913,7 @@ def _run_iterate_convergence_loop(
             from plan_tool.review_persistence import AuditInputSnapshot
 
             audit_input_snapshot = AuditInputSnapshot.capture(
-                path, ctx.repo_root, detail_grade=detail_grade
+                path, ctx.repo_root
             )
         except Exception:  # noqa: BLE001 — outcome records unsampled evidence
             audit_capture_failed = True
@@ -3161,7 +3080,6 @@ def _run_iterate_convergence_loop(
                 else:
                     _bundle_status = emit_bare_plan_banner(
                         plan, path, ctx.repo_root,
-                        detail_grade=detail_grade,
                         bundle_status=bundle_status,
                     )
                     _grounding = (
@@ -3195,7 +3113,6 @@ def _run_iterate_convergence_loop(
                             reporter=_progress,
                             run_logger=run_logger,
                             budget_report=_audit_budget,
-                            detail_grade=detail_grade,
                             advisory_out=_captured_advisory,
                             audit_input_snapshot=audit_input_snapshot,
                             resumed_out=_sampler_resumed,
@@ -3258,13 +3175,6 @@ def _run_iterate_convergence_loop(
                         collect_self_consistency_findings(
                             plan, ctx.repo_root,
                             plan_name=args.name, plan_path=path,
-                            # Derived here, not captured: this loop's own
-                            # scope has no grade binding. Always ``run``
-                            # today — `--grade jira` with `--iterate` is
-                            # rejected rc 2 — but passing it keeps the loop
-                            # and the finalize gate reading one grade if that
-                            # guard is ever relaxed.
-                            detail_grade=_completeness_detail_grade(args),
                         )
                     )
 
@@ -3326,7 +3236,6 @@ def _run_iterate_convergence_loop(
                         path,
                         ctx.repo_root,
                         _checkpoint_advisory.source_plan_fingerprint,
-                        detail_grade=detail_grade,
                     ):
                         _checkpoint_advisory = None
                 _checkpoint_path = write_pre_apply_audit_checkpoint(
@@ -3334,7 +3243,6 @@ def _run_iterate_convergence_loop(
                     audit_recs=_audit_recs,
                     budget=_audit_budget,
                     bundle_status=bundle_status,
-                    detail_grade=detail_grade,
                     code_drifted=code_drifted,
                     audit_shape_advisory=_checkpoint_advisory,
                     audit_input_snapshot=audit_input_snapshot,
@@ -4082,8 +3990,6 @@ def _render_completeness_json(
     budget=None,
     halt_reason: str | None = None,
     early_exit_code: int | None = None,
-    detail_grade: str = GRADE_RUN,
-    detail_bundle_fingerprint=None,
     audit_shape_advisory_display=None,
     plan_mass=None,
     audit_stage: str = "detail",
@@ -4104,18 +4010,7 @@ def _render_completeness_json(
     the markdown report. When the iterate loop halted, ``halt_reason`` /
     ``early_exit_code`` mirror the ``## Halt`` section in the markdown report;
     ``early_exit_code`` wins over ``--fail-on-findings`` for the process rc.
-
-    ``detail_grade`` / ``detail_bundle_fingerprint`` carry the report's
-    grounding provenance onto this path too. ``finalize_completeness_run``
-    returns from its ``--json`` branch before the markdown report is written,
-    so without them a jira-grade ``--json`` run would report findings with
-    nothing binding them to the bytes judged. Both keys are emitted **only**
-    under a non-default grade, so the default payload is unchanged.
-
-    ``plan_mass`` is #238's optional structural-mass snapshot
-    (``plan_tool.completeness_report.plan_mass_to_json``); the caller omits
-    it at jira grade (detail-bundle bytes are a run-grade-path measurement),
-    and the key is emitted only when supplied."""
+    """
     import json as _json
 
     out = {
@@ -4271,9 +4166,6 @@ def _render_completeness_json(
             else qualified_result
         ),
     }
-    if detail_grade != GRADE_RUN:
-        out["detail_grade"] = detail_grade
-        out["detail_bundle_fingerprint"] = dict(detail_bundle_fingerprint or {})
     if audit_shape_advisory_display is not None:
         from plan_tool.completeness_report import audit_shape_advisory_json
 
@@ -4403,8 +4295,6 @@ def _render_grouped_report(
     iterate_enabled: bool,
     bundle_status=None,
     budget=None,
-    detail_grade: str = GRADE_RUN,
-    detail_bundle_fingerprint=None,
     audit_shape_advisory_display=None,
     resumed_from_sampler_checkpoint: bool = False,
     qualified_result=_QUALIFIED_RESULT_UNSET,
@@ -4420,15 +4310,7 @@ def _render_grouped_report(
     audit-only mode it's also printed to stdout for interactive
     inspection, while --iterate prints a concise summary instead so
     the long automated run doesn't bury its result.
-
-    ``detail_grade`` decides the coverage/body wording and the next-steps
-    block, so the report never describes a run-grade defect for a jira-grade
-    finding or names a verb the grade cannot serve.
-    ``detail_bundle_fingerprint`` is the artifact→digest map the audit read;
-    at jira grade it is rendered as provenance, pinning exactly which bytes
-    every finding below was judged against.
     """
-    jira_grade = detail_grade == GRADE_JIRA
     _g: list[str] = []
     _p = _g.append
     _p(f"## Plan completeness: {plan.title}")
@@ -4452,10 +4334,6 @@ def _render_grouped_report(
             "This provenance does not change its findings, coverage, or "
             "qualified result."
         )
-        _p("")
-    if jira_grade:
-        _p(f"**Detail grade: `{GRADE_JIRA}`.** Every finding below was judged "
-           "against the compact jira-grade artifacts listed under Grounding.")
         _p("")
     if bundle_status is not None and bundle_status.is_bare:
         kind = "bare" if bundle_status.is_fully_bare else "partially-detailed"
@@ -4556,46 +4434,22 @@ def _render_grouped_report(
         _p("### Detail coverage")
         _p("")
         for issue in det.detail_cov_issues:
-            if jira_grade:
-                # A jira artifact is never *declared* — there is no pointer
-                # axis at that grade, so the path is derived and checked.
-                _p(
-                    f"- WARN: step {issue.step_id} has no jira-grade detail "
-                    f"artifact at its derived path `{issue.detail_path}`"
-                )
-            else:
-                _p(
-                    f"- WARN: step {issue.step_id} detail "
-                    f"`{issue.detail_path}` declared but missing on disk"
-                )
+            _p(
+                f"- WARN: step {issue.step_id} detail "
+                f"`{issue.detail_path}` declared but missing on disk"
+            )
         _p("")
 
     if det.detail_body_issues:
         _p("### Detail file sections")
         _p("")
-        if jira_grade:
-            _p(
-                "_Each step's jira-grade artifact is checked against the "
-                "compact section contract, which is closed: a body that adds, "
-                "drops, empties, or repeats a section fails it._"
-            )
-        else:
-            _p(
-                "_Required headings in each step's detail file are missing or "
-                "placeholder. `## Acceptance criteria` here is the detail "
-                "file's section — not a Jira story's acceptance criteria._"
-            )
+        _p(
+            "_Required headings in each step's detail file are missing or "
+            "placeholder. `## Acceptance criteria` here is the detail "
+            "file's section — not a Jira story's acceptance criteria._"
+        )
         _p("")
         for issue in det.detail_body_issues:
-            # A producer whose defect does not reduce to one heading writes its
-            # own line; the run-grade producers leave ``message`` unset.
-            message = getattr(issue, "message", None)
-            if message:
-                _p(
-                    f"- WARN: step {issue.step_id} detail "
-                    f"`{issue.detail_path}` — {message}"
-                )
-                continue
             verb = "missing" if issue.kind == "missing" else "empty/placeholder"
             _p(
                 f"- WARN: step {issue.step_id} detail `{issue.detail_path}` "
@@ -4747,7 +4601,7 @@ def _render_grouped_report(
     _gaps = next_step_gaps(
         verdict, correctness=correctness_recs, advisory_conceptual=conceptual_recs
     )
-    _correctness_apply = bool(_gaps.close_correctness) and _bare_plan and not jira_grade
+    _correctness_apply = (bool(_gaps.close_correctness)) and (_bare_plan)
     # No apply verb targets a conceptual-correctness gap (#85), so the
     # structural bullet's auto-apply wording names deterministic findings only.
     _structural_findings_noun = "deterministic finding(s)"
@@ -4780,15 +4634,7 @@ def _render_grouped_report(
     ]
     _next_steps: list[str] = []
     if _structural:
-        if jira_grade:
-            # Every apply verb here reads the run-grade bundle or a saved
-            # sidecar this grade does not write, so name none of them.
-            _next_steps.append(
-                "- Read and fix the finding(s) above through a "
-                "session-directed edit — this grade "
-                "writes no findings sidecar, so no apply verb can replay them."
-            )
-        elif iterate_enabled:
+        if iterate_enabled:
             # The convergence loop already ran; what's left resisted
             # auto-apply or was deferred — point at the interactive walk.
             _iterate_findings_noun = (
@@ -4813,10 +4659,7 @@ def _render_grouped_report(
                 f"{_structural_findings_noun} above."
             )
     if _blocking_sc:
-        # Grade-independent by construction: it names no apply verb at either
-        # grade, because none of these sources is apply-eligible. Naming the
-        # sources lets the reader find the findings above without re-reading
-        # the whole section.
+        # Name each source so the reader can find its findings above.
         _sc_sources = ", ".join(sorted({r.source for r in _blocking_sc}))
         _sc_fix = "make a session-directed edit to the plan"
         if any(r.source == INTENT_PRESENCE_SOURCE for r in _blocking_sc):
@@ -4836,15 +4679,7 @@ def _render_grouped_report(
             "or `PLAN_TOOL_PURITY_SCAN_BUDGET` for skipped scans). "
             "No apply verb targets them."
         )
-    if _missing_detail and jira_grade:
-        # Permanently true and naming no plan-internal step number: this ships
-        # to operators and nothing owns editing it later.
-        _next_steps.append(
-            "- Author the missing jira-grade artifact(s) at the derived "
-            "path(s) named above, following the compact section contract in "
-            "`DETAIL_FORMAT.md`."
-        )
-    elif _missing_detail and not _bare_plan:
+    if _missing_detail and not _bare_plan:
         _next_steps.append(
             f"- `plan-tool detail {args.name}` — author detail files for "
             "the step(s) missing them."
@@ -4867,12 +4702,11 @@ def _render_grouped_report(
             dc.replace(_gaps, close_correctness=())
             if _correctness_apply
             else _gaps,
-            jira_grade=jira_grade,
             bare_plan=_bare_plan,
         )
     )
     _next_command, _next_description = next_stage_command(
-        args.name, bundle_status, detail_grade=detail_grade, verdict=verdict,
+        args.name, bundle_status, verdict=verdict,
     )
     if not _verdict_offers_stage(verdict):
         _covered_sources = {
@@ -4890,7 +4724,7 @@ def _render_grouped_report(
             }
             if not _bare_plan:
                 _covered_sources.add("detail-body")
-        if _missing_detail and (jira_grade or not _bare_plan):
+        if _missing_detail and ((not _bare_plan)):
             _covered_sources.add("detail-coverage")
         _next_steps.extend(
             f"- {step}"
@@ -4899,7 +4733,7 @@ def _render_grouped_report(
             )
         )
         _next_steps.append(
-            f"- {reaudit_step(args.name, verdict, detail_grade=detail_grade)}"
+            f"- {reaudit_step(args.name, verdict)}"
         )
     elif _bare_plan and not _next_steps and (_detail_level or conceptual_recs):
         _next_steps.append(
@@ -4929,7 +4763,7 @@ def _render_grouped_report(
         verdict,
         False,
     ):
-        _reaudit, _note = _reaudit_command(args.name, verdict, detail_grade=detail_grade)
+        _reaudit, _note = _reaudit_command(args.name, verdict)
         _next_steps = [
             f"- `{_reaudit}` — run a fresh audit before reusing or applying "
             "saved findings.",
@@ -4938,22 +4772,6 @@ def _render_grouped_report(
         _p(_line)
     _p("")
 
-    if jira_grade:
-        # Provenance: the grade plus the artifact→digest map, so no finding is
-        # reported without binding it to the bytes that were judged.
-        _p("### Grounding")
-        _p("")
-        _p(
-            f"_Detail grade `{GRADE_JIRA}`. The artifacts read, by digest — a "
-            "step absent from this list had no artifact on disk._"
-        )
-        _p("")
-        if detail_bundle_fingerprint:
-            for _rel, _digest in sorted(detail_bundle_fingerprint.items()):
-                _p(f"- `{_rel}` — `{_digest}`")
-        else:
-            _p("- _(no jira-grade artifact on disk for any step)_")
-        _p("")
 
     return "\n".join(_g)
 
@@ -4978,7 +4796,6 @@ def _persist_and_present_report(
     quiet_presentation: bool = False,
     suppress_plan_mass: bool = False,
     bundle_status=None,
-    detail_grade: str = GRADE_RUN,
     audit_shape_advisory=None,
     audit_shape_advisory_display=None,
     audit_coverage=None,
@@ -5027,27 +4844,7 @@ def _persist_and_present_report(
     ``finalize_completeness_run`` after an iterative loop — keeps the final
     default, so the role names the producer, never the run's mode.
 
-    ``detail_grade`` suppresses two cross-grade surfaces at jira grade, each
-    by its own named mechanism because neither covers the other:
-
-    - **the findings sidecar** — ``write_completeness_report`` is called
-      without ``recommendations``, so the ``.md`` is still written (a
-      committable record) but no ``-completeness.json`` joins the run-grade
-      audit history that ``--reuse-audit`` and ``completeness-apply`` read;
-    - **the plan-mass snapshot** — computed inside the same
-      ``skip_sidecar_write`` block and gated on ``jira_grade`` alone (a
-      jira-grade bundle's detail files live at a different path this leaf
-      doesn't compute bytes for). ``skip_sidecar_write=True`` is not the
-      remedy: it short-circuits ``build_report_md`` too, so no ``.md`` would
-      be written at all.
-
-    The operator-guidance prose is the third surface, suppressed inside
-    ``build_report_md`` (which takes the grade). The remaining readers here
-    are grade-safe by construction and need no mechanism: the three
-    fingerprint producers and ``check_concept_coverage`` read current disk,
-    not saved history, and the decision-telemetry writers record plan
-    structure and audit coverage — advisory tuning data no findings consumer
-    reads back."""
+    """
     from plan_tool.cli.console import _print_next_steps
     from plan_tool.completeness_report import (
         build_report_md,
@@ -5065,7 +4862,6 @@ def _persist_and_present_report(
         compute_plan_fingerprint,
     )
 
-    jira_grade = detail_grade == GRADE_JIRA
     withhold_final_findings_sidecar = (
         not is_pre_apply_checkpoint
         and audit_coverage_withholds_final_findings_sidecar(audit_coverage)
@@ -5076,7 +4872,6 @@ def _persist_and_present_report(
             plan=plan,
             plan_path=path,
             repo_root=ctx.repo_root,
-            detail_grade=detail_grade,
         )
     report_advisory_display = (
         None
@@ -5132,7 +4927,7 @@ def _persist_and_present_report(
             from plan_tool.granularity import GRANULARITY_SPLIT_SOURCE
 
             sidecar_recs = None
-            if not jira_grade and not withhold_final_findings_sidecar:
+            if not withhold_final_findings_sidecar:
                 mixed_split_recs = [
                     r for r in smell_recs
                     if r.source == GRANULARITY_SPLIT_SOURCE
@@ -5162,17 +4957,10 @@ def _persist_and_present_report(
                 ).as_posix()
             except ValueError:
                 plan_rel = str(path)
-            # Plan-mass snapshot (#238): reporting only, computed only for the
-            # final report (a pre-apply checkpoint isn't a real snapshot, and
-            # a jira-grade bundle's detail files live at a different path
-            # this leaf doesn't compute bytes for). ``compute_plan_mass_best_effort``
-            # is the one shared failure policy (also used by the ``--json``
-            # path in ``completeness_cmd.py``); the delta lookup below is
-            # this call site's alone, so it keeps its own narrow guard.
             plan_mass_snapshot = None
             plan_mass_first_step_count = None
             plan_mass_first_detail_bytes = None
-            if not suppress_plan_mass and not jira_grade:
+            if not suppress_plan_mass:
                 from plan_tool.completeness_report import (
                     compute_plan_mass_best_effort,
                     first_saved_plan_mass,
@@ -5214,7 +5002,6 @@ def _persist_and_present_report(
                 code_drifted=code_drifted,
                 halt_reason=halt_reason,
                 bundle_status=bundle_status,
-                detail_grade=detail_grade,
                 audit_shape_advisory_display=report_advisory_display,
                 plan_mass=plan_mass_snapshot,
                 plan_mass_first_step_count=plan_mass_first_step_count,
@@ -5238,11 +5025,6 @@ def _persist_and_present_report(
             report_path = write_completeness_report(
                 path, report_md,
                 repo_root=ctx.repo_root,
-                # Omitting ``recommendations`` is what withholds the sidecar:
-                # every saved audit is read as run-grade-grounded and carries
-                # no grade marker, so persisting one here would let a later
-                # reuse/apply/convergence consumer read this grade's findings
-                # as the other's. See the docstring.
                 recommendations=sidecar_recs,
                 plan_fingerprint=plan_fp,
                 code_fingerprint=code_fp,
@@ -5321,15 +5103,6 @@ def _persist_and_present_report(
             code_drifted=code_drifted,
             bundle_status=bundle_status,
             correctness=correctness_recs,
-            # Defensive, not live: this block is inside the ``iterate_enabled``
-            # arm, and ``--grade jira`` with ``--iterate`` is rejected rc 2, so
-            # today the grade here is always run. Passed anyway so a relaxed
-            # guard cannot silently reintroduce run-grade apply verbs into a
-            # jira-grade console block — the same backstop-at-the-function rule
-            # the detail lane's deep guards follow. The *live* jira-grade
-            # guidance is rendered by ``completeness_report`` (``_HAND_FIX_INTRO``),
-            # which receives the grade on every path.
-            detail_grade=detail_grade,
             qualified_result=outcome.qualified_result,
             is_pre_apply_checkpoint=is_pre_apply_checkpoint,
             verdict=verdict,

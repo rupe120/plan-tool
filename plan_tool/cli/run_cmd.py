@@ -46,8 +46,6 @@ from plan_tool.claude_errors import (
     reset_rate_limit_resume_command_provider,
     set_rate_limit_resume_command_provider,
 )
-from plan_tool.jira_grade import GRADE_DEFAULT, GRADE_JIRA, JIRA_GRADE_VALUES
-from plan_tool.renderer import DetailGradeError, load_jira_grade_step_detail
 from plan_tool.scope_fence import _fenced_code_spans, _strip_frontmatter
 from plan_tool.pathutil import literal_path
 from plan_tool.locator import (
@@ -113,119 +111,6 @@ from plan_tool.cli.reconcile import _cmd_run_reconcile
 # stays cycle-free.
 
 
-def _detail_grade(args: argparse.Namespace) -> str:
-    """Which detail grade this invocation runs at.
-
-    Read through ``getattr`` everywhere: hand-built namespaces are a
-    repo-wide test idiom, and ``direct_cmd.cmd_direct_run`` reaches
-    ``cmd_run`` with a copied namespace — the default keeps both on
-    run grade.
-    """
-    return getattr(args, "detail_grade", GRADE_DEFAULT)
-
-
-def _grade_flag_suffix(args: argparse.Namespace) -> str:
-    """`` --detail-grade <g>`` when a non-default grade is active, else "".
-
-    Every printed `plan-tool run` line carries it: a hint that drops the grade
-    sends the operator to a run that renders from the other contract's body.
-    """
-    grade = _detail_grade(args)
-    return f" --detail-grade {grade}" if grade != GRADE_DEFAULT else ""
-
-
-def _reject_detail_grade_conflicts(args: argparse.Namespace) -> Optional[int]:
-    """Reject a non-default grade combined with a non-execution path.
-
-    Grade selects the *input* a step executes from, so it only means
-    something on the execution path. Returns ``2`` (after printing the
-    redirect) for a review ``--mode`` or the ``--reconcile`` audit alias,
-    else ``None``. Called before any context or run-log work so a rejected
-    invocation leaves no ghost run dir.
-    """
-    detail_grade = _detail_grade(args)
-    if detail_grade == GRADE_DEFAULT:
-        return None
-    if getattr(args, "reconcile", False):
-        error(
-            f"--detail-grade {detail_grade} is mutually exclusive with "
-            f"--reconcile (the code-side audit grounds on the plan contract, "
-            f"not on a step's execution detail)."
-        )
-        return 2
-    if getattr(args, "mode", "run") != "run":
-        error(
-            f"--detail-grade {detail_grade} applies to execution only (got "
-            f"--mode {args.mode}); review modes carry their own grounding."
-        )
-        return 2
-    return None
-
-
-def _preflight_jira_grade_details(
-    plan_path: Path,
-    *,
-    repo_root: Path,
-    step_id: Optional[int],
-    all_steps: bool,
-) -> Optional[str]:
-    """Aggregate every in-scope step that has no usable jira-grade artifact.
-
-    Returns one error message naming *all* broken steps (an operator
-    repairing a bundle wants the whole list) or ``None`` when every in-scope
-    step can be executed at jira grade. Resolution and validation go through
-    :func:`plan_tool.renderer.load_jira_grade_step_detail`, so this check and
-    the render-time gate agree by construction.
-
-    Scope is the steps this invocation would actually execute: the
-    not-yet-done steps for a sweep, else the single step ``step_id``
-    resolves to. That is at or inside the bundle-coverage rule's non-``done``
-    set — a run may check fewer steps than the rule, never more, so ``run``
-    can never reject a bundle the audit and the export accept.
-
-    An explicitly requested ``done`` step is the one case where scope leaves
-    that set: ``resolve_step`` honours ``--step N`` at any status. It is
-    still checked (a step with no body cannot execute), but reported as an
-    execution problem — bundle coverage exempts ``done`` steps, so the
-    bundle is not at fault.
-
-    A plan that fails to parse falls through (``None``); ``run_step``
-    surfaces the same error with a better message.
-    """
-    try:
-        plan = parse_plan(plan_path)
-        if all_steps:
-            steps = [s for s in plan.steps if s.status != StepStatus.DONE]
-        else:
-            steps = [resolve_step(plan, step_id)]
-    except (OSError, ParseError, ValidationError, LauncherError):
-        return None
-
-    problems: list[str] = []
-    for step in steps:
-        try:
-            load_jira_grade_step_detail(
-                plan, step, plan_path=plan_path, repo_root=repo_root
-            )
-        except DetailGradeError as exc:
-            note = (
-                " (this step is done, which jira-grade bundle coverage "
-                "exempts — the bundle is not at fault; this run simply has "
-                "no body to execute from)"
-                if step.status == StepStatus.DONE
-                else ""
-            )
-            problems.append(f"{exc}{note}")
-    if not problems:
-        return None
-    noun = "step" if len(problems) == 1 else "steps"
-    bullets = "\n".join(f"- {body}" for body in problems)
-    return (
-        f"--detail-grade {GRADE_JIRA} cannot execute {len(problems)} "
-        f"{noun}:\n{bullets}"
-    )
-
-
 def _build_run_resume_command(
     args: argparse.Namespace,
     plan_name: str,
@@ -263,9 +148,6 @@ def _build_run_resume_command(
         argv.append("--dry-run")
     if getattr(args, "allow_missing_parent", False):
         argv.append("--allow-missing-parent")
-    detail_grade = _detail_grade(args)
-    if detail_grade != GRADE_DEFAULT:
-        argv.extend(["--detail-grade", detail_grade])
     return shlex.join(argv)
 
 
@@ -388,7 +270,7 @@ def _preflight_merged_plan_guard(
         return None
     if not require_merged_plan(ctx.repo_root):
         return None
-    check = check_plan_merged(ctx.repo_root, plan_path, _detail_grade(args))
+    check = check_plan_merged(ctx.repo_root, plan_path)
     if check.unverifiable is not None:
         if check.unverifiable != NO_REMOTE:
             warn(f"cannot verify the plan is on the default branch: {check.unverifiable}; proceeding.")
@@ -937,8 +819,6 @@ def _accept_flag_error(args: argparse.Namespace) -> Optional[int]:
             ("--reconcile", getattr(args, "reconcile", False)),
             ("--dry-run", args.dry_run),
             ("--archive", getattr(args, "archive", False)),
-            (f"--detail-grade {_detail_grade(args)}",
-             _detail_grade(args) != GRADE_DEFAULT),
             (f"--mode {args.mode}", args.mode != "run"),
         )
         if active
@@ -1054,11 +934,6 @@ def cmd_run(args: argparse.Namespace) -> int:
     See ``docs/reference/contracts/process.md`` for the execution and reconciliation
     authority boundaries.
     """
-    # Grade/mode conflicts are pure argument validation — rejected before any
-    # context or run-log work so a bad invocation leaves nothing behind.
-    grade_conflict_rc = _reject_detail_grade_conflicts(args)
-    if grade_conflict_rc is not None:
-        return grade_conflict_rc
     accept_conflict_rc = _accept_flag_error(args)
     if accept_conflict_rc is not None:
         return accept_conflict_rc
@@ -1246,24 +1121,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     # spending a claude call. Scoped to the execution mode and skipped in
     # --dry-run, superseding the older non-blocking recommendation. Placed
     # before the run log opens so a decline leaves no ghost run dir.
-    #
-    # Under a non-default grade the run-grade warn/confirm helpers are the
-    # wrong check (they read ``Step.detail`` and recommend authoring it) and
-    # the wrong shape (warn-and-proceed is the silent fallback the grade
-    # forbids). The hard aggregated preflight below replaces them, and runs
-    # under --dry-run too so a broken artifact never reaches a render.
-    detail_grade = _detail_grade(args)
-    if detail_grade == GRADE_JIRA:
-        problem = _preflight_jira_grade_details(
-            path,
-            repo_root=ctx.repo_root,
-            step_id=args.step,
-            all_steps=False,
-        )
-        if problem is not None:
-            error(problem)
-            return 2
-    elif args.mode == "run" and not args.dry_run:
+    if args.mode == "run" and not args.dry_run:
         if not _confirm_missing_step_details(
             path,
             repo_root=ctx.repo_root,
@@ -1288,7 +1146,6 @@ def cmd_run(args: argparse.Namespace) -> int:
         step_filter=args.step,
         flags={
             "mode": args.mode,
-            "detail_grade": detail_grade,
             "dry_run": args.dry_run,
             "no_save": args.no_save,
             "no_walk": args.no_walk,
@@ -1349,7 +1206,6 @@ def cmd_run(args: argparse.Namespace) -> int:
                 dry_run=args.dry_run,
                 allow_missing_parent=args.allow_missing_parent,
                 run_logger=run_logger,
-                detail_grade=detail_grade,
             )
         except LauncherError as exc:
             err_msg = str(exc)
@@ -1382,10 +1238,8 @@ def cmd_run(args: argparse.Namespace) -> int:
                         "inspect the run log for the failed call",
                     ),
                     (
-                        # Carry the grade: replaying without it re-renders the
-                        # run-grade prompt, not the one that failed.
                         f"plan-tool run {args.name} --step {result.step_id}"
-                        f"{_grade_flag_suffix(args)} --dry-run",
+                        f" --dry-run",
                         "re-render the prompt without invoking claude",
                     ),
                     (
@@ -1467,7 +1321,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                 "Next steps:",
                 [
                     (
-                        f"plan-tool run {args.name}{_grade_flag_suffix(args)}",
+                        f"plan-tool run {args.name}",
                         f"execute step {result.advanced_to}",
                     ),
                     (
@@ -1647,23 +1501,7 @@ def _cmd_run_sweep(
     # just below), so this — reading the operator's *original* ``--yes`` —
     # is the one chance to ask. A non-interactive stdin proceeds with the
     # warning. Skipped under --dry-run (no claude call to ground).
-    #
-    # A non-default grade swaps that soft gate for the hard aggregated
-    # artifact check over every step the sweep would run (see
-    # ``_preflight_jira_grade_details``): one rc=2 naming every broken step,
-    # before the first run log opens and under --dry-run too.
-    detail_grade = _detail_grade(args)
-    if detail_grade == GRADE_JIRA:
-        problem = _preflight_jira_grade_details(
-            plan_path,
-            repo_root=ctx.repo_root,
-            step_id=None,
-            all_steps=True,
-        )
-        if problem is not None:
-            error(problem)
-            return 2
-    elif not args.dry_run:
+    if not args.dry_run:
         if not _confirm_missing_step_details(
             plan_path,
             repo_root=ctx.repo_root,
@@ -1697,7 +1535,7 @@ def _cmd_run_sweep(
             print(
                 f"sweep capped at --max-steps {args.max_steps}; "
                 f"stopping. Re-run `plan-tool run {args.name}"
-                f"{_grade_flag_suffix(args)} --all` "
+                f" --all` "
                 f"to continue.",
                 file=sys.stderr,
             )
@@ -1749,7 +1587,6 @@ def _cmd_run_sweep(
             step_filter=None,
             flags={
                 "mode": args.mode,
-                "detail_grade": detail_grade,
                 "dry_run": args.dry_run,
                 "no_save": args.no_save,
                 "no_walk": args.no_walk,
@@ -1773,9 +1610,7 @@ def _cmd_run_sweep(
             # Recommend a detail file once per swept step before its
             # claude call (suppressed in --dry-run); the sweep is always
             # the execution mode, so the directive applies every step.
-            # Skipped at a non-default grade — it reads ``Step.detail``,
-            # which that grade does not execute from.
-            if not args.dry_run and detail_grade == GRADE_DEFAULT:
+            if not args.dry_run:
                 _warn_missing_step_detail(
                     plan_path,
                     repo_root=ctx.repo_root,
@@ -1792,7 +1627,6 @@ def _cmd_run_sweep(
                     dry_run=args.dry_run,
                     allow_missing_parent=args.allow_missing_parent,
                     run_logger=run_logger,
-                    detail_grade=detail_grade,
                 )
             except LauncherError as exc:
                 # A LauncherError from run_step itself (e.g. preflight
@@ -2122,7 +1956,7 @@ def register(subparsers) -> dict[str, Handler]:
             "only the plan and lessons files. Refused unless the step is "
             "current and committed, and when nothing certifies it. Not "
             "combinable with --all, --reconcile, --dry-run, --archive, "
-            "--detail-grade, or a review --mode (--iterate warns)."
+            "or a review --mode (--iterate warns)."
         ),
     )
     p_run.add_argument(
@@ -2194,25 +2028,6 @@ def register(subparsers) -> dict[str, Handler]:
             "plan unchanged. Review modes parse claude's `## Findings` block "
             "and print a verdict; a completed audit exits 0 even with "
             "CRITICAL findings."
-        ),
-    )
-    # Grade is an *input* axis, deliberately separate from ``--mode``: the
-    # public mode stays ``run`` at every grade, so the lifecycle (mark-done,
-    # advance, the test-authoring gate) and the ``--all`` sweep's mode
-    # allowlist are untouched.
-    p_run.add_argument(
-        "--detail-grade",
-        choices=JIRA_GRADE_VALUES,
-        default=GRADE_DEFAULT,
-        dest="detail_grade",
-        help=(
-            f"which detail artifact the step executes from (default: "
-            f"{GRADE_DEFAULT}). `{GRADE_JIRA}` reads the compact jira-grade "
-            "artifacts under plan-details/<plan_slug>/jira/ and fails before "
-            "any backend call — including under --dry-run — when one is "
-            "missing or off-contract; the run-grade detail file is never "
-            "substituted. Execution only: rejected with a review --mode or "
-            "with --reconcile."
         ),
     )
     p_run.add_argument(

@@ -1128,8 +1128,9 @@ def _companion_setup(tmp_path: Path, *, epic_key: str = "AUTH") -> tuple[Path, P
     return plan, manifest
 
 
+@pytest.mark.integration
 class TestCmdJiraPairedExport:
-    def test_default_export_passes_the_derived_story_and_handoff_paths(
+    def test_default_export_uses_run_grade_without_grade_argument(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
     ) -> None:
         from plan_tool.cli import app as cli_module
@@ -1160,36 +1161,70 @@ class TestCmdJiraPairedExport:
         assert seen["handoff_output_path"] == (
             plan.parent / "jira-handoffs" / "demo" / "jira-stories.developer-handoff.md"
         )
-        assert seen["grade"] == "run"
+        assert "grade" not in seen
         assert "wrote story to" in capsys.readouterr().out
 
-    def test_paired_export_forwards_jira_grade(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    def test_run_detail_publishes_both_artifacts_from_the_cli(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        import json
+        from plan_tool.cli import app as cli_module
+        from plan_tool.jira import export_jira
+        from plan_tool.jira_handoff import read_markdown_provenance
+
+        plan, manifest = _companion_setup(tmp_path)
+        plan.write_text(plan.read_text().replace(
+            "    status: current", "    status: current\n    intent: Parse plan input\n    detail: detail.md"
+        ))
+        detail = "# First\n<!-- plan-tool:detail-format-version: 1 -->\n" + "\n".join(
+            f"## {heading}\n\nCLI run detail\n" for heading in (
+                "Summary", "Table of Contents", "Why", "Files",
+                "Implementation", "Tests", "Acceptance criteria",
+            )
+        )
+        (tmp_path / "detail.md").write_text(detail)
+
+        def invoke(prompt: str) -> str:
+            assert detail in prompt
+            return json.dumps([{
+                "id": "AUTH-S1", "title": "First", "description": "Ship first",
+                "acceptance_criteria": ["Works"], "files": ["parser.py"],
+                "steps": [1], "depends_on": [], "estimate_hours": 2,
+            }])
+
+        def export_with_stubbed_backend(path: Path, **kwargs: object):
+            return export_jira(path, invoker=invoke, **kwargs)
+
+        monkeypatch.setattr("plan_tool.cli.jira_cmd.export_jira", export_with_stubbed_backend)
+        monkeypatch.chdir(tmp_path)
+        assert cli_module.main([
+            "--manifest", str(manifest), "jira", "demo", "--epic", "AUTH",
+        ]) == 0
+        story = derive_jira_output_path(plan, None, format="markdown")
+        handoff = plan.parent / "jira-handoffs" / "demo" / "jira-stories.developer-handoff.md"
+        story_proof = read_markdown_provenance(story.read_text())
+        handoff_proof = read_markdown_provenance(handoff.read_text())
+        assert story_proof is not None and handoff_proof is not None
+        assert story_proof.fingerprint == handoff_proof.fingerprint
+        assert story_proof.pair_identity == handoff_proof.pair_identity
+        assert "detail.md" in handoff.read_text()
+
+    @pytest.mark.parametrize("grade", ["jira", "run", "unknown"])
+    def test_jira_grade_selector_is_rejected_by_argparse(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, grade: str
     ) -> None:
         from plan_tool.cli import app as cli_module
 
         _, manifest = _companion_setup(tmp_path)
-        seen: dict[str, object] = {}
-
-        def fake_export(plan_path: Path, **kwargs: object) -> JiraPublicationResult:
-            seen.update(kwargs)
-            return JiraPublicationResult(
-                story_path=kwargs["story_output_path"],
-                handoff_path=kwargs["handoff_output_path"],
-                story_output="story",
-                handoff_output="handoff",
-                stories=[],
-                dropped_history=[],
-                changed_created_tickets=[],
-                created_to_dropped=[],
-            )
-
-        monkeypatch.setattr("plan_tool.cli.jira_cmd.export_jira", fake_export)
+        def never_export(*args: object, **kwargs: object) -> None:
+            raise AssertionError("removed selectors must fail before export")
+        monkeypatch.setattr("plan_tool.cli.jira_cmd.export_jira", never_export)
         monkeypatch.chdir(tmp_path)
-        assert cli_module.main(
-            ["--manifest", str(manifest), "jira", "demo", "--epic", "AUTH", "--grade", "jira"]
-        ) == 0
-        assert seen["grade"] == "jira"
+        with pytest.raises(SystemExit) as exc:
+            cli_module.main(
+                ["--manifest", str(manifest), "jira", "demo", "--grade", grade]
+            )
+        assert exc.value.code == 2
 
     def test_no_write_renders_and_prints_both_artifacts(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]

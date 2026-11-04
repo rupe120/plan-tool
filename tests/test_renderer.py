@@ -8,12 +8,10 @@ import pytest
 
 from plan_tool import parse_plan_text
 from plan_tool.detail_artifacts import (
-    derive_jira_detail_path,
     render_detail_format_version_marker,
 )
 from plan_tool.renderer import (
     DetailGradeError,
-    load_jira_grade_step_detail,
     prompts_dir,
     render_prompt,
 )
@@ -176,6 +174,36 @@ steps:
 
 
 class TestRenderRunPrompt:
+    def test_retired_jira_detail_reader_is_not_exposed(self) -> None:
+        import plan_tool.renderer as renderer
+
+        assert not hasattr(renderer, "load_jira_grade_step_detail")
+
+    def test_render_prompt_rejects_removed_detail_grade_selector(self, tmp_path: Path) -> None:
+        plan = _plan()
+        with pytest.raises(TypeError, match="detail_grade"):
+            render_prompt(plan, plan.step_by_id(2), repo_root=tmp_path, detail_grade="jira")
+
+    def test_default_run_rendering_uses_declared_run_grade_detail(self, tmp_path: Path) -> None:
+        from string import Template
+        import plan_tool.renderer as renderer
+
+        plan = _plan()
+        step = plan.step_by_id(2)
+        body = "Declared detail: café"
+        detail = tmp_path / step.detail
+        detail.parent.mkdir(parents=True)
+        detail.write_text(body, encoding="utf-8")
+        blocks = []
+        prompt = render_prompt(plan, step, repo_root=tmp_path, collect_blocks=blocks)
+        expected = Template((renderer.prompts_dir() / "run.md").read_text()).safe_substitute(
+            renderer._build_variables(plan, step, repo_root=tmp_path)
+        )
+        assert prompt == expected
+        assert body in prompt
+        assert dict(blocks)["step detail"] == len(body.encode("utf-8"))
+        assert not (renderer.prompts_dir() / "run-jira.md").exists()
+
     def test_substitutes_plan_and_step_fields(self, tmp_path: Path) -> None:
         plan = _plan()
         step = plan.step_by_id(2)
@@ -248,230 +276,14 @@ class TestRenderRunPrompt:
             render_prompt(plan, step, repo_root=tmp_path, mode="does-not-exist")
 
 
-# A conforming jira-grade artifact: the five required H2s, nothing else.
-_JIRA_BODY = """## Intent
-
-Prove the renderer reads the compact artifact. UNIQUE_JIRA_MARKER_ABC
-
-## Change
-
-Add the grade parameter and the strict loader.
-
-## Constraints
-
-Never substitute the run-grade body.
-
-## Done when
-
-The rendered prompt carries this body.
-
-## Out of scope
-
-The reconcile lane.
-"""
-
-# A run-grade body parked at the jira-grade path — the mislabeling case.
-_RUN_GRADE_BODY = """## Summary
-
-Seven sections, not five.
-
-## Why
-
-Because this is the run-grade schema.
-
-## Files (creates vs edits)
-
-- `a.py`
-
-## Implementation
-
-Do the thing.
-
-## Tests
-
-Test the thing.
-
-## Acceptance criteria
-
-- It works.
-"""
 
 
 def _plan_file(tmp_path: Path) -> Path:
-    """Write the test plan to disk so jira-grade paths can be derived."""
+    """Write the test plan to disk."""
     plan_path = tmp_path / "docs" / "implementation-plans" / "1-render-test.md"
     plan_path.parent.mkdir(parents=True, exist_ok=True)
     plan_path.write_text(_PLAN_YAML, encoding="utf-8")
     return plan_path
-
-
-def _jira_artifact_path(plan_path: Path) -> Path:
-    """Where step 2's jira-grade artifact is derived to."""
-    return (
-        plan_path.parent
-        / "plan-details"
-        / "render-test"
-        / "jira"
-        / "02-step-two.md"
-    )
-
-
-def _write_run_grade_detail(tmp_path: Path, body: str) -> None:
-    """Write the run-grade file ``Step.detail`` points at."""
-    detail_path = tmp_path / "plan-details" / "render-test" / "02-step-two.md"
-    detail_path.parent.mkdir(parents=True, exist_ok=True)
-    detail_path.write_text(body, encoding="utf-8")
-
-
-class TestRenderJiraGradePrompt:
-    def test_jira_grade_renders_jira_body(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        _write_run_grade_detail(tmp_path, "RUN_GRADE_MARKER_ZZZ")
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_JIRA_BODY, encoding="utf-8")
-
-        prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="jira",
-        )
-        assert "UNIQUE_JIRA_MARKER_ABC" in prompt
-        assert "RUN_GRADE_MARKER_ZZZ" not in prompt
-
-    def test_jira_grade_uses_run_jira_template(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_JIRA_BODY, encoding="utf-8")
-
-        prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="jira",
-        )
-        # Framing unique to the jira-grade template.
-        assert "compact contract with five sections" in prompt
-        # Framing unique to prompts/run.md.
-        assert "Choose intuitive, self-descriptive names" not in prompt
-        assert "${" not in prompt
-
-    def test_jira_grade_missing_artifact_raises(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        _write_run_grade_detail(tmp_path, "RUN_GRADE_MARKER_ZZZ")
-
-        with pytest.raises(DetailGradeError) as excinfo:
-            render_prompt(
-                plan, step, repo_root=tmp_path, mode="run",
-                plan_path=plan_path, detail_grade="jira",
-            )
-        message = str(excinfo.value)
-        assert "02-step-two.md" in message  # names the derived path
-        assert "## Intent" in message  # states the durable contract
-        assert "RUN_GRADE_MARKER_ZZZ" not in message
-
-    def test_jira_grade_wrong_schema_raises(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_RUN_GRADE_BODY, encoding="utf-8")
-
-        with pytest.raises(DetailGradeError) as excinfo:
-            render_prompt(
-                plan, step, repo_root=tmp_path, mode="run",
-                plan_path=plan_path, detail_grade="jira",
-            )
-        assert "run-grade body at a jira-grade path" in str(excinfo.value)
-
-    def test_jira_grade_collect_blocks_measures_jira_body(
-        self, tmp_path: Path
-    ) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        _write_run_grade_detail(tmp_path, "a much longer run-grade body " * 20)
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_JIRA_BODY, encoding="utf-8")
-
-        blocks: list[tuple[str, int]] = []
-        render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="jira", collect_blocks=blocks,
-        )
-        assert ("step detail", len(_JIRA_BODY.encode("utf-8"))) in blocks
-
-    def test_jira_grade_needs_plan_path(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        with pytest.raises(DetailGradeError):
-            render_prompt(
-                plan, step, repo_root=tmp_path, mode="run", detail_grade="jira"
-            )
-
-    def test_unknown_grade_raises(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        with pytest.raises(DetailGradeError):
-            render_prompt(
-                plan, step, repo_root=tmp_path, mode="run",
-                plan_path=_plan_file(tmp_path), detail_grade="nonesuch",
-            )
-
-    def test_default_grade_render_unchanged(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        _write_run_grade_detail(tmp_path, "RUN_GRADE_MARKER_ZZZ")
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_JIRA_BODY, encoding="utf-8")
-
-        implicit = render_prompt(plan, step, repo_root=tmp_path, mode="run")
-        explicit = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="run",
-        )
-        assert implicit == explicit
-        assert "RUN_GRADE_MARKER_ZZZ" in implicit
-        assert "UNIQUE_JIRA_MARKER_ABC" not in implicit
-
-    def test_jira_grade_only_swaps_the_execution_template(
-        self, tmp_path: Path
-    ) -> None:
-        # Grade selects the detail source at every mode; only ``run`` has a
-        # grade-specific template, so a review mode keeps prompts/<mode>.md.
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        artifact = _jira_artifact_path(plan_path)
-        artifact.parent.mkdir(parents=True, exist_ok=True)
-        artifact.write_text(_JIRA_BODY, encoding="utf-8")
-
-        prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="check",
-            plan_path=plan_path, detail_grade="jira",
-        )
-        assert "compact contract with five sections" not in prompt
-
-    def test_loader_reports_repo_relative_path(self, tmp_path: Path) -> None:
-        plan = _plan()
-        step = plan.step_by_id(2)
-        plan_path = _plan_file(tmp_path)
-        with pytest.raises(DetailGradeError) as excinfo:
-            load_jira_grade_step_detail(
-                plan, step, plan_path=plan_path, repo_root=tmp_path
-            )
-        assert (
-            "docs/implementation-plans/plan-details/render-test/jira/"
-            "02-step-two.md" in str(excinfo.value)
-        )
 
 
 _FENCED_PLAN_YAML = """---
@@ -531,18 +343,13 @@ def _write_plan(tmp_path: Path, yaml: str, name: str = "1-fenced.md") -> Path:
 
 
 class TestScopeFenceInRunPrompt:
-    """Both fence halves reach ``run`` and ``run-jira`` through one variable."""
+    """The run prompt carries the plan and step scope fence."""
 
     @staticmethod
     def _fenced(tmp_path: Path):
         plan_path = _write_plan(tmp_path, _FENCED_PLAN_YAML)
         return plan_path, parse_plan_text(_FENCED_PLAN_YAML)
 
-    @staticmethod
-    def _write_jira_artifact(plan_path: Path, plan, step) -> None:
-        path = derive_jira_detail_path(plan_path, plan, step)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(_JIRA_BODY, encoding="utf-8")
 
     def test_fence_reaches_the_run_prompt(self, tmp_path: Path) -> None:
         plan_path, plan = self._fenced(tmp_path)
@@ -555,40 +362,6 @@ class TestScopeFenceInRunPrompt:
         assert "GUARDRAIL_MARKER" in prompt
         assert "OUT_OF_SCOPE_MARKER" in prompt
 
-    def test_fence_reaches_the_run_jira_prompt(self, tmp_path: Path) -> None:
-        plan_path, plan = self._fenced(tmp_path)
-        step = plan.step_by_id(1)
-        self._write_jira_artifact(plan_path, plan, step)
-
-        prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="jira",
-        )
-        assert "compact contract with five sections" in prompt  # the jira template
-        assert "PLAN_INTENT_MARKER" in prompt
-        assert "STEP_ONE_INTENT_MARKER" in prompt
-        assert "OUT_OF_SCOPE_MARKER" in prompt
-
-    def test_run_and_run_jira_carry_the_same_fence(self, tmp_path: Path) -> None:
-        """One variable, built above the template choice — the two grades
-        cannot drift into rendering different fences."""
-        plan_path, plan = self._fenced(tmp_path)
-        step = plan.step_by_id(1)
-        self._write_jira_artifact(plan_path, plan, step)
-
-        run_prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run", plan_path=plan_path,
-        )
-        jira_prompt = render_prompt(
-            plan, step, repo_root=tmp_path, mode="run",
-            plan_path=plan_path, detail_grade="jira",
-        )
-
-        def fence_of(prompt: str) -> str:
-            start = prompt.index("**Scope fence")
-            return prompt[start:prompt.index("## What to do", start)]
-
-        assert fence_of(run_prompt) == fence_of(jira_prompt)
 
     def test_plan_intent_reaches_the_run_prompt(self, tmp_path: Path) -> None:
         yaml = _FENCED_PLAN_YAML.replace(

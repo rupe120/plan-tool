@@ -55,7 +55,6 @@ from plan_tool.convergence_diagnosis import (
     _structural_recurs_in_streak,
 )
 from plan_tool.convergence import STAGE_BARE, STAGE_DETAIL
-from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN
 from plan_tool.review import Recommendation
 from plan_tool.review_persistence import (
     Annotation,
@@ -1203,7 +1202,7 @@ def _bare_mechanism_history(
     *,
     annotations: dict[str, Annotation] | None = None,
     audit_stage: str = STAGE_BARE,
-    audit_revision_grade: str | None = GRADE_RUN,
+    audit_revision_grade: str | None = 'run',
 ) -> ReportHistory:
     return _history(
         [
@@ -1255,7 +1254,7 @@ def test_bare_mechanism_advisory_requires_open_bare_plan_correctness_finding() -
     assert all(not classify_bare_mechanism_advisory(history) for history in cases)
 
 
-def test_bare_mechanism_advisory_uses_only_completed_run_grade_history() -> None:
+def test_bare_mechanism_advisory_requires_completed_run_grade_evidence() -> None:
     finding = _finding(
         "mechanism",
         source="plan-correctness",
@@ -1264,31 +1263,30 @@ def test_bare_mechanism_advisory_uses_only_completed_run_grade_history() -> None
     )
     run_history = _bare_mechanism_history([finding])
     jira_history = _bare_mechanism_history(
-        [finding], audit_revision_grade=GRADE_JIRA
+        [finding], audit_revision_grade='jira'
     )
     legacy_history = _bare_mechanism_history([finding], audit_revision_grade=None)
+    malformed_history = _bare_mechanism_history([finding], audit_revision_grade="unknown")
     collapsed_jira_replay = _history(
         [
             _snapshot(
                 [finding],
                 created_at="2026-06-01T09:00:00Z",
-                audit_revision_grade=GRADE_RUN,
+                audit_revision_grade='run',
             ),
             _snapshot(
                 [finding],
                 created_at="2026-06-02T09:00:00Z",
-                audit_revision_grade=GRADE_JIRA,
+                audit_revision_grade='jira',
             ),
         ]
     )
 
     baseline = diagnose_convergence(run_history)
     assert baseline.bare_mechanism_findings == (finding,)
-    assert not diagnose_convergence(
-        run_history, mechanism_advisory_grade=GRADE_JIRA
-    ).bare_mechanism_findings
     assert not diagnose_convergence(jira_history).bare_mechanism_findings
     assert not diagnose_convergence(legacy_history).bare_mechanism_findings
+    assert not diagnose_convergence(malformed_history).bare_mechanism_findings
     assert not diagnose_convergence(collapsed_jira_replay).bare_mechanism_findings
     assert diagnose_convergence(jira_history).verdict == baseline.verdict
 

@@ -3,7 +3,7 @@
 ## Usage
 
 ```
-plan-tool jira [-h] [-y] [--show] [--lint] [--input INPUT] [--max-hours MAX_HOURS] [--format {markdown,json}] [--grade {run,jira}] [--output OUTPUT] [--no-write] [--stdout] [--epic EPIC] [--jira-tag JIRA_TAG] [--handoff-output HANDOFF_OUTPUT] [--adopt-existing] [name]
+plan-tool jira [-h] [-y] [--show] [--lint] [--input INPUT] [--max-hours MAX_HOURS] [--format {markdown,json}] [--output OUTPUT] [--no-write] [--stdout] [--epic EPIC] [--jira-tag JIRA_TAG] [--handoff-output HANDOFF_OUTPUT] [--adopt-existing] [name]
 ```
 
 ## Arguments
@@ -22,7 +22,6 @@ plan-tool jira [-h] [-y] [--show] [--lint] [--input INPUT] [--max-hours MAX_HOUR
 | `--input` `INPUT` | — | with --lint, check this existing jira-stories markdown/json file instead of resolving a plan's conventional output |
 | `--max-hours` `MAX_HOURS` | `8` | advisory per-story size target in hours (default: 8). A soft target, not a hard cap — stories are sized to be atomic PRs (independently mergeable without breaking the build), so a large-but-atomic story is kept whole rather than fragmented. |
 | `--format` `{markdown|json}` | `markdown` | output format (default: markdown, paste-ready into JIRA) |
-| `--grade` `{run|jira}` | `run` | which detail bundle grounds the stories (default: run). `jira` reads the compact jira-grade artifacts under plan-details/<plan_slug>/jira/ and fails before any backend call when one is missing (on a committed step that isn't done) or off-contract — the run-grade detail file is never substituted. |
 | `--output` `OUTPUT` | — | explicit output file path. Default: <plan_dir>/plan-details/<plan_slug>/jira-stories.{md,json} |
 | `--no-write` | off | invoke the story generator but do not write either artifact; print the story and developer handoff instead |
 | `--stdout` | off | also print the formatted output to stdout (default prints only a short summary line when writing succeeds) |

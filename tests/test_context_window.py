@@ -405,7 +405,7 @@ def test_a_605kb_prompt_is_measured_against_each_lanes_own_resolved_window(tmp_p
 # --- every call site resolves the window ---------------------------------------
 
 
-_EXPECTED_SITES = {"shell.py": 1, "review.py": 3, "create.py": 1, "detail.py": 3, "launcher.py": 3}
+_EXPECTED_SITES = {"shell.py": 1, "review.py": 3, "create.py": 1, "detail.py": 2, "launcher.py": 3}
 
 
 def test_every_budget_call_site_resolves_the_window_and_only_the_refusal_gate_excludes_observed() -> None:

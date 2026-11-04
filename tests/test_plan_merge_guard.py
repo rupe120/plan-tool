@@ -8,8 +8,6 @@ from pathlib import Path
 
 import pytest
 
-from plan_tool.detail_artifacts import derive_jira_detail_path
-from plan_tool.parser import parse_plan
 from plan_tool.plan_merge_guard import NO_REMOTE, check_plan_merged, default_branch_name
 
 PLAN = "docs/implementation-plans/demo.md"
@@ -49,8 +47,8 @@ class Repo:
         self.git("push", "-q", "origin", "HEAD:main")
         self.git("fetch", "-q", "origin")
 
-    def check(self, detail_grade: str = "run"):
-        result = check_plan_merged(self.root, self.root / PLAN, detail_grade)
+    def check(self):
+        result = check_plan_merged(self.root, self.root / PLAN)
         # An unparseable plan or missing ref returns empty results; never let that read as a pass.
         assert result.unverifiable is None, result.unverifiable
         return result
@@ -189,25 +187,14 @@ def test_a_plan_outside_the_repository_cannot_be_checked(repo: Repo, tmp_path: P
     assert "outside" in (check_plan_merged(repo.root, outside).unverifiable or "")
 
 
-def _jira_detail_paths(r: Repo) -> list[str]:
-    plan = parse_plan(r.root / PLAN)
-    return [derive_jira_detail_path(r.root / PLAN, plan, step).relative_to(r.root).as_posix() for step in plan.steps]
 
 
-def test_a_jira_grade_run_needs_the_jira_artifacts_and_not_the_run_grade_details(repo: Repo) -> None:
-    # Carve-out: at jira grade the run never reads Step.detail, so absent run-grade files are fine.
+
+
+
+
+def test_merge_check_requires_declared_run_grade_details(repo: Repo) -> None:
     repo.write(PLAN, _plan_text())
-    repo.commit("plan only")
-    for rel in _jira_detail_paths(repo):
-        repo.write(rel, "jira detail\n")
-    repo.merge_to_origin("plan and jira artifacts")
-    assert repo.check("jira").missing == ()
-    assert repo.check("run").missing == ("docs/d/01.md", "docs/d/02.md")
-
-
-def test_a_missing_jira_artifact_is_reported_by_its_derived_path(repo: Repo) -> None:
-    repo.write(PLAN, _plan_text())
-    first, second = _jira_detail_paths(repo)
-    repo.write(first, "jira detail\n")
-    repo.merge_to_origin("plan and first jira artifact")
-    assert repo.check("jira").missing == (second,)
+    repo.write("docs/d/jira/01.md", "An alternate artifact cannot satisfy the merge check.\n")
+    repo.merge_to_origin("plan without declared details")
+    assert repo.check().missing == ("docs/d/01.md", "docs/d/02.md")

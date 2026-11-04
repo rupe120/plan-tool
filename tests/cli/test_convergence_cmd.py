@@ -112,7 +112,7 @@ def _save(
         from plan_tool.review_persistence import AuditInputSnapshot
 
         snapshot = AuditInputSnapshot.capture(
-            repo.plans_dir / "1-demo.md", repo.root, detail_grade=audit_grade
+            repo.plans_dir / "1-demo.md", repo.root
         )
         kwargs["qualified_result"] = {
             "headline": "awaiting-human-action",
@@ -331,19 +331,17 @@ def test_current_audit_stage_bare_with_no_detail_files(registered_plan) -> None:
     from plan_tool.cli.convergence_cmd import _current_audit_stage
     from plan_tool.cli.context import _load_context
     from plan_tool.convergence import STAGE_BARE
-    from plan_tool.jira_grade import GRADE_RUN
     from plan_tool.locator import resolve_plan_for_context
 
     ctx = _load_context(_ns_for(registered_plan))
     path = resolve_plan_for_context(ctx, "1-demo")
-    assert _current_audit_stage(ctx, path, detail_grade=GRADE_RUN) == STAGE_BARE
+    assert _current_audit_stage(ctx, path) == STAGE_BARE
 
 
 def test_current_audit_stage_detail_when_step_has_detail_file(registered_plan) -> None:
     from plan_tool.cli.convergence_cmd import _current_audit_stage
     from plan_tool.cli.context import _load_context
     from plan_tool.convergence import STAGE_DETAIL
-    from plan_tool.jira_grade import GRADE_RUN
     from plan_tool.locator import resolve_plan_for_context
 
     plan_path = registered_plan.plans_dir / "1-demo.md"
@@ -353,39 +351,7 @@ def test_current_audit_stage_detail_when_step_has_detail_file(registered_plan) -
 
     ctx = _load_context(_ns_for(registered_plan))
     path = resolve_plan_for_context(ctx, "1-demo")
-    assert _current_audit_stage(ctx, path, detail_grade=GRADE_RUN) == STAGE_DETAIL
-
-
-def test_current_audit_stage_detail_at_jira_grade_when_run_grade_is_bare(
-    registered_plan,
-) -> None:
-    """A plan authored/audited only at jira grade must resolve STAGE_DETAIL
-    when asked at jira grade, even though it has no run-grade detail file
-    (the disagreement `--grade` exists to prevent)."""
-    from plan_tool.cli.convergence_cmd import _current_audit_stage
-    from plan_tool.cli.context import _load_context
-    from plan_tool.convergence import STAGE_BARE, STAGE_DETAIL
-    from plan_tool.detail_artifacts import derive_jira_detail_path
-    from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN
-    from plan_tool.locator import resolve_plan_for_context
-    from plan_tool.parser import parse_plan
-
-    plan_path = registered_plan.plans_dir / "1-demo.md"
-    plan = parse_plan(plan_path)
-    jira = derive_jira_detail_path(plan_path, plan, plan.steps[0])
-    jira.parent.mkdir(parents=True, exist_ok=True)
-    jira.write_text(
-        "## Intent\n\nShip it.\n\n## Change\n\nAdd the handler.\n\n"
-        "## Constraints\n\nNo API change.\n\n"
-        "## Done when\n\nThe handler returns 200.\n\n"
-        "## Out of scope\n\nThe beta path.\n",
-        encoding="utf-8",
-    )
-
-    ctx = _load_context(_ns_for(registered_plan))
-    path = resolve_plan_for_context(ctx, "1-demo")
-    assert _current_audit_stage(ctx, path, detail_grade=GRADE_RUN) == STAGE_BARE
-    assert _current_audit_stage(ctx, path, detail_grade=GRADE_JIRA) == STAGE_DETAIL
+    assert _current_audit_stage(ctx, path) == STAGE_DETAIL
 
 
 def test_current_audit_stage_falls_back_to_none_on_unparseable_plan(
@@ -393,7 +359,6 @@ def test_current_audit_stage_falls_back_to_none_on_unparseable_plan(
 ) -> None:
     from plan_tool.cli.convergence_cmd import _current_audit_stage
     from plan_tool.cli.context import _load_context
-    from plan_tool.jira_grade import GRADE_RUN
     from plan_tool.locator import resolve_plan_for_context
 
     ctx = _load_context(_ns_for(registered_plan))
@@ -401,7 +366,7 @@ def test_current_audit_stage_falls_back_to_none_on_unparseable_plan(
     (registered_plan.plans_dir / "1-demo.md").write_text(
         "not a valid plan file", encoding="utf-8"
     )
-    assert _current_audit_stage(ctx, path, detail_grade=GRADE_RUN) is None
+    assert _current_audit_stage(ctx, path) is None
 
 
 def test_convergence_agrees_with_completeness_audit_detail_stage_demotion(
@@ -560,13 +525,12 @@ def test_convergence_prints_edit_drift_advisory(registered_plan, capsys) -> None
 def test_convergence_prints_standalone_mechanism_advisory_after_one_bare_pass(
     registered_plan, capsys
 ) -> None:
-    from plan_tool.jira_grade import GRADE_RUN
 
     _save(
         registered_plan,
         recs=[_mechanism_rec("mechanism")],
         when=_dt(1),
-        audit_grade=GRADE_RUN,
+        audit_grade='run',
     )
 
     rc = main(registered_plan.argv("convergence", "1-demo"))
@@ -580,7 +544,6 @@ def test_convergence_prints_standalone_mechanism_advisory_after_one_bare_pass(
 def test_convergence_prints_combined_mechanism_edit_drift_advisory(
     registered_plan, capsys
 ) -> None:
-    from plan_tool.jira_grade import GRADE_RUN
 
     _save(
         registered_plan,
@@ -590,13 +553,13 @@ def test_convergence_prints_combined_mechanism_edit_drift_advisory(
         ],
         when=_dt(1),
         annotations={"applied": Annotation(status="applied")},
-        audit_grade=GRADE_RUN,
+        audit_grade='run',
     )
     _save(
         registered_plan,
         recs=[_correctness_rec("carry", anchor="carry-gap")],
         when=_dt(2),
-        audit_grade=GRADE_RUN,
+        audit_grade='run',
     )
     _save(
         registered_plan,
@@ -606,7 +569,7 @@ def test_convergence_prints_combined_mechanism_edit_drift_advisory(
             _correctness_rec("fresh", anchor="fresh-gap", title="Fresh unrelated gap"),
         ],
         when=_dt(3),
-        audit_grade=GRADE_RUN,
+        audit_grade='run',
     )
 
     rc = main(registered_plan.argv("convergence", "1-demo"))
@@ -617,30 +580,6 @@ def test_convergence_prints_combined_mechanism_edit_drift_advisory(
     assert "Select a serializer choice" in out
     assert "\n⚠ Bare-plan mechanism advisory:" not in out
     assert 'Matched findings: "Applied gap restated".' in out
-
-
-def test_convergence_jira_grade_suppresses_mechanism_advisory(
-    registered_plan, capsys
-) -> None:
-    from plan_tool.jira_grade import GRADE_RUN
-
-    _save(
-        registered_plan,
-        recs=[_mechanism_rec("mechanism")],
-        when=_dt(1),
-        audit_grade=GRADE_RUN,
-    )
-    reports_dir = registered_plan.plans_dir / "plan-details" / "demo" / "reports"
-    saved_before = {path.name: path.read_bytes() for path in reports_dir.glob("*.json")}
-
-    rc = main(registered_plan.argv("convergence", "1-demo", "--grade", "jira"))
-    out = capsys.readouterr().out
-
-    saved_after = {path.name: path.read_bytes() for path in reports_dir.glob("*.json")}
-    assert rc == 0
-    assert "insufficient-history" in out
-    assert "Bare-plan mechanism" not in out
-    assert saved_after == saved_before
 
 
 def test_convergence_parse_failure_still_passes_classify_domain(
@@ -704,3 +643,31 @@ def test_convergence_parse_failure_still_passes_classify_domain(
     out = capsys.readouterr().out
     assert rc == 0
     assert "Edit drift" not in out
+
+
+import pytest
+
+
+@pytest.mark.integration
+class TestRunGradeConvergenceWiring:
+    def test_convergence_rejects_removed_grade_selector(self, registered_plan, capsys):
+        with pytest.raises(SystemExit) as caught:
+            main(registered_plan.argv("convergence", "demo", "--grade", "jira"))
+        assert caught.value.code == 2
+        assert "unrecognized arguments: --grade jira" in capsys.readouterr().err
+
+    def test_convergence_current_stage_uses_run_grade_bundle(self, registered_plan):
+        from plan_tool.cli.convergence_cmd import _current_audit_stage
+        from plan_tool.review import audit_detail_bundle_status
+        from plan_tool.cli.completeness_phases import derive_audit_stage
+        from plan_tool.parser import parse_plan
+        from types import SimpleNamespace
+
+        path = registered_plan.plans_dir / "1-demo.md"
+        ctx = SimpleNamespace(repo_root=registered_plan.root)
+        for present in (False, True):
+            if present:
+                path.write_text(path.read_text().replace("    title: Only step", "    title: Only step\n    detail: declared.md"))
+                (registered_plan.root / "declared.md").write_text("## Summary\n\nPresent.\n")
+            stage = derive_audit_stage(audit_detail_bundle_status(parse_plan(path), path, ctx.repo_root))
+            assert _current_audit_stage(ctx, path) == stage == ("detail" if present else "bare")

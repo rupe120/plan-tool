@@ -1284,3 +1284,16 @@ def test_removed_run_log_events_are_absent_from_the_registry_and_the_doc() -> No
         assert removed not in owners
         assert not hasattr(run_log_module, removed)
         assert removed not in text
+
+
+def test_saved_review_qualified_result_contract_documents_run_grade_only_evidence():
+    contract = (Path(__file__).resolve().parents[1] / "DATA_CONTRACT.md").read_text()
+    assert "Revision versions 1, 2, and 3 remain supported" in contract
+    assert "Explicit retired Jira-grade evidence and malformed revisions are unavailable" in contract
+    assert "reads never rewrite archived sidecars" in contract
+    gate = _section(contract, "Saved gate verdict")
+    grade_value = re.search(r'^\| `detail_grade` \| (.*?) \|$', gate, re.MULTILINE)
+    assert grade_value is not None
+    assert grade_value.group(1) == 'literal `"run"`'
+    audit_fields = _documented_field_names(_section(contract, "`completeness-audit --json`"))
+    assert {"detail_grade", "detail_bundle_fingerprint"}.isdisjoint(audit_fields)

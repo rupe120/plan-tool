@@ -76,7 +76,6 @@ from plan_tool.scope_fence import _fenced_code_spans, _strip_frontmatter
 from plan_tool.progress import ProgressReporter, StderrReporter
 from plan_tool.locator import slug_from_filename
 from plan_tool.model_response_sidecar import store_model_response_sidecar
-from plan_tool.jira_grade import GRADE_RUN
 from plan_tool.renderer import DetailGradeError, render_prompt
 from plan_tool.response_contract import (
     APPLY_BASIC_VERDICT_RESPONSE_CONTRACT,
@@ -1734,7 +1733,6 @@ def run_step(
     reporter: Optional[ProgressReporter] = None,
     allow_missing_parent: bool = False,
     run_logger: Optional["RunLogWriter"] = None,
-    detail_grade: str = GRADE_RUN,
     completed_sibling_context: str = "",
     selected_reconcile_plan_snapshot: Optional[Plan] = None,
     selected_reconcile_plan_fingerprint: Optional[str] = None,
@@ -1761,15 +1759,6 @@ def run_step(
     stdout — the two channels are independent (verbose on stdout, framing
     on stderr) so neither interferes with the other.
 
-    ``detail_grade`` picks which detail artifact grounds the prompt (see
-    :func:`plan_tool.renderer.render_prompt`). It is an *input* axis, not a
-    lifecycle one: ``mode`` stays ``"run"`` under every grade, so mark-done,
-    advance, the test-order directive, and the test-authoring gate behave
-    identically. A non-default grade applies to execution only and is
-    rejected with any other mode. A missing or off-contract jira-grade
-    artifact raises :class:`LauncherError` during prompt build — before the
-    invoker, and before the ``dry_run`` branch.
-
     ``completed_sibling_context`` is an opt-in ownership block for a fresh
     selected ``run-reconcile`` call. It is rendered verbatim through the
     existing template-variable seam and measured as its own prompt-budget
@@ -1782,13 +1771,6 @@ def run_step(
     """
     if mode in MUTATING_MODES:
         _reject_unmatched_plan_fence(plan_path)
-    if detail_grade != GRADE_RUN and mode != "run":
-        raise LauncherError(
-            f"--detail-grade {detail_grade} applies to execution only "
-            f"(got mode '{mode}'); review and reconcile prompts carry their "
-            f"own grounding."
-        )
-
     selected_reconcile_preflight = (
         selected_reconcile_plan_snapshot is not None
         or selected_reconcile_plan_fingerprint is not None
@@ -1840,7 +1822,7 @@ def run_step(
         prompt = render_prompt(
             plan, step, repo_root=repo_root, mode=mode,
             collect_blocks=budget_blocks,
-            plan_path=plan_path, detail_grade=detail_grade,
+            plan_path=plan_path,
             extra_vars={"completed_sibling_context": completed_sibling_context},
         )
         if completed_sibling_context:

@@ -2,13 +2,9 @@
 
 One module owns "where is this step's detail file?": canonical path
 derivation (``derive_detail_path`` and its slug helpers) plus the
-pointer-vs-canonical resolution (``resolve_detail_artifact``) that
-``fingerprint``, ``review``, and ``scope_out`` previously reimplemented
-behind call-time lazy imports of ``plan_tool.detail``. Both detail grades derive here —
-``derive_jira_detail_path`` sits beside the run-grade derivation so the
-collision rules between them are stated in one place. The module also owns
-the run-grade detail format-version reader gate and its raw-upgrade entry
-point.
+pointer-vs-canonical resolution (``resolve_detail_artifact``). The module
+also owns the run-grade detail format-version reader gate and its raw-upgrade
+entry point.
 
 Deliberately a **leaf**: imports only the stdlib, ``plan_tool.schema``,
 and ``plan_tool.locator`` — never ``plan_tool.detail`` / ``review`` /
@@ -132,36 +128,6 @@ def derive_detail_path(plan_path: Path, plan: Plan, step: Step) -> Path:
     step_slug = derive_step_slug(step.title)
     filename = f"{step.id:02d}-{step_slug}.md"
     return plan_dir / "plan-details" / plan_slug / filename
-
-
-# Subdirectory holding the plan's jira-grade detail artifacts. A
-# subdirectory rather than a suffixed sibling: ``detail._archive_orphan_details``
-# globs ``{NN}-*.md`` non-recursively, so a same-directory jira artifact would
-# be archived as an orphan every time the run-grade file for that step is
-# re-authored. Nesting puts it outside that glob, outside
-# :func:`find_unreferenced_detail_for_step`'s exact-name adoption, and outside
-# split migration (which walks ``Step.detail`` pointers).
-_JIRA_GRADE_DIRNAME = "jira"
-
-
-def derive_jira_detail_path(plan_path: Path, plan: Plan, step: Step) -> Path:
-    """Compute the conventional output path for a step's **jira-grade**
-    detail file.
-
-    Format:
-
-        <plan_path.parent>/plan-details/<plan_slug>/jira/<NN>-<step_slug>.md
-
-    Same id and slug derivation as :func:`derive_detail_path` — only the
-    directory differs, so the two grades can never resolve to one path.
-
-    There is no pointer axis: ``Step.detail`` stays run-grade-only and no
-    frontmatter field points at a jira artifact, so resolution is this
-    derivation plus an ``is_file()`` check. Missing-file policy belongs to
-    the consumer, as it does for the run-grade resolver.
-    """
-    run_grade = derive_detail_path(plan_path, plan, step)
-    return run_grade.parent / _JIRA_GRADE_DIRNAME / run_grade.name
 
 
 def find_unreferenced_detail_for_step(

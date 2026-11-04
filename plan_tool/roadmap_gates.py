@@ -198,8 +198,7 @@ _NARRATIVE_EXCERPT_LIMIT = 160
 class Violation:
     """One relation a roadmap artifact breaks.
 
-    Modeled on ``jira_grade.JiraGradeFinding`` minus its ``blocking`` flag:
-    every violation here blocks a stage and feeds its retry, so a severity
+    Every violation blocks a stage and feeds its retry, so a severity
     axis would be a field nobody reads and an invitation to invent an
     advisory tier. ``artifact`` is a filename constant, never a path —
     enough for a message to say which file to fix. ``row_id`` is ``None``

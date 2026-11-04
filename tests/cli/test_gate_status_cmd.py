@@ -8,19 +8,19 @@ from plan_tool.cli import main
 
 
 @pytest.mark.integration
-def test_gate_status_emits_versioned_json_without_creating_state(registered_plan, capsys):
-    repo = registered_plan
-    before = {p.relative_to(repo.root): p.read_bytes() for p in repo.root.rglob('*') if p.is_file()}
-    assert main(repo.argv('gate-status', 'demo', '--json')) == 0
-    document = json.loads(capsys.readouterr().out)
-    assert document == {
-        'version': 1, 'plan': 'demo', 'plan_path': 'plans/1-demo.md',
-        'detail_grade': 'run', 'current_stage': 'bare',
-        'stages': {'bare': None, 'detail': None},
-    }
-    after = {p.relative_to(repo.root): p.read_bytes() for p in repo.root.rglob('*') if p.is_file()}
-    assert after == before
-
+class TestGateStatusReadOnlyJson:
+    def test_gate_status_emits_run_grade_versioned_json_without_creating_state(self, registered_plan, capsys):
+        repo = registered_plan
+        before = {p.relative_to(repo.root): p.read_bytes() for p in repo.root.rglob('*') if p.is_file()}
+        assert main(repo.argv('gate-status', 'demo', '--json')) == 0
+        document = json.loads(capsys.readouterr().out)
+        assert document == {
+            'version': 1, 'plan': 'demo', 'plan_path': 'plans/1-demo.md',
+            'current_stage': 'bare',
+            'stages': {'bare': None, 'detail': None},
+        }
+        after = {p.relative_to(repo.root): p.read_bytes() for p in repo.root.rglob('*') if p.is_file()}
+        assert after == before
 
 @pytest.mark.integration
 def test_unparseable_plan_has_unknown_current_stage(registered_plan, capsys):
@@ -48,3 +48,12 @@ def test_external_plans_directory_preserves_absolute_plan_path(registered_plan, 
         "--plans-dir", str(directory), "gate-status", "outside", "--json"
     )) == 0
     assert json.loads(capsys.readouterr().out)["plan_path"] == str(external)
+
+
+@pytest.mark.integration
+class TestRunGradeGateStatusWiring:
+    def test_gate_status_rejects_removed_grade_selector(self, registered_plan, capsys):
+        with pytest.raises(SystemExit) as caught:
+            main(registered_plan.argv("gate-status", "demo", "--grade", "jira"))
+        assert caught.value.code == 2
+        assert "unrecognized arguments: --grade jira" in capsys.readouterr().err

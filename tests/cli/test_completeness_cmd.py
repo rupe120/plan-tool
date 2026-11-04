@@ -114,7 +114,6 @@ from plan_tool.cli.completeness_phases import (
     derive_audit_stage,
 )
 from plan_tool.create import PLAN_BODY_SECTIONS
-from plan_tool.jira_grade import GRADE_JIRA, GRADE_RUN
 from plan_tool.parser import ValidationError as ParserValidationError, parse_plan
 from plan_tool.review import DetailBodyIssue, DetailBundleStatus, DetailCoverageIssue, Recommendation
 
@@ -733,12 +732,12 @@ def _qualifying_producer_coverage(
     }
 
 
-def _hoisted_bundle(plan, path, repo_root, *, detail_grade=GRADE_RUN):
+def _hoisted_bundle(plan, path, repo_root):
     """Mirror ``cmd_completeness``'s pre-branch hoist for finalize/loop callers."""
     from plan_tool.review import audit_detail_bundle_status
 
     bundle_status = audit_detail_bundle_status(
-        plan, path, repo_root, detail_grade=detail_grade,
+        plan, path, repo_root,
     )
     return bundle_status, derive_audit_stage(bundle_status)
 
@@ -1396,7 +1395,7 @@ class TestRunDeterministicChecks:
         smell = _rec("info", source="feature-ref")
         seen: dict = {}
 
-        def fake(plan, repo_root, *, plan_name, plan_path=None, detail_grade=GRADE_RUN):
+        def fake(plan, repo_root, *, plan_name, plan_path=None):
             seen["plan_name"] = plan_name
             return [smell]
 
@@ -2367,15 +2366,14 @@ _CORPUS_BUCKET_COUNTS = {
 
 # The exact half: a digest over the full rendering, so a finding that changed
 # content, id, or position — not just count — fails too. It renders issue
-# records through ``repr``, so the two ``DetailBodyIssue``-bearing fixtures
-# re-pinned when that carrier gained its optional ``message`` slot; the
-# readable half above is unchanged, which is what proves no finding moved.
+# records through ``repr``; carrier shape changes affect the digest while
+# the readable bucket counts pin detector membership.
 _CORPUS_DIGESTS = {
     "clean": "240cebc1535841cb",
     "granularity-split": "fa5fd0fa57ce826e",
-    "canonical-only-detail": "b90f4536dba062e1",
+    "canonical-only-detail": "d6c8cda65007e22f",
     "input-contract": "c835daa372aebc71",
-    "footprint": "0653001e2cdd56d9",
+    "footprint": "8b222e03aa09475c",
     "missing-body": "c0d06cc7d11ee753",
     "concept-coverage": "f3c626d7730d63c1",
 }
@@ -2453,8 +2451,6 @@ _DETECTOR_NAME_RE = re.compile(
 _DIRECT_CALL_ALLOWLIST = {
     # The smell group's own registry dispatcher — a fan-out, not a detector.
     "collect_smell_findings",
-    # The one claude-judged pass in this phase, so not a deterministic
-    # detector at all (and already forced off under jira grade).
     "_collect_purity_split_findings",
 }
 
@@ -3816,7 +3812,7 @@ class TestRenderGroupedReport:
                 _empty_det(),
                 correctness_recs=[rec], conceptual_recs=[], audit_recs=[rec],
                 iterate_enabled=iterate, bundle_status=_COMPLETE_BUNDLE,
-                detail_grade=GRADE_RUN, verdict=verdict,
+                 verdict=verdict,
             )
             steps = md.split("### Suggested next steps", 1)[1]
             assert "session-directed edit" in steps
@@ -3921,25 +3917,6 @@ class TestRenderGroupedReport:
         assert "one-line `intent:`" in suggested
         assert "intent-presence" in suggested
 
-    def test_blocking_self_consistency_next_step_names_no_apply_verb_at_jira_grade(
-        self,
-    ) -> None:
-        rec = _rec("medium", source="intent-presence", title="no intent")
-        md = _render_grouped_report(
-            SimpleNamespace(title="P"),
-            SimpleNamespace(name="p"),
-            _det_with_self_consistency([rec]),
-            correctness_recs=[],
-            conceptual_recs=[],
-            audit_recs=[],
-            iterate_enabled=False,
-            detail_grade=GRADE_JIRA,
-        )
-        suggested = md.split("### Suggested next steps", 1)[1]
-        assert "advisory under the audit's blocking bar" not in suggested
-        assert "one-line `intent:`" in suggested
-        assert "completeness-apply" not in suggested
-        assert "--iterate" not in suggested
 
     def test_non_intent_self_consistency_next_step_says_manual_edit(self) -> None:
         rec = _rec("medium", source="orphaned-deliverable", title="orphan")
@@ -4178,83 +4155,13 @@ class TestRenderGroupedReport:
         assert "plan-tool detail" not in suggested
         assert "session-directed edit" in suggested
 
-    def test_jira_grade_bare_plan_correctness_keeps_hand_fix_bullet(self) -> None:
-        correctness = [_rec("high", source="plan-correctness")]
-        md = _render_grouped_report(
-            SimpleNamespace(title="P"),
-            SimpleNamespace(name="p"),
-            _empty_det(),
-            correctness_recs=correctness,
-            conceptual_recs=[],
-            audit_recs=correctness,
-            iterate_enabled=False,
-            detail_grade=GRADE_JIRA,
-            bundle_status=SimpleNamespace(
-                is_bare=True,
-                is_fully_bare=True,
-                detailed_count=0,
-                total=1,
-            ),
-        )
-        suggested = md.split("### Suggested next steps", 1)[1]
-        # One bullet per blocking correctness gap at jira grade (amendment 6).
-        close_lines = [
-            ln for ln in suggested.splitlines() if ln.startswith("- Close ")
-        ]
-        assert len(close_lines) == 1
-        assert "Read and fix the finding(s) above" not in suggested
-        assert "completeness-apply" not in suggested
-        assert "advisory under the audit's blocking bar" not in suggested
-
-    def test_jira_grade_stage_transitions_preserve_the_selected_grade(self) -> None:
-        bare_conceptual = [_rec("medium", source="plan-completeness")]
-        bare = _render_grouped_report(
-            SimpleNamespace(title="P"),
-            SimpleNamespace(name="p"),
-            _empty_det(),
-            correctness_recs=[],
-            conceptual_recs=bare_conceptual,
-            audit_recs=bare_conceptual,
-            iterate_enabled=False,
-            detail_grade=GRADE_JIRA,
-            bundle_status=SimpleNamespace(
-                is_bare=True,
-                is_fully_bare=True,
-                detailed_count=0,
-                total=1,
-            ),
-            verdict=_CLEAR_VERDICT,
-        )
-        complete = _render_grouped_report(
-            SimpleNamespace(title="P"),
-            SimpleNamespace(name="p"),
-            _empty_det(),
-            correctness_recs=[],
-            conceptual_recs=[],
-            audit_recs=[],
-            iterate_enabled=False,
-            detail_grade=GRADE_JIRA,
-            bundle_status=SimpleNamespace(
-                is_bare=False,
-                is_fully_bare=False,
-                detailed_count=1,
-                total=1,
-            ),
-            verdict=_CLEAR_VERDICT,
-        )
-
-        assert "plan-tool detail p --grade jira" in bare
-        assert "plan-tool run p" not in bare
-        assert "plan-tool jira p --grade jira" in complete
-        assert "plan-tool run p" not in complete
-
 
 _COMPLETE_BUNDLE = SimpleNamespace(
     is_bare=False, is_fully_bare=False, detailed_count=1, total=1
 )
 
 
-def _render_with_verdict(verdict, *, conceptual=(), grade=GRADE_RUN, **kw) -> str:
+def _render_with_verdict(verdict, *, conceptual=(), **kw) -> str:
     return _render_grouped_report(
         SimpleNamespace(title="P"),
         SimpleNamespace(name="p"),
@@ -4264,7 +4171,6 @@ def _render_with_verdict(verdict, *, conceptual=(), grade=GRADE_RUN, **kw) -> st
         audit_recs=list(conceptual),
         iterate_enabled=False,
         bundle_status=_COMPLETE_BUNDLE,
-        detail_grade=grade,
         verdict=verdict,
         **kw,
     )
@@ -4314,10 +4220,9 @@ class TestNextStepVerdictWiring:
         md = _render_with_verdict(verdict)
         assert "No gaps to close — `plan-tool run p`" in md
 
-    @pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
-    def test_blocking_bar_id_closes_every_next_step_surface(self, grade) -> None:
+    def test_blocking_bar_id_closes_every_next_step_surface(self) -> None:
         verdict = blocking_verdict_from_gate(["plan-completeness-high"])
-        md = _render_with_verdict(verdict, grade=grade)
+        md = _render_with_verdict(verdict)
         suggested = md.split("### Suggested next steps", 1)[1]
         assert "No gaps to close" not in md
         assert "plan-tool run p" not in suggested
@@ -6102,337 +6007,6 @@ class TestCompletenessFencePreflight:
         assert not reports.exists()
 
 
-class TestCompletenessGradeSelector:
-    """``--grade {run,jira}`` — the detail-grade axis on ``completeness-audit``:
-    flag routing, the up-front guards, and what jira grade skips.
-
-    The conceptual audit is stubbed at the *domain* seam
-    (``plan_tool.review.audit_plan_until_stable``) so no real claude call
-    fires; the guard cases must exit before even that is reached.
-    """
-
-    def _parse(self, *flags):
-        parser = argparse.ArgumentParser()
-        sub = parser.add_subparsers(dest="cmd")
-        register(sub)
-        return parser.parse_args(["completeness-audit", "myplan", *flags])
-
-    def _stub_audit(self, monkeypatch):
-        import plan_tool.review
-
-        monkeypatch.setattr(
-            plan_tool.review, "audit_plan_until_stable", lambda *a, **k: []
-        )
-
-    def test_grade_flag_defaults_to_run(self) -> None:
-        assert self._parse().grade == "run"
-        assert self._parse("--grade", "jira").grade == "jira"
-
-    def test_grade_flag_rejects_unknown_value(self) -> None:
-        with pytest.raises(SystemExit):
-            self._parse("--grade", "epic")
-
-    def test_grade_defaults_run_for_legacy_namespace(self) -> None:
-        """A hand-built namespace with no ``grade`` attribute (the repo-wide
-        test idiom, and how packaged pipelines copy a namespace) takes the
-        run path."""
-        from plan_tool.cli.completeness_cmd import _completeness_detail_grade
-
-        assert _completeness_detail_grade(SimpleNamespace()) == "run"
-
-    def test_grade_jira_rejects_iterate(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-        import plan_tool.completeness_report
-        import plan_tool.review
-        import plan_tool.run_log
-
-        def _boom(*a, **k):  # pragma: no cover - must never run
-            raise AssertionError("guard ran too late")
-
-        monkeypatch.setattr(plan_tool.review, "audit_plan_until_stable", _boom)
-        monkeypatch.setattr(
-            plan_tool.completeness_report, "resolve_reusable_audit", _boom
-        )
-        # The third side effect the guard must precede. Stubbed rather than
-        # checked as an absent run dir: this fails if the run log opens at
-        # all, including on a path that cleans up after itself.
-        monkeypatch.setattr(plan_tool.run_log.RunLogWriter, "start", _boom)
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "--iterate"
-            )
-        )
-        assert rc == 2
-        assert "mutually exclusive with --iterate" in capsys.readouterr().err
-
-    @pytest.mark.parametrize(
-        "flags",
-        [("--reuse-audit",), ("--reuse-audit-id", "20260505-120000-completeness")],
-    )
-    def test_grade_jira_rejects_reuse_flags(
-        self, registered_plan, monkeypatch, capsys, flags
-    ) -> None:
-        from plan_tool.cli import main
-        import plan_tool.completeness_report
-        import plan_tool.review
-        import plan_tool.run_log
-
-        def _boom(*a, **k):  # pragma: no cover - must never run
-            raise AssertionError("guard ran too late")
-
-        monkeypatch.setattr(plan_tool.review, "audit_plan_until_stable", _boom)
-        monkeypatch.setattr(
-            plan_tool.completeness_report, "resolve_reusable_audit", _boom
-        )
-        # The third side effect the guard must precede. Stubbed rather than
-        # checked as an absent run dir: this fails if the run log opens at
-        # all, including on a path that cleans up after itself.
-        monkeypatch.setattr(plan_tool.run_log.RunLogWriter, "start", _boom)
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", *flags
-            )
-        )
-        assert rc == 2
-        err = capsys.readouterr().err
-        assert "cannot reuse a saved audit" in err
-        assert "run-grade bundle" in err
-
-    def test_grade_jira_skips_reuse_lookup(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        """The unprompted reuse lookup never runs at jira grade — a saved
-        run-grade sidecar would read as fresh (its fingerprints are
-        grade-independent) and silently substitute the other grade."""
-        from plan_tool.cli import main
-        import plan_tool.completeness_report
-
-        self._stub_audit(monkeypatch)
-        lookups: list[tuple] = []
-        monkeypatch.setattr(
-            plan_tool.completeness_report,
-            "resolve_reusable_audit",
-            lambda *a, **k: lookups.append((a, k)),
-        )
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y"
-            )
-        )
-        assert rc == 0
-        assert lookups == []
-        # Control: the default grade still consults the saved sidecar.
-        assert (
-            main(registered_plan.argv("completeness-audit", "demo", "-y")) == 0
-        )
-        assert len(lookups) == 1
-
-    def test_grade_jira_forces_purity_off(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        """``run_purity`` is off at jira grade even when ``--purity`` asks for
-        it: the MIXED-STEP verdict reads the run-grade body. Opting in
-        explicitly is what makes this assertion mean anything now that the
-        pass is off by default (BACKLOG #210)."""
-        from plan_tool.cli import main
-        import plan_tool.cli.completeness_phases as phases
-
-        self._stub_audit(monkeypatch)
-        purity_calls: list[tuple] = []
-        monkeypatch.setattr(
-            phases,
-            "_collect_purity_split_findings",
-            lambda *a, **k: purity_calls.append((a, k)) or [],
-        )
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira",
-                "--purity", "-y",
-            )
-        )
-        assert rc == 0
-        assert purity_calls == []
-        assert "purity check (claude)" not in capsys.readouterr().err
-
-    def test_run_grade_runs_purity_when_opted_in(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        """The counterpart to the jira-grade force-off: at run grade
-        ``--purity`` is honored, so the two tests together isolate the grade
-        guard from the flag default."""
-        from plan_tool.cli import main
-        import plan_tool.cli.completeness_phases as phases
-
-        self._stub_audit(monkeypatch)
-        purity_calls: list[tuple] = []
-        monkeypatch.setattr(
-            phases,
-            "_collect_purity_split_findings",
-            lambda *a, **k: purity_calls.append((a, k)) or [],
-        )
-        assert (
-            main(
-                registered_plan.argv(
-                    "completeness-audit", "demo", "--purity", "-y"
-                )
-            )
-            == 0
-        )
-        assert len(purity_calls) == 1
-        assert "purity check (claude)" in capsys.readouterr().err
-
-    def test_default_grade_skips_purity_without_opt_in(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        """The default is off at run grade too — the whole point of the flip
-        (BACKLOG #210). Without this, nothing pins the new default end to end."""
-        from plan_tool.cli import main
-        import plan_tool.cli.completeness_phases as phases
-
-        self._stub_audit(monkeypatch)
-        purity_calls: list[tuple] = []
-        monkeypatch.setattr(
-            phases,
-            "_collect_purity_split_findings",
-            lambda *a, **k: purity_calls.append((a, k)) or [],
-        )
-        assert (
-            main(registered_plan.argv("completeness-audit", "demo", "-y")) == 0
-        )
-        assert purity_calls == []
-        assert "purity check (claude)" not in capsys.readouterr().err
-
-    def test_grade_jira_banner_names_grounding(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-
-        self._stub_audit(monkeypatch)
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y"
-            )
-        )
-        assert rc == 0
-        err = capsys.readouterr().err
-        assert "grounding: jira-grade detail bundle" in err
-        # The directory is the resolver's, not a second copy of the layout.
-        assert "plans/plan-details/demo/jira/" in err
-
-    def test_default_banner_unchanged(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-
-        self._stub_audit(monkeypatch)
-        assert (
-            main(registered_plan.argv("completeness-audit", "demo", "-y")) == 0
-        )
-        assert "grounding:" not in capsys.readouterr().err
-
-    def test_grade_jira_grounds_audit_prompt_on_jira_bundle(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        """End to end: the prompt the stubbed invoker receives carries the
-        jira artifact and its framing, never the run-grade detail body."""
-        from plan_tool.cli import main
-        from plan_tool.detail_artifacts import derive_jira_detail_path
-        from plan_tool.parser import parse_plan
-        import plan_tool.review
-
-        plan_path = registered_plan.plans_dir / "1-demo.md"
-        plan = parse_plan(plan_path)
-        detail = plan_path.parent / "plan-details" / "demo" / "01-only-step.md"
-        detail.parent.mkdir(parents=True, exist_ok=True)
-        detail.write_text(
-            "## Summary\n\nRUN-GRADE-ONLY-MARKER\n", encoding="utf-8"
-        )
-        jira = derive_jira_detail_path(plan_path, plan, plan.steps[0])
-        jira.parent.mkdir(parents=True, exist_ok=True)
-        jira.write_text(
-            "## Intent\n\nShip it.\n\n## Change\n\nAdd the handler.\n\n"
-            "## Constraints\n\nNo API change.\n\n"
-            "## Done when\n\nThe handler returns 200.\n\n"
-            "## Out of scope\n\nThe beta path.\n",
-            encoding="utf-8",
-        )
-
-        prompts: list[str] = []
-
-        def _capture(prompt: str) -> tuple[int, str]:
-            prompts.append(prompt)
-            return 0, "## Correctness findings\n\n_(none)_\n\n" \
-                      "## Completeness findings\n\n_(none)_\n"
-
-        monkeypatch.setattr(
-            plan_tool.review, "shell_review_invoker", _capture
-        )
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y",
-                "--audit-passes", "1",
-            )
-        )
-        assert rc == 0
-        assert len(prompts) == 1
-        assert "Ship it." in prompts[0]
-        assert "**not** a completeness gap" in prompts[0]
-        assert "RUN-GRADE-ONLY-MARKER" not in prompts[0]
-
-
-# A body meeting the jira-grade section contract, for fixtures that need a
-# conforming artifact. ``## Out of scope`` is templated because the orphan
-# check's condition 4 reads exactly that section.
-def _jira_body(out_of_scope: str = "The beta path.") -> str:
-    return (
-        "## Intent\n\nShip it.\n\n"
-        "## Change\n\nAdd the handler.\n\n"
-        "## Constraints\n\nNo API change.\n\n"
-        "## Done when\n\nThe handler returns 200.\n\n"
-        f"## Out of scope\n\n{out_of_scope}\n"
-    )
-
-
-def _write_jira_artifact(plan, plan_path, step, body: str) -> Path:
-    """Write ``body`` at ``step``'s derived jira-grade path."""
-    from plan_tool.detail_artifacts import derive_jira_detail_path
-
-    path = derive_jira_detail_path(plan_path, plan, step)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(body, encoding="utf-8")
-    return path
-
-
-# The detectors withheld at jira grade because they read run-grade detail
-# bodies under the seven-section contract.
-_RUN_GRADE_ONLY_DETECTORS = (
-    "check_detail_body_completeness",
-    "check_files_coherence",
-    "check_detail_coverage",
-    "detect_suppression_shape",
-    "check_step_input_contract_references",
-)
-
-# A sample of the grade-independent set, spanning the plan-level well-formedness
-# table, the smell fan-out, the self-consistency table, and the split
-# ``## Input`` check's plan-body arm.
-_GRADE_INDEPENDENT_DETECTORS = (
-    "check_file_existence",
-    "validate_deps",
-    "check_body_completeness",
-    "check_lessons_coverage",
-    "validate_feature_refs",
-    "detect_self_referential_features",
-    "detect_claim_vs_delivery",
-    "check_concept_coverage",
-    "check_intent_presence",
-    "detect_orphaned_deliverable",
-    "check_plan_input_contract_references",
-)
-
-
 def _spy_detectors(monkeypatch, names) -> list[str]:
     """Record which of ``names`` the battery calls, keeping real behavior.
 
@@ -6457,119 +6031,13 @@ def _spy_detectors(monkeypatch, names) -> list[str]:
     return called
 
 
-class TestDetectorGradeClasses:
-    """The grade axis as data on the registry, plus the one guard that keeps
-    it total.
-
-    Step 8's source-level guard already fails the build when a detector is
-    called outside the registry dispatch, so "a check ran without a grade
-    class" is unreachable once every *entry* is classified — which is what
-    this narrow guard asserts.
-    """
-
-    def test_every_registry_entry_has_a_grade_class(self) -> None:
-        from plan_tool.review import DETECTOR_GRADE_CLASSES
-
-        unclassified = [
-            entry.key
-            for entry in all_deterministic_detectors()
-            if entry.grade not in DETECTOR_GRADE_CLASSES
-        ]
-        assert unclassified == []
-        # And the policy can therefore build a table for every grade.
-        for grade in (GRADE_RUN, GRADE_JIRA):
-            assert deterministic_detector_registry(grade).keys
-
-    def test_a_classless_entry_fails_the_guard(self) -> None:
-        # The negative case: without it the guard above could rot into a
-        # tautology if the class ever gained a permissive default.
-        from plan_tool.review import (
-            DETECTOR_GRADE_CLASSES,
-            DetectorEntry,
-            DetectorRegistry,
-        )
-
-        widened = DetectorRegistry(
-            all_deterministic_detectors().entries
-            + (DetectorEntry("classless", lambda ctx, results: []),)
-        )
-        assert [
-            entry.key
-            for entry in widened
-            if entry.grade not in DETECTOR_GRADE_CLASSES
-        ] == ["classless"]
-        with pytest.raises(ValueError, match="no grade class"):
-            widened.for_grade(GRADE_RUN)
-
-    def test_test_strategy_alignment_is_unclassified(self) -> None:
-        # It belongs to the reconcile/review lane, so it is absent from the
-        # registry and therefore carries no grade class to get wrong.
-        assert "test-strategy" not in " ".join(
-            all_deterministic_detectors().keys
-        )
-
-    def test_grade_run_registry_is_the_full_battery(self) -> None:
-        # The default table is exactly today's, in today's order: the jira
-        # entry is the only one the run filter removes.
-        assert deterministic_detector_registry(GRADE_RUN).keys == _REGISTRY_KEYS
-        assert all_deterministic_detectors().keys == (
-            _REGISTRY_KEYS[:6] + ("jira-grade-bundle",) + _REGISTRY_KEYS[6:]
-        )
-
-    def test_grade_jira_registry_swaps_the_detail_readers(self) -> None:
-        keys = deterministic_detector_registry(GRADE_JIRA).keys
-        assert "jira-grade-bundle" in keys
-        for withheld in (
-            "detail-coverage",
-            "detail-body-completeness",
-            "files-coherence",
-            "suppression-shape",
-            "input-contract-references-steps",
-        ):
-            assert withheld not in keys
-        # The grade-independent set survives, including the plan-body arm of
-        # the split ``## Input`` check.
-        for kept in (
-            "file-existence",
-            "deps",
-            "body-completeness",
-            "lessons-coverage",
-            "claim-vs-delivery",
-            "orphaned-deliverable",
-            "input-contract-references-plan",
-        ):
-            assert kept in keys
+class TestRunGradeDeterministicBattery:
+    """The retained detector dispatch order."""
 
 
-class TestGradedDeterministicBattery:
-    """What the battery actually dispatches at each grade."""
-
-    def test_grade_jira_selects_jira_battery(
+    def test_deterministic_detector_registry_dispatches_retained_run_grade_checks(
         self, tmp_repo, monkeypatch
     ) -> None:
-        called = _spy_detectors(
-            monkeypatch,
-            _RUN_GRADE_ONLY_DETECTORS
-            + _GRADE_INDEPENDENT_DETECTORS
-            + ("check_jira_grade_bundle",),
-        )
-        plan, path = _write_and_parse(tmp_repo, _CLEAN_STEPS)
-        _write_jira_artifact(plan, path, plan.steps[0], _jira_body())
-        _run_deterministic_checks(
-            plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-            plan_name="p", quiet=True, detail_grade=GRADE_JIRA,
-        )
-        for withheld in _RUN_GRADE_ONLY_DETECTORS:
-            assert withheld not in called
-        assert "check_jira_grade_bundle" in called
-        for kept in _GRADE_INDEPENDENT_DETECTORS:
-            assert kept in called
-
-    def test_grade_run_deterministic_battery_unchanged(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        # The default grade calls exactly today's set — no detector dropped by
-        # the policy and no jira entry admitted.
         from plan_tool.review import DetectorRegistry
 
         dispatched: list[str] = []
@@ -6587,219 +6055,10 @@ class TestGradedDeterministicBattery:
         )
         assert tuple(dispatched) == _REGISTRY_KEYS
 
-    def test_grade_jira_dispatch_matches_the_composed_registry(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        # The battery filters its two sub-registries and the two fan-outs
-        # separately, so the composed table could drift from what actually
-        # runs. Pin the parity at the grade where the filter is non-empty.
-        from plan_tool.review import DetectorRegistry
 
-        dispatched: list[str] = []
-        run_all = DetectorRegistry.run_all
-
-        def spy(self, det_ctx):
-            dispatched.extend(self.keys)
-            return run_all(self, det_ctx)
-
-        monkeypatch.setattr(DetectorRegistry, "run_all", spy)
-        plan, path = _write_and_parse(tmp_repo, _CLEAN_STEPS)
-        _write_jira_artifact(plan, path, plan.steps[0], _jira_body())
-        _run_deterministic_checks(
-            plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-            plan_name="p", quiet=True, detail_grade=GRADE_JIRA,
-        )
-        assert (
-            tuple(dispatched)
-            == deterministic_detector_registry(GRADE_JIRA).keys
-        )
-
-    def test_grade_jira_still_runs_plan_altitude_deliverable_checks(
-        self, tmp_repo, monkeypatch
-    ) -> None:
-        """The plan-altitude orphan check fires at jira grade — and reads its
-        deferral signal from the *jira* artifact.
-
-        Condition 4 is a required trip condition, not a suppressor, so a
-        both-grades classification that left this reading run-grade bodies
-        would silently emit nothing. The fixture satisfies the whole
-        conjunction: one step declares the deliverable, no other step consumes
-        it, no plan claim names it, and the jira artifact's ``## Out of scope``
-        defers it.
-        """
-        called = _spy_detectors(
-            monkeypatch,
-            ("detect_orphaned_deliverable", "detect_claim_vs_delivery"),
-        )
-        steps = (
-            "steps:\n"
-            "  - id: 1\n"
-            "    title: Only step\n"
-            "    creates: [src/orphan_widget.py]\n"
-        )
-        plan, path = _write_and_parse(tmp_repo, steps)
-        # A run-grade body on disk that does NOT defer it: if the check read
-        # the wrong grade, condition 4 would fail and nothing would fire.
-        run_grade = path.parent / "plan-details" / "sectioned" / "01-only-step.md"
-        run_grade.parent.mkdir(parents=True, exist_ok=True)
-        run_grade.write_text("## Summary\n\nNo fence here.\n", encoding="utf-8")
-        artifact = _write_jira_artifact(
-            plan, path, plan.steps[0],
-            _jira_body("Wiring `src/orphan_widget.py` in."),
-        )
-
-        def _orphans(detail_grade):
-            report = _run_deterministic_checks(
-                plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-                plan_name="p", quiet=True, detail_grade=detail_grade,
-            )
-            return [
-                r for r in report.self_consistency_recs
-                if r.source == "orphaned-deliverable"
-            ]
-
-        assert len(_orphans(GRADE_JIRA)) == 1
-        assert "detect_orphaned_deliverable" in called
-        assert "detect_claim_vs_delivery" in called
-
-        # Drop the deferral from the jira artifact and the finding goes away —
-        # pinning that the signal came from that artifact, not the run-grade
-        # body still sitting on disk.
-        artifact.write_text(_jira_body(), encoding="utf-8")
-        assert _orphans(GRADE_JIRA) == []
-
-    def test_grade_jira_run_grade_pointer_defect_does_not_block(
-        self, tmp_repo
-    ) -> None:
-        # A set-but-missing ``Step.detail`` is a run-grade pointer defect; it
-        # must not flip the gate on a jira-grade audit whose bundle is whole.
-        # Intent-bearing so the pointer defect is the only thing under test.
-        steps = (
-            "steps:\n"
-            "  - id: 1\n"
-            "    title: Only step\n"
-            "    intent: why the only step exists\n"
-            "    detail: plans/plan-details/sectioned/01-gone.md\n"
-        )
-        plan, path = _write_and_parse(tmp_repo, steps, intent=_PLAN_INTENT)
-        _write_jira_artifact(plan, path, plan.steps[0], _jira_body())
-        det = _run_deterministic_checks(
-            plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-            plan_name="p", quiet=True, detail_grade=GRADE_JIRA,
-        )
-        assert det.detail_cov_issues == []
-        assert det.detail_body_issues == []
-        assert _completeness_has_blocking_findings(
-            path_style_hint=det.path_style_hint,
-            dep_issues=det.dep_issues,
-            body_issues=det.body_issues,
-            detail_cov_issues=det.detail_cov_issues,
-            detail_body_issues=det.detail_body_issues,
-            lessons_issues=det.lessons_issues,
-            data_contract_recs=det.data_contract_recs,
-            self_consistency_recs=det.self_consistency_recs,
-            audit_stage=STAGE_DETAIL,
-            purity_coverage_recs=[],
-        ) is False
-        # Control: at run grade the same pointer defect does block.
-        run_det = _run_deterministic_checks(
-            plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-            plan_name="p", quiet=True,
-        )
-        assert [i.kind for i in run_det.detail_cov_issues] == ["missing_on_disk"]
-
-    @pytest.mark.parametrize(
-        "second_body",
-        [
-            None,  # partial bundle → the coverage arm
-            "## Summary\n\ns\n\n## Why\n\nw\n\n## Files\n\nf\n\n"
-            "## Implementation\n\ni\n\n## Tests\n\nt\n",  # → the contract arm
-        ],
-        ids=["missing-artifact", "wrong-schema"],
-    )
-    def test_grade_jira_bundle_findings_flip_the_rc(
-        self, registered_plan, monkeypatch, capsys, second_body
-    ) -> None:
-        """End to end: both arms block, so ``--fail-on-findings`` exits 1."""
-        from plan_tool.cli import main
-        from plan_tool.parser import parse_plan
-        import plan_tool.review
-
-        def fake_audit(*_args, budget_report=None, **_kwargs):
-            if budget_report is not None:
-                budget_report.update(_qualifying_producer_coverage())
-            return []
-
-        monkeypatch.setattr(
-            plan_tool.review, "audit_plan_until_stable", fake_audit
-        )
-        path = registered_plan.plans_dir / "1-demo.md"
-        # Intent-bearing: the whole-bundle control below must exit 0, so no
-        # unrelated blocking finding may ride along.
-        path.write_text(
-            _sectioned_plan_text(
-                "steps:\n"
-                "  - id: 1\n    title: First\n    intent: why the first step\n"
-                "  - id: 2\n    title: Second\n    intent: why the second step\n",
-                intent=_PLAN_INTENT,
-            ),
-            encoding="utf-8",
-        )
-        plan = parse_plan(path)
-        _write_jira_artifact(plan, path, plan.steps[0], _jira_body())
-        if second_body is not None:
-            _write_jira_artifact(plan, path, plan.steps[1], second_body)
-
-        argv = ["completeness-audit", "demo", "--grade", "jira", "-y"]
-        assert main(registered_plan.argv(*argv)) == 0  # findings never gate alone
-        assert main(registered_plan.argv(*argv, "--fail-on-findings")) == 1
-        # …and the same bundle made whole exits 0 either way.
-        _write_jira_artifact(plan, path, plan.steps[1], _jira_body())
-        assert main(registered_plan.argv(*argv, "--fail-on-findings")) == 0
-
-    def test_grade_jira_agrees_with_jira_export_on_done_step_exemption(
-        self, tmp_repo
-    ) -> None:
-        """One bundle, two consumers, one exemption: a ``done`` step with no
-        jira artifact is neither an audit coverage finding nor an export
-        error."""
-        from plan_tool.jira import (
-            _capture_jira_grade_step_detail,
-            _DETAIL_STATE_MISSING,
-            _DETAIL_STATE_PRESENT,
-        )
-
-        steps = (
-            "steps:\n"
-            "  - id: 1\n    title: Built already\n    status: done\n"
-            "  - id: 2\n    title: Still open\n"
-        )
-        plan, path = _write_and_parse(tmp_repo, steps)
-        _write_jira_artifact(plan, path, plan.steps[1], _jira_body())
-        det = _run_deterministic_checks(
-            plan, path, SimpleNamespace(repo_root=tmp_repo.root),
-            plan_name="p", quiet=True, detail_grade=GRADE_JIRA,
-        )
-        assert det.detail_cov_issues == []
-        assert det.detail_body_issues == []
-        # The export agrees: capture_companion_export_input's real
-        # per-step capture exempts the done step from needing an
-        # artifact (its caller only rejects _DETAIL_STATE_MISSING for a
-        # non-done step) and validates the open step's artifact cleanly.
-        done_step, open_step = plan.steps
-        assert (
-            _capture_jira_grade_step_detail(path, plan, done_step, tmp_repo.root).state
-            == _DETAIL_STATE_MISSING
-        )
-        assert (
-            _capture_jira_grade_step_detail(path, plan, open_step, tmp_repo.root).state
-            == _DETAIL_STATE_PRESENT
-        )
-
-
-class TestGradeJiraReportSurfaces:
-    """The report surfaces that would otherwise mix grades: the sidecar, the
-    convergence diagnosis, the operator guidance, and the stderr notice."""
+@pytest.mark.integration
+class TestRunGradeReportSurfaces:
+    """The retained report, sidecar, JSON, and format-validation surfaces."""
 
     def _stub_audit(self, monkeypatch):
         import plan_tool.review
@@ -6808,15 +6067,13 @@ class TestGradeJiraReportSurfaces:
             plan_tool.review, "audit_plan_until_stable", lambda *a, **k: []
         )
 
-    def _sectioned_jira_plan(self, registered_plan):
-        """Give the registered ``demo`` plan a body and a conforming jira
-        artifact, so an audit at either grade runs clean."""
+    def _sectioned_plan(self, registered_plan):
+        """Give the registered plan its required body sections."""
         from plan_tool.parser import parse_plan
 
         path = registered_plan.plans_dir / "1-demo.md"
         path.write_text(_sectioned_plan_text(_CLEAN_STEPS), encoding="utf-8")
         plan = parse_plan(path)
-        _write_jira_artifact(plan, path, plan.steps[0], _jira_body())
         return plan, path
 
     def _reports(self, registered_plan):
@@ -6830,29 +6087,6 @@ class TestGradeJiraReportSurfaces:
             sorted(p.name for p in target.glob("*.json")),
         )
 
-    def test_grade_jira_suppresses_sidecar(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-
-        self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
-        assert main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y"
-            )
-        ) == 0
-        mds, jsons = self._reports(registered_plan)
-        assert len(mds) == 1  # the committable record is still written
-        assert jsons == []  # …but nothing joins the run-grade audit history
-        capsys.readouterr()
-        assert main(
-            registered_plan.argv("gate-status", "demo", "--grade", "jira", "--json")
-        ) == 0
-        verdict = json.loads(capsys.readouterr().out)
-        assert verdict["detail_grade"] == "jira"
-        assert verdict["current_stage"] == "detail"
-        assert verdict["stages"] == {"bare": None, "detail": None}
 
     def test_default_grade_still_writes_sidecar(
         self, registered_plan, monkeypatch, capsys
@@ -6860,7 +6094,7 @@ class TestGradeJiraReportSurfaces:
         from plan_tool.cli import main
 
         self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
+        self._sectioned_plan(registered_plan)
         assert main(
             registered_plan.argv("completeness-audit", "demo", "-y")
         ) == 0
@@ -6868,25 +6102,6 @@ class TestGradeJiraReportSurfaces:
         assert len(mds) == 1
         assert len(jsons) == 1
 
-    @pytest.mark.parametrize("extra", [(), ("--json",)])
-    def test_grade_jira_warns_sidecar_suppressed(
-        self, registered_plan, monkeypatch, capsys, extra
-    ) -> None:
-        # Bound to the audit completing, so it fires exactly once on the
-        # ``--json`` path too — which returns before any report is written.
-        from plan_tool.cli import main
-
-        self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
-        assert main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y", *extra
-            )
-        ) == 0
-        err = capsys.readouterr().err
-        assert err.count("no findings sidecar written") == 1
-        assert "--reuse-audit" in err
-        assert "plan-tool convergence" in err
 
     @pytest.mark.parametrize("extra", [(), ("--json",)])
     def test_default_grade_warns_nothing(
@@ -6895,7 +6110,7 @@ class TestGradeJiraReportSurfaces:
         from plan_tool.cli import main
 
         self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
+        self._sectioned_plan(registered_plan)
         assert main(
             registered_plan.argv(
                 "completeness-audit", "demo", "-y", *extra
@@ -6935,25 +6150,6 @@ class TestGradeJiraReportSurfaces:
         assert "999" in err
         assert "Traceback" not in err
 
-    def test_grade_jira_json_carries_grade_and_provenance(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-
-        self._stub_audit(monkeypatch)
-        _plan, path = self._sectioned_jira_plan(registered_plan)
-        assert main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y", "--json"
-            )
-        ) == 0
-        payload = json.loads(capsys.readouterr().out)
-        assert payload["detail_grade"] == GRADE_JIRA
-        fingerprint = payload["detail_bundle_fingerprint"]
-        assert list(fingerprint) == [
-            "plans/plan-details/demo/jira/01-only-step.md"
-        ]
-        assert all(len(d) == 64 for d in fingerprint.values())
 
     def test_default_json_unchanged(
         self, registered_plan, monkeypatch, capsys
@@ -6961,7 +6157,7 @@ class TestGradeJiraReportSurfaces:
         from plan_tool.cli import main
 
         self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
+        self._sectioned_plan(registered_plan)
         assert main(
             registered_plan.argv("completeness-audit", "demo", "-y", "--json")
         ) == 0
@@ -6969,29 +6165,9 @@ class TestGradeJiraReportSurfaces:
         assert "detail_grade" not in payload
         assert "detail_bundle_fingerprint" not in payload
 
-    def test_grade_jira_report_states_its_grounding(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
 
-        self._stub_audit(monkeypatch)
-        self._sectioned_jira_plan(registered_plan)
-        assert main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y"
-            )
-        ) == 0
-        report = self._reports(registered_plan)[0][0]
-        text = (
-            plan_reports_dir(registered_plan.plans_dir / "1-demo.md") / report
-        ).read_text(encoding="utf-8")
-        assert "### Grounding" in text
-        assert "Detail grade: `jira`" in text
-        assert "plans/plan-details/demo/jira/01-only-step.md" in text
-
-
-class TestGradedGroupedReportProse:
-    """``_render_grouped_report``'s wording and next-steps, by grade."""
+class TestRunGradeGroupedReportProse:
+    """Run-grade grouped-report wording and next steps."""
 
     def _det(self, **overrides):
         base = dict(
@@ -7006,7 +6182,7 @@ class TestGradedGroupedReportProse:
         base.update(overrides)
         return _DeterministicReport(**base)
 
-    def _render(self, det, *, conceptual=(), grade=GRADE_RUN, **kwargs):
+    def _render(self, det, *, conceptual=(), **kwargs):
         return _render_grouped_report(
             SimpleNamespace(title="Demo", steps=[]),
             SimpleNamespace(name="demo"),
@@ -7015,33 +6191,9 @@ class TestGradedGroupedReportProse:
             conceptual_recs=list(conceptual),
             audit_recs=list(conceptual),
             iterate_enabled=False,
-            detail_grade=grade,
             **kwargs,
         )
 
-    def test_grade_jira_next_steps_omit_apply_and_iterate(self) -> None:
-        det = self._det(
-            body_issues=[
-                SimpleNamespace(kind="missing", section="Overview", details="d")
-            ],
-            detail_cov_issues=[
-                DetailCoverageIssue(
-                    step_id=1,
-                    kind="missing_on_disk",
-                    detail_path="plans/plan-details/demo/jira/02-x.md",
-                )
-            ],
-        )
-        out = self._render(det, conceptual=[_rec("medium")], grade=GRADE_JIRA)
-        assert "--iterate" not in out
-        assert "completeness-apply" not in out
-        assert "plan-tool detail" not in out
-        # The reader still leaves with an action for each finding class.
-        assert "Read and fix the finding(s) above through a session-directed edit" in out
-        # The missing-artifact remedy is permanently true and names no
-        # plan-internal step number.
-        assert "DETAIL_FORMAT.md" in out
-        assert "derived path(s)" in out
 
     def test_grade_run_next_steps_unchanged(self) -> None:
         det = self._det(
@@ -7060,30 +6212,6 @@ class TestGradedGroupedReportProse:
         assert "session-directed edit" in out
         assert "DETAIL_FORMAT.md" not in out
 
-    def test_jira_coverage_and_body_render_wording(self) -> None:
-        det = self._det(
-            detail_cov_issues=[
-                DetailCoverageIssue(
-                    step_id=2,
-                    kind="missing_on_disk",
-                    detail_path="plans/plan-details/demo/jira/02-x.md",
-                )
-            ],
-            detail_body_issues=[
-                DetailBodyIssue(
-                    step_id=1,
-                    kind="wrong-schema",
-                    section="",
-                    detail_path="plans/plan-details/demo/jira/01-x.md",
-                    message="run-grade body at a jira-grade path: …",
-                )
-            ],
-        )
-        out = self._render(det, grade=GRADE_JIRA)
-        # Never "declared": a jira artifact has no pointer axis to declare it.
-        assert "declared but missing on disk" not in out
-        assert "no jira-grade detail artifact at its derived path" in out
-        assert "run-grade body at a jira-grade path: …" in out
 
     def test_run_coverage_and_body_wording_unchanged(self) -> None:
         det = self._det(
@@ -9359,7 +8487,7 @@ def test_checkpoint_accepts_threaded_bundle_status() -> None:
     assert "bundle_status" in inspect.signature(
         write_pre_apply_audit_checkpoint
     ).parameters
-    assert "detail_grade" in inspect.signature(
+    assert "detail_grade" not in inspect.signature(
         write_pre_apply_audit_checkpoint
     ).parameters
     assert "audit_detail_bundle_status(" not in src
@@ -14114,46 +13242,6 @@ class TestCompletenessStderrConvergenceAdvisories:
         assert "High-impact seam recurrence" not in err
         assert "Edit drift" not in err
 
-    def test_completeness_stderr_skips_advisories_on_jira_grade(
-        self, registered_plan, monkeypatch, capsys
-    ) -> None:
-        from plan_tool.cli import main
-
-        mechanism = _advisory_mechanism_rec("mechanism")
-        grade_helper = TestGradeJiraReportSurfaces()
-        grade_helper._stub_audit(monkeypatch)
-        grade_helper._sectioned_jira_plan(registered_plan)
-
-        import plan_tool.review
-
-        budget = {
-            "budget_limited": False,
-            "passes_used": 1,
-            "cap": 1,
-            "recommendation_kind": None,
-            "recommended_passes": None,
-            "recommendation_advice": None,
-            "confirmation_kind": "confirmed-dry",
-            "conforming_pass_count": 1,
-            "failed_or_malformed_pass_count": 0,
-        }
-
-        def fake_audit(*_args, budget_report=None, **_kwargs):
-            if budget_report is not None:
-                budget_report.update(budget)
-            return [mechanism]
-
-        monkeypatch.setattr(plan_tool.review, "audit_plan_until_stable", fake_audit)
-        rc = main(
-            registered_plan.argv(
-                "completeness-audit", "demo", "--grade", "jira", "-y"
-            )
-        )
-        err = capsys.readouterr().err
-        assert rc == 0
-        assert "High-impact seam recurrence" not in err
-        assert "Edit drift" not in err
-        assert "Bare-plan mechanism" not in err
 
     def test_completeness_stderr_skips_when_sidecar_not_written(
         self, registered_plan, monkeypatch, capsys
@@ -14310,33 +13398,6 @@ class TestCompletenessStderrConvergenceAdvisories:
         assert "Bare-plan mechanism" in advisory_err
         assert advisory_outcome.stop_reason == control_outcome.stop_reason
 
-    def test_convergence_loop_advisory_lines_pass_detail_grade_to_diagnosis(
-        self, monkeypatch
-    ) -> None:
-        import plan_tool.cli.completeness_cmd as completeness_cmd
-        import plan_tool.convergence_diagnosis as convergence_diagnosis
-
-        grades: list[str] = []
-        monkeypatch.setattr(
-            convergence_diagnosis, "load_report_history", lambda _path: object()
-        )
-
-        def fake_diagnosis(_history, **kwargs):
-            grades.append(kwargs["mechanism_advisory_grade"])
-            return SimpleNamespace(
-                impact_recurrence=None,
-                bare_mechanism_findings=(),
-                edit_drift=None,
-            )
-
-        monkeypatch.setattr(convergence_diagnosis, "diagnose_convergence", fake_diagnosis)
-
-        assert completeness_cmd._convergence_loop_advisory_lines(
-            Path("demo.md"),
-            detail_grade=GRADE_JIRA,
-            audit_stage=STAGE_BARE,
-        ) == []
-        assert grades == [GRADE_JIRA]
 
     def test_completeness_mechanism_advisory_does_not_change_audit_only_rc_or_fail_on_findings(
         self, registered_plan, monkeypatch, capsys
@@ -14401,7 +13462,6 @@ _RELOCATED_ITERATE_HELPER_NAMES = (
     "_fmt_finding_counts",
     "_finding_progress_label",
     "_effective_audit_passes",
-    "_completeness_detail_grade",
     "_sampled_bundle_status",
     "_coverage_input_from_reusable_audit",
     "_conceptual_bar_from_audit_recs",
@@ -14694,15 +13754,12 @@ class TestAuthoringMergedBlockGatesRunOnBlockingVerdict:
             "plan-tool reconcile-plan demo"
         )
 
-    @pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
     @pytest.mark.parametrize("bare", [True, False])
     @pytest.mark.parametrize("state", _VERDICT_STATES)
     def test_stage_rows_name_the_shared_stage_for_the_grade_and_bundle(
-        self, monkeypatch, tmp_path, state, bare, grade
+        self, monkeypatch, tmp_path, state, bare
     ) -> None:
-        """Jira-grade authoring is CLI-disabled, so the grade is pinned here at
-        the helper: a bare bundle names `detail`, a detailed jira-grade bundle
-        names the jira-grade verb, and only a completed empty set offers any."""
+        """Only a completed empty verdict offers detail or run for the bundle."""
         import plan_tool.cli.authoring as authoring
 
         plan_path = tmp_path / "1-demo.md"
@@ -14713,7 +13770,7 @@ class TestAuthoringMergedBlockGatesRunOnBlockingVerdict:
         )
         verdict = _verdict_for(state) or authoring.ABSENT_BLOCKING_VERDICT
         _follow, rows = authoring._authoring_guidance(
-            "demo", path=plan_path, repo_root=tmp_path, detail_grade=grade,
+            "demo", path=plan_path, repo_root=tmp_path,
             tail_outcome=authoring._CompletenessTailOutcome(
                 [], None, verdict, SimpleNamespace(is_bare=bare)
             ),
@@ -14721,12 +13778,10 @@ class TestAuthoringMergedBlockGatesRunOnBlockingVerdict:
         if state != _EMPTY_SET:
             assert rows == []
             return
-        suffix = " --grade jira" if grade == GRADE_JIRA else ""
+        suffix = ""
         expected = (
             f"plan-tool detail demo{suffix}"
             if bare
-            else "plan-tool jira demo --grade jira"
-            if grade == GRADE_JIRA
             else "plan-tool run demo"
         )
         assert [c for c, _ in rows] == [expected]
@@ -14768,11 +13823,11 @@ class TestAuthoringMergedBlockGatesRunOnBlockingVerdict:
         outcome = authoring._coerce_completeness_tail_outcome([("a", "b")])
         assert outcome.blocking_verdict is ABSENT_BLOCKING_VERDICT
         assert authoring._authoring_guidance(
-            "demo", path=Path("p.md"), repo_root=Path("."), detail_grade=GRADE_RUN,
+            "demo", path=Path("p.md"), repo_root=Path("."),
             tail_outcome=outcome,
         )[1] == []
         assert authoring._authoring_guidance(
-            "demo", path=Path("p.md"), repo_root=Path("."), detail_grade=GRADE_RUN,
+            "demo", path=Path("p.md"), repo_root=Path("."),
             tail_outcome=None,
         )[1] == []
 
@@ -14804,11 +13859,10 @@ _GROUPED_VERDICTS = {
 }
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("stage", list(_GROUPED_STAGES))
 @pytest.mark.parametrize("state", list(_GROUPED_VERDICTS))
 def test_grouped_report_offers_a_stage_only_for_a_completed_empty_set(
-    state, stage, grade
+    state, stage
 ) -> None:
     """The grouped report is the fourth reader: at every stage and grade it
     follows the verdict, never a stage it could derive from the bundle."""
@@ -14822,17 +13876,14 @@ def test_grouped_report_offers_a_stage_only_for_a_completed_empty_set(
         audit_recs=[],
         iterate_enabled=False,
         bundle_status=bundle,
-        detail_grade=grade,
         verdict=_GROUPED_VERDICTS[state],
     )
     suggested = md.split("### Suggested next steps", 1)[1]
     if state == "empty-set":
         if bundle.is_bare:
             expected = "plan-tool detail p" + (
-                " --grade jira" if grade == GRADE_JIRA else ""
+                ""
             )
-        elif grade == GRADE_JIRA:
-            expected = "plan-tool jira p --grade jira"
         else:
             expected = "plan-tool run p"
         assert expected in suggested
@@ -14851,7 +13902,7 @@ def test_grouped_report_offers_a_stage_only_for_a_completed_empty_set(
 
     verdict = _GROUPED_VERDICTS[state] or ABSENT_BLOCKING_VERDICT
     next_cmd, _desc = next_stage_command(
-        "p", bundle, detail_grade=grade, verdict=verdict
+        "p", bundle, verdict=verdict
     )
     assert suggested.count(f"`{next_cmd}`") == 1
     assert suggested.count("`plan-tool completeness-audit p") == (
@@ -14864,10 +13915,9 @@ def test_grouped_report_offers_a_stage_only_for_a_completed_empty_set(
         ]
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("bare", [True, False])
 def test_grouped_report_advisory_gap_is_listed_without_close_or_reaudit_wording(
-    grade, bare
+     bare
 ) -> None:
     """Advisory conceptual gaps (a completed empty set) are not 'close … then
     re-audit': the only row is the stage, and no re-audit command appears."""
@@ -14883,25 +13933,20 @@ def test_grouped_report_advisory_gap_is_listed_without_close_or_reaudit_wording(
         bundle_status=SimpleNamespace(
             is_bare=bare, is_fully_bare=bare, detailed_count=0 if bare else 1, total=1
         ),
-        detail_grade=grade,
         verdict=_CLEAR_VERDICT,
     )
     suggested = md.split("### Suggested next steps", 1)[1]
     assert "completeness-audit" not in suggested
     assert not [ln for ln in suggested.splitlines() if ln.startswith("- Close ")]
     expected = (
-        "plan-tool detail p" + (" --grade jira" if grade == GRADE_JIRA else "")
+        "plan-tool detail p" + ("")
         if bare
-        else "plan-tool jira p --grade jira"
-        if grade == GRADE_JIRA
         else "plan-tool run p"
     )
     assert suggested.count(f"`{expected}`") == 1
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 def test_grouped_report_incomplete_with_nothing_listed_is_not_told_to_close_gaps(
-    grade,
 ) -> None:
     md = _render_grouped_report(
         SimpleNamespace(title="P"),
@@ -14912,14 +13957,11 @@ def test_grouped_report_incomplete_with_nothing_listed_is_not_told_to_close_gaps
         audit_recs=[],
         iterate_enabled=False,
         bundle_status=_GROUPED_STAGES["detailed"],
-        detail_grade=grade,
         verdict=blocking_verdict_from_gate([], untrusted_cause=UNTRUSTED_TRANSIENT),
     )
     suggested = md.split("### Suggested next steps", 1)[1]
     reaudit = (
-        "plan-tool completeness-audit p --grade jira"
-        if grade == GRADE_JIRA
-        else "plan-tool completeness-audit p --iterate"
+        "plan-tool completeness-audit p --iterate"
     )
     assert suggested.count(f"`{reaudit}`") == 1
     assert not [ln for ln in suggested.splitlines() if ln.startswith("- Close ")]
@@ -14928,7 +13970,7 @@ def test_grouped_report_incomplete_with_nothing_listed_is_not_told_to_close_gaps
 
 # --- Round-3 amendments: the grouped report's closing rows ------------------
 
-def _grouped_suggested(*, verdict, det=None, bundle="detailed", grade=GRADE_RUN,
+def _grouped_suggested(*, verdict, det=None, bundle="detailed",
                        correctness=(), conceptual=()) -> str:
     md = _render_grouped_report(
         SimpleNamespace(title="P"),
@@ -14939,7 +13981,6 @@ def _grouped_suggested(*, verdict, det=None, bundle="detailed", grade=GRADE_RUN,
         audit_recs=[*correctness, *conceptual],
         iterate_enabled=False,
         bundle_status=_GROUPED_STAGES[bundle],
-        detail_grade=grade,
         verdict=verdict,
     )
     return md.split("### Suggested next steps", 1)[1]
@@ -15037,11 +14078,10 @@ def test_grouped_persistent_cause_row_is_the_shared_description() -> None:
     assert rows[UNTRUSTED_TRANSIENT] != rows[UNTRUSTED_PERSISTENT]
 
 
-@pytest.mark.parametrize("grade", [GRADE_RUN, GRADE_JIRA])
 @pytest.mark.parametrize("bare", [True, False])
-def test_fresh_audit_follow_up_command_is_the_shared_reaudit_command(grade, bare) -> None:
+def test_fresh_audit_follow_up_command_is_the_shared_reaudit_command(bare) -> None:
     """Amendment 7: the parents' fresh-audit row is built by the shared
-    ``_reaudit_command`` (run grade iterates, jira grade never does)."""
+    ``_reaudit_command`` with the required iteration flag."""
     import plan_tool.cli.authoring as authoring
     from plan_tool.completeness_report import (
         ABSENT_BLOCKING_VERDICT,
@@ -15049,10 +14089,10 @@ def test_fresh_audit_follow_up_command_is_the_shared_reaudit_command(grade, bare
     )
 
     command, _ = authoring._fresh_completeness_audit_follow_up(
-        "demo", detail_grade=grade, bare_plan=bare
+        "demo", bare_plan=bare
     )
     assert command == _reaudit_command(
-        "demo", ABSENT_BLOCKING_VERDICT, detail_grade=grade
+        "demo", ABSENT_BLOCKING_VERDICT
     )[0]
 
 
@@ -15086,7 +14126,7 @@ def test_authoring_guidance_checks_the_tail_and_bundle_once(
         SimpleNamespace(is_bare=False),
     )
     follow_up, stage = authoring._authoring_guidance(
-        "demo", path=plan_path, repo_root=tmp_path, detail_grade=GRADE_RUN,
+        "demo", path=plan_path, repo_root=tmp_path,
         tail_outcome=outcome,
     )
     assert follow_up == [("plan-tool x", "tail row")]
@@ -15109,7 +14149,7 @@ class TestTailMovedArtifactsThroughRealSnapshots:
         result = None
         if result_from_snapshot:
             snapshot = AuditInputSnapshot.capture(
-                plan_path, tmp_path, detail_grade=GRADE_RUN
+                plan_path, tmp_path
             )
             result = {
                 "headline": "no-qualified-current-evidence",
@@ -15128,7 +14168,7 @@ class TestTailMovedArtifactsThroughRealSnapshots:
             blocking_verdict_from_gate(["plan-correctness-high"], untrusted_cause=cause),
         )
         rows, _stage = authoring._authoring_guidance(
-            "demo", path=plan_path, repo_root=tmp_path, detail_grade=GRADE_RUN,
+            "demo", path=plan_path, repo_root=tmp_path,
             tail_outcome=outcome,
         )
         return rows[0][1]
@@ -15160,37 +14200,6 @@ class TestTailMovedArtifactsThroughRealSnapshots:
         assert "no current audit evidence" not in why
         assert "1 blocking gap(s) open" in why
 
-    def test_a_result_for_another_grade_is_not_called_stale(
-        self, tmp_path
-    ) -> None:
-        """Deliberate (carve-out): a recorded revision for another detail
-        grade says nothing about this grade's files, so the cause is kept."""
-        import plan_tool.cli.authoring as authoring
-        from plan_tool.jira_grade import GRADE_JIRA
-        from plan_tool.review_persistence import AuditInputSnapshot
-
-        plan_path = tmp_path / "1-demo.md"
-        plan_path.write_text(_sectioned_plan_text(_CLEAN_STEPS), encoding="utf-8")
-        snapshot = AuditInputSnapshot.capture(
-            plan_path, tmp_path, detail_grade=GRADE_RUN
-        )
-        result = {
-            "headline": "no-qualified-current-evidence", "stage": "detail",
-            "coverage": "unconfirmed", "revision_status": "current",
-            "audit_revision": snapshot.revision,
-        }
-        plan_path.write_text(
-            plan_path.read_text(encoding="utf-8") + "\nedit\n", encoding="utf-8"
-        )
-        outcome = authoring._CompletenessTailOutcome(
-            [], result,
-            blocking_verdict_from_gate(["a"], untrusted_cause="persistent"),
-        )
-        rows, _ = authoring._authoring_guidance(
-            "demo", path=plan_path, repo_root=tmp_path,
-            detail_grade=GRADE_JIRA, tail_outcome=outcome,
-        )
-        assert "re-auditing unchanged text reproduces this result" in rows[0][1]
 
     def test_a_failed_capture_is_unproven_not_moved(
         self, tmp_path, monkeypatch
@@ -15234,12 +14243,12 @@ class TestTailMovedArtifactsThroughRealSnapshots:
             step_id=None, title="2 blocking deps finding(s)", body="",
         )
         _c, real_why = authoring._fresh_completeness_audit_follow_up(
-            "demo", detail_grade=GRADE_RUN,
+            "demo",
             verdict=blocking_verdict_from_gate([], [real]),
         )
         assert "1 blocking gap(s) open" in real_why
         _c, arm_why = authoring._fresh_completeness_audit_follow_up(
-            "demo", detail_grade=GRADE_RUN,
+            "demo",
             verdict=blocking_verdict_from_gate([], [arm]),
         )
         assert "1 deterministic check(s) failing" in arm_why
@@ -15260,3 +14269,40 @@ class TestTailMovedArtifactsThroughRealSnapshots:
         monkeypatch.setattr(AuditInputSnapshot, "capture", staticmethod(counting))
         self._guidance(tmp_path, edit=True, cause="persistent")
         assert calls["n"] == 2  # the fixture's snapshot, plus exactly one check
+
+
+@pytest.mark.integration
+class TestRetiredAuditGradeSelector:
+    def test_completeness_audit_rejects_removed_grade_selector(self, registered_plan, capsys):
+        from plan_tool.cli import main
+
+        with pytest.raises(SystemExit) as caught:
+            main(registered_plan.argv("completeness-audit", "demo", "--grade", "jira"))
+        assert caught.value.code == 2
+        assert "unrecognized arguments: --grade jira" in capsys.readouterr().err
+
+
+@pytest.mark.integration
+class TestRunGradeAuditPersistence:
+    def test_completeness_audit_persists_run_grade_report_and_qualified_sidecar(
+        self, registered_plan, monkeypatch,
+    ):
+        from plan_tool.cli import main
+        from plan_tool.review_persistence import load_review, plan_reports_dir
+        import plan_tool.review
+
+        def audit(*args, budget_report, **kwargs):
+            budget_report.update(_qualifying_producer_coverage())
+            budget_report["confirmation_kind"] = "confirmed-dry"
+            return []
+
+        monkeypatch.setattr(plan_tool.review, "audit_plan_until_stable", audit)
+        plan_path = registered_plan.plans_dir / "1-demo.md"
+        plan_path.write_text(_sectioned_plan_text(_CLEAN_STEPS))
+        assert main(registered_plan.argv("completeness-audit", "demo", "-y")) == 0
+        reports = list(plan_reports_dir(plan_path).glob("*-completeness.md"))
+        assert len(reports) == 1
+        saved = load_review(reports[0].with_suffix(".json"))
+        assert saved.qualified_result["audit_revision"]["detail_grade"] == "run"
+        assert saved.qualified_result["coverage"] == "confirmed"
+        assert saved.is_pre_apply_checkpoint is False

@@ -53,7 +53,6 @@ from plan_tool.detail import (
     _repo_relative,
     _scaled_detail_budget_for_step,
     derive_detail_path,
-    derive_jira_detail_path,
     derive_step_slug,
     emit_detail_findings_summary,
     extract_filename_mentions,
@@ -63,11 +62,9 @@ from plan_tool.detail import (
     find_unreferenced_detail_for_step,
     generate_detail,
     parse_detail_response,
-    parse_jira_detail_response,
     parse_structured_detail_response,
     render_declared_risk_context,
     render_detail_prompt,
-    render_jira_detail_prompt,
     stamp_detail_format_version_marker,
     update_step_detail_field,
 )
@@ -77,7 +74,6 @@ from plan_tool.detail_artifacts import (
     render_detail_format_version_marker,
     require_supported_detail_format_version,
 )
-from plan_tool.jira_grade import GRADE_JIRA, JIRA_GRADE_REQUIRED_H2S
 from plan_tool.review import Recommendation
 from plan_tool.scope_fence import (
     PLAN_INTENT_HEADING,
@@ -179,7 +175,6 @@ def test_generate_detail_signature_is_exact() -> None:
             "Optional[Callable[[int, str], None]]",
         ),
         ("prior_body", inspect.Parameter.KEYWORD_ONLY, "", "str"),
-        ("grade", inspect.Parameter.KEYWORD_ONLY, "run", "str"),
         ("recovery_only", inspect.Parameter.KEYWORD_ONLY, False, "bool"),
     ]
     assert signature.return_annotation == "list[DetailResult]"
@@ -566,21 +561,6 @@ class TestRenderDetailPrompt:
         )
         assert "${" not in prompt
 
-    def test_jira_detail_prompt_does_not_render_declared_risk_context(
-        self, tmp_path: Path
-    ) -> None:
-        plan = Plan(
-            title="Risk context plan",
-            status=PlanStatus.IN_PROGRESS,
-            priority=Priority.MEDIUM,
-            risk_profile=RiskProfile.HIGH,
-            risk_profile_rationale="The change crosses an external boundary.",
-            steps=[Step(id=1, title="Render context")],
-        )
-
-        prompt = render_jira_detail_prompt(plan, plan.step_by_id(1), repo_root=tmp_path)
-
-        assert "Declared risk profile (advisory)" not in prompt
 
     def test_source_excerpt_contract_survives_cleanup(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -805,7 +785,6 @@ class TestRenderDetailPrompt:
 
         for prompt in (
             render_detail_prompt(plan, plan.step_by_id(1), repo_root=tmp_path),
-            render_jira_detail_prompt(plan, plan.step_by_id(1), repo_root=tmp_path),
         ):
             assert "Keep the implementation narrow." in prompt
             assert "Do not add a service." in prompt
@@ -845,29 +824,6 @@ class TestRenderDetailPrompt:
         assert calls == [tmp_path]
         assert all("Run snapshot marker" in (result.prompt or "") for result in results)
 
-    def test_jira_detail_dry_run_rejects_before_project_context(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        from plan_tool import detail as detail_module
-
-        plan_path = _write_detail_plan(tmp_path)
-        calls: list[Path] = []
-
-        def snapshot(repo_root: Path) -> str:
-            calls.append(repo_root)
-            return "## Confirmed project context\n\nJira snapshot marker"
-
-        monkeypatch.setattr(detail_module, "project_profile_context", snapshot)
-        with pytest.raises(DetailError, match="Jira-grade detail authoring is disabled"):
-            generate_detail(
-                plan_path,
-                repo_root=tmp_path,
-                dry_run=True,
-                grade=GRADE_JIRA,
-                reporter=NullReporter(),
-            )
-
-        assert calls == []
 
     def test_output_path_pins_canonical_and_forbids_self_write(
         self, tmp_path: Path
@@ -7102,6 +7058,23 @@ def test_generated_handoff_is_not_a_detail_sibling_or_orphan(tmp_path: Path) -> 
     assert handoff.read_text(encoding="utf-8") == "# Developer handoff\n"
 
 
+def test_orphan_sweep_archives_only_stale_same_step_files(tmp_path: Path) -> None:
+    canonical = tmp_path / "01-current.md"
+    other_step = tmp_path / "02-other.md"
+    stale = [tmp_path / "01-old.md", tmp_path / "01-older.md"]
+    for path in [canonical, other_step, *stale]:
+        path.write_text(path.name, encoding="utf-8")
+
+    moved = _archive_orphan_details(canonical, 1)
+
+    assert set(moved) == {tmp_path / "archive" / path.name for path in stale}
+    for path in stale:
+        assert not path.exists()
+        assert (tmp_path / "archive" / path.name).read_text(encoding="utf-8") == path.name
+    for path in [canonical, other_step]:
+        assert path.read_text(encoding="utf-8") == path.name
+
+
 @pytest.mark.integration
 class TestGenerateDetailOrphanSweep:
     """``_archive_orphan_details`` moves stale ``NN-*.md`` siblings.
@@ -8390,39 +8363,6 @@ class TestScopeFenceReachesDetailPrompt:
         labels = [name for name, _ in blocks]
         assert "scope-fence" in labels
         assert "plan-guardrails" not in labels
-
-    def test_scope_fence_reaches_the_jira_detail_prompt(
-        self, tmp_path: Path
-    ) -> None:
-        # The jira grade's required ``## Intent`` section asks the author to
-        # state the step's purpose, so this lane must not be fence-free.
-        plan_path = _write_intent_plan(tmp_path / "i")
-        plan = parse_plan(plan_path)
-
-        prompt = render_jira_detail_prompt(
-            plan,
-            plan.step_by_id(2),
-            repo_root=tmp_path / "i",
-            scope_fence_block=render_scope_fence(
-                plan_path,
-                plan_intent=plan.intent or "",
-                step_intent=plan.step_by_id(2).intent or "",
-            ),
-        )
-
-        assert "Plan-level guardrails and scope fence (authoritative)" in prompt
-        assert "Give the builder the fence." in prompt
-        assert "${" not in prompt
-
-    def test_jira_prompt_falls_back_when_no_fence(self, tmp_path: Path) -> None:
-        plan = parse_plan(_write_detail_plan(tmp_path))
-
-        prompt = render_jira_detail_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path
-        )
-
-        assert "_no plan-level guardrails or scope fence_" in prompt
-        assert "${" not in prompt
 
 
 @pytest.mark.integration
@@ -16451,245 +16391,6 @@ class TestGenerateDetailPromptBudget:
         assert len(calls) == 4
 
 
-# --- legacy Jira-grade detail artifacts ------------------------------------
-#
-# Explicit readers retain the compact parser and renderer. Jira-grade detail
-# authoring fails closed at its CLI, public-generator, and internal boundaries.
-
-_JIRA_BODY = (
-    "# Step 1 — Wire up the renderer\n"
-    "\n"
-    "## Intent\n"
-    "\n"
-    "The renderer has no wiring yet, so nothing downstream can draw a plan.\n"
-    "\n"
-    "## Change\n"
-    "\n"
-    "Wire `renderer.py` into the plan pipeline and return a rendered view.\n"
-    "\n"
-    "## Constraints\n"
-    "\n"
-    "- Keep the existing `render()` signature.\n"
-    "- Do not touch the plan schema.\n"
-    "\n"
-    "## Done when\n"
-    "\n"
-    "- `render()` returns a rendered plan instead of `None`.\n"
-    "- The renderer tests pass.\n"
-    "\n"
-    "## Out of scope\n"
-    "\n"
-    "- Styling the rendered output. Step 2 owns that.\n"
-)
-
-
-def _jira_path_for(tmp_path: Path, step_id: int, slug: str) -> Path:
-    return (
-        tmp_path / "plan-details" / "orch" / "jira" / f"{step_id:02d}-{slug}.md"
-    )
-
-
-class TestJiraGradeGate:
-    """``parse_jira_detail_response`` — the legacy artifact parser."""
-
-    def test_accepts_conforming_body(self) -> None:
-        parsed = parse_jira_detail_response(_JIRA_BODY)
-        assert parsed.body == _JIRA_BODY.strip()
-        assert parsed.findings == ()
-
-    def test_strips_preamble_and_fences(self) -> None:
-        # Same envelope leniency the run-grade parser has.
-        parsed = parse_jira_detail_response(
-            "```\nSure, here it is:\n\n" + _JIRA_BODY + "```\n"
-        )
-        assert parsed.body is not None
-        assert parsed.body.startswith("# Step 1")
-
-    def test_preserves_a_final_content_fence(self) -> None:
-        body = _JIRA_BODY + "\nExample:\n```\nclosing fence remains content\n```"
-        parsed = parse_jira_detail_response(body)
-        assert parsed.body == body
-
-    def test_strips_an_outer_wrapper_around_a_final_content_fence(self) -> None:
-        body = _JIRA_BODY + "\nExample:\n```\nclosing fence remains content\n```"
-        parsed = parse_jira_detail_response(f"```\n{body}\n```\n")
-        assert parsed.body == body
-
-    def test_skips_a_heading_inside_a_fenced_preamble(self) -> None:
-        parsed = parse_jira_detail_response(
-            "Preamble:\n```sh\n# not the detail title\n```\n" + _JIRA_BODY
-        )
-        assert parsed.body == _JIRA_BODY.strip()
-
-    def test_normalizes_unicode_line_boundaries(self) -> None:
-        body = _JIRA_BODY.replace("The renderer", "The\frenderer")
-        parsed = parse_jira_detail_response(body)
-        assert parsed.body == body.replace("\f", "\n").strip()
-
-    def test_rejects_run_grade_body(self) -> None:
-        # A complete, valid seven-section run-grade body must fail
-        # structurally — the closed schema is what makes that possible.
-        parsed = parse_jira_detail_response(_GOOD_BODY)
-        assert parsed.body is None
-        assert parsed.findings
-        assert any("run-grade" in f.message for f in parsed.findings)
-
-    def test_no_stub_synthesis_for_missing_section(self) -> None:
-        # Run-grade parsing stubs one missing section; four of five here is a
-        # hard reject, never a fabricated fifth.
-        four_of_five = _JIRA_BODY.split("## Out of scope")[0].rstrip() + "\n"
-        parsed = parse_jira_detail_response(four_of_five)
-        assert parsed.body is None
-        assert any("Out of scope" in f.message for f in parsed.findings)
-
-    def test_rejects_unknown_section(self) -> None:
-        parsed = parse_jira_detail_response(
-            _JIRA_BODY + "\n## Implementation\n\nExtra.\n"
-        )
-        assert parsed.body is None
-        assert any("unknown section" in f.message for f in parsed.findings)
-
-    def test_rejects_blocking_prose_finding(self) -> None:
-        # The prose gate's blocking findings drive this loop — a denylisted
-        # filler phrase is a reject, not an advisory.
-        padded = _JIRA_BODY.replace(
-            "The renderer has no wiring yet",
-            "It is worth noting that the renderer has no wiring yet",
-        )
-        parsed = parse_jira_detail_response(padded)
-        assert parsed.body is None
-        assert any("filler phrase" in f.message for f in parsed.findings)
-
-    def test_rejects_response_without_heading(self) -> None:
-        parsed = parse_jira_detail_response("no thanks")
-        assert parsed.body is None
-        assert parsed.findings == ()
-
-
-class TestJiraGradePrompt:
-    def test_names_five_sections_and_closed_rule(self, tmp_path: Path) -> None:
-        plan_path = _write_orchestrator_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        prompt = render_jira_detail_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path
-        )
-        for heading in JIRA_GRADE_REQUIRED_H2S:
-            assert f"## {heading}" in prompt
-        assert "schema is closed" in prompt
-        assert "no other `##` heading may appear" in prompt.lower()
-
-    def test_pins_output_path_and_forbids_file_writes(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _write_orchestrator_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        step = plan.step_by_id(1)
-        output_path = derive_jira_detail_path(plan_path, plan, step)
-        prompt = render_jira_detail_prompt(
-            plan, step, repo_root=tmp_path, output_path=output_path
-        )
-        assert _repo_relative(output_path, tmp_path) in prompt
-        assert "Do not create, write, or edit any file." in prompt
-
-    def test_carries_step_context_and_file_contents(
-        self, tmp_path: Path
-    ) -> None:
-        plan_path = _write_orchestrator_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        prompt = render_jira_detail_prompt(
-            plan, plan.step_by_id(1), repo_root=tmp_path
-        )
-        assert "Wire up the renderer" in prompt
-        assert "`renderer.py`" in prompt
-        assert "def render(plan)" in prompt
-        # No run-grade scaffolding leaks into the compact prompt.
-        assert "plan-tool-detail-deferrals" not in prompt
-
-
-class TestJiraGradeDetailAuthoringDisabled:
-    def test_public_generator_rejects_before_parsing_or_writing(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        from plan_tool import detail as detail_module
-
-        def parse_must_not_run(_path: Path):
-            raise AssertionError("Jira-grade authoring must reject before parsing")
-
-        monkeypatch.setattr(detail_module, "parse_plan", parse_must_not_run)
-
-        with pytest.raises(DetailError, match="Jira-grade detail authoring is disabled"):
-            generate_detail(
-                tmp_path / "missing-plan.md",
-                repo_root=tmp_path,
-                grade=GRADE_JIRA,
-            )
-
-        assert not (tmp_path / "plan-details").exists()
-
-    def test_internal_dispatch_rejects_before_parsing(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        from plan_tool import detail as detail_module
-        from plan_tool.convergence import IterativeBudget
-
-        def parse_must_not_run(_path: Path):
-            raise AssertionError("Jira-grade dispatch must reject before parsing")
-
-        monkeypatch.setattr(detail_module, "parse_plan", parse_must_not_run)
-
-        with pytest.raises(DetailError, match="Jira-grade detail authoring is disabled"):
-            detail_module._parse_detail_plan_and_dispatch(
-                tmp_path / "missing-plan.md",
-                repo_root=tmp_path,
-                step_id=None,
-                force=False,
-                dry_run=False,
-                invoker=lambda _prompt: _JIRA_BODY,
-                reporter=None,
-                extract_lessons=False,
-                resume=True,
-                prompt_fn=None,
-                run_logger=None,
-                budget=IterativeBudget(enabled=False),
-                allow_split=False,
-                jobs=1,
-                commit_step=None,
-                grade=GRADE_JIRA,
-            )
-
-    def test_internal_jira_writer_rejects_before_invoking_or_writing(
-        self, tmp_path: Path
-    ) -> None:
-        from plan_tool import detail as detail_module
-
-        plan_path = _write_orchestrator_plan(tmp_path)
-        plan = parse_plan(plan_path)
-        invocations: list[str] = []
-
-        def invoker(prompt: str) -> str:
-            invocations.append(prompt)
-            return _JIRA_BODY
-
-        with pytest.raises(DetailError, match="Jira-grade detail authoring is disabled"):
-            detail_module._generate_jira_detail(
-                plan_path,
-                plan,
-                repo_root=tmp_path,
-                step_id=1,
-                force=False,
-                dry_run=False,
-                invoker=invoker,
-                reporter=NullReporter(),
-                resume=True,
-                prompt_fn=None,
-                run_logger=None,
-                commit_step=None,
-            )
-
-        assert invocations == []
-        assert not _jira_path_for(tmp_path, 1, "wire-up-renderer").exists()
-
-
 def test_extract_plan_references_ignores_fenced_pseudo_heading_and_preserves_body(
     tmp_path: Path,
 ) -> None:
@@ -16739,3 +16440,46 @@ def test_detail_render_and_pointer_update_keep_description_step_text(tmp_path):
     assert "title" not in step
     assert parse_plan(path).steps[0].detail == "details/one.md"
     assert parse_plan(path).steps[0].title == "Exact step text"
+
+
+def test_jira_grade_authoring_symbols_are_not_exposed() -> None:
+    from plan_tool import detail
+
+    for name in ("render_jira_detail_prompt", "_generate_jira_detail", "derive_jira_detail_path"):
+        assert not hasattr(detail, name)
+    for writer in (detail.generate_detail, detail._author_step_detail, detail._parse_detail_plan_and_dispatch):
+        assert "grade" not in inspect.signature(writer).parameters
+
+
+def test_run_grade_worker_preserves_replacement_checkpoint_and_saved_output(tmp_path: Path) -> None:
+    from plan_tool import detail
+
+    plan_path = _write_orchestrator_plan(tmp_path)
+    plan = parse_plan(plan_path)
+    step = plan.step_by_id(1)
+    canonical = detail.derive_detail_path(plan_path, plan, step)
+    canonical.parent.mkdir(parents=True)
+    canonical.write_text("prior detail\n", encoding="utf-8")
+    checkpoint = tmp_path / "checkpoint.json"
+    outcome = detail._author_step_detail(
+        step, prompt="author detail", output_path=canonical, cached=None,
+        input_hash="test-hash", ckpt_path=checkpoint, ckpt_name="detail-step-01",
+        plan_slug="orch", phase_name="detail-step-01", invoke_idx=0,
+        invoke_total=1, reporter=NullReporter(), run_logger=None,
+        invoker=lambda _prompt: _GOOD_BODY, repo_root=tmp_path,
+        plan_path=plan_path, capture_scenarios=False, arm=None,
+        foundational_invoker=None,
+    )
+    assert outcome.succeeded
+    assert outcome.update == (1, canonical.relative_to(tmp_path).as_posix())
+    assert "Wire up the renderer" in canonical.read_text(encoding="utf-8")
+    assert checkpoint.is_file()  # The caller retains recovery until it saves the pointer.
+    archives = list((canonical.parent / "archive").glob("*.md"))
+    assert len(archives) == 1
+    assert archives[0].read_text(encoding="utf-8") == "prior detail\n"
+
+
+def test_retired_jira_detail_parser_is_not_exposed() -> None:
+    import plan_tool.detail as detail_module
+
+    assert not {"JiraDetailParse", "parse_jira_detail_response"} & vars(detail_module).keys()

@@ -11,8 +11,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-from plan_tool.detail_artifacts import derive_jira_detail_path
-from plan_tool.jira_grade import GRADE_DEFAULT, GRADE_JIRA
 from plan_tool.parser import ParseError, ValidationError, parse_plan, parse_plan_text
 from plan_tool.schema import Plan, StepScope
 
@@ -81,7 +79,7 @@ def _detail_drifted(root: Path, ref: str, rel: str) -> bool:
         return True
 
 
-def check_plan_merged(repo_root: Path, plan_path: Path, detail_grade: str = GRADE_DEFAULT) -> MergeCheck:
+def check_plan_merged(repo_root: Path, plan_path: Path) -> MergeCheck:
     if _git(repo_root, "remote", "get-url", "origin") is None:
         return MergeCheck(unverifiable=NO_REMOTE)
     ref = _default_ref(repo_root)
@@ -97,15 +95,8 @@ def check_plan_merged(repo_root: Path, plan_path: Path, detail_grade: str = GRAD
         return MergeCheck(default_ref=ref, unverifiable="the plan does not parse")
 
     committed = [s for s in plan.steps if s.scope == StepScope.COMMITTED]
-    if detail_grade == GRADE_JIRA:
-        undeclared: tuple[str, ...] = ()
-        details = [
-            derive_jira_detail_path(plan_path, plan, s).resolve().relative_to(repo_root.resolve()).as_posix()
-            for s in committed
-        ]
-    else:
-        undeclared = tuple(f"step {s.id}: no detail file declared" for s in committed if not s.detail)
-        details = [s.detail for s in committed if s.detail]
+    undeclared = tuple(f"step {s.id}: no detail file declared" for s in committed if not s.detail)
+    details = [s.detail for s in committed if s.detail]
     wanted = list(dict.fromkeys([rel, *details]))
     present = _files_on_ref(repo_root, ref, wanted)
     missing = tuple(p for p in wanted if p not in present) + undeclared

@@ -12,13 +12,7 @@ structured array for tooling. Output is also written to disk alongside
 the plan at ``<plan_dir>/plan-details/<plan_slug>/jira-stories.{md,json}``
 so it becomes a checked-in artifact next to the per-step detail files.
 
-``--grade jira`` grounds the export on the **jira-grade** detail bundle
-(``plan-details/<plan_slug>/jira/``) instead of the run-grade
-``Step.detail`` files. The grade is validated up front and fails loudly:
-a missing or off-contract jira-grade artifact never degrades into the
-run-grade body, so the export can't misreport which contract it consumed.
-The selected run- or jira-grade detail bundle grounds one paired export. See
-``plan_tool/jira_grade.py`` for the compact Jira-grade contract.
+Run-grade ``Step.detail`` grounds both artifacts in one paired export.
 
 Claude does the natural-language work — synthesizing titles, writing
 descriptions and acceptance criteria, and deciding how to chunk the plan
@@ -45,20 +39,9 @@ from plan_tool.backend import spawn_cwd_from_repo_root
 from plan_tool.detail_artifacts import (
     DetailFormatError,
     derive_detail_path,
-    derive_jira_detail_path,
     require_supported_detail_format_version,
 )
 from plan_tool.jira_config import Epic
-from plan_tool.jira_grade import (
-    GRADE_JIRA,
-    GRADE_RUN,
-    JIRA_GRADE_REQUIRED_H2S,
-    JiraGradeContractError,
-    _RUN_GRADE_H2_TOKENS,
-    is_known_grade,
-    load_jira_grade_detail,
-    unknown_grade_message,
-)
 from plan_tool.jira_handoff import (
     DETAIL_STATE_MISSING as _HANDOFF_DETAIL_STATE_MISSING,
     DETAIL_STATE_PRESENT as _HANDOFF_DETAIL_STATE_PRESENT,
@@ -672,15 +655,7 @@ class JiraError(Exception):
 
 
 def _reject_unmatched_handoff_fence(*, plan_path: Path, body_text: str) -> None:
-    """Keep paired publication from committing a truncated handoff.
-
-    Grade-agnostic: ``render_handoff_body``'s ``_plan_context_sections`` /
-    ``_has_scope_or_placement_context`` (``jira_handoff.py``) parse
-    ``body_text`` with ``ignore_fenced_code=True`` for every grade, so an
-    unmatched opening fence corrupts a jira-grade handoff exactly as it
-    would a run-grade one — this used to check only ``grade == GRADE_RUN``
-    and let the jira-grade case publish a mangled handoff with no error.
-    """
+    """Keep paired publication from committing a truncated handoff."""
     if _fenced_code_spans(body_text).unmatched_opening is not None:
         raise JiraError(
             f"{plan_path}: unmatched opening code fence; add a matching "
@@ -821,25 +796,6 @@ def shell_jira_invoker(prompt: str) -> str:
     """
     _, stdout = claude_invoke(prompt)
     return stdout
-
-
-# Appended to the export prompt under jira grade. The plain-English contract
-# covers the *story* prose too, and story prose is born in this call — so it
-# rides along with the jira-grade bodies rather than forking the template.
-# A prompt contract, not a gate: read-time validation stays structural (see
-# ``jira_grade.py``'s audience split).
-_JIRA_GRADE_PROSE_DIRECTIVE = """\
-## Plain-English story prose
-
-Write each story's plain summary, description, and acceptance criteria in
-plain English:
-
-- Use short, direct sentences. Split a sentence instead of stacking clauses.
-- Say each thing once. Do not restate a point in a later section.
-- Cut filler ("it is worth noting", "in order to", "the fact that").
-- Keep every path, symbol, example, and constraint from the step detail
-  intact and verbatim. Plain English governs the prose around those
-  anchors, never the anchors themselves."""
 
 
 def _render_epic_block(epic: Epic) -> str:
@@ -2110,6 +2066,11 @@ _STORY_SOURCE_PRESENT = "present"
 _STORY_PROMPT_CONTRACT_REVISION = 1
 _HANDOFF_FORMAT_CONTRACT_REVISION = 1
 
+# Run-grade required sections; see DETAIL_FORMAT.md.
+_RUN_GRADE_H2_TOKENS = (
+    "summary", "table", "why", "files", "implementation", "tests", "acceptance",
+)
+
 _RUN_GRADE_DETAIL_H2_RE = re.compile(r"^##[ \t]+([A-Za-z]+)", re.MULTILINE)
 
 
@@ -2153,16 +2114,7 @@ class _StepDetailInput:
 
 
 def _capture_run_grade_step_detail(step: Step, repo_root: Path) -> _StepDetailInput:
-    """Capture ``step.detail`` (the run-grade pointer) as render input.
-
-    Raises when a pointer's target exists but is unreadable or
-    structurally invalid — a *present* selected detail must always be
-    usable. A pointer whose target isn't on disk is captured as
-    ``_DETAIL_STATE_MISSING``, exactly like an unset pointer, matching
-    :func:`_capture_jira_grade_step_detail`'s equivalent branch so the
-    caller's single non-done/done rule applies identically to both grades
-    — a done step's dangling pointer is historical, not a capture failure.
-    """
+    """Capture valid run detail; an absent pointer or file counts as missing."""
     if step.detail is None:
         return _StepDetailInput(state=_DETAIL_STATE_MISSING)
     path = repo_root / step.detail
@@ -2199,27 +2151,6 @@ def _capture_run_grade_step_detail(step: Step, repo_root: Path) -> _StepDetailIn
             f"step {step.id} ({step.title}): selected detail `{rel}` is "
             f"missing required section(s): {', '.join(missing)}"
         )
-    return _StepDetailInput(state=_DETAIL_STATE_PRESENT, path=rel, text=text)
-
-
-def _capture_jira_grade_step_detail(
-    plan_path: Path, plan: Plan, step: Step, repo_root: Path
-) -> _StepDetailInput:
-    """Capture ``step``'s jira-grade artifact as render input.
-
-    Never falls back to ``step.detail`` (the run-grade pointer) — a
-    missing jira-grade artifact is captured as ``_DETAIL_STATE_MISSING``,
-    exactly like an unset run-grade pointer, so the caller's single
-    non-done/done rule applies identically to both grades.
-    """
-    path = derive_jira_detail_path(plan_path, plan, step)
-    if not path.is_file():
-        return _StepDetailInput(state=_DETAIL_STATE_MISSING)
-    try:
-        text = load_jira_grade_detail(path)
-    except JiraGradeContractError as exc:
-        raise JiraError(f"step {step.id} ({step.title}): {exc}") from exc
-    rel = _repo_relative_posix(path, repo_root)
     return _StepDetailInput(state=_DETAIL_STATE_PRESENT, path=rel, text=text)
 
 
@@ -2402,22 +2333,11 @@ def _capture_target_content_proof(path: Path, repo_root: Path) -> _TargetContent
 def _all_detail_artifact_paths(
     plan_path: Path, plan: Plan, repo_root: Path
 ) -> frozenset[str]:
-    """Every step's run- *and* jira-grade detail path, any scope, any grade.
-
-    Deliberately total (not just committed steps, not just the selected
-    grade): a generated target must never collide with an artifact from
-    either detail grade, whether or not that artifact is on disk or
-    selected for this run.
-    """
+    """Every step's run-grade detail path, including absent artifacts."""
     paths: set[str] = set()
     for step in plan.steps:
         paths.add(
             _repo_relative_posix(derive_detail_path(plan_path, plan, step), repo_root)
-        )
-        paths.add(
-            _repo_relative_posix(
-                derive_jira_detail_path(plan_path, plan, step), repo_root
-            )
         )
     return frozenset(paths)
 
@@ -2453,8 +2373,8 @@ def _capture_target_preflight(
         rel = _repo_relative_posix(target, repo_root)
         if rel in detail_paths:
             raise JiraError(
-                f"companion {label} target `{rel}` collides with a run- or "
-                "jira-grade detail artifact path — choose a different "
+                f"companion {label} target `{rel}` collides with a run-grade "
+                "detail artifact path — choose a different "
                 "destination"
             )
     return _TargetPreflightCapture(
@@ -2478,7 +2398,6 @@ class CompanionExportInput:
     plan: Plan
     frontmatter_text: str
     body_text: str
-    grade: str
     committed_steps: tuple[_CommittedStepInput, ...]
     parked_step_history: tuple[_ParkedStepHistory, ...]
     settings: _CompanionExportSettings
@@ -2503,7 +2422,6 @@ def capture_companion_export_input(
     epic: Epic,
     story_output_path: Path,
     handoff_output_path: Path,
-    grade: str = GRADE_RUN,
     format: str = "markdown",
     max_hours: int = 8,
     plan_tag: str = "",
@@ -2519,7 +2437,7 @@ def capture_companion_export_input(
     committed non-done step has no structurally valid selected detail; a
     committed step's present detail is structurally invalid (even when the
     step is done); a generated target collides with a detail artifact from
-    either grade; or an existing story source at ``story_output_path``
+    run-grade detail; or an existing story source at ``story_output_path``
     cannot be established. Parked (``deferred``/``wont_do``) steps are
     never selected, validated, or excerpted — only their
     id/title/scope/status_note survive, in
@@ -2534,8 +2452,7 @@ def capture_companion_export_input(
         raise JiraError(
             f"unknown format {format!r}; choose one of {_VALID_FORMATS}"
         )
-    if not is_known_grade(grade):
-        raise JiraError(unknown_grade_message(grade))
+
 
     text = plan_path.read_text(encoding="utf-8")
     document = split_plan_document(text)
@@ -2553,12 +2470,7 @@ def capture_companion_export_input(
     problems: list[str] = []
     for step in plan.committed_steps:
         try:
-            if grade == GRADE_JIRA:
-                detail = _capture_jira_grade_step_detail(
-                    plan_path, plan, step, repo_root
-                )
-            else:
-                detail = _capture_run_grade_step_detail(step, repo_root)
+            detail = _capture_run_grade_step_detail(step, repo_root)
         except JiraError as exc:
             problems.append(str(exc))
             continue
@@ -2620,7 +2532,6 @@ def capture_companion_export_input(
         plan=plan,
         frontmatter_text=document.frontmatter_yaml,
         body_text=document.body,
-        grade=grade,
         committed_steps=tuple(committed_inputs),
         parked_step_history=parked_history,
         settings=settings,
@@ -2745,8 +2656,6 @@ def render_companion_export_prompt(
         story_id_example_dep=f"{prefix}{start_number + 2}",
         start_number=str(start_number),
     )
-    if capture.grade == GRADE_JIRA:
-        return f"{prompt}\n\n{_JIRA_GRADE_PROSE_DIRECTIVE}"
     return prompt
 
 
@@ -3162,11 +3071,6 @@ def regenerate_companion_stories(
 #
 # Captures, renders, stamps, and publishes the story and handoff as one pair.
 
-# Mirrors detail_artifacts._JIRA_GRADE_DIRNAME (kept local rather than
-# imported since that name is private to that module).
-_JIRA_LANE_DIRNAME = "jira"
-
-
 def _paths_collide(a: Path, b: Path) -> bool:
     """True if two resolved paths name the same file, including on a
     case-insensitive filesystem (default macOS/Windows) where a case
@@ -3300,26 +3204,6 @@ def _companion_target_preflight(
                     f"(`{plan_details_root}`) — choose a destination "
                     "outside it"
                 )
-            # _is_within just matched via either an exact or a casefolded
-            # comparison (case-insensitive filesystem support); re-deriving
-            # parts with a plain, case-sensitive relative_to() can raise on
-            # exactly the case-variant path that only the casefolded branch
-            # matched, so fall back to the same casefolded comparison here.
-            try:
-                rel_parts = resolved.relative_to(plan_details_root).parts
-            except ValueError:
-                rel_parts = (
-                    Path(str(resolved).casefold())
-                    .relative_to(str(plan_details_root).casefold())
-                    .parts
-                )
-            if len(rel_parts) >= 2 and rel_parts[1].casefold() == _JIRA_LANE_DIRNAME:
-                raise JiraError(
-                    f"companion {label} target `{resolved}` falls inside "
-                    "the independent jira-grade authoring lane — choose a "
-                    "different destination"
-                )
-
     current_plan_identity = _repo_relative_posix(capture.plan_path, repo_root)
     story_is_legacy = _require_target_recognized_or_absent(
         story_output_path,
@@ -3407,7 +3291,7 @@ def _build_handoff_render_input(
     return HandoffRenderInput(
         plan=capture.plan,
         body_text=capture.body_text,
-        grade=capture.grade,
+        grade="run",
         source_plan_path=_repo_relative_posix(capture.plan_path, repo_root),
         committed_steps=tuple(
             _handoff_committed_step_render_input(ci) for ci in capture.committed_steps
@@ -3615,7 +3499,6 @@ def render_jira_export(
     epic: Epic,
     story_output_path: Path,
     handoff_output_path: Path,
-    grade: str = GRADE_RUN,
     format: str = "markdown",
     max_hours: int = 8,
     plan_tag: str = "",
@@ -3634,7 +3517,6 @@ def render_jira_export(
         epic=epic,
         story_output_path=story_output_path,
         handoff_output_path=handoff_output_path,
-        grade=grade,
         format=format,
         max_hours=max_hours,
         plan_tag=plan_tag,
@@ -3709,7 +3591,6 @@ def export_jira(
     epic: Epic,
     story_output_path: Path,
     handoff_output_path: Path,
-    grade: str = GRADE_RUN,
     format: str = "markdown",
     max_hours: int = 8,
     plan_tag: str = "",
@@ -3737,7 +3618,6 @@ def export_jira(
         epic=epic,
         story_output_path=story_output_path,
         handoff_output_path=handoff_output_path,
-        grade=grade,
         format=format,
         max_hours=max_hours,
         plan_tag=plan_tag,

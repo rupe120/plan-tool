@@ -16,7 +16,7 @@ def plan_path(tmp_path):
     return path
 
 
-def _save(path, *, day=1, grade='run', stage='bare', headline='clean',
+def _save(path, *, day=1, stage='bare', headline='clean',
           coverage='confirmed', revision_status='current', **kwargs):
     return save_review(
         plan_slug='demo', plan_path=path.name, repo_root=path.parent,
@@ -25,13 +25,13 @@ def _save(path, *, day=1, grade='run', stage='bare', headline='clean',
         qualified_result={
             'headline': headline, 'stage': stage, 'coverage': coverage,
             'revision_status': revision_status,
-            'audit_revision': AuditInputSnapshot.capture(path, path.parent, detail_grade=grade).revision,
+            'audit_revision': AuditInputSnapshot.capture(path, path.parent).revision,
         }, **kwargs,
     )
 
 
-def _document(path, grade='run'):
-    return build_gate_status(path, path.parent, detail_grade=grade, current_stage='bare')
+def _document(path):
+    return build_gate_status(path, path.parent, current_stage='bare')
 
 
 @pytest.mark.parametrize('headline,coverage,revision_status,expected', [
@@ -48,6 +48,9 @@ def test_converged_requires_current_confirmed_clean_or_advisory_result(
     report = _save(plan_path, headline=headline, coverage=coverage, revision_status=revision_status)
     result = _document(plan_path)['stages']['bare']
     saved = json.loads(report.read_text())['qualified_result']
+    if coverage != 'confirmed' or revision_status != 'current' or headline == 'no-qualified-current-evidence':
+        assert result is None
+        return
     assert result['headline'] == saved['headline']
     assert result['coverage'] == saved['coverage']
     assert result['converged'] is expected
@@ -65,12 +68,15 @@ def test_plan_edit_invalidates_a_saved_clean_result_without_mutating_it(plan_pat
     assert report.read_bytes() == before
 
 
-def test_reader_never_substitutes_a_foreign_grade_sidecar(plan_path):
+def test_reader_ignores_retired_grade_sidecar_without_substituting(plan_path):
     run = _save(plan_path)
-    jira = _save(plan_path, day=2, grade='jira', headline='awaiting-human-action')
+    jira = _save(plan_path, day=2, headline='awaiting-human-action')
+    payload = json.loads(jira.read_text())
+    payload['qualified_result']['audit_revision']['detail_grade'] = 'jira'
+    jira.write_text(json.dumps(payload))
+    before = jira.read_bytes()
     assert _document(plan_path)['stages']['bare']['report'] == run.stem
-    assert _document(plan_path, 'jira')['stages']['bare']['report'] == jira.stem
-    assert _document(plan_path, 'jira')['stages']['bare']['converged'] is False
+    assert jira.read_bytes() == before
 
 
 def test_newest_per_stage_wins_even_when_older_report_matches_current_files(plan_path):
@@ -84,9 +90,10 @@ def test_newest_per_stage_wins_even_when_older_report_matches_current_files(plan
     assert result['converged'] is False
 
 
-def test_each_stage_retains_its_own_latest_result(plan_path):
-    bare = _save(plan_path)
+def test_gate_status_selects_newest_qualified_run_grade_result_per_stage(plan_path):
+    _save(plan_path)
     detail = _save(plan_path, day=2, stage='detail')
+    bare = _save(plan_path, day=3)
     stages = _document(plan_path)['stages']
     assert stages['bare']['report'] == bare.stem
     assert stages['detail']['report'] == detail.stem
@@ -127,7 +134,7 @@ def test_confirmation_kind_is_delivered_from_coverage_without_inference(plan_pat
     assert _document(plan_path)['stages']['bare']['confirmation_kind'] == 'confirmed-low-yield'
 
 
-def test_corrupt_and_nonfinal_newer_reports_do_not_hide_final_evidence(plan_path):
+def test_gate_status_does_not_replace_final_result_with_unqualified_or_unusable_evidence(plan_path):
     final = _save(plan_path)
     newer = _save(plan_path, day=2)
     raw = json.loads(newer.read_text())
@@ -135,7 +142,10 @@ def test_corrupt_and_nonfinal_newer_reports_do_not_hide_final_evidence(plan_path
     raw['qualified_result'] = None
     newer.write_text(json.dumps(raw))
     (plan_reports_dir(plan_path) / '9999-corrupt.json').write_text('{')
+    unqualified = _save(plan_path, day=3, coverage='unconfirmed')
+    before = unqualified.read_bytes()
     assert _document(plan_path)['stages']['bare']['report'] == final.stem
+    assert unqualified.read_bytes() == before
 
 
 @pytest.mark.parametrize("unavailable", ["unknown-role", "not-sampled"])
