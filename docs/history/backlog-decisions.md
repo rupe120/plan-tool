@@ -774,3 +774,20 @@ the way and is independent of AI-DLC: BACKLOG #444, shipped 2026-10-06.
 printed it. A refusal from an AI-DLC guard points at the runtime-hook
 candidate above; a stage run with the skill installed on AI-DLC 2.10.0 is the
 first thing to try.
+
+## Same-batch relation follow-ups, 2026-11-04
+
+The self-reference bug entry also carried two lower-severity observations.
+The endpoint-kind exhaustiveness concern was already pinned by
+`test_relation_endpoint_table_types_every_kind_but_the_deliberately_untyped_decision_anchor`
+in `tests/test_roadmap_candidate.py`: every relation kind has a typed target
+except the deliberately generic decision anchor. That concern requires no new
+policy or implementation.
+
+The same-batch endpoint helper is also evaluated for removed relation atoms.
+No supported failing input was established for that observation; the source
+entry described it as unreachable under the predecessor gates. Retire that
+contingent change rather than widen the self-reference fix. Reopen only with a
+valid admitted predecessor and candidate for which a removed relation is
+incorrectly authorized through a same-batch addition. This is a retirement of
+an unproven risk, not a claim that removed-relation behavior changes.

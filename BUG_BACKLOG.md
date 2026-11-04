@@ -46,49 +46,6 @@ Durable re-open conditions for retired items are recorded in
 
 ## BUG
 
-### A same-batch add-row whose relation targets itself is wrongly refused as unauthorized
-
-- **Files:** `plan_tool/roadmap_candidate.py:_same_batch_added_endpoint_identity`,
-  `_validate_relation_authority`. Not part of the `roadmap-candidate-row-prose-amendments`
-  branch — this is already-shipped code from the merged
-  `roadmap-candidate-same-batch-relations` plan; a stale local `main` in this
-  clone (41 commits behind `origin/main`) caused a `/code-review` pass to
-  scope its diff against it and surface this, so it's recorded here rather
-  than fixed on that unrelated branch.
-- **Symptom:** confirmed by execution against the real
-  `materialize_candidate`/`parse_candidate_delta` pipeline. A batch add-row
-  creating a row whose own declared relation targets itself (e.g. an entity
-  with a `REFERENCE` field pointing at its own id — a tree/parent-pointer
-  shape) is refused with `reason='unauthorized-addition'`. In
-  `_same_batch_added_endpoint_identity`, the exclusion
-  `(operation.artifact_key, operation.row.id) != (relation.owner_artifact_key,
-  relation.owner_id)` is written to stop a relation's owning operation from
-  authorizing itself, but for a true self-reference the owner op is also the
-  only operation that could ever supply the endpoint, so the exclusion
-  removes the sole valid match and `exact_additions` comes back empty.
-- **Fix:** none applied (out of scope for the branch that surfaced it). The
-  exclusion needs to distinguish "this operation is the owner, and a
-  *different* operation should supply the endpoint" from "this operation is
-  the owner and legitimately also creates its own self-referencing endpoint"
-  — likely by allowing the match when `relation.owner_id == relation.endpoint_id`
-  rather than unconditionally excluding same-operation matches.
-- **Related, same area, not separately filed:** the same review pass also
-  flagged (a) the same-batch exception being checked identically for added
-  *and* removed relation atoms in `_validate_relation_authority` (structurally
-  unreachable today given gate-maintained invariants, but written
-  endpoint-generic rather than addition-generic), and (b)
-  `_RELATION_ENDPOINT_IDENTITIES` failing open for any future `RelationKind`
-  with no entry (its own comment already records `CONSTRAINT_ANCHOR` once
-  slipping through this way) with no exhaustiveness test tying the table to
-  `RelationKind`'s members. Both are real but lower-severity; worth a look
-  alongside the fix above rather than filing three separate entries.
-- **Approach:** direct, once picked up on the branch/plan that actually owns
-  this code — small, localized exclusion-condition fix plus a regression test
-  for the self-reference case.
-- **Origin:** 2026-09-28, `/code-review high` on
-  `run/roadmap-candidate-row-prose-amendments`, diff scoped against a stale
-  local `main` in error.
-
 ### `_code_anchor_resolves` still reports two real, existing files as missing: bare-filename citations and negated-existence citations
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves`,
