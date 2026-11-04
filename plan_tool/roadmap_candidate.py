@@ -2554,8 +2554,6 @@ def _same_batch_added_endpoint_identity(
         if any(
             isinstance(operation, CandidateAddRow)
             and (operation.artifact_key, type(operation.row).__name__, operation.row.id) == identity
-            and (operation.artifact_key, operation.row.id)
-            != (relation.owner_artifact_key, relation.owner_id)
             for operation in operations
         )
     )
