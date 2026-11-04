@@ -50,3 +50,17 @@ caller exclusions, corrects the seed/backlog/doc paths, and adds Cursor guidance
 and the glossary to the existing sweep. The property is that retiring three
 commands cannot silently widen into retiring unrelated application authorities.
 No production code changes accompany this correction.
+
+## Bare gate
+
+2026-11-04 command:
+`uv run plan-tool --backend codex --model gpt-6.1-sol completeness-audit completeness-apply-retirement --iterate --commit --audit-passes 1 -y < /dev/null`.
+The final report is `reports/20261104-130709-completeness.md` under the plan's
+detail directory: 0/6 detailed, zero conceptual correctness/completeness findings,
+confirmed coverage, current revision, and advisory-only result. The conceptual
+call is fresh, not reused. Bare-stage completeness application remains withheld;
+there are no findings on that axis to carry into detail. The sole heuristic
+`plan-claim-vs-delivery-caca4275` names `apply_finding`, which the plan expressly
+preserves rather than delivers; it requires no plan expansion. No correction
+loop is necessary and unchanged-plan resampling serves no purpose. Detail may
+proceed; this does not certify the unauthored detail bundle.
