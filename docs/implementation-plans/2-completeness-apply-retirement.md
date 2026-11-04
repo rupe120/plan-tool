@@ -64,6 +64,7 @@ steps:
   - tests/test_cli.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/02-retire-direct-run-direct-jira-commands.md
   description: Retire the direct-run and direct-jira commands by deleting plan_tool/cli/direct_cmd.py
     and its parser, dispatch, lock-set, capability, and reference entries (its mid-chain
     authoring and applied-gap commits and relocated-root dirt guard retire with it;
