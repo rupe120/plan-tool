@@ -1100,6 +1100,58 @@ def test_existing_valid_symbol_remains_valid_when_path_is_planned(planned_paths)
     ) == []
 
 
+@pytest.mark.parametrize(
+    "symbol, resolves",
+    [
+        ("Worker", True), ("Worker.run", True), ("Worker._private", True),
+        ("Worker.fetch", True), ("Worker.missing", False),
+        ("Missing.run", False), ("Other.run", False),
+        ("Worker.value", False), ("registry.run", False),
+        ("outer.inner", False),
+    ],
+)
+def test_code_anchor_resolves_direct_class_methods_without_guessing_runtime_members(
+    tmp_path: Path, symbol: str, resolves: bool,
+) -> None:
+    (tmp_path / "worker.py").write_text(
+        "class Worker:\n"
+        "    value = 1\n"
+        "    def run(self):\n"
+        "        def inner(): pass\n"
+        "    def _private(self): pass\n"
+        "    async def fetch(self): pass\n"
+        "class Other: pass\n"
+        "registry = {'run': Worker.run}\n"
+        "def outer():\n"
+        "    def inner(): pass\n",
+        encoding="utf-8",
+    )
+    anchor = f"worker.py:{symbol}"
+    issues = contract.check_input_contract_references(
+        _input_doc(f"Uses `{anchor}`."), tmp_path, location="detail.md:## Input",
+    )
+    if resolves:
+        assert issues == []
+    else:
+        assert len(issues) == 1
+        assert issues[0].code_anchor == anchor
+        assert "does not resolve in HEAD" in issues[0].reason
+
+
+
+def test_registered_owner_method_cannot_bypass_registered_field_validation(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "plan_tool/review_persistence.py"
+    path.parent.mkdir()
+    path.write_text("class SavedReview:\n    def helper(self): pass\n")
+    ok, reason = contract._code_anchor_resolves(
+        tmp_path, "plan_tool/review_persistence.py:SavedReview.helper",
+    )
+    assert ok is False
+    assert "unregistered field" in reason
+
+
 def test_code_anchor_resolves_via_monorepo_subdirectory_root(tmp_path: Path) -> None:
     # Written relative to a subdirectory project root (e.g. a monorepo's
     # ``backend-py/``), not the git repo root — still a real file. See

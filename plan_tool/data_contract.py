@@ -564,6 +564,18 @@ def _valid_open_bag_key(owner: str, field_name: str, key: str | None) -> bool:
 
 
 def _module_level_symbol_exists(tree: ast.AST, symbol: str) -> bool:
+    parts = symbol.split(".")
+    if len(parts) == 2:
+        owner, method = parts
+        return any(
+            isinstance(node, ast.ClassDef) and node.name == owner
+            and any(
+                isinstance(member, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and member.name == method
+                for member in node.body
+            )
+            for node in getattr(tree, "body", [])
+        )
     for node in getattr(tree, "body", []):
         if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
             if node.name == symbol:
@@ -684,7 +696,7 @@ def _code_anchor_resolves(
         tree = ast.parse(path.read_text(encoding="utf-8"))
     except (OSError, SyntaxError) as exc:
         return False, f"code anchor `{anchor}` could not be parsed: {exc}"
-    if len(parts) == 1 and _module_level_symbol_exists(tree, owner):
+    if _module_level_symbol_exists(tree, symbol):
         return True, None
     return False, f"code anchor `{anchor}` does not resolve in HEAD"
 
