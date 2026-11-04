@@ -113,6 +113,7 @@ steps:
       leaves no dangling pointer
     2: removes direct_cmd.py, the only caller of cmd_completeness_apply outside its
       own command
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/03-retire-completeness-apply-command-both.md
   description: Retire the completeness-apply command, both its interactive walk and
     its --jobs N parallel lane, by deleting cmd_completeness_apply, its apply-walk
     helpers in completeness_phases.py, and plan_tool/cli/completeness_apply_parallel.py
