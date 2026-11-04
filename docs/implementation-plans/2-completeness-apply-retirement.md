@@ -194,6 +194,7 @@ steps:
     3: 'the last code removal has landed, so #376 is fully shipped'
     4: directive sweep complete
     5: reference-doc sweep complete
+  detail: docs/implementation-plans/plan-details/completeness-apply-retirement/06-close-backlog-376-shipped-completeness.md
   description: 'Close BACKLOG #376 as shipped by completeness-apply-retirement, retire
     or trim backlog entries that exist only for the removed commands, and file follow-ups
     for the now-unreachable granularity-split walk opt-in and stale .plan-tool/lessons/project.md
