@@ -5565,8 +5565,7 @@ class TestReconcileCodeAllSweep:
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         """A step declared ``change_type: non-code`` has no code for this
-        audit to touch (mirrors ``direct_cmd._is_code_step``'s gate), so
-        the sweep must not spend a claude call on it."""
+        audit to touch, so the sweep must not spend a claude call on it."""
         from plan_tool.cli import app as cli_module
         from plan_tool.launcher import RunResult
 
@@ -7401,7 +7400,7 @@ class TestCmdCompletenessConceptWiring:
         assert "completeness done" in out
         # This fixture deliberately has no detail bundle. Under #85,
         # conceptual-completeness gaps stay informational on bare plans;
-        # only conceptual-correctness gaps can name completeness-apply.
+        # conceptual gaps use session-directed correction guidance.
         assert "completeness-apply" not in out
         assert "advisory  1 conceptual gap(s)" in out
         assert "informational until a complete detail bundle exists" in out
@@ -7794,7 +7793,7 @@ class TestCmdCompletenessConceptWiring:
         """#85 (read-only-audit split): ``cmd_completeness --iterate -y`` must
         NOT route conceptual *correctness* findings to ``apply_finding``. They
         are collected from the once-run conceptual audit and persisted to the
-        report/sidecar unapplied, for ``completeness-apply`` to walk.
+        report/sidecar unapplied for session-directed correction.
 
         This pins the inverse of the pre-#85 wiring (Lesson 7: test the
         wiring, not just the helper)."""
@@ -7864,7 +7863,7 @@ class TestCmdCompletenessConceptWiring:
             "correctness findings must not be auto-applied under #85; "
             f"captured: {captured_calls!r}"
         )
-        # It is persisted to the report unapplied for completeness-apply.
+        # It remains persisted and unapplied for session-directed correction.
         reports = list(
             (tmp_path / "plans" / "plan-details" / "concept-test" / "reports")
             .glob("*-completeness.md")
@@ -8930,7 +8929,7 @@ class TestCmdCompletenessConceptWiring:
         Also guards the apply wiring under the read-only-audit split (#85):
           - The audit's conceptual *correctness* finding is NOT dispatched
             to apply_finding (it is persisted unapplied for
-            ``completeness-apply`` to walk).
+            session-directed correction).
           - A deterministic finding still reaches apply_finding in the
             same run (the audit converges on its deterministic stream)."""
         from plan_tool import launcher as launcher_module
@@ -9025,7 +9024,7 @@ class TestCmdCompletenessConceptWiring:
         )
         # #85: the deterministic stream still reaches apply_finding, but the
         # conceptual correctness finding NEVER does (it is persisted for
-        # completeness-apply).
+        # session-directed correction).
         bodies = [body for (_sid, body) in captured_apply_sources]
         concept_applies = [b for b in bodies if "foo.py" in b]
         deterministic_seen = any("Overview body empty" in b for b in bodies)
@@ -14773,3 +14772,16 @@ class TestAnnotateEndToEnd:
         with pytest.raises(SystemExit) as excinfo:
             main(["annotate", "--help"])
         assert excinfo.value.code == 0
+
+
+@pytest.mark.parametrize("command", ["completeness-audit", "detail"])
+def test_audit_and_detail_help_describe_reader_owned_conceptual_edits(command, capsys) -> None:
+    from plan_tool.cli.app import main
+
+    with pytest.raises(SystemExit) as exc:
+        main([command, "--help"])
+    assert exc.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "human or orchestrating session" in help_text
+    assert "hand-edit the relevant plan or detail files" in help_text
+    assert "deterministic well-formedness" in help_text.replace("- ", "-")

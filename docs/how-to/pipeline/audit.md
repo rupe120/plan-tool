@@ -279,7 +279,7 @@ present as `null` for schema compatibility.
 non-routing `AuditShapeAdvisory` beside its findings. It records the exact
 plan/detail audit-input fingerprint, the contiguous arm's step ids, counts, and
 anchor slugs grouped by audit axis. Grouped audit output, persisted reports,
-concise iterate output, JSON, and `completeness-apply` render the same keep-or-
+concise iterate output and JSON render the same keep-or-
 carve prompt only when that dedicated fingerprint still matches current disk. A
 human may continue with the arm; that explicitly overrides the non-blocking
 signal. The advisory never enters source filters, annotations, workers, or the
@@ -393,40 +393,26 @@ that diagnosis.
 When a current arm-clustering advisory is present, the grouped audit report and
 saved report render its committed arm steps, stored counts, and axis-grouped
 anchor slugs as an evidence-bearing keep-or-carve decision aid. `--iterate`
-keeps the same current signal in its compact summary. `completeness-apply`
-presents it once in the parent process before serial work or parallel worker
-provisioning; stale optional advice is hidden without changing the saved walk.
+keeps the same current signal in its compact summary. Stale optional advice is hidden without changing audit findings.
 
-The deterministic layer gates the conceptual one: auditing concepts in empty or
-placeholder sections is pointless, so run `completeness-audit` to clear authoring gaps
-first. Under `--iterate`, the multi-pass conceptual audit runs **once, up front**
-(re-auditing each round would re-phrase the same gaps into fresh ids and defeat
-convergence detection); its blocking **correctness** findings (including material
-ambiguity) are applied via `apply_finding`
-alongside the deterministic findings, each fingerprint dispatched at most once.
-Only the deterministic layer is re-checked between rounds, so the loop stops when
-those converge, when the open count stops shrinking (`--max-stall-rounds`), or
-when the budget is spent. Advisory **completeness** findings are reported for
-human review, not auto-applied. `reconcile` then earns its claude call to compare the now-coherent plan
-against the code.
+The conceptual audit runs once up front; only deterministic checks repeat
+between repair rounds. Each repair fingerprint dispatches at most once. The
+loop stops when deterministic findings converge, the open count stalls
+(`--max-stall-rounds`), or the budget is spent; conceptual stage blockers
+remain for judged correction.
 
-**Bare-plan apply fence (plan-level, axis-split).** A plan is **bare** when
-`audit_detail_bundle_status` → `DetailBundleStatus.is_bare` is true (at least
-one step has no detail file on disk). On a bare or partially-detailed plan,
-conceptual-**correctness** gaps keep the `completeness-apply` route — they
-target plan-body prose, step titles, and acceptance criteria that exist without
-detail files. Conceptual-**completeness** gaps and the deterministic
-detail-level finding sources (`DETAIL_LEVEL_FINDING_SOURCES` in
-`completeness_report.py`: `detail-coverage`, `files-coherence`, `detail-body`)
-stay withheld; `cmd_completeness_apply` walks only `plan-correctness` and
-reports the rest. The BLOCKED remedy is coverage-aware at **plan** level
-(`_blocked_next_step`): on a bare plan it leads with `plan-tool detail`, with
-`plan-tool split` as the secondary over-packed-step option — never keyed on
-which step a finding sits on. `suggested_next_steps`,
-`suggested_next_step_commands`, and `_render_grouped_report`'s
-`### Suggested next steps` block all read `next_step_gaps`
-(`NextStepGaps`), so they share one close-or-advisory gap list. The blocking verdict that decides whether a
-stage transition is offered is separate; see
+The iterate loop repairs deterministic well-formedness findings only. Both
+conceptual axes remain saved evidence for human or orchestrating-session
+judgment. Read the report, verify and judge related findings, edit the plan or
+detail text, commit bounded corrections, and re-audit the changed snapshot.
+
+**Bare-plan correction boundary.** A plan is bare when at least one step has
+no detail file on disk. Correct material plan-body contracts, ordering, risks,
+and acceptance criteria before authoring detail. Keep implementation mechanics
+and fixture-level coverage detail-owned. Bare-stage completeness medium findings
+remain advisory; audit the complete detail bundle again before execution.
+`next_step_gaps` keeps reported close-or-advisory lists consistent with the
+stage-aware blocking verdict; see
 [One blocking set drives every next step](#one-blocking-set-drives-every-next-step).
 
 ### One blocking set drives every next step
@@ -721,8 +707,7 @@ unknown-role evidence beside a `no-history` diagnosis.
 Direct-walk filtering does not change the generic
 `plan_tool/review_persistence.py:resolve_saved_review()` locator or pre-apply
 checkpoint recovery. A sampler checkpoint never reaches
-`plan_tool/cli/completeness_cmd.py:cmd_completeness_apply()` or
-`plan_tool/cli/data_contract_cmd.py:cmd_data_contract_apply()`: both require
+`plan_tool/cli/data_contract_cmd.py:cmd_data_contract_apply()`, which requires
 ordinary final qualified evidence.
 
 **Who inherits this, and who does not.** `plan_tool/telemetry_analysis.py`,
@@ -833,10 +818,9 @@ for the code-is-truth vs plan-is-truth split.
 | Intent-presence detector          | `plan_tool/review.py` (`check_intent_presence`, `is_usable_intent`, `INTENT_PRESENCE_SOURCE`, its `triage_reason` branch) |
 | Self-consistency partition + next steps | `plan_tool/review.py` (`SELF_CONSISTENCY_SOURCES`), `plan_tool/cli/completeness_phases.py` (the `### Self-consistency` render and its next-steps line) |
 | Deterministic battery + report      | `plan_tool/cli/completeness_phases.py` (`deterministic_detector_registry`, `_render_grouped_report`, `_render_completeness_json`) |
-| Advisory presentation             | `plan_tool/completeness_report.py` (`prepare_audit_shape_advisory_display`, shared markdown/console/JSON renderers), `plan_tool/cli/completeness_apply_parallel.py` (`run_parallel_apply` parent-side handoff) |
+| Advisory presentation             | `plan_tool/completeness_report.py` (`prepare_audit_shape_advisory_display`, shared markdown/console/JSON renderers) |
 | Report assembly                   | `plan_tool/completeness_report.py` (`build_report_md`) |
 | Bare-plan conceptual apply fence  | `plan_tool/completeness_report.py` (`next_step_gaps`, `_blocked_next_step`, `DETAIL_LEVEL_FINDING_SOURCES`); `plan_tool/review.py` (`audit_detail_bundle_status`, `DetailBundleStatus`) |
-| Conceptual gap apply walk         | `plan_tool/cli/completeness_cmd.py` (`cmd_completeness_apply`) |
 | Run-grade detail-bundle fingerprint | `plan_tool/fingerprint.py` (`compute_detail_bundle_fingerprint`) |
 | Audit stage derivation            | `plan_tool/cli/completeness_phases.py` (`derive_audit_stage`) |
 | Stage conceptual bar              | `plan_tool/convergence.py` (`is_blocking_finding`, `STAGE_BARE`, `STAGE_DETAIL`); `plan_tool/review.py` (`classify_finding_domain`) |

@@ -1677,7 +1677,7 @@ def test_claude_invoke_parallel_switches_do_not_leak_between_threads(
 def test_concurrent_rate_limit_prompts_are_serialized(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Parallel workers (detail/completeness-apply --jobs N) share one stdin;
+    """Parallel detail workers share one stdin;
     the shared RATE_LIMIT_PROMPT_LOCK must keep at most one thread inside the
     interactive prompt at a time so termios/input() never collide."""
     import threading

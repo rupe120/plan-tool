@@ -47,52 +47,12 @@ and reconcile any function this table calls `indirectly covered` but
 coverage shows as fully hit (those are still valid targets for a *direct*
 test even when line coverage is green).
 
-## Step 7 audit result
+## Inventory scope
 
-- **No new functions.** The 108 module-level symbols in `cli.py` match
-  this table 1:1 — nothing was added since the step-1 inventory, so no
-  function lacks an entry.
-- **`cmd_status` gap closed.** It was the only `uncovered` row in the
-  step-1 inventory (no legacy test drove `main(["status", …])`). It is
-  now pinned by `tests/cli/test_inspect_cmds.py`
-  (`main(["status", …])` on the temp-repo fixtures). No further backfill
-  was required.
-- **~78 functions have a `tests/cli/` home** (steps 2–6); the rest keep a
-  named legacy pointer that drives `main(argv)` or imports the symbol —
-  split-stable, so no duplicate test is added.
-
-## Step 19 audit result
-
-- **No functions moved.** Step 19 finalizes `plan_tool/cli/app.py` as the
-  thin entry: it relocates the intent-grouped subcommand catalog from
-  `app.__doc__` to the `plan_tool.cli` *package* docstring, rewires
-  `build_parser` / `main` to thread that package docstring into the parser
-  `description`, drops `app` from `COMMAND_MODULES`, and deletes the now-empty
-  `app.register`. None of these touch a `cli.py`-origin function — the
-  108-symbol inventory below is unchanged, and every per-function `tests/cli`
-  home / legacy pointer still resolves through the `plan_tool.cli` surface.
-- **`register` is not in the inventory.** `app.register` was a parser-seam
-  helper introduced by the step-10 split (never a `cli.py` symbol), so its
-  deletion does not alter the 108-symbol count.
-- **Coverage re-run shows no regression.** Re-running
-
-  ```
-  uv run pytest tests/cli tests/test_cli.py --cov=plan_tool.cli --cov-report=term-missing
-  ```
-
-  reproduces the step-7 baseline: every inventoried function keeps its prior
-  coverage; the only `tests/cli/*.py` change is re-pinning the internal
-  registry-seam test (`test_command_modules_registry_excludes_app`) to the
-  post-finalize contract (`app` absent from `COMMAND_MODULES`, no
-  `app.register`), and re-baselining the `--help` golden for the rewritten
-  maintenance note.
-
-## Per-function inventory
-
-Columns: the `tests/cli/` test that pins the symbol split-proof (the one
-the package split must keep green), and the legacy pointer (behavioral
-coverage that predates the split, or `—` when the `tests/cli/` test is
-the sole home).
+The table tracks surviving CLI symbols from the package split and their
+coverage homes. Retired command handlers carry no coverage obligation;
+command rejection tests pin their removal. Counts from the initial split
+are historical and do not describe the current inventory.
 
 | Function | tests/cli home | Legacy pointer |
 |----------|----------------|----------------|
@@ -196,7 +156,6 @@ the sole home).
 | cmd_review | — | test_review.py (main(["reconcile-plan", …]) at 2050–4706; canonical command is `reconcile-plan`, handler keeps `cmd_review`) |
 | cmd_review_walk | — | test_review_walk.py (main(["reconcile-plan-walk", …]) throughout) |
 | cmd_review_all | test_review_cmds.py (audit-only gate) | test_cli.py — `verify-all --mode` sweep worker (reached via `cmd_verify_all`) |
-| cmd_completeness_apply | — | test_cli.py (main(["completeness-apply", …])) |
 | cmd_verify | — | test_launcher.py / test_cli.py — `verify-all --rollup` worker (reached via `cmd_verify_all`; `verify` alias defaults to it) |
 | cmd_verify_all | test_review_cmds.py (mode/rollup gate) | dispatcher for `verify-all` (+ aliases `reconcile-all` / `review-all` / `verify`) |
 | cmd_completeness | test_completeness_cmd.py (main completeness-audit) | test_cli.py (cli.cmd_completeness + main(["completeness-audit", …])) |

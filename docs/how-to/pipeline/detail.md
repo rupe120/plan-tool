@@ -227,9 +227,8 @@ the tree clean between steps (load-bearing for the test-authoring gate, same as
   non-zero rc that flags the run (the files are still on disk).
 
 The completeness tail invoked from `detail` never commits on its own — `detail`
-owns the commits (per-step + residual). The sibling `completeness-audit --iterate
---commit` and `completeness-apply --commit` commit *their* applied edits when run
-standalone.
+owns the commits (per-step + residual). Standalone `completeness-audit --iterate --commit` commits its deterministic
+repairs.
 
 ## Reprocessing a detailed step
 

@@ -1042,8 +1042,8 @@ plan-tool completeness-audit <slug> --iterate --audit-passes 1 -y
 plan-tool detail <slug> -y --commit
 
 # 5. Detail-grounded gate. The audit converges only the deterministic
-#    findings; close the conceptual gaps through a session-directed edit, or with
-#    `completeness-apply <slug>` as a human at a TTY.
+#    findings; review the saved report, judge and edit conceptual gaps,
+#    commit bounded corrections, and re-audit the changed snapshot.
 plan-tool completeness-audit <slug> --iterate -y
 
 # 6. Execute. --commit keeps the tree clean between steps, which the
@@ -1077,7 +1077,6 @@ plan-tool status <name>                 # step-by-step status for one plan
 plan-tool list --status                 # roll up cached audit reports
 plan-tool validate <name>               # schema-check frontmatter; no claude
 plan-tool completeness-audit <name>     # judge the plan's design (reports only)
-plan-tool completeness-apply <name>     # apply saved conceptual gaps (human at a TTY)
 plan-tool convergence <name>            # is the audit/apply loop converging? no claude, exits 0
 plan-tool split-criteria <name>         # why the plan is shaped the way it is
 plan-tool reconcile-plan <name>         # code canonical — PRE-execution only

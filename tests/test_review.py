@@ -9093,8 +9093,7 @@ class TestCheckPlanAudit:
     ) -> None:
         """The slug is kept on ``rec.anchor`` (not just hashed into the
         id) so the multi-sample loop can feed it back into later
-        samples' prompts and ``completeness-apply --anchor`` can accept
-        it as a readable key. Sluggless findings stay ``None``."""
+        samples' prompts and reports can cite it as a readable key. Sluggless findings stay ``None``."""
         from plan_tool.review import check_plan_audit
         from plan_tool.parser import parse_plan
 

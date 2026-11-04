@@ -1,8 +1,7 @@
 """Shared git-commit plumbing for the opt-in ``--commit`` flags.
 
 Used by the authoring/audit verbs whose ``--commit`` stages and commits the
-plan/detail edits they produce (``detail``, ``completeness-audit``,
-``completeness-apply``). Stdlib-only leaf — imports nothing from the cli
+plan/detail edits they produce (``detail``, ``completeness-audit``). Stdlib-only leaf — imports nothing from the cli
 package, so any command module can import it without a cycle. ``run``'s
 ``--commit`` keeps its own per-green-step helper (different subject/semantics).
 """

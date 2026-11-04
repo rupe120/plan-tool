@@ -117,10 +117,10 @@ class TestCliReferenceDrift:
         assert "scope-review.md" in rendered
         assert "scope-review" in rendered["README.md"]
 
-    def test_direct_verbs_reference_is_generated(self) -> None:
+    def test_retired_direct_verbs_have_no_generated_reference(self) -> None:
         rendered = cli_reference.render_reference()
-        assert "direct-jira.md" in rendered
-        assert "direct-run.md" in rendered
+        assert "direct-jira.md" not in rendered
+        assert "direct-run.md" not in rendered
         index = rendered["README.md"]
-        assert "](direct-jira.md)" in index
-        assert "](direct-run.md)" in index
+        assert "](direct-jira.md)" not in index
+        assert "](direct-run.md)" not in index

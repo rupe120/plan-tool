@@ -217,7 +217,7 @@ def _build_review_action_fn(
         a stamped directive, re-hash its targets — but if the plan is
         missing/unreadable/corrupt, return **stale** (recommend-only), NOT the
         coarse fallback: an empty ``saved_plan_fingerprint`` (the
-        reconcile/completeness-apply lanes pass none) would read as not-stale
+        reconcile lanes pass none) would read as not-stale
         there, so the dispatcher would proceed and the bridge's own re-parse of
         the gone plan would crash the walk. Returning stale keeps the bridge
         from ever being reached with a gone plan.
@@ -947,7 +947,7 @@ def _build_review_action_fn(
         pre-apply ``check_drift``.
 
         ``halt_on_applied`` (set only by the ``granularity-split`` router
-        branch) breaks the completeness-apply walk after an ``applied`` split:
+        branch) breaks the saved-finding walk after an ``applied`` split:
         the 1→2 renumber makes every later saved finding's ``step_id`` stale.
         The ``BLOCKED-STRUCTURAL`` caller keeps the default (``False``) so the
         reconcile lane's post-split behavior is unchanged.
@@ -1515,7 +1515,7 @@ def _build_review_action_fn(
             # ``should_apply_as_finding`` branch so it can't burn an apply
             # attempt first (``should_apply_as_finding`` also excludes
             # structural sources, so this ordering is belt-and-suspenders).
-            # ``halt_on_applied`` stops the completeness-apply walk after an
+            # ``halt_on_applied`` stops the saved-finding walk after an
             # applied split renumbers the plan; ``guard_saved_directive`` refuses
             # a saved split whose target step moved since it was computed.
             return _dispatch_structural_escalation(

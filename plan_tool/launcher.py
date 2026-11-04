@@ -789,12 +789,7 @@ shell_invoker._last_stats = ClaudeRunStats()  # type: ignore[attr-defined]
 
 
 def _invoker_stats(invoker: Any) -> ClaudeRunStats:
-    """Stats of the calling thread's last ``shell_invoker`` call.
-
-    ``completeness-apply --jobs N`` workers share ``shell_invoker``, so its
-    ``_last_stats`` attribute can hold another worker's call; the thread-local
-    copy cannot. Other invokers (test fakes) keep the attribute read.
-    """
+    """Read thread-local shell stats; test invokers retain attribute lookup."""
     if invoker is shell_invoker:
         local = getattr(_thread_stats, "stats", None)
         if local is not None:

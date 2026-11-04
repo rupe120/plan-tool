@@ -141,7 +141,7 @@ def is_blocking_finding(
     Non-conceptual findings use ``is_blocking(severity)`` only. ``nit``/
     ``info`` never block; ``high``/``critical`` always block. Bare-stage
     ``plan-completeness`` medium never blocks, independent of domain
-    (``completeness-apply`` is withheld until the detail bundle exists).
+    (detail-level completeness is judged once the detail bundle exists).
     Every other medium finding blocks unless
     :func:`_medium_conceptual_docs_domain` exempts it -- same rule at both
     stages; see docs/how-to/pipeline/audit.md's "Conceptual bar set" for why bare stage

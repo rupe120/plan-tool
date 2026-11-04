@@ -10568,7 +10568,7 @@ def _converge_create_plan(
     # Stage-failure sentinel. Set when an iteration's generic reference
     # research remains unparseable or its step re-proposal fails. The
     # published plan remains usable, so the CLI records an incomplete
-    # iteration and exits 0; direct pipelines stop from this result field.
+    # iteration and exits 0; cli/authoring.py reads this result field.
     stage_failure: Optional[str] = None
 
     from plan_tool.drift_detection import iteration_session

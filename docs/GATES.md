@@ -313,8 +313,7 @@ Findings produced by these checks:
 
   Every non-JSON ordinary final run writes a markdown report to
   `plan-details/<slug>/reports/<ts>-completeness.md` and a structured
-  sidecar `plan-details/<slug>/reports/<ts>-completeness.json` that
-  `completeness-apply` consumes. One exception: a non-JSON terminal
+  sidecar `plan-details/<slug>/reports/<ts>-completeness.json` for review and reuse. One exception: a non-JSON terminal
   Cursor plan-quota stop still saves the readable markdown report, but
   withholds that reusable final findings sidecar — resolve the provider
   condition and run a fresh audit to get one.
@@ -322,31 +321,14 @@ Findings produced by these checks:
   Under `--iterate` the terminal shows only a concise summary plus the
   report path; the conceptual-completeness gaps are advisory inside the
   audit's iterate loop (chasing every new gap would never converge), and
-  the report explains how to address them via the apply pair below.
-- **`plan-tool completeness-apply <name>`** — **deprecated, going away
-  (BACKLOG #376): read the report and make a session-directed edit instead** — reviewing the
-  whole report at once beats walking it gap by gap, and the slow pace
-  obscures whether the plan is actually converging. Paired with
-  `completeness-audit`. It walks the conceptual-completeness gaps from
-  the most recent saved audit and applies gap-closing edits via claude,
-  one finding at a time. It does **not** re-run the audit — it replays
-  the saved findings, so addressing a single gap doesn't require a full
-  re-audit.
+  the report explains how to address them through judged edits and re-audit.
+  Read the saved report, verify and judge the findings, edit the appropriate plan or detail text, commit bounded corrections, and re-run `completeness-audit --iterate --commit` against the changed snapshot.
 
-  Every conceptual gap is a judgment call, so there's no blanket
-  auto-apply: it's always interactive propose-then-confirm, one gap at a
-  time, with you deciding whether each edit is right. (A non-interactive
-  stdin skips the walk and just reports the gaps instead.)
-  `--anchor <slug>` (repeatable) restricts the walk to specific gaps by
-  their `[anchor-slug]` — each finding in the report carries its own
-  anchor.
-  Run `completeness-audit` afterwards to verify the gaps you addressed
-  actually drop off.
 - **`plan-tool data-contract-apply <name>`** — also paired with
   `completeness-audit`, but scoped to saved `DATA_CONTRACT.md` drift. It
   walks only fresh structured `data-contract` payloads saved by the
   audit, annotates the same saved-review sidecar, and leaves conceptual
-  gaps to `completeness-apply`. Stale payload fingerprints require a
+  gaps for judged edits. Stale payload fingerprints require a
   fresh audit before applying.
 - **`plan-tool verify-all --rollup <name> --deep`** — extends
   `verify-all` with a per-acceptance-bullet check. For each done step, it

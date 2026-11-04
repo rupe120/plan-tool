@@ -4932,7 +4932,7 @@ class TestApplyFindingDryRun:
         assert "Do not infer" in result.prompt
         assert "feature ownership from prose alone" in result.prompt
         # Shared regression fixture: the same concept phrase and demoted
-        # mechanical example reach the prompt that completeness-apply uses.
+        # mechanical example reach the shared finding-application prompt.
         assert "audit-sample-reuse" in result.prompt
         assert "audit sample reuse guard" in result.prompt
         assert "e.g. callers may branch on explicit flags" in result.prompt

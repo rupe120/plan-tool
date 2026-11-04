@@ -296,8 +296,7 @@ Create defaults to iteration; retain it.
 
 > Run the bare-plan audit through the skill with iteration and checkpointing.
 > Read the saved report and triage conceptual findings through session-directed
-> judgment under the shared directives, not the human-TTY completeness-apply
-> walk. Surface consequential scope or design decisions to me. Commit bounded
+> judgment under the shared directives. Surface consequential scope or design decisions to me. Commit bounded
 > corrections before re-auditing changed snapshots. Link the plan and reports,
 > summarize changes, exact N of M detail coverage, qualification, convergence
 > outcome and withheld axes. Ask for corrections or continuation and wait before

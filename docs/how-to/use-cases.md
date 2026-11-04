@@ -260,12 +260,6 @@ For a single obvious edit, use a direct change with
 [its review loop](../../integrations/shared/DIRECTIVES.md#direct-changes-get-the-same-loop)
 instead of creating a plan.
 
-**Legacy compatibility only:** `direct-jira` and `direct-run` remain available
-but are deprecated and scheduled for removal with `completeness-apply`
-(BACKLOG #376). They chain gap-by-gap automatic application and are not the
-route for new assistant-driven workflows. See the
-[command reference](../reference/commands.md#cli-usage) for existing invocations.
-
 ### 11. Ground a project-sized concept before you write a seed
 
 > Inspect the repository and help prepare a grounded concept brief for review.

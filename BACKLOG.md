@@ -1292,25 +1292,51 @@ working straight down the tiers.
   then-pending successor status.
 - **Status:** closed.
 
-**#376 — Retire completeness/direct auto-apply; the orchestrating session makes session-directed edits**
+**#519 — Decide the disposition of the unreachable granularity-split review-walk opt-in**
 
-- **What:** Retire `completeness-apply`'s interactive and parallel conceptual
-  application paths and the `direct-run` / `direct-jira` chains that depend on
-  them. A human at a TTY or an orchestrating session reads the saved report and
-  applies a bounded, judged edit; no unattended command retains that authority.
-- **Scope:** parser/help/reference entries, direct pipelines, hidden callers,
-  active guidance, legacy report readers, and focused/full regression tests.
-  Create/detail deterministic well-formedness repair and reconcile routes stay
-  out of scope; #369 inventories those independently.
-- **Boundary:** do not retain a renamed private auto-apply path, add a generic
-  workflow engine, or rewrite historical reports merely to remove vocabulary.
-- **Evidence:** the parked bare plan is
-  `docs/implementation-plans/2-completeness-apply-retirement.md`; the existing
-  deprecation warnings are interim mitigation only.
-- **Route:** `plan`; **Readiness:** ready for plan review; **Status:** 6/6
-  detailed, bare and detail-grounded audits have confirmed coverage with no
-  conceptual findings; no execution started. Review evidence:
-  `handoffs/2026-11-04-completeness-apply-retirement-review.md`.
+- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
+- **Principle:** `none` — disposition of an unreachable shared dispatch route.
+- **Evidence:** `plan_tool/review_walk.py:split_escalation_target()` requires
+  `granularity-split` in `extra_apply_sources` and medium severity. The former
+  `is_granularity_split_finding()` name no longer exists. Production callers of
+  `cli/review_actions.py:_build_review_action_fn()` do not opt into that source;
+  the surviving data-contract walk opts into its own source only. Retirement of
+  `completeness-apply` leaves the structural dispatch branch unreachable.
+- **Outcome:** choose removal or an explicitly scoped surviving consumer for
+  this opt-in, then deliver only that decision with focused regression coverage.
+- **In scope:** the opt-in predicate, shared dispatcher branch, caller inventory,
+  and tests for the chosen disposition.
+- **Out of scope:** reconnecting conceptual auto-apply, changing generic review
+  or reconcile authority, audit gates, or #369's independent caller inventory.
+- **Allowed behavior changes:** only the separately judged split-route disposition.
+- **Allowed reorganization:** none.
+- **Verification:** enumerate all production opt-ins; test the selected route and
+  preserve the generic walk's refusal to dispatch unopted structural findings.
+- **Stop / defer:** surface any need to change shared review authority separately.
+- **Origin:** completeness-apply-retirement step 6, 2026-11-04.
+
+**#520 — Prune current lesson guidance that points to retired application machinery**
+
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+- **Principle:** `write-for-the-human`.
+- **Evidence:** `.plan-tool/lessons/project.md` has current guidance anchored by
+  `completeness_apply_parallel.py` / `WorktreePool` (branchless worktree consumer),
+  `_CONCEPTUAL_APPLY_SOURCE_RANK` (saved replay routing), and
+  `_SAVED_SERIAL_APPLY_SOURCE_RANK` (serial/parallel source membership).
+  Those production owners no longer exist after completeness-apply-retirement.
+- **Outcome:** review and prune or narrow these stale instructional bullets so
+  lessons describe surviving machinery without losing useful dated provenance.
+- **In scope:** the named lesson bullets and directly related retirement claims;
+  verify each against current symbols and consumers before changing it.
+- **Out of scope:** blanket deletion of historical command mentions, lesson-store
+  redesign, shared review changes, or rewriting saved reports and run logs.
+- **Allowed behavior changes:** lesson text only.
+- **Allowed reorganization:** none.
+- **Verification:** compare each edited instruction with current code; inspect the
+  diff to preserve independent lessons, history, and surviving consumer guidance.
+- **Stop / defer:** file unrelated stale lessons separately rather than expanding
+  into a repository-wide lesson audit.
+- **Origin:** completeness-apply-retirement step 6, 2026-11-04.
 
 **#369 — Inventory other `apply_finding` authorities separately from #376**
 
@@ -1765,7 +1791,7 @@ contract.
      it has **not** covered, rather than rediscovering the same class at one
      sibling at a time.
 - **Convergence invariants:** the primary audit's stable id remains the sole
-  identity for unioning, `--anchor`, annotations, and `completeness-apply`.
+  identity for unioning, finding anchors, annotations, and saved readers.
   Related-site rows are evidence attached to that id, not recommendations and
   not a source of extra `new` count, severity, materiality, dry-streak reset,
   or arm-clustering membership. Re-finding an existing id on a later pass does
@@ -1780,7 +1806,7 @@ contract.
   anchor, relation, disposition, and a short evidence note. Render a compact
   "also applies at" extent under the original finding in the grouped report,
   saved markdown, JSON, carried-findings block, and the
-  `completeness-apply` / `apply_finding` context so an apply is deliberately
+  surviving `apply_finding` caller context so an apply is deliberately
   class-wide. Preserve legacy sidecars with an absent field, document the
   read/write contract in `DATA_CONTRACT.md`, and ensure an old or malformed
   optional field cannot block a walk. The terminal must separately show the
@@ -1854,8 +1880,8 @@ contract.
     failed sweep produces a warning but leaves primary-audit convergence and
     findings unchanged, (f) JSON/markdown sidecars round-trip the optional
     field and legacy/malformed fields remain walkable, and (g) one focused
-    integration fixture shows `completeness-apply` receives one class-wide
-    finding with all verified sites rather than several sibling findings.
+    integration fixture shows a surviving `apply_finding` caller receives one
+    class-wide finding with all verified sites rather than several sibling findings.
     Assert the separate progress/run-log phase and its one-call-per-eligible-
     pass budget. Run the full suite after the data-model change.
   - **Stop / defer:** if experiments show the sweep mostly repeats evidence
@@ -2251,7 +2277,7 @@ implementation contract.
 
 - **What:** The interactive rate-limit recovery (prompt + key-polling wait) is now
   thread-serialized by a shared `claude_errors.RATE_LIMIT_PROMPT_LOCK`, so parallel
-  workers (`detail` / `completeness-apply --jobs N`, which share one process-global
+  workers (`detail --jobs N`, which share one process-global
   stdin) can no longer corrupt the terminal by driving `input()`/termios
   concurrently. That fix (landed 2026-07-06) stops the corruption but leaves two
   follow-ups:
@@ -2268,7 +2294,7 @@ implementation contract.
     seam-extraction work now owned by **#136** (post-#101 `rate_limit_loop`
     extraction). This entry keeps only the non-interactive-policy half above.
 - **Effort:** small (the non-interactive signal touches the invoker call sites in
-  `detail.py` / `completeness_apply_parallel.py`). **Approach:** `direct`.
+  `detail.py`). **Approach:** `direct`.
 - **Dependencies:** the landed `RATE_LIMIT_PROMPT_LOCK` fix; interacts with the
   `BUG_BACKLOG.md` entry "`--on-rate-limit switch`/`ask` silently collapse to
   `stop`" (fix that policy plumbing first so the shared helper carries the correct
@@ -2612,10 +2638,7 @@ implementation contract.
   duplicate that state (drift risk, two sources of truth) for zero gain. Reverted
   the leaf. Existing machinery: **detail** — `checkpoint.py` saves right after
   parse; re-run takes the `cached` path and skips the invoke (`detail.py:1651,
-  1844`). **completeness-apply** (serial *and* `--jobs>1`) — annotations persist
-  **per finding** (`review_walk.py:756`, `completeness_phases.py:1100`); re-walk
-  pre-skips already-`applied` findings before dispatch, and a `failed` annotation
-  is non-terminal (retried). **completeness-audit** — reuses the saved conceptual
+  1844`). **completeness-audit** — reuses the saved conceptual
   audit, "skipping the conceptual Claude call" (`completeness_cmd.py:303`).
   **detail batch** — plan detail-pointers skip already-detailed steps.
   **Per-step commit durability** shipped 2026-07-11 — the real fix for the
@@ -2755,34 +2778,6 @@ implementation contract.
   convention until the sampler keys on the tag" names this as unfinished; filed
   per the scope-contract rule (a described-but-unimplemented behavior becomes a
   tracked entry).
-
-**#106 — Finer completeness-apply detail-bundle gate: don't skip a split finding against an already-detailed step on a partial plan**
-
-- **What:** After the axis-split bare-plan fence (bare-plan-correctness-apply,
-  2026-08-03), `cmd_completeness_apply` walks `plan-correctness` on a bare/partial
-  plan but still withholds every other saved source — including `granularity-split`.
-  So a partially-detailed plan can persist a `medium` `granularity-split` finding
-  against a **fully-detailed mixed step** that the walk never dispatches — neither
-  applying the split nor printing the recommend-only `plan-tool split …`. Make the
-  gate finer: skip only findings whose **target step** lacks detail, so an
-  actionable split against an already-detailed step still surfaces.
-- **Why:** on a partial plan the shipped split bridge's acceptance-criterion
-  "without the opt-in … recommends only" is silently inert, and step 1's Claude
-  spend produced a finding that can never be acted on until every sibling step is
-  detailed. Documented as a known limitation in the (now-archived)
-  `completeness-apply-split-bridge` plan; captured here so it isn't lost.
-- **Scope caution:** per-finding target-detailed-ness applies only to sources
-  that carry a reliable `step_id` (e.g. `granularity-split`, this entry's own
-  example) — not to the conceptual audit sources: only **6.0%** of conceptual
-  findings resolve to a step (116 of 1,933), so a per-finding gate over
-  `plan-correctness`/`plan-completeness` would classify ~94% as ungrounded and
-  collapse to the binary the axis-split already provides. This must **narrow**
-  the skip, not remove the bare-plan invariant ("a completeness action can only
-  target what exists").
-- **Effort:** small. **Approach:** `plan-tool`. **Iterate:** default recipe.
-- **Origin:** 2026-07-08 — `[bare-plan-split-gate]` finding from the
-  `completeness-apply-split-bridge` completeness audit; deferred as out of scope
-  for that plan.
 
 **#105 — Stable per-step identity to close the directive-signature same-`(title, change_type)` collision**
 
@@ -2931,22 +2926,22 @@ implementation contract.
 **#230 — Extend the shipped `--time-budget` stop to durable batch boundaries**
 
 - **What:** `--time-budget` already stops the convergence loops cleanly. Extend
-  the same cooperative deadline posture to the three long-lived surfaces that do
-  not route through `convergence.should_continue`: the `completeness-apply`
-  per-finding walk, the non-reconcile `run` per-step batch, and the outer
+  the same cooperative deadline posture to the two long-lived surfaces that do
+  not route through `convergence.should_continue`: the non-reconcile `run`
+  per-step batch and the outer
   `detail` step-to-step batch boundary. Each has a durable progress boundary
-  (finding annotation, plan pointer, or per-step commit), so check the deadline
+  (plan pointer or per-step commit), so check the deadline
   only between units and emit an accurate resume hint.
 - **Outcome:** a time-budgeted invocation of each named surface exits cleanly at
   its next durable boundary, preserves completed work, reports
   `time_budget_exceeded`, and provides a resume command.
-- **In scope:** the three batch/walk boundaries, shared budget resolution, their
+- **In scope:** the two batch boundaries, shared budget resolution, their
   reporter/resume-hint wiring, and focused tests.
 - **Out of scope / Non-goals:** interrupting a running Claude call; changing the
   shipped convergence-loop behavior; reworking checkpointing or commit policy;
   argparse consolidation (owned by #80); and a broad reason-to-hint refactor.
-- **Effort:** small–medium — three boundary integrations over an established
-  budget contract. **Approach:** `plan-tool` because the three caller contracts
+- **Effort:** small–medium — two boundary integrations over an established
+  budget contract. **Approach:** `plan-tool` because the two caller contracts
   and resume semantics must stay coherent.
 - **Quality:** `survive-interruption` — extends an existing safe-stop contract
   only where progress is already durable.
@@ -3190,8 +3185,8 @@ implementation contract.
 - **Shipped 2026-08-16:** the `--all` sweep gap this item originally opened with is
   closed. `reconcile-code <name> --all` now sweeps every plan step in order
   (including `done` steps — the point of a post-run sweep is checking landed code,
-  not skipping it), skips steps declared explicit `non-code` (mirrors
-  `direct_cmd._is_code_step`), is mutually exclusive with both `--step` and
+  not skipping it), skips steps declared explicit `non-code`, is mutually
+  exclusive with both `--step` and
   `--reuse-id` (a pinned save can't mean anything sensible across N steps), and
   halts on the first per-step *execution* failure (a redirect or critical finding
   does not halt it — read each step's printed verdict, per
@@ -3207,11 +3202,7 @@ implementation contract.
 - **Also (smaller, unchanged):** concurrent `reconcile-code` on the same plan should
   either serialize safely or fail with a clear message instead of a bare exit-2
   collision.
-- **Also (new, 2026-08-16):** `direct_cmd.py:cmd_direct_run`'s step-7 reconcile loop
-  still hand-rolls a per-code-step `cmd_reconcile_code` call rather than calling
-  `reconcile-code <name> --all` once — now that `--all` filters non-code steps the
-  same way, the two are policy-equivalent and the hand-rolled loop is a candidate to
-  collapse into the single call. Separately, `_cmd_detail_reconcile_all` (skips
+- **Shared-sweep boundary:** `_cmd_detail_reconcile_all` (skips
   `done` steps), `_cmd_run_reconcile_all` (includes them, filters non-code instead),
   and `_cmd_run_sweep` (runs executable steps) are three distinct sweep-loop shapes
   across `cli/reconcile.py` and `cli/run_cmd.py`. A 2026-08-16 `/code-review` pass
@@ -3219,8 +3210,7 @@ implementation contract.
   differ; revisit it if a behavior change requires common machinery or the paths
   drift out of sync.
 - **Effort:** small — the drift-check is either a doc fix (already applied) or a
-  no-walk rollup summarizer; the `direct-run` consolidation is a small, low-risk
-  simplification once someone verifies run-log/rc parity between the two paths.
+  no-walk rollup summarizer.
 - **Approach:** `direct`.
 - **Origin:** 2026-07-16 — lazy-deferral run-tail loop 1; friction driving
   `reconcile-code` step-by-step across a completed plan. `--all` sweep shipped
@@ -3258,56 +3248,6 @@ implementation contract.
   diminishing-return streak).
 - **Origin:** 2026-07-16 — #118 direct-pipeline authoring; round-3 audit's own note
   that stubbed tests can't catch the flagged integration edges.
-
-**#140 — `direct_cmd.py` hardening: dedupe the verb prologues, lift the size gate, expose jira flags**
-
-- **What:** Four cleanups a high-effort `/code-review` pass surfaced on the
-  shipped `plan_tool/cli/direct_cmd.py` (the #118 direct verbs):
-  1. **Dedupe the ~110-line prologue.** `cmd_direct_jira` and `cmd_direct_run`
-     copy-paste the entire clean-tree gate + sink hand-off + split/iteration
-     guards + size gate + detail stage + authoring commit + completeness-apply
-     block, differing only in message strings and (formerly) one commit guard.
-     That drift already shipped one bug — the direct-jira unconditional-commit
-     asymmetry (fixed 2026-07-17). Extract a shared
-     `_author_detail_apply(args, verb) -> tuple[rc, plan_name | None]` so the
-     invariant lives once.
-  2. **Lift the size gate out of the thin CLI leaf.** `gate_create_result_size`
-     / `SizeGateResult` encode a plan-sizing *policy* (step-count threshold,
-     verdict) — domain logic that belongs in a top-level orchestrator, not
-     `cli/`, per the CLI-layering rule.
-  3. **Expose the jira-stage flags.** `direct-jira` hardcodes/`getattr`-defaults
-     `epic`, `max_hours`, `format`, `output`, `no_write`, `stdout` with no
-     parser flags, so an operator can never assign an epic, choose JSON, or set
-     max-hours — capabilities the standalone `jira` verb has. Decide which to
-     surface on `direct-jira` (at least `--epic` / `--format`) vs leave as the
-     small-work default.
-  4. **Drop the redundant plan re-parse.** `gate_create_result_size` parses the
-     plan to count steps; `cmd_direct_run` re-parses it for the reconcile loop.
-     Thread the parsed `Plan` through instead of reading + parsing twice.
-- **Also (dead state, low):** `gate_create_result_size`'s `plan_path is None`
-  split-short-circuit branch (and `SizeGateResult.split_short_circuit`) is
-  unreachable from both callers (they return before calling the gate) — it exists
-  only for a unit test. Remove it, or keep it as a deliberate defensive guard and
-  note that intent.
-- **Also (behavior decision):** `cmd_direct_run` leaves every reconcile-code
-  step's inline edits **uncommitted**, so a `direct-run` that reaches the reconcile
-  tail ends with a **dirty tree** — even though its `run --commit` stage committed
-  each green step. Currently documented as intentional (matches standalone
-  `reconcile-code`, whose edits the operator reviews) in the plan's Known limits,
-  but the review re-raised it: the dirty end-state surprises an operator who
-  assumes an unattended verb leaves a clean committed tree, and the reconcile
-  edits can be lost to a stray `checkout`/`stash` or block a later `--commit`-gated
-  command. Decide: commit the reconcile edits at the end (clean end-state, at the
-  cost of un-reviewed committed edits), leave them (status quo), or gate the
-  choice behind a flag. Capture the decision here so it survives the plan's
-  eventual archival.
-- **Effort:** medium — (1) is the bulk (a careful extract of a shared helper both
-  verbs call); (2)/(4) are small; (3) is arg plumbing + a scope decision.
-- **Approach:** `plan-tool` — CLI leaf + a new/again orchestrator seam.
-- **Quality:** `gate-signal` — (1) removes the drift class that already shipped a
-  commit bug; (2) keeps domain policy testable outside the CLI shell.
-- **Origin:** 2026-07-17 — #118 direct-pipeline post-run `/code-review` (high
-  effort); cleanup findings on the freshly-generated `direct_cmd.py`.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
@@ -3404,87 +3344,6 @@ implementation contract.
   implementation the seed is built from.
 - **Status:** seed authored, blocked on #142 executing first (per the
   operator-workflow arc's ordered route).
-
-**#146 — Support nested / ancestor-repo relocation in the `direct-jira` / `direct-run` pipeline**
-
-- **What:** the `direct-pipeline-repo-root-resolution` plan (fixing the
-  stale-`repo_root` "plan not found" bug) deliberately **scopes out** the case
-  where `create`'s seed-derived relocation lands on a root that is *nested
-  inside* the cwd root, or is a strict *ancestor* of it — i.e. where the
-  original `repo_root` and the relocated `created_repo_root` are not disjoint
-  trees. In that scoped-down plan, `direct-jira`/`direct-run` **refuse** a
-  nested/ancestor relocation with a clear error ("nested-repo relocation
-  unsupported; run from the target repo directly") rather than trying to handle
-  it. This item is the deferred full-support follow-up.
-- **Why deferred (the thorny findings a completeness audit surfaced
-  2026-07-18):** git's embedded-repository semantics make the non-disjoint case
-  genuinely hard, and three distinct HIGH/MEDIUM findings all trace to it:
-  - **`nested-repo-dirty-precondition`** (HIGH): a nested `.git` under the cwd
-    tree makes the *original* root read dirty to git before `create` runs (git
-    reports an embedded repo as a single collapsed `?? nested/` porcelain line;
-    `--untracked-files=all` does **not** expand it), so the step-0 clean-tree
-    precondition rejects the chain with "requires a clean working tree" before
-    relocation logic ever runs.
-  - **`original-root-commit-embeds-nested-repo`** (HIGH): the original-root
-    archival commit (`commit_all(repo_root, ...)` → `git add -A`) silently
-    stages a nested `created_repo_root` as an embedded gitlink (`mode 160000`,
-    "warning: adding embedded git repository") the instant it has a commit,
-    corrupting the intended "small, seed-archival-only" commit.
-  - **`relocated-root-collision-replace-dirt`** (HIGH, ancestor half):
-    `find_umbrella_root` case 1 (`plan_tool/locator.py`) can return a strict
-    *ancestor* of cwd, which `cmd_create`'s `startswith` relation check
-    mislabels "broader (outside)" — the same bucket as a true sibling — so
-    `repo_root` ends up nested inside `created_repo_root` and its own committed
-    state collapses to one opaque embedded-repo entry that step 3's expected
-    dirty-path set never accounts for, aborting a chain that did nothing wrong.
-- **Fix (indicative):** detect the non-disjoint relocation up front (one root
-  is `.is_relative_to` the other) and handle it deliberately — options include
-  scoping every commit to explicit pathspecs instead of `git add -A` (so a
-  nested repo is never staged as a gitlink), teaching the step-0 precondition
-  to ignore an embedded-repo boundary, and fixing `cmd_create`'s
-  relation-string classifier to distinguish the ancestor case from a true
-  sibling. Each needs a design decision, hence deferred rather than crammed
-  into the bug-fix plan.
-- **Separately, a narrower correctness gap in the same area
-  (`relocated-root-collision-replace-dirt`, the collision half):** step 3's
-  relocated-root expected-dirt allowlist (`_relocated_root_unexpected_dirt`)
-  omits the extra writes `create_plan`/`cmd_create` make under the relocated
-  root when a `--from-existing` seed **collides with and replaces** an existing
-  same-slug plan (`replaced_archives`, manifest-entry removal, and a
-  `plan_details_renamed_to` rename — the `should_replace` branch,
-  `plan_tool/create.py` ~line 6218). This one is **independent of nesting** — it
-  fires in the plain sibling case too — so it may be worth folding into the
-  scoped-down bug-fix plan rather than here; tracked here so it isn't lost if
-  the bug-fix plan defers it.
-- **Approach:** `plan-tool` — multiple call sites, git-semantics design
-  choices, its own decomposition.
-- **Quality:** `grounding` + `gate-signal` — the failure mode is a chain that
-  aborts (or silently corrupts a commit) on a legitimate relocation.
-- **Origin:** 2026-07-18 — carved out of `direct-pipeline-repo-root-resolution`
-  when its completeness audit surfaced the embedded-repo cluster above and the
-  operator chose to ship the disjoint (sibling) + internal-manifest-divergence
-  core and defer the nested/ancestor case. See that plan's `## Out of scope`.
-
-**#150 — Have `create` report its complete touched-path set on `CreateResult` so the direct-* relocated-root guard can allowlist exhaustively**
-
-- **What:** `direct_cmd.py:_relocated_root_unexpected_dirt` allowlists
-  `create`'s writes under the relocated root to distinguish them from a
-  stranger's dirt, but `CreateResult` doesn't enumerate every write, so the
-  set is best-effort. Four rounds of audit/review each found another missed
-  write (grounding.json, collision archives, `.plan-tool/` telemetry, the
-  deleted-original side of a collision-replace). The common cases are now
-  covered exactly; two residual best-effort gaps remain: (a) a seed physically
-  under the relocated root (its seed-archives land there, not exposed on
-  `CreateResult`), and (b) a collision-replace that `rmtree`s a *pre-rename*
-  detail-dir source (`rename_plan_details_to_slug`; `CreateResult` exposes only
-  `plan_details_renamed_to`, the destination).
-- **Fix:** have `create`/`create_plan` record every path it touches under each
-  root (writes + deletions) on `CreateResult` (e.g. a `touched_paths` field),
-  so the guard allowlists exactly instead of guessing. Failure mode today is a
-  *spurious abort* (safe), never corruption — hence deferred, not urgent.
-- **Approach:** `plan-tool` (CreateResult contract change + guard rewrite +
-  DATA_CONTRACT.md).
-- **Origin:** 2026-07-18, direct-pipeline-repo-root-resolution audit/review tail.
 
 **#155 — Harden the purity-cache below-floor (#144) reuse heuristic and success-gate against their documented edge cases**
 
@@ -5646,29 +5505,24 @@ separate)**
   to "BACKLOG #149" (the plan's step 6 and detail files cite it). Companion to
   #38 (detail length as a drift signal) and #49 (the detail wizard).
 
-**#114 — Give `detail`, `completeness-audit`, `completeness-apply` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
+**#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
 - **What:** Today only `run` accepts a missing plan name and falls back to an
   interactive picker (`run_cmd.py:_select_open_plan` over `_open_plan_entries`,
-  which keeps `e.plan is not None and not e.plan.all_steps_done`). `detail`,
-  `completeness-audit`, and `completeness-apply` make `name` a required positional
-  (`authoring.py` `p_detail`, `completeness_cmd.py` `p_completeness` /
-  `p_completeness_apply`) and argparse-error when it's omitted — with no help
+  which keeps `e.plan is not None and not e.plan.all_steps_done`). `detail`
+  and `completeness-audit` make `name` a required positional
+  (`authoring.py` `p_detail`, `completeness_cmd.py` `p_completeness`) and argparse-error when it's omitted — with no help
   discovering which plans are actually in the right state for that command.
-  Generalize `run`'s picker so all four commands, given no name on a TTY, list the
+  Generalize `run`'s picker so all three commands, given no name on a TTY, list the
   plans **applicable to that command** and let the user choose.
 - **Per-command filter predicate (the applicable-state definition):**
   - `detail` → plans that **need detail**:
     `audit_detail_bundle_status(plan, path, repo_root).is_bare` (at least one step
     has no detail file). `.is_fully_bare` distinguishes freshly-created from
     partially-detailed.
-  - `completeness-audit` / `completeness-apply` → plans with a **complete detail
-    bundle** (`not .is_bare`) — surface only plans whose detail exists so the
-    picker favors fully-actionable targets (mirrors `cmd_completeness_apply`'s
-    `_BARE_PLAN_WALKABLE_SOURCES` gate, which walks only `plan-correctness` on
-    bare plans). A bare plan named explicitly is still accepted (the audit runs
-    and correctness gaps can be walked); the filter governs only what the picker
-    *offers*, not a hard capability gate.
+  - `completeness-audit` → plans with a **complete detail
+    bundle** (`not .is_bare`). A bare plan named explicitly remains accepted;
+    the filter governs only what the picker offers, not audit capability.
   - `run` → unchanged: plans with a runnable step (its current `_open_plan_entries`
     filter).
 - **Display / filtering:** **hide** non-applicable plans from each picker (don't
@@ -5686,19 +5540,18 @@ separate)**
   (`_open_plan_entries`, `_open_step_hint`, `_select_open_plan`, `_read_plan_choice`,
   and the non-TTY hard-error-with-`plan-tool list`-hint guard) into a **shared helper
   parameterized by (a) the filter predicate and (b) the per-row state label**, rather
-  than copy-pasting into three commands. Model row output on `cmd_list`'s row builder
+  than copy-pasting into two commands. Model row output on `cmd_list`'s row builder
   (`inspect.py:140–179`) and `_select_open_plan`'s menu.
-- **Effort:** medium — one shared picker helper + three parser changes (`name` →
-  `nargs="?"`, `default=None`) + three call-site fallbacks + tests. No new plan-state
+- **Effort:** medium — one shared picker helper + two parser changes (`name` →
+  `nargs="?"`, `default=None`) + two call-site fallbacks + tests. No new plan-state
   primitive is needed; the tri-state composes from the helpers above.
 - **Risks:** small. Making `name` optional must preserve the non-TTY / piped path as a
   hard error (rc=2) exactly like `run` — a picker must never block a scripted/CI
-  invocation. `completeness-apply --jobs > 1` is already non-interactive (requires
-  `-y`), so the picker is a TTY-only affordance on the default `--jobs 1` path. Keep
+  invocation. Keep
   the MALFORMED handling (`e.plan is None`) `cmd_list` already does so unparseable
   entries don't crash the picker.
 - **Dependencies:** none — every primitive already exists.
-- **Approach:** `plan-tool` — cross-cuts four command surfaces + a shared helper +
+- **Approach:** `plan-tool` — cross-cuts three command surfaces + a shared helper +
   tests, a natural fit for the create→detail→run pipeline.
 - **Origin:** 2026-07-09 — requested to make the plan-consuming commands
   self-discoverable, extending `run`'s existing picker to `detail` and the
@@ -8128,8 +7981,8 @@ separate)**
 **#89 — Extend `--commit` to more mutating commands (wider, consistent commit-hygiene coverage)**
 
 - **Principle:** `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say.
-- **What:** `--commit` today is accepted by only five surfaces — `run` (per-step
-  green commits), `detail`, `completeness-audit`, `completeness-apply`, and
+- **What:** `--commit` today is accepted by only four surfaces — `run` (per-step
+  green commits), `detail`, `completeness-audit`, and
   `manifest sweep`/archive. Several other commands *mutate the repo* (plan files,
   detail files, or code) but leave the working tree dirty for the operator to
   commit by hand. Extend the flag — with each command committing **its own**
@@ -8178,16 +8031,11 @@ separate)**
 
 **#83 — End-to-end bare-plan action-surface regression harness**
 
-- **What:** Add a single integration fixture that drives `completeness-audit`
-  and `completeness-apply` on a bare/partially-detailed plan and asserts the
-  post-split baseline across every renderer: conceptual-**completeness** gaps
-  and deterministic detail-level writers stay withheld; conceptual-**correctness**
-  gaps name `plan-tool completeness-apply`; the bare BLOCKED bullet leads with
-  `plan-tool detail` on purpose (with `plan-tool split` second); stderr banner,
-  stdout/grouped report, saved markdown, saved sidecar replay, and console next
-  steps all read one fence via `next_step_gaps`. This complements
-  the narrower unit/command pins for #70/C; it is a cross-surface consistency
-  harness, not a new behavior change.
+- **What:** Add one integration fixture driving `completeness-audit` on bare
+  and partially-detailed plans. Verify conceptual findings remain reported for
+  session-directed edits and deterministic detail-level writers stay withheld.
+  Check stderr, grouped output, saved markdown, sidecar replay, and next steps
+  for consistent detail coverage and actionable surviving commands.
 - **Provenance:** narrowed 2026-08-03 by the bare-plan-correctness-apply plan
   (axis-split bare-plan fence shipped; this entry no longer pins a
   structural-only surface or forbids `plan-tool detail` in next steps).
@@ -8203,7 +8051,7 @@ separate)**
 - **Iterate:** not needed; run the focused CLI/report suites.
 - **Origin:** surfaced 2026-06-28 while tightening #70/C. The active change pins
   the summary builders, grouped-report renderer, banner, and
-  `completeness-apply` / iterate-loop action gates separately; this item adds
+  deterministic iterate-loop action gates separately; this item adds
   the end-to-end leak check across all surfaces.
 
 **#79 — Extract the *verified* duplicated leaf helpers (measured, not eyeballed — most of the original list turned out not to be duplication)**
@@ -8410,15 +8258,7 @@ separate)**
     `check_drift`/`emit_drift_halt_warning` across the four →
     `pre_apply_drift_guard`/`post_apply_drift_guard` in `drift_detection.py`.
   - the `apply_finding`+run_logger phase-wrap (identical `finding_label`
-    lambda) → `dispatch_apply_finding_logged`. **Now a 5th call site**
-    (`cli/completeness_apply_parallel.py:replay_results`, added 2026-07-17
-    closing the #74/B2 run-log gap) — same phase name/extras, its own
-    `_finding_label` copy (which collides in *name*, not contract, with an
-    unrelated `_finding_label` already in `cli/data_contract_cmd.py`). Fold
-    this site in too when the extraction lands; consider sourcing the label
-    from `Recommendation.title` (already the same "first body line"
-    derivation, per `review.py`'s `_parse_plan_audit_findings`) instead of
-    each site re-splitting `rec.body`. **Historical 2026-08-28:** the two
+    lambda) → `dispatch_apply_finding_logged`. **Historical 2026-08-28:** the two
     behavior bugs found in this shared shape shipped independently in
     `2c4eae3c`, with their own tests, rather than being silently absorbed as
     an incidental behavior change inside a "pure move" refactor.
@@ -8549,8 +8389,7 @@ separate)**
     a single `run_end` with the real rc, and no leftover `in-flight.json`;
     plus a sink test on at least one (drive `shell._emit_call_end` and assert
     the phase override), mirroring `tests/test_review.py`'s.
-  - **Stop / defer:** if a verb turns out to need a *nested* log (e.g.
-    `direct-jira` chaining `jira`), file that separately rather than
+  - **Stop / defer:** if a verb turns out to need a *nested* log, file that separately rather than
     inventing nesting semantics here.
 - **Risks / fallout:** low. The one live trap is a test asserting no
   `.plan-tool` directory as a proxy for "nothing was saved" — `741fdf6` hit
@@ -9224,9 +9063,8 @@ separate)**
   false thereafter. Anything appearing *during* a multi-step run — a concurrent
   session, an editor writing a sidecar, a hook — is swept. The single-session
   assumption is also increasingly wrong by the tool's own direction: it ships
-  parallel plan worktrees, `--clone` full isolation, and
-  `completeness-apply --jobs N`, all of which normalize more than one plan-tool
-  process against one repo.
+  parallel plan worktrees and `--clone` full isolation; concurrent sessions
+  can also write to one repo.
 - **The precedent already exists.** `gitcommit.py:42`
   `unexpected_dirty_paths(repo_root, expected)` already takes a
   caller-supplied *expected*-path set and reasons about nesting and
@@ -9236,25 +9074,23 @@ separate)**
   inventing the notion.
 - **Effort:** medium. The helper change is small (`git add -A -- <pathspec>`
   keeps deletes and renames working *within* scope, so seed-archive moves and
-  frontmatter rewrites still stage correctly). The work is the ~10 call sites
-  across four modules — `cli/authoring.py:212`, `cli/completeness_cmd.py`
-  (609, 780, 1401), `cli/manifest.py:611`, `cli/direct_cmd.py` (185, 413, 444,
-  595, 625) — each of which must state its touched paths.
+  frontmatter rewrites still stage correctly). The surviving call sites are in `cli/authoring.py`,
+  `cli/completeness_cmd.py`, and `cli/manifest.py`; each must state its touched
+  paths.
 - **Risks / fallout:** the failure direction **inverts** — today's risk is
   over-staging, tomorrow's is *under*-staging, where a file the verb genuinely
   wrote is silently left uncommitted and the run looks clean. That is arguably
   worse, so the change needs a post-commit assertion that no expected path
-  remains dirty. Two interactions to settle rather than discover:
+  remains dirty. One interaction to settle rather than discover:
   **gitignored paths** (`git add -A` skips them silently, which is why
   `path_is_gitignored`/`warn_recommended_paths_ignored` exist; an explicit
   pathspec errors instead, so the ignored-but-expected case needs a decided
-  behavior), and **`direct_cmd`'s unattended pipelines**, which may lean on
-  sweep semantics across a whole staged phase.
+  behavior).
 - **Dependencies:** none.
 - **Scope contract:**
   - **Outcome:** a `--commit` run commits exactly the paths the verb touched;
     an unrelated dirty file present at commit time is never included.
-  - **In scope:** `cli/gitcommit.py:commit_all` and its ~10 call sites; the
+  - **In scope:** `cli/gitcommit.py:commit_all` and its surviving call sites; the
     touched-path plumbing each verb needs; tests.
   - **Out of scope / Non-goals:** changing the clean-tree precondition,
     commit subjects/trailers, which verbs accept `--commit`, per-step
@@ -9770,50 +9606,15 @@ longer describes current work. It is retained only as dated carve-out context.
   build trigger stated rather than building it immediately.
 - **Status:** not started; ready, waiting on the trigger above.
 
-**#280 — Verify and resolve the `completeness-cli-layering` code-review duplication candidates (5 findings, one review pass)**
+**#280 — Verify and resolve the `completeness-cli-layering` code-review duplication candidates (remaining saved-audit candidate)**
 
-- **What:** a `/code-review high` pass on the `completeness-cli-layering`
-  refactor (2026-08-15, rounds 4–6) flagged 5 possible duplications, all
-  inside `plan_tool/cli/completeness_phases.py` or against one sibling
-  module. None has been independently re-verified past the reviewing
-  agent's own citation — per the consolidation-evidence rule in `docs/TRACKING.md`
-  (and #79's history: 4 of 5 claimed duplicates there were wrong in the
-  direction that breaks things), re-derive each before consolidating
-  anything.
+- **What:** Verify the remaining saved-audit lookup comparison between
+  `cli/completeness_phases.py` and `cli/data_contract_cmd.py`. The application
+  walk, source-rank, repeated-parse, and application-only resolution candidates
+  have no surviving target. Re-derive any duplication before consolidating.
 - **Checklist — each resolves to "consolidated, with a test proving the
   preserved difference" or "documented as intentionally distinct, closed":**
-  1. **Dataclass/dispatch boilerplate within this file.**
-     `_SavedAuditResolution`/`_ApplyWalkTargets` (`:216`/`:479`) share an
-     `ok`/`rc`/`message` field prefix and docstring sentence.
-     `_run_apply_walk`/`_apply_walk_recs_parallel` (`:1131`/`:865`) share
-     tail logic (gitignored-audit warning, `--commit` block, closing
-     print) — **but their `--commit` guard conditions genuinely differ**
-     (serial gates on `plan_path is not None`, parallel on `answered`) and
-     must not be collapsed away. Both also build near-identical
-     `RunLogWriter.start(...)` calls (`:805`/`:1018`) differing only in
-     `"jobs": jobs`.
-  2. **Conceptual-source membership hardcoded twice.**
-     `_CONCEPTUAL_APPLY_SOURCE_RANK` and `_split_conceptual_recs`
-     (`:372`/`~2654`) independently hardcode the
-     `plan-correctness`/`plan-completeness` pair instead of deriving from
-     `convergence.CONCEPTUAL_SOURCES`, though `_split_conceptual_recs`'s
-     own docstring claims to centralize the split. Confirm a derivation
-     preserves whatever ordering `_CONCEPTUAL_APPLY_SOURCE_RANK` encodes
-     before swapping.
-  3. **`parse_plan(plan_path)` called up to 4x per `completeness-apply`
-     invocation** (`:195, 331, 423, 612`), no `Plan` threaded between
-     calls. Check whether an intervening write — `_apply_files_coherence`
-     writes `allowed_mentions:` back to the plan — means a later site
-     depends on re-reading; collapsing to one parse could silently make it
-     see stale content instead of the post-write state it gets today.
-  4. **`_resolve_saved_completeness_audit` vs. `completeness_report.py`'s
-     `resolve_reusable_audit`/`ReusableAudit`** (`:394, 434`) — same
-     saved-sidecar-resolution shape, two independently written eligibility
-     checks (`_saved_audit_revision_is_current` vs.
-     `is_reusable_audit_sidecar`). May be testing genuinely different
-     questions (reuse-across-a-fresh-run vs. still-actionable) — confirm
-     before merging.
-  5. **`completeness_phases.py` vs. `data_contract_cmd.py`.** Two
+  1. **`completeness_phases.py` vs. `data_contract_cmd.py`.** Two
      suspected overlaps: sidecar load/target resolution with divergent
      error handling (swallow-to-`{}` vs. raise `ReviewLoadError`), and
      "find the newest current, qualified saved audit" scan logic.
@@ -10666,8 +10467,7 @@ longer describes current work. It is retained only as dated carve-out context.
   self-consistency example. `intent-presence` now blocks through the same
   bucket at `medium`, and the walkthrough never mentions it — so an operator
   reading the runbook after hitting the finding gets no remedy. The fix is one
-  bullet naming the one-line `intent:` edit, alongside the existing note that
-  neither source is `completeness-apply`-eligible (still true).
+  bullet naming the one-line `intent:` edit, with a session-directed edit remedy.
 - **Effort:** small — prose only, no code, no tests.
 - **Approach:** direct. **Origin:** 2026-08-02, `intent-required` step 8; the
   file was in neither that step's nor its sibling doc step's file list.
@@ -12810,7 +12610,7 @@ plan-tool reconcile-code roadmap-stack-layer --all
   - an exit-code flip or a new `--fail-on-findings` path — the exit-code convention holds: a completed audit exits 0 with findings;
   - a deterministic technology-name comparison (matching `PostgreSQL` against `SQLite` strings) — it measures vocabulary, not the property, misses a plan that names no product or a synonym, and a high false-positive proxy is killed, not tuned;
   - a new roadmap artifact or a fifth roadmap stage file — decided 2026-10-08 under #461; the report is a saved audit report outside the roadmap's versioned store and never enters a roadmap version;
-  - auto-applying findings — `completeness-apply` is being retired (#376); whoever drives the plan reads the report and edits through that plan's own audit loop;
+  - auto-applying findings — conceptual application commands are retired; whoever drives the plan reads the report and edits through that plan's own audit loop;
   - rewriting plans, seeds, or the roadmap — the audit is read-only; a conflict whose resolution changes an accepted decision goes through the roadmap feedback lifecycle;
   - feeding `is_blocking_finding`, `is_blocking_impact`, `should_continue`, or any per-plan convergence state — the report is a separate advisory channel;
   - judging plan quality, completeness, or ordering beyond conflicts with the reference or between plans;

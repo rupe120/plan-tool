@@ -1,40 +1,4 @@
-"""Conceptual-completeness command module — the ``completeness-audit`` /
-``completeness-apply`` verbs.
-
-Two handlers answer "is this plan correct, complete, and unambiguous?"
-
-- ``completeness-audit`` (``cmd_completeness``)
-  layers deterministic well-formedness checks (body sections, detail
-  files, dep/path resolution, lessons coverage — no claude call) under a
-  multi-pass conceptual audit of the plan's own concepts grounded in the
-  per-step detail bundle, and optionally drives an ``--iterate``
-  convergence loop that applies open findings and re-audits.
-- ``completeness-apply`` (``cmd_completeness_apply``) replays the saved
-  audit's ``plan-correctness`` and ``plan-completeness`` findings through
-  the gap walker.
-
-``cmd_completeness`` is orchestration only: parse / banner / budget, then
-delegation to named phase helpers — ``_run_deterministic_checks`` (the
-well-formedness battery, no-claude except the opt-in per-step MIXED-STEP
-purity pass), ``_sample_conceptual_audit`` (the single audit call), and the
-``--iterate`` convergence loop and pure rendering/persistence phases in
-:mod:`plan_tool.cli.completeness_phases`
-(``_run_iterate_convergence_loop`` / ``_render_completeness_json`` /
-``_render_grouped_report`` / ``_persist_and_present_report``).
-
-Import edge is one-directional: this module imports the cycle-free leaves
-(``context`` / ``parser`` / ``completeness_phases``), the step-15
-reconcile engine (``reconcile``), and domain packages — never ``app``.
-Each handler's
-claude-driving collaborator (``walk_recommendations``) is a module global
-of :mod:`plan_tool.cli.completeness_phases`, so a monkeypatch that drives
-``completeness-apply``'s walk must target
-``plan_tool.cli.completeness_phases``; the body-local domain imports
-(``plan_tool.review.*``, ``plan_tool.launcher.apply_finding``) stay the
-monkeypatch seams the legacy suites rely on. ``app`` re-imports every moved
-name so the package surface and ``authoring.cmd_detail``'s
-``app.cmd_completeness`` forward-call keep resolving.
-"""
+"""Completeness audit registration and orchestration."""
 
 from __future__ import annotations
 
@@ -68,7 +32,6 @@ from plan_tool.style import (
     error,
     info,
     success,
-    warn,
 )
 
 from plan_tool.cli.context import _load_context, _resolve_iterative_budget
@@ -93,10 +56,7 @@ from plan_tool.cli.completeness_phases import (
     _persist_and_present_report,
     _render_completeness_json,
     _render_grouped_report,
-    _resolve_apply_walk_targets,
     _resolve_plan_for_report,
-    _resolve_saved_completeness_audit,
-    _run_apply_walk,
     _run_deterministic_checks,
     _sample_conceptual_audit,
     _sampled_bundle_status,
@@ -114,122 +74,6 @@ from plan_tool.completeness_report import (
     UNTRUSTED_TRANSIENT,
     blocking_verdict_from_gate,
 )
-
-
-def cmd_completeness_apply(args: argparse.Namespace) -> int:
-    """Walk the conceptual gaps from a saved audit and apply gap-closing
-    edits, one finding at a time — and deterministically resolve the
-    audit's files-coherence drift (see :func:`_apply_files_coherence`),
-    the structural subset ``apply_finding`` can't touch because it edits
-    prose, not frontmatter.
-
-    Walks BOTH conceptual sources — ``plan-correctness`` (design gaps,
-    including material ambiguity) first, then ``plan-completeness`` (what's
-    missing). Under the
-    read-only-audit split (#85) the ``completeness-audit --iterate`` loop
-    applies only its deterministic well-formedness findings and persists
-    both conceptual sources *unapplied*, so this verb is the sole mutator
-    of the conceptual gap map.
-
-    Pairs with ``plan-tool completeness-audit`` (which finds the gaps
-    and saves them to
-    ``plan-details/<slug>/reports/<ts>-completeness.json``).
-    This verb does NOT re-run the audit — it replays the saved findings
-    and routes each through ``apply_finding`` so Claude proposes a
-    focused edit per gap.
-
-    Always interactive: one propose-then-confirm prompt per gap, so the
-    operator reviews each conceptual issue in context. There is no
-    blanket auto-apply — the value of this verb is the per-gap context it
-    surfaces, and that only pays off with a human in the loop. On a
-    non-interactive stdin (CI / pipe) the conceptual walk is skipped and
-    the gaps are reported instead. ``--anchor <slug>`` (repeatable)
-    restricts the walk to specific gaps by their ``[anchor-slug]``.
-
-    The deterministic files-coherence fix (adding cited real-file paths
-    to a step's ``allowed_mentions:``) is mechanical, not conceptual, so
-    it runs without a prompt when a complete detail bundle exists. On a
-    bare plan only ``plan-correctness`` gaps are walked; other saved
-    sources are reported as withheld until detail exists.
-
-    See ``docs/reference/contracts/process.md`` for the audit/apply authority split.
-    """
-    warn(
-        "completeness-apply is going away (BACKLOG #376): walking findings "
-        "one gap at a time is slower than reading the whole report at once, "
-        "and the slow pace obscures whether the plan is actually converging "
-        "-- read the saved report and make a session-directed edit to the "
-        "plan/detail files "
-        "instead."
-    )
-    ctx = _load_context(args)
-    # ``--commit`` clean-tree gate up front (fail fast before loading the
-    # saved audit): the end-of-run ``git add -A`` must not fold in
-    # pre-existing changes.
-    if getattr(args, "commit", False) and working_tree_dirty(ctx.repo_root):
-        error(
-            "--commit requires a clean working tree (commit or stash your "
-            "changes first)."
-        )
-        return 2
-
-    resolution = _resolve_saved_completeness_audit(args, ctx)
-    if not resolution.ok:
-        error(resolution.message)
-        return resolution.rc
-    plan_path = resolution.plan_path
-    saved_path = resolution.saved_path
-    saved = resolution.saved
-    pre_apply_advisory_display = resolution.pre_apply_advisory_display
-
-    # Keep the one parent-process presenter to hand to the parallel lane too;
-    # its idempotence prevents a worker/replay duplicate.
-    advisory_presented = False
-
-    def _present_pre_apply_advisory() -> None:
-        nonlocal advisory_presented
-        if advisory_presented or pre_apply_advisory_display is None:
-            return
-        from plan_tool.completeness_report import render_audit_shape_advisory_console
-
-        print(render_audit_shape_advisory_console(pre_apply_advisory_display))
-        advisory_presented = True
-
-    _present_pre_apply_advisory()
-
-    # Freshness gate (BACKLOG #61 slice 3): this verb replays a *saved* sidecar,
-    # so warn if the detail bundle drifted since the audit — those findings may
-    # no longer match the changed detail files. The walk is interactive, so the
-    # operator skips stale gaps per-finding after this flag.
-    if resolution.drifted_detail:
-        warn(
-            f"this saved completeness audit may be stale — "
-            f"{len(resolution.drifted_detail)} detail file(s) changed since it "
-            f"was saved ({saved.created_at}); its findings may no longer match "
-            f"those files. Re-run `plan-tool completeness-audit "
-            f"{args.name}` for current findings before applying."
-        )
-
-    targets = _resolve_apply_walk_targets(
-        saved, args=args, ctx=ctx, plan_path=plan_path,
-    )
-    if not targets.ok:
-        if targets.message is not None:
-            error(targets.message)
-        return targets.rc
-
-    return _run_apply_walk(
-        targets.walk_recs,
-        targets.conceptual_walk_recs,
-        saved=saved,
-        saved_path=saved_path,
-        plan_path=plan_path,
-        ctx=ctx,
-        args=args,
-        parallel=targets.parallel,
-        plan_is_bare=targets.plan_is_bare,
-        pre_apply_presentation=_present_pre_apply_advisory,
-    )
 
 
 def _completeness_commit_subject(slug: str) -> str:
@@ -1445,20 +1289,7 @@ def _completeness_has_blocking_findings(
 
 
 def register(subparsers) -> dict[str, Handler]:
-    """Add the completeness subparsers and return their dispatch map.
-
-    ``completeness-audit`` (aliased ``completeness``) and
-    ``completeness-apply`` declare ``parents=[yes_parent, ...]``; those
-    parents currently originate in ``app.register``. Per the
-    duplicate-then-defer rule, this command module — carved out before
-    ``parser.py`` owns the shared parents — rebuilds its own verbatim
-    copies (argparse ``parents=`` copies actions by reference, so identical
-    parent objects yield byte-identical ``--help``). Consolidation into
-    ``parser.py`` is deferred.
-
-    ``completeness-audit`` dispatches to ``cmd_completeness``;
-    ``completeness-apply`` is the paired walker.
-    """
+    """Register the completeness audit."""
     sub = subparsers
 
     yes_parent = make_yes_parent()
@@ -1684,7 +1515,8 @@ def register(subparsers) -> dict[str, Handler]:
             "where present + "
             "code at HEAD; a bare plan with no detail yet is audited at the "
             "plan/concept level). Conceptual gaps are reported for a "
-            "session-directed edit, not applied by a tool command. A "
+            "human or orchestrating session to read and hand-edit the relevant "
+            "plan or detail files. A "
             "completed audit exits 0; findings "
             "are in the report (and --json exposes stage-aware "
             "has_blocking_findings, conceptual_bar_blocking_ids, and "
@@ -1705,7 +1537,10 @@ def register(subparsers) -> dict[str, Handler]:
             "after the audit, run the same apply-findings / re-audit "
             "convergence loop the other subcommands use (shared "
             "ConvergenceState + iteration lock + scope guard): apply each "
-            "open finding via claude and re-audit until findings converge "
+            "eligible deterministic well-formedness finding via claude and "
+            "re-audit until findings converge "
+            "(conceptual findings require the human or orchestrating session "
+            "to read and hand-edit the relevant plan or detail files) "
             "or --max-iterations / --iteration-budget is hit. Before the "
             "first apply this saves a pre-apply checkpoint report under the "
             "usual <ts>-completeness names, marked in its payload as "
@@ -1843,118 +1678,4 @@ def register(subparsers) -> dict[str, Handler]:
         ),
     )
 
-    p_completeness_apply = sub.add_parser(
-        "completeness-apply",
-        help=(
-            "DEPRECATED, going away (BACKLOG #376) — walking findings one "
-            "gap at a time is slow and obscures the convergence signal; "
-            "read the saved report and make a session-directed edit to the "
-            "plan/detail files "
-            "instead. "
-            "walk the conceptual gaps from the most recent saved "
-            "`completeness-audit` and apply gap-closing edits via claude, one "
-            "finding at a time, AND deterministically clear files-coherence "
-            "drift (no claude: add cited real-file paths to the step's "
-            "allowed_mentions). Walks BOTH conceptual sources — "
-            "plan-correctness (including material ambiguity) first, then "
-            "plan-completeness — which the audit "
-            "persists unapplied (read-only-audit split, #85). Pairs with "
-            "completeness-audit; does NOT re-run the audit. A current saved "
-            "arm-clustering advisory prints once as a non-blocking keep-or-"
-            "carve prompt before serial work or parallel worker provisioning; "
-            "a stale advisory is hidden without changing the saved walk. Always "
-            "interactive: one per-gap confirm so you review each conceptual "
-            "issue in context (no blanket auto-apply). On a bare plan only "
-            "plan-correctness gaps are walked; other saved sources are "
-            "reported as withheld until detail exists. The deterministic "
-            "files-coherence fix runs only when a complete detail bundle "
-            "exists. On a non-interactive stdin the walk is skipped and "
-            "the gaps are reported. "
-            "`--anchor <slug>` (repeatable) restricts to specific gaps."
-        ),
-        parents=[yes_parent],
-    )
-    p_completeness_apply.add_argument(
-        "name",
-        help="plan name — slug, filename stem (e.g. 1-my-feature), or filename.md",
-    )
-    p_completeness_apply.add_argument(
-        "--id",
-        default=None,
-        metavar="STEM",
-        help=(
-            "load a specific saved completeness audit by filename stem "
-            "(e.g. 20260505-123456-completeness); default: newest "
-            "`-completeness.json` for this plan"
-        ),
-    )
-    p_completeness_apply.add_argument(
-        "--anchor",
-        action="append",
-        default=[],
-        metavar="SLUG",
-        help=(
-            "address one gap by its `[anchor-slug]` (from the report). "
-            "Repeatable to target several gaps. Default: walk all gaps."
-        ),
-    )
-    p_completeness_apply.add_argument(
-        "--rewalk",
-        action="store_true",
-        help=(
-            "re-prompt items that already have annotations (default: "
-            "skip already-annotated items)"
-        ),
-    )
-    p_completeness_apply.add_argument(
-        "--include-info",
-        action="store_true",
-        dest="include_info",
-        help="walk info-level gaps too (default: skip them)",
-    )
-    p_completeness_apply.add_argument(
-        "--apply-structural",
-        action="store_true",
-        dest="apply_structural",
-        help=(
-            "opt the serial walk into *applying* a medium granularity-split "
-            "step split (via escalate_to_split) on a safe plan with an "
-            "interactive confirm; without it (or under -y, or --jobs > 1) the "
-            "split finding is recommend-only. Independent of --include-info: "
-            "the medium split is walked regardless of it."
-        ),
-    )
-    p_completeness_apply.add_argument(
-        "--commit",
-        action="store_true",
-        dest="commit",
-        help=(
-            "after applying gap-closing edits, stage all changes (git add "
-            "-A) and create one commit with subject 'plan(<slug>): "
-            "completeness — applied N gap(s)'. Requires a clean working tree "
-            "up front; off by default; only commits when a gap was applied."
-        ),
-    )
-    from plan_tool.cli.authoring import _positive_int
-
-    p_completeness_apply.add_argument(
-        "--jobs",
-        type=_positive_int,
-        default=1,
-        dest="jobs",
-        metavar="N",
-        help=(
-            "apply up to N gaps concurrently in isolated worktrees (explicit "
-            "integer >= 1; default 1 = the interactive per-gap walk; there is "
-            "no 0/auto mode). N>1 is NON-INTERACTIVE and requires -y (it "
-            "bypasses the per-gap confirm), a clean working tree (isolation is "
-            "off HEAD), and applies both conceptual sources (including "
-            "ambiguity under correctness) correctness-first. "
-            "A single --anchor gap degrades to serial (nothing to parallelize)."
-        ),
-    )
-
-    return {
-        "completeness-audit": cmd_completeness,
-        "completeness-apply": cmd_completeness_apply,
-    }
+    return {"completeness-audit": cmd_completeness}
