@@ -7,11 +7,11 @@ Full design and provenance are in the handoffs linked below.
 
 ## What AI-DLC and the orchestration layer are
 
-**AI-DLC** is an external, named workflow framework (governed by
-`aidlc-workflows-rupe120`) with phases **Ideation → Inception →
-Construction → Operations**. Each phase is built of stages with typed
-artifacts, epistemic tags on claims (`[assumption]`, open questions, etc.),
-and gated approval.
+**AI-DLC** is an external workflow framework from AWS Labs
+([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) with five
+phases: **Initialization → Ideation → Inception → Construction → Operation**.
+Each phase is built of stages with typed artifacts, epistemic tags on claims
+(`[assumption]`, open questions, etc.), and gated approval.
 
 An **orchestration layer** sits above `plan-tool`. It runs a real project (an
 "intent") through the framework, produces the framework's artifacts, and owns
