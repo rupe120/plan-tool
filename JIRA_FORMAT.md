@@ -84,8 +84,9 @@ exactly one final suffix removed (`jira-stories.md` and `jira-stories.json`
 both yield `jira-stories`; `release.v1.json` yields `release.v1`; a
 suffix-free basename is unchanged). The story and handoff destinations must
 differ from each other, from the plan source file, and from every run-grade
-detail artifact (`derive_detail_path()` in `plan_tool/detail_artifacts.py`,
-including absent artifacts for any step). `plan-tool jira` rejects a
+detail artifact (both each declared `steps[].detail` pointer and the conventional
+`derive_detail_path()` in `plan_tool/detail_artifacts.py`, including absent
+artifacts for any step). `plan-tool jira` rejects a
 destination that fails any of these checks before invoking a model or writing
 anything (`_companion_target_preflight()`).
 

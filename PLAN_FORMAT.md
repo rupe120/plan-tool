@@ -245,7 +245,7 @@ The parser rejects the plan when:
 6. The dependency graph contains a cycle.
 7. More than one step has `status: current`.
 8. The plan declares a `format_version` outside `SUPPORTED_PLAN_FORMAT_VERSIONS` — checked before rule 9's unknown-field rejection, so a plan carrying both an unsupported version and an unknown key is refused for the version, not the key.
-9. An unknown field appears at plan level or inside a step (strict mode — prevents silent typos).
+9. An unknown field appears at plan level, inside a step, or inside a feature registry entry (strict mode — prevents silent typos).
 10. Step `description` and legacy `title` conflict or contain an invalid supplied value (see [Field semantics](#field-semantics)).
 11. A risk-profile declaration omits either paired field, uses explicit `null`, uses a tier outside `low` / `standard` / `high`, or supplies a blank or multi-line rationale.
 

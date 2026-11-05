@@ -585,8 +585,7 @@ def write_pre_apply_audit_checkpoint(
         plan_path=path,
         repo_root=ctx.repo_root,
     )
-    grouped_md = _render_grouped_report(
-        plan, args, det,
+    grouped_options = dict(
         correctness_recs=correctness_recs,
         conceptual_recs=conceptual_recs,
         audit_recs=audit_recs,
@@ -596,6 +595,10 @@ def write_pre_apply_audit_checkpoint(
         audit_shape_advisory_display=advisory_display,
         resumed_from_sampler_checkpoint=resumed_from_sampler_checkpoint,
         is_pre_apply_checkpoint=True,
+    )
+    grouped_md = _render_grouped_report(plan, args, det, **grouped_options)
+    embedded_grouped_md = _render_grouped_report(
+        plan, args, det, **grouped_options, embedded=True,
     )
     outcome = _IterateOutcome(
         stop_reason="pre-apply checkpoint",
@@ -613,6 +616,7 @@ def write_pre_apply_audit_checkpoint(
         correctness_recs=correctness_recs,
         conceptual_recs=conceptual_recs,
         grouped_md=grouped_md,
+        embedded_grouped_md=embedded_grouped_md,
         smell_recs=det.smell_recs,
         data_contract_recs=det.data_contract_recs,
         data_contract_payloads=det.data_contract_payloads,
@@ -3268,6 +3272,7 @@ def _render_grouped_report(
     args,
     det: _DeterministicReport,
     *,
+    embedded: bool = False,
     correctness_recs,
     conceptual_recs,
     audit_recs,
@@ -3282,6 +3287,7 @@ def _render_grouped_report(
 ) -> str:
     """Assemble the grouped Markdown report as a single string.
 
+    ``embedded`` leaves conceptual correctness to the enclosing report.
     ``verdict`` is the finalize gate's blocking verdict; omitted reads as
     ``absent`` (no stage transition offered).
 
@@ -3364,13 +3370,8 @@ def _render_grouped_report(
             f"- {sev}: step {d.step_id} depends on step {d.depends_on} "
             f"which is {d.reason}"
         )
-    # Conceptual-correctness findings (claude) join the correctness group:
-    # an unsound or contradictory concept is a structural blocker, same
-    # band as a broken dependency. Render the *full* body, not ``rec.title``
-    # (the body's first line clipped to 120 chars), so an over-long finding
-    # doesn't read truncated mid-thought; the ``[anchor-slug]`` cross-
-    # references the address command in the report's conceptual section.
-    for rec in correctness_recs:
+    # Embedded reports own conceptual findings in their dedicated section.
+    for rec in (() if embedded else correctness_recs):
         correctness_lines.append(format_finding_bullet(rec, rec.anchor or ""))
         restated = restated_property_or_none(rec)
         if restated:
@@ -3386,10 +3387,12 @@ def _render_grouped_report(
         "the plan's stated concepts are internally sound._"
     )
     _p("")
+    if embedded and correctness_recs:
+        _p("Conceptual correctness: see the dedicated section above.")
     if correctness_lines:
         for line in correctness_lines:
             _p(line)
-    else:
+    elif not (embedded and correctness_recs):
         _p("- _(none — paths resolve, deps coherent, concepts sound)_")
     _p("")
 
@@ -3767,6 +3770,7 @@ def _persist_and_present_report(
     correctness_recs,
     conceptual_recs,
     grouped_md: str,
+    embedded_grouped_md: Optional[str] = None,
     smell_recs=(),
     data_contract_recs=(),
     data_contract_payloads=None,
@@ -3954,7 +3958,9 @@ def _persist_and_present_report(
                 deferred=deferred_recs,
                 advisory_conceptual=advisory_conceptual,
                 open_findings=open_findings,
-                grouped_report_md=grouped_md,
+                grouped_report_md=(
+                    embedded_grouped_md if embedded_grouped_md is not None else grouped_md
+                ),
                 correctness=correctness_recs,
                 smells=list(smell_recs),
                 plan=plan,

@@ -33,7 +33,7 @@ a completed process and a clean audit are different claims.
 
 ## Review use
 
-Read [the plan](../docs/implementation-plans/2-public-release-content-snapshot.md),
+Read [the plan](../docs/implementation-plans/archive/2-public-release-content-snapshot.md),
 its details and the [maintained conclusions](../docs/evidence/public-release-content-snapshot.md#applied-dispositions-and-retained-conclusions).
 Treat audit measurements as evidence about their named inputs. Review changed
 plan content again before a new implementation; use code reconciliation and

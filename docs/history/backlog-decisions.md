@@ -496,7 +496,7 @@ structure. Not guarded: `BUG_BACKLOG.md` (no ids), an id held only by a
 
 Shipped 2026-10-16 in PR #107 (merge `b90edb570`, code head `1ddc48bf9`, full
 suite 14,642 passed / 67 skipped); closed 2026-10-19. The plan is
-[`2-roadmap-plan-derivation.md`](../implementation-plans/2-roadmap-plan-derivation.md).
+[`2-roadmap-plan-derivation.md`](../implementation-plans/archive/2-roadmap-plan-derivation.md).
 The change improves the existing route only: stage-four guidance in
 `roadmap-plans.md` (shared producers and consumers, production/update
 operations, and an owner for every hop of a source-required transition),
@@ -638,12 +638,12 @@ former backlog entry, "Roll back a roadmap revision that fails or is cut
 short" (shipped and removed 2026-09-18), for the Integration trace that found it),
 and it landed 2026-09-18 as `roadmap-decision-settlement`, a dedicated
 settle action with its own preflight and receipt
-(`docs/implementation-plans/2-roadmap-decision-settlement.md`).
+(`docs/implementation-plans/archive/2-roadmap-decision-settlement.md`).
 
 ### Dangling-journal reconciliation cut from `roadmap-revision-rollback`
 
 Cut 2026-09-18, filed forward as BACKLOG #399. Steps 2 and 3 of
-`docs/implementation-plans/2-roadmap-revision-rollback.md` built, then removed,
+`docs/implementation-plans/archive/2-roadmap-revision-rollback.md` built, then removed,
 a mechanism that peeked a dangling `recover_roadmap_publication` journal
 before recovery and folded its members into the revision checkpoint when
 eligible, so the checkpoint's `last_written_bytes` would not go stale across
@@ -774,3 +774,20 @@ the way and is independent of AI-DLC: BACKLOG #444, shipped 2026-10-06.
 printed it. A refusal from an AI-DLC guard points at the runtime-hook
 candidate above; a stage run with the skill installed on AI-DLC 2.10.0 is the
 first thing to try.
+
+## Same-batch relation follow-ups, 2026-11-04
+
+The self-reference bug entry also carried two lower-severity observations.
+The endpoint-kind exhaustiveness concern was already pinned by
+`test_relation_endpoint_table_types_every_kind_but_the_deliberately_untyped_decision_anchor`
+in `tests/test_roadmap_candidate.py`: every relation kind has a typed target
+except the deliberately generic decision anchor. That concern requires no new
+policy or implementation.
+
+The same-batch endpoint helper is also evaluated for removed relation atoms.
+No supported failing input was established for that observation; the source
+entry described it as unreachable under the predecessor gates. Retire that
+contingent change rather than widen the self-reference fix. Reopen only with a
+valid admitted predecessor and candidate for which a removed relation is
+incorrectly authorized through a same-batch addition. This is a retirement of
+an unproven risk, not a claim that removed-relation behavior changes.

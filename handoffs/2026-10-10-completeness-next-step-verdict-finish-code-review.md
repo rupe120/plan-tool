@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Change | BACKLOG #480: every untrusted completeness verdict names the gaps the audit established and prescribes the action that changes the result — `transient` / `persistent` / `stale-revision` cause values with a stated precedence, an incomplete audit keeping its blocking ids in the verdict, and the seven residual reader seams |
-| Plan | `docs/implementation-plans/2-completeness-next-step-verdict-finish.md` (plan PR #74); seed archived under `plan-seeds/archive/` |
+| Plan | `docs/implementation-plans/archive/2-completeness-next-step-verdict-finish.md` (plan PR #74); seed archived under `plan-seeds/archive/` |
 | Branch | `feat/completeness-next-step-verdict-finish` |
 | Review range | `e8ca455fc..HEAD` |
 | Reviewer | `/code-review high` in-session (forked), report-only |

@@ -8369,7 +8369,7 @@ def test_correction_display_reads_stored_evidence_not_the_live_artifact(capsys) 
     assert "  correction before text: " + roadmap_cmd._render_stored_value(stored_before) in lines
 
 
-# --- Narrative review evidence on the candidate surfaces (docs/implementation-plans/2-candidate-narrative-review-evidence.md) ---
+# --- Narrative review evidence on the candidate surfaces (docs/implementation-plans/archive/2-candidate-narrative-review-evidence.md) ---
 
 _NARRATIVE_FINDING = SimpleNamespace(
     kind="removed-id-in-live-prose", artifact="domain", row_id="entity-gone", start=10, end=21, line=3,

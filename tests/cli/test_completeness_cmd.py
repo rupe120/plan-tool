@@ -5757,7 +5757,10 @@ class TestPersistAndPresentReport:
         """The one producer of crash-recovery evidence marks its sidecar, so a
         role-unaware version-1/2 reader rejects it instead of reading it as a
         converged final report."""
+        from dataclasses import replace
         from plan_tool.review_persistence import AuditInputSnapshot
+
+        rec = replace(_corr_rec("c"), source="plan-correctness", body="Checkpoint gap.")
 
         plan, path = _write_and_parse(tmp_repo, _CLEAN_STEPS)
         ctx = SimpleNamespace(repo_root=tmp_repo.root)
@@ -5768,7 +5771,7 @@ class TestPersistAndPresentReport:
             path,
             ctx,
             SimpleNamespace(name="1-sectioned"),
-            audit_recs=[_corr_rec("c")],
+            audit_recs=[rec],
             budget={},
             bundle_status=bundle_status,
             audit_input_snapshot=snapshot,
@@ -5776,6 +5779,7 @@ class TestPersistAndPresentReport:
         )
         assert report_path is not None
         assert report_path.name.endswith("-completeness.md")
+        assert report_path.read_text().count(rec.body) == 1
         sidecar = report_path.with_suffix(".json")
         payload = json.loads(sidecar.read_text(encoding="utf-8"))
         assert payload["version"] == 4

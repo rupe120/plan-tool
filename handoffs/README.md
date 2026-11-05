@@ -55,10 +55,6 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
-- [Cleanup for focus and stability](2026-11-04-cleanup-focus-and-stability.md) —
-  recommended #376 retirement pickup, known bare-plan drift, separate audit-noise
-  fixes, and reproduction-led stability follow-ups; implementation is not started.
-
 - [Jira-grade retirement execution and review](2026-11-03-jira-grade-retirement-plan.md) — eight
   completed steps, reconciliation findings and corrections, model provenance,
   two clean independent reviews, and prepared publication branches.
@@ -144,6 +140,8 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
+| [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164 | #369, #519, #520 retain their independent owners |
+| [Completed maintenance](2026-11-05-completed-maintenance-code-review.md) | Converged; merged through PRs #165–167 and #169 | Deferred stability bugs, nested-function citations, and run-ID collision in `BUG_BACKLOG.md` |
 | [`BACKLOG.md` id guard](2026-09-23-backlog-id-guard-code-review.md) | All in-diff findings fixed or declined | Finding E, the wider broken-link count (#426); not compressed |
 | [Roadmap brief-source drift](2026-09-12-roadmap-brief-source-drift-code-review.md) | Converged 2026-09-14 (10 rounds, 55 findings) | `BUG_BACKLOG.md` external-replacement risk (F26); closed route-local record and #367 |
 | [Roadmap concept comparison](2026-09-21-roadmap-concept-comparison-code-review.md) | **Stopped by the owner** 2026-09-21, 11 rounds | #406–#422 |

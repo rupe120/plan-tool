@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Change | BACKLOG #479: every completeness next-step reader (report prose, console list and summary, grouped report) and the `detail` / `split` / `merge` parents derive what to close and the one next command from the finalize gate's blocking verdict, so no surface says "no plan-level gaps remain" or offers a stage while a gate-blocking gap is open |
-| Plan | `docs/implementation-plans/2-completeness-next-steps-blocking-set.md` (plan PR #70); seed archived under `plan-seeds/archive/` |
+| Plan | `docs/implementation-plans/archive/2-completeness-next-steps-blocking-set.md` (plan PR #70); seed archived under `plan-seeds/archive/` |
 | Branch | `feat/completeness-next-steps-blocking-set`, merged as PR #71 (`1d6476e1a`) |
 | Review range | `97ce3a261..23743e90e` |
 | Checks run | Full suite `uv run pytest tests/ -q -n auto` after every fix batch; last: 14,330 passed, 67 skipped (`c1680dcde`); `reconcile-code --all`: 0 findings on steps 1–4 |

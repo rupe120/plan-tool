@@ -555,6 +555,24 @@ class TestFormatValidationErrors:
         # A pure typo isn't a real field anywhere, so no misplacement hint.
         assert "belongs on" not in line
 
+    @pytest.mark.parametrize("field", ["description", "depends_on", "steps", "typo"])
+    def test_feature_extra_field_lists_only_feature_keys_without_mutating_errors(self, field):
+        from plan_tool.schema import Feature
+
+        text = _concept_plan("").replace(
+            "steps:", f"features:\n  - id: capability\n    title: Capability\n    {field}: invalid\nsteps:",
+        )
+        with pytest.raises(ValidationError) as caught:
+            parse_plan_text(text)
+        errors = caught.value.errors
+        snapshot = deepcopy(errors)
+        (line,) = format_validation_errors(errors)
+        assert line.startswith(f"features.0.{field}: unknown feature field (allowed: ")
+        assert line.endswith(")")
+        keys = line.split("(allowed: ", 1)[1].split(")", 1)[0].split(", ")
+        assert keys == list(Feature.model_fields)
+        assert errors == snapshot
+
     @pytest.mark.parametrize("step_text,missing", [
         ("", True),
         ("    descripton: Work\n", True),

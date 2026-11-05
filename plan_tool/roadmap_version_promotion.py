@@ -387,7 +387,7 @@ def _promoted_stack_is_structural(
     """Whether the promoted candidate's unpromoted stack stores a STRUCTURAL route.
 
     Recovery asks the same question with the same two ids (`_selected_promotion_is_structural`).
-    See docs/implementation-plans/2-roadmap-stack-aware-approval.md § "Architecture" (Stack route).
+    See docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md § "Architecture" (Stack route).
     """
     return roadmap_candidate_run.candidate_stack_route(
         plans_dir=plans_dir, slug=slug,

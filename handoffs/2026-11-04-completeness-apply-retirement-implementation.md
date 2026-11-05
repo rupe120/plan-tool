@@ -1,9 +1,12 @@
 # Completeness apply retirement implementation
 
-All six steps are done on `implement/completeness-apply-retirement`, based on
-`465e493fc` (`origin/main`, plan PR #162 verified merged). The implementation
-is ready for separate code and plan-status review. No implementation PR is
-merged by this session; the Architect reviews CLAUDE rule changes.
+All six steps are shipped on `origin/main` at `cf303fe29`. Plan PR #162,
+implementation PR #163, and plan-status PR #164 are verified merged on
+2026-11-04; the code and plan snapshots match their fetched remote paths.
+This closed review ledger retains implementation and validation provenance.
+Independent completed fixes retain their dispositions in the
+[maintenance review ledger](2026-11-05-completed-maintenance-code-review.md);
+remaining work belongs to `BACKLOG.md` and `BUG_BACKLOG.md`.
 
 ## Delivered scope
 
@@ -20,6 +23,39 @@ owns stale lesson maintenance. A machine comparison with `origin/main` confirms
 the complete #369 block is byte-for-byte unchanged. The changelog fragment
 `changelog.d/completeness-apply-retirement.md` marks the CLI removal as breaking
 and gives the replacement workflow.
+
+## Pre-execution audit provenance
+
+Historical evidence, 2026-11-04. The archived bundle is
+`docs/implementation-plans/archive/plan-details/completeness-apply-retirement/`.
+Before execution, `reconcile-plan --all --no-walk -y` saves
+`reports/20261104-130427.json`; the semantic review identified obsolete step-5 paths, wrong #367 ownership,
+and removed Jira-grade wording. Its already-built suggestions are token matches
+contradicted by the semantic review; no step status changes follow. The correction
+also aligns seed, backlog, and documentation paths and includes Cursor guidance
+and the glossary. Bare-stage completeness application remains withheld. The
+bounded correction ensures retirement does
+not widen into unrelated application authority; judged corrections retain generic application
+and deterministic repair authority, and preserve #369's independent scope.
+The seed remains archived and inert, not a competing scope owner.
+
+Both audit gates use `completeness-audit completeness-apply-retirement
+--iterate --commit --audit-passes 1 -y` with backend Codex, model
+`gpt-6.1-sol`, and closed stdin. Bare report
+`reports/20261104-130709-completeness.md` records 0/6 details, zero conceptual
+findings, confirmed coverage, current revision, and a fresh conceptual call.
+The sole heuristic `plan-claim-vs-delivery-caca4275` names deliberately preserved
+`apply_finding`; it does not justify plan expansion.
+
+One-shot `detail --commit -y` authors all six details. Its tail saves
+`reports/20261104-132734-completeness.md`, with zero findings. The iterative
+detail-grounded gate adds `--reuse-audit` and saves
+`reports/20261104-140106-completeness.md`: 6/6 details, zero open findings,
+confirmed coverage, current revision, explicit conceptual-call reuse, and an
+advisory-only result. There is no conceptual correction loop requiring a
+three-snapshot trajectory. These records certify the authored bundle, not
+implementation delivery; the implementation and post-run reviews below own
+that evidence. Do not rerun pre-execution plan-mutating audits on executed work.
 
 ## Execution and recovery
 
@@ -71,26 +107,16 @@ conclusion and scope because scratch logs are transient.
 
 ## Publication
 
-Create separate code and plan-status PRs from the prepared split branches.
-This backlog item has no promoted Jira key; `BACKLOG-376` identifies the source
-entry rather than inventing an IPPT ticket. Merge the code PR first, then the
-plan-status PR, so done statuses never land ahead of their implementation.
-Do not approve or merge either PR without an explicit user instruction.
+[Implementation PR #163](https://bitbucket.org/protagona/plan-tool/pull-requests/163)
+and [plan-status PR #164](https://bitbucket.org/protagona/plan-tool/pull-requests/164)
+are verified merged, in that order. `git fetch origin main` resolves to
+`cf303fe29`; path-scoped diffs against `BACKLOG-376-code` and `BACKLOG-376-plan`
+are empty for their respective snapshots. The item has no promoted Jira key;
+BACKLOG #376 is the source record. No additional publication is pending.
 
-## Requested Claude Code review loop
-
-The user requests an additional Claude Code skill-driven review to convergence.
-The first launch targets `origin/main...5b1e115d1` using
-`claude -p --model claude-sonnet-5-5 --effort high`, with instructions to invoke
-the installed local-diff-capable code-review skill in report-only mode. It
-exits 1 before review with: “Failed to authenticate: this login reached its time
-limit and cannot be renewed.” No Claude review or clean round is established.
-The next action is `claude auth login`, then relaunch the saved prompt at
-`.tmp/completeness-apply-retirement.claude-review-1.prompt`. Keep findings and
-dispositions in this ledger; fix confirmed in-scope defects, validate, commit,
-and request fresh rounds until two consecutive rounds are clean or low-yield.
-The prepared split branches predate this requested additional review; refresh
-them after any resulting fixes before publication.
+Claude review uses the `claude-personal` alias. The ordinary CLI's expired
+login prevented two review starts; those attempts establish no review evidence.
+The five completed rounds below establish the retained convergence result.
 
 ## Review pass 1 — /code-review high findings (2026-11-04)
 
@@ -202,7 +228,7 @@ changes follow pass 5. The restored persistence test is mutation-verified;
 tracked skill copies match their canonical sources. Prepared local code and
 plan-status branches are refreshed from the final committed work through the
 repository split script; pre-Claude snapshots are retained under suffixed
-branch names. Nothing is pushed or published during this review loop.
+branch names. Publication is verified under the Publication section above.
 
 ## Review pass 2 — claude-personal /code-review high (2026-11-04)
 

@@ -46,49 +46,6 @@ Durable re-open conditions for retired items are recorded in
 
 ## BUG
 
-### A same-batch add-row whose relation targets itself is wrongly refused as unauthorized
-
-- **Files:** `plan_tool/roadmap_candidate.py:_same_batch_added_endpoint_identity`,
-  `_validate_relation_authority`. Not part of the `roadmap-candidate-row-prose-amendments`
-  branch — this is already-shipped code from the merged
-  `roadmap-candidate-same-batch-relations` plan; a stale local `main` in this
-  clone (41 commits behind `origin/main`) caused a `/code-review` pass to
-  scope its diff against it and surface this, so it's recorded here rather
-  than fixed on that unrelated branch.
-- **Symptom:** confirmed by execution against the real
-  `materialize_candidate`/`parse_candidate_delta` pipeline. A batch add-row
-  creating a row whose own declared relation targets itself (e.g. an entity
-  with a `REFERENCE` field pointing at its own id — a tree/parent-pointer
-  shape) is refused with `reason='unauthorized-addition'`. In
-  `_same_batch_added_endpoint_identity`, the exclusion
-  `(operation.artifact_key, operation.row.id) != (relation.owner_artifact_key,
-  relation.owner_id)` is written to stop a relation's owning operation from
-  authorizing itself, but for a true self-reference the owner op is also the
-  only operation that could ever supply the endpoint, so the exclusion
-  removes the sole valid match and `exact_additions` comes back empty.
-- **Fix:** none applied (out of scope for the branch that surfaced it). The
-  exclusion needs to distinguish "this operation is the owner, and a
-  *different* operation should supply the endpoint" from "this operation is
-  the owner and legitimately also creates its own self-referencing endpoint"
-  — likely by allowing the match when `relation.owner_id == relation.endpoint_id`
-  rather than unconditionally excluding same-operation matches.
-- **Related, same area, not separately filed:** the same review pass also
-  flagged (a) the same-batch exception being checked identically for added
-  *and* removed relation atoms in `_validate_relation_authority` (structurally
-  unreachable today given gate-maintained invariants, but written
-  endpoint-generic rather than addition-generic), and (b)
-  `_RELATION_ENDPOINT_IDENTITIES` failing open for any future `RelationKind`
-  with no entry (its own comment already records `CONSTRAINT_ANCHOR` once
-  slipping through this way) with no exhaustiveness test tying the table to
-  `RelationKind`'s members. Both are real but lower-severity; worth a look
-  alongside the fix above rather than filing three separate entries.
-- **Approach:** direct, once picked up on the branch/plan that actually owns
-  this code — small, localized exclusion-condition fix plus a regression test
-  for the self-reference case.
-- **Origin:** 2026-09-28, `/code-review high` on
-  `run/roadmap-candidate-row-prose-amendments`, diff scoped against a stale
-  local `main` in error.
-
 ### `_code_anchor_resolves` still reports two real, existing files as missing: bare-filename citations and negated-existence citations
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves`,
@@ -256,7 +213,7 @@ Durable re-open conditions for retired items are recorded in
   completeness audit prompts, which carry no roadmap resolution.
 - **Symptom:** promotion writes only `.roadmap-versions/accepted-head.json`
   and does not refresh the top-level `0N-*.md` files. That is by design
-  (`docs/implementation-plans/2-roadmap-versioned-from-birth.md`,
+  (`docs/implementation-plans/archive/2-roadmap-versioned-from-birth.md`,
   Architecture: top-level files beside an accepted head "are inert leftovers
   that no command reads or flags"). No command reads them, but seed authors
   and audit models do. The seed prompt makes every draft seed cite bare
@@ -441,37 +398,35 @@ Durable re-open conditions for retired items are recorded in
   5-second subprocess wait limit; the test passes alone.
 - **Fix:** widen or poll the subprocess wait while preserving the assertion
   that a reader guard blocks a writer for the same roadmap.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+- **Route:** `direct` · **Readiness:** `evidence-gated` · **Tier:** `experienced`.
 - **Verification:** run the focused test and the loaded parallel suite; retain
   the guard assertion rather than accepting a timeout as success.
 - **Exclusions:** the retired direct-pipeline test has no surviving consumer;
   do not restore it or change production reader/writer policy.
+- **Disposition:** deferred by user direction, 2026-11-04; no timeout or guard
+  policy change is selected. Reopen on a reproduced failure, retaining the
+  exact expired wait, child exit codes, traceback, and worker sequence.
+- **Reproduction evidence (2026-11-04):** at `9364cc7d0`, Python 3.14.7 /
+  Pydantic 2.13.3, version-promotion and revision-publication tests pass together
+  (136 tests). Ten guard repetitions alongside the normal parallel full suite
+  pass; the suite passes 14,716 tests with 67 skipped. This does not fix the flake.
 - **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
 
-### `_code_anchor_resolves` reports an existing method, private method or nested function as not resolving in HEAD
+### `_code_anchor_resolves` does not resolve function-local function citations
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves` and
   `_module_level_symbol_exists`.
-- **Symptom:** a detail citation `path:Class.method` (or `path:Class._private`,
-  or a function nested in another) is reported as `code anchor … does not
-  resolve in HEAD` unless the owner is a registered data contract. The check
-  accepts only a one-part symbol that exists at module level, so any two-part
-  symbol falls through to the failure branch even when the class and method
-  exist. In one detail bundle (Integration `construction-batch-driver`, Gate 2 round
-  1), 19 such citations were flagged as blocking structural findings, and each
-  named a method that exists at the cited path (for example
-  `RoadmapDriver.start`, `_Reader.text`).
-- **Fix:** resolve a two-part symbol by finding the top-level class, then a
-  `def` or `async def` inside it. Keep reporting a symbol that is genuinely
-  absent. This extends the resolver fix already tracked for bare-filename and
-  negated-existence citations in the entry above.
-- **Deliberately not:** resolving names that are keys in a runtime dict or
-  built by registration; those keep failing, and an author cites them in
-  prose.
-- **Approach:** direct; a bounded change in one function with a test per shape.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
-- **Origin:** 2026-10-19, Integration `construction-batch-driver` Gate 2 audit. The
-  workaround was to cite the path and the symbol in separate spans.
+- **Symptom:** a recognized two-part citation `path:outer.inner` fails even
+  when `inner` is defined directly inside the module-level function `outer`.
+  Ordinary class-method citations resolve; function-local definitions remain
+  outside that resolver's supported set.
+- **Fix:** select whether direct function-local definitions are supported,
+  then pin that boundary without inferring runtime registration or dict keys.
+  Three-part symbol paths remain outside the citation grammar; grammar
+  expansion is separate work.
+- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
+- **Origin:** 2026-10-19 Integration `construction-batch-driver` citation report;
+  nested-function portion retained separately from the class-method fix.
 
 ### Onboarding and installed skill instructions conflict with canonical audit and iteration rules
 
@@ -544,17 +499,6 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
-### Feature-container unknown fields are mislabeled as plan-level fields
-
-- **Files:** `plan_tool/parser.py:_explain_extra_field` and mirrored tests.
-- **Symptom:** a rejected extra field in a feature registry object, such as `features: [{id: cap, title: X, description: d}]`, is labeled “unknown plan-level field” and lists Plan fields rather than the Feature fields. Validation correctly rejects the input; the container label and allowed-field list are misleading.
-- **Evidence:** step-description diagnostic review 1 probes this input and the existing `features.0.depends_on` case. The helper classifies every non-step location as plan-level at the pre-repair base as well; this is not introduced by the alias diagnostic change.
-- **Outcome / in scope:** identify actual feature containers and list their supported fields while preserving plan/step diagnostics and placement hints.
-- **Out of scope:** accepting new fields, changing feature or step schemas, altering error payloads or exit codes, or normalizing unrelated application errors.
-- **Verification:** real feature-extra-field errors name the feature container and only its valid keys; plan/step extra and missing-field cases retain their correct behavior.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
@@ -575,17 +519,6 @@ Durable re-open conditions for retired items are recorded in
 - **Verification:** actual sync with multiline titles/rationales, heading-looking and fenced-looking lines; assert intended decision content remains within its owned section, unowned bytes survive and repeat sync does not accumulate unintended sections.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** H1-boundary Claude Code review 1, candidate 6; independently reproduced through the actual synchronizer.
-
-### Jira export can write onto a done step's missing custom detail destination
-
-- **Files:** `plan_tool/jira.py:_all_detail_artifact_paths`, `_capture_target_preflight`; `tests/test_jira.py` companion target-preflight coverage.
-- **Symptom / evidence:** a done step with `detail: notes/declared.md` and no file there permits either the story or handoff output at that same path. A stubbed `export_jira` probe reproduces both cases in temporary directories on 2026-11-03. The preflight protects derived paths but does not include declared pointers; the same omission exists at merge-base `2b6292993`. Existing tests cover canonical collisions and bundle destinations, but not this custom absent-pointer case.
-- **Outcome / in scope:** reject story and handoff destinations that collide with any declared detail path, including absent files, before backend invocation or either renderer. Keep canonical-path protection and the existing target normalization rules.
-- **Out of scope:** publication redesign, new output formats, detail-grade compatibility, artifact migration, or changes to done-step historical fallback.
-- **Fix:** include declared pointers in the preflight's protected set and add coverage for both outputs, with the existing canonical and non-colliding cases retained.
-- **Verification:** reproduce both absent-pointer collisions with a never-invoke stub; assert refusal before output creation and keep ordinary paired export green.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin / scope:** retirement reconciliation sweep 1, step 4 (`20261104-040750-run-reconcile.json`, high). Deferred from IPPT-17 because the omission predates retirement and its scope preserves output/publication behavior.
 
 ### Files-coherence checking cannot recognize declared extensionless Dockerfile citations
 
@@ -748,6 +681,26 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct. The three start/sink blocks in `gates.py`, `intent_proposal.py` and `create.py`
   are also near-identical and could share one scoped helper; that consolidation needs AST-verified
   identity before anyone merges them.
+
+### Run IDs can collide within one second because their random suffix has only 24 bits
+
+- **Files:** `plan_tool/run_log.py:new_run_id`,
+  `tests/test_run_log.py:test_new_run_id_is_unique_per_call`.
+- **Symptom / evidence:** a full parallel suite on 2026-11-04, worker `gw8`,
+  produces only 99 distinct IDs from 100 calls. IDs share the seconds-precision
+  prefix; `secrets.token_hex(3)` supplies just six hex characters. Both the
+  generator and test are unchanged by the feature-field diagnostic branch.
+- **Fix:** increase collision resistance while preserving filename safety and
+  existing run-log readers. Replace a probabilistic-only regression check with
+  deterministic coverage of the selected generation contract; do not suppress
+  the observed collision by weakening the uniqueness assertion alone.
+- **Approach:** direct; select the narrow generation remedy and verify its
+  consumers and filename contract before implementation.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** post-Claude feature-field diagnostic validation,
+  `/private/tmp/feature-field-diagnostics.claude-final-tests.log`: 1 failed,
+  14,725 passed, 67 skipped in 70.48 seconds. The trace records
+  `assert 99 == 100` at `tests/test_run_log.py:161`.
 
 ## MINOR
 
@@ -1062,25 +1015,6 @@ Durable re-open conditions for retired items are recorded in
   `_caller_outside_shell` test is the precedent.
 - **Origin:** 2026-10-02, tracing the warning in the `candidate-narrative-review-evidence`
   `create` log.
-
-### A completeness report prints every conceptual-correctness finding twice, once in its own section and again in the embedded grouped report
-
-- **Files:** `plan_tool/completeness_report.py:build_report_md` (the
-  `## Conceptual correctness — fix these first` section at `:1914` and the
-  `## Full grouped report` embed at `:2065`), and
-  `plan_tool/cli/completeness_phases.py:_render_grouped_report` (`:1601`),
-  whose `### Correctness (run these first)` block renders the same set.
-- **Symptom:** in Integration's
-  `plan-details/chat-output-streaming/reports/20261010-140834-completeness.md`,
-  lines 40 and 76 are the same `[message-delivery-state-finality]` finding,
-  word for word. A reader counts two findings where there is one, and a
-  session triaging the report can apply the same edit twice.
-- **Fix:** render each finding once. The grouped report embedded by
-  `build_report_md` omits its correctness block and points to the top-level
-  section; the standalone grouped report keeps it.
-- **Approach:** direct.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 ### A partially edited protected References block is restored as a second full copy
 
@@ -1414,6 +1348,17 @@ not include them.
   that with a test that runs the failing order in a fresh interpreter.
 - **Approach:** direct once the failing order is reproduced; an
   investigation until then.
+- **Disposition:** deferred by user direction, 2026-11-04; no initialization
+  change is selected. Reopen with the exact failing node/traceback, preceding
+  worker test sequence, and interpreter/dependency versions, then reproduce
+  that sequence in a fresh interpreter before selecting a remedy.
+- **Reproduction evidence (2026-11-04):** at `9364cc7d0`, Python 3.14.7 /
+  Pydantic 2.13.3, the two affected modules pass together (136 tests) and the full
+  parallel suite passes 14,716 tests with 67 skipped. Six cold import permutations
+  of `roadmap_candidate`, `roadmap`, and `roadmap_candidate_run` let both single
+  and batch candidate models reach ordinary required-field validation. The
+  single model's initially incomplete schema flag alone is not a reproduction:
+  its first validation completes normally. No failing order is established.
 - **Origin:** 2026-09-14, full-suite validation of the docs restructure. It
   was first noted on 2026-09-12 as "known suite instability" in the roadmap
   brief-source review handoff, but never filed.

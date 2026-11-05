@@ -758,7 +758,7 @@ def candidate_stack_route(
     """Derive the unpromoted stack from ``tip_version_id`` down to, excluding, ``root_version_id``.
 
     An unreadable hop raises ``CandidateProposalError``; it is never read as "not structural".
-    See docs/implementation-plans/2-roadmap-stack-aware-approval.md § "Architecture" (Stack route).
+    See docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md § "Architecture" (Stack route).
     """
     if root_version_id is None or tip_version_id == root_version_id:
         return CandidateStackRoute(hops=())

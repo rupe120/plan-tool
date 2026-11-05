@@ -1084,7 +1084,7 @@ Invalid output, failed gates, interruption, rejection, edit, and stale bindings 
 Purpose: show a candidate reviewer when live prose still names a design row the
 candidate removed, computed from that candidate. This contract is evidence
 only. The correction is the prose-correction operation of IPPT-18
-([`docs/implementation-plans/2-candidate-prose-correction.md`](docs/implementation-plans/2-candidate-prose-correction.md));
+([`docs/implementation-plans/archive/2-candidate-prose-correction.md`](docs/implementation-plans/archive/2-candidate-prose-correction.md));
 the model-judged narrative review is BACKLOG #435; the response-basis check is
 BACKLOG #437. The IPPT-18 correction operation ships as
 `plan_tool/roadmap_candidate.py:CandidateCorrectProse`. The check is
@@ -1539,7 +1539,9 @@ grows to include added rows by these rules, and only these:
 
 Every relation an added row owns must also end at a reached row. A group of
 added rows that only cite each other is not reached, in any artifact; one member
-grounded by a rule above grounds the rest of the group. An incoming relation
+grounded by a rule above grounds the rest of the group. A batch-added row may
+cite itself as an exact typed endpoint, but that self-reference alone does not
+make the row reached. An incoming relation
 from another *added* row never grounds a row by itself (the owner must be
 reached first through a rule above). Single-feedback candidates cannot cite an
 added row at all, so only the outgoing-to-predecessor rule applies to them.

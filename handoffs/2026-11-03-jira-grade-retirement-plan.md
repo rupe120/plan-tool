@@ -4,7 +4,7 @@
 | --- | --- |
 | Work | BACKLOG #308 / IPPT-17; retire legacy Jira-grade detail inputs and selectors |
 | Implementation branch | `IPPT-17-retire-jira-grade`, based on plan PR #159's merge `2b6292993` |
-| Plan | [Retire Jira Grade Detail](../docs/implementation-plans/2-retire-jira-grade-detail.md), eight steps, all detailed |
+| Plan | [Retire Jira Grade Detail](../docs/implementation-plans/archive/2-retire-jira-grade-detail.md), eight steps, all detailed |
 | Plan-design audit snapshot | `09596f729`; report/checkpoint commit `de15e59a8` |
 | Plan-design result | Clean, confirmed coverage, current revision, detail stage, zero findings |
 | Next action | Review code PR #160 and plan-status PR #161; merge code first |
@@ -73,9 +73,9 @@ Jira-grade evidence cannot certify the remaining gate.
 Sweep 1 audits all seven code steps against `9459459bf`, saves every report,
 and skips explicit non-code step 8. It runs with `--all --no-walk --no-reuse
 -y`, so findings are read and judged before application. Reports span
-[`20261104-040546-run-reconcile.json`](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261104-040546-run-reconcile.json)
+[`20261104-040546-run-reconcile.json`](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261104-040546-run-reconcile.json)
 through
-[`20261104-040950-run-reconcile.json`](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261104-040950-run-reconcile.json).
+[`20261104-040950-run-reconcile.json`](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261104-040950-run-reconcile.json).
 Steps 1, 2, 3, 6, and 7 are clean; steps 4 and 5 carry the findings below.
 
 | Finding | Property, evidence, and disposition |
@@ -157,10 +157,10 @@ stdin. Detail authoring uses `--commit -y` without iteration.
 
 | Snapshot | Model and coverage | Result and disposition |
 | --- | --- | --- |
-| [Bare audit](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261029-192028-completeness.md) | `gpt-5.6-terra`; 0 of 8 details | Clean, confirmed/current. Completeness apply remains withheld at bare stage; no conceptual findings need application. |
-| [Detail command's audit tail](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261029-193426-completeness.md) | `gpt-5.6-terra`; 8 of 8 details | A dotted-method citation does not fit the anchor checker, and live docs are missing from the sweep. `41c5110e9` corrects the citation and extends the existing docs responsibility. |
-| [Detail re-audit](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261104-013137-completeness.md) | `gpt-5.6-terra`; 8 of 8 details | Confirmed/current advisory-only result: active seed and project lessons also carry stale guidance. `62b433490` adds those sources to the same final step. |
-| [Final detail audit](../docs/implementation-plans/plan-details/retire-jira-grade-detail/reports/20261104-013523-completeness.md) | `gpt-6.1-sol`; 8 of 8 details | Clean, confirmed/current, zero correctness and completeness findings. |
+| [Bare audit](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261029-192028-completeness.md) | `gpt-5.6-terra`; 0 of 8 details | Clean, confirmed/current. Completeness apply remains withheld at bare stage; no conceptual findings need application. |
+| [Detail command's audit tail](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261029-193426-completeness.md) | `gpt-5.6-terra`; 8 of 8 details | A dotted-method citation does not fit the anchor checker, and live docs are missing from the sweep. `41c5110e9` corrects the citation and extends the existing docs responsibility. |
+| [Detail re-audit](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261104-013137-completeness.md) | `gpt-5.6-terra`; 8 of 8 details | Confirmed/current advisory-only result: active seed and project lessons also carry stale guidance. `62b433490` adds those sources to the same final step. |
+| [Final detail audit](../docs/implementation-plans/archive/plan-details/retire-jira-grade-detail/reports/20261104-013523-completeness.md) | `gpt-6.1-sol`; 8 of 8 details | Clean, confirmed/current, zero correctness and completeness findings. |
 
 The final command is:
 

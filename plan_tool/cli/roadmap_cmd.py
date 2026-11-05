@@ -977,7 +977,7 @@ def _cmd_roadmap_structural_candidate_decision(
     writes nothing; with it, the library compares the digest under the writer guard before sealing.
     Edit and reject print the same stack first, take no confirm, and reject adds what it drops; an edit
     then prints its stored replacement's stack.
-    See docs/implementation-plans/2-roadmap-stack-aware-approval.md § "Architecture" (Digest).
+    See docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md § "Architecture" (Digest).
     """
     candidate_id = _option_occurrences(args, "decide_candidate")[-1]
     decision = _option_occurrences(args, "candidate_decision")[-1]

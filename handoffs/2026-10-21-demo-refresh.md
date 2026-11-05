@@ -20,7 +20,7 @@ previous staged contents; local fixture tips below are not approved replacements
 
 ## Current plan pickup: use the plan-tool skill
 
-[Teach demos and examples through the plan-tool skill](../docs/implementation-plans/2-skill-led-demo-examples.md)
+[Teach demos and examples through the plan-tool skill](../docs/implementation-plans/archive/2-skill-led-demo-examples.md)
 provides the maintained walkthroughs and learning entry points. All four steps
 are done. The launcher owns plan status and the post-flight checks. Do not
 re-author the seed, restart the conversion or repeat the completed rehearsal
@@ -58,9 +58,9 @@ not a consuming-repository dark-mode rehearsal.
 
 | Snapshot | Coverage and retained conclusion | Report |
 | --- | --- | --- |
-| Bare | 0 of 4; clean, confirmed; detail/completeness apply withheld | [23:38 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-233834-completeness.md) |
-| Initial detailed | 4 of 4; clean, confirmed; superseded by user-review amendment | [23:44 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234419-completeness.md) |
-| Amended detailed | 4 of 4; clean, confirmed; zero blocking/deferred findings | [23:47 report](../docs/implementation-plans/plan-details/skill-led-demo-examples/reports/20261021-234705-completeness.md) |
+| Bare | 0 of 4; clean, confirmed; detail/completeness apply withheld | [23:38 report](../docs/implementation-plans/archive/plan-details/skill-led-demo-examples/reports/20261021-233834-completeness.md) |
+| Initial detailed | 4 of 4; clean, confirmed; superseded by user-review amendment | [23:44 report](../docs/implementation-plans/archive/plan-details/skill-led-demo-examples/reports/20261021-234419-completeness.md) |
+| Amended detailed | 4 of 4; clean, confirmed; zero blocking/deferred findings | [23:47 report](../docs/implementation-plans/archive/plan-details/skill-led-demo-examples/reports/20261021-234705-completeness.md) |
 
 The original authoring handoff records 14,698 passed and 66 skipped in 62.83s.
 That dated result does not replace the launcher's current post-flight result or

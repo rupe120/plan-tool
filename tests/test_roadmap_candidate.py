@@ -2708,6 +2708,29 @@ def _materialize_batch(operations: list[dict], monkeypatch: pytest.MonkeyPatch):
     )
 
 
+@pytest.mark.parametrize("grounding", ("outgoing", "incoming", "none"))
+@pytest.mark.parametrize("reverse_operations", (False, True))
+def test_batch_self_reference_resolves_but_cannot_ground_its_own_added_row(
+    monkeypatch: pytest.MonkeyPatch, grounding: str, reverse_operations: bool,
+) -> None:
+    fields = [{"name": "parent", "type": "reference", "entity_id": "entity-tree"}]
+    if grounding == "outgoing":
+        fields.append({"name": "order", "type": "reference", "entity_id": "entity-order"})
+    operations = [_add_entity("entity-tree", fields, "review-order")]
+    if grounding == "incoming":
+        operations.append(_order_owned_by("entity-tree", "review-order"))
+    result = _materialize_batch(operations[::-1] if reverse_operations else operations, monkeypatch)
+
+    if grounding == "none":
+        assert result.batch_candidate is None
+        assert result.refusal is not None
+        assert result.refusal.reason == "unauthorized-addition"
+        assert "requires a reached context anchor" in result.refusal.detail
+    else:
+        assert result.refusal is None
+        assert result.batch_candidate is not None
+
+
 @pytest.mark.parametrize("reverse_operations", (False, True))
 def test_batch_candidate_reached_existing_owner_anchors_an_added_value_only_entity(
     monkeypatch: pytest.MonkeyPatch, reverse_operations: bool
