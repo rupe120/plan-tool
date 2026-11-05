@@ -1,11 +1,12 @@
 # Cleanup for focus and stability
 
-BACKLOG #376 and the report/citation fixes in PR #165 are shipped. The user
+BACKLOG #376, the report/citation fixes in PR #165, and the self-reference fix
+in PR #166 are shipped. The user
 defers full-suite stability work; continue from the live BUG queue.
 
 | Item | Current state |
 | --- | --- |
-| Verified baseline | `origin/main` at `cf303fe29`, fetched 2026-11-04 |
+| Verified baseline | `origin/main` at `949ce72e3`, fetched 2026-11-04 |
 | Retirement plan | [PR #162](https://bitbucket.org/protagona/plan-tool/pull-requests/162), merged |
 | Retirement implementation | [PR #163](https://bitbucket.org/protagona/plan-tool/pull-requests/163), merged before the plan-status PR |
 | Plan status and evidence | [PR #164](https://bitbucket.org/protagona/plan-tool/pull-requests/164), merged; six steps done |
@@ -26,10 +27,11 @@ plan or fold them into the shipped retirement.
 
 | Priority | Backlog work | Pickup route |
 | --- | --- | --- |
-| Complete locally | Duplicated conceptual-correctness findings | Embedded checkpoint and final reports render conceptual correctness once; standalone grouped output retains the findings. See validation below. |
-| Complete locally | Valid class-method citations reported missing | Direct normal, private, and async methods resolve; registry field validation stays authoritative. Nested functions retain a separate backlog entry. |
+| Merged in PR #165 | Duplicated conceptual-correctness findings | Embedded checkpoint and final reports render conceptual correctness once; standalone grouped output retains the findings. See validation below. |
+| Merged in PR #165 | Valid class-method citations reported missing | Direct normal, private, and async methods resolve; registry field validation stays authoritative. Nested functions retain a separate backlog entry. |
 | Deferred by user | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | No failure reproduces in the current environment. Investigation evidence is committed at `fd07b7734` on `investigate/full-suite-stability`; no initialization or timeout change is selected. |
-| Complete locally | Same-batch added row self-reference | Endpoint lookup accepts exact typed self-references; the row still needs independent grounding in reached predecessor context. |
+| Merged in PR #166 | Same-batch added row self-reference | Endpoint lookup accepts exact typed self-references; the row still needs independent grounding in reached predecessor context. |
+| Complete locally | Feature-container unknown-field diagnostics | Feature entries list Feature keys and name the correct container; plan/step diagnostics retain their behavior. |
 
 Read each current `BUG_BACKLOG.md` entry before editing. Search by identifier
 and vocabulary, verify reported bugs against existing tests, fix the invariant
@@ -131,3 +133,30 @@ Temporarily marking every added row reached makes both self-only cases fail;
 the source is restored immediately, then all 189 candidate tests pass again.
 `git diff --check` passes. Transient evidence uses
 `/private/tmp/same-batch-self-reference.*`.
+
+## Feature-container diagnostics
+
+The ready direct BUG item reproduces through `parse_plan_text` followed by
+`format_validation_errors`: extra `description`, `depends_on`, `steps`, and typo
+keys in `features[0]` are rejected but called plan-level fields. All four new
+cases fail against the original formatter.
+
+Pre-edit identifier searches cover `_explain_extra_field`, its formatter and
+callers, `Feature.model_fields`, and feature error locations. Vocabulary
+searches cover unknown fields, allowed fields, and placement hints across
+parser code, mirrored tests, and format/reference documentation. One shared
+formatter owns the defect; there are no separate caller implementations.
+
+The bounded correction recognizes a feature-entry location
+`("features", index, field)` and lists the actual `Feature` keys. Validation,
+structured errors, plan/step messages, missing feature-title messages, and step
+alias hints retain their contracts. Regression tests compare the exact allowed
+key list and verify that formatting leaves the structured errors unchanged.
+The focused parser suite passes all 473 tests. The code review finds no
+actionable issues and independently passes all 473 parser tests. Full regression
+validation passes 14,726 tests with 67 skipped in 76.49 seconds;
+`git diff --check` passes. The format doc and changelog include feature entries;
+the resolved bug entry is removed.
+
+Branch: `fix/feature-field-diagnostics`. Transient validation and review logs
+use `/private/tmp/feature-field-diagnostics.*`.

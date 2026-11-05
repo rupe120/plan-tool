@@ -492,17 +492,6 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
-### Feature-container unknown fields are mislabeled as plan-level fields
-
-- **Files:** `plan_tool/parser.py:_explain_extra_field` and mirrored tests.
-- **Symptom:** a rejected extra field in a feature registry object, such as `features: [{id: cap, title: X, description: d}]`, is labeled “unknown plan-level field” and lists Plan fields rather than the Feature fields. Validation correctly rejects the input; the container label and allowed-field list are misleading.
-- **Evidence:** step-description diagnostic review 1 probes this input and the existing `features.0.depends_on` case. The helper classifies every non-step location as plan-level at the pre-repair base as well; this is not introduced by the alias diagnostic change.
-- **Outcome / in scope:** identify actual feature containers and list their supported fields while preserving plan/step diagnostics and placement hints.
-- **Out of scope:** accepting new fields, changing feature or step schemas, altering error payloads or exit codes, or normalizing unrelated application errors.
-- **Verification:** real feature-extra-field errors name the feature container and only its valid keys; plan/step extra and missing-field cases retain their correct behavior.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
