@@ -1,12 +1,11 @@
 # Cleanup for focus and stability
 
-BACKLOG #376, the report/citation fixes in PR #165, and the self-reference fix
-in PR #166 are shipped. The user
+BACKLOG #376 and the fixes in PRs #165–167 are shipped. The user
 defers full-suite stability work; continue from the live BUG queue.
 
 | Item | Current state |
 | --- | --- |
-| Verified baseline | `origin/main` at `949ce72e3`, fetched 2026-11-04 |
+| Verified baseline | `origin/main` at `416ebae2f`, fetched 2026-11-04 |
 | Retirement plan | [PR #162](https://bitbucket.org/protagona/plan-tool/pull-requests/162), merged |
 | Retirement implementation | [PR #163](https://bitbucket.org/protagona/plan-tool/pull-requests/163), merged before the plan-status PR |
 | Plan status and evidence | [PR #164](https://bitbucket.org/protagona/plan-tool/pull-requests/164), merged; six steps done |
@@ -31,7 +30,8 @@ plan or fold them into the shipped retirement.
 | Merged in PR #165 | Valid class-method citations reported missing | Direct normal, private, and async methods resolve; registry field validation stays authoritative. Nested functions retain a separate backlog entry. |
 | Deferred by user | Full-suite worker/subprocess and `GateCleanCandidate` forward-reference failures | No failure reproduces in the current environment. Investigation evidence is committed at `fd07b7734` on `investigate/full-suite-stability`; no initialization or timeout change is selected. |
 | Merged in PR #166 | Same-batch added row self-reference | Endpoint lookup accepts exact typed self-references; the row still needs independent grounding in reached predecessor context. |
-| Complete locally | Feature-container unknown-field diagnostics | Feature entries list Feature keys and name the correct container; plan/step diagnostics retain their behavior. |
+| Merged in PR #167 | Feature-container unknown-field diagnostics | Feature entries list Feature keys and name the correct container; plan/step diagnostics retain their behavior. |
+| Complete locally | Jira outputs colliding with absent declared detail paths | Protect both declared and canonical paths for both export destinations before rendering or model invocation. |
 
 Read each current `BUG_BACKLOG.md` entry before editing. Search by identifier
 and vocabulary, verify reported bugs against existing tests, fix the invariant
@@ -204,3 +204,49 @@ final regression evidence after the review correction; it does not establish
 that the separately tracked run-ID collision is fixed. The failed run and its
 scope disposition remain above. No runtime source change follows the clean
 Claude confirmation review.
+
+## Jira declared-detail collision fix, 2026-11-05
+
+Branch `fix/jira-declared-detail-collision` starts at merged PR #167's
+`416ebae2f`. The ready BUG item is the absent custom-detail destination collision
+retained from IPPT-17's retirement reconciliation. It is a bounded direct fix;
+publication, recovery, formats, historical fallback, and target normalization
+retain their contracts.
+
+Defect class: the export preflight reserves only conventional detail paths,
+while capture reads declared `steps[].detail` pointers. Identifier searches
+cover `_all_detail_artifact_paths`, `_capture_target_preflight`, both render and
+publication routes, `step.detail`, and `derive_detail_path`. Vocabulary searches
+cover detail-artifact collisions, declared pointers, custom details, and missing
+paths. One shared set builder supplies both story and handoff checks. The
+format contract in `JIRA_FORMAT.md` is its one detailed restatement.
+
+The fix adds each non-null declared pointer as `repo_root / step.detail` to
+the existing protected set using `_repo_relative_posix`, preserving canonical
+paths and their normalization. Every plan step is considered. Capture preflight
+rejects matching story or handoff outputs before detail capture, rendering, or
+backend invocation.
+
+Four end-to-end regression cases cover story/handoff crossed with markdown/JSON.
+They fail on the original implementation by reaching the forbidden handoff
+renderer. After the fix they raise the collision error and create no output.
+All 247 Jira tests pass. Existing tests preserve canonical and bundle checks,
+noncolliding paired exports, and missing-detail historical fallback for done
+steps. Full suite: **14,730 passed, 67 skipped in 80.62 seconds**.
+`git diff --check` passes. The resolved bug entry is removed; the changelog is
+`changelog.d/jira-declared-detail-collision.md`.
+
+Claude Code uses the personal configuration with `claude-sonnet-5-5` at high
+effort and explicitly invokes `engineering:code-review` in report-only mode.
+It reviews the uncommitted working-tree diff against `416ebae2f`, including the
+changelog, and returns **Approve, no findings**. Its independent validation
+passes 304 Jira/detail-artifact tests. Coverage limits: it does not rerun the
+full suite or reproduce the original failure because its source-substitution
+attempts are sandbox-blocked; the session's actual pre-fix run supplies that
+evidence. Symlinked pointers and empty-string detail pointers receive no new
+end-to-end test. No speculative change follows the review's non-actionable
+truthiness or wording observations.
+
+Transient evidence uses `/private/tmp/jira-declared-detail-collision.*`.
+Stability and run-ID risks remain separate; this green suite does not establish
+that those intermittent defects are fixed.
