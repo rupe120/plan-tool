@@ -6,6 +6,30 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.2.0'></a>
+## 1.2.0 — 2026-11-05
+
+### Added
+
+- The release script offers an explicit `--publish` command to tag a merged release on main, push its tag, and verify the destination. Conflicting tags are refused and failed pushes can be retried.
+
+### Removed
+
+- Retire legacy Jira-grade detail inputs and the `--grade` selectors on `detail`, `jira`, `completeness-audit`, `convergence`, and `gate-status`, plus `run --detail-grade`. Use canonical detail authored by `plan-tool detail` and omit the removed selectors. Legacy compact detail files are not migrated or accepted as inputs; author canonical detail for affected plans. Jira stories and their paired developer handoff retain their output contracts (IPPT-17).
+
+- Remove `completeness-apply`, `direct-run`, and `direct-jira`. Read saved conceptual findings and apply judged edits in the driving session, then re-audit. Use the individual authoring, execution, and Jira export commands in place of the direct pipelines. Existing reports, annotations, sidecars, and run logs remain readable (BACKLOG #376).
+
+### Fixed
+
+- Saved completeness reports show each conceptual-correctness finding once while standalone grouped output retains the findings.
+- Code citations resolve direct class methods, including private and async methods, while preserving registered-contract field validation.
+
+- Invalid fields in plan feature entries name the feature container and list its supported fields instead of plan-level fields.
+
+- Jira exports reject story and handoff destinations that collide with a declared step detail path, even when the detail file is missing.
+
+- Roadmap candidate batches accept a new row’s self-reference when the row is grounded in reached context; a self-reference alone still cannot authorize an addition.
+
 <a id='changelog-1.1.0'></a>
 ## 1.1.0 — 2026-10-22
 
