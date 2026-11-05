@@ -83,14 +83,14 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [Roadmap Structural Feedback Approval handoff — Read the reuse boundary for immutable candidates, promotion, recovery, and seed invalidation.](../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
-- [ROADMAP_FORMAT.md — Read immutable candidate authority, accepted-head selection, and roadmap seed-state rules.](../../../../ROADMAP_FORMAT.md)
-- [ROADMAP_FEEDBACK_FORMAT.md — Read the candidate-review and promotion lifecycle.](../../../../ROADMAP_FEEDBACK_FORMAT.md)
-- [DATA_CONTRACT.md — Read persisted publication and recovery contracts.](../../../../DATA_CONTRACT.md)
-- [plan_tool/roadmap_revision_publish.py — Read writer guards, seed helpers, generation publication, and recovery recognition.](../../../../plan_tool/roadmap_revision_publish.py)
-- [plan_tool/roadmap_version_promotion.py — Read the sole promotion caller that step 5 will update.](../../../../plan_tool/roadmap_version_promotion.py)
-- [plan_tool/roadmap_seed_state.py — Read seed-state validation and invalidation rendering.](../../../../plan_tool/roadmap_seed_state.py)
-- [plan_tool/roadmap_versions.py — Read accepted-head and immutable version storage contracts.](../../../../plan_tool/roadmap_versions.py)
+- [Roadmap Structural Feedback Approval handoff — Read the reuse boundary for immutable candidates, promotion, recovery, and seed invalidation.](../../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
+- [ROADMAP_FORMAT.md — Read immutable candidate authority, accepted-head selection, and roadmap seed-state rules.](../../../../../ROADMAP_FORMAT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — Read the candidate-review and promotion lifecycle.](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [DATA_CONTRACT.md — Read persisted publication and recovery contracts.](../../../../../DATA_CONTRACT.md)
+- [plan_tool/roadmap_revision_publish.py — Read writer guards, seed helpers, generation publication, and recovery recognition.](../../../../../plan_tool/roadmap_revision_publish.py)
+- [plan_tool/roadmap_version_promotion.py — Read the sole promotion caller that step 5 will update.](../../../../../plan_tool/roadmap_version_promotion.py)
+- [plan_tool/roadmap_seed_state.py — Read seed-state validation and invalidation rendering.](../../../../../plan_tool/roadmap_seed_state.py)
+- [plan_tool/roadmap_versions.py — Read accepted-head and immutable version storage contracts.](../../../../../plan_tool/roadmap_versions.py)
 
 ## Applicable guardrails
 

@@ -122,15 +122,15 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [ROADMAP_FORMAT.md — terminal-disposition matrix and roadmap terminal vocabulary](../../../../ROADMAP_FORMAT.md)
+- [ROADMAP_FORMAT.md — terminal-disposition matrix and roadmap terminal vocabulary](../../../../../ROADMAP_FORMAT.md)
 
-- [BACKLOG.md #344 — writer-guard origin and exit-code distinction](../../../../BACKLOG.md)
+- [BACKLOG.md #344 — writer-guard origin and exit-code distinction](../../../../../BACKLOG.md)
 
-- [BACKLOG.md #347 — roadmap text-read exception-family boundary](../../../../BACKLOG.md)
+- [BACKLOG.md #347 — roadmap text-read exception-family boundary](../../../../../BACKLOG.md)
 
-- [BACKLOG.md #348 — roadmap-level terminal status on exception exits](../../../../BACKLOG.md)
+- [BACKLOG.md #348 — roadmap-level terminal status on exception exits](../../../../../BACKLOG.md)
 
-- [BUG_BACKLOG.md — prompt-template failures that must avoid the generic crash path](../../../../BUG_BACKLOG.md)
+- [BUG_BACKLOG.md — prompt-template failures that must avoid the generic crash path](../../../../../BUG_BACKLOG.md)
 
 ## Applicable guardrails
 

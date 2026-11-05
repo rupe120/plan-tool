@@ -103,15 +103,15 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [BUG_BACKLOG.md — Structural candidates cannot satisfy described-row gates for newly added rows](../../../../BUG_BACKLOG.md#structural-candidates-cannot-satisfy-described-row-gates-for-newly-added-rows) — Read the source problem, amendment shape, and prompt requirement.
+- [BUG_BACKLOG.md — Structural candidates cannot satisfy described-row gates for newly added rows](../../../../../BUG_BACKLOG.md#structural-candidates-cannot-satisfy-described-row-gates-for-newly-added-rows) — Read the source problem, amendment shape, and prompt requirement.
 
-- [ROADMAP_FORMAT.md — Roadmap validation rules](../../../../ROADMAP_FORMAT.md) — Read the `undescribed-row` rule and prose-amendment bounds that prompts must not bypass.
+- [ROADMAP_FORMAT.md — Roadmap validation rules](../../../../../ROADMAP_FORMAT.md) — Read the `undescribed-row` rule and prose-amendment bounds that prompts must not bypass.
 
-- [plan_tool/roadmap_candidate.py](../../../../plan_tool/roadmap_candidate.py) — Read the landed candidate operation admission and immutable materialization contract from step 2.
+- [plan_tool/roadmap_candidate.py](../../../../../plan_tool/roadmap_candidate.py) — Read the landed candidate operation admission and immutable materialization contract from step 2.
 
-- [plan_tool/roadmap_candidate_run.py](../../../../plan_tool/roadmap_candidate_run.py) — Read `render_candidate_delta_prompt()`, `_render_batch_operation_shapes()`, and batch publication ownership.
+- [plan_tool/roadmap_candidate_run.py](../../../../../plan_tool/roadmap_candidate_run.py) — Read `render_candidate_delta_prompt()`, `_render_batch_operation_shapes()`, and batch publication ownership.
 
-- [plan_tool/roadmap_candidate_review.py](../../../../plan_tool/roadmap_candidate_review.py) — Read correction invocation and structural replacement publication boundaries.
+- [plan_tool/roadmap_candidate_review.py](../../../../../plan_tool/roadmap_candidate_review.py) — Read correction invocation and structural replacement publication boundaries.
 
 ## Applicable guardrails
 

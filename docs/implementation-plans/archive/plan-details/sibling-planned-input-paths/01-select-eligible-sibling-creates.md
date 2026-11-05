@@ -109,16 +109,16 @@ Every added or changed test must be green before completion. Run the affected ex
 
 ## References
 
-- [Source bug and eligibility contract](../../../../BUG_BACKLOG.md) — Read the entry about Input checks reporting sibling-created paths as missing.
-- [Plan architecture and scope](../../../../docs/implementation-plans/2-sibling-planned-input-paths.md#architecture) — Read the repository and same-roadmap selection requirements.
-- [Manifest reader](../../../../plan_tool/locator.py) — Inspect `load_manifest_plan_paths` and its containment limits.
-- [Source-seed resolution](../../../../plan_tool/review_persistence.py) — Inspect `_resolve_source_seed_path` and `_read_source_seed_bytes` for archive handling.
-- [Tracked seed identity](../../../../plan_tool/roadmap_seed_state.py) — Inspect `locate_tracked_seed` and `TrackedSeedLocation`.
-- [Accepted roadmap reader](../../../../plan_tool/roadmap_versions.py) — Inspect `load_accepted_version` for immutable accepted-head authority.
-- [Roadmap contract](../../../../ROADMAP_FORMAT.md) — Read accepted versions and draft-seed identity.
-- [Anchor validation](../../../../plan_tool/data_contract.py) — Inspect `_code_anchor_resolves` for the unchanged missing-path and existing-symbol boundary.
-- [Architecture](../../../../docs/ARCHITECTURE.md) — Check import direction before adding reader dependencies.
-- [Testing guide](../../../../TESTING.md) — Keep filesystem fixtures isolated and backend calls neutralized.
+- [Source bug and eligibility contract](../../../../../BUG_BACKLOG.md) — Read the entry about Input checks reporting sibling-created paths as missing.
+- [Plan architecture and scope](../../2-sibling-planned-input-paths.md#architecture) — Read the repository and same-roadmap selection requirements.
+- [Manifest reader](../../../../../plan_tool/locator.py) — Inspect `load_manifest_plan_paths` and its containment limits.
+- [Source-seed resolution](../../../../../plan_tool/review_persistence.py) — Inspect `_resolve_source_seed_path` and `_read_source_seed_bytes` for archive handling.
+- [Tracked seed identity](../../../../../plan_tool/roadmap_seed_state.py) — Inspect `locate_tracked_seed` and `TrackedSeedLocation`.
+- [Accepted roadmap reader](../../../../../plan_tool/roadmap_versions.py) — Inspect `load_accepted_version` for immutable accepted-head authority.
+- [Roadmap contract](../../../../../ROADMAP_FORMAT.md) — Read accepted versions and draft-seed identity.
+- [Anchor validation](../../../../../plan_tool/data_contract.py) — Inspect `_code_anchor_resolves` for the unchanged missing-path and existing-symbol boundary.
+- [Architecture](../../../../ARCHITECTURE.md) — Check import direction before adding reader dependencies.
+- [Testing guide](../../../../../TESTING.md) — Keep filesystem fixtures isolated and backend calls neutralized.
 
 ## Applicable guardrails
 

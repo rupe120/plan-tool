@@ -92,10 +92,10 @@ Every listed test in `tests/test_roadmap_revision_run.py` must be green before t
 
 ## References
 
-- [DATA_CONTRACT.md — Read the `RoadmapLocalRevisionAttempt` contract and its redaction boundary.](../../../../DATA_CONTRACT.md)
+- [DATA_CONTRACT.md — Read the `RoadmapLocalRevisionAttempt` contract and its redaction boundary.](../../../../../DATA_CONTRACT.md)
 - [plan_tool/roadmap_revision_run.py — Read `_run_accepted_revision`, `_attempt_result`, and `_gate_rejection_detail` for local failure ordering.](../../../../plan_tool/roadmap_revision_run.py)
-- [plan_tool/run_log.py — Read `RunLogWriter.roadmap_local_revision_attempt` and the shared receipt surface from step 2.](../../../../plan_tool/run_log.py)
-- [BUG_BACKLOG.md — Read the model-backed terminal-failure receipt source issue.](../../../../BUG_BACKLOG.md)
+- [plan_tool/run_log.py — Read `RunLogWriter.roadmap_local_revision_attempt` and the shared receipt surface from step 2.](../../../../../plan_tool/run_log.py)
+- [BUG_BACKLOG.md — Read the model-backed terminal-failure receipt source issue.](../../../../../BUG_BACKLOG.md)
 
 ## Applicable guardrails
 

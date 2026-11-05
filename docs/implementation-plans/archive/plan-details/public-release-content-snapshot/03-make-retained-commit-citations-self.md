@@ -105,9 +105,9 @@ This is a non-code step; use document review and existing checks.
 ## References
 
 - [Plan](../../2-public-release-content-snapshot.md) — Scope and dependencies.
-- [Selection record](../../../evidence/public-release-content-snapshot.md) — Content decisions.
-- [Pickup](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Current decisions and next actions.
-- [Documentation style](../../../reference/documentation-style.md) — Reader-first structure and fact preservation.
+- [Selection record](../../../../evidence/public-release-content-snapshot.md) — Content decisions.
+- [Pickup](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Current decisions and next actions.
+- [Documentation style](../../../../reference/documentation-style.md) — Reader-first structure and fact preservation.
 
 ## Applicable guardrails
 

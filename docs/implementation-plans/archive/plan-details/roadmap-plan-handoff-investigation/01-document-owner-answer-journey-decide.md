@@ -97,14 +97,14 @@ Create `docs/explanations/roadmap-plan-handoff.md` as the reviewed design record
 
 ## References
 
-- [BACKLOG.md #492 — Defines the investigation outcome, scope fence, stage arc, and follow-on ownership.](../../../../BACKLOG.md)
-- [Integration evidence for the roadmap to plan handoff — Supplies the bounded observations and their stated limits.](../../../evidence/integration-roadmap-to-plan-handoff.md)
-- [Roadmap format — Defines immutable accepted-head authority and accepted-version readers.](../../../../ROADMAP_FORMAT.md)
-- [Developer documentation style — Defines the scanning structure for this explanation record.](../../../reference/documentation-style.md)
-- [plan_tool/create.py — Inspect `_project_context_block` and the existing create-side context path.](../../../../plan_tool/create.py)
-- [plan_tool/detail.py — Inspect `render_detail_prompt` and its current authoring inputs.](../../../../plan_tool/detail.py)
-- [plan_tool/review.py — Inspect `render_plan_audit_prompt` and detail-bundle grounding.](../../../../plan_tool/review.py)
-- [plan_tool/cli/inspect.py — Inspect `cmd_status` and `_print_status` before proposing any status follow-on.](../../../../plan_tool/cli/inspect.py)
+- [BACKLOG.md #492 — Defines the investigation outcome, scope fence, stage arc, and follow-on ownership.](../../../../../BACKLOG.md)
+- [Integration evidence for the roadmap to plan handoff — Supplies the bounded observations and their stated limits.](../../../../evidence/integration-roadmap-to-plan-handoff.md)
+- [Roadmap format — Defines immutable accepted-head authority and accepted-version readers.](../../../../../ROADMAP_FORMAT.md)
+- [Developer documentation style — Defines the scanning structure for this explanation record.](../../../../reference/documentation-style.md)
+- [plan_tool/create.py — Inspect `_project_context_block` and the existing create-side context path.](../../../../../plan_tool/create.py)
+- [plan_tool/detail.py — Inspect `render_detail_prompt` and its current authoring inputs.](../../../../../plan_tool/detail.py)
+- [plan_tool/review.py — Inspect `render_plan_audit_prompt` and detail-bundle grounding.](../../../../../plan_tool/review.py)
+- [plan_tool/cli/inspect.py — Inspect `cmd_status` and `_print_status` before proposing any status follow-on.](../../../../../plan_tool/cli/inspect.py)
 
 ## Applicable guardrails
 

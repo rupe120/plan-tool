@@ -111,12 +111,12 @@ No test files are created or edited. This is a non-code step; `plan_tool/launche
 ## References
 
 - [Public Release Content Snapshot](../../2-public-release-content-snapshot.md) — Read the architecture, testing contract and scope boundary for local snapshot verification.
-- [Release preparation handoff](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read “Current decisions” and “Next actions” for the preparation boundary.
-- [Public-release coordination arc](../../backlog-arcs/backlog-arc-public-release.md) — Distinguish this content check from distribution and onboarding work.
-- [Testing guide](../../../../TESTING.md) — Use the supported test commands and existing isolation rules.
-- [Sanitized-example provenance](../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Check the distinction between historical input identity and sanitized example identity.
-- [Context-budget evidence](../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Read the limits on replaying historical measurements.
-- [Developer documentation style](../../../reference/documentation-style.md) — Keep the evidence record organized around results, exceptions and next actions.
+- [Release preparation handoff](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read “Current decisions” and “Next actions” for the preparation boundary.
+- [Public-release coordination arc](../../../backlog-arcs/backlog-arc-public-release.md) — Distinguish this content check from distribution and onboarding work.
+- [Testing guide](../../../../../TESTING.md) — Use the supported test commands and existing isolation rules.
+- [Sanitized-example provenance](../../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Check the distinction between historical input identity and sanitized example identity.
+- [Context-budget evidence](../../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Read the limits on replaying historical measurements.
+- [Developer documentation style](../../../../reference/documentation-style.md) — Keep the evidence record organized around results, exceptions and next actions.
 
 ## Applicable guardrails
 

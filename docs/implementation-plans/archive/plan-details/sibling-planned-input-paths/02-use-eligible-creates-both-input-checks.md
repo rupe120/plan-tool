@@ -93,13 +93,13 @@ Run the affected suites with `uv run pytest tests/test_review.py tests/test_data
 
 ## References
 
-- [Source backlog — Read the sibling planned-path entry for the eligibility and non-downgrade contract.](../../../../BUG_BACKLOG.md)
-- [Input consumers — Locate `_planned_paths`, both Input-check arms, their combined wrapper, and `INPUT_CONTRACT_DETECTORS`.](../../../../plan_tool/review.py)
-- [Shared anchor validator — Read `check_input_contract_references` and `_code_anchor_resolves` for the absent-path boundary.](../../../../plan_tool/data_contract.py)
-- [Consumer tests — Read `_write_input_contract_plan` and the Input-check recomposition coverage for existing fixture and dispatch conventions.](../../../../tests/test_review.py)
-- [Validator regressions — Read the planned-path acceptance and existing-file stale-symbol tests together.](../../../../tests/test_data_contract.py)
-- [Data contract — Consult the owning reference for Input-contract finding structures.](../../../../DATA_CONTRACT.md)
-- [Testing guide — Follow hermetic test and backend-neutralization requirements.](../../../../TESTING.md)
+- [Source backlog — Read the sibling planned-path entry for the eligibility and non-downgrade contract.](../../../../../BUG_BACKLOG.md)
+- [Input consumers — Locate `_planned_paths`, both Input-check arms, their combined wrapper, and `INPUT_CONTRACT_DETECTORS`.](../../../../../plan_tool/review.py)
+- [Shared anchor validator — Read `check_input_contract_references` and `_code_anchor_resolves` for the absent-path boundary.](../../../../../plan_tool/data_contract.py)
+- [Consumer tests — Read `_write_input_contract_plan` and the Input-check recomposition coverage for existing fixture and dispatch conventions.](../../../../../tests/test_review.py)
+- [Validator regressions — Read the planned-path acceptance and existing-file stale-symbol tests together.](../../../../../tests/test_data_contract.py)
+- [Data contract — Consult the owning reference for Input-contract finding structures.](../../../../../DATA_CONTRACT.md)
+- [Testing guide — Follow hermetic test and backend-neutralization requirements.](../../../../../TESTING.md)
 
 ## Applicable guardrails
 

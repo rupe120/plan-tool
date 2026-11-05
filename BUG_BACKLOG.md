@@ -213,7 +213,7 @@ Durable re-open conditions for retired items are recorded in
   completeness audit prompts, which carry no roadmap resolution.
 - **Symptom:** promotion writes only `.roadmap-versions/accepted-head.json`
   and does not refresh the top-level `0N-*.md` files. That is by design
-  (`docs/implementation-plans/2-roadmap-versioned-from-birth.md`,
+  (`docs/implementation-plans/archive/2-roadmap-versioned-from-birth.md`,
   Architecture: top-level files beside an accepted head "are inert leftovers
   that no command reads or flags"). No command reads them, but seed authors
   and audit models do. The seed prompt makes every draft seed cite bare
@@ -398,11 +398,18 @@ Durable re-open conditions for retired items are recorded in
   5-second subprocess wait limit; the test passes alone.
 - **Fix:** widen or poll the subprocess wait while preserving the assertion
   that a reader guard blocks a writer for the same roadmap.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+- **Route:** `direct` · **Readiness:** `evidence-gated` · **Tier:** `experienced`.
 - **Verification:** run the focused test and the loaded parallel suite; retain
   the guard assertion rather than accepting a timeout as success.
 - **Exclusions:** the retired direct-pipeline test has no surviving consumer;
   do not restore it or change production reader/writer policy.
+- **Disposition:** deferred by user direction, 2026-11-04; no timeout or guard
+  policy change is selected. Reopen on a reproduced failure, retaining the
+  exact expired wait, child exit codes, traceback, and worker sequence.
+- **Reproduction evidence (2026-11-04):** at `9364cc7d0`, Python 3.14.7 /
+  Pydantic 2.13.3, version-promotion and revision-publication tests pass together
+  (136 tests). Ten guard repetitions alongside the normal parallel full suite
+  pass; the suite passes 14,716 tests with 67 skipped. This does not fix the flake.
 - **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
 
 ### `_code_anchor_resolves` does not resolve function-local function citations
@@ -1334,6 +1341,17 @@ not include them.
   that with a test that runs the failing order in a fresh interpreter.
 - **Approach:** direct once the failing order is reproduced; an
   investigation until then.
+- **Disposition:** deferred by user direction, 2026-11-04; no initialization
+  change is selected. Reopen with the exact failing node/traceback, preceding
+  worker test sequence, and interpreter/dependency versions, then reproduce
+  that sequence in a fresh interpreter before selecting a remedy.
+- **Reproduction evidence (2026-11-04):** at `9364cc7d0`, Python 3.14.7 /
+  Pydantic 2.13.3, the two affected modules pass together (136 tests) and the full
+  parallel suite passes 14,716 tests with 67 skipped. Six cold import permutations
+  of `roadmap_candidate`, `roadmap`, and `roadmap_candidate_run` let both single
+  and batch candidate models reach ordinary required-field validation. The
+  single model's initially incomplete schema flag alone is not a reproduction:
+  its first validation completes normally. No failing order is established.
 - **Origin:** 2026-09-14, full-suite validation of the docs restructure. It
   was first noted on 2026-09-12 as "known suite instability" in the roadmap
   brief-source review handoff, but never filed.

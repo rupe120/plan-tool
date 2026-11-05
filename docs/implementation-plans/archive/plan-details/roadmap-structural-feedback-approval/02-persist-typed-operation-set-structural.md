@@ -91,13 +91,13 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [Roadmap Structural Feedback Approval handoff — approved work order and prerequisite boundaries](../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
-- [ROADMAP_FORMAT.md — immutable candidate authority and structural-route constraints](../../../../ROADMAP_FORMAT.md)
-- [DATA_CONTRACT.md — persisted candidate, review, and publication contracts](../../../../DATA_CONTRACT.md)
-- [ROADMAP_FEEDBACK_FORMAT.md — mutable ledger ownership and feedback lifecycle](../../../../ROADMAP_FEEDBACK_FORMAT.md)
-- [plan_tool/roadmap_candidate.py — validated operations and complete candidate materialization](../../../../plan_tool/roadmap_candidate.py)
-- [plan_tool/roadmap_candidate_run.py — candidate evidence, batch storage, and atomic state checks](../../../../plan_tool/roadmap_candidate_run.py)
-- [plan_tool/roadmap_revision_publish.py — journaled immutable generation publication](../../../../plan_tool/roadmap_revision_publish.py)
+- [Roadmap Structural Feedback Approval handoff — approved work order and prerequisite boundaries](../../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
+- [ROADMAP_FORMAT.md — immutable candidate authority and structural-route constraints](../../../../../ROADMAP_FORMAT.md)
+- [DATA_CONTRACT.md — persisted candidate, review, and publication contracts](../../../../../DATA_CONTRACT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — mutable ledger ownership and feedback lifecycle](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [plan_tool/roadmap_candidate.py — validated operations and complete candidate materialization](../../../../../plan_tool/roadmap_candidate.py)
+- [plan_tool/roadmap_candidate_run.py — candidate evidence, batch storage, and atomic state checks](../../../../../plan_tool/roadmap_candidate_run.py)
+- [plan_tool/roadmap_revision_publish.py — journaled immutable generation publication](../../../../../plan_tool/roadmap_revision_publish.py)
 
 ## Applicable guardrails
 

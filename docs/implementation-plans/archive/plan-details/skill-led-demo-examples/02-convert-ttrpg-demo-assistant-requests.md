@@ -102,13 +102,13 @@ This is a non-code step. The test-authoring gate keys on `change_type` and does 
 
 ## References
 
-- [ROADMAP_FORMAT.md](../../../../ROADMAP_FORMAT.md) — Read accepted-head authority, settled-decision limits and immutable artifact rules.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — Read ledger ownership, candidate review and settlement confirmation.
-- [docs/how-to/roadmap.md](../../../how-to/roadmap.md) — Use the existing inspection, settlement, feedback and seed procedures.
-- [integrations/shared/DIRECTIVES.md](../../../../integrations/shared/DIRECTIVES.md) — Follow the canonical assistant-driven authoring, audit and monitoring rules.
-- [docs/how-to/pipeline/audit.md](../../../how-to/pipeline/audit.md) — Interpret audit coverage, qualification and incomplete results.
-- [handoffs/2026-10-21-demo-refresh.md](../../../../handoffs/2026-10-21-demo-refresh.md) — Preserve preparation evidence and publication boundaries.
-- [docs/reference/documentation-style.md](../../../reference/documentation-style.md) — Review task-first structure and scanning clarity.
+- [ROADMAP_FORMAT.md](../../../../../ROADMAP_FORMAT.md) — Read accepted-head authority, settled-decision limits and immutable artifact rules.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — Read ledger ownership, candidate review and settlement confirmation.
+- [docs/how-to/roadmap.md](../../../../how-to/roadmap.md) — Use the existing inspection, settlement, feedback and seed procedures.
+- [integrations/shared/DIRECTIVES.md](../../../../../integrations/shared/DIRECTIVES.md) — Follow the canonical assistant-driven authoring, audit and monitoring rules.
+- [docs/how-to/pipeline/audit.md](../../../../how-to/pipeline/audit.md) — Interpret audit coverage, qualification and incomplete results.
+- [handoffs/2026-10-21-demo-refresh.md](../../../../../handoffs/2026-10-21-demo-refresh.md) — Preserve preparation evidence and publication boundaries.
+- [docs/reference/documentation-style.md](../../../../reference/documentation-style.md) — Review task-first structure and scanning clarity.
 
 ## Applicable guardrails
 

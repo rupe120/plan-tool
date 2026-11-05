@@ -276,11 +276,11 @@ Library cases go in `tests/test_roadmap_candidate_review.py`. CLI cases go in `t
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Architecture" owner decision 3 and § "Design decisions" (Digest) define the two invocations and the recompute under the guard.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/04-build-whole-stack-view-its-digest-its.md](04-build-whole-stack-view-its-digest-its.md) — the view, digest, and printout this step wires.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/02-make-review-side-guards-stack-aware.md](02-make-review-side-guards-stack-aware.md) — the stack-aware guards and CLI precheck this step keeps.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
-- [plan_tool/roadmap_candidate_review.py](../../../../plan_tool/roadmap_candidate_review.py) — `decide_structural_candidate` and `_new_structural_approval_seal`.
-- [plan_tool/cli/roadmap_cmd.py](../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision` and `_candidate_lifecycle_has_conflict`.
-- [plan_tool/roadmap_decision_settlement_run.py](../../../../plan_tool/roadmap_decision_settlement_run.py) — `_STATUS_BY_OUTCOME`, the confirmation exit precedent.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
+- [plan_tool/roadmap_candidate_review.py](../../../../../plan_tool/roadmap_candidate_review.py) — `decide_structural_candidate` and `_new_structural_approval_seal`.
+- [plan_tool/cli/roadmap_cmd.py](../../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision` and `_candidate_lifecycle_has_conflict`.
+- [plan_tool/roadmap_decision_settlement_run.py](../../../../../plan_tool/roadmap_decision_settlement_run.py) — `_STATUS_BY_OUTCOME`, the confirmation exit precedent.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
 
 ## Applicable guardrails
 

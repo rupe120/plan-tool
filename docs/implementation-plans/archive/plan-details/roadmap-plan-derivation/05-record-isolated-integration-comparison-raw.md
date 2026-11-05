@@ -98,12 +98,12 @@ No test file changes belong to this step. `plan_tool/launcher.py:_step_requires_
 
 ## References
 
-- [Benchmark evidence](../../../evidence/roadmap-plan-set-benchmark.md) — Read “Reproduction identity,” “Witnessed failures to retain,” and “Comparison contract” for the pinned inputs and comparison limits.
-- [Roadmap contract](../../../../ROADMAP_FORMAT.md) — Follow accepted-version authority and existing mapping dispositions.
-- [Roadmap workflow](../../../how-to/roadmap.md) — Use the existing staged generation, seed handoffs, and review routes.
-- [Backlog tracking](../../../TRACKING.md) — Apply “The life of an item” and “Scope contract and anti-creep” when reconciling #496.
-- [Layering measurement](../../../evidence/roadmap-layering-measurement.md) — Read “How to read this result” before drawing conclusions from a limited comparison.
-- [Documentation style](../../../reference/documentation-style.md) — Structure provenance and comparison tables for review.
+- [Benchmark evidence](../../../../evidence/roadmap-plan-set-benchmark.md) — Read “Reproduction identity,” “Witnessed failures to retain,” and “Comparison contract” for the pinned inputs and comparison limits.
+- [Roadmap contract](../../../../../ROADMAP_FORMAT.md) — Follow accepted-version authority and existing mapping dispositions.
+- [Roadmap workflow](../../../../how-to/roadmap.md) — Use the existing staged generation, seed handoffs, and review routes.
+- [Backlog tracking](../../../../TRACKING.md) — Apply “The life of an item” and “Scope contract and anti-creep” when reconciling #496.
+- [Layering measurement](../../../../evidence/roadmap-layering-measurement.md) — Read “How to read this result” before drawing conclusions from a limited comparison.
+- [Documentation style](../../../../reference/documentation-style.md) — Structure provenance and comparison tables for review.
 
 ## Applicable guardrails
 

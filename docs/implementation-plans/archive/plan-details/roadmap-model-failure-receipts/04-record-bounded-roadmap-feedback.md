@@ -89,11 +89,11 @@ Add or update the focused cases in `tests/test_roadmap.py` beside `TestAttemptFa
 
 ## References
 
-- [BUG_BACKLOG.md — Read the model-failure receipt problem statement and roadmap evidence scope.](../../../../BUG_BACKLOG.md)
-- [BACKLOG.md #217 — Read the roadmap rejected-response evidence and provenance context.](../../../../BACKLOG.md)
-- [DATA_CONTRACT.md — Read the `AttemptFailed`, `GateViolations`, and shared failure-receipt event contracts.](../../../../DATA_CONTRACT.md)
-- [plan_tool/roadmap.py:_run_bounded_stage_feedback — Read the bounded feedback retry loop and accepted candidate path.](../../../../plan_tool/roadmap.py)
-- [plan_tool/roadmap.py:_run_roadmap — Read the bounded-feedback publication path that remains unchanged.](../../../../plan_tool/roadmap.py)
+- [BUG_BACKLOG.md — Read the model-failure receipt problem statement and roadmap evidence scope.](../../../../../BUG_BACKLOG.md)
+- [BACKLOG.md #217 — Read the roadmap rejected-response evidence and provenance context.](../../../../../BACKLOG.md)
+- [DATA_CONTRACT.md — Read the `AttemptFailed`, `GateViolations`, and shared failure-receipt event contracts.](../../../../../DATA_CONTRACT.md)
+- [plan_tool/roadmap.py:_run_bounded_stage_feedback — Read the bounded feedback retry loop and accepted candidate path.](../../../../../plan_tool/roadmap.py)
+- [plan_tool/roadmap.py:_run_roadmap — Read the bounded-feedback publication path that remains unchanged.](../../../../../plan_tool/roadmap.py)
 - [plan_tool/roadmap_revision_run.py:run_local_feedback_revision — Read the separate local revision producer that stays outside this step.](../../../../plan_tool/roadmap_revision_run.py)
 
 ## Applicable guardrails

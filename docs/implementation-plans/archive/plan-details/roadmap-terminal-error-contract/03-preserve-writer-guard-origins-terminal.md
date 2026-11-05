@@ -95,13 +95,13 @@ Preserve whether a roadmap writer-guard failure happens before the primary run s
 
 ## References
 
-- [BACKLOG.md #344](../../../../BACKLOG.md) — Read the tracked preflight-versus-mid-run writer-guard exit-code problem.
+- [BACKLOG.md #344](../../../../../BACKLOG.md) — Read the tracked preflight-versus-mid-run writer-guard exit-code problem.
 
-- [ROADMAP_FORMAT.md](../../../../ROADMAP_FORMAT.md) — Read Step 1’s terminal-disposition matrix before selecting classifications.
+- [ROADMAP_FORMAT.md](../../../../../ROADMAP_FORMAT.md) — Read Step 1’s terminal-disposition matrix before selecting classifications.
 
-- [plan_tool/roadmap.py](../../../../plan_tool/roadmap.py) — Read `run_roadmap`, `_run_roadmap`, and `_roadmap_command_lifecycle`.
+- [plan_tool/roadmap.py](../../../../../plan_tool/roadmap.py) — Read `run_roadmap`, `_run_roadmap`, and `_roadmap_command_lifecycle`.
 
-- [plan_tool/cli/roadmap_cmd.py](../../../../plan_tool/cli/roadmap_cmd.py) — Read `cmd_roadmap`’s primary-run exception and return-code boundary.
+- [plan_tool/cli/roadmap_cmd.py](../../../../../plan_tool/cli/roadmap_cmd.py) — Read `cmd_roadmap`’s primary-run exception and return-code boundary.
 
 ## Applicable guardrails
 

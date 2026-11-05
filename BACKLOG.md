@@ -11525,7 +11525,7 @@ longer describes current work. It is retained only as dated carve-out context.
   member of the current processing pair (the accepted root or the active
   candidate), and *stale* once supersession, rejection, discard, or an
   accepted-head change leaves it outside that pair
-  (`docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md`,
+  (`docs/implementation-plans/archive/2-roadmap-versioned-feedback-revision-chain.md`,
   `ROADMAP_FEEDBACK_FORMAT.md`). Every proposal now records the candidate that
   produced it (`ProposalFields.candidate_version_id`), but nothing compares
   that id with the current root and active pointer, so no surface says whether
@@ -11632,7 +11632,7 @@ longer describes current work. It is retained only as dated carve-out context.
 **#427 — `roadmap-versioned-feedback-revision-chain` step details cite 96 test names that do not exist**
 
 - **What:** the eleven step detail files under
-  `docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/`
+  `docs/implementation-plans/archive/plan-details/roadmap-versioned-feedback-revision-chain.3/`
   name tests in backticks. Machine-verified 2026-09-23 (method: every backticked
   `test_*` identifier in a detail file, matched against every `def test_*` in
   `tests/**/*.py`): 212 names cited, 116 defined, 96 not defined. Per step
@@ -12585,7 +12585,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Approach:** plan-tool.
 - **Route:** `plan` · **Readiness:** `ready` · **Tier:** `architect`. **Principle:** `write-for-the-human`.
 - **Arc assignment:** `backlog-arc-roadmap`.
-- **Seed:** `plan-seeds/archive/roadmap-stack-layer.replaced.md`; plan `docs/implementation-plans/2-roadmap-stack-layer.md`.
+- **Seed:** `plan-seeds/archive/roadmap-stack-layer.replaced.md`; plan `docs/implementation-plans/archive/2-roadmap-stack-layer.md`.
 - **Origin:** Integration roadmap review, 2026-10-08: the brief's "no AWS account or specific service is fixed yet" left no trace in the accepted roadmap, whose root version (hand-enrolled 2026-09-21) never passed candidate review. Follows the shipped `## Stack` seed section; the Integration HTML review aid is brought up to date after this lands.
 
 ```bash

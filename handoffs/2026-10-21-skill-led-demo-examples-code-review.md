@@ -2,7 +2,7 @@
 
 | Field | Record |
 | --- | --- |
-| Plan | [Teach demos and examples through the plan-tool skill](../docs/implementation-plans/2-skill-led-demo-examples.md) |
+| Plan | [Teach demos and examples through the plan-tool skill](../docs/implementation-plans/archive/2-skill-led-demo-examples.md) |
 | Base | `80dfaa78e8ff95d1528a581e4fb10fba6ecc0b27` |
 | Reviewed implementation snapshot | `81a83f5bb0409e58150c703a0d6add8ef381d133` |
 | Branch | `implement/skill-led-demo-examples` |

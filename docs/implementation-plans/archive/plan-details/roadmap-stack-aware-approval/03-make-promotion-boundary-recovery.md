@@ -224,10 +224,10 @@ New cases:
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Design decisions" (Stack route, Guards), "Guard sites", and Risks define what the boundary and recovery must and must not do.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/01-one-stack-route-derivation-beside.md](01-one-stack-route-derivation-beside.md) — step 1's derivation contract and the masking helper this step's tests reuse.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/02-make-review-side-guards-stack-aware.md](02-make-review-side-guards-stack-aware.md) — step 2's shared guards, their signatures, and the deferral to this step.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
-- [plan_tool/roadmap_version_promotion.py](../../../../plan_tool/roadmap_version_promotion.py) — the candidate-lineage promotion writer and the seed-state member.
-- [plan_tool/roadmap_revision_publish.py](../../../../plan_tool/roadmap_revision_publish.py) — `_selected_promotion_is_structural` and `_is_completed_version_owned_generation`.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
+- [plan_tool/roadmap_version_promotion.py](../../../../../plan_tool/roadmap_version_promotion.py) — the candidate-lineage promotion writer and the seed-state member.
+- [plan_tool/roadmap_revision_publish.py](../../../../../plan_tool/roadmap_revision_publish.py) — `_selected_promotion_is_structural` and `_is_completed_version_owned_generation`.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
 
 ## Applicable guardrails
 

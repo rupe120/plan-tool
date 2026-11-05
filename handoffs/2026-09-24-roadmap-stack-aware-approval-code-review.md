@@ -4,7 +4,7 @@
 
 | Field | Value |
 | --- | --- |
-| Plan | `roadmap-stack-aware-approval` (`docs/implementation-plans/2-roadmap-stack-aware-approval.md`), 8 steps (7 code, step 8 non-code), all green. Source: `BACKLOG.md` #431; Jira `IPPT-9`. |
+| Plan | `roadmap-stack-aware-approval` (`docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md`), 8 steps (7 code, step 8 non-code), all green. Source: `BACKLOG.md` #431; Jira `IPPT-9`. |
 | Branch | `codex/roadmap-stack-aware-approval-seed`, based on `origin/main` at `950365c2` (PR #19 merged). Local only; publishing needs a force-push. |
 | Range | Baseline `aba83968`; run head `f62aad66`; reconcile-code reports committed at `d942827d`. Product code net +378 lines, tests net +3,573. |
 | Checks run | Four bare-plan `completeness-audit --iterate` rounds and one detail-grounded audit (`20260924-235704-completeness.md`), each `no-qualified-current-evidence` at the pass cap; loop stopped by exit 2. Full suite green after every step and at the end: 13,936 passed, 190 skipped. One `reconcile-code --all` sweep (`20260925-014553` through `20260925-015848` `-run-reconcile.json`): 0 critical/high/medium, 1 nit. |

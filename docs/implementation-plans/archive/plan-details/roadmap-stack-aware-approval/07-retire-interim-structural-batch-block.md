@@ -231,14 +231,14 @@ Cases live in the four declared test files. Steps 2, 3, 5, and 6 own the per-lay
 ## References
 
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Architecture" owner decision 1, "Guard sites", "Scope guardrails" (ordering fence), and "Testing" define what this step retires and proves.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — P2.1 records the defect, the reproduction, and the block; P4.1 records why the three active states are pinned.
-- [plan_tool/roadmap_candidate_run.py](../../../../plan_tool/roadmap_candidate_run.py) — `_run_batch_candidate_proposal`, `_store_batch_candidate`, and `source_ancestry_to_root`.
-- [plan_tool/roadmap_version_promotion.py](../../../../plan_tool/roadmap_version_promotion.py) — the promotion boundary the route tests drive.
-- [plan_tool/roadmap_revision_publish.py](../../../../plan_tool/roadmap_revision_publish.py) — `recover_roadmap_publication` and its completed-journal rule.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — P2.1 records the defect, the reproduction, and the block; P4.1 records why the three active states are pinned.
+- [plan_tool/roadmap_candidate_run.py](../../../../../plan_tool/roadmap_candidate_run.py) — `_run_batch_candidate_proposal`, `_store_batch_candidate`, and `source_ancestry_to_root`.
+- [plan_tool/roadmap_version_promotion.py](../../../../../plan_tool/roadmap_version_promotion.py) — the promotion boundary the route tests drive.
+- [plan_tool/roadmap_revision_publish.py](../../../../../plan_tool/roadmap_revision_publish.py) — `recover_roadmap_publication` and its completed-journal rule.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/01-one-stack-route-derivation-beside.md](01-one-stack-route-derivation-beside.md) — the masking helper this step retires.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/03-make-promotion-boundary-recovery.md](03-make-promotion-boundary-recovery.md) — the stack builder and the per-layer promotion and recovery cases.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/05-split-structural-approve-two.md](05-split-structural-approve-two.md) — the approve helper, the digest contract, and the real-orchestrator cases.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the batch stacking rule. Step 8 rewords its block sentence.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the batch stacking rule. Step 8 rewords its block sentence.
 
 ## Applicable guardrails
 

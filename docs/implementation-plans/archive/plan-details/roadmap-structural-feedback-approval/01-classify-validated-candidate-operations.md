@@ -86,12 +86,12 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [Roadmap Structural Feedback Approval handoff — approved work order and prerequisite boundaries](../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
-- [ROADMAP_FORMAT.md — local presentation fields and immutable candidate outcome contract](../../../../ROADMAP_FORMAT.md)
-- [DATA_CONTRACT.md — persisted candidate and review contracts](../../../../DATA_CONTRACT.md)
-- [ROADMAP_FEEDBACK_FORMAT.md — mutable ledger ownership and feedback lifecycle](../../../../ROADMAP_FEEDBACK_FORMAT.md)
-- [plan_tool/roadmap_candidate.py — candidate operation validation and materialization boundary](../../../../plan_tool/roadmap_candidate.py)
-- [plan_tool/roadmap_revision.py — `TEXT_FIELDS_BY_ROW_TYPE`, the existing presentation-field policy](../../../../plan_tool/roadmap_revision.py)
+- [Roadmap Structural Feedback Approval handoff — approved work order and prerequisite boundaries](../../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
+- [ROADMAP_FORMAT.md — local presentation fields and immutable candidate outcome contract](../../../../../ROADMAP_FORMAT.md)
+- [DATA_CONTRACT.md — persisted candidate and review contracts](../../../../../DATA_CONTRACT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — mutable ledger ownership and feedback lifecycle](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [plan_tool/roadmap_candidate.py — candidate operation validation and materialization boundary](../../../../../plan_tool/roadmap_candidate.py)
+- [plan_tool/roadmap_revision.py — `TEXT_FIELDS_BY_ROW_TYPE`, the existing presentation-field policy](../../../../../plan_tool/roadmap_revision.py)
 
 ## Applicable guardrails
 

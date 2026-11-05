@@ -92,11 +92,11 @@ Verify new assertions by temporarily breaking the behavior they pin and observin
 
 ## References
 
-- [BACKLOG.md — #517](../../../../BACKLOG.md) — Read the alias scope and owner-confirmed compatibility exception.
-- [PLAN_FORMAT.md](../../../../PLAN_FORMAT.md) — Read the step field semantics and authored frontmatter contract.
-- [DATA_CONTRACT.md](../../../../DATA_CONTRACT.md) — Read the format-version boundary this step preserves.
-- [plan_tool/schema.py](../../../../plan_tool/schema.py) — Use `Step` as the shared owner of alias validation.
-- [plan_tool/parser.py](../../../../plan_tool/parser.py) — Use the canonical writer supplied by step 2.
+- [BACKLOG.md — #517](../../../../../BACKLOG.md) — Read the alias scope and owner-confirmed compatibility exception.
+- [PLAN_FORMAT.md](../../../../../PLAN_FORMAT.md) — Read the step field semantics and authored frontmatter contract.
+- [DATA_CONTRACT.md](../../../../../DATA_CONTRACT.md) — Read the format-version boundary this step preserves.
+- [plan_tool/schema.py](../../../../../plan_tool/schema.py) — Use `Step` as the shared owner of alias validation.
+- [plan_tool/parser.py](../../../../../plan_tool/parser.py) — Use the canonical writer supplied by step 2.
 
 ## Applicable guardrails
 

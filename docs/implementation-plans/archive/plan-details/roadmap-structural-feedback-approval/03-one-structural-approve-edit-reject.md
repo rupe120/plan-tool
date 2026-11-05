@@ -89,13 +89,13 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [Roadmap Structural Feedback Approval handoff — Read the settled single-decision direction and reuse boundary.](../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
-- [ROADMAP_FORMAT.md — Read the canonical artifact, feedback, and structural rewrite contracts.](../../../../ROADMAP_FORMAT.md)
-- [ROADMAP_FEEDBACK_FORMAT.md — Read mutable ledger ownership and reviewer-feedback lifecycle rules.](../../../../ROADMAP_FEEDBACK_FORMAT.md)
-- [DATA_CONTRACT.md — Read persisted candidate, review, publication, and recovery contracts.](../../../../DATA_CONTRACT.md)
-- [plan_tool/roadmap_candidate_review.py — Read the existing question, replacement, seal, and release bindings.](../../../../plan_tool/roadmap_candidate_review.py)
-- [plan_tool/roadmap_candidate_run.py — Read active-pointer, supersession, terminal-resolution, and publication helpers.](../../../../plan_tool/roadmap_candidate_run.py)
-- [plan_tool/roadmap_version_promotion.py — Read the sole accepted-head promotion path.](../../../../plan_tool/roadmap_version_promotion.py)
+- [Roadmap Structural Feedback Approval handoff — Read the settled single-decision direction and reuse boundary.](../../../../../handoffs/2026-09-22-roadmap-feedback-revision-approval.md)
+- [ROADMAP_FORMAT.md — Read the canonical artifact, feedback, and structural rewrite contracts.](../../../../../ROADMAP_FORMAT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — Read mutable ledger ownership and reviewer-feedback lifecycle rules.](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [DATA_CONTRACT.md — Read persisted candidate, review, publication, and recovery contracts.](../../../../../DATA_CONTRACT.md)
+- [plan_tool/roadmap_candidate_review.py — Read the existing question, replacement, seal, and release bindings.](../../../../../plan_tool/roadmap_candidate_review.py)
+- [plan_tool/roadmap_candidate_run.py — Read active-pointer, supersession, terminal-resolution, and publication helpers.](../../../../../plan_tool/roadmap_candidate_run.py)
+- [plan_tool/roadmap_version_promotion.py — Read the sole accepted-head promotion path.](../../../../../plan_tool/roadmap_version_promotion.py)
 
 ## Applicable guardrails
 

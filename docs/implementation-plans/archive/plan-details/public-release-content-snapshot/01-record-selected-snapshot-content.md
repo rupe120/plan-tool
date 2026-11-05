@@ -97,15 +97,15 @@ This is a `non-code` step. The test-authoring gate does not apply because it key
 
 ## References
 
-- [BACKLOG.md](../../../../BACKLOG.md) — Read #513’s scope contract and #514’s settled distribution boundary.
-- [Public onboarding and release pickup](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read owner decisions, inventory limits and report/PDF evidence.
-- [Public-release coordination arc](../../backlog-arcs/backlog-arc-public-release.md) — Check prerequisite ownership and ordering.
-- [Integration evidence provenance](../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Compare historical input identity with sanitized-example identity.
-- [Integration sizing evidence](../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Read the limits on reproducing historical measurements.
-- [Report revision producer](../../../../plan_tool/fingerprint.py) — Inspect `audit_input_revision` for the hashed revision contract.
-- [Report revision normalizer](../../../../plan_tool/review_persistence.py) — Inspect `normalize_audit_revision` for revision validation.
-- [AI-assisted development policy source](../../../reference/ai-assisted-development-policy.md) — Identify the tracked source whose redistribution disposition needs recording.
-- [Developer documentation style](../../../reference/documentation-style.md) — Structure ownership mappings and distinguish current routes from dated evidence.
+- [BACKLOG.md](../../../../../BACKLOG.md) — Read #513’s scope contract and #514’s settled distribution boundary.
+- [Public onboarding and release pickup](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read owner decisions, inventory limits and report/PDF evidence.
+- [Public-release coordination arc](../../../backlog-arcs/backlog-arc-public-release.md) — Check prerequisite ownership and ordering.
+- [Integration evidence provenance](../../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Compare historical input identity with sanitized-example identity.
+- [Integration sizing evidence](../../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Read the limits on reproducing historical measurements.
+- [Report revision producer](../../../../../plan_tool/fingerprint.py) — Inspect `audit_input_revision` for the hashed revision contract.
+- [Report revision normalizer](../../../../../plan_tool/review_persistence.py) — Inspect `normalize_audit_revision` for revision validation.
+- [AI-assisted development policy source](../../../../reference/ai-assisted-development-policy.md) — Identify the tracked source whose redistribution disposition needs recording.
+- [Developer documentation style](../../../../reference/documentation-style.md) — Structure ownership mappings and distinguish current routes from dated evidence.
 
 ## Applicable guardrails
 

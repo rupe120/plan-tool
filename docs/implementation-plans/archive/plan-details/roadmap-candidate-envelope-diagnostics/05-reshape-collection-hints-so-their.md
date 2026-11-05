@@ -95,15 +95,15 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [BUG_BACKLOG.md — Read the candidate-envelope source entry for the hint-shape property and stored-response evidence.](../../../../BUG_BACKLOG.md)
+- [BUG_BACKLOG.md — Read the candidate-envelope source entry for the hint-shape property and stored-response evidence.](../../../../../BUG_BACKLOG.md)
 
-- [ROADMAP_FEEDBACK_FORMAT.md — Read the ledger-to-candidate lifecycle that keeps hints separate from proposal authority.](../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — Read the ledger-to-candidate lifecycle that keeps hints separate from proposal authority.](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
 
-- [ROADMAP_FORMAT.md — Read the immutable artifact and structural-route contract.](../../../../ROADMAP_FORMAT.md)
+- [ROADMAP_FORMAT.md — Read the immutable artifact and structural-route contract.](../../../../../ROADMAP_FORMAT.md)
 
-- [plan_tool/roadmap_candidate_context.py — Read `candidate_collection_hints` and the immutable capsule records that supply source-backed identities.](../../../../plan_tool/roadmap_candidate_context.py)
+- [plan_tool/roadmap_candidate_context.py — Read `candidate_collection_hints` and the immutable capsule records that supply source-backed identities.](../../../../../plan_tool/roadmap_candidate_context.py)
 
-- [plan_tool/roadmap_candidate_run.py — Read `render_candidate_delta_prompt` for the batch prompt’s hint consumer.](../../../../plan_tool/roadmap_candidate_run.py)
+- [plan_tool/roadmap_candidate_run.py — Read `render_candidate_delta_prompt` for the batch prompt’s hint consumer.](../../../../../plan_tool/roadmap_candidate_run.py)
 
 ## Applicable guardrails
 

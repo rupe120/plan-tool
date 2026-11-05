@@ -86,8 +86,8 @@ Every listed test in `tests/test_roadmap_versions.py` must be green before this 
 
 ## References
 
-- [ROADMAP_FORMAT.md — Read the immutable-version identity, fixed-member, and presentation contracts.](../../../../ROADMAP_FORMAT.md)
-- [BACKLOG.md #402 — Read the comparison feature’s explicit stored-version and read-only scope contract.](../../../../BACKLOG.md)
+- [ROADMAP_FORMAT.md — Read the immutable-version identity, fixed-member, and presentation contracts.](../../../../../ROADMAP_FORMAT.md)
+- [BACKLOG.md #402 — Read the comparison feature’s explicit stored-version and read-only scope contract.](../../../../../BACKLOG.md)
 - [Roadmap Concept Comparison plan — Read step 3’s intent and step 4’s consumer boundary.](../../2-roadmap-concept-comparison.md)
 
 ## Applicable guardrails

@@ -226,11 +226,11 @@ Library cases go in `tests/test_roadmap_candidate_review.py`. Printout cases go 
 
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Design decisions" (Stack view, Digest) and Risks define what the view, digest, and printout must and must not do.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/01-one-stack-route-derivation-beside.md](01-one-stack-route-derivation-beside.md) — step 1's derivation, its hop order, and its error channel.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
-- [plan_tool/roadmap_candidate_review.py](../../../../plan_tool/roadmap_candidate_review.py) — `_identity`, `_canonical_json_bytes`, and the module that gains the view and digest.
-- [plan_tool/cli/roadmap_cmd.py](../../../../plan_tool/cli/roadmap_cmd.py) — `_render_structural_candidate_disclosure` and `_render_stored_value`.
-- [plan_tool/roadmap_diff.py](../../../../plan_tool/roadmap_diff.py) — `build_roadmap_diff`, the cumulative diff's primitive.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
+- [plan_tool/roadmap_candidate_review.py](../../../../../plan_tool/roadmap_candidate_review.py) — `_identity`, `_canonical_json_bytes`, and the module that gains the view and digest.
+- [plan_tool/cli/roadmap_cmd.py](../../../../../plan_tool/cli/roadmap_cmd.py) — `_render_structural_candidate_disclosure` and `_render_stored_value`.
+- [plan_tool/roadmap_diff.py](../../../../../plan_tool/roadmap_diff.py) — `build_roadmap_diff`, the cumulative diff's primitive.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
 
 ## Applicable guardrails
 

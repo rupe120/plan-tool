@@ -118,10 +118,10 @@ rather than adding a runtime test or inferring legal rights from test results.
 ## References
 
 - [Plan](../../2-public-release-content-snapshot.md) — Scope and ordering.
-- [Release handoff](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Rebuild and ownership evidence limits.
-- [Policy source](../../../reference/ai-assisted-development-policy.md) — Editable source.
-- [Driving directives](../../../../integrations/shared/DIRECTIVES.md) — Current workflow authority.
-- [Command reference](../../../reference/commands.md) — Current command meanings.
+- [Release handoff](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Rebuild and ownership evidence limits.
+- [Policy source](../../../../reference/ai-assisted-development-policy.md) — Editable source.
+- [Driving directives](../../../../../integrations/shared/DIRECTIVES.md) — Current workflow authority.
+- [Command reference](../../../../reference/commands.md) — Current command meanings.
 
 ## Applicable guardrails
 

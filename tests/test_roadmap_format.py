@@ -969,5 +969,5 @@ def test_backlog_461_stays_plan_authored_until_full_shipment() -> None:
         (line for line in backlog.splitlines() if line.startswith("**#461 ")), None
     )
     assert heading is not None and "PLAN-AUTHORED" in heading, heading
-    assert (_REPO_ROOT / "docs/implementation-plans/2-roadmap-stack-layer.md").is_file()
+    assert (_REPO_ROOT / "docs/implementation-plans/archive/2-roadmap-stack-layer.md").is_file()
     assert (_REPO_ROOT / "plan-seeds/archive/roadmap-stack-layer.replaced.md").is_file()

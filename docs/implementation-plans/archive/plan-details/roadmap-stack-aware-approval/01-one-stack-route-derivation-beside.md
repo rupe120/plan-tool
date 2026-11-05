@@ -145,10 +145,10 @@ Test cases:
 ## References
 
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Design decisions" (Stack route), "Guard sites", and Risks define what this derivation must and must not do.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions this step serves.
-- [plan_tool/roadmap_candidate_run.py](../../../../plan_tool/roadmap_candidate_run.py) — `source_ancestry_to_root`, `load_stored_candidate_proposal`, `CandidateProposalEvidence`, and the batch runner.
-- [plan_tool/roadmap_revision_publish.py](../../../../plan_tool/roadmap_revision_publish.py) — `_selected_promotion_is_structural`, the recovery predicate that consumes this derivation in step 3.
-- [ROADMAP_FEEDBACK_FORMAT.md](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions this step serves.
+- [plan_tool/roadmap_candidate_run.py](../../../../../plan_tool/roadmap_candidate_run.py) — `source_ancestry_to_root`, `load_stored_candidate_proposal`, `CandidateProposalEvidence`, and the batch runner.
+- [plan_tool/roadmap_revision_publish.py](../../../../../plan_tool/roadmap_revision_publish.py) — `_selected_promotion_is_structural`, the recovery predicate that consumes this derivation in step 3.
+- [ROADMAP_FEEDBACK_FORMAT.md](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the feedback lifecycle and the batch stacking rule.
 
 ## Applicable guardrails
 

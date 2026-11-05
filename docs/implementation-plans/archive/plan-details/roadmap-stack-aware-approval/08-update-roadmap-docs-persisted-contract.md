@@ -177,13 +177,13 @@ The test-authoring gate does not apply: it keys on `change_type` (`feature` / `r
 ## References
 
 - [`docs/implementation-plans/2-roadmap-stack-aware-approval.md`](../../2-roadmap-stack-aware-approval.md) — "Scope guardrails", step 8's acceptance criteria, and the owner sign-off the documents restate.
-- [`handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md`](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — P2.1, the interim block, and the owner directions this step records as shipped.
-- [`ROADMAP_FEEDBACK_FORMAT.md`](../../../../ROADMAP_FEEDBACK_FORMAT.md) — the lifecycle vocabulary and the batch stacking rule.
-- [`docs/how-to/roadmap.md`](../../../how-to/roadmap.md) — § 6, the operator procedure.
-- [`plan_tool/roadmap_candidate_run.py`](../../../../plan_tool/roadmap_candidate_run.py) — the stack-route derivation and batch sourcing.
-- [`plan_tool/roadmap_candidate_review.py`](../../../../plan_tool/roadmap_candidate_review.py) — the structural decision, the stack view, and the digest.
-- [`plan_tool/cli/roadmap_cmd.py`](../../../../plan_tool/cli/roadmap_cmd.py) — the confirm flag, result lines, and exit statuses.
-- [`changelog.d/README.md`](../../../../changelog.d/README.md) — fragment name and format.
+- [`handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md`](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — P2.1, the interim block, and the owner directions this step records as shipped.
+- [`ROADMAP_FEEDBACK_FORMAT.md`](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — the lifecycle vocabulary and the batch stacking rule.
+- [`docs/how-to/roadmap.md`](../../../../how-to/roadmap.md) — § 6, the operator procedure.
+- [`plan_tool/roadmap_candidate_run.py`](../../../../../plan_tool/roadmap_candidate_run.py) — the stack-route derivation and batch sourcing.
+- [`plan_tool/roadmap_candidate_review.py`](../../../../../plan_tool/roadmap_candidate_review.py) — the structural decision, the stack view, and the digest.
+- [`plan_tool/cli/roadmap_cmd.py`](../../../../../plan_tool/cli/roadmap_cmd.py) — the confirm flag, result lines, and exit statuses.
+- [`changelog.d/README.md`](../../../../../changelog.d/README.md) — fragment name and format.
 
 ## Applicable guardrails
 

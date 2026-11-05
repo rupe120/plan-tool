@@ -95,11 +95,11 @@ This step is `change_type: non-code`. The test-authoring gate does not apply bec
 ## References
 
 - [Plan — closure and dependency contract](../../2-public-release-content-snapshot.md) — Read step 6’s dependency notes and acceptance criteria.
-- [Backlog — #513 and neighboring release work](../../../../BACKLOG.md) — Read the content-preparation scope and separate prerequisites.
-- [Pickup handoff](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read settled direction, remaining routing and current pickup instructions.
-- [Public-release coordination arc](../../backlog-arcs/backlog-arc-public-release.md) — Preserve ordered responsibilities and exit boundaries.
-- [Tracking rules](../../../TRACKING.md#promotion-stubs) — Apply the correct pending and shipped-entry treatment.
-- [Documentation style](../../../reference/documentation-style.md) — Keep status, evidence and next actions easy to scan.
+- [Backlog — #513 and neighboring release work](../../../../../BACKLOG.md) — Read the content-preparation scope and separate prerequisites.
+- [Pickup handoff](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read settled direction, remaining routing and current pickup instructions.
+- [Public-release coordination arc](../../../backlog-arcs/backlog-arc-public-release.md) — Preserve ordered responsibilities and exit boundaries.
+- [Tracking rules](../../../../TRACKING.md#promotion-stubs) — Apply the correct pending and shipped-entry treatment.
+- [Documentation style](../../../../reference/documentation-style.md) — Keep status, evidence and next actions easy to scan.
 
 ## Applicable guardrails
 

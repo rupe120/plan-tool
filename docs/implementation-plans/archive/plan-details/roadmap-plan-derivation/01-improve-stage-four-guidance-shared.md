@@ -91,10 +91,10 @@ Run the affected prompt tests, then the plan’s full test command. Temporarily 
 
 ## References
 
-- [Roadmap format](../../../../ROADMAP_FORMAT.md) — Read for existing plan dispositions, ordering fields, and accepted-version authority.
-- [Stage-four prompt](../../../../plan_tool/prompts/roadmap-plans.md) — Read the input boundary, inventory, checked rules, and example before editing.
-- [Pinned benchmark evidence](../../../evidence/roadmap-plan-set-benchmark.md) — Read “Witnessed failures to retain” and “Comparison contract” for the observed gaps and limits on interpretation.
-- [Source backlog](../../../../BACKLOG.md) — Read entry #496 for the effort’s scope and shipment bookkeeping.
+- [Roadmap format](../../../../../ROADMAP_FORMAT.md) — Read for existing plan dispositions, ordering fields, and accepted-version authority.
+- [Stage-four prompt](../../../../../plan_tool/prompts/roadmap-plans.md) — Read the input boundary, inventory, checked rules, and example before editing.
+- [Pinned benchmark evidence](../../../../evidence/roadmap-plan-set-benchmark.md) — Read “Witnessed failures to retain” and “Comparison contract” for the observed gaps and limits on interpretation.
+- [Source backlog](../../../../../BACKLOG.md) — Read entry #496 for the effort’s scope and shipment bookkeeping.
 
 ## Applicable guardrails
 

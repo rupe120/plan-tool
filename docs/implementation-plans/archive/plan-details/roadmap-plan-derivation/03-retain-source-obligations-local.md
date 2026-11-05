@@ -94,12 +94,12 @@ Run the affected create and roadmap tests, then the full pytest suite. Mark the 
 
 ## References
 
-- [SEED_FORMAT.md](../../../../SEED_FORMAT.md) — Read “Explicit scope boundaries” for canonical proof sections and source obligations.
-- [Seed ingestion contract](../../../reference/contracts/seed-ingestion.md) — Read “Section contract” and “Source authority” for preparation and publication boundaries.
-- [Create-from-existing workflow](../../../how-to/pipeline/create-from-existing.md) — Follow the existing route, publication, and archival flow.
-- [plan_tool/create.py](../../../../plan_tool/create.py) — Inspect `_prepare_create_plan`, `_render_plan_body`, and the materialized-evidence restoration helpers.
-- [ROADMAP_FORMAT.md](../../../../ROADMAP_FORMAT.md) — Read the accepted-version authority and plan mapping contracts.
-- [Roadmap plan-set benchmark](../../../evidence/roadmap-plan-set-benchmark.md) — Read the witnessed obligation-retention failures and comparison limits.
+- [SEED_FORMAT.md](../../../../../SEED_FORMAT.md) — Read “Explicit scope boundaries” for canonical proof sections and source obligations.
+- [Seed ingestion contract](../../../../reference/contracts/seed-ingestion.md) — Read “Section contract” and “Source authority” for preparation and publication boundaries.
+- [Create-from-existing workflow](../../../../how-to/pipeline/create-from-existing.md) — Follow the existing route, publication, and archival flow.
+- [plan_tool/create.py](../../../../../plan_tool/create.py) — Inspect `_prepare_create_plan`, `_render_plan_body`, and the materialized-evidence restoration helpers.
+- [ROADMAP_FORMAT.md](../../../../../ROADMAP_FORMAT.md) — Read the accepted-version authority and plan mapping contracts.
+- [Roadmap plan-set benchmark](../../../../evidence/roadmap-plan-set-benchmark.md) — Read the witnessed obligation-retention failures and comparison limits.
 
 ## Applicable guardrails
 

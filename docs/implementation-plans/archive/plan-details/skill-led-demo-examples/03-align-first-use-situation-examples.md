@@ -103,14 +103,14 @@ The test-authoring gate does not apply to this `non-code` step; it keys on `feat
 
 ## References
 
-- [README.md](../../../../README.md) — Read “Your first plan” and “Decision flow” for the current entry routes.
-- [docs/demos/planning-demo.md](../../../demos/planning-demo.md) — Use step 1’s assistant-led planning example.
-- [docs/demos/roadmap-demo.md](../../../demos/roadmap-demo.md) — Use step 2’s larger-concept example.
-- [integrations/shared/DIRECTIVES.md](../../../../integrations/shared/DIRECTIVES.md) — Read the seed, audit, monitoring and execution contracts.
-- [SEED_FORMAT.md](../../../../SEED_FORMAT.md) — Check seed scope and reference requirements.
-- [JIRA_FORMAT.md](../../../../JIRA_FORMAT.md) — Check local export and paired developer-handoff behavior.
-- [handoffs/2026-10-21-demo-refresh.md](../../../../handoffs/2026-10-21-demo-refresh.md) — Check the preparation and publication boundary.
-- [docs/reference/documentation-style.md](../../../reference/documentation-style.md) — Follow task-first structure and preserve technical facts.
+- [README.md](../../../../../README.md) — Read “Your first plan” and “Decision flow” for the current entry routes.
+- [docs/demos/planning-demo.md](../../../../demos/planning-demo.md) — Use step 1’s assistant-led planning example.
+- [docs/demos/roadmap-demo.md](../../../../demos/roadmap-demo.md) — Use step 2’s larger-concept example.
+- [integrations/shared/DIRECTIVES.md](../../../../../integrations/shared/DIRECTIVES.md) — Read the seed, audit, monitoring and execution contracts.
+- [SEED_FORMAT.md](../../../../../SEED_FORMAT.md) — Check seed scope and reference requirements.
+- [JIRA_FORMAT.md](../../../../../JIRA_FORMAT.md) — Check local export and paired developer-handoff behavior.
+- [handoffs/2026-10-21-demo-refresh.md](../../../../../handoffs/2026-10-21-demo-refresh.md) — Check the preparation and publication boundary.
+- [docs/reference/documentation-style.md](../../../../reference/documentation-style.md) — Follow task-first structure and preserve technical facts.
 
 ## Applicable guardrails
 

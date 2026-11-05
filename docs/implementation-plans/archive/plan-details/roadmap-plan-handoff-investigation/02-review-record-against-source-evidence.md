@@ -88,12 +88,12 @@ Step 1 creates the decision record, but #492 cannot close on a plausible narrati
 
 ## References
 
-- [BACKLOG.md #492](../../../../BACKLOG.md) — Read the outcome, verification, and single staged arc that this step reconciles.
-- [Integration evidence for the roadmap to plan handoff](../../../evidence/integration-roadmap-to-plan-handoff.md) — Review the source identity, observations, and stated evidence limits.
+- [BACKLOG.md #492](../../../../../BACKLOG.md) — Read the outcome, verification, and single staged arc that this step reconciles.
+- [Integration evidence for the roadmap to plan handoff](../../../../evidence/integration-roadmap-to-plan-handoff.md) — Review the source identity, observations, and stated evidence limits.
 - [Roadmap Plan Handoff Investigation](../../2-roadmap-plan-handoff-investigation.md) — Follow the plan’s decision targets, acceptance criteria, and scope boundary.
-- [Roadmap format](../../../../ROADMAP_FORMAT.md) — Use the accepted-head authority contract when reviewing roadmap claims.
-- [Roadmap backlog arc](../../backlog-arcs/backlog-arc-roadmap.md) — Preserve the router’s #492 anchor and follow-on ordering.
-- [Documentation style](../../../reference/documentation-style.md) — Keep the reviewed design record easy to scan and route by reader task.
+- [Roadmap format](../../../../../ROADMAP_FORMAT.md) — Use the accepted-head authority contract when reviewing roadmap claims.
+- [Roadmap backlog arc](../../../backlog-arcs/backlog-arc-roadmap.md) — Preserve the router’s #492 anchor and follow-on ordering.
+- [Documentation style](../../../../reference/documentation-style.md) — Keep the reviewed design record easy to scan and route by reader task.
 
 ## Applicable guardrails
 

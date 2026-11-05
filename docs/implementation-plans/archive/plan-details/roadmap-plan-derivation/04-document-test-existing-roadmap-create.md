@@ -91,12 +91,12 @@ Use isolated filesystem fixtures and injected invokers. Mark cases that drive or
 
 ## References
 
-- [Roadmap format](../../../../ROADMAP_FORMAT.md) — Read “Draft seeds under the roadmap slug” and “Immutable candidate-version authority” for source and lifecycle boundaries.
-- [Roadmap walkthrough](../../../how-to/roadmap.md) — Update the existing mapping, handoff, fallback, and continuation sections.
-- [Create from existing material](../../../how-to/pipeline/create-from-existing.md) — Reuse the intake and retention explanation owned by step 3.
-- [Seed format](../../../../SEED_FORMAT.md) — Use canonical proof and scope sections in handoff fixtures.
-- [Roadmap orchestration tests](../../../../tests/test_roadmap.py) — Reuse materialization, promotion, and accepted-head test anchors.
-- [Create tests](../../../../tests/test_create.py) — Reuse file-backed intake and tracked-roadmap reference coverage.
+- [Roadmap format](../../../../../ROADMAP_FORMAT.md) — Read “Draft seeds under the roadmap slug” and “Immutable candidate-version authority” for source and lifecycle boundaries.
+- [Roadmap walkthrough](../../../../how-to/roadmap.md) — Update the existing mapping, handoff, fallback, and continuation sections.
+- [Create from existing material](../../../../how-to/pipeline/create-from-existing.md) — Reuse the intake and retention explanation owned by step 3.
+- [Seed format](../../../../../SEED_FORMAT.md) — Use canonical proof and scope sections in handoff fixtures.
+- [Roadmap orchestration tests](../../../../../tests/test_roadmap.py) — Reuse materialization, promotion, and accepted-head test anchors.
+- [Create tests](../../../../../tests/test_create.py) — Reuse file-backed intake and tracked-roadmap reference coverage.
 
 ## Applicable guardrails
 

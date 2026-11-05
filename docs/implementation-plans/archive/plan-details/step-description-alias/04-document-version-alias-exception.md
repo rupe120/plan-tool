@@ -96,12 +96,12 @@ The test-authoring gate does not apply to this `non-code` step; it keys on code 
 
 ## References
 
-- [BACKLOG.md — #517](../../../../BACKLOG.md) — Read the scope contract and dated owner-approved exception.
-- [PLAN_FORMAT.md — Frontmatter schema](../../../../PLAN_FORMAT.md#frontmatter-schema) — Owns authored step fields, examples, and validation semantics.
-- [DATA_CONTRACT.md — Version-evolution policy](../../../../DATA_CONTRACT.md#version-evolution-policy) — Owns the general transition policy and plan-format exception.
-- [plan_tool/schema.py — Step](../../../../plan_tool/schema.py) — Verify the landed input contract and internal attribute.
-- [plan_tool/parser.py — Plan parsing and serialization](../../../../plan_tool/parser.py) — Verify version handling and preferred output.
-- [docs/TRACKING.md — Promotion stubs](../../../TRACKING.md#promotion-stubs) — Read the shipment bookkeeping rule before closing the source entry.
+- [BACKLOG.md — #517](../../../../../BACKLOG.md) — Read the scope contract and dated owner-approved exception.
+- [PLAN_FORMAT.md — Frontmatter schema](../../../../../PLAN_FORMAT.md#frontmatter-schema) — Owns authored step fields, examples, and validation semantics.
+- [DATA_CONTRACT.md — Version-evolution policy](../../../../../DATA_CONTRACT.md#version-evolution-policy) — Owns the general transition policy and plan-format exception.
+- [plan_tool/schema.py — Step](../../../../../plan_tool/schema.py) — Verify the landed input contract and internal attribute.
+- [plan_tool/parser.py — Plan parsing and serialization](../../../../../plan_tool/parser.py) — Verify version handling and preferred output.
+- [docs/TRACKING.md — Promotion stubs](../../../../TRACKING.md#promotion-stubs) — Read the shipment bookkeeping rule before closing the source entry.
 
 ## Applicable guardrails
 

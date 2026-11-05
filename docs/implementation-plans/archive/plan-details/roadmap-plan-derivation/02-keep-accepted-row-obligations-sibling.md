@@ -90,12 +90,12 @@ Run the affected test classes, then `uv run pytest tests/ -q -n auto`. Temporari
 
 ## References
 
-- [Seed format](../../../../SEED_FORMAT.md) — Read “Explicit scope boundaries” for canonical proof headings and seed-level content.
-- [Roadmap format](../../../../ROADMAP_FORMAT.md) — Read for accepted-version authority, plan mapping, ordering, and assumptions.
-- [Seed materialization prompt](../../../../plan_tool/prompts/roadmap-seed.md) — Read “Seed requirements” and the accepted-artifact inputs before editing.
-- [Materialization implementation](../../../../plan_tool/roadmap.py) — Read `_render_seed_materialize_prompt` and `_materialize_plan_seed` for existing context delivery and ownership.
-- [Create from existing](../../../how-to/pipeline/create-from-existing.md) — Read for the downstream interpretation of supplied seed sections.
-- [Source backlog](../../../../BACKLOG.md) — Read #496 for the effort’s scope and shipment requirements.
+- [Seed format](../../../../../SEED_FORMAT.md) — Read “Explicit scope boundaries” for canonical proof headings and seed-level content.
+- [Roadmap format](../../../../../ROADMAP_FORMAT.md) — Read for accepted-version authority, plan mapping, ordering, and assumptions.
+- [Seed materialization prompt](../../../../../plan_tool/prompts/roadmap-seed.md) — Read “Seed requirements” and the accepted-artifact inputs before editing.
+- [Materialization implementation](../../../../../plan_tool/roadmap.py) — Read `_render_seed_materialize_prompt` and `_materialize_plan_seed` for existing context delivery and ownership.
+- [Create from existing](../../../../how-to/pipeline/create-from-existing.md) — Read for the downstream interpretation of supplied seed sections.
+- [Source backlog](../../../../../BACKLOG.md) — Read #496 for the effort’s scope and shipment requirements.
 
 ## Applicable guardrails
 

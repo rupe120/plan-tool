@@ -182,10 +182,10 @@ Tests live in `tests/test_roadmap_candidate_review.py` and `tests/cli/test_roadm
 
 - [docs/implementation-plans/2-roadmap-stack-aware-approval.md](../../2-roadmap-stack-aware-approval.md) — § "Design decisions" (Stack route, Guards, Edit and reject keep their contracts) and the "Guard sites" table define what this step changes and keeps.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/01-one-stack-route-derivation-beside.md](01-one-stack-route-derivation-beside.md) — step 1's derivation, its error channel, and the stack-building test helper this step reuses.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
-- [plan_tool/roadmap_candidate_review.py](../../../../plan_tool/roadmap_candidate_review.py) — `decide_structural_candidate`, `_require_structural_candidate`, `_require_answered_review_route`, `_edit_structural_candidate`.
-- [plan_tool/cli/roadmap_cmd.py](../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision`.
-- [plan_tool/roadmap_version_promotion.py](../../../../plan_tool/roadmap_version_promotion.py) — `_load_complete_directly_approved_candidate`, the one other caller of the shared guard.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
+- [plan_tool/roadmap_candidate_review.py](../../../../../plan_tool/roadmap_candidate_review.py) — `decide_structural_candidate`, `_require_structural_candidate`, `_require_answered_review_route`, `_edit_structural_candidate`.
+- [plan_tool/cli/roadmap_cmd.py](../../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision`.
+- [plan_tool/roadmap_version_promotion.py](../../../../../plan_tool/roadmap_version_promotion.py) — `_load_complete_directly_approved_candidate`, the one other caller of the shared guard.
 
 ## Applicable guardrails
 

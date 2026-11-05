@@ -83,12 +83,12 @@ The test-authoring gate does not apply: this step has `change_type: non-code`, w
 
 ## References
 
-- [DATA_CONTRACT.md](../../../../DATA_CONTRACT.md) — Read the existing Input-reference finding discussion before extending it.
-- [BUG_BACKLOG.md](../../../../BUG_BACKLOG.md) — Identify the originating missing-path entry and preserve adjacent independent bugs.
-- [plan_tool/review.py](../../../../plan_tool/review.py) — Verify the landed selector and both Input-reference consumers.
-- [plan_tool/data_contract.py](../../../../plan_tool/data_contract.py) — Verify the absent-path and existing-symbol boundary.
-- [tests/test_data_contract.py](../../../../tests/test_data_contract.py) — Read the opposite acceptance and rejection invariants.
-- [tests/test_review.py](../../../../tests/test_review.py) — Check step 2’s delivered consumer and eligibility coverage.
+- [DATA_CONTRACT.md](../../../../../DATA_CONTRACT.md) — Read the existing Input-reference finding discussion before extending it.
+- [BUG_BACKLOG.md](../../../../../BUG_BACKLOG.md) — Identify the originating missing-path entry and preserve adjacent independent bugs.
+- [plan_tool/review.py](../../../../../plan_tool/review.py) — Verify the landed selector and both Input-reference consumers.
+- [plan_tool/data_contract.py](../../../../../plan_tool/data_contract.py) — Verify the absent-path and existing-symbol boundary.
+- [tests/test_data_contract.py](../../../../../tests/test_data_contract.py) — Read the opposite acceptance and rejection invariants.
+- [tests/test_review.py](../../../../../tests/test_review.py) — Check step 2’s delivered consumer and eligibility coverage.
 - [Experiment README](/private/tmp/integration-roadmap-plan-regeneration-20261015/docs/experiments/roadmap-plan-regeneration/README.md) — Read the stop condition and resume procedure.
 - [Experiment result](/private/tmp/integration-roadmap-plan-regeneration-20261015/docs/experiments/roadmap-plan-regeneration/result.json) — Check the saved per-occurrence reproduction evidence.
 

@@ -124,13 +124,13 @@ The test-authoring gate does not apply: this step is `change_type: non-code`, wh
 ## References
 
 - [Public Release Content Snapshot](../../2-public-release-content-snapshot.md) — Read “Architecture” for report omission, evidence identity and snapshot boundaries.
-- [BACKLOG.md](../../../../BACKLOG.md) — Read #513 for the cleanup contract and #514 for the selected distribution boundary.
-- [Public onboarding and release pickup](../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read “Current decisions” and “Preparation result” for scope and evidence limits.
-- [Context-budget provenance](../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Distinguish historical input identity from the sanitized payload.
-- [Context-budget sizing](../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Preserve the measurement’s purpose and replay limitations.
-- [Audit revision construction](../../../../plan_tool/fingerprint.py) — Read `audit_input_revision` for path-bearing detail identity.
-- [Audit revision validation](../../../../plan_tool/review_persistence.py) — Read `normalize_audit_revision` for digest validation.
-- [Developer documentation style](../../../reference/documentation-style.md) — Follow its guidance on document ownership and reference repair.
+- [BACKLOG.md](../../../../../BACKLOG.md) — Read #513 for the cleanup contract and #514 for the selected distribution boundary.
+- [Public onboarding and release pickup](../../../../../handoffs/2026-10-19-public-onboarding-and-release.md) — Read “Current decisions” and “Preparation result” for scope and evidence limits.
+- [Context-budget provenance](../../../../evidence/integration-context-budget-2026-10-09/provenance.json) — Distinguish historical input identity from the sanitized payload.
+- [Context-budget sizing](../../../../evidence/integration-context-budget-2026-10-09/sizing.md) — Preserve the measurement’s purpose and replay limitations.
+- [Audit revision construction](../../../../../plan_tool/fingerprint.py) — Read `audit_input_revision` for path-bearing detail identity.
+- [Audit revision validation](../../../../../plan_tool/review_persistence.py) — Read `normalize_audit_revision` for digest validation.
+- [Developer documentation style](../../../../reference/documentation-style.md) — Follow its guidance on document ownership and reference repair.
 
 ## Applicable guardrails
 

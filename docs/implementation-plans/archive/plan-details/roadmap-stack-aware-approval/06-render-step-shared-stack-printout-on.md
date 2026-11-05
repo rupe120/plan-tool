@@ -223,9 +223,9 @@ All tests go in `tests/cli/test_roadmap_cmd.py`.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/04-build-whole-stack-view-its-digest-its.md](04-build-whole-stack-view-its-digest-its.md) — the view, builder, and printout this step renders.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/05-split-structural-approve-two.md](05-split-structural-approve-two.md) — the approve branch this step leaves alone, and the build-failure exit it mirrors.
 - [docs/implementation-plans/plan-details/roadmap-stack-aware-approval/02-make-review-side-guards-stack-aware.md](02-make-review-side-guards-stack-aware.md) — the precheck and the derivation stub helper.
-- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
-- [plan_tool/cli/roadmap_cmd.py](../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision`, `_render_structural_candidate_decision_result`, `_cmd_roadmap_propose_candidate`, `_render_candidate_proposal_result`.
-- [plan_tool/roadmap_candidate_review.py](../../../../plan_tool/roadmap_candidate_review.py) — `_edit_structural_candidate` and `reject_candidate_review`, for what each result carries.
+- [handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md](../../../../../handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md) — the P2.1 defect and the owner decisions.
+- [plan_tool/cli/roadmap_cmd.py](../../../../../plan_tool/cli/roadmap_cmd.py) — `_cmd_roadmap_structural_candidate_decision`, `_render_structural_candidate_decision_result`, `_cmd_roadmap_propose_candidate`, `_render_candidate_proposal_result`.
+- [plan_tool/roadmap_candidate_review.py](../../../../../plan_tool/roadmap_candidate_review.py) — `_edit_structural_candidate` and `reject_candidate_review`, for what each result carries.
 
 ## Applicable guardrails
 

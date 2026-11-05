@@ -102,13 +102,13 @@ This is a `non-code` step. The test-authoring gate in `plan_tool/launcher.py:_st
 ## References
 
 - [Plan and scope](../../2-skill-led-demo-examples.md) — Read “Testing,” “Acceptance criteria” and the scope fence.
-- [Demo preparation handoff](../../../../handoffs/2026-10-21-demo-refresh.md) — Read preparation provenance and publication ownership.
-- [Jira export format](../../../../JIRA_FORMAT.md) — Check paired outputs, provenance and lint interpretation.
-- [Plan format](../../../../PLAN_FORMAT.md) — Check retained plan fixtures.
-- [Detail format](../../../../DETAIL_FORMAT.md) — Check retained run-grade details.
-- [Roadmap format](../../../../ROADMAP_FORMAT.md) — Check accepted-head artifact authority.
-- [Roadmap feedback format](../../../../ROADMAP_FEEDBACK_FORMAT.md) — Check ledger, candidate and settlement boundaries.
-- [Documentation style](../../../../docs/reference/documentation-style.md) — Keep discovery, procedures and evidence in their existing roles.
+- [Demo preparation handoff](../../../../../handoffs/2026-10-21-demo-refresh.md) — Read preparation provenance and publication ownership.
+- [Jira export format](../../../../../JIRA_FORMAT.md) — Check paired outputs, provenance and lint interpretation.
+- [Plan format](../../../../../PLAN_FORMAT.md) — Check retained plan fixtures.
+- [Detail format](../../../../../DETAIL_FORMAT.md) — Check retained run-grade details.
+- [Roadmap format](../../../../../ROADMAP_FORMAT.md) — Check accepted-head artifact authority.
+- [Roadmap feedback format](../../../../../ROADMAP_FEEDBACK_FORMAT.md) — Check ledger, candidate and settlement boundaries.
+- [Documentation style](../../../../reference/documentation-style.md) — Keep discovery, procedures and evidence in their existing roles.
 
 ## Applicable guardrails
 

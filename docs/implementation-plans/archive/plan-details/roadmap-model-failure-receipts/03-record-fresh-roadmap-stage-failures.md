@@ -88,11 +88,11 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [BUG_BACKLOG.md — Read the model-failure receipt problem statement and roadmap evidence scope.](../../../../BUG_BACKLOG.md)
-- [BACKLOG.md #217 — Read the roadmap rejected-response evidence and provenance context.](../../../../BACKLOG.md)
-- [DATA_CONTRACT.md — Read the `AttemptFailed`, `GateViolations`, and shared failure-receipt event contracts.](../../../../DATA_CONTRACT.md)
-- [plan_tool/roadmap.py:_run_stage — Read the fresh-stage attempt loop and its current retry classifications.](../../../../plan_tool/roadmap.py)
-- [plan_tool/detail.py:_log_parse_failure — Read the existing best-effort rejected-response sidecar precedent.](../../../../plan_tool/detail.py)
+- [BUG_BACKLOG.md — Read the model-failure receipt problem statement and roadmap evidence scope.](../../../../../BUG_BACKLOG.md)
+- [BACKLOG.md #217 — Read the roadmap rejected-response evidence and provenance context.](../../../../../BACKLOG.md)
+- [DATA_CONTRACT.md — Read the `AttemptFailed`, `GateViolations`, and shared failure-receipt event contracts.](../../../../../DATA_CONTRACT.md)
+- [plan_tool/roadmap.py:_run_stage — Read the fresh-stage attempt loop and its current retry classifications.](../../../../../plan_tool/roadmap.py)
+- [plan_tool/detail.py:_log_parse_failure — Read the existing best-effort rejected-response sidecar precedent.](../../../../../plan_tool/detail.py)
 
 ## Applicable guardrails
 

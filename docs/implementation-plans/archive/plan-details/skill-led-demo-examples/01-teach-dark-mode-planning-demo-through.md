@@ -101,13 +101,13 @@ This is a non-code step. The test-authoring gate applies to `feature` and `refac
 
 ## References
 
-- [Seed format](../../../../SEED_FORMAT.md) — Required scope and reference content for seed samples.
-- [Plan format](../../../../PLAN_FORMAT.md) — Frontmatter and body requirements for the retained fixture.
-- [Detail format](../../../../DETAIL_FORMAT.md) — Current run-grade detail contract.
-- [Jira format](../../../../JIRA_FORMAT.md) — Local story export and paired developer handoff ownership.
-- [Audit procedure](../../../how-to/pipeline/audit.md) — Audit sequence, coverage and qualified-result interpretation.
-- [Demo refresh handoff](../../../../handoffs/2026-10-21-demo-refresh.md) — Preparation evidence and publication boundary.
-- [Documentation style](../../../reference/documentation-style.md) — Task-first structure and review checks.
+- [Seed format](../../../../../SEED_FORMAT.md) — Required scope and reference content for seed samples.
+- [Plan format](../../../../../PLAN_FORMAT.md) — Frontmatter and body requirements for the retained fixture.
+- [Detail format](../../../../../DETAIL_FORMAT.md) — Current run-grade detail contract.
+- [Jira format](../../../../../JIRA_FORMAT.md) — Local story export and paired developer handoff ownership.
+- [Audit procedure](../../../../how-to/pipeline/audit.md) — Audit sequence, coverage and qualified-result interpretation.
+- [Demo refresh handoff](../../../../../handoffs/2026-10-21-demo-refresh.md) — Preparation evidence and publication boundary.
+- [Documentation style](../../../../reference/documentation-style.md) — Task-first structure and review checks.
 
 ## Applicable guardrails
 

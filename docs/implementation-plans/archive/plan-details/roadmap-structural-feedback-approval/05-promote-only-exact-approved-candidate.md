@@ -85,12 +85,12 @@ Every listed test must be green before this step is complete.
 
 ## References
 
-- [ROADMAP_FORMAT.md — Read the structural feedback and accepted-artifact authority contracts.](../../../../ROADMAP_FORMAT.md)
-- [DATA_CONTRACT.md — Read persisted candidate, review, accepted-head, and publication-record contracts.](../../../../DATA_CONTRACT.md)
-- [ROADMAP_FEEDBACK_FORMAT.md — Read mutable ledger ownership and the boundary between feedback progress and canonical promotion.](../../../../ROADMAP_FEEDBACK_FORMAT.md)
-- [plan_tool/roadmap_version_promotion.py — Read the existing exact-seal, stored-byte, and final-currentness checks.](../../../../plan_tool/roadmap_version_promotion.py)
-- [plan_tool/roadmap_candidate_review.py — Read the review seal and structural decision lineage.](../../../../plan_tool/roadmap_candidate_review.py)
-- [plan_tool/roadmap_revision_publish.py — Read journaled generation publication and recovery rules.](../../../../plan_tool/roadmap_revision_publish.py)
+- [ROADMAP_FORMAT.md — Read the structural feedback and accepted-artifact authority contracts.](../../../../../ROADMAP_FORMAT.md)
+- [DATA_CONTRACT.md — Read persisted candidate, review, accepted-head, and publication-record contracts.](../../../../../DATA_CONTRACT.md)
+- [ROADMAP_FEEDBACK_FORMAT.md — Read mutable ledger ownership and the boundary between feedback progress and canonical promotion.](../../../../../ROADMAP_FEEDBACK_FORMAT.md)
+- [plan_tool/roadmap_version_promotion.py — Read the existing exact-seal, stored-byte, and final-currentness checks.](../../../../../plan_tool/roadmap_version_promotion.py)
+- [plan_tool/roadmap_candidate_review.py — Read the review seal and structural decision lineage.](../../../../../plan_tool/roadmap_candidate_review.py)
+- [plan_tool/roadmap_revision_publish.py — Read journaled generation publication and recovery rules.](../../../../../plan_tool/roadmap_revision_publish.py)
 
 ## Applicable guardrails
 

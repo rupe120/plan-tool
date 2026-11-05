@@ -3,8 +3,10 @@
 All six steps are shipped on `origin/main` at `cf303fe29`. Plan PR #162,
 implementation PR #163, and plan-status PR #164 are verified merged on
 2026-11-04; the code and plan snapshots match their fetched remote paths.
-The implementation ledger retains review and validation provenance. The next
-independent work is in the [cleanup pickup](2026-11-04-cleanup-focus-and-stability.md).
+This closed review ledger retains implementation and validation provenance.
+Independent completed fixes retain their dispositions in the
+[maintenance review ledger](2026-11-05-completed-maintenance-code-review.md);
+remaining work belongs to `BACKLOG.md` and `BUG_BACKLOG.md`.
 
 ## Delivered scope
 
@@ -21,6 +23,39 @@ owns stale lesson maintenance. A machine comparison with `origin/main` confirms
 the complete #369 block is byte-for-byte unchanged. The changelog fragment
 `changelog.d/completeness-apply-retirement.md` marks the CLI removal as breaking
 and gives the replacement workflow.
+
+## Pre-execution audit provenance
+
+Historical evidence, 2026-11-04. The archived bundle is
+`docs/implementation-plans/archive/plan-details/completeness-apply-retirement/`.
+Before execution, `reconcile-plan --all --no-walk -y` saves
+`reports/20261104-130427.json`; the semantic review identified obsolete step-5 paths, wrong #367 ownership,
+and removed Jira-grade wording. Its already-built suggestions are token matches
+contradicted by the semantic review; no step status changes follow. The correction
+also aligns seed, backlog, and documentation paths and includes Cursor guidance
+and the glossary. Bare-stage completeness application remains withheld. The
+bounded correction ensures retirement does
+not widen into unrelated application authority; judged corrections retain generic application
+and deterministic repair authority, and preserve #369's independent scope.
+The seed remains archived and inert, not a competing scope owner.
+
+Both audit gates use `completeness-audit completeness-apply-retirement
+--iterate --commit --audit-passes 1 -y` with backend Codex, model
+`gpt-6.1-sol`, and closed stdin. Bare report
+`reports/20261104-130709-completeness.md` records 0/6 details, zero conceptual
+findings, confirmed coverage, current revision, and a fresh conceptual call.
+The sole heuristic `plan-claim-vs-delivery-caca4275` names deliberately preserved
+`apply_finding`; it does not justify plan expansion.
+
+One-shot `detail --commit -y` authors all six details. Its tail saves
+`reports/20261104-132734-completeness.md`, with zero findings. The iterative
+detail-grounded gate adds `--reuse-audit` and saves
+`reports/20261104-140106-completeness.md`: 6/6 details, zero open findings,
+confirmed coverage, current revision, explicit conceptual-call reuse, and an
+advisory-only result. There is no conceptual correction loop requiring a
+three-snapshot trajectory. These records certify the authored bundle, not
+implementation delivery; the implementation and post-run reviews below own
+that evidence. Do not rerun pre-execution plan-mutating audits on executed work.
 
 ## Execution and recovery
 
