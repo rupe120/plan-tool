@@ -1,7 +1,8 @@
 # AI-DLC integration
 
 How `plan-tool`'s `roadmap` verb relates to the AI-DLC workflow framework and
-Integration, the runtime that drives a project through it: the boundary the two
+Integration, the web application under development that orchestrates the AI-DLC
+and `plan-tool` command-line tools together: the boundary the two
 systems keep, where they actually touch, and what's shipped versus still
 open. Not for backend-CLI integrations (Claude Code, Codex, Cursor) — that's
 the top-level `integrations/` directory. This page is the read-first entry
@@ -16,11 +17,18 @@ Construction → Operations**. Each phase is built of stages with typed
 artifacts, epistemic tags on claims (`[assumption]`, open questions, etc.),
 and gated approval.
 
-**Integration** is a sibling product: the actual AI-DLC *runtime*. It runs a real
-project (an "intent") through the framework, produces the framework's
-artifacts, and owns the **connector** — the layer that maps those artifacts
-onto `plan-tool`'s generic vocabulary. `plan-tool` never has a connector of
-its own; that mapping is entirely Integration's.
+**Integration** is a sibling product under development: a web application that
+orchestrates the AI-DLC and `plan-tool` command-line tools together. It is built
+`plan-tool`-first, as a caller of the interfaces `plan-tool` documents for any
+orchestrator — [headless operation](../OPERATIONS.md#running-headlessly),
+machine-readable plan frontmatter, saved reports, and the exit-code convention.
+It runs a real project (an "intent") through the framework, produces the
+framework's artifacts, and owns the **connector** — the layer that maps those
+artifacts onto `plan-tool`'s generic vocabulary. `plan-tool` never has a
+connector of its own; that mapping is entirely Integration's.
+
+`plan-tool` does not depend on Integration. It works standalone, and another
+orchestrator can drive it through the same interfaces.
 
 `plan-tool`'s `roadmap` verb is the Inception-stage engine: it writes
 `01-domain.md` → `02-constraints.md` → `03-components.md` →
@@ -41,7 +49,7 @@ record paths.
 input roles, inherited-versus-derived decisions, open questions,
 obligations, coverage output, and a shared frame for the model requests that
 can change what artifacts mean — never AI-DLC's own names for them. A
-connector mapping can change with a Integration workflow profile without a
+connector mapping can change with an Integration workflow profile without a
 `plan-tool` release, and a `plan-tool` role can serve a non-AI-DLC producer
 just as well.
 
@@ -153,7 +161,7 @@ design" as "shipped code" — they're tracked separately below.
 | Per-stage supplementary sources with declared roles (`BACKLOG` #383) | **Held** — waiting on a comparison-proven per-stage grounding gap, not scheduled | `BACKLOG.md`, entry #383 |
 | `roadmap --view status --json` (`BACKLOG` #385) | **Held** — evidence-gated on Integration having a concrete connector consumer | `BACKLOG.md`, entry #385 |
 | Citation snapshots, obligations, the seam frame, coverage projection (touchpoints 3, 5, 6, 7) | Settled design; not yet built as running code | Same handoff, § "The design" |
-| A Integration `roadmap` run against the real AI-DLC corpus | **Has never happened** | Both 2026-09-11 and 2026-09-14 handoffs state this explicitly |
+| An Integration `roadmap` run against the real AI-DLC corpus | **Has never happened** | Both 2026-09-11 and 2026-09-14 handoffs state this explicitly |
 
 **Explicitly still open** (not decided; don't treat any of these as settled).
 Only the source carrier has been decided, for now: #384 ships on the single
