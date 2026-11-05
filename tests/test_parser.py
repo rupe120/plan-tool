@@ -568,6 +568,7 @@ class TestFormatValidationErrors:
         snapshot = deepcopy(errors)
         (line,) = format_validation_errors(errors)
         assert line.startswith(f"features.0.{field}: unknown feature field (allowed: ")
+        assert line.endswith(")")
         keys = line.split("(allowed: ", 1)[1].split(")", 1)[0].split(", ")
         assert keys == list(Feature.model_fields)
         assert errors == snapshot
