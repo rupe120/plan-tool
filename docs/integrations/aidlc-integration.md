@@ -1,12 +1,9 @@
 # AI-DLC integration
 
-How `plan-tool`'s `roadmap` verb relates to the AI-DLC workflow framework and
-to an orchestration layer that drives a project through it: the boundary the two
-systems keep, where they actually touch, and what's shipped versus still
-open. Not for backend-CLI integrations (Claude Code, Codex, Cursor) — that's
-the top-level `integrations/` directory. This page is the read-first entry
-point; the full design and its provenance live in the handoffs and evidence
-doc linked throughout.
+How `plan-tool`'s `roadmap` verb relates to the AI-DLC framework and the
+orchestration layer above it: the boundary, where they touch, and what's
+shipped. For backend CLIs (Claude Code, Codex, Cursor), see `integrations/`.
+Full design and provenance are in the handoffs linked below.
 
 ## What AI-DLC and the orchestration layer are
 
@@ -22,11 +19,10 @@ the **connector** — the layer that maps those artifacts onto `plan-tool`'s
 generic vocabulary. `plan-tool` never has a connector of its own; that mapping
 is entirely the orchestration layer's.
 
-`plan-tool` is built to be driven from above, and does not depend on any
-orchestration layer. It works standalone, and any caller can drive it through
-the interfaces it documents for every orchestrator —
-[headless operation](../OPERATIONS.md#running-headlessly), machine-readable plan
-frontmatter, saved reports, and the exit-code convention.
+`plan-tool` depends on no orchestration layer and works standalone, but it is
+built to be driven from above: any caller can use its documented interfaces —
+[headless operation](../OPERATIONS.md#running-headlessly), plan frontmatter,
+saved reports, and exit codes.
 
 `plan-tool`'s `roadmap` verb is the Inception-stage engine: it writes
 `01-domain.md` → `02-constraints.md` → `03-components.md` →
