@@ -25,6 +25,7 @@ from pydantic import ValidationError as PydanticValidationError
 
 from plan_tool.schema import (
     PLAN_FORMAT_VERSION,
+    Feature,
     Plan,
     Step,
     SUPPORTED_PLAN_FORMAT_VERSIONS,
@@ -117,13 +118,13 @@ def format_validation_errors(errors: list[dict[str, Any]]) -> list[str]:
 
 
 def _explain_extra_field(loc_parts: tuple[Any, ...]) -> str:
-    """Build an actionable message for a forbidden (unknown) field.
-
-    Determines the field's container from its location — anything under
-    ``steps`` is step-level, otherwise plan-level — then lists that
-    container's valid fields. If the field is actually defined on the *other*
-    container, append a hint pointing the author there.
-    """
+    """Name the unknown field's container and its valid schema keys."""
+    if (
+        len(loc_parts) == 3
+        and loc_parts[0] == "features"
+        and isinstance(loc_parts[1], int)
+    ):
+        return f"unknown feature field (allowed: {', '.join(Feature.model_fields)})"
     field = str(loc_parts[-1]) if loc_parts else ""
     is_step = any(str(p) == "steps" for p in loc_parts[:-1])
     here, here_fields = ("step", Step) if is_step else ("plan-level", Plan)

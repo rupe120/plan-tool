@@ -492,17 +492,6 @@ Durable re-open conditions for retired items are recorded in
   tests for `create`, so a test that pins the current joining behavior may
   exist.
 
-### Feature-container unknown fields are mislabeled as plan-level fields
-
-- **Files:** `plan_tool/parser.py:_explain_extra_field` and mirrored tests.
-- **Symptom:** a rejected extra field in a feature registry object, such as `features: [{id: cap, title: X, description: d}]`, is labeled “unknown plan-level field” and lists Plan fields rather than the Feature fields. Validation correctly rejects the input; the container label and allowed-field list are misleading.
-- **Evidence:** step-description diagnostic review 1 probes this input and the existing `features.0.depends_on` case. The helper classifies every non-step location as plan-level at the pre-repair base as well; this is not introduced by the alias diagnostic change.
-- **Outcome / in scope:** identify actual feature containers and list their supported fields while preserving plan/step diagnostics and placement hints.
-- **Out of scope:** accepting new fields, changing feature or step schemas, altering error payloads or exit codes, or normalizing unrelated application errors.
-- **Verification:** real feature-extra-field errors name the feature container and only its valid keys; plan/step extra and missing-field cases retain their correct behavior.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** concise step-description diagnostic review, 2026-10-22; pre-existing formatter follow-up.
-
 ### Create body-patch helpers can normalize existing plan body newlines
 
 - **Files:** `plan_tool/create.py:_patch_plan_body_section`, `_insert_references_section`.
@@ -689,6 +678,26 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct. The three start/sink blocks in `gates.py`, `intent_proposal.py` and `create.py`
   are also near-identical and could share one scoped helper; that consolidation needs AST-verified
   identity before anyone merges them.
+
+### Run IDs can collide within one second because their random suffix has only 24 bits
+
+- **Files:** `plan_tool/run_log.py:new_run_id`,
+  `tests/test_run_log.py:test_new_run_id_is_unique_per_call`.
+- **Symptom / evidence:** a full parallel suite on 2026-11-04, worker `gw8`,
+  produces only 99 distinct IDs from 100 calls. IDs share the seconds-precision
+  prefix; `secrets.token_hex(3)` supplies just six hex characters. Both the
+  generator and test are unchanged by the feature-field diagnostic branch.
+- **Fix:** increase collision resistance while preserving filename safety and
+  existing run-log readers. Replace a probabilistic-only regression check with
+  deterministic coverage of the selected generation contract; do not suppress
+  the observed collision by weakening the uniqueness assertion alone.
+- **Approach:** direct; select the narrow generation remedy and verify its
+  consumers and filename contract before implementation.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** post-Claude feature-field diagnostic validation,
+  `/private/tmp/feature-field-diagnostics.claude-final-tests.log`: 1 failed,
+  14,725 passed, 67 skipped in 70.48 seconds. The trace records
+  `assert 99 == 100` at `tests/test_run_log.py:161`.
 
 ## MINOR
 
