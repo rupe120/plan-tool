@@ -513,17 +513,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** H1-boundary Claude Code review 1, candidate 6; independently reproduced through the actual synchronizer.
 
-### Jira export can write onto a done step's missing custom detail destination
-
-- **Files:** `plan_tool/jira.py:_all_detail_artifact_paths`, `_capture_target_preflight`; `tests/test_jira.py` companion target-preflight coverage.
-- **Symptom / evidence:** a done step with `detail: notes/declared.md` and no file there permits either the story or handoff output at that same path. A stubbed `export_jira` probe reproduces both cases in temporary directories on 2026-11-03. The preflight protects derived paths but does not include declared pointers; the same omission exists at merge-base `2b6292993`. Existing tests cover canonical collisions and bundle destinations, but not this custom absent-pointer case.
-- **Outcome / in scope:** reject story and handoff destinations that collide with any declared detail path, including absent files, before backend invocation or either renderer. Keep canonical-path protection and the existing target normalization rules.
-- **Out of scope:** publication redesign, new output formats, detail-grade compatibility, artifact migration, or changes to done-step historical fallback.
-- **Fix:** include declared pointers in the preflight's protected set and add coverage for both outputs, with the existing canonical and non-colliding cases retained.
-- **Verification:** reproduce both absent-pointer collisions with a never-invoke stub; assert refusal before output creation and keep ordinary paired export green.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin / scope:** retirement reconciliation sweep 1, step 4 (`20261104-040750-run-reconcile.json`, high). Deferred from IPPT-17 because the omission predates retirement and its scope preserves output/publication behavior.
-
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
