@@ -464,8 +464,7 @@ plan-tool is one take; it is not the only reasonable one.
   - **How it compares:** both work through your coding assistant. plan-tool adds
     a CLI underneath its skill that keeps plans as machine-readable frontmatter
     and runs audits on them; AI-DLC delivers its workflow as steering rules.
-  - **They compose:** an orchestrator can drive both. Integration, a sibling web
-    app under development, does
+  - **They compose:** an orchestration layer can drive both
     ([details](docs/integrations/aidlc-integration.md)).
   - No feature-by-feature comparison has been done.
 - **An example governance policy.** The
