@@ -46,7 +46,7 @@ Command: `uv run plan-tool --backend codex --model gpt-6.1-sol reconcile-code
 step-description-alias --all --no-walk --no-reuse -y < /dev/null`.
 Complete eligible set: steps 1, 2, 3, including done steps; non-code step 4
 excluded. Exit zero; reports below are relative to
-`docs/implementation-plans/plan-details/step-description-alias/reports/`.
+`docs/implementation-plans/archive/plan-details/step-description-alias/reports/`.
 
 | Step | Report | Result |
 | --- | --- | --- |

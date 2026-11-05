@@ -296,7 +296,7 @@ For the owner:
 For the roadmap owner:
 
 - **One stale citation** in the detail file
-  `docs/implementation-plans/plan-details/roadmap-decision-settlement/07-document-settlement-route-retire-every.md`:
+  `docs/implementation-plans/archive/plan-details/roadmap-decision-settlement/07-document-settlement-route-retire-every.md`:
   line 77 cites `BUG_BACKLOG.md:275`, an entry that now sits under `## ROADMAP`.
   Fix it at that plan's next re-audit, because editing the detail makes its saved
   reports stale.

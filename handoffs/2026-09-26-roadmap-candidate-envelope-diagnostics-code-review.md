@@ -4,7 +4,7 @@
 
 | Field | Value |
 | --- | --- |
-| Plan | `roadmap-candidate-envelope-diagnostics` (`docs/implementation-plans/2-roadmap-candidate-envelope-diagnostics.md`), 7 steps (5 code, 6 and 7 non-code). Source: `BUG_BACKLOG.md` § "Candidate proposal retries still emit incompatible row-operation envelopes…" (`PLAN-AUTHORED`). |
+| Plan | `roadmap-candidate-envelope-diagnostics` (`docs/implementation-plans/archive/2-roadmap-candidate-envelope-diagnostics.md`), 7 steps (5 code, 6 and 7 non-code). Source: `BUG_BACKLOG.md` § "Candidate proposal retries still emit incompatible row-operation envelopes…" (`PLAN-AUTHORED`). |
 | Branch | `impl/roadmap-candidate-envelope-diagnostics`, based on `main` at `24b32aff`, pushed to `origin`. |
 | Review range | `24b32aff..HEAD`; `plan_tool/` and `tests/` only. |
 | Run | Steps 1–5 green, each through the full-suite gate; step 6 green (tests only). Step 7 is marked done without its edit; the closure is a direct edit (see "Decisions"). |

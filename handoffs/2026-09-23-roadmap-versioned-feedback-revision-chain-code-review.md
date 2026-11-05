@@ -4,7 +4,7 @@
 
 | Field | Value |
 | --- | --- |
-| Plan | `roadmap-versioned-feedback-revision-chain` (`docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md`), 11 steps, all `done`; `status: completed` (2026-09-23) |
+| Plan | `roadmap-versioned-feedback-revision-chain` (`docs/implementation-plans/archive/2-roadmap-versioned-feedback-revision-chain.md`), 11 steps, all `done`; `status: completed` (2026-09-23) |
 | Branch | `codex/roadmap-feedback-batch-revision`; pushed through `2ba267a3` only, every commit since (from `25c7c737`) is local (the pre-push hook runs the full suite) |
 | Run head (all steps green) | `c2c64ef4` |
 | Checks run | `reconcile-code --all` sweep 1 (`gpt-5.6-terra`, `reports/20260923-144352…145713-run-reconcile.json`); sweep 2 (10 code steps, step 11 non-code, `reports/20260923-165831…171047-run-reconcile.json`, committed `0ac4b4a0`); full suite 13367 passed / 191 skipped at run head, 13601 passed / 190 skipped at `8e978039` |

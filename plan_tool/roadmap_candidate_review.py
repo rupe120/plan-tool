@@ -1416,7 +1416,7 @@ def decide_structural_candidate(
 
     Approval seals only when ``confirm_digest`` equals the stack digest recomputed under the writer
     guard; the digest confirms an approval and nothing else.
-    See docs/implementation-plans/2-roadmap-stack-aware-approval.md § "Architecture" (Digest).
+    See docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md § "Architecture" (Digest).
     """
     if decision not in {"approve", "edit", "reject"}:
         return _result("refused", "structural decision is unknown", 0)
@@ -1481,7 +1481,7 @@ class CandidateStackView:
 
     ``hops`` runs oldest first and ends at the candidate; the recorded root is not a hop. The digest
     covers structured facts, never printed text.
-    See docs/implementation-plans/2-roadmap-stack-aware-approval.md § "Architecture" (Stack view, Digest).
+    See docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md § "Architecture" (Stack view, Digest).
     """
 
     root_version_id: str

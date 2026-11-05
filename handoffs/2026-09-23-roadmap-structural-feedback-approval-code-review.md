@@ -6,7 +6,7 @@
 
 | Field | Value |
 | --- | --- |
-| Plan | `roadmap-structural-feedback-approval` (`docs/implementation-plans/2-roadmap-structural-feedback-approval.md`), 7 steps (6 code, step 7 non-code), all green |
+| Plan | `roadmap-structural-feedback-approval` (`docs/implementation-plans/archive/2-roadmap-structural-feedback-approval.md`), 7 steps (6 code, step 7 non-code), all green |
 | Branch | `codex/roadmap-structural-approval-handoff` (base `main` at `30484873`, PR #18 merged) |
 | Run head (all steps green) | `471aa057` |
 | Checks run | Detail-grounded `completeness-audit --iterate` clean at 7/7 detail coverage (`20260923-220408-completeness.md`); three complete `reconcile-code --all` sweeps over the six code steps (commits `6fa71bfa`, `e15ac3e1`, `d1d2921a`); final full suite green at `75664e74` (13,730 passed, 190 skipped; log `.tmp/roadmap-structural-approval-review.p4-fixes.pytest.log`) |

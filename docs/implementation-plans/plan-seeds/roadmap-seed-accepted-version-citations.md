@@ -80,7 +80,7 @@ stale-copy case.
   their citations are corrected by hand or by re-running `create` from the
   seed.
 - Making promotion rewrite or refresh the top-level `0N-*.md` files. That
-  restores the two-copy design `docs/implementation-plans/2-roadmap-versioned-from-birth.md`
+  restores the two-copy design `docs/implementation-plans/archive/2-roadmap-versioned-from-birth.md`
   removed, and the top-level files stay inert by design.
 - Deleting or warning about leftover top-level files. The stderr warning
   shipped 2026-10-10 on the roadmap verbs stays as it is.
@@ -232,7 +232,7 @@ adjacent finding in `BUG_BACKLOG.md` or `BACKLOG.md`; do not absorb it here.
 
 - `BUG_BACKLOG.md` — the source entry named above.
 - `ROADMAP_FORMAT.md` — the accepted-head lifecycle and the draft-seed contract.
-- `docs/implementation-plans/2-roadmap-versioned-from-birth.md` — why top-level
+- `docs/implementation-plans/archive/2-roadmap-versioned-from-birth.md` — why top-level
   files beside an accepted head are inert.
 - `plan_tool/prompts/roadmap-seed.md`, `plan_tool/roadmap_versions.py`,
   `plan_tool/roadmap_gates.py`, `plan_tool/roadmap_seed_state.py`.

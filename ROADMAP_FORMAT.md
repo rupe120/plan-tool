@@ -1084,7 +1084,7 @@ Invalid output, failed gates, interruption, rejection, edit, and stale bindings 
 Purpose: show a candidate reviewer when live prose still names a design row the
 candidate removed, computed from that candidate. This contract is evidence
 only. The correction is the prose-correction operation of IPPT-18
-([`docs/implementation-plans/2-candidate-prose-correction.md`](docs/implementation-plans/2-candidate-prose-correction.md));
+([`docs/implementation-plans/archive/2-candidate-prose-correction.md`](docs/implementation-plans/archive/2-candidate-prose-correction.md));
 the model-judged narrative review is BACKLOG #435; the response-basis check is
 BACKLOG #437. The IPPT-18 correction operation ships as
 `plan_tool/roadmap_candidate.py:CandidateCorrectProse`. The check is

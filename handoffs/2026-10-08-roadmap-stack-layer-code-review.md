@@ -7,7 +7,7 @@ One ledger, updated in place. Closure label (see `handoffs/README.md` § "Retent
 | | |
 | --- | --- |
 | Review range | `8ce4516c..HEAD` on `impl/roadmap-stack-layer` (25 commits) |
-| Plan | `docs/implementation-plans/2-roadmap-stack-layer.md`, 8 of 8 steps `done` |
+| Plan | `docs/implementation-plans/archive/2-roadmap-stack-layer.md`, 8 of 8 steps `done` |
 | Checks run | Full suite green at 13,591 passed, 67 skipped after review pass 5; five headless review passes; `reconcile-code --all` twice (sweep 1: 5 medium, 2 nit across steps 3, 6, 7; sweep 2: 0 critical / 0 high / 0 medium / 0 nits on all 7 code steps) |
 | Reviewer | Headless `claude -p` sessions at effort `high`, report-only, each with a named findings file |
 | Disposition | Closed; PR #46 |

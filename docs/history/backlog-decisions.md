@@ -496,7 +496,7 @@ structure. Not guarded: `BUG_BACKLOG.md` (no ids), an id held only by a
 
 Shipped 2026-10-16 in PR #107 (merge `b90edb570`, code head `1ddc48bf9`, full
 suite 14,642 passed / 67 skipped); closed 2026-10-19. The plan is
-[`2-roadmap-plan-derivation.md`](../implementation-plans/2-roadmap-plan-derivation.md).
+[`2-roadmap-plan-derivation.md`](../implementation-plans/archive/2-roadmap-plan-derivation.md).
 The change improves the existing route only: stage-four guidance in
 `roadmap-plans.md` (shared producers and consumers, production/update
 operations, and an owner for every hop of a source-required transition),
@@ -638,12 +638,12 @@ former backlog entry, "Roll back a roadmap revision that fails or is cut
 short" (shipped and removed 2026-09-18), for the Integration trace that found it),
 and it landed 2026-09-18 as `roadmap-decision-settlement`, a dedicated
 settle action with its own preflight and receipt
-(`docs/implementation-plans/2-roadmap-decision-settlement.md`).
+(`docs/implementation-plans/archive/2-roadmap-decision-settlement.md`).
 
 ### Dangling-journal reconciliation cut from `roadmap-revision-rollback`
 
 Cut 2026-09-18, filed forward as BACKLOG #399. Steps 2 and 3 of
-`docs/implementation-plans/2-roadmap-revision-rollback.md` built, then removed,
+`docs/implementation-plans/archive/2-roadmap-revision-rollback.md` built, then removed,
 a mechanism that peeked a dangling `recover_roadmap_publication` journal
 before recovery and folded its members into the revision checkpoint when
 eligible, so the checkpoint's `last_written_bytes` would not go stale across
