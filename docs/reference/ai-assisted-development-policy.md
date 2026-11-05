@@ -1,8 +1,10 @@
 # AI-Assisted Software Development Policy
 
-**Status:** Draft v0.1
+**Status:** Draft v0.1 — an example, not a standard
 **Applies to:** Any software work done with help from AI coding tools — chat agents, autocomplete, plan or spec generators, review bots.
 **Who it's for:** Engineers, reviewers, release owners, and the person who signs off on each change.
+
+> **An example, not a prescription.** This document shows one way a team might govern AI-assisted development. It is a starting point to adapt or replace, not a standard to adopt as written, and it carries no endorsement from any standards body. AI-assisted development is new, and teams are still working out what good practice looks like. It is shared here so others can borrow from it, argue with it, and publish better versions. See §10 for other approaches worth reading.
 
 ---
 
@@ -129,6 +131,15 @@ plan-tool covers planning, scope, review orchestration, and the decision log wel
 - **Tracking which model version made a change** for later investigation.
 
 You'll need other tools for these — secret scanners, dependency scanners, SBOM tools, and a commit-labeling convention. They're marked as such in §5.
+
+## 10. Other approaches worth reading
+
+This policy is one example among several possible ones, and `plan-tool` is one way to meet it. Two pointers for comparison:
+
+- **AI-DLC (AI-Driven Development Life Cycle)** — an open-source methodology from AWS Labs, published at [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) under the MIT-0 license. It supplies workflow rules that steer an AI coding assistant through structured phases with human approval gates, across several assistants and IDEs. It is a credible alternative to the approach here, and the two can inform each other. This policy has not been checked against it line by line.
+- **NIST SSDF (SP 800-218)** — the secure-development framework that Appendix A maps this policy against.
+
+If you maintain another approach, or find one of these rules wrong, please say so by opening an issue or pull request.
 
 ---
 
