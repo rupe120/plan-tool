@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step3-data-contract-08c6f99a": {
+      "code_anchor": "plan_tool/run_log.py:RoadmapSourceAdmission",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-while.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-while.md",
+      "reason": "code anchor `plan_tool/run_log.py:RoadmapSourceAdmission` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260912-160216-completeness"
+}

@@ -1,0 +1,155 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-immutable-evidence-storage",
+  "plan_path": "docs/implementation-plans/2-roadmap-immutable-evidence-storage.md",
+  "created_at": "2026-08-15T11:53:53Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "505329064c85979637b72ea65cd4e8f627ddad9d991c27f472a29afb5617f197",
+  "code_fingerprint": {
+    "docs/ARCHITECTURE.md": "1c79af5cde890c510ee07b6003cdf3274c91a085ea5b8aa19a7e1db6ab78479f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/01-minimal-immutable-evidence-publication.md": "25f7233c930cde53ac65f3d8e1f506d3fadd60e7ada8bcffd5e4d3b6c38e7276",
+    "docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/02-document-reduced-immutable-evidence.md": "cf4f16556153f97ff9cee0dd32d36cd2f27b29ddf0bd22cec7924a510ffc2d6a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Immutable Evidence Storage\n\n`roadmap-immutable-evidence-storage` \u00b7 generated 2026-08-15T11:53:53Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-immutable-evidence-storage   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-immutable-evidence-storage  # alternative interactive review/apply\n\n- HIGH `[namespace-directory-lifecycle]`: Step 1 (`Add minimal immutable evidence publication and enumeration helper`) leaves the `ESCALATIONS` namespace-directory lifecycle unchosen: Architecture says the helper \u201cderives the namespace directory\u201d but defines only the final-directory fsync. A root-level namespace, a required pre-created child, and a first-use child all comply, but a newly created child also needs its parent-directory durability boundary before `created`; otherwise the Overview\u2019s first-writer durability, the host-failure Risk, Testing\u2019s valid-winner case, and acceptance criteria 2\u20133 can fail. [fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html)\n  - Fix: Define the `ESCALATIONS` directory location and first-use policy, including every directory durability boundary required before `created`, and cover that policy in the criteria and tests.\n- MEDIUM `[temporary-cleanup-ownership]`: Step 1 allows a later call to remove a crash-left dot temporary, while Architecture, the Reduced-scope fence\u2019s \u201cexclusive create resolves the only real race,\u201d the crash-temporary Risk, Testing\u2019s cleanup case, and acceptance criterion 4 require competing creators to reach `existing`. A later call can unlink a live publisher\u2019s source temporary before its link, making that publisher return `write-failed` instead; without an ownership rule, cleanup can also delete an unrelated dot-prefixed entry that scans are otherwise required to ignore.\n  - Fix: Restrict cleanup to the current call\u2019s own temporary and make cross-call crash leftovers ignore-only, then align the cleanup, contention, and unrelated-entry tests with that rule.\n- MEDIUM `[enumeration-invalid-input]`: Architecture says a wrong namespace returns `invalid-input` before storage opens, but its closed enumeration contract says enumeration returns only records or `write-failed`. Step 1, Testing\u2019s sealed-registry check, and acceptance criterion 1 leave an invalid namespace passed to enumeration without one defined observable result.\n  - Fix: state enumeration\u2019s invalid-namespace outcome explicitly and align the validation, result-contract, test, and acceptance language.\n- HIGH `[existing-record-durability]`: Step 1 (`Add minimal immutable evidence publication and enumeration helper`) can return an `existing` record, or enumerate a linked final, before the winning publisher performs the final-directory `fsync`: Architecture syncs that directory only on the `created` path, while the `EEXIST` path rereads immediately and scans expose matching finals. Risks, Testing, and acceptance criteria 2\u20135 protect only `created`, so a caller can act on opaque bytes that disappear after a host failure.\n  - Fix: require every path that returns an already linked final, including race losers and enumeration, to establish the necessary directory durability or return `write-failed`, and test the ordering\n- MEDIUM `[temporary-name-exclusivity]`: Step 1 calls for a \u201cprimitive-named\u201d dot temporary but never requires unique, exclusive temporary creation. Architecture\u2019s same-directory write/link sequence, Testing\u2019s competing-creator case, and acceptance criteria 2 and 4 allow two live publishers to select one temporary pathname and overwrite or unlink each other\u2019s staged bytes before exclusive final linking decides the winner.\n  - Fix: require per-call exclusive temporary creation with a non-final dot name and add an interleaving case that proves colliding publishers cannot share staged bytes\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[storage-boundary-documentation]`: Step 2 (`Document the reduced immutable evidence storage boundary`) promises documentation in `docs/ARCHITECTURE.md`, but its test strategy only says verification \u201ccovers the architecture and scope fence,\u201d and no acceptance criterion requires the result contract, durability boundary, or deliberately excluded mechanisms to be documented. All current criteria can pass with the required consumer-facing boundary absent or stale.\n  - Fix: Add an observable documentation criterion for the storage contract and reduced-scope fence, tied to step 2\u2019s `docs/ARCHITECTURE.md` deliverable.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d4980ffa]`: The plan's `## Acceptance criteria` names `escalations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9ca8e203]`: The plan's `## Acceptance criteria` names `f_fullfsync`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-evidence-storage` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Immutable Evidence Storage\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[namespace-directory-lifecycle]`: Step 1 (`Add minimal immutable evidence publication and enumeration helper`) leaves the `ESCALATIONS` namespace-directory lifecycle unchosen: Architecture says the helper \u201cderives the namespace directory\u201d but defines only the final-directory fsync. A root-level namespace, a required pre-created child, and a first-use child all comply, but a newly created child also needs its parent-directory durability boundary before `created`; otherwise the Overview\u2019s first-writer durability, the host-failure Risk, Testing\u2019s valid-winner case, and acceptance criteria 2\u20133 can fail. [fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html)\n- MEDIUM `[temporary-cleanup-ownership]`: Step 1 allows a later call to remove a crash-left dot temporary, while Architecture, the Reduced-scope fence\u2019s \u201cexclusive create resolves the only real race,\u201d the crash-temporary Risk, Testing\u2019s cleanup case, and acceptance criterion 4 require competing creators to reach `existing`. A later call can unlink a live publisher\u2019s source temporary before its link, making that publisher return `write-failed` instead; without an ownership rule, cleanup can also delete an unrelated dot-prefixed entry that scans are otherwise required to ignore.\n- MEDIUM `[enumeration-invalid-input]`: Architecture says a wrong namespace returns `invalid-input` before storage opens, but its closed enumeration contract says enumeration returns only records or `write-failed`. Step 1, Testing\u2019s sealed-registry check, and acceptance criterion 1 leave an invalid namespace passed to enumeration without one defined observable result.\n- HIGH `[existing-record-durability]`: Step 1 (`Add minimal immutable evidence publication and enumeration helper`) can return an `existing` record, or enumerate a linked final, before the winning publisher performs the final-directory `fsync`: Architecture syncs that directory only on the `created` path, while the `EEXIST` path rereads immediately and scans expose matching finals. Risks, Testing, and acceptance criteria 2\u20135 protect only `created`, so a caller can act on opaque bytes that disappear after a host failure.\n- MEDIUM `[temporary-name-exclusivity]`: Step 1 calls for a \u201cprimitive-named\u201d dot temporary but never requires unique, exclusive temporary creation. Architecture\u2019s same-directory write/link sequence, Testing\u2019s competing-creator case, and acceptance criteria 2 and 4 allow two live publishers to select one temporary pathname and overwrite or unlink each other\u2019s staged bytes before exclusive final linking decides the winner.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[storage-boundary-documentation]`: Step 2 (`Document the reduced immutable evidence storage boundary`) promises documentation in `docs/ARCHITECTURE.md`, but its test strategy only says verification \u201ccovers the architecture and scope fence,\u201d and no acceptance criterion requires the result contract, durability boundary, or deliberately excluded mechanisms to be documented. All current criteria can pass with the required consumer-facing boundary absent or stale.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `escalations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `f_fullfsync`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-immutable-evidence-storage` \u2014 walk the 5 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-12e6e620",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add minimal immutable evidence publication and enumeration helper`) leaves the `ESCALATIONS` namespace-director",
+      "body": "Step 1 (`Add minimal immutable evidence publication and enumeration helper`) leaves the `ESCALATIONS` namespace-directory lifecycle unchosen: Architecture says the helper \u201cderives the namespace directory\u201d but defines only the final-directory fsync. A root-level namespace, a required pre-created child, and a first-use child all comply, but a newly created child also needs its parent-directory durability boundary before `created`; otherwise the Overview\u2019s first-writer durability, the host-failure Risk, Testing\u2019s valid-winner case, and acceptance criteria 2\u20133 can fail. [fsync(2)](https://man7.org/linux/man-pages/man2/fsync.2.html)",
+      "suggested_action": "Define the `ESCALATIONS` directory location and first-use policy, including every directory durability boundary required before `created`, and cover that policy in the criteria and tests.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "namespace-directory-lifecycle",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-cfaf939d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 allows a later call to remove a crash-left dot temporary, while Architecture, the Reduced-scope fence\u2019s \u201cexclusiv",
+      "body": "Step 1 allows a later call to remove a crash-left dot temporary, while Architecture, the Reduced-scope fence\u2019s \u201cexclusive create resolves the only real race,\u201d the crash-temporary Risk, Testing\u2019s cleanup case, and acceptance criterion 4 require competing creators to reach `existing`. A later call can unlink a live publisher\u2019s source temporary before its link, making that publisher return `write-failed` instead; without an ownership rule, cleanup can also delete an unrelated dot-prefixed entry that scans are otherwise required to ignore.",
+      "suggested_action": "Restrict cleanup to the current call\u2019s own temporary and make cross-call crash leftovers ignore-only, then align the cleanup, contention, and unrelated-entry tests with that rule.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "temporary-cleanup-ownership",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3539455a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says a wrong namespace returns `invalid-input` before storage opens, but its closed enumeration contract sa",
+      "body": "Architecture says a wrong namespace returns `invalid-input` before storage opens, but its closed enumeration contract says enumeration returns only records or `write-failed`. Step 1, Testing\u2019s sealed-registry check, and acceptance criterion 1 leave an invalid namespace passed to enumeration without one defined observable result.",
+      "suggested_action": "state enumeration\u2019s invalid-namespace outcome explicitly and align the validation, result-contract, test, and acceptance language.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "enumeration-invalid-input",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-71cc5bfd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add minimal immutable evidence publication and enumeration helper`) can return an `existing` record, or enumera",
+      "body": "Step 1 (`Add minimal immutable evidence publication and enumeration helper`) can return an `existing` record, or enumerate a linked final, before the winning publisher performs the final-directory `fsync`: Architecture syncs that directory only on the `created` path, while the `EEXIST` path rereads immediately and scans expose matching finals. Risks, Testing, and acceptance criteria 2\u20135 protect only `created`, so a caller can act on opaque bytes that disappear after a host failure.",
+      "suggested_action": "require every path that returns an already linked final, including race losers and enumeration, to establish the necessary directory durability or return `write-failed`, and test the ordering",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "existing-record-durability",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-81661f6d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 calls for a \u201cprimitive-named\u201d dot temporary but never requires unique, exclusive temporary creation. Architecture",
+      "body": "Step 1 calls for a \u201cprimitive-named\u201d dot temporary but never requires unique, exclusive temporary creation. Architecture\u2019s same-directory write/link sequence, Testing\u2019s competing-creator case, and acceptance criteria 2 and 4 allow two live publishers to select one temporary pathname and overwrite or unlink each other\u2019s staged bytes before exclusive final linking decides the winner.",
+      "suggested_action": "require per-call exclusive temporary creation with a non-final dot name and add an interleaving case that proves colliding publishers cannot share staged bytes",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "temporary-name-exclusivity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-730283d8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Document the reduced immutable evidence storage boundary`) promises documentation in `docs/ARCHITECTURE.md`, bu",
+      "body": "Step 2 (`Document the reduced immutable evidence storage boundary`) promises documentation in `docs/ARCHITECTURE.md`, but its test strategy only says verification \u201ccovers the architecture and scope fence,\u201d and no acceptance criterion requires the result contract, durability boundary, or deliberately excluded mechanisms to be documented. All current criteria can pass with the required consumer-facing boundary absent or stale.",
+      "suggested_action": "Add an observable documentation criterion for the storage contract and reduced-scope fence, tied to step 2\u2019s `docs/ARCHITECTURE.md` deliverable.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "storage-boundary-documentation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "505329064c85979637b72ea65cd4e8f627ddad9d991c27f472a29afb5617f197",
+    "detail_bundle_digest": "f809a19cc999a2e41e8250974716251871d6f1af911cf540662ed126cdba909e",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/01-minimal-immutable-evidence-publication.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/02-document-reduced-immutable-evidence.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

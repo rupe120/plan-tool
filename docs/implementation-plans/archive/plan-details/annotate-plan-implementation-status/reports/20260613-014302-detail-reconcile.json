@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "plan_slug": "annotate-plan-implementation-status",
+  "plan_path": "docs/implementation-plans/2-annotate-plan-implementation-status.md",
+  "created_at": "2026-06-13T01:43:02Z",
+  "kind": "detail-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "",
+  "code_fingerprint": {},
+  "code_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

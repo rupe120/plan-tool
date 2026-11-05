@@ -1,0 +1,122 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T14:52:08Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3dc3d5202743253534f5bcb891e3412123b3a3e739d6f2d1b9a1f491d8b9e178",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "62cf1723b2cf4ec2107a32bdb3d9c364d667dd7dab885dd08485820a38daea3a",
+    "DETAIL_FORMAT.md": "02686f8092e077844acdcf2f408e6f456aab8381f200acc64f03c7963ba3ccae",
+    "docs/ARCHITECTURE.md": "491a9b11c255e56fafebea94526f3a236a4af80b63958e0ad5cae161295b6a16",
+    "docs/AUDIT_FLOW.md": "3226b66ac93154285746c62186b078bc8a546212796ac21c9e52064b4f49575c",
+    "docs/cli/completeness-apply.md": "0ec1e203b71307c5370ec821aa66176aee88d994d95fd6a2fc05f682f103ae08",
+    "docs/cli/completeness-audit.md": "4b89b767f91ae60614d2d63f8f6d63b5ce0a1b7968c5b5ba5c6e2efb6b0f00c2",
+    "plan_tool/cli/completeness_cmd.py": "bb18adfe078dfea2b1edce73ffecf71a492a520e281011aae108c34eb980fc7a",
+    "plan_tool/cli/completeness_phases.py": "79adbb4ed442d5093068af4c506a1d29b8516bb9d8c9c729e19284d7f4b77e26",
+    "plan_tool/completeness_report.py": "a83d7ef2d525df20fc1cbeeb39f6999a9201bfc28262a01e105537756820d782",
+    "plan_tool/convergence.py": "8a87acd8d04446074a91abf06e94e4f16efd9a7c3656379a0709c0d69a96eac5",
+    "plan_tool/convergence_diagnosis.py": "4fd2d1146531a69cedf9bd0d18deedacb3a7524a90e1f0d943c56fc7d5c2ec58",
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "plan_tool/prompts/plan-audit.md": "e3a4f78150c2596aa51bdc369a8715dac812f56e88e4fa29f69a77797fb3fdcd",
+    "plan_tool/review.py": "a227280b4e2dc40ad1e21eaedab4200f531f858166a208001ebad8ea746408e9",
+    "tests/cli/test_completeness_cmd.py": "aabbc617b82eeec2fdb566abf57c1072fac5b6a7a39590ea48c85efd20c7bb90",
+    "tests/test_completeness_report.py": "420820cbd75502e9b629d7d42a23165459bf82ee9d2953bd6343433813852a55",
+    "tests/test_convergence.py": "a26ac39f5cabfe250f01ba4239d353dd01c111fb6d081fd810a1e425e69e7950",
+    "tests/test_convergence_diagnosis.py": "b706609da609d5586a81e187b060458accfed8d82e5af170a686fdc87a4b804a",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960",
+    "tests/test_review.py": "7ad52a1dcb4581b55cdbd03a038572cd43bcb8b90e6c412d6110cb0670f11c5b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-shared-low-risk-directives-block.md": "1a45ef5810c4b9a167f374c936c189f92299d852fa2d886fc05f16bf738b2df9",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-honor-low-risk-every-detail-writing.md": "c1ecbb28c45da45d2e25417e01504fd17cbba07ef4b89df660898c7ba207bbbf",
+    "docs/implementation-plans/plan-details/risk-profile-2/03-tier-challenge-high-severity-manual.md": "e55a4961ce465826ba8510c7f29f645d99140bd530ed5a9af02c6e9ef7f81a14",
+    "docs/implementation-plans/plan-details/risk-profile-2/04-make-every-low-risk-audit-pass-replace.md": "7bf43d069325017b2e2436db6b5ae4dedc43ef8bfac10e363f23d6aacbe7e811"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T14:52:07Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `3dc3d5202743253534f5bcb891e3412123b3a3e739d6f2d1b9a1f491d8b9e178`\n- **Detail bundle digest:** `a642a072a95a9361140b91b65df13da7931a29ec3806477b83d312f4cc5a172d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool detail risk-profile-2` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `3dc3d5202743253534f5bcb891e3412123b3a3e739d6f2d1b9a1f491d8b9e178`\n- **Detail bundle digest:** `a642a072a95a9361140b91b65df13da7931a29ec3806477b83d312f4cc5a172d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail risk-profile-2` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "3dc3d5202743253534f5bcb891e3412123b3a3e739d6f2d1b9a1f491d8b9e178",
+      "detail_bundle_digest": "a642a072a95a9361140b91b65df13da7931a29ec3806477b83d312f4cc5a172d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-shared-low-risk-directives-block.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-honor-low-risk-every-detail-writing.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/03-tier-challenge-high-severity-manual.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/04-make-every-low-risk-audit-pass-replace.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

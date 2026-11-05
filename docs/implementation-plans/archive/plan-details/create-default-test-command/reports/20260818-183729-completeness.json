@@ -1,0 +1,78 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T18:37:29Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b528f5902db47ec6b66b5c4e8591f4d800dd61919c285e23059bdb427871e5c3",
+  "code_fingerprint": {
+    "BACKLOG.md": "2ca0268834b58b20ede5fb6f6221bf888b04f94ce645e68b1bf4464c413b3b36",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md": "fe1a586bd6e6c4444feca045ae4db2b066c5906177cb3102963dfb78dddc1917",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-detect-one-proven-uv-pytest-command.md": "b9eb87cf74eeefabdaa30866de17ac3367c3bd04248282f584eb8389264f07de",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md": "3eb2dddfba4665fc0a9bb0e7665a9e0ca2018fb3e419d171762f2330ffa5ab42",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md": "1522c29d5a73103847aa49c12a583c5e64d9c6aa98a28fddd8fdbd14e3df70e4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-18T18:37:29Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-00c20530]`: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Plan sections\n\n_Required headings in the plan document are missing or still placeholder. `## Acceptance criteria` here is the plan's own section \u2014 not a Jira story's acceptance criteria._\n\n- MISSING: plan section `## References` \u2014 required H2 section `## References` is absent from the plan body\n- MISSING: plan section `## Steps` \u2014 required H2 section `## Steps` is absent from the plan body\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk create-default-test-command` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "b528f5902db47ec6b66b5c4e8591f4d800dd61919c285e23059bdb427871e5c3",
+    "detail_bundle_digest": "ff9552236e1d2cd080f49c840a59b88fa261cebd16c37e2356a483926be075a2",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-detect-one-proven-uv-pytest-command.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

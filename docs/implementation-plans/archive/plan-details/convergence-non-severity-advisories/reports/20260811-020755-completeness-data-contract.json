@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-c5e81a81": {
+      "code_anchor": null,
+      "field_or_key": "audit_stage",
+      "location": "docs/implementation-plans/2-convergence-non-severity-advisories.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/2-convergence-non-severity-advisories.md",
+      "reason": "`SavedReview.audit_stage` is not a registered persisted field or alias",
+      "step_id": null,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260811-020755-completeness"
+}

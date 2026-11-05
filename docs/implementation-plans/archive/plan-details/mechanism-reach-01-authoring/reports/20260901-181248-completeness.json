@@ -1,0 +1,73 @@
+{
+  "version": 4,
+  "plan_slug": "mechanism-reach-01-authoring",
+  "plan_path": "docs/implementation-plans/2-mechanism-reach-01-authoring.md",
+  "created_at": "2026-09-01T18:12:48Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d39b6f3fac626b67e1a65a763dd4d6b9bdf80645037a8d1cb48e181af3adae65",
+  "code_fingerprint": {
+    "plan_tool/create.py": "b3a688bb07cae29b0914266cef0068df745916f9c518f5fd23dafea7a15779b9",
+    "plan_tool/detail.py": "1df9efb551e8adc7fc008655c4dcd69324fc7fa360ed7e5f77c839ba1f5ea69d",
+    "plan_tool/prompts/detail.md": "93951b1e17952e6278f2c9f02d86225590c22b280a3e06443c488ecc51764221",
+    "plan_tool/prompts/foundational-logic-sweep.md": "729f4a7f5e7d4d8bf0c8e8a393ffb7af3e2e0655a0975009663e173fa1496acd",
+    "plan_tool/prompts/synthesize-body.md": "afad452ea48fbf70eb87b74d184fced1f8b93ae8867d2ffeaed848831fc8868c",
+    "tests/test_create.py": "57ea8ad322d3b8d0da90e42b6f5f46e93c094568356df65fafa4eab4191c0296",
+    "tests/test_detail.py": "163215ca6bd86a0afd020d7cecb8223e54d3c2fd22c04a15b5d64a1bbaa5233d",
+    "tests/test_foundational_logic.py": "08b7a980e452fd744640edd97ff037ff5116e7c043200e0b3b00c5c9bb74ce6d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-combined-split-create-guidance.md": "5b68523d99e898e1e47ebce748ce3a2e82b8b4127ce84f7ca904e0aa18b261ff",
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-combined-split-detail-guidance.md": "79caa0677b90f74f79d6dfc17e5e66a7c9508219ed56affe4975ba6b180fcd6c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Mechanism Reach 01 Authoring\n\n`mechanism-reach-01-authoring` \u00b7 generated 2026-09-01T18:12:48Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit mechanism-reach-01-authoring` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Mechanism Reach 01 Authoring\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail mechanism-reach-01-authoring` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "d39b6f3fac626b67e1a65a763dd4d6b9bdf80645037a8d1cb48e181af3adae65",
+    "detail_bundle_digest": "213ce64c4d389e219ddc03d1c44479d667d1f0d271b4c40d42d9839b366889cf",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-combined-split-create-guidance.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-combined-split-detail-guidance.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "dd8652c57ba7ea41d0a7e1695c2ed1bf978384016388172138cf4a306680c2e4",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

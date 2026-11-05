@@ -1,0 +1,157 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T19:20:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "59538a1cd62782143aa12ad3e0edd455d944afe4ebf5012a14b4fa944c201153",
+  "code_fingerprint": {
+    "BACKLOG.md": "8d07769552866afab47f41d71bb8663e8bd145988067738a60e8ce2fb2daad6a",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md": "5cecc91740df587d79601483d3b175fdabe4f27e57419fba5e4ec4a857e0070a",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-qualify-one-uv-pytest-candidate.md": "555dc822eefce5458a6dd84b3ac353faaee36858bcdd41eeb5359497eacd0a5e",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md": "401c87252652449f2f4e99c01e86b39a496fce1825c54063ff42e7ad4c355020",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md": "9c34dff94715543cefa53a03ebdb7e7c999b1b6c5db3568821b4e111ad00771c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-18T19:20:42Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9300de2a2b0cbdd5732f54db15a6184dd6ce141c38422348bc07d0702d8268b1`\n- **Detail bundle digest:** `c076df3bae884488f346c33d052319cce783e719f1476af8c283998462ddad7d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (-1 vs. first audit)\n- **Detail-bundle size:** 33850 bytes (+33850 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply create-default-test-command   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[automatic-suite-coverage]`: Step 2 (`Qualify the one UV pytest candidate`) treats `pytest`/`pytest-xdist`, `uv.lock`, and a root `tests/` directory plus a successful `uv run pytest tests/ -q -n auto` run as proof of a suite-pass gate. Overview, Architecture, Testing, acceptance criteria, step 1\u2019s suite-pass contract, and step 3\u2019s qualified-result path all rely on that claim, but those markers do not show that `tests/` contains the repository\u2019s full pytest suite; `plan_tool/launcher.py:_run_test_gate` will run only that stored subset. HEAD\u2019s `pyproject.toml` happens to set `testpaths = [\"tests\"]`, but step 2 does not require that property, so another matching repository can still hide a red test outside `tests/`.\n  - Fix: restrict automatic qualification to a fixed, local condition that establishes `tests/` is the intended pytest suite, and cover the unknown fallback when that condition is absent.\n- MEDIUM `[preflight-timeout-contract]`: Step 2 (`Qualify the one UV pytest candidate`) says a timed-out preflight becomes unknown in its Implementation, tests, and acceptance criteria, but never chooses the timeout. Step 3 consumes that result, while `PLAN_FORMAT.md` and `plan_tool/launcher.py:_run_test_gate` already define the later gate\u2019s 600-second limit; implementations can therefore wait materially different times before `create` omits or prompts for the command.\n  - Fix: define one preflight deadline and apply it consistently to qualification, failure handling, and its tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply create-default-test-command` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9300de2a2b0cbdd5732f54db15a6184dd6ce141c38422348bc07d0702d8268b1`\n- **Detail bundle digest:** `c076df3bae884488f346c33d052319cce783e719f1476af8c283998462ddad7d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[automatic-suite-coverage]`: Step 2 (`Qualify the one UV pytest candidate`) treats `pytest`/`pytest-xdist`, `uv.lock`, and a root `tests/` directory plus a successful `uv run pytest tests/ -q -n auto` run as proof of a suite-pass gate. Overview, Architecture, Testing, acceptance criteria, step 1\u2019s suite-pass contract, and step 3\u2019s qualified-result path all rely on that claim, but those markers do not show that `tests/` contains the repository\u2019s full pytest suite; `plan_tool/launcher.py:_run_test_gate` will run only that stored subset. HEAD\u2019s `pyproject.toml` happens to set `testpaths = [\"tests\"]`, but step 2 does not require that property, so another matching repository can still hide a red test outside `tests/`.\n- MEDIUM `[preflight-timeout-contract]`: Step 2 (`Qualify the one UV pytest candidate`) says a timed-out preflight becomes unknown in its Implementation, tests, and acceptance criteria, but never chooses the timeout. Step 3 consumes that result, while `PLAN_FORMAT.md` and `plan_tool/launcher.py:_run_test_gate` already define the later gate\u2019s 600-second limit; implementations can therefore wait materially different times before `create` omits or prompts for the command.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-schema-py:plan-test-command]`: docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md:## Input cites `plan_tool/schema.py:Plan.test_command`, but code anchor `plan_tool/schema.py:Plan.test_command` does not resolve in HEAD.\n- MEDIUM `[data-contract-input-plan-tool-schema-py:plan-test-command]`: docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md:## Input cites `plan_tool/schema.py:Plan.test_command`, but code anchor `plan_tool/schema.py:Plan.test_command` does not resolve in HEAD.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2aceffec",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Qualify the one UV pytest candidate`) treats `pytest`/`pytest-xdist`, `uv.lock`, and a root `tests/` directory ",
+      "body": "Step 2 (`Qualify the one UV pytest candidate`) treats `pytest`/`pytest-xdist`, `uv.lock`, and a root `tests/` directory plus a successful `uv run pytest tests/ -q -n auto` run as proof of a suite-pass gate. Overview, Architecture, Testing, acceptance criteria, step 1\u2019s suite-pass contract, and step 3\u2019s qualified-result path all rely on that claim, but those markers do not show that `tests/` contains the repository\u2019s full pytest suite; `plan_tool/launcher.py:_run_test_gate` will run only that stored subset. HEAD\u2019s `pyproject.toml` happens to set `testpaths = [\"tests\"]`, but step 2 does not require that property, so another matching repository can still hide a red test outside `tests/`.",
+      "suggested_action": "restrict automatic qualification to a fixed, local condition that establishes `tests/` is the intended pytest suite, and cover the unknown fallback when that condition is absent.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "automatic-suite-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9ed40144",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Qualify the one UV pytest candidate`) says a timed-out preflight becomes unknown in its Implementation, tests, ",
+      "body": "Step 2 (`Qualify the one UV pytest candidate`) says a timed-out preflight becomes unknown in its Implementation, tests, and acceptance criteria, but never chooses the timeout. Step 3 consumes that result, while `PLAN_FORMAT.md` and `plan_tool/launcher.py:_run_test_gate` already define the later gate\u2019s 600-second limit; implementations can therefore wait materially different times before `create` omits or prompts for the command.",
+      "suggested_action": "define one preflight deadline and apply it consistently to qualification, failure handling, and its tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "preflight-timeout-contract",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-71ea318d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `plan_tool/schema.py:Plan.test_command`",
+      "body": "docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md:## Input cites `plan_tool/schema.py:Plan.test_command`, but code anchor `plan_tool/schema.py:Plan.test_command` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-schema-py:plan-test-command",
+      "target_signature": null
+    },
+    {
+      "id": "step4-data-contract-f4a65aa2",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "Stale Input contract reference `plan_tool/schema.py:Plan.test_command`",
+      "body": "docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md:## Input cites `plan_tool/schema.py:Plan.test_command`, but code anchor `plan_tool/schema.py:Plan.test_command` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-schema-py:plan-test-command",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "9300de2a2b0cbdd5732f54db15a6184dd6ce141c38422348bc07d0702d8268b1",
+      "detail_bundle_digest": "c076df3bae884488f346c33d052319cce783e719f1476af8c283998462ddad7d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md",
+          "state": "present",
+          "digest": "5cecc91740df587d79601483d3b175fdabe4f27e57419fba5e4ec4a857e0070a"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-qualify-one-uv-pytest-candidate.md",
+          "state": "present",
+          "digest": "555dc822eefce5458a6dd84b3ac353faaee36858bcdd41eeb5359497eacd0a5e"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md",
+          "state": "present",
+          "digest": "401c87252652449f2f4e99c01e86b39a496fce1825c54063ff42e7ad4c355020"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md",
+          "state": "present",
+          "digest": "9c34dff94715543cefa53a03ebdb7e7c999b1b6c5db3568821b4e111ad00771c"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 33850,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

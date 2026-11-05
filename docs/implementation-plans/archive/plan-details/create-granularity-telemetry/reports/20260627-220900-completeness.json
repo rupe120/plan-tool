@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "plan_slug": "create-granularity-telemetry",
+  "plan_path": "docs/implementation-plans/2-create-granularity-telemetry.md",
+  "created_at": "2026-06-27T22:09:00Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9c6afca95ac71ad38058098b657b49981a3a63e04fe984cd52d9edae910c2673",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "483a33b15d20f04c26694b60a2e6641bb342417de94291ac3bceaeac507a54c6",
+    "plan_tool/create.py": "2d617fd25ac579c45d2c23c999e6b0698ca66d08a71c3aa73b2cb93746aaad40",
+    "plan_tool/granularity.py": "76dd3dfd0370805fa455ccfb8f87a55809ce8716e4ee2f288221b7123d239c5a",
+    "plan_tool/telemetry.py": "0c7a116a909cd9b672f5e8c6d909bf5631818d2c1c3cb35f60f81ef5b49ec902",
+    "tests/test_create.py": "c08fc9104da27a515feee3215c30449853aedb28888c37564d79a52d8ca02446",
+    "tests/test_data_contract.py": "1a48a87e4195b0dcb3a1506968e2a943f9543f2f20f3360b799f62814816db86",
+    "tests/test_granularity.py": "2aa37b790486eb39101fd1d0be5fa8ab263d4488f6845a992bd0113157b93dc1",
+    "tests/test_telemetry.py": "8a00ac009a5f167c7e3408263183eb352be32661f5c78e5bf895ca2920489549"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/01-promote-granularity-split-predicate-literals.md": "c5def7fda0d538cb25705eadade8834ea765de475fb25f7e1a6e89c5dc967d17",
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/02-expose-split-predicate-recovery-helper.md": "7c00bf53d9854fe79fa149b2bfd5da0fdd4913b1f74dcf8d5ba9e78dcd857c4b",
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/03-create-side-telemetry-recorders-split.md": "e311d7c6fb69286dd71962ab0a0d3ee1bac3761e48d224239eb3e8e5ef2932f9",
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/04-record-create-stage-granularity.md": "1afde3894059e17d29772f2ecd797383208a318c9fa787119ac6e8057115813f",
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/05-record-per-step-outcome-events-accept.md": "9825e60d638b0f3222796ee4c2e40a1d246e67956cf91eea5600a1d95a06a4f2",
+    "docs/implementation-plans/plan-details/create-granularity-telemetry/06-document-new-create-telemetry-context.md": "e4a435111bb4c3fa82c77c0174964b4cfd00c20f24a1f0a46794e4b4608e24da"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Create Granularity Telemetry\n\n`create-granularity-telemetry` \u00b7 generated 2026-06-27T22:09:00Z \u00b7 mode: audit-only\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The `--iterate` convergence loop auto-applies these; they are listed here because it did not apply them this run (it halted, was budget-limited, or the audit ran read-only). Address them with:\n\n    plan-tool completeness-audit create-granularity-telemetry --iterate   # auto-apply the correctness fixes\n    plan-tool reconcile-plan-walk create-granularity-telemetry            # review/apply each one interactively\n\n- INFO `[plan-plan-correctness-4edecf9b]`: INFO: [action-classification-fidelity] Step 5 (`record-per-step-outcome-events`) classifies actions by value comparison (`answer == step.change_type` \u2192 `accept`), so an operator who explicitly re-types the proposed change type (e.g. types `r` on a step already proposed `refactor`) is recorded as `accept`, indistinguishable from pressing Enter. Step 5 documents this as a deliberate choice to avoid threading the raw keystroke out of `_ask_change_type`, so it is closed, not open \u2014 but since the telemetry's central output is the operator-action distribution, aggregation must read `accept` as \"kept the proposed type,\" not \"passively pressed Enter.\"\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[file-footprint-dimension]`: The assessment event (step 4, `record-create-stage-granularity-assessment`) records `steps` (step count) but no aggregate file footprint, yet the Problem statement frames the plan-level boundary question around file count (\"a cohesive plan with many files may be correct as one plan, a small plan may still be structurally wrong\") and the Deferred \"Plan-level split advisory\" names \"aggregate file footprint\" as a candidate churn predictor. Telemetry is recorded at decision time and cannot be backfilled, so omitting footprint now forecloses ever evaluating that hypothesis from the collected log \u2014 the deferred advisory would have to add the field and re-accumulate from scratch.\n  - Address: `plan-tool completeness-apply create-granularity-telemetry --anchor file-footprint-dimension`\n- MEDIUM `[split-count-multiplicity]`: The assessment's `split` count is defined as \"the number of `granularity-split` findings\" (step 4 acceptance), but a single step can trip multiple deterministic predicates (mixed-verbs + two-clauses + multi-area each carry distinct ids and survive dedup), so `split` counts findings while `split_step_ids` counts steps \u2014 and the plan never says whether `split_step_ids` dedupes per step or repeats per finding. Aggregation reading `split` as \"steps that fired\" would over-count.\n  - Address: `plan-tool completeness-apply create-granularity-telemetry --anchor split-count-multiplicity`\n- MEDIUM `[checkpoint-double-count]`: The original interactive pass writes a `mode=\"interactive\"` assessment *and* a review checkpoint; a later resume writes a second `mode=\"checkpoint\"` assessment over the same candidate list, so one logical review yields two `create-review` events for the same plan. The Architecture section names this and pushes dedup to aggregation, but neither the acceptance criteria nor the `DATA_CONTRACT.md` step (step 6) records the instruction that `checkpoint`-mode assessments must be excluded from \"fresh signal fired\" counts \u2014 leaving the warning in prose the consumer may miss.\n  - Address: `plan-tool completeness-apply create-granularity-telemetry --anchor checkpoint-double-count`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/granularity.py', 'tests/test_granularity.py']).\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply create-granularity-telemetry` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Granularity Telemetry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- INFO: INFO: [action-classification-fidelity] Step 5 (`record-per-step-outcome-events`) classifies actions by value comparison (`answer == step.change_type` \u2192 `accept`), so an operator who explicitly re-types the proposed change type (e.g. types `r` on a step already proposed `refactor`) is recorded as `accept`, indistinguishable from pressing Enter. Step 5 documents this as a deliberate choice to avoid threading the raw keystroke out of `_ask_change_type`, so it is closed, not open \u2014 but since the telemetry's central output is the operator-action distribution, aggregation must read `accept` as \"kept the proposed type,\" not \"passively pressed Enter.\"\n\n### Detail file sections\n\n_Required headings in each step's detail file are missing or placeholder. `## Acceptance criteria` here is the detail file's section \u2014 not a Jira story's acceptance criteria._\n\n- WARN: step 1 detail `docs/implementation-plans/plan-details/create-granularity-telemetry/01-promote-granularity-split-predicate-literals.md` \u2014 section `## Table of Contents` missing\n- WARN: step 2 detail `docs/implementation-plans/plan-details/create-granularity-telemetry/02-expose-split-predicate-recovery-helper.md` \u2014 section `## Table of Contents` missing\n\n### Files coherence\n\n- NIT: step 6 declared `DATA_CONTRACT.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[file-footprint-dimension]`: The assessment event (step 4, `record-create-stage-granularity-assessment`) records `steps` (step count) but no aggregate file footprint, yet the Problem statement frames the plan-level boundary question around file count (\"a cohesive plan with many files may be correct as one plan, a small plan may still be structurally wrong\") and the Deferred \"Plan-level split advisory\" names \"aggregate file footprint\" as a candidate churn predictor. Telemetry is recorded at decision time and cannot be backfilled, so omitting footprint now forecloses ever evaluating that hypothesis from the collected log \u2014 the deferred advisory would have to add the field and re-accumulate from scratch.\n- MEDIUM `[split-count-multiplicity]`: The assessment's `split` count is defined as \"the number of `granularity-split` findings\" (step 4 acceptance), but a single step can trip multiple deterministic predicates (mixed-verbs + two-clauses + multi-area each carry distinct ids and survive dedup), so `split` counts findings while `split_step_ids` counts steps \u2014 and the plan never says whether `split_step_ids` dedupes per step or repeats per finding. Aggregation reading `split` as \"steps that fired\" would over-count.\n- MEDIUM `[checkpoint-double-count]`: The original interactive pass writes a `mode=\"interactive\"` assessment *and* a review checkpoint; a later resume writes a second `mode=\"checkpoint\"` assessment over the same candidate list, so one logical review yields two `create-review` events for the same plan. The Architecture section names this and pushes dedup to aggregation, but neither the acceptance criteria nor the `DATA_CONTRACT.md` step (step 6) records the instruction that `checkpoint`-mode assessments must be excluded from \"fresh signal fired\" counts \u2014 leaving the warning in prose the consumer may miss.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/granularity.py', 'tests/test_granularity.py']).\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit create-granularity-telemetry --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply create-granularity-telemetry` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4edecf9b",
+      "source": "plan-correctness",
+      "severity": "info",
+      "step_id": null,
+      "title": "INFO: [action-classification-fidelity] Step 5 (`record-per-step-outcome-events`) classifies actions by value comparison ",
+      "body": "INFO: [action-classification-fidelity] Step 5 (`record-per-step-outcome-events`) classifies actions by value comparison (`answer == step.change_type` \u2192 `accept`), so an operator who explicitly re-types the proposed change type (e.g. types `r` on a step already proposed `refactor`) is recorded as `accept`, indistinguishable from pressing Enter. Step 5 documents this as a deliberate choice to avoid threading the raw keystroke out of `_ask_change_type`, so it is closed, not open \u2014 but since the telemetry's central output is the operator-action distribution, aggregation must read `accept` as \"kept the proposed type,\" not \"passively pressed Enter.\"",
+      "suggested_action": "in step 5 and the `DATA_CONTRACT.md` `action` table, state that `accept` means resolved==proposed (including an explicit re-type) and only `unclassified-accepted` is a pure Enter, so the recorded distribution isn't over-read.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-plan-completeness-74c65df4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The assessment event (step 4, `record-create-stage-granularity-assessment`) records `steps` (step count) but no aggregat",
+      "body": "The assessment event (step 4, `record-create-stage-granularity-assessment`) records `steps` (step count) but no aggregate file footprint, yet the Problem statement frames the plan-level boundary question around file count (\"a cohesive plan with many files may be correct as one plan, a small plan may still be structurally wrong\") and the Deferred \"Plan-level split advisory\" names \"aggregate file footprint\" as a candidate churn predictor. Telemetry is recorded at decision time and cannot be backfilled, so omitting footprint now forecloses ever evaluating that hypothesis from the collected log \u2014 the deferred advisory would have to add the field and re-accumulate from scratch.",
+      "suggested_action": "add an aggregate file-footprint measure (e.g. count of distinct files across the candidate steps) to the `create-review` assessment context, framed as observational data, not a size threshold or detector.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "file-footprint-dimension"
+    },
+    {
+      "id": "plan-plan-completeness-4ad53174",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The assessment's `split` count is defined as \"the number of `granularity-split` findings\" (step 4 acceptance), but a sin",
+      "body": "The assessment's `split` count is defined as \"the number of `granularity-split` findings\" (step 4 acceptance), but a single step can trip multiple deterministic predicates (mixed-verbs + two-clauses + multi-area each carry distinct ids and survive dedup), so `split` counts findings while `split_step_ids` counts steps \u2014 and the plan never says whether `split_step_ids` dedupes per step or repeats per finding. Aggregation reading `split` as \"steps that fired\" would over-count.",
+      "suggested_action": "state in step 4 / `DATA_CONTRACT.md` that `split` counts findings (a step may contribute several) and pin whether `split_step_ids` holds distinct step ids.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "split-count-multiplicity"
+    },
+    {
+      "id": "plan-plan-completeness-1c0ffb8a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The original interactive pass writes a `mode=\"interactive\"` assessment *and* a review checkpoint; a later resume writes ",
+      "body": "The original interactive pass writes a `mode=\"interactive\"` assessment *and* a review checkpoint; a later resume writes a second `mode=\"checkpoint\"` assessment over the same candidate list, so one logical review yields two `create-review` events for the same plan. The Architecture section names this and pushes dedup to aggregation, but neither the acceptance criteria nor the `DATA_CONTRACT.md` step (step 6) records the instruction that `checkpoint`-mode assessments must be excluded from \"fresh signal fired\" counts \u2014 leaving the warning in prose the consumer may miss.",
+      "suggested_action": "carry the \"treat `mode=checkpoint` separately to avoid inflating fresh-signal counts\" caveat into step 6's context-key documentation so the contract, not just the plan body, states it.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "checkpoint-double-count"
+    }
+  ],
+  "annotations": {}
+}

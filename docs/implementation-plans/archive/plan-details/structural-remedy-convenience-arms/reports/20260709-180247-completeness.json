@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "plan_slug": "structural-remedy-convenience-arms",
+  "plan_path": "docs/implementation-plans/2-structural-remedy-convenience-arms.md",
+  "created_at": "2026-07-09T18:02:47Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ab2beaf5528ff63586c7143bc8acfcda797f34b8a1264ad6020d771a04c0a1ec",
+  "code_fingerprint": {
+    "BACKLOG.md": "611cffd3646bf7a58b291b8eec245799c73ca1edad0af4f06198c9cbd6419d11",
+    "CLAUDE.md": "be4288b83311d91117ae39b67e5f77c419a29d4536c12c6102d4d8446f25d20c",
+    "RUNBOOK.md": "752e2c710887913c234a0571c71cbeacbd02d5d18ae989534e58a2fe0224dd6d",
+    "docs/cli/reconcile-plan-walk.md": "bf647467c7f3cfe1c473983669d666de6d18f5faa579e8e40f143e130e5f443b",
+    "docs/cli/reconcile-plan.md": "97af13462aa38e7c45783d3d20fcdd571b186f11191022be51f2fc58ba2df833",
+    "docs/cli/scope-out.md": "01373516ed4a8d5886268634cf8e2020cf9d72a8ca856eb6ac6b0102aee19fb1",
+    "plan_tool/cli/convergence_cmd.py": "7cdba124a1dc92a41011b8fa63c399a8e35685c6b2b4cedaf1c4e54f7a1376e9",
+    "plan_tool/cli/review_actions.py": "4d7c2523591ed3b9398a5d1d122f6de2b04441b7c8ccf58441fdbe8061c5fcf0",
+    "plan_tool/cli/review_cmd.py": "9625b60d3f472cc580fefcd4cbc23121ab599b9124662b30220692d5ad7db073",
+    "plan_tool/cli/scope_out_cmd.py": "198c220aca77c899d22040bb1291e6a274ae572f058324f16f6cd513226fc966",
+    "plan_tool/convergence_diagnosis.py": "857a0f956771f647e842edeb021fe005fae67968d86ee20b1cb7eec5f85cf878",
+    "plan_tool/reground.py": "65fddf7ca35e28321def7696394e9d4b120d76e684d49d85103ab089e6ffd635",
+    "plan_tool/scope_out.py": "6583fd045f54b583676684548481e09071085a85f5400c32ba7d074ccd5736db",
+    "tests/cli/test_convergence_cmd.py": "af42ee69bb9b6834abc57564284102e267919c6390fa00f7d9561240f21f4337",
+    "tests/cli/test_review_actions.py": "5096548765e0d34de1737dcdbfae4d717aef338daf9e98176d603b38ed593ca8",
+    "tests/test_convergence_diagnosis.py": "6173d1e7084bc6a03c45afcf31ed76a094d47d406fe27e43057a6f84ad074228",
+    "tests/test_reground.py": "99088d0d9b0e3436ae5c9d1d237576dac3e14e7367e523795ecb4aa9d3fb22e7",
+    "tests/test_scope_out.py": "dceff9e87225874f05b423465917bf574b71983c9842a9a0f92884fea5b6003a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/01-generalize-scope-out-narrow-carve.md": "5ff45c0c5b452c8a020be3c266ff663f126a4a59ed05ca9d11f6ea5a36a560c5",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md": "42ee89dec37e5f1d1f5df0c1f41d22e51b5eb6c24c32657b7cf030c0bcfff5af",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md": "e20d7c77732bf78036ccc6046eea95ba13805c0025e1d3d46d9bfa9ca80fb132",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/04-per-remedy-merge-reground-opt-flags.md": "33e13e9a1d7783a73cd7c62422560bb07215800ed27a6fc6e7a5ef5615ab3631",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/05-create-existing-re-baseline-disposition.md": "d90f38b7dceb911c1cd2bcd3dbc6af77146736db3f9b947452264e40d215a524",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/06-wire-re-ground-re-baseline-disposition.md": "f82213979e07f069f5864759cd30fa4741e453bfd8f0121c967bc6e7129e21fc",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/07-reconcile-backlog-70-refresh-structural.md": "3a6d298cd345188b1c7b846a38f9077f5cd8597c72d0f42657ec7bec56216c35"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Structural Remedy Convenience Arms\n\n`structural-remedy-convenience-arms` \u00b7 generated 2026-07-09T18:02:47Z \u00b7 mode: audit-only\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Convergence \u2014 the completeness audit/apply loop is spinning\n\nThis loop is spinning \u2014 the same region keeps re-surfacing without shrinking. Consider the remedy below before continuing; the diagnosis prints the hand-run recipe, but the one-command remedy is `plan-tool convergence structural-remedy-convenience-arms --apply-split` (in-place re-split) or `plan-tool convergence structural-remedy-convenience-arms --apply-scope-out` (carve the step out), behind the same apply-or-recommend gate.\n\n```\nconvergence: spinning \u2014 structural-remedy-convenience-arms (window 3)\n  completeness: spinning (3 audits)\n  \u2022 reground-rebaseline-recursion-propagation: recurs in 2 of 3 audits; severity medium \u2192 medium (peak medium)\n  \u2022 rebaseline-seed-renderer-sharing: recurs in 2 of 3 audits; severity medium \u2192 medium (peak medium)\n  \u2022 single-step-step-ids-population: recurs in 2 of 3 audits; severity medium \u2192 medium (peak medium)\nThe decomposition itself is wrong across steps; re-seed and re-decompose:\n  plan-tool create structural-remedy-convenience-arms --from-existing <seed.md> --iterate\n  Hand-author <seed.md> from the plan's current state (annotate can forward-seed it), then re-run the line above.\n```\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply structural-remedy-convenience-arms   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk structural-remedy-convenience-arms  # alternative interactive review/apply\n\n- MEDIUM `[convergence-multi-region-actuation]`: The Problem statement and Overview claim the `convergence` multi-region `FORK_SCOPE_OUT` focus \"can only render as prose today instead of actuating,\" but step 3 (`03-make-convergence-actuate-multi-region`) \u2014 and `convergence_diagnosis.py:classify_fork` at HEAD \u2014 establish that a `FORK_SCOPE_OUT` is emitted **only** when every recurring region resolves to one and the same step; several distinct spinning steps fall to `FORK_STRUCTURAL` (re-seed). So today there is no multi-region `FORK_SCOPE_OUT` that \"renders as prose\"; the shape simply does not exist and the whole-plan re-seed fires instead. The body overstates current capability relative to step 3's accurate account, and a reader trusts a middle-state that isn't there.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[rebaseline-source-plan-supersession]`: The re-ground re-baseline disposition (step 5 `05-create-existing-re-baseline-disposition`, wired by step 6 `06-wire-re-ground-re-baseline-disposition`) marks the flagged already-built steps `done` in the source plan **and** writes a seed whose scope-to-re-plan is the plan's remaining non-flagged, not-done committed steps \u2014 the same steps the source plan still owns as PENDING. Because the seed is deliberately a *complete* `create --from-existing` re-decompose input (flagged steps as done-context plus every remaining committed step as scope-to-re-plan, per the resolved `rebaseline-seed-scope-completeness` requirement), running `create` on it produces a plan that duplicates the source plan's remaining scope. No step defines that the seed supersedes the source plan, so the \"in addition to marking done\" reading leaves the operator with two live plans claiming the same unbuilt work and no guidance on retiring the source.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor rebaseline-source-plan-supersession`\n- MEDIUM `[per-remedy-stale-directive-guard]`: The Risks entry \"Per-remedy `--merge` / `--reground` flags widen the mutation surface\" names the hazard of enabling a remedy while skipping its stale-directive guard, but step 4 (`04-per-remedy-merge-reground-opt-flags`) adds no criterion or test locking that a `--merge`- or `--reground`-only walk still honors `_saved_directive_is_stale`. The guard runs before the opt-in gate in both `_dispatch_merge_remedy` and `_dispatch_reground_remedy` (`review_actions.py`), so the hazard is foreclosed by construction \u2014 the split only changes which opt-in token each dispatcher receives \u2014 but the named risk still ships with no verifying test.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor per-remedy-stale-directive-guard`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5cdbc99b]`: The plan's `## Acceptance criteria` names `fork_scope_out`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f255d253]`: The plan's `## Acceptance criteria` names `n..m`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply structural-remedy-convenience-arms` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Structural Remedy Convenience Arms\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[convergence-multi-region-actuation]`: The Problem statement and Overview claim the `convergence` multi-region `FORK_SCOPE_OUT` focus \"can only render as prose today instead of actuating,\" but step 3 (`03-make-convergence-actuate-multi-region`) \u2014 and `convergence_diagnosis.py:classify_fork` at HEAD \u2014 establish that a `FORK_SCOPE_OUT` is emitted **only** when every recurring region resolves to one and the same step; several distinct spinning steps fall to `FORK_STRUCTURAL` (re-seed). So today there is no multi-region `FORK_SCOPE_OUT` that \"renders as prose\"; the shape simply does not exist and the whole-plan re-seed fires instead. The body overstates current capability relative to step 3's accurate account, and a reader trusts a middle-state that isn't there.\n\n### Files coherence\n\n- NIT: step 7 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-scope-out-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input cites `scope_out_cmd.py`, but code anchor path `scope_out_cmd.py` does not exist.\n- MEDIUM `[data-contract-input-convergence-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[rebaseline-source-plan-supersession]`: The re-ground re-baseline disposition (step 5 `05-create-existing-re-baseline-disposition`, wired by step 6 `06-wire-re-ground-re-baseline-disposition`) marks the flagged already-built steps `done` in the source plan **and** writes a seed whose scope-to-re-plan is the plan's remaining non-flagged, not-done committed steps \u2014 the same steps the source plan still owns as PENDING. Because the seed is deliberately a *complete* `create --from-existing` re-decompose input (flagged steps as done-context plus every remaining committed step as scope-to-re-plan, per the resolved `rebaseline-seed-scope-completeness` requirement), running `create` on it produces a plan that duplicates the source plan's remaining scope. No step defines that the seed supersedes the source plan, so the \"in addition to marking done\" reading leaves the operator with two live plans claiming the same unbuilt work and no guidance on retiring the source.\n- MEDIUM `[per-remedy-stale-directive-guard]`: The Risks entry \"Per-remedy `--merge` / `--reground` flags widen the mutation surface\" names the hazard of enabling a remedy while skipping its stale-directive guard, but step 4 (`04-per-remedy-merge-reground-opt-flags`) adds no criterion or test locking that a `--merge`- or `--reground`-only walk still honors `_saved_directive_is_stale`. The guard runs before the opt-in gate in both `_dispatch_merge_remedy` and `_dispatch_reground_remedy` (`review_actions.py`), so the hazard is foreclosed by construction \u2014 the split only changes which opt-in token each dispatcher receives \u2014 but the named risk still ships with no verifying test.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `fork_scope_out`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `n..m`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit structural-remedy-convenience-arms --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply structural-remedy-convenience-arms` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4ee8f5de",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Problem statement and Overview claim the `convergence` multi-region `FORK_SCOPE_OUT` focus \"can only render as prose",
+      "body": "The Problem statement and Overview claim the `convergence` multi-region `FORK_SCOPE_OUT` focus \"can only render as prose today instead of actuating,\" but step 3 (`03-make-convergence-actuate-multi-region`) \u2014 and `convergence_diagnosis.py:classify_fork` at HEAD \u2014 establish that a `FORK_SCOPE_OUT` is emitted **only** when every recurring region resolves to one and the same step; several distinct spinning steps fall to `FORK_STRUCTURAL` (re-seed). So today there is no multi-region `FORK_SCOPE_OUT` that \"renders as prose\"; the shape simply does not exist and the whole-plan re-seed fires instead. The body overstates current capability relative to step 3's accurate account, and a reader trusts a middle-state that isn't there.",
+      "suggested_action": "reword Problem/Overview to say a multi-region spin currently falls to `FORK_STRUCTURAL` and that Arm 1 (step 3) adds the new contiguous-range `FORK_SCOPE_OUT` arm between the single-step scope-out and the structural fallback.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "convergence-multi-region-actuation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-aef8e4d6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The re-ground re-baseline disposition (step 5 `05-create-existing-re-baseline-disposition`, wired by step 6 `06-wire-re-",
+      "body": "The re-ground re-baseline disposition (step 5 `05-create-existing-re-baseline-disposition`, wired by step 6 `06-wire-re-ground-re-baseline-disposition`) marks the flagged already-built steps `done` in the source plan **and** writes a seed whose scope-to-re-plan is the plan's remaining non-flagged, not-done committed steps \u2014 the same steps the source plan still owns as PENDING. Because the seed is deliberately a *complete* `create --from-existing` re-decompose input (flagged steps as done-context plus every remaining committed step as scope-to-re-plan, per the resolved `rebaseline-seed-scope-completeness` requirement), running `create` on it produces a plan that duplicates the source plan's remaining scope. No step defines that the seed supersedes the source plan, so the \"in addition to marking done\" reading leaves the operator with two live plans claiming the same unbuilt work and no guidance on retiring the source.",
+      "suggested_action": "establish in Arm 3 / step 6 that a re-baseline seed supersedes the source plan's remaining scope \u2014 add a walk status line and an acceptance criterion directing the operator to re-create from the seed and archive/retire the source plan.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "rebaseline-source-plan-supersession",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-5c5d201b",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks entry \"Per-remedy `--merge` / `--reground` flags widen the mutation surface\" names the hazard of enabling a re",
+      "body": "The Risks entry \"Per-remedy `--merge` / `--reground` flags widen the mutation surface\" names the hazard of enabling a remedy while skipping its stale-directive guard, but step 4 (`04-per-remedy-merge-reground-opt-flags`) adds no criterion or test locking that a `--merge`- or `--reground`-only walk still honors `_saved_directive_is_stale`. The guard runs before the opt-in gate in both `_dispatch_merge_remedy` and `_dispatch_reground_remedy` (`review_actions.py`), so the hazard is foreclosed by construction \u2014 the split only changes which opt-in token each dispatcher receives \u2014 but the named risk still ships with no verifying test.",
+      "suggested_action": "add an acceptance criterion (and a step-4 dispatch test) that a narrow-flag-only walk still refuses a stale saved directive, closing the named risk.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-remedy-stale-directive-guard",
+      "target_signature": null
+    },
+    {
+      "id": "step2-data-contract-29c241f6",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `scope_out_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input cites `scope_out_cmd.py`, but code anchor path `scope_out_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-scope-out-cmd-py",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-d1e6865d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `convergence_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-convergence-cmd-py",
+      "target_signature": null
+    }
+  ],
+  "annotations": {
+    "plan-plan-correctness-4ee8f5de": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-5c5d201b": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-aef8e4d6": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    }
+  }
+}

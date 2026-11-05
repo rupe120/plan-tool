@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "plan_slug": "preserve-reused-audit-coverage",
+  "plan_path": "docs/implementation-plans/2-preserve-reused-audit-coverage.md",
+  "created_at": "2026-08-05T02:06:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f37bee5f5bb20c95afe6f455ebbca0e6011d3fd566a30c4c2d6c3387db7d540c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "DATA_CONTRACT.md": "2f863852fdff5789fd3aa8354bdcddc04711759a6480dc883eb448c85e38bb56",
+    "plan_tool/cli/completeness_cmd.py": "e7460e314a7ea75621d290fee36b5414620af38632993d95b02e11c23dc0270e",
+    "plan_tool/cli/completeness_phases.py": "b3027b82f9904f11335506e602558a59d90f43a986d96c1c5eac9a87a0cafd9f",
+    "plan_tool/completeness_report.py": "b600a92adc2ab40d7195c283422a4d998f698bc0ff49c311d5954e5df5e582e4",
+    "plan_tool/data_contract.py": "e347c33bd5d237d8ff9e0bb7167eafc8c4a19d73ad8176f8d853ebc7ee728dd8",
+    "plan_tool/review_persistence.py": "3da122913dd3190f1ebf2ea49a9fdf1664cacf5046e6b7e5952d65a6afb4c681",
+    "tests/cli/test_completeness_cmd.py": "8d835c1eedae0ae05432cca7e8dbcd593efb566c2c6d54e0891acda031a527ba",
+    "tests/test_completeness_report.py": "4f7020efbc14402209faf30a1311c1ecd3ae4b14b91fc28e8d7fd736910a33d8",
+    "tests/test_data_contract.py": "f3cafe2c021ca42adfb41a733fa7e4fda20602d4509a1f414d4b6778c7043f13",
+    "tests/test_review_persistence.py": "aa791ff7eff87939c2fcb163a44d4f3ace3d9bf430122e8f0efc89ac5bf93388"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/01-save-normalized-coverage-completeness.md": "b56ac3c614721ec52cb972b00dbc18a2b25713d736698d6f8b27369955cfdc64",
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/02-restore-saved-coverage-when-reusing.md": "57b7112d7de092700b0a871ed6b118700f89f8c5c3e08b367af578057a273e1d",
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/03-record-validation-close-source-risk.md": "87a583a77364b88ed9e6ed230ba0730c6ea0699f63ec1a9a26bffa1b1219d61a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Preserve Reused Audit Coverage\n\n`preserve-reused-audit-coverage` \u00b7 generated 2026-08-05T02:06:02Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply preserve-reused-audit-coverage   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[iterate-checkpoint-coverage]`: The Architecture says \u201c`finalize_completeness_run` selects one coverage value\u201d and \u201cThat one selected value feeds \u2026 the existing iterate checkpoint path,\u201d while step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201cSeed iterate coverage before the checkpoint.\u201d At HEAD, `_run_iterate_convergence_loop` writes `write_pre_apply_audit_checkpoint` before returning to `finalize_completeness_run`, so finalization cannot feed that earlier sink.\n  - Fix: State that iterate reuse seeds selected coverage before its checkpoint and carries that same value into finalization. - INFO: [coverage-validity] Step 1 (`Save normalized coverage in completeness audit sidecars`) calls a \u201ccontradictory coverage state\u201d unknown without defining the valid tuples. `audit_plan_until_stable` can emit `budget_limited=False` and `confirmation_kind=None` for an unconfirmed one-pass (`cap == 1`) audit, so a generic normalizer could downgrade an observed verdict to unknown. \u2192 fix: Define accepted producer coverage combinations, including the cap-one unconfirmed form, and test normalization against them.\n- MEDIUM `[reuse-audit-precedence]`: Step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201can explicit `--audit-passes` continues to force that branch,\u201d but `plan_tool/cli/completeness_cmd.py:_resolve_audit_reuse` says \u201cExplicit `--reuse-audit` always wins, even over `--audit-passes N`.\u201d Changing that precedence would make a fingerprint-fresh explicit reuse call Claude, contrary to the no-call boundary.\n  - Fix: Specify that `--audit-passes` blocks automatic reuse only; an explicit `--reuse-audit` still reuses a fresh sidecar without a Claude call.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cb79900d]`: The plan's `## Acceptance criteria` names `coverage.evidence_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply preserve-reused-audit-coverage` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Preserve Reused Audit Coverage\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[iterate-checkpoint-coverage]`: The Architecture says \u201c`finalize_completeness_run` selects one coverage value\u201d and \u201cThat one selected value feeds \u2026 the existing iterate checkpoint path,\u201d while step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201cSeed iterate coverage before the checkpoint.\u201d At HEAD, `_run_iterate_convergence_loop` writes `write_pre_apply_audit_checkpoint` before returning to `finalize_completeness_run`, so finalization cannot feed that earlier sink.\n- MEDIUM `[reuse-audit-precedence]`: Step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201can explicit `--audit-passes` continues to force that branch,\u201d but `plan_tool/cli/completeness_cmd.py:_resolve_audit_reuse` says \u201cExplicit `--reuse-audit` always wins, even over `--audit-passes N`.\u201d Changing that precedence would make a fingerprint-fresh explicit reuse call Claude, contrary to the no-call boundary.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `coverage.evidence_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk preserve-reused-audit-coverage` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a7d56835",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture says \u201c`finalize_completeness_run` selects one coverage value\u201d and \u201cThat one selected value feeds \u2026 the ",
+      "body": "The Architecture says \u201c`finalize_completeness_run` selects one coverage value\u201d and \u201cThat one selected value feeds \u2026 the existing iterate checkpoint path,\u201d while step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201cSeed iterate coverage before the checkpoint.\u201d At HEAD, `_run_iterate_convergence_loop` writes `write_pre_apply_audit_checkpoint` before returning to `finalize_completeness_run`, so finalization cannot feed that earlier sink.",
+      "suggested_action": "State that iterate reuse seeds selected coverage before its checkpoint and carries that same value into finalization. - INFO: [coverage-validity] Step 1 (`Save normalized coverage in completeness audit sidecars`) calls a \u201ccontradictory coverage state\u201d unknown without defining the valid tuples. `audit_plan_until_stable` can emit `budget_limited=False` and `confirmation_kind=None` for an unconfirmed one-pass (`cap == 1`) audit, so a generic normalizer could downgrade an observed verdict to unknown. \u2192 fix: Define accepted producer coverage combinations, including the cap-one unconfirmed form, and test normalization against them.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iterate-checkpoint-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-1eb98ceb",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201can explicit `--audit-passes` continues to forc",
+      "body": "Step 2 (`Restore saved coverage when reusing a completeness audit`) says \u201can explicit `--audit-passes` continues to force that branch,\u201d but `plan_tool/cli/completeness_cmd.py:_resolve_audit_reuse` says \u201cExplicit `--reuse-audit` always wins, even over `--audit-passes N`.\u201d Changing that precedence would make a fingerprint-fresh explicit reuse call Claude, contrary to the no-call boundary.",
+      "suggested_action": "Specify that `--audit-passes` blocks automatic reuse only; an explicit `--reuse-audit` still reuses a fresh sidecar without a Claude call.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reuse-audit-precedence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

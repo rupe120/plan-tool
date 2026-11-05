@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "plan_slug": "plan-refresh-against-code",
+  "plan_path": "docs/implementation-plans/2-plan-refresh-against-code.md",
+  "created_at": "2026-06-17T01:52:10Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "873245adf56998591cf4ad4e776c3d115e69fb257dc3ae95cfbaed1b57f64050",
+  "code_fingerprint": {
+    "CLAUDE.md": "a2e5a0ea7e7fdbedf20fd5d81e3b1f0f8c5583f8760bedd6f5d3b17ab378896e",
+    "README.md": "b4f3919d73f3ab378baeea4e471e11bb6b1ac24aa9d8b663f83119afc11fdaeb",
+    "RUNBOOK.md": "37fd0f390b406beb0d9a41d475dcc1d5354c6cb695e0b5a229263b2e65559d4f",
+    "docs/AUDIT_RESUME_FLOW.md": "4bc4cc97a1eaf7b604eff9dc1356c802a3302403372d6d24636e3ab482640e5e",
+    "integrations/claude/SKILL.md": "0a6c8eafb294fb13f3209c6c655eef6dd5115011774cccc241391f5e7951eb77",
+    "integrations/codex/SKILL.md": "d4eaacd07b7bc0dfd0828256e310b79d85834e542756cb8389a2a5913fc954c1",
+    "plan_tool/cli/authoring.py": "70be581b6ddff818d15099123a4d58d5743d13503a0659e25026f0a0d5ceca15",
+    "plan_tool/cli/reconcile.py": "96ea24409520b565f4eb0406bf56f15c9abbefc8e1f486d3605bf2476f094d10",
+    "plan_tool/cli/review_cmd.py": "a231fabde46a67aa297e3555e2bf9fdd349418436d5f44f1aa3f6aa9ff0021ae",
+    "plan_tool/completeness_report.py": "2835f8dd190bbbde0a8653cfeae30f68d5b9b04abba105035c796b0ef2a66fae",
+    "plan_tool/fingerprint.py": "eb20285c1bc6e8634aabd969ca7ad7fa956a7efb2b67df40446f69bde641ae33",
+    "tests/cli/test_authoring_cmds.py": "919daf17eba69a9caa66488aff4f385fac65c9d974cd85061ae5dae845dbbcda",
+    "tests/cli/test_review_cmds.py": "70b4bc6338b0bb9f99b4413ab2af8ef81c14de80dabc944e6081f800b1fd34d1",
+    "tests/test_fingerprint.py": "d3fd74cc4bbe8ceb5c424e0ab200f12f4ddd44bbe9f1183f1253f45bb58a19bf"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Plan Refresh Against Code\n\n`plan-refresh-against-code` \u00b7 generated 2026-06-17T01:52:10Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 5\n- **Deferred:** 3 (3 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The no-baseline (pre-feature plan) path is specified two mutually exclusive ways. Architecture's \"No-baseline path is a full reconcile, not the cheap gate\", the \"No-baseline refresh cost\" risk, and step 3's Branch 1 (`needs_grounding` \u2192 reconcile over the whole declared surface, one `detail-reconcile` Claude call per owning step) all mandate a full reconcile; but the \"Stale/absent fingerprint\" risk, the Testing \"Edge: no fingerprint stored yet \u2192 assume-fresh \u2026 with **no Claude call**\", and the Acceptance criterion \"A plan with no stored fingerprint is treated as assume-fresh \u2026 reports 'grounded' with no Claude call\" mandate a no-op. A developer implementing step 3 (whose `test_no_baseline_treated_as_needs_grounding` asserts reconcile runs) cannot also satisfy the acceptance criterion that asserts no Claude call \u2014 the two halves of the plan grade each other as failing.\n- [APPLIED] Step 3 (`refresh.py`) re-stamps the grounding sidecar to the current code state immediately after `run_auto_reconcile_on_drift`, which only *saves* findings for `reconcile-plan-walk` and never applies them \u2014 and is best-effort, silently skipping a step whose `detail-reconcile` call errors or exits non-zero (confirmed in `auto_reconcile.py`). The next `--refresh` then diffs the code map, finds no drift, and reports \"still grounded\" while the surfaced findings sit unapplied and any failed-to-examine step's drift goes unre-examined. The cheap gate thus hides exactly the unresolved state refresh exists to surface. \u2014 - `docs/implementation-plans/2-plan-refresh-against-code.md`: rewrote Architecture point 3 so the cheap \"still grounded\" no-op fires only on an empty diff with a *clean* grounding, and a drift refresh records a distinct \"examined, findings-pending\" state (with failed/unexamined steps left stale) that the gate does not clear over unapplied drift.\n- [APPLIED] The \"all-PENDING / pre-start framing\" paragraph says refresh \"does not inspect step run-state \u2026 runs the same gate + scoped reconcile regardless.\" Combined with step 5 stamping a baseline at `create`/`detail` time (before the plan's `creates:` files exist), the first refresh after `plan-tool run` implements the plan sees every newly-written file as \"new\"/drift and reconciles the plan against *its own implementation* \u2014 treating intended work as external code drift. The plan names the situation refresh is *for* but builds no guard against running it mid-implementation.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[force-flag]`: The \"Stale/absent fingerprint\" risk and the assume-fresh acceptance criterion both reserve reconcile \"for a `--force` re-ground or genuine code drift,\" but no step builds `--force` \u2014 step 3 and step 4 each list it under Deferred. The acceptance criterion thus names a trigger no step delivers, leaving the reader to assume a knob that does not ship.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor force-flag`\n- MEDIUM `[restamp-masks-pending-findings]`: Step 3's drift branch re-stamps the grounding sidecar to the current code state *after* `run_auto_reconcile_on_drift` only **surfaces** findings (it does not apply them). The plan names the distinction (\"records the code state \u2026 not that the surfaced findings were applied\") but never names the consequence: a second `reconcile-plan --refresh` then sees `code_match=True` and reports \"still grounded,\" silently masking the still-pending, unapplied findings from `reconcile-plan-walk`. No step or criterion covers the re-refresh-with-pending-findings case.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor restamp-masks-pending-findings`\n- MEDIUM `[step1-third-copy]`: Step 1 extracts the map-diff into `diff_code_fingerprint` but dedups only `completeness_report.resolve_reusable_audit` and `cli/reconcile.resolve_reusable_reconcile`, leaving the near-identical inline block in `cli/review_cmd.py` (step 1 Deferred: \"the third copy \u2026 left out of footprint\"). The \"drift between copies is a silent correctness risk\" rationale the step itself cites therefore still applies between the new helper and the untouched `review_cmd` copy.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor step1-third-copy`\n- MEDIUM `[self-implementation-as-drift]`: The \"all-PENDING / pre-start framing\" paragraph states refresh \"does not inspect step run-state ... runs the same gate + scoped reconcile regardless,\" but no section names the consequence: on a partially-implemented plan, the plan's *own* in-progress work \u2014 a `creates:` file now on disk, or an edited `files:` entry \u2014 registers as code drift and triggers a reconcile against the operator's own changes, not against someone else's merge. This is distinct from the declared-surface blind spot (which concerns *unlisted* files).\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor self-implementation-as-drift`\n- MEDIUM `[empty-code-surface]`: A plan whose steps declare no code `files`/`creates` (a docs-only plan like step 6) produces an empty `compute_code_fingerprint` map, so `check_grounding_drift` always returns `code_match=True` and refresh is a permanent silent no-op \u2014 it can never tell the operator the docs may have gone stale against the code they describe. The plan never names the empty-watched-surface case (the extreme of the declared-surface blind spot).\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor empty-code-surface`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step6-files-coherence-1776785d]`: `CLAUDE.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-b404ada7]`: `README.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply plan-refresh-against-code` \u2014 walk the 5 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply plan-refresh-against-code --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (3 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Plan Refresh Against Code\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 6 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 6 declared `README.md` not mentioned in detail\n- NIT: step 6 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[force-flag]`: The \"Stale/absent fingerprint\" risk and the assume-fresh acceptance criterion both reserve reconcile \"for a `--force` re-ground or genuine code drift,\" but no step builds `--force` \u2014 step 3 and step 4 each list it under Deferred. The acceptance criterion thus names a trigger no step delivers, leaving the reader to assume a knob that does not ship.\n- MEDIUM `[restamp-masks-pending-findings]`: Step 3's drift branch re-stamps the grounding sidecar to the current code state *after* `run_auto_reconcile_on_drift` only **surfaces** findings (it does not apply them). The plan names the distinction (\"records the code state \u2026 not that the surfaced findings were applied\") but never names the consequence: a second `reconcile-plan --refresh` then sees `code_match=True` and reports \"still grounded,\" silently masking the still-pending, unapplied findings from `reconcile-plan-walk`. No step or criterion covers the re-refresh-with-pending-findings case.\n- MEDIUM `[step1-third-copy]`: Step 1 extracts the map-diff into `diff_code_fingerprint` but dedups only `completeness_report.resolve_reusable_audit` and `cli/reconcile.resolve_reusable_reconcile`, leaving the near-identical inline block in `cli/review_cmd.py` (step 1 Deferred: \"the third copy \u2026 left out of footprint\"). The \"drift between copies is a silent correctness risk\" rationale the step itself cites therefore still applies between the new helper and the untouched `review_cmd` copy.\n- MEDIUM `[self-implementation-as-drift]`: The \"all-PENDING / pre-start framing\" paragraph states refresh \"does not inspect step run-state ... runs the same gate + scoped reconcile regardless,\" but no section names the consequence: on a partially-implemented plan, the plan's *own* in-progress work \u2014 a `creates:` file now on disk, or an edited `files:` entry \u2014 registers as code drift and triggers a reconcile against the operator's own changes, not against someone else's merge. This is distinct from the declared-surface blind spot (which concerns *unlisted* files).\n- MEDIUM `[empty-code-surface]`: A plan whose steps declare no code `files`/`creates` (a docs-only plan like step 6) produces an empty `compute_code_fingerprint` map, so `check_grounding_drift` always returns `code_match=True` and refresh is a permanent silent no-op \u2014 it can never tell the operator the docs may have gone stale against the code they describe. The plan never names the empty-watched-surface case (the extreme of the declared-surface blind spot).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk plan-refresh-against-code` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply plan-refresh-against-code` \u2014 walk the 5 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-2972eb4c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The \"Stale/absent fingerprint\" risk and the assume-fresh acceptance criterion both reserve reconcile \"for a `--force` re",
+      "body": "The \"Stale/absent fingerprint\" risk and the assume-fresh acceptance criterion both reserve reconcile \"for a `--force` re-ground or genuine code drift,\" but no step builds `--force` \u2014 step 3 and step 4 each list it under Deferred. The acceptance criterion thus names a trigger no step delivers, leaving the reader to assume a knob that does not ship.",
+      "suggested_action": "drop `--force` from the acceptance criterion and risk text (or mark it explicitly deferred-not-shipped), so no acceptance bullet depends on an unimplemented flag.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "force-flag"
+    },
+    {
+      "id": "plan-plan-completeness-299b8b50",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's drift branch re-stamps the grounding sidecar to the current code state *after* `run_auto_reconcile_on_drift` on",
+      "body": "Step 3's drift branch re-stamps the grounding sidecar to the current code state *after* `run_auto_reconcile_on_drift` only **surfaces** findings (it does not apply them). The plan names the distinction (\"records the code state \u2026 not that the surfaced findings were applied\") but never names the consequence: a second `reconcile-plan --refresh` then sees `code_match=True` and reports \"still grounded,\" silently masking the still-pending, unapplied findings from `reconcile-plan-walk`. No step or criterion covers the re-refresh-with-pending-findings case.",
+      "suggested_action": "add an edge-case concept (and a criterion or RUNBOOK note in step 6) stating how a refresh signals that examined-but-unapplied findings are outstanding rather than reporting a clean \"still grounded.\"",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "restamp-masks-pending-findings"
+    },
+    {
+      "id": "plan-plan-completeness-dd7d5a7d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 extracts the map-diff into `diff_code_fingerprint` but dedups only `completeness_report.resolve_reusable_audit` a",
+      "body": "Step 1 extracts the map-diff into `diff_code_fingerprint` but dedups only `completeness_report.resolve_reusable_audit` and `cli/reconcile.resolve_reusable_reconcile`, leaving the near-identical inline block in `cli/review_cmd.py` (step 1 Deferred: \"the third copy \u2026 left out of footprint\"). The \"drift between copies is a silent correctness risk\" rationale the step itself cites therefore still applies between the new helper and the untouched `review_cmd` copy.",
+      "suggested_action": "note in step 1 (or the Deferred section) that the `review_cmd` copy remains a known divergence point until a follow-up folds it into the shared helper, so the residual risk is tracked rather than implied resolved.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "step1-third-copy"
+    },
+    {
+      "id": "plan-plan-completeness-9d4a3612",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The \"all-PENDING / pre-start framing\" paragraph states refresh \"does not inspect step run-state ... runs the same gate +",
+      "body": "The \"all-PENDING / pre-start framing\" paragraph states refresh \"does not inspect step run-state ... runs the same gate + scoped reconcile regardless,\" but no section names the consequence: on a partially-implemented plan, the plan's *own* in-progress work \u2014 a `creates:` file now on disk, or an edited `files:` entry \u2014 registers as code drift and triggers a reconcile against the operator's own changes, not against someone else's merge. This is distinct from the declared-surface blind spot (which concerns *unlisted* files).",
+      "suggested_action": "name the self-implementation-as-drift case and state refresh's intended behavior when run against a plan whose declared surface the operator is mid-implementation on. - INFO: [plan-digest-unconsumed] The grounded plan digest (`compute_plan_fingerprint`) is computed and persisted by steps 2 and 5 but read by no step's logic \u2014 the drift gate (step 3) diffs only the code map. The plan defends it as \"reserved for `SavedReview` parity\" and \"room for a later plan-self-edit staleness check,\" but since no step exercises it, whether the parity is actually required is unfalsifiable from the plan alone. \u2192 fix: mark `grounded_plan_fingerprint` explicitly as reserved-unused, or name the step that would read it, so reviewers don't expect a self-edit staleness check the bundle never delivers.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "self-implementation-as-drift"
+    },
+    {
+      "id": "plan-plan-completeness-4796965f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "A plan whose steps declare no code `files`/`creates` (a docs-only plan like step 6) produces an empty `compute_code_fing",
+      "body": "A plan whose steps declare no code `files`/`creates` (a docs-only plan like step 6) produces an empty `compute_code_fingerprint` map, so `check_grounding_drift` always returns `code_match=True` and refresh is a permanent silent no-op \u2014 it can never tell the operator the docs may have gone stale against the code they describe. The plan never names the empty-watched-surface case (the extreme of the declared-surface blind spot).",
+      "suggested_action": "name the empty-code-surface case and state refresh's expected behavior for it (no-op-by-design vs. a one-line \"nothing to ground\" notice).",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "empty-code-surface"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-2972eb4c": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-299b8b50": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-dd7d5a7d": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-9d4a3612": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-4796965f": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-plan-refresh-against-code.md`: added an \"Empty watched surface\" bullet to `## Out of scope` naming the no-`files`/`creates` (docs-only) case and stating refresh is a permanent no-op-by-design that emits a \"nothing to ground\" notice rather than reporting \"still grounded\".",
+      "halt_reason": ""
+    }
+  }
+}

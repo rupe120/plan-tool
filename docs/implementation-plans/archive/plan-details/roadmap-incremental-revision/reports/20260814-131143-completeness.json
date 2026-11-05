@@ -1,0 +1,132 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-incremental-revision",
+  "plan_path": "docs/implementation-plans/2-roadmap-incremental-revision.md",
+  "created_at": "2026-08-14T13:11:43Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "da397e48ae9ed82b6975c8deeda0ba897300f87fef68d09d07d4d1c9bdb8fbbd",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "ROADMAP_FORMAT.md": "ab920b33474876e8f7f61534e316180fe1f70e1b0076d519a965d2f42bab9215",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "docs/ARCHITECTURE.md": "9b8db0e2ca98def8e4fe8bd9283419782976e0ce0f973d59adb4a5bdf9ec6559",
+    "docs/ROADMAP_WALKTHROUGH.md": "4c9a6f4ad04ee2c6c8123a751e1373797891ad7f9e78ad5217b6804fec12f6f7",
+    "docs/cli/roadmap.md": "5390820929acffad9f1ec87f22f8d21978b0a5ece2cf51d004e31d9f13b0d8a3",
+    "plan_tool/cli/authoring.py": "23ad7a56932e11e74115a86b2eecf9e91a7e621732b7aae810ce31b123facbac",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "plan_tool/roadmap_artifacts.py": "90eceab79eeb9e4d3569f7b1c75173d3ab95d2126b7c20c45d2da78766bfa5eb",
+    "plan_tool/roadmap_seed_state.py": "36634f92999774b9ab8dbc7205a144454df152aea64063471a5783d017af63ea",
+    "plan_tool/run_log.py": "44c6a86917436bf15b84735a21775c13493628f0e8b17b749f65ed1fd2f69382",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb",
+    "tests/test_roadmap_artifacts.py": "70681fd5f183d94ec7ce69e8c2addeb4d37ad64b0eefe79ba4ab89be36f15fc0",
+    "tests/test_roadmap_format.py": "3423eb1f1761dd84ca4ac7ab5bd858a9e191e1330595c623b76b0c8e69ffe85d",
+    "tests/test_roadmap_seed_state.py": "baff4675b1de8e2576fc657f1ac24738ca7c677d159072bcd64dc619eba740ee",
+    "tests/test_run_log.py": "ba02e630709aac5ea3a0e18846dcfbc3a745cc948395e74806b7f2d1e728816a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/01-define-same-artifact-live-feedback.md": "27b3a918383745f2c952212913b311f1059d0b42e642803a2472946d70d13fee",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/02-parse-merge-one-single-field-target-row.md": "a4e9cc09e5003bf881b6efccd8f412ad3c557d3824252ea8ca1928cb49e7ee97",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/03-serialize-roadmap-seed-state-writers.md": "c0b06a0744d183560edbe1de60bc5442766dc24f9260a976c4cf6ec34e726f4b",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/04-expose-one-exclusive-revise-feedback.md": "3605bf9287250c220554fc667c2f0571c0b13aae5dcc069d87dcc04a2570a2ba",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/05-document-local-feedback-revision.md": "71d32f173ca109e86ac588c6deb33236d66f979506892440795030af65befcb3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Incremental Revision\n\n`roadmap-incremental-revision` \u00b7 generated 2026-08-14T13:11:42Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4f5857b88a21687ba5727bf99c3601cf9de4d723945b3cef2c14d668ba007bec`\n- **Detail bundle digest:** `d810f08a364954ba6368efbac905fe54bf1edeca35fba35f043dae0566447a81`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (-7 vs. first audit)\n- **Detail-bundle size:** 74139 bytes (+74139 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-incremental-revision   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[local-revision-event-schema]`: Step 4 (`Expose one exclusive --revise-feedback command with one physical backend request and machine-checkable event evidence`) requires one preflight event for every runner invocation and one attempt event for every post-preflight exit, but its guard acquisition precedes preflight and its fixed attempt matrix omits prompt-render and upstream-artifact load failures. Step 3 (`Serialize roadmap and seed-state writers, pre-invalidate seed state, and atomically publish one gate-valid artifact candidate`) requires normal upstream artifacts during validation, so those failures can occur after invalidation with no defined event row.\n  - Fix: define closed preflight and attempt-event rows for guard, context-render, and upstream-validation failures, including phase values and tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-incremental-revision` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Incremental Revision\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4f5857b88a21687ba5727bf99c3601cf9de4d723945b3cef2c14d668ba007bec`\n- **Detail bundle digest:** `d810f08a364954ba6368efbac905fe54bf1edeca35fba35f043dae0566447a81`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[local-revision-event-schema]`: Step 4 (`Expose one exclusive --revise-feedback command with one physical backend request and machine-checkable event evidence`) requires one preflight event for every runner invocation and one attempt event for every post-preflight exit, but its guard acquisition precedes preflight and its fixed attempt matrix omits prompt-render and upstream-artifact load failures. Step 3 (`Serialize roadmap and seed-state writers, pre-invalidate seed state, and atomically publish one gate-valid artifact candidate`) requires normal upstream artifacts during validation, so those failures can occur after invalidation with no defined event row.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-incremental-revision` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b45f5e74",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Expose one exclusive --revise-feedback command with one physical backend request and machine-checkable event ev",
+      "body": "Step 4 (`Expose one exclusive --revise-feedback command with one physical backend request and machine-checkable event evidence`) requires one preflight event for every runner invocation and one attempt event for every post-preflight exit, but its guard acquisition precedes preflight and its fixed attempt matrix omits prompt-render and upstream-artifact load failures. Step 3 (`Serialize roadmap and seed-state writers, pre-invalidate seed state, and atomically publish one gate-valid artifact candidate`) requires normal upstream artifacts during validation, so those failures can occur after invalidation with no defined event row.",
+      "suggested_action": "define closed preflight and attempt-event rows for guard, context-render, and upstream-validation failures, including phase values and tests.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "local-revision-event-schema",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "4f5857b88a21687ba5727bf99c3601cf9de4d723945b3cef2c14d668ba007bec",
+      "detail_bundle_digest": "d810f08a364954ba6368efbac905fe54bf1edeca35fba35f043dae0566447a81",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/01-define-same-artifact-live-feedback.md",
+          "state": "present",
+          "digest": "27b3a918383745f2c952212913b311f1059d0b42e642803a2472946d70d13fee"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/02-parse-merge-one-single-field-target-row.md",
+          "state": "present",
+          "digest": "a4e9cc09e5003bf881b6efccd8f412ad3c557d3824252ea8ca1928cb49e7ee97"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/03-serialize-roadmap-seed-state-writers.md",
+          "state": "present",
+          "digest": "c0b06a0744d183560edbe1de60bc5442766dc24f9260a976c4cf6ec34e726f4b"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/04-expose-one-exclusive-revise-feedback.md",
+          "state": "present",
+          "digest": "3605bf9287250c220554fc667c2f0571c0b13aae5dcc069d87dcc04a2570a2ba"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/05-document-local-feedback-revision.md",
+          "state": "present",
+          "digest": "71d32f173ca109e86ac588c6deb33236d66f979506892440795030af65befcb3"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 74139,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

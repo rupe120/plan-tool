@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "plan_slug": "prompt-budget-advisory",
+  "plan_path": "docs/implementation-plans/2-prompt-budget-advisory.md",
+  "created_at": "2026-07-07T04:03:51Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cc7d5c164d63fda2b0c05e9fa41e227000e16ee5e6de34ccc6a9f254eca8c2b7",
+  "code_fingerprint": {
+    "BACKLOG.md": "cc732a64c7fe8b92482c5d74386ee2a0ce20d917858902607838015749231062",
+    "DATA_CONTRACT.md": "590f1c9f228537fb64eba7c18a9e8d73aee0b9f7114960a1a13ed48738ed0626",
+    "RUNBOOK.md": "c083c902c29bb2094fa8ff0873070ba02696ad4c4f3d3e9b06f9e5e2edc4fc92",
+    "plan_tool/create.py": "9b72ee900c89202eec41e9c179642025ff8e24b957dc308edf3e4c9ac45e5642",
+    "plan_tool/detail.py": "3f670c122d3c0ed94ee2ce02615805317aaa08afbc329eb7742eac4fa7a0a6a4",
+    "plan_tool/launcher.py": "22fe12bb41573aa4d294fc68732e52324f290e25b83c3580cab4f658630f43e1",
+    "plan_tool/review.py": "c6f1d0803c2e2bc88e884f69a1cad4f6798d346165eac36070e8639f9fdd8f41",
+    "plan_tool/shell.py": "12edbe0d9d1bdbfe278866859dd7f9e06823e06eac1825b0afa53dddd5ead763",
+    "plan_tool/telemetry.py": "457f08ed9b2b006b563de708d5d48712ee67ac07d817bd44876e5066beab883e",
+    "tests/test_create.py": "ea80949dd415610380bc91d0aee496f52462491a16cf30d480ca6fd1928f5c8e",
+    "tests/test_data_contract.py": "83b1cdca0733dfce35bb1a36b309e7560c71df6501574cc89613de399425bdc8",
+    "tests/test_detail.py": "f6fa0351520d3eb1046a853f789df7c9c5df8bf465a610ab98d453ab7d5b36f6",
+    "tests/test_launcher.py": "3662816692ac32e4d0079fc7c414ad78f0a33f94be4506330dca8499817550be",
+    "tests/test_review.py": "4be8a329780a7502e8b2a13b71456852537351d45d7c38997b8eaf9a81dd340e",
+    "tests/test_shell.py": "5b63296595a8da2faaf4bafbecddba80c46ab22e7513053c78ebead0ccd6de96",
+    "tests/test_telemetry.py": "7bec5224e96286ed61a318ee49962d6047c17b5fdc1b63aed8e0bfeb84e71514"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Prompt Budget Advisory\n\n`prompt-budget-advisory` \u00b7 generated 2026-07-07T04:03:51Z \u00b7 mode: iterate \u00b7 loop stopped: all_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 2 (2 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply prompt-budget-advisory   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk prompt-budget-advisory  # alternative interactive review/apply\n\n- MEDIUM `[double-warn-suppression]`: The Risks table's **Double-warning** entry claims \"Mitigation: the backstop suppresses when a named-block check already ran,\" but no step delivers that suppression: step 7 (`shell-claude-backstop`) builds `note_prompt_budget_advised()` yet its own Deferred and the acceptance criterion say \"Wiring that mark into the named-block senders is a named `reconcile-plan` follow-up \u2026 until it lands, those senders also fire the backstop.\" Steps 3\u20135 (`generate_detail`, `create_plan`, `audit_plan_until_stable`) all funnel through `shell.claude_invoke`, so on plan completion `detail`/`create`/`plan-audit` each emit **two** advisories per send \u2014 directly worsening the \"advisory fatigue\" the plan names as its top Risk \u2014 while the Risks entry presents the double-warn as already mitigated.\n- MEDIUM `[per-model-context-window]`: Every wiring step (3\u20137) passes `context_window=None`, so `estimate_prompt_budget` always judges against `DEFAULT_CONTEXT_WINDOW = 200_000` (step 1) \u2014 never `model_specs.ModelSpec.context_window`, which the Problem statement itself names as \"already carries `context_window` \u2026 but does not use it for budgeting.\" The consequence is not a mere deferral: against a backend whose real window is ~1M (a large-context Claude), a 250K-token prompt that fits comfortably shows negative headroom and fires `high` \u2014 a false positive that feeds the exact advisory-fatigue risk the plan's Risks table calls out; against a sub-200K window it under-warns and misses real overflow. The plan defers per-model resolution but never records that the fixed default makes the verdict systematically wrong off the 200K class.\n- INFO `[plan-plan-correctness-4af85f07]`: INFO: [audit-once-per-run-floor] Step 5 (`audit_plan_until_stable`) fires the advisory once before the `while passes < cap:` loop, so it measures the pass-1 prompt with an empty carried-findings block \u2014 the smallest prompt of the run. The step discloses this (per-pass re-measurement is Deferred, and it reasons the carried-findings block is \"bounded\"), so this is a considered decision, not an open gap; flagged only to note the audit surface checks the prompt floor, not the growing later passes.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[per-model-context-window]`: The Problem statement names as a defect that \"`model_specs.py` already carries `context_window` \u2026 but **does not use it for budgeting**,\" and the Deferred entry (\"Per-model window resolution *beyond* `model_specs.context_window`\") reads as if that per-model window is the resolved baseline \u2014 but every wiring step (1, 3, 4, 5, 6, 7) passes `context_window=None`, so the advisory always judges against the 200K `DEFAULT_CONTEXT_WINDOW` and `ModelSpec.context_window` stays unused. For the `codex` and `cursor` backends, whose real windows can differ from 200K, the advisory silently mis-estimates headroom and can miss the very overflow it exists to catch, so the plan does not resolve the third consequence its own Problem section lists.\n  - Address: `plan-tool completeness-apply prompt-budget-advisory --anchor per-model-context-window`\n- MEDIUM `[audit-surface-remedies]`: The Overview promises \"runnable structural remedies \u2026 relevant to the calling surface\" and names \"lower audit `--max-passes`\" as the plan-audit remedy, but step 5 (`audit_plan_until_stable`) calls `maybe_warn_prompt_budget` with only `total_bytes` and the block list \u2014 it passes no `surface`/`remedies`, so the audit advisory never surfaces its named `--max-passes` remedy an operator would act on. Step 4 (`create_plan`) is similarly non-committal (\"pass any phase-relevant remedy hints only if \u2026 accepts them\").\n  - Address: `plan-tool completeness-apply prompt-budget-advisory --anchor audit-surface-remedies`\n- MEDIUM `[backstop-telemetry-double-record]`: Step 7's `shell.claude_invoke` backstop records a `phase=\"shell-backstop\"` event on every real send, and `detail` / `create` / `audit` all funnel through `claude_invoke` (via `shell_detail_invoker` / `shell_claude_invoker` / `shell_review_invoker`), so until the deferred mark-wiring reconcile follow-up lands, each named-block send records **two** `prompt-budget` events \u2014 its named-phase event (step 3/4/5) *and* a `shell-backstop` event \u2014 double-counting the send and mislabeling half the batch traffic as blockless. Step 7's Deferred acknowledges only \"an extra advisory line per send,\" not the duplicate telemetry record, yet this telemetry is the #72 distribution the whole feature exists to build, so the pollution defeats the recorder's own purpose.\n  - Address: `plan-tool completeness-apply prompt-budget-advisory --anchor backstop-telemetry-double-record`\n- MEDIUM `[double-warn-suppression]`: Step 8 (`document-and-reconcile`) removes BACKLOG #95 outright and folds only the embed-cap remainder into #97, but the \"do not double-warn\" mitigation the Risks table promises is **not** delivered \u2014 step 7 ships the `note_prompt_budget_advised()` primitive while the caller-side mark is a deferred reconcile follow-up, so `detail`/`create`/`audit` double-warn until it lands. Deleting #95 as fully shipped overstates completion and drops the durable trail to that pending suppression work, contradicting the backlog rule to \"mark it plan-authored if work is still pending.\"\n  - Address: `plan-tool completeness-apply prompt-budget-advisory --anchor double-warn-suppression`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step7-suppression-shape-c3d507c9]`: Step 7's title or detail (`## Summary` / `## Why`) states its own deliverable suppresses/downgrades/bypasses an existing audit gate, check, finding, or severity. Silencing a quality gate is a brittle shape \u2014 confirm the gate is wrong rather than the step that trips it.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step2-files-coherence-b744b86b]`: `DATA_CONTRACT.md` is in step 2's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply prompt-budget-advisory` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- `plan-tool completeness-apply prompt-budget-advisory` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (2 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Prompt Budget Advisory\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated \u2014 new findings aren't tapering (3\u21923\u21921) \u2014 the plan is likely under-decomposed; run `plan-tool convergence prompt-budget-advisory` rather than raising --audit-passes.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[double-warn-suppression]`: The Risks table's **Double-warning** entry claims \"Mitigation: the backstop suppresses when a named-block check already ran,\" but no step delivers that suppression: step 7 (`shell-claude-backstop`) builds `note_prompt_budget_advised()` yet its own Deferred and the acceptance criterion say \"Wiring that mark into the named-block senders is a named `reconcile-plan` follow-up \u2026 until it lands, those senders also fire the backstop.\" Steps 3\u20135 (`generate_detail`, `create_plan`, `audit_plan_until_stable`) all funnel through `shell.claude_invoke`, so on plan completion `detail`/`create`/`plan-audit` each emit **two** advisories per send \u2014 directly worsening the \"advisory fatigue\" the plan names as its top Risk \u2014 while the Risks entry presents the double-warn as already mitigated.\n- MEDIUM `[per-model-context-window]`: Every wiring step (3\u20137) passes `context_window=None`, so `estimate_prompt_budget` always judges against `DEFAULT_CONTEXT_WINDOW = 200_000` (step 1) \u2014 never `model_specs.ModelSpec.context_window`, which the Problem statement itself names as \"already carries `context_window` \u2026 but does not use it for budgeting.\" The consequence is not a mere deferral: against a backend whose real window is ~1M (a large-context Claude), a 250K-token prompt that fits comfortably shows negative headroom and fires `high` \u2014 a false positive that feeds the exact advisory-fatigue risk the plan's Risks table calls out; against a sub-200K window it under-warns and misses real overflow. The plan defers per-model resolution but never records that the fixed default makes the verdict systematically wrong off the 200K class.\n- INFO: INFO: [audit-once-per-run-floor] Step 5 (`audit_plan_until_stable`) fires the advisory once before the `while passes < cap:` loop, so it measures the pass-1 prompt with an empty carried-findings block \u2014 the smallest prompt of the run. The step discloses this (per-pass re-measurement is Deferred, and it reasons the carried-findings block is \"bounded\"), so this is a considered decision, not an open gap; flagged only to note the audit surface checks the prompt floor, not the growing later passes.\n\n### Files coherence\n\n- NIT: step 2 declared `DATA_CONTRACT.md` not mentioned in detail\n- NIT: step 8 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[per-model-context-window]`: The Problem statement names as a defect that \"`model_specs.py` already carries `context_window` \u2026 but **does not use it for budgeting**,\" and the Deferred entry (\"Per-model window resolution *beyond* `model_specs.context_window`\") reads as if that per-model window is the resolved baseline \u2014 but every wiring step (1, 3, 4, 5, 6, 7) passes `context_window=None`, so the advisory always judges against the 200K `DEFAULT_CONTEXT_WINDOW` and `ModelSpec.context_window` stays unused. For the `codex` and `cursor` backends, whose real windows can differ from 200K, the advisory silently mis-estimates headroom and can miss the very overflow it exists to catch, so the plan does not resolve the third consequence its own Problem section lists.\n- MEDIUM `[audit-surface-remedies]`: The Overview promises \"runnable structural remedies \u2026 relevant to the calling surface\" and names \"lower audit `--max-passes`\" as the plan-audit remedy, but step 5 (`audit_plan_until_stable`) calls `maybe_warn_prompt_budget` with only `total_bytes` and the block list \u2014 it passes no `surface`/`remedies`, so the audit advisory never surfaces its named `--max-passes` remedy an operator would act on. Step 4 (`create_plan`) is similarly non-committal (\"pass any phase-relevant remedy hints only if \u2026 accepts them\").\n- MEDIUM `[backstop-telemetry-double-record]`: Step 7's `shell.claude_invoke` backstop records a `phase=\"shell-backstop\"` event on every real send, and `detail` / `create` / `audit` all funnel through `claude_invoke` (via `shell_detail_invoker` / `shell_claude_invoker` / `shell_review_invoker`), so until the deferred mark-wiring reconcile follow-up lands, each named-block send records **two** `prompt-budget` events \u2014 its named-phase event (step 3/4/5) *and* a `shell-backstop` event \u2014 double-counting the send and mislabeling half the batch traffic as blockless. Step 7's Deferred acknowledges only \"an extra advisory line per send,\" not the duplicate telemetry record, yet this telemetry is the #72 distribution the whole feature exists to build, so the pollution defeats the recorder's own purpose.\n- MEDIUM `[double-warn-suppression]`: Step 8 (`document-and-reconcile`) removes BACKLOG #95 outright and folds only the embed-cap remainder into #97, but the \"do not double-warn\" mitigation the Risks table promises is **not** delivered \u2014 step 7 ships the `note_prompt_budget_advised()` primitive while the caller-side mark is a deferred reconcile follow-up, so `detail`/`create`/`audit` double-warn until it lands. Deleting #95 as fully shipped overstates completion and drops the durable trail to that pending suppression work, contradicting the backlog rule to \"mark it plan-authored if work is still pending.\"\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 7's title or detail (`## Summary` / `## Why`) states its own deliverable suppresses/downgrades/bypasses an existing audit gate, check, finding, or severity. Silencing a quality gate is a brittle shape \u2014 confirm the gate is wrong rather than the step that trips it.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk prompt-budget-advisory` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply prompt-budget-advisory` \u2014 walk the 4 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-dbfe87e6",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks table's **Double-warning** entry claims \"Mitigation: the backstop suppresses when a named-block check already ",
+      "body": "The Risks table's **Double-warning** entry claims \"Mitigation: the backstop suppresses when a named-block check already ran,\" but no step delivers that suppression: step 7 (`shell-claude-backstop`) builds `note_prompt_budget_advised()` yet its own Deferred and the acceptance criterion say \"Wiring that mark into the named-block senders is a named `reconcile-plan` follow-up \u2026 until it lands, those senders also fire the backstop.\" Steps 3\u20135 (`generate_detail`, `create_plan`, `audit_plan_until_stable`) all funnel through `shell.claude_invoke`, so on plan completion `detail`/`create`/`plan-audit` each emit **two** advisories per send \u2014 directly worsening the \"advisory fatigue\" the plan names as its top Risk \u2014 while the Risks entry presents the double-warn as already mitigated.",
+      "suggested_action": "reconcile the Risks entry with the shipped design \u2014 either fold the one-line `note_prompt_budget_advised()` mark into steps 3\u20135 so suppression is real within this plan, or restate the Risks mitigation to admit the double-warn ships until the deferred follow-up",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "double-warn-suppression"
+    },
+    {
+      "id": "plan-plan-correctness-f8c9dff2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Every wiring step (3\u20137) passes `context_window=None`, so `estimate_prompt_budget` always judges against `DEFAULT_CONTEXT",
+      "body": "Every wiring step (3\u20137) passes `context_window=None`, so `estimate_prompt_budget` always judges against `DEFAULT_CONTEXT_WINDOW = 200_000` (step 1) \u2014 never `model_specs.ModelSpec.context_window`, which the Problem statement itself names as \"already carries `context_window` \u2026 but does not use it for budgeting.\" The consequence is not a mere deferral: against a backend whose real window is ~1M (a large-context Claude), a 250K-token prompt that fits comfortably shows negative headroom and fires `high` \u2014 a false positive that feeds the exact advisory-fatigue risk the plan's Risks table calls out; against a sub-200K window it under-warns and misses real overflow. The plan defers per-model resolution but never records that the fixed default makes the verdict systematically wrong off the 200K class.",
+      "suggested_action": "state in Architecture/Deferred that the 200K default is a coarse stand-in that mis-verdicts non-200K windows, and commit the plan to at least resolving `model_specs.context_window` when the backend is known rather than always defaulting.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-model-context-window"
+    },
+    {
+      "id": "plan-plan-correctness-4af85f07",
+      "source": "plan-correctness",
+      "severity": "info",
+      "step_id": null,
+      "title": "INFO: [audit-once-per-run-floor] Step 5 (`audit_plan_until_stable`) fires the advisory once before the `while passes < c",
+      "body": "INFO: [audit-once-per-run-floor] Step 5 (`audit_plan_until_stable`) fires the advisory once before the `while passes < cap:` loop, so it measures the pass-1 prompt with an empty carried-findings block \u2014 the smallest prompt of the run. The step discloses this (per-pass re-measurement is Deferred, and it reasons the carried-findings block is \"bounded\"), so this is a considered decision, not an open gap; flagged only to note the audit surface checks the prompt floor, not the growing later passes.",
+      "suggested_action": "none required \u2014 leave as the deliberate once-per-run decision the step already documents.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-plan-completeness-f8c9dff2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Problem statement names as a defect that \"`model_specs.py` already carries `context_window` \u2026 but **does not use it ",
+      "body": "The Problem statement names as a defect that \"`model_specs.py` already carries `context_window` \u2026 but **does not use it for budgeting**,\" and the Deferred entry (\"Per-model window resolution *beyond* `model_specs.context_window`\") reads as if that per-model window is the resolved baseline \u2014 but every wiring step (1, 3, 4, 5, 6, 7) passes `context_window=None`, so the advisory always judges against the 200K `DEFAULT_CONTEXT_WINDOW` and `ModelSpec.context_window` stays unused. For the `codex` and `cursor` backends, whose real windows can differ from 200K, the advisory silently mis-estimates headroom and can miss the very overflow it exists to catch, so the plan does not resolve the third consequence its own Problem section lists.",
+      "suggested_action": "either operationalize resolving the active backend's `model_specs.context_window` into at least the named-block call sites, or correct the Problem statement and Deferred to state the window is always the default and per-model resolution is wholly deferred",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-model-context-window"
+    },
+    {
+      "id": "plan-plan-completeness-9d0e2f31",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Overview promises \"runnable structural remedies \u2026 relevant to the calling surface\" and names \"lower audit `--max-pas",
+      "body": "The Overview promises \"runnable structural remedies \u2026 relevant to the calling surface\" and names \"lower audit `--max-passes`\" as the plan-audit remedy, but step 5 (`audit_plan_until_stable`) calls `maybe_warn_prompt_budget` with only `total_bytes` and the block list \u2014 it passes no `surface`/`remedies`, so the audit advisory never surfaces its named `--max-passes` remedy an operator would act on. Step 4 (`create_plan`) is similarly non-committal (\"pass any phase-relevant remedy hints only if \u2026 accepts them\").",
+      "suggested_action": "state in step 5 (and firm up step 4) that the advisory passes the surface-specific remedy strings the Overview lists, so the plan-audit and create advisories are actionable rather than bare size warnings",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "audit-surface-remedies"
+    },
+    {
+      "id": "plan-plan-completeness-0d5947c3",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7's `shell.claude_invoke` backstop records a `phase=\"shell-backstop\"` event on every real send, and `detail` / `cre",
+      "body": "Step 7's `shell.claude_invoke` backstop records a `phase=\"shell-backstop\"` event on every real send, and `detail` / `create` / `audit` all funnel through `claude_invoke` (via `shell_detail_invoker` / `shell_claude_invoker` / `shell_review_invoker`), so until the deferred mark-wiring reconcile follow-up lands, each named-block send records **two** `prompt-budget` events \u2014 its named-phase event (step 3/4/5) *and* a `shell-backstop` event \u2014 double-counting the send and mislabeling half the batch traffic as blockless. Step 7's Deferred acknowledges only \"an extra advisory line per send,\" not the duplicate telemetry record, yet this telemetry is the #72 distribution the whole feature exists to build, so the pollution defeats the recorder's own purpose.",
+      "suggested_action": "name the duplicate-`prompt-budget`-record consequence alongside the double-advisory one in step 7's Deferred and state how the #72 analysis pass distinguishes/dedupes backstop records from named-block records until the mark is wired.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "backstop-telemetry-double-record"
+    },
+    {
+      "id": "plan-plan-completeness-dbfe87e6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 8 (`document-and-reconcile`) removes BACKLOG #95 outright and folds only the embed-cap remainder into #97, but the ",
+      "body": "Step 8 (`document-and-reconcile`) removes BACKLOG #95 outright and folds only the embed-cap remainder into #97, but the \"do not double-warn\" mitigation the Risks table promises is **not** delivered \u2014 step 7 ships the `note_prompt_budget_advised()` primitive while the caller-side mark is a deferred reconcile follow-up, so `detail`/`create`/`audit` double-warn until it lands. Deleting #95 as fully shipped overstates completion and drops the durable trail to that pending suppression work, contradicting the backlog rule to \"mark it plan-authored if work is still pending.\"",
+      "suggested_action": "have step 8 mark #95 plan-authored with the outstanding double-warn-suppression mark-wiring retained as the tracked remainder, rather than removing #95 as fully shipped.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "double-warn-suppression"
+    }
+  ],
+  "annotations": {
+    "plan-plan-correctness-dbfe87e6": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-f8c9dff2": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-0d5947c3": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-dbfe87e6": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-f8c9dff2": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    }
+  }
+}

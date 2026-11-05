@@ -1,0 +1,147 @@
+{
+  "version": 4,
+  "plan_slug": "skill-router-and-shared-reference",
+  "plan_path": "docs/implementation-plans/2-skill-router-and-shared-reference.md",
+  "created_at": "2026-09-16T19:17:46Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2bc405e4b9881eb4fa2c3a61025e5e93d8fc73ede4dc5246e694c33a8807c3b8",
+  "code_fingerprint": {
+    "BACKLOG.md": "4463cd6d6c349084e41504ab2a9f901b3aeff29dacf137b90970f1108afb4a7b",
+    "README.md": "8fbea936d77daf00c75408abe9de4e7f90307cbc21b6ae1640a9dc0998154336",
+    "docs/ARCHITECTURE.md": "87589ff6f9b3a58618a1a1321fba6ed318714661ce242e5be7b36bfbb9a25e81",
+    "docs/cli/README.md": "e61dd086e6e5be9f8ff9ee3197a7891c001fc4e84c159fbfa3326f21f4188ec7",
+    "docs/cli/install-skill.md": "1c8eca129c46f1d1039aaba6a9ad452efae9b1237d0d2b9c4d1864e6c57fcc24",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "eca8d79f10c2781c70cda81c3c3ff27b2e284100cfd76f186bce4c82bce78a58",
+    "integrations/claude/SKILL.md": "e4457f4e0a6d2c4b58b602a670ddfbae46a24ecaaccacbf91d3dea4b0fccc055",
+    "integrations/codex/SKILL.md": "00abf3a0f0745d8787e82728ce32a3c5c578b009b497a49e43d60cb9db89e4ef",
+    "integrations/shared/DIRECTIVES.md": "d49f6f00ef4937602cfb780c44a20f8f5dd0df7ffc38a5d64ccd6ab8082c1d49",
+    "plan_tool/cli/__init__.py": "3c8ab5eafcb706ddc4812588e1f7a6bc9fb0c9c3896e87509743d82f0e967bb6",
+    "plan_tool/cli/inspect.py": "a9d0f1d287f0853e88d24b1ce1027a63820acd7b9aea4755e1f7bfb47c1db291",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "plan_tool/cli/review_cmd.py": "82732f5ef96a0a22c1983db363985a979c7876a96d89e923aee650dbd9e2409e",
+    "plan_tool/cli/skill_cmd.py": "8574b907e41240f7358888f88606989cdf610153a636325e2a18cb43707fde5c",
+    "tests/cli/test_skill_cmd.py": "2a6f9a421f1fbe02853d91488366eb10a88861f2e4ecfed617ab16e158dda8d7",
+    "tests/test_backend.py": "7973c99a92cbafc90d57da45448edbdf358ec263214214d74a29a5da31266aed",
+    "tests/test_model_specs.py": "d2ba21b320ca154bace6df64407d5912b0704992df794b908107ed0bed255f2c",
+    "tests/test_roadmap_format.py": "925bba7f912d1ed55428702b2681eac4bbfacee4d43147c87371c9515ab8fd95"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md": "a47e853372cef5b1f8aef2495ef988ee0c1fc420bddb9a40498179690772be4f",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md": "2bd89ad5497d7523b777d93a1f92a0f9e8c14354addb67ffe8aed8ed113ae6d7",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md": "37cada016da8d626a6e8bab3ce5a50176e63934ad2da1cfb56575b1105f185e6",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md": "67fc7041378915e7c7f397802e5204b133b0fb3c7000955c9420da23f6567e78",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-directives-md.md": "9c4bcd1932d541dfff7deac70634f035bff22d7c944d58c686ad7438605ea258"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Skill Router And Shared Reference\n\n`skill-router-and-shared-reference` \u00b7 generated 2026-09-16T19:17:46Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk skill-router-and-shared-reference  # optional interactive review of the saved findings\n\n- HIGH `[roadmap-guidance-relocation-scope]` [confidence: limited]: Step 1 and step 3 commit to relocating \"the Claude router's roadmap operational guidance\" out of the router into `integrations/shared/DIRECTIVES.md`, and step 3 additionally directs moving \"the roadmap guide-sweep pins off the Claude router\" \u2014 but this directly conflicts with the plan's own Architecture principle for what the router keeps.\n\n  The Architecture section states:\n  ```\n  Router and reference split by the question each answers. The router\n  answers *when to reach for the tool and how to invoke it* \u2014 which tool,\n  invocation and headless form, backend selection, the decision tree, and\n  pointers onward. The reference owns *the rules* \u2014 the two audit gates, the\n  session-directed convergence loop and its three exits, reconcile\n  directionality, `--iterate` / `--commit`, the post-run tail, and seed\n  authoring.\n  ```\n  and the Risks section separately warns:\n  ```\n  Over-moving: pushing invocation and decision-tree prose into the reference\n  forces every assistant to read a long document to answer \"which command\",\n  which is the failure the router exists to prevent.\n  ```\n  At HEAD, the roadmap content the steps target for removal is not separable prose \u2014 it is embedded directly in the router's \"Decision tree for common user asks\" table (`integrations/claude/SKILL.md`, the \"I have a project-sized concept, not a single feature\" row) and its \"Subcommands at a glance\" table (the **Roadmap** / **Roadmap non-stage routes** / **Roadmap rewrite** rows). This is confirmed by `tests/test_roadmap_format.py`'s `_SOURCE_ADMISSION_GUIDANCE`, `_SOURCE_ADMISSION_ISOLATION`, `_STRUCTURAL_ROUTE_GUIDES`/`_STRUCTURAL_ROUTE_GUIDE_BOUNDS` (pinning `(\"| **roadmap rewrite** |\", \"| **discovery** |\")` \u2014 i.e. the table itself), and `_NON_STAGE_BRIEF_DRIFT_GUIDES` \u2014 all of which pin exact substrings from those two tables onto `integrations/claude/SKILL.md`. Step 3's instruction to move these pins off the Claude router therefore means the decision-tree row and the entire roadmap subcommand-table group are expected to leave the router, with no step or acceptance criterion saying whether a short \"run `plan-tool roadmap` for this\" pointer stays behind. That is exactly the over-moving failure the Risks entry names, and that Risk itself is never mitigated by any step \u2014 it is the one Risks entry with no corresponding step (steps 1's ordering mitigates the *other* risk, \"losing content\"; step 2's atomic-install design mitigates the *other* other risk, \"per-path semantics multiply\"; over-moving has no mitigation anywhere). The acceptance criterion \"No router restates a rule the shared reference owns\" is unverifiable against this same ambiguity: it's unclear whether the roadmap decision-tree/subcommand-table content counts as \"a rule the reference owns\" (steps 1/3's framing) or \"the decision tree\" the router is defined to keep (the Architecture's framing). Separately, the plan's Testing section lists only `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the \"existing seams\" this work extends, omitting `tests/test_roadmap_format.py` entirely even though steps 1 and 3 are the ones editing its guide-sweep dicts \u2014 reinforcing that the scope of this relocation was not fully worked through when the plan was written.\n  - Fix: State explicitly, at the plan or step-1/step-3 level, which roadmap content the thinned router keeps (at minimum, a one-line decision-tree pointer per roadmap-shaped user ask, e.g. \"project-sized concept \u2192 see DIRECTIVES.md's roadmap section, or run `plan-tool roadmap <slug> --from-existing <concept.md>`\") versus which detailed flag-semantics/table content relocates to DIRECTIVES.md, and add `tests/test_roadmap_format.py` to the Testing section's named seams so the guide-sweep dicts are recognized as part of this effort's scope.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[install-skill-integration-choices-cli-docs]` [confidence: limited]: Step 4 adds `cursor` to `install-skill --integration`'s argparse choices, but no step or Testing bullet accounts for regenerating the drift-guarded generated doc `docs/cli/install-skill.md` (currently pinned to `{claude|codex}` \u2014 see `plan_tool/cli_reference` and `tests/cli/test_cli_reference.py`'s \"assert the committed files match what the generator emits today\" contract). `BACKLOG.md` #370's own \"In scope\" list explicitly names \"the generated `docs/cli/`\" as part of this effort, but the plan's Testing section only names `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the seams being extended.\n  - Fix: Add an acceptance criterion or testing bullet stating that `docs/cli/install-skill.md` is regenerated (`python -m plan_tool.cli_reference --write`) once `--integration` gains new choices, so the existing drift guard stays green.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-f9866a59]` [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit skill-router-and-shared-reference` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Skill Router And Shared Reference\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[roadmap-guidance-relocation-scope]` [confidence: limited]: Step 1 and step 3 commit to relocating \"the Claude router's roadmap operational guidance\" out of the router into `integrations/shared/DIRECTIVES.md`, and step 3 additionally directs moving \"the roadmap guide-sweep pins off the Claude router\" \u2014 but this directly conflicts with the plan's own Architecture principle for what the router keeps.\n\n  The Architecture section states:\n  ```\n  Router and reference split by the question each answers. The router\n  answers *when to reach for the tool and how to invoke it* \u2014 which tool,\n  invocation and headless form, backend selection, the decision tree, and\n  pointers onward. The reference owns *the rules* \u2014 the two audit gates, the\n  session-directed convergence loop and its three exits, reconcile\n  directionality, `--iterate` / `--commit`, the post-run tail, and seed\n  authoring.\n  ```\n  and the Risks section separately warns:\n  ```\n  Over-moving: pushing invocation and decision-tree prose into the reference\n  forces every assistant to read a long document to answer \"which command\",\n  which is the failure the router exists to prevent.\n  ```\n  At HEAD, the roadmap content the steps target for removal is not separable prose \u2014 it is embedded directly in the router's \"Decision tree for common user asks\" table (`integrations/claude/SKILL.md`, the \"I have a project-sized concept, not a single feature\" row) and its \"Subcommands at a glance\" table (the **Roadmap** / **Roadmap non-stage routes** / **Roadmap rewrite** rows). This is confirmed by `tests/test_roadmap_format.py`'s `_SOURCE_ADMISSION_GUIDANCE`, `_SOURCE_ADMISSION_ISOLATION`, `_STRUCTURAL_ROUTE_GUIDES`/`_STRUCTURAL_ROUTE_GUIDE_BOUNDS` (pinning `(\"| **roadmap rewrite** |\", \"| **discovery** |\")` \u2014 i.e. the table itself), and `_NON_STAGE_BRIEF_DRIFT_GUIDES` \u2014 all of which pin exact substrings from those two tables onto `integrations/claude/SKILL.md`. Step 3's instruction to move these pins off the Claude router therefore means the decision-tree row and the entire roadmap subcommand-table group are expected to leave the router, with no step or acceptance criterion saying whether a short \"run `plan-tool roadmap` for this\" pointer stays behind. That is exactly the over-moving failure the Risks entry names, and that Risk itself is never mitigated by any step \u2014 it is the one Risks entry with no corresponding step (steps 1's ordering mitigates the *other* risk, \"losing content\"; step 2's atomic-install design mitigates the *other* other risk, \"per-path semantics multiply\"; over-moving has no mitigation anywhere). The acceptance criterion \"No router restates a rule the shared reference owns\" is unverifiable against this same ambiguity: it's unclear whether the roadmap decision-tree/subcommand-table content counts as \"a rule the reference owns\" (steps 1/3's framing) or \"the decision tree\" the router is defined to keep (the Architecture's framing). Separately, the plan's Testing section lists only `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the \"existing seams\" this work extends, omitting `tests/test_roadmap_format.py` entirely even though steps 1 and 3 are the ones editing its guide-sweep dicts \u2014 reinforcing that the scope of this relocation was not fully worked through when the plan was written.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[install-skill-integration-choices-cli-docs]` [confidence: limited]: Step 4 adds `cursor` to `install-skill --integration`'s argparse choices, but no step or Testing bullet accounts for regenerating the drift-guarded generated doc `docs/cli/install-skill.md` (currently pinned to `{claude|codex}` \u2014 see `plan_tool/cli_reference` and `tests/cli/test_cli_reference.py`'s \"assert the committed files match what the generator emits today\" contract). `BACKLOG.md` #370's own \"In scope\" list explicitly names \"the generated `docs/cli/`\" as part of this effort, but the plan's Testing section only names `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the seams being extended.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n### Suggested next steps\n\n- Close the 1 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-fc38ab99",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 and step 3 commit to relocating \"the Claude router's roadmap operational guidance\" out of the router into `integr",
+      "body": "Step 1 and step 3 commit to relocating \"the Claude router's roadmap operational guidance\" out of the router into `integrations/shared/DIRECTIVES.md`, and step 3 additionally directs moving \"the roadmap guide-sweep pins off the Claude router\" \u2014 but this directly conflicts with the plan's own Architecture principle for what the router keeps.\n\n  The Architecture section states:\n  ```\n  Router and reference split by the question each answers. The router\n  answers *when to reach for the tool and how to invoke it* \u2014 which tool,\n  invocation and headless form, backend selection, the decision tree, and\n  pointers onward. The reference owns *the rules* \u2014 the two audit gates, the\n  session-directed convergence loop and its three exits, reconcile\n  directionality, `--iterate` / `--commit`, the post-run tail, and seed\n  authoring.\n  ```\n  and the Risks section separately warns:\n  ```\n  Over-moving: pushing invocation and decision-tree prose into the reference\n  forces every assistant to read a long document to answer \"which command\",\n  which is the failure the router exists to prevent.\n  ```\n  At HEAD, the roadmap content the steps target for removal is not separable prose \u2014 it is embedded directly in the router's \"Decision tree for common user asks\" table (`integrations/claude/SKILL.md`, the \"I have a project-sized concept, not a single feature\" row) and its \"Subcommands at a glance\" table (the **Roadmap** / **Roadmap non-stage routes** / **Roadmap rewrite** rows). This is confirmed by `tests/test_roadmap_format.py`'s `_SOURCE_ADMISSION_GUIDANCE`, `_SOURCE_ADMISSION_ISOLATION`, `_STRUCTURAL_ROUTE_GUIDES`/`_STRUCTURAL_ROUTE_GUIDE_BOUNDS` (pinning `(\"| **roadmap rewrite** |\", \"| **discovery** |\")` \u2014 i.e. the table itself), and `_NON_STAGE_BRIEF_DRIFT_GUIDES` \u2014 all of which pin exact substrings from those two tables onto `integrations/claude/SKILL.md`. Step 3's instruction to move these pins off the Claude router therefore means the decision-tree row and the entire roadmap subcommand-table group are expected to leave the router, with no step or acceptance criterion saying whether a short \"run `plan-tool roadmap` for this\" pointer stays behind. That is exactly the over-moving failure the Risks entry names, and that Risk itself is never mitigated by any step \u2014 it is the one Risks entry with no corresponding step (steps 1's ordering mitigates the *other* risk, \"losing content\"; step 2's atomic-install design mitigates the *other* other risk, \"per-path semantics multiply\"; over-moving has no mitigation anywhere). The acceptance criterion \"No router restates a rule the shared reference owns\" is unverifiable against this same ambiguity: it's unclear whether the roadmap decision-tree/subcommand-table content counts as \"a rule the reference owns\" (steps 1/3's framing) or \"the decision tree\" the router is defined to keep (the Architecture's framing). Separately, the plan's Testing section lists only `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the \"existing seams\" this work extends, omitting `tests/test_roadmap_format.py` entirely even though steps 1 and 3 are the ones editing its guide-sweep dicts \u2014 reinforcing that the scope of this relocation was not fully worked through when the plan was written.",
+      "suggested_action": "State explicitly, at the plan or step-1/step-3 level, which roadmap content the thinned router keeps (at minimum, a one-line decision-tree pointer per roadmap-shaped user ask, e.g. \"project-sized concept \u2192 see DIRECTIVES.md's roadmap section, or run `plan-tool roadmap <slug> --from-existing <concept.md>`\") versus which detailed flag-semantics/table content relocates to DIRECTIVES.md, and add `tests/test_roadmap_format.py` to the Testing section's named seams so the guide-sweep dicts are recognized as part of this effort's scope.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-guidance-relocation-scope",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-84c2c1d6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 adds `cursor` to `install-skill --integration`'s argparse choices, but no step or Testing bullet accounts for reg",
+      "body": "Step 4 adds `cursor` to `install-skill --integration`'s argparse choices, but no step or Testing bullet accounts for regenerating the drift-guarded generated doc `docs/cli/install-skill.md` (currently pinned to `{claude|codex}` \u2014 see `plan_tool/cli_reference` and `tests/cli/test_cli_reference.py`'s \"assert the committed files match what the generator emits today\" contract). `BACKLOG.md` #370's own \"In scope\" list explicitly names \"the generated `docs/cli/`\" as part of this effort, but the plan's Testing section only names `tests/cli/test_skill_cmd.py` and `tests/test_backend.py:1592` as the seams being extended.",
+      "suggested_action": "Add an acceptance criterion or testing bullet stating that `docs/cli/install-skill.md` is regenerated (`python -m plan_tool.cli_reference --write`) once `--integration` gains new choices, so the existing drift guard stays green.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "install-skill-integration-choices-cli-docs",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "2bc405e4b9881eb4fa2c3a61025e5e93d8fc73ede4dc5246e694c33a8807c3b8",
+    "detail_bundle_digest": "f44f4e1765169e5108e5cab7bfba9dede09f3e0874b2d936c2e466e99c25db2a",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-directives-md.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "468393fadc9abf27bfc7d16eb80620532a615842fa7f0794a395f190db902755",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

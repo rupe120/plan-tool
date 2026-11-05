@@ -1,0 +1,255 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-incremental-revision",
+  "plan_path": "docs/implementation-plans/2-roadmap-incremental-revision.md",
+  "created_at": "2026-08-13T23:51:34Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "26341a53b7ffddfc5dd45f9e103d9375bb4d840aa0c8fe1f6ef591b3c9084e5a",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "CLAUDE.md": "da80a58da2b14e97ca9b3229daf6dcedd6b8ce7a4f8a693c926f9d6dc2bdeb1b",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "ROADMAP_FORMAT.md": "ab920b33474876e8f7f61534e316180fe1f70e1b0076d519a965d2f42bab9215",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "docs/ARCHITECTURE.md": "9b8db0e2ca98def8e4fe8bd9283419782976e0ce0f973d59adb4a5bdf9ec6559",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "f51e8f23f0e9ae1478b83b71d05c98cb4deaeae2181737fb1a74283fd7030d02",
+    "docs/ROADMAP_WALKTHROUGH.md": "4c9a6f4ad04ee2c6c8123a751e1373797891ad7f9e78ad5217b6804fec12f6f7",
+    "docs/cli/roadmap.md": "5390820929acffad9f1ec87f22f8d21978b0a5ece2cf51d004e31d9f13b0d8a3",
+    "plan_tool/cli/authoring.py": "23ad7a56932e11e74115a86b2eecf9e91a7e621732b7aae810ce31b123facbac",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "plan_tool/roadmap_artifacts.py": "90eceab79eeb9e4d3569f7b1c75173d3ab95d2126b7c20c45d2da78766bfa5eb",
+    "plan_tool/roadmap_seed_state.py": "36634f92999774b9ab8dbc7205a144454df152aea64063471a5783d017af63ea",
+    "plan_tool/roadmap_view.py": "91e394a35f24682212f237a8fe77b2e1b96be2aa48527cadfda71fedd62a4c7d",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb",
+    "tests/test_roadmap_artifacts.py": "70681fd5f183d94ec7ce69e8c2addeb4d37ad64b0eefe79ba4ab89be36f15fc0",
+    "tests/test_roadmap_format.py": "3423eb1f1761dd84ca4ac7ab5bd858a9e191e1330595c623b76b0c8e69ffe85d",
+    "tests/test_roadmap_seed_state.py": "baff4675b1de8e2576fc657f1ac24738ca7c677d159072bcd64dc619eba740ee",
+    "tests/test_roadmap_view.py": "3c0703c6224604821c324439d7857531019fd6a24d5a315ad3e8ebb5db8e4cb9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/01-extract-shared-artifact-validation.md": "49a4ffbbca2aa8c176e45751b9893bcb464e8cd2f6a7e202a83a83eb7ab394b7",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/02-expose-seed-state-rendering-while.md": "8fdafe2771506766d2db301ec0bc1403d7d23da904a6056a5fa28944467c0ac8",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/03-define-revision-collection-names.md": "d358c4b9610b286fac75557f37b010696fb89ced5c96f358471eb6c5c82ddcc1",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/04-reject-invalid-artifact-qualified.md": "320fa055fa984f231bad1fb736b201d2b2fff1abddeaa8fd6c963d2e4558d381",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/05-parse-render-row-owned-prose-blocks-row.md": "be8adb5d353d383b611a30d0f2d403c376782cd433b84509703e8b218246cab4",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/06-merge-allowlisted-patches-require-local.md": "3fc3cc382fd2e27f5aac96072fd7570ae2e4944e9e31224cf98338e5c4fdc838",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/07-clean-tree-git-checkpoints-revision.md": "dc53c93abe93c6cb58583cec0c27728020ab954c30f0cadcc4466e1aa540893f",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/08-publish-fenced-recoverable-revisions.md": "1630060e676025ceb7290913574bdda3c67f745cbcc7eb417fdd7eb8e37115d1",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/09-run-one-bounded-patch-request-per.md": "8225e9374d03c0eb831527c43dac05048b490c3bb8d2c67b703cbc85df777cf8",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/10-explicit-revise-feedback-selection.md": "6349109944ca176b76b3bc134cc2ff8068208e60a46c9cc2b66786ee8c9871fc",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/11-show-latest-published-selected-feedback.md": "602d75f6f1424f25596e8a17ea4e850dd9e054e48d851df35a4c54e6c36afc29",
+    "docs/implementation-plans/plan-details/roadmap-incremental-revision/12-document-targeted-revision-preferred.md": "b79710065aaf7fd0dd13048e92035a69213a1f17ad5f48b4acf2cb40e9a14836"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Incremental Revision\n\n`roadmap-incremental-revision` \u00b7 generated 2026-08-13T23:51:34Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-incremental-revision   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-incremental-revision  # alternative interactive review/apply\n\n- HIGH `[row-write-allowlist]`: Architecture defines selected `artifact:id` roots and an affected *collection* order, but never defines the allowed row set in each dependent collection. Steps 4 (`Reject invalid artifact-qualified feedback selections...`), 5 (`Parse and render... patches`), 6 (`Merge allowlisted patches...`), and 9 (`Run one bounded patch request...`) can therefore accept a patch that changes an unselected row; `plan_tool/roadmap_gates.check_design_row_continuity` only requires a removal to cite local open feedback and never checks that its target is the removed row. This breaks the Architecture merger promise and the Acceptance criteria\u2019s non-target-row fence.\n  - Fix: define a deterministic row-level write allowlist for every collection, including the exact selected-feedback-to-removal authorization and rules for permitted new rows, then make every patch, context block, and merger check use it.\n- HIGH `[baseline-conflict-detection]`: Architecture\u2019s transaction lock serializes plan-tool commands but cannot stop a reviewer from editing a roadmap artifact or `seed-state.json` while the backend is running. The publication protocol records preimage digests but never requires a pre-replace comparison or a guarded restore; a later reviewer edit can therefore be overwritten by publication, or by recovery after a checkpoint failure, despite the Overview and Architecture promises to preserve reviewer-owned state. `plan_tool/roadmap._write_artifact` confirms that the current write path is unconditional replacement.\n  - Fix: require the publisher and recovery path to detect baseline or candidate digest conflicts for every revision-owned path and refuse without overwriting newer external bytes.\n- HIGH `[seed-state-vocabulary]`: Architecture\u2019s stale-plan paragraph says impacted entries become `stale`, removed IDs become `removed`, and \u201cthe sidecar changes status only\u201d; the Input, Deferred section, and stale-draft Acceptance criterion depend on that signal. This contradicts `plan_tool/roadmap_seed_state.validate_seed_state`, which accepts only `current` and `invalidated`; `roadmap_seed_manifest.classify_draft_seeds` derives `stale` from `invalidated`, and `find_orphan_seed_records` treats an entry for a removed plan as an orphan. Steps 2, 3, and 8 do not choose a compatible representation or migration.\n  - Fix: retain the raw `current`/`invalidated` status contract for extant drafts, record removed IDs in the published session record, and reconcile the Architecture, Deferred section, acceptance criteria, and all seed consumers to that representation.\n- HIGH `[seed-command-lock-lifetime]`: Architecture calls `materialize_plan_seed`, `refresh_roadmap_seeds`, `accept_roadmap_seed`, `_apply_roadmap_seeds`, `_cmd_roadmap_materialize`, and `_confirm_invalidated_roadmap_seed` \u201cpublic readers\u201d that take the lock only briefly, but the first five also write drafts, promoted copies, or `seed-state.json`. `plan_tool/roadmap.materialize_plan_seed`, `accept_roadmap_seed`, `refresh_roadmap_seeds`, and `_apply_roadmap_seeds` currently make those writes after reading their inputs, so a targeted publish can race them and lose a `stale` status or recreate a removed entry.\n  - Fix: define one lock or snapshot-revalidation rule for each named seed-mutating command so its final write cannot commit against a targeted revision that changed its roadmap or sidecar baseline.\n- HIGH `[recovery-preimage-completeness]`: Architecture makes a durable `prepared` marker the recovery authority, yet only says it carries \u201cstaged preimage paths\u201d; it does not require every preimage\u2014including a path that did not exist\u2014to be durably staged before that marker is written. The Risks, Testing section, and pre-checkpoint recovery Acceptance criterion promise restoration after interruption, but a durable marker without durable restore inputs cannot meet that promise.\n  - Fix: define the preimage staging order and absent-path representation so recovery never begins after `prepared` exists unless it can restore every revision-owned path exactly.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- HIGH `[prose-block-enrollment]`: Architecture requires every targeted artifact to have a complete row-owned prose-block map, but only rejects a roadmap that lacks one and sends it to broad `--from-stage`; it never says how ordinary new or existing artifacts acquire that map. Current `ROADMAP_FORMAT.md` and `plan_tool/prompts/roadmap-domain.md`, `roadmap-constraints.md`, `roadmap-components.md`, and `roadmap-plans.md` require only a free narrative body, while `plan_tool/roadmap_artifacts` preserves that body unchanged. Without an enrollment path, broad re-entry can keep producing artifacts that targeted revision must reject.\n  - Fix: make step 5 define and test how normal authoring and broad re-entry create or explicitly migrate a complete prose-block map while preserving legacy unowned prose.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-incremental-revision` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Incremental Revision\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 12 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[row-write-allowlist]`: Architecture defines selected `artifact:id` roots and an affected *collection* order, but never defines the allowed row set in each dependent collection. Steps 4 (`Reject invalid artifact-qualified feedback selections...`), 5 (`Parse and render... patches`), 6 (`Merge allowlisted patches...`), and 9 (`Run one bounded patch request...`) can therefore accept a patch that changes an unselected row; `plan_tool/roadmap_gates.check_design_row_continuity` only requires a removal to cite local open feedback and never checks that its target is the removed row. This breaks the Architecture merger promise and the Acceptance criteria\u2019s non-target-row fence.\n- HIGH `[baseline-conflict-detection]`: Architecture\u2019s transaction lock serializes plan-tool commands but cannot stop a reviewer from editing a roadmap artifact or `seed-state.json` while the backend is running. The publication protocol records preimage digests but never requires a pre-replace comparison or a guarded restore; a later reviewer edit can therefore be overwritten by publication, or by recovery after a checkpoint failure, despite the Overview and Architecture promises to preserve reviewer-owned state. `plan_tool/roadmap._write_artifact` confirms that the current write path is unconditional replacement.\n- HIGH `[seed-state-vocabulary]`: Architecture\u2019s stale-plan paragraph says impacted entries become `stale`, removed IDs become `removed`, and \u201cthe sidecar changes status only\u201d; the Input, Deferred section, and stale-draft Acceptance criterion depend on that signal. This contradicts `plan_tool/roadmap_seed_state.validate_seed_state`, which accepts only `current` and `invalidated`; `roadmap_seed_manifest.classify_draft_seeds` derives `stale` from `invalidated`, and `find_orphan_seed_records` treats an entry for a removed plan as an orphan. Steps 2, 3, and 8 do not choose a compatible representation or migration.\n- HIGH `[seed-command-lock-lifetime]`: Architecture calls `materialize_plan_seed`, `refresh_roadmap_seeds`, `accept_roadmap_seed`, `_apply_roadmap_seeds`, `_cmd_roadmap_materialize`, and `_confirm_invalidated_roadmap_seed` \u201cpublic readers\u201d that take the lock only briefly, but the first five also write drafts, promoted copies, or `seed-state.json`. `plan_tool/roadmap.materialize_plan_seed`, `accept_roadmap_seed`, `refresh_roadmap_seeds`, and `_apply_roadmap_seeds` currently make those writes after reading their inputs, so a targeted publish can race them and lose a `stale` status or recreate a removed entry.\n- HIGH `[recovery-preimage-completeness]`: Architecture makes a durable `prepared` marker the recovery authority, yet only says it carries \u201cstaged preimage paths\u201d; it does not require every preimage\u2014including a path that did not exist\u2014to be durably staged before that marker is written. The Risks, Testing section, and pre-checkpoint recovery Acceptance criterion promise restoration after interruption, but a durable marker without durable restore inputs cannot meet that promise.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[prose-block-enrollment]`: Architecture requires every targeted artifact to have a complete row-owned prose-block map, but only rejects a roadmap that lacks one and sends it to broad `--from-stage`; it never says how ordinary new or existing artifacts acquire that map. Current `ROADMAP_FORMAT.md` and `plan_tool/prompts/roadmap-domain.md`, `roadmap-constraints.md`, `roadmap-components.md`, and `roadmap-plans.md` require only a free narrative body, while `plan_tool/roadmap_artifacts` preserves that body unchanged. Without an enrollment path, broad re-entry can keep producing artifacts that targeted revision must reject.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-incremental-revision` \u2014 walk the 5 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a418827e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture defines selected `artifact:id` roots and an affected *collection* order, but never defines the allowed row ",
+      "body": "Architecture defines selected `artifact:id` roots and an affected *collection* order, but never defines the allowed row set in each dependent collection. Steps 4 (`Reject invalid artifact-qualified feedback selections...`), 5 (`Parse and render... patches`), 6 (`Merge allowlisted patches...`), and 9 (`Run one bounded patch request...`) can therefore accept a patch that changes an unselected row; `plan_tool/roadmap_gates.check_design_row_continuity` only requires a removal to cite local open feedback and never checks that its target is the removed row. This breaks the Architecture merger promise and the Acceptance criteria\u2019s non-target-row fence.",
+      "suggested_action": "define a deterministic row-level write allowlist for every collection, including the exact selected-feedback-to-removal authorization and rules for permitted new rows, then make every patch, context block, and merger check use it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "row-write-allowlist",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-1b0d71c3",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s transaction lock serializes plan-tool commands but cannot stop a reviewer from editing a roadmap artifact",
+      "body": "Architecture\u2019s transaction lock serializes plan-tool commands but cannot stop a reviewer from editing a roadmap artifact or `seed-state.json` while the backend is running. The publication protocol records preimage digests but never requires a pre-replace comparison or a guarded restore; a later reviewer edit can therefore be overwritten by publication, or by recovery after a checkpoint failure, despite the Overview and Architecture promises to preserve reviewer-owned state. `plan_tool/roadmap._write_artifact` confirms that the current write path is unconditional replacement.",
+      "suggested_action": "require the publisher and recovery path to detect baseline or candidate digest conflicts for every revision-owned path and refuse without overwriting newer external bytes.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "baseline-conflict-detection",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ad4504f2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s stale-plan paragraph says impacted entries become `stale`, removed IDs become `removed`, and \u201cthe sidecar",
+      "body": "Architecture\u2019s stale-plan paragraph says impacted entries become `stale`, removed IDs become `removed`, and \u201cthe sidecar changes status only\u201d; the Input, Deferred section, and stale-draft Acceptance criterion depend on that signal. This contradicts `plan_tool/roadmap_seed_state.validate_seed_state`, which accepts only `current` and `invalidated`; `roadmap_seed_manifest.classify_draft_seeds` derives `stale` from `invalidated`, and `find_orphan_seed_records` treats an entry for a removed plan as an orphan. Steps 2, 3, and 8 do not choose a compatible representation or migration.",
+      "suggested_action": "retain the raw `current`/`invalidated` status contract for extant drafts, record removed IDs in the published session record, and reconcile the Architecture, Deferred section, acceptance criteria, and all seed consumers to that representation.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-state-vocabulary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dc9d1438",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture calls `materialize_plan_seed`, `refresh_roadmap_seeds`, `accept_roadmap_seed`, `_apply_roadmap_seeds`, `_cm",
+      "body": "Architecture calls `materialize_plan_seed`, `refresh_roadmap_seeds`, `accept_roadmap_seed`, `_apply_roadmap_seeds`, `_cmd_roadmap_materialize`, and `_confirm_invalidated_roadmap_seed` \u201cpublic readers\u201d that take the lock only briefly, but the first five also write drafts, promoted copies, or `seed-state.json`. `plan_tool/roadmap.materialize_plan_seed`, `accept_roadmap_seed`, `refresh_roadmap_seeds`, and `_apply_roadmap_seeds` currently make those writes after reading their inputs, so a targeted publish can race them and lose a `stale` status or recreate a removed entry.",
+      "suggested_action": "define one lock or snapshot-revalidation rule for each named seed-mutating command so its final write cannot commit against a targeted revision that changed its roadmap or sidecar baseline.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-command-lock-lifetime",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d52e059f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture makes a durable `prepared` marker the recovery authority, yet only says it carries \u201cstaged preimage paths\u201d;",
+      "body": "Architecture makes a durable `prepared` marker the recovery authority, yet only says it carries \u201cstaged preimage paths\u201d; it does not require every preimage\u2014including a path that did not exist\u2014to be durably staged before that marker is written. The Risks, Testing section, and pre-checkpoint recovery Acceptance criterion promise restoration after interruption, but a durable marker without durable restore inputs cannot meet that promise.",
+      "suggested_action": "define the preimage staging order and absent-path representation so recovery never begins after `prepared` exists unless it can restore every revision-owned path exactly.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recovery-preimage-completeness",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-a047f7d6",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture requires every targeted artifact to have a complete row-owned prose-block map, but only rejects a roadmap t",
+      "body": "Architecture requires every targeted artifact to have a complete row-owned prose-block map, but only rejects a roadmap that lacks one and sends it to broad `--from-stage`; it never says how ordinary new or existing artifacts acquire that map. Current `ROADMAP_FORMAT.md` and `plan_tool/prompts/roadmap-domain.md`, `roadmap-constraints.md`, `roadmap-components.md`, and `roadmap-plans.md` require only a free narrative body, while `plan_tool/roadmap_artifacts` preserves that body unchanged. Without an enrollment path, broad re-entry can keep producing artifacts that targeted revision must reject.",
+      "suggested_action": "make step 5 define and test how normal authoring and broad re-entry create or explicitly migrate a complete prose-block map while preserving legacy unowned prose.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "prose-block-enrollment",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "26341a53b7ffddfc5dd45f9e103d9375bb4d840aa0c8fe1f6ef591b3c9084e5a",
+    "detail_bundle_digest": "40ac9ef65b34d575d94f024ad8c5b537f8fb93708e934823580d28c9d6e7c7d9",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/01-extract-shared-artifact-validation.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/02-expose-seed-state-rendering-while.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/03-define-revision-collection-names.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/04-reject-invalid-artifact-qualified.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/05-parse-render-row-owned-prose-blocks-row.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/06-merge-allowlisted-patches-require-local.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/07-clean-tree-git-checkpoints-revision.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/08-publish-fenced-recoverable-revisions.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 9,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/09-run-one-bounded-patch-request-per.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 10,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/10-explicit-revise-feedback-selection.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 11,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/11-show-latest-published-selected-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 12,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-incremental-revision/12-document-targeted-revision-preferred.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

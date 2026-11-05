@@ -1,0 +1,177 @@
+{
+  "version": 4,
+  "plan_slug": "jira-developer-handoff-companion",
+  "plan_path": "docs/implementation-plans/2-jira-developer-handoff-companion.md",
+  "created_at": "2026-08-21T22:55:38Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "27f5c21633a12396ca0b24b548fd449caa3d0ab2c16d0f704353fb020769a2b6",
+  "code_fingerprint": {
+    "BACKLOG.md": "d0e3ac3edf1b3894dfae2ce93f024b8729c4cb46e3abba0838bd93ee9c20774a",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "ec08f476bc4e5b83c8c0e21ae7606c3219d86e05c84aa576a018f40a8ad028c6",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "6b29bfb574df6cd7021a425a60cfa7e679b301a244cc4388e141ddf94ecd33b3",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md": "31db143508fb70419e2394157d0ed42886b72e086ce86ff079d651c08b199425",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-prepare-companion-mode-story-renderer.md": "d88bc6bbd67bf390172aa1f58cbf542c24d9ad98db01e359f1770a871522e21c",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-define-generated-jira-developer-handoff.md": "11b2eaf163bc549ef9069af9166e1654a4f67a70e086ebd91c1ebcb07d7ed93d",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-publish-synchronized-story-handoff.md": "571780d130b1c652ca095c5012db03cc709a81cffb2a5fbddc75fdef2ca56818",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-opt-jira-companion-cli-mode-explicit.md": "bab842a3ec5a697f2bd3ff394e6a3530ba7cefc48116869c16b48726f316089e",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-finish-jira-companion-docs-mark-backlog.md": "cc85cd7c4ba8b2d1a2bbdae4f33f1ba842a1f4ce4fa757b27dad4654f14249a1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Jira Developer Handoff Companion\n\n`jira-developer-handoff-companion` \u00b7 generated 2026-08-21T22:55:38Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply jira-developer-handoff-companion   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk jira-developer-handoff-companion  # alternative interactive review/apply\n\n- HIGH `[story-handoff-state]`: Architecture says companion mode \u201cdoes not preserve old stories\u201d and replaces both files; step 2 (`Prepare a companion-mode story renderer that keeps generated files current`) and step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`) carry that rule. At HEAD, `plan_tool.jira:_FrozenTicket`, `read_existing_export`, and `_export_jira_append` preserve the human-written `jira_issue_key`; replacing an existing story-only export in companion mode can silently drop the Jira handoff record, while Testing only proves replacement of a generated story file.\n  - Fix: Define a non-destructive rule for an existing story target that contains human Jira handoff data, and cover it in the publication tests and acceptance criteria.\n- MEDIUM `[handoff-dependency-edges]`: Step 3 (`Define the generated Jira developer-handoff format and lifecycle`) leaves the visible Plan path open: Architecture makes \u201cevery covered step, its dependency edges\u201d binding, but only says each section renders \u201cPlan path\u201d plus spirit and outcome; Testing proves dependency order, not the edges themselves. A topological order can be identical for different dependency graphs, so acceptance criterion 2 cannot verify that binding edges survived.\n  - Fix: Define how each Plan path section visibly represents declared dependencies, including the no-dependency case, and require it in the consumer fixture and acceptance criterion.\n- MEDIUM `[handoff-derived-destination]`: Step 5 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) does not choose the derived Markdown handoff path. Architecture calls it \u201ca derived Markdown sibling,\u201d while `plan_tool.jira:derive_jira_output_path` only defines `jira-stories.{md,json}`; Testing and acceptance cannot predict, document, or collision-check the default handoff target, especially with `--format json` or explicit `--output`.\n  - Fix: Define one derived handoff-path rule for both default and explicit story destinations, then use it consistently in CLI documentation, collision checks, and tests.\n- HIGH `[generated-path-authoring-lane]`: Architecture allows the story destination to come from `--output` but rejects only \u201ca companion path inside the independent Jira-grade authoring lane.\u201d Step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`), step 5\u2019s collision checks, Testing\u2019s independently authored-target case, acceptance criterion 5, step 6, and `plan_tool.jira:export_jira`\u2019s unrestricted `output_path` write leave a companion-mode story `--output` able to target and overwrite `plan-details/<slug>/jira/...` human-authored detail.\n  - Fix: Make the independent Jira-grade authoring lane forbidden for both generated destinations and test/document that shared protection\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step1-granularity-merge-023cf701]`: Steps 1 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step2-granularity-merge-ffe748e5]`: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Jira Developer Handoff Companion\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[story-handoff-state]`: Architecture says companion mode \u201cdoes not preserve old stories\u201d and replaces both files; step 2 (`Prepare a companion-mode story renderer that keeps generated files current`) and step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`) carry that rule. At HEAD, `plan_tool.jira:_FrozenTicket`, `read_existing_export`, and `_export_jira_append` preserve the human-written `jira_issue_key`; replacing an existing story-only export in companion mode can silently drop the Jira handoff record, while Testing only proves replacement of a generated story file.\n- MEDIUM `[handoff-dependency-edges]`: Step 3 (`Define the generated Jira developer-handoff format and lifecycle`) leaves the visible Plan path open: Architecture makes \u201cevery covered step, its dependency edges\u201d binding, but only says each section renders \u201cPlan path\u201d plus spirit and outcome; Testing proves dependency order, not the edges themselves. A topological order can be identical for different dependency graphs, so acceptance criterion 2 cannot verify that binding edges survived.\n- MEDIUM `[handoff-derived-destination]`: Step 5 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) does not choose the derived Markdown handoff path. Architecture calls it \u201ca derived Markdown sibling,\u201d while `plan_tool.jira:derive_jira_output_path` only defines `jira-stories.{md,json}`; Testing and acceptance cannot predict, document, or collision-check the default handoff target, especially with `--format json` or explicit `--output`.\n- HIGH `[generated-path-authoring-lane]`: Architecture allows the story destination to come from `--output` but rejects only \u201ca companion path inside the independent Jira-grade authoring lane.\u201d Step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`), step 5\u2019s collision checks, Testing\u2019s independently authored-target case, acceptance criterion 5, step 6, and `plan_tool.jira:export_jira`\u2019s unrestricted `output_path` write leave a companion-mode story `--output` able to target and overwrite `plan-details/<slug>/jira/...` human-authored detail.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 1 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply jira-developer-handoff-companion` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-84a043ef",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says companion mode \u201cdoes not preserve old stories\u201d and replaces both files; step 2 (`Prepare a companion-m",
+      "body": "Architecture says companion mode \u201cdoes not preserve old stories\u201d and replaces both files; step 2 (`Prepare a companion-mode story renderer that keeps generated files current`) and step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`) carry that rule. At HEAD, `plan_tool.jira:_FrozenTicket`, `read_existing_export`, and `_export_jira_append` preserve the human-written `jira_issue_key`; replacing an existing story-only export in companion mode can silently drop the Jira handoff record, while Testing only proves replacement of a generated story file.",
+      "suggested_action": "Define a non-destructive rule for an existing story target that contains human Jira handoff data, and cover it in the publication tests and acceptance criteria.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "story-handoff-state",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dead685c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Define the generated Jira developer-handoff format and lifecycle`) leaves the visible Plan path open: Architect",
+      "body": "Step 3 (`Define the generated Jira developer-handoff format and lifecycle`) leaves the visible Plan path open: Architecture makes \u201cevery covered step, its dependency edges\u201d binding, but only says each section renders \u201cPlan path\u201d plus spirit and outcome; Testing proves dependency order, not the edges themselves. A topological order can be identical for different dependency graphs, so acceptance criterion 2 cannot verify that binding edges survived.",
+      "suggested_action": "Define how each Plan path section visibly represents declared dependencies, including the no-dependency case, and require it in the consumer fixture and acceptance criterion.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "handoff-dependency-edges",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ba83c634",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) does not choose the derived Markdown hand",
+      "body": "Step 5 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) does not choose the derived Markdown handoff path. Architecture calls it \u201ca derived Markdown sibling,\u201d while `plan_tool.jira:derive_jira_output_path` only defines `jira-stories.{md,json}`; Testing and acceptance cannot predict, document, or collision-check the default handoff target, especially with `--format json` or explicit `--output`.",
+      "suggested_action": "Define one derived handoff-path rule for both default and explicit story destinations, then use it consistently in CLI documentation, collision checks, and tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "handoff-derived-destination",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-66d2c935",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture allows the story destination to come from `--output` but rejects only \u201ca companion path inside the independ",
+      "body": "Architecture allows the story destination to come from `--output` but rejects only \u201ca companion path inside the independent Jira-grade authoring lane.\u201d Step 4 (`Publish synchronized story and handoff source files without overwriting human guidance`), step 5\u2019s collision checks, Testing\u2019s independently authored-target case, acceptance criterion 5, step 6, and `plan_tool.jira:export_jira`\u2019s unrestricted `output_path` write leave a companion-mode story `--output` able to target and overwrite `plan-details/<slug>/jira/...` human-authored detail.",
+      "suggested_action": "Make the independent Jira-grade authoring lane forbidden for both generated destinations and test/document that shared protection",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "generated-path-authoring-lane",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "27f5c21633a12396ca0b24b548fd449caa3d0ab2c16d0f704353fb020769a2b6",
+    "detail_bundle_digest": "97c4194bbc68d1f2f096599a8ab496748102f92b24f7513dc76ce3b23697f33d",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-prepare-companion-mode-story-renderer.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-define-generated-jira-developer-handoff.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-publish-synchronized-story-handoff.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-opt-jira-companion-cli-mode-explicit.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-finish-jira-companion-docs-mark-backlog.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "14f8a11652141ab52994fb0c37ebb1227594d2b824b38b942dea3a0dfd86b32b",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

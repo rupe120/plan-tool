@@ -1,0 +1,116 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T11:24:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1c5f4bece7ccb583e3b354a3b052372017cbc17a22d7bb6bf667207defd6656e",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "plan_tool/run_log.py": "44c6a86917436bf15b84735a21775c13493628f0e8b17b749f65ed1fd2f69382",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb",
+    "tests/test_run_log.py": "ba02e630709aac5ea3a0e18846dcfbc3a745cc948395e74806b7f2d1e728816a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-behavior-preserving-roadmap.md": "f4fd9b33cfb64784d9c62f56cae84cd5dc795b0e2d783f42ea6d157f9673ea5c",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-optional-per-run-context-envelope.md": "ede0576521e7cc9e0ae48bbb4f6b6c1460d736264f2da714ad312de0ec4fff85",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-log-source-ordered-plan-attributed.md": "8e1013ebe4c084501f4aed614c681b257af67e9062d14991f1c1f86f543098aa",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-selected-all-eligible-materialize.md": "71ee7641809287a5e932715bf7cc94f0eeed717b6e9e847b58e82e52d0a88806",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-give-refresh-seeds-one-ordered-run.md": "c7fa919d6fb4f3c5b5ffa5f68b875c4ad70e8599c128ac342e5e31db2a3c7b19",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/06-document-materialization-refresh-run.md": "45225992b542eac2fe1c61e8fbd407ea2096a3d01dc29342799f1a047546c950"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Materialization Observability\n\n`roadmap-seed-materialization-observability` \u00b7 generated 2026-08-14T11:24:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-seed-materialization-observability   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[command-event-attribution]`: `command: \"roadmap\"` is required on every scoped event by `## Architecture`, `## Testing`, and `## Acceptance criteria`, but step 2 (`Add an optional per-run context envelope`) defines only the four roadmap fields, while steps 4 and 5 initialize only those four fields. At HEAD, `plan_tool/run_log.py:RunLogWriter._emit` events and `_make_call_end_sink` do not retain `command`, so backend and call-end records can omit it despite the stated guarantee.\n  - Fix: make `command` immutable writer context for materialize and refresh, and test it on normal, shell call-end, terminal, and snapshot paths.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-c0030ac9]`: The plan's `## Acceptance criteria` names `active_plan_id`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-79a5999c]`: The plan's `## Acceptance criteria` names `artifact.plans`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-868a35c1]`: The plan's `## Acceptance criteria` names `backend_attempt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5113ad49]`: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-230e3ecb]`: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bb6d6099]`: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2a2e5cfa]`: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8bf3b476]`: The plan's `## Acceptance criteria` names `requested_plan_id`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4e60f287]`: The plan's `## Acceptance criteria` names `roadmap_action`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a3d7a1aa]`: The plan's `## Acceptance criteria` names `roadmap_slug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-835bb881]`: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6317d754]`: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c849d878]`: The plan's `## Acceptance criteria` names `seed_attempt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-a5f5459e]`: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-materialization-observability` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Materialization Observability\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[command-event-attribution]`: `command: \"roadmap\"` is required on every scoped event by `## Architecture`, `## Testing`, and `## Acceptance criteria`, but step 2 (`Add an optional per-run context envelope`) defines only the four roadmap fields, while steps 4 and 5 initialize only those four fields. At HEAD, `plan_tool/run_log.py:RunLogWriter._emit` events and `_make_call_end_sink` do not retain `command`, so backend and call-end records can omit it despite the stated guarantee.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `active_plan_id`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `artifact.plans`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_attempt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `requested_plan_id`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `roadmap_action`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `roadmap_slug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `seed_attempt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-seed-materialization-observability` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4a5c0105",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`command: \"roadmap\"` is required on every scoped event by `## Architecture`, `## Testing`, and `## Acceptance criteria`,",
+      "body": "`command: \"roadmap\"` is required on every scoped event by `## Architecture`, `## Testing`, and `## Acceptance criteria`, but step 2 (`Add an optional per-run context envelope`) defines only the four roadmap fields, while steps 4 and 5 initialize only those four fields. At HEAD, `plan_tool/run_log.py:RunLogWriter._emit` events and `_make_call_end_sink` do not retain `command`, so backend and call-end records can omit it despite the stated guarantee.",
+      "suggested_action": "make `command` immutable writer context for materialize and refresh, and test it on normal, shell call-end, terminal, and snapshot paths.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "command-event-attribution",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "0328573e9444a7b61668d88108705b720062afbdfd9b581e2603a4085b3a72c9",
+    "detail_bundle_digest": "36c214d568fa502cf5268185d0dc8a90f8bef1a03164f3eddc9e5643dccb9aec",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-behavior-preserving-roadmap.md",
+        "state": "present",
+        "digest": "f4fd9b33cfb64784d9c62f56cae84cd5dc795b0e2d783f42ea6d157f9673ea5c"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-optional-per-run-context-envelope.md",
+        "state": "present",
+        "digest": "ede0576521e7cc9e0ae48bbb4f6b6c1460d736264f2da714ad312de0ec4fff85"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-log-source-ordered-plan-attributed.md",
+        "state": "present",
+        "digest": "8e1013ebe4c084501f4aed614c681b257af67e9062d14991f1c1f86f543098aa"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-selected-all-eligible-materialize.md",
+        "state": "present",
+        "digest": "71ee7641809287a5e932715bf7cc94f0eeed717b6e9e847b58e82e52d0a88806"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-give-refresh-seeds-one-ordered-run.md",
+        "state": "present",
+        "digest": "c7fa919d6fb4f3c5b5ffa5f68b875c4ad70e8599c128ac342e5e31db2a3c7b19"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/06-document-materialization-refresh-run.md",
+        "state": "present",
+        "digest": "45225992b542eac2fe1c61e8fbd407ea2096a3d01dc29342799f1a047546c950"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

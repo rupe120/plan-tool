@@ -1,0 +1,160 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-c818bb20": {
+      "code_anchor": "scope_review_cmd.py:cmd_scope_review",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-lazy-deferral-confirmation.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-lazy-deferral-confirmation.md",
+      "reason": "code anchor path `scope_review_cmd.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-c918bc3b": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-replace-create-whole-tree-confirm-walk.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-replace-create-whole-tree-confirm-walk.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-cfa1d7b7": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-replace-create-whole-tree-confirm-walk.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-replace-create-whole-tree-confirm-walk.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-5b161347": {
+      "code_anchor": "plan_tool/parser.py:BodySection.name",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/05-make-scope-review-drill-bucket-lazily.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/05-make-scope-review-drill-bucket-lazily.md",
+      "reason": "code anchor `plan_tool/parser.py:BodySection.name` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-3012eca2": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-670853c3": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-b6229454": {
+      "code_anchor": null,
+      "field_or_key": "bucket_anchor",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-make-check-concept-coverage-its-collect.md",
+      "reason": "`ConceptNode.bucket_anchor` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-84b1d9ab": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-8e8ee44c": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-93b6dd26": {
+      "code_anchor": null,
+      "field_or_key": "bucket_anchor",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/08-make-detail-shared-find-routing-record.md",
+      "reason": "`ConceptNode.bucket_anchor` is not a registered persisted field or alias",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-2f54787d": {
+      "code_anchor": "concept_bootstrap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md",
+      "reason": "code anchor path `concept_bootstrap.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-335acea9": {
+      "code_anchor": "concept_tree.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md",
+      "reason": "code anchor path `concept_tree.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-3bb0481e": {
+      "code_anchor": "concept_review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md",
+      "reason": "code anchor path `concept_review.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-6625916d": {
+      "code_anchor": "concept_sync.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/09-update-backlog-md-claude-md-close-121.md",
+      "reason": "code anchor path `concept_sync.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260715-193938-completeness"
+}

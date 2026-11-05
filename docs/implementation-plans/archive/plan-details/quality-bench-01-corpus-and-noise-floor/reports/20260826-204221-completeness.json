@@ -1,0 +1,200 @@
+{
+  "version": 4,
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "plan_path": "docs/implementation-plans/2-quality-bench-01-corpus-and-noise-floor.md",
+  "created_at": "2026-08-26T20:42:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fb0d1abc7600505064f58709668939a65d3ef1e13ed50595819bbf5e7c9c60f2",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "4cfeee2b10a3812e10cf8e0f10e786314fe4c091bbdda1a304f7f4b0978e2d8c",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md": "554ec514b05af81a9fd3379d479640983ee92f7a744014bf173d39b2581c57c6",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md": "38194491c4163e1bc36cc3c2674d7fd91da93186a2f46951cde26b55acffed27",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md": "64fa6390f81eb2c68f170ed453f78239c7be91ba3e0c4567392ac991e9c15124",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md": "05dbf59996b70ec181603bfe8445f01aab56c35f8dd88ee5a22e5f5533bfbace",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md": "e1f29ee74878a271b1de5910ae78d36ce729b804f98e4ff6dc642cde9937cb60",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md": "4335ebfd65a534fcdf8fa9b160b69707a171e3e3b2c07242fe874452cd6cd0fa",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md": "7096eb3b0517bddf6f1a5daf9d3f94da6e8573060857062ccbe83fe72f6570f5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Quality Bench 01 Corpus And Noise Floor\n\n`quality-bench-01-corpus-and-noise-floor` \u00b7 generated 2026-08-26T20:42:20Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `fb0d1abc7600505064f58709668939a65d3ef1e13ed50595819bbf5e7c9c60f2`\n- **Detail bundle digest:** `caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk quality-bench-01-corpus-and-noise-floor  # alternative interactive review/apply\n\n- MEDIUM `[corpus-snapshot-digest]` [confidence: limited]: Corpus snapshot digest framing is named in step 1, Architecture\u2019s \u201cV1 corpus enumeration and snapshot encoding\u201d paragraph, the first acceptance criterion, and Testing, but \u201clength-prefixed\u201d never defines the length encoding. Different valid encodings produce different label and floor identities for identical corpus bytes.\n  - Fix: Define one byte-level length frame for paths and file bytes, then lock it with a golden snapshot-to-digest vector.\n- MEDIUM `[recovery-profile-switch]` [confidence: limited]: Step 3 says \u201ca fallback/switch request \u2026 stops,\u201d while Architecture\u2019s recovery rule stops only a selection \u201cthat would activate any different digest.\u201d A fallback or interactive switch that resolves to the same profile is therefore either rejected or allowed, changing capture completion and recorded attempt cost.\n  - Fix: Choose one rule for same-profile fallback and interactive switch selections, and align the recovery contract and tests to it.\n- HIGH `[forced-label-replacement]` [confidence: limited]: Forced label replacement in step 3, Architecture\u2019s label-publication rules, Testing, and the `run` acceptance criterion requires moving the old label to `.replaced.N` before publishing the replacement, but defines no recoverable state for an interruption or write failure between those mutations. The label can disappear from its lookup path despite the plan\u2019s atomic-publication promise.\n  - Fix: Define recoverable all-or-nothing forced-label publication that keeps a complete prior generation selectable until the new generation commits, with interruption tests at each mutation boundary.\n- HIGH `[replay-identity]` [confidence: limited]: The Architecture backend-profile definition, steps 3 and 5 identity pins, step 6 matching rule, and profile fixtures omit per-call timeout controls. At HEAD, `plan_tool/shell.py:_effective_subprocess_timeout` reads `PLAN_TOOL_CLAUDE_TIMEOUT` for each backend call, so two captures can share the recorded profile yet differ in termination, outcome, wall time, and cost.\n  - Fix: Include every effective capture-time termination control in the pinned execution identity, or freeze and reject unsupported overrides, across run, floor, compare, and tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-bec26cca]` [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d429a1e0]` [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]` [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO `[step3-granularity-split-e25c9d8a]` [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force archives its prior generation before replacement)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 apply the 4 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Quality Bench 01 Corpus And Noise Floor\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `fb0d1abc7600505064f58709668939a65d3ef1e13ed50595819bbf5e7c9c60f2`\n- **Detail bundle digest:** `caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[corpus-snapshot-digest]` [confidence: limited]: Corpus snapshot digest framing is named in step 1, Architecture\u2019s \u201cV1 corpus enumeration and snapshot encoding\u201d paragraph, the first acceptance criterion, and Testing, but \u201clength-prefixed\u201d never defines the length encoding. Different valid encodings produce different label and floor identities for identical corpus bytes.\n- MEDIUM `[recovery-profile-switch]` [confidence: limited]: Step 3 says \u201ca fallback/switch request \u2026 stops,\u201d while Architecture\u2019s recovery rule stops only a selection \u201cthat would activate any different digest.\u201d A fallback or interactive switch that resolves to the same profile is therefore either rejected or allowed, changing capture completion and recorded attempt cost.\n- HIGH `[forced-label-replacement]` [confidence: limited]: Forced label replacement in step 3, Architecture\u2019s label-publication rules, Testing, and the `run` acceptance criterion requires moving the old label to `.replaced.N` before publishing the replacement, but defines no recoverable state for an interruption or write failure between those mutations. The label can disappear from its lookup path despite the plan\u2019s atomic-publication promise.\n- HIGH `[replay-identity]` [confidence: limited]: The Architecture backend-profile definition, steps 3 and 5 identity pins, step 6 matching rule, and profile fixtures omit per-call timeout controls. At HEAD, `plan_tool/shell.py:_effective_subprocess_timeout` reads `PLAN_TOOL_CLAUDE_TIMEOUT` for each backend call, so two captures can share the recorded profile yet differ in termination, outcome, wall time, and cost.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force archives its prior generation before replacement)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-371db885",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Corpus snapshot digest framing is named in step 1, Architecture\u2019s \u201cV1 corpus enumeration and snapshot encoding\u201d paragrap",
+      "body": "Corpus snapshot digest framing is named in step 1, Architecture\u2019s \u201cV1 corpus enumeration and snapshot encoding\u201d paragraph, the first acceptance criterion, and Testing, but \u201clength-prefixed\u201d never defines the length encoding. Different valid encodings produce different label and floor identities for identical corpus bytes.",
+      "suggested_action": "Define one byte-level length frame for paths and file bytes, then lock it with a golden snapshot-to-digest vector.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "corpus-snapshot-digest",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-644c1219",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 says \u201ca fallback/switch request \u2026 stops,\u201d while Architecture\u2019s recovery rule stops only a selection \u201cthat would a",
+      "body": "Step 3 says \u201ca fallback/switch request \u2026 stops,\u201d while Architecture\u2019s recovery rule stops only a selection \u201cthat would activate any different digest.\u201d A fallback or interactive switch that resolves to the same profile is therefore either rejected or allowed, changing capture completion and recorded attempt cost.",
+      "suggested_action": "Choose one rule for same-profile fallback and interactive switch selections, and align the recovery contract and tests to it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recovery-profile-switch",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-39f506a0",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Forced label replacement in step 3, Architecture\u2019s label-publication rules, Testing, and the `run` acceptance criterion ",
+      "body": "Forced label replacement in step 3, Architecture\u2019s label-publication rules, Testing, and the `run` acceptance criterion requires moving the old label to `.replaced.N` before publishing the replacement, but defines no recoverable state for an interruption or write failure between those mutations. The label can disappear from its lookup path despite the plan\u2019s atomic-publication promise.",
+      "suggested_action": "Define recoverable all-or-nothing forced-label publication that keeps a complete prior generation selectable until the new generation commits, with interruption tests at each mutation boundary.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "forced-label-replacement",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-2f39e5b3",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture backend-profile definition, steps 3 and 5 identity pins, step 6 matching rule, and profile fixtures omi",
+      "body": "The Architecture backend-profile definition, steps 3 and 5 identity pins, step 6 matching rule, and profile fixtures omit per-call timeout controls. At HEAD, `plan_tool/shell.py:_effective_subprocess_timeout` reads `PLAN_TOOL_CLAUDE_TIMEOUT` for each backend call, so two captures can share the recorded profile yet differ in termination, outcome, wall time, and cost.",
+      "suggested_action": "Include every effective capture-time termination control in the pinned execution identity, or freeze and reject unsupported overrides, across run, floor, compare, and tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "replay-identity",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "fb0d1abc7600505064f58709668939a65d3ef1e13ed50595819bbf5e7c9c60f2",
+      "detail_bundle_digest": "caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "5fa7acdfa1da7ed67a6a9d4d572c3c2303bc7878006de5005e782eee74b01ce5",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

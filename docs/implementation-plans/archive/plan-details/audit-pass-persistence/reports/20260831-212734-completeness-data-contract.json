@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-007c3289": {
+      "code_anchor": null,
+      "field_or_key": "sampler_state",
+      "location": "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md",
+      "reason": "`SavedReview.sampler_state` is not a registered persisted field or alias",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260831-212734-completeness"
+}

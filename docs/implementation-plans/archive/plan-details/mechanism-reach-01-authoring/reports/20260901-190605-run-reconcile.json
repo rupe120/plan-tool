@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "plan_slug": "mechanism-reach-01-authoring",
+  "plan_path": "docs/implementation-plans/2-mechanism-reach-01-authoring.md",
+  "created_at": "2026-09-01T19:06:05Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "747e74958d14d6d12ecb9306abef11ac298bbc16ab919e25c3c086f18859bec4",
+  "code_fingerprint": {
+    "plan_tool/create.py": "33a2c5c10a9edf3a535e41321bee7ebbeacb065f463efe0ba6ca873d332ebbde",
+    "plan_tool/detail.py": "4a2ab5245f86300eeabf15f3397c875f2a859aa08f2f96eb6c1748f98f34c6cf",
+    "plan_tool/prompts/detail.md": "845a4dbb988aef411e7435b7de49eeb88af04eb6264900c46020c19309929819",
+    "plan_tool/prompts/foundational-logic-sweep.md": "7087152fbb19ddd7dd9f45354f40c99ce686407c608469da1ce66c8a4f60595d",
+    "plan_tool/prompts/synthesize-body.md": "3aa3f4cb81c076e4cbb509f11713447284cac683cdfc81a35a8efae594702418",
+    "tests/test_create.py": "605c2ecae39347ec5530a4e3abf2b19fa592d64c63c230079355c9753e899e46",
+    "tests/test_detail.py": "27dc0b619b4cbe0ab717e462f991f0153a619f636689898cca6282fbc5016fd1",
+    "tests/test_foundational_logic.py": "bbd5be2e23b38f3706aafae6e3ce9fd894454d80bbe44c060138b03170d7a224"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 1 of 1 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

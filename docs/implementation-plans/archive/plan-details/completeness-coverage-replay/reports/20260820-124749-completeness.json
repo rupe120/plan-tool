@@ -1,0 +1,153 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T12:47:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "309e77654180f1a1cd7f90dfdcae846a0763e6ae52d50c65abad6645613d4bc7",
+  "code_fingerprint": {
+    "BACKLOG.md": "ea66d47f21dbfc212740d00e1440507df8a6ba1ccf2df205b66a3c66669fdb5e",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "5f9f29de130bdc8c1facf789f347dadaaec5feca16104d471aaa6fe54e82c2c6",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "b0d06cab17d99620edab38e93369fd323ecb8caf46c9ff2c7b47ca2ca01b47c8",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "9496581f48d3de1c02c9f9356206ea6c4e14c7f72afb7b88e5d6c48634819f0c",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "1688850a1054b1386890f2dcd13a4904e5946724009e85e4693b21aba01f1155"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T12:47:49Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `185c92606b51d365dae6409ecb47f2835738ae3e0295ebaa24091ac5f01b0cae`\n- **Detail bundle digest:** `d54682f1b28043b386badea9998ab2d6653eaf3d5af7afa69cb5f0d42311c799`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 61707 bytes (+61707 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[complete-worktree-evidence]`: Step 1\u2019s sealed-source-root guarantee spans the Architecture and acceptance criteria, step 1\u2019s `Seal and retain the visible worktree` / `Keep capture runtime outside the source root` rules and tests, and step 3\u2019s `Seal each audit input` / `Clean scratch reports` rules. At HEAD, `plan_tool/cli/completeness_phases.py:_run_conceptual_audit` calls `plan_tool.telemetry:record_audit_coverage`, which writes ignored `.plan-tool/telemetry/decisions.jsonl` through `record_decision`; step 1 suppresses only prompt-budget writers, while step 3 removes only reports and sidecars before the next snapshot. Also, `plan_tool/review.py:shell_review_invoker` reaches `plan_tool/shell.py:claude_invoke`, whose normal backends use `acceptEdits` / `workspace-write`, so a pre-run inventory alone does not prove the model stayed within the committed read surface. A capture can therefore gain model-readable runtime state or source edits after admission.\n  - Fix: define and test a capture-only access fence over the whole audit lifecycle that permits only the sealed committed source surface, routes or suppresses every audit runtime writer including coverage telemetry, and re-verifies the inventory after each captured prompt.\n- HIGH `[candidate-evidence-universe]`: The Problem statement requires \u201ceach eligible captured case's labelled fresh finding set\u201d to remain represented, while Architecture permits selection when \u201cevery required comparison resolves with no discovery loss.\u201d Step 1\u2019s `Predeclare schedules`, step 2\u2019s `Evaluate every declared schedule` and terminal-selection rules, step 3\u2019s `Exercise the declared comparison set`, and step 4\u2019s publication can therefore report a loss in an eligible trajectory outside a candidate\u2019s required membership yet still select that candidate and unblock #173.\n  - Fix: define one complete per-candidate evidence universe so every eligible labelled case either gates selection or makes the result insufficient, and apply it consistently to manifest validation, replay, capture, and publication\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d03f3f4b]`: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply completeness-coverage-replay` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `185c92606b51d365dae6409ecb47f2835738ae3e0295ebaa24091ac5f01b0cae`\n- **Detail bundle digest:** `d54682f1b28043b386badea9998ab2d6653eaf3d5af7afa69cb5f0d42311c799`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[complete-worktree-evidence]`: Step 1\u2019s sealed-source-root guarantee spans the Architecture and acceptance criteria, step 1\u2019s `Seal and retain the visible worktree` / `Keep capture runtime outside the source root` rules and tests, and step 3\u2019s `Seal each audit input` / `Clean scratch reports` rules. At HEAD, `plan_tool/cli/completeness_phases.py:_run_conceptual_audit` calls `plan_tool.telemetry:record_audit_coverage`, which writes ignored `.plan-tool/telemetry/decisions.jsonl` through `record_decision`; step 1 suppresses only prompt-budget writers, while step 3 removes only reports and sidecars before the next snapshot. Also, `plan_tool/review.py:shell_review_invoker` reaches `plan_tool/shell.py:claude_invoke`, whose normal backends use `acceptEdits` / `workspace-write`, so a pre-run inventory alone does not prove the model stayed within the committed read surface. A capture can therefore gain model-readable runtime state or source edits after admission.\n- HIGH `[candidate-evidence-universe]`: The Problem statement requires \u201ceach eligible captured case's labelled fresh finding set\u201d to remain represented, while Architecture permits selection when \u201cevery required comparison resolves with no discovery loss.\u201d Step 1\u2019s `Predeclare schedules`, step 2\u2019s `Evaluate every declared schedule` and terminal-selection rules, step 3\u2019s `Exercise the declared comparison set`, and step 4\u2019s publication can therefore report a loss in an eligible trajectory outside a candidate\u2019s required membership yet still select that candidate and unblock #173.\n\n### Files coherence\n\n- NIT: step 3 declared `benchmarks/corpus/completeness-coverage/fixtures.bundle` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture]`: docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-coverage-replay --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-54ca8c77",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s sealed-source-root guarantee spans the Architecture and acceptance criteria, step 1\u2019s `Seal and retain the visi",
+      "body": "Step 1\u2019s sealed-source-root guarantee spans the Architecture and acceptance criteria, step 1\u2019s `Seal and retain the visible worktree` / `Keep capture runtime outside the source root` rules and tests, and step 3\u2019s `Seal each audit input` / `Clean scratch reports` rules. At HEAD, `plan_tool/cli/completeness_phases.py:_run_conceptual_audit` calls `plan_tool.telemetry:record_audit_coverage`, which writes ignored `.plan-tool/telemetry/decisions.jsonl` through `record_decision`; step 1 suppresses only prompt-budget writers, while step 3 removes only reports and sidecars before the next snapshot. Also, `plan_tool/review.py:shell_review_invoker` reaches `plan_tool/shell.py:claude_invoke`, whose normal backends use `acceptEdits` / `workspace-write`, so a pre-run inventory alone does not prove the model stayed within the committed read surface. A capture can therefore gain model-readable runtime state or source edits after admission.",
+      "suggested_action": "define and test a capture-only access fence over the whole audit lifecycle that permits only the sealed committed source surface, routes or suppresses every audit runtime writer including coverage telemetry, and re-verifies the inventory after each captured prompt.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "complete-worktree-evidence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-fcaf9f05",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Problem statement requires \u201ceach eligible captured case's labelled fresh finding set\u201d to remain represented, while A",
+      "body": "The Problem statement requires \u201ceach eligible captured case's labelled fresh finding set\u201d to remain represented, while Architecture permits selection when \u201cevery required comparison resolves with no discovery loss.\u201d Step 1\u2019s `Predeclare schedules`, step 2\u2019s `Evaluate every declared schedule` and terminal-selection rules, step 3\u2019s `Exercise the declared comparison set`, and step 4\u2019s publication can therefore report a loss in an eligible trajectory outside a candidate\u2019s required membership yet still select that candidate and unblock #173.",
+      "suggested_action": "define one complete per-candidate evidence universe so every eligible labelled case either gates selection or makes the result insufficient, and apply it consistently to manifest validation, replay, capture, and publication",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "candidate-evidence-universe",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-5440c24a",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `plan_tool/review_persistence.py:AuditInputSnapshot.capture`",
+      "body": "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "185c92606b51d365dae6409ecb47f2835738ae3e0295ebaa24091ac5f01b0cae",
+      "detail_bundle_digest": "d54682f1b28043b386badea9998ab2d6653eaf3d5af7afa69cb5f0d42311c799",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+          "state": "present",
+          "digest": "5f9f29de130bdc8c1facf789f347dadaaec5feca16104d471aaa6fe54e82c2c6"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+          "state": "present",
+          "digest": "b0d06cab17d99620edab38e93369fd323ecb8caf46c9ff2c7b47ca2ca01b47c8"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+          "state": "present",
+          "digest": "9496581f48d3de1c02c9f9356206ea6c4e14c7f72afb7b88e5d6c48634819f0c"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+          "state": "present",
+          "digest": "1688850a1054b1386890f2dcd13a4904e5946724009e85e4693b21aba01f1155"
+        }
+      ],
+      "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 61707,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

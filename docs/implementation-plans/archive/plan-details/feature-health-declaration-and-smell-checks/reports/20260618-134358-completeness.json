@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "plan_slug": "feature-health-declaration-and-smell-checks",
+  "plan_path": "docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md",
+  "created_at": "2026-06-18T13:43:58Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5236daf9d9f5a6ed9410cf1fbd4f704da497a80da0d5f0eb7ed357d494c010e8",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "d9527ec89128d88e1ffb7cc32813ce8b5f2055dada562f6784d03a86ba496bbe",
+    "plan_tool/cli/completeness_cmd.py": "786adbae01695556dcd45f6be1c849cfbf07bca788ada96873d2663cb9a2f65a",
+    "plan_tool/cli/completeness_phases.py": "61a544b4214ff2755a45ded661b8d4b638c5afbeb64ffec3712ba0a98a8f54d2",
+    "plan_tool/cli/inspect.py": "2b1acb83890db11be18d258c9d04a053d981dbfd13235dfd7de088964c0f4c3d",
+    "plan_tool/completeness_report.py": "7578305e9f6adad77753a19094ad9b40987636331681909f0225e5ceaec696ae",
+    "plan_tool/create.py": "d0f830c9e39bbc44085ed0eb1f5159f17d797350d70612b387782280dc9b3f8d",
+    "plan_tool/detail.py": "e64da0759cc0f562545e1dbd97c0aeb71f9d50a92d8d7cc9c43380a2811fe8e8",
+    "plan_tool/project_config.py": "044e0bd678644d9de9e984f828a7ca042bc728f6f9e8119f71db6d3ecff258ed",
+    "plan_tool/review.py": "c881ae1ca89c9fce5b0d77eb8e19f9254bb136610a03b3f6e00826486f5f2dca",
+    "plan_tool/schema.py": "6decaaec9074956bc971242373bb94246fe98cf3184446f0f6664db8bcee9f9e",
+    "tests/cli/test_completeness_cmd.py": "142a038f2983f7f8e31b310851c4ca5b940056258675f08c14cbc86d824b8ceb",
+    "tests/cli/test_inspect_cmds.py": "02ff0d726716d75465b407b19a3c19d50ddd8560fadfc6b22c9b08c23dc97f5f",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "0387f3fea5e91e46ee2d629678272b16976bdaf7d8584257710f42e815eb93d2",
+    "tests/test_parser.py": "d0fa77f54b951a0005b045bc13b5ba17ba9ba3ceff2d487e04c2d13bebf950d3",
+    "tests/test_project_config.py": "679dfbcf9622212a1bb9583a39a600005f6d7d52e924f8b775b238559dd1d3f3",
+    "tests/test_review.py": "1e23eb74e6335217fe654143f2d1bb052e08154a7d9288d0740baa91a0c85d31"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Feature Health Declaration And Smell Checks\n\n`feature-health-declaration-and-smell-checks` \u00b7 generated 2026-06-18T13:43:58Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 2 dispatched (2 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 1 (1 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Risks entry \"`features:` drift after structural edits\" and step 1 (`feature-model-optional-plan-features`) both claim a `split`/`merge` renumber that drops a referenced step id \"fails validation loudly\" because the transform's dry-run `Plan` construction re-runs `_validate_features`. Neither holds in the code at HEAD: `create.py:_apply_step_split` builds its dry-run `Plan(..., steps=rewired)` with **no** `features=`, so `_validate_features` sees an empty list and validates nothing; and `detail.py:split_step` persists via `plan.model_copy(update={\"steps\": new_steps})`, and pydantic v2 `model_copy` skips validators entirely. Worse, `split` renumbers steps to contiguous `1..N` but never remaps `features.steps` (it only remaps `depends_on`), so a feature naming a *shifted* step silently points at the wrong step and `_validate_features` \u2014 which only checks resolvability \u2014 never fires. The risk the plan says it mitigates is unmitigated. \u2014 - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: extended step 1's frontmatter title and added `plan_tool/create.py`, `plan_tool/detail.py`, `tests/test_create.py`, `tests/test_detail.py` to its `files:` set\n- [APPLIED] Step 2 (`deterministic-suppression-shape-self`) scopes the suppression detector to scan only `step.title` and `feature.title`, but the Problem statement's motivating case \u2014 the `type_impure` flag \"whose job was to *suppress* the mixed-step finding\" \u2014 states its suppressing purpose in rationale/detail, not in a step *title* (real step titles read \"Add a persisted `change_type` flag,\" not \"suppress the mixed-step finding\"). The detector's tests pass on hand-crafted trip titles (\"downgrade the mixed-step finding\"), proving the regex, not that a real plan would trip. As scoped the check may never catch the very shape it is built to catch. \u2014 - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: in Part B's suppression bullet, committed detail-body (`## Summary`/`## Why`) scanning as in-scope alongside title scanning and stated that title-only scanning has near-zero recall on the motivating `type_impure` shape (whose suppressing purpose lives in rationale, not the title).\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[self-referential-dogfood]`: The self-referential check is correctly config-driven and inert when unconfigured, but no step seeds plan-tool's *own* `.plan-tool/config.json` `validation_machinery_paths` \u2014 and steps 2/3 themselves modify exactly that machinery (`review.py`, `completeness_phases.py`, `completeness_cmd.py`, `completeness_report.py`). So the self-referential half of the motivating story is never demonstrated end-to-end in the repo that motivated it: step 4's only integration test (`test_real_suppression_plan_trips_advisory`) exercises suppression, not self-reference.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor self-referential-dogfood`\n- MEDIUM `[suppression-title-recall]`: Step 2 (`deterministic-suppression-shape-self`) scopes the suppression detector to scan only `step.title` and `feature.title`, deferring detail-body scanning. The motivating `type_impure` shape the Problem statement promises to catch (\"suppress the mixed-step finding\") is a *purpose* that lives in a step's `## Summary`/`## Why` prose, not necessarily its terse title \u2014 so the detector's recall against the very case the plan cites is unestablished, and a real gate-suppression whose title is anodyne (\"Add persisted change_type flag\") escapes silently.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor suppression-title-recall`\n- MEDIUM `[suppression-cooccurrence-signal]`: The Architecture body (Part B) says the suppression check \"should weight a co-occurring suppression-shape signal (the step also adds a flag/schema field whose role is to silence a check)\" to raise match confidence, but step 2 (`deterministic-suppression-shape-self`) implements it only as non-functional rationale text keyed on whether `step.all_files` touches any schema/config file \u2014 it neither verifies the field's silencing role nor feeds the match decision. The decision-weighting concept named in the body is thus not operationalized.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor suppression-cooccurrence-signal`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step5-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Feature Health Declaration And Smell Checks\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 5 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[self-referential-dogfood]`: The self-referential check is correctly config-driven and inert when unconfigured, but no step seeds plan-tool's *own* `.plan-tool/config.json` `validation_machinery_paths` \u2014 and steps 2/3 themselves modify exactly that machinery (`review.py`, `completeness_phases.py`, `completeness_cmd.py`, `completeness_report.py`). So the self-referential half of the motivating story is never demonstrated end-to-end in the repo that motivated it: step 4's only integration test (`test_real_suppression_plan_trips_advisory`) exercises suppression, not self-reference.\n- MEDIUM `[suppression-title-recall]`: Step 2 (`deterministic-suppression-shape-self`) scopes the suppression detector to scan only `step.title` and `feature.title`, deferring detail-body scanning. The motivating `type_impure` shape the Problem statement promises to catch (\"suppress the mixed-step finding\") is a *purpose* that lives in a step's `## Summary`/`## Why` prose, not necessarily its terse title \u2014 so the detector's recall against the very case the plan cites is unestablished, and a real gate-suppression whose title is anodyne (\"Add persisted change_type flag\") escapes silently.\n- MEDIUM `[suppression-cooccurrence-signal]`: The Architecture body (Part B) says the suppression check \"should weight a co-occurring suppression-shape signal (the step also adds a flag/schema field whose role is to silence a check)\" to raise match confidence, but step 2 (`deterministic-suppression-shape-self`) implements it only as non-functional rationale text keyed on whether `step.all_files` touches any schema/config file \u2014 it neither verifies the field's silencing role nor feeds the match decision. The decision-weighting concept named in the body is thus not operationalized.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk feature-health-declaration-and-smell-checks` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-71a97a81",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The self-referential check is correctly config-driven and inert when unconfigured, but no step seeds plan-tool's *own* `",
+      "body": "The self-referential check is correctly config-driven and inert when unconfigured, but no step seeds plan-tool's *own* `.plan-tool/config.json` `validation_machinery_paths` \u2014 and steps 2/3 themselves modify exactly that machinery (`review.py`, `completeness_phases.py`, `completeness_cmd.py`, `completeness_report.py`). So the self-referential half of the motivating story is never demonstrated end-to-end in the repo that motivated it: step 4's only integration test (`test_real_suppression_plan_trips_advisory`) exercises suppression, not self-reference.",
+      "suggested_action": "add a step (or explicit note) that seeds plan-tool's own `validation_machinery_paths`, or state that live self-referential demonstration is deferred to operator config",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "self-referential-dogfood"
+    },
+    {
+      "id": "plan-plan-completeness-fa0a4c0e",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`deterministic-suppression-shape-self`) scopes the suppression detector to scan only `step.title` and `feature.t",
+      "body": "Step 2 (`deterministic-suppression-shape-self`) scopes the suppression detector to scan only `step.title` and `feature.title`, deferring detail-body scanning. The motivating `type_impure` shape the Problem statement promises to catch (\"suppress the mixed-step finding\") is a *purpose* that lives in a step's `## Summary`/`## Why` prose, not necessarily its terse title \u2014 so the detector's recall against the very case the plan cites is unestablished, and a real gate-suppression whose title is anodyne (\"Add persisted change_type flag\") escapes silently.",
+      "suggested_action": "state the title-only recall limitation in the acceptance criteria (or bring `## Summary`/`## Why` detail-body scanning into scope) so the Problem statement's catch-the-motivating-case claim is honestly bounded",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "suppression-title-recall"
+    },
+    {
+      "id": "plan-plan-completeness-48c8bdea",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture body (Part B) says the suppression check \"should weight a co-occurring suppression-shape signal (the st",
+      "body": "The Architecture body (Part B) says the suppression check \"should weight a co-occurring suppression-shape signal (the step also adds a flag/schema field whose role is to silence a check)\" to raise match confidence, but step 2 (`deterministic-suppression-shape-self`) implements it only as non-functional rationale text keyed on whether `step.all_files` touches any schema/config file \u2014 it neither verifies the field's silencing role nor feeds the match decision. The decision-weighting concept named in the body is thus not operationalized.",
+      "suggested_action": "reconcile the body and step 2 on whether co-occurrence is a confidence weight on the match or merely advisory rationale, so the spec and implementation agree",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "suppression-cooccurrence-signal"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-71a97a81": {
+      "status": "applied",
+      "note": "deferred to operator config",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-fa0a4c0e": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: extended the suppression smell-check acceptance criterion to require scanning the detail-body (`## Summary`/`## Why`) alongside titles, grounding the catch-the-`type_impure`-case claim and noting title-only recall would be near-zero.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-48c8bdea": {
+      "status": "applied",
+      "note": "\u258e Edit Part B's suppression bullet only. Replace \"weight a co-occurring suppression-shape signal \u2026 to raise match confidence\" with   \u258e language that matches step 2's already-decided behavior: the schema/config co-occurrence is appended to the finding's rationale as   \u258e operator-facing enrichment after a match \u2014 it is not a match input and does not affect the decision. Do not add confidence-weighting   \u258e machinery; the check emits a single info severity with a binary match and has no confidence dimension.",
+      "halt_reason": ""
+    }
+  }
+}

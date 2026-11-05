@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-e42553b3": {
+      "code_anchor": null,
+      "field_or_key": "is_pre_apply_checkpoint",
+      "location": "docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md",
+      "reason": "`SavedReview.is_pre_apply_checkpoint` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-007c3289": {
+      "code_anchor": null,
+      "field_or_key": "sampler_state",
+      "location": "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md",
+      "reason": "`SavedReview.sampler_state` is not a registered persisted field or alias",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-517b3d46": {
+      "code_anchor": "plan_tool/review_persistence.py:AuditInputSnapshot.fingerprint",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.fingerprint` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260831-211426-completeness"
+}

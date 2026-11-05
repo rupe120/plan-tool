@@ -1,0 +1,104 @@
+{
+  "version": 4,
+  "plan_slug": "mechanism-reach-01-authoring",
+  "plan_path": "docs/implementation-plans/2-mechanism-reach-01-authoring.md",
+  "created_at": "2026-09-01T15:48:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "e264b1d54abfd4dbe85141c8368fdd003851e9cc41503c227a5d9307db1e9297",
+  "code_fingerprint": {
+    "plan_tool/prompts/detail.md": "93951b1e17952e6278f2c9f02d86225590c22b280a3e06443c488ecc51764221",
+    "plan_tool/prompts/synthesize-body.md": "afad452ea48fbf70eb87b74d184fced1f8b93ae8867d2ffeaed848831fc8868c",
+    "tests/test_create.py": "57ea8ad322d3b8d0da90e42b6f5f46e93c094568356df65fafa4eab4191c0296",
+    "tests/test_detail.py": "163215ca6bd86a0afd020d7cecb8223e54d3c2fd22c04a15b5d64a1bbaa5233d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-create-guidance-choose-unchanged.md": "4f7cfe74bf7772756c46989fe671a1dcb66f8aa9effb2761993f9876ed2c655e",
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-detail-guidance-preserve.md": "8951e64c589dd9e287e2bd666c0e4228110669a0b0f156b2652a2282f5a1c406"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Mechanism Reach 01 Authoring\n\n`mechanism-reach-01-authoring` \u00b7 generated 2026-09-01T15:48:50Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply mechanism-reach-01-authoring   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk mechanism-reach-01-authoring  # alternative interactive review/apply\n\n- HIGH `[create-owner-choice-reach]` [confidence: limited]: Step 1 (`Extend create guidance to choose unchanged reuse, a bounded local change, or separate shared work, with focused prompt tests`) limits the create change to `plan_tool/prompts/synthesize-body.md`, but `plan_tool/create.py:_prepare_create_plan` obtains `steps` through `propose_steps_from_claude` / `_render_from_prompt` before `propose_body_sections` synthesizes the body. Architecture\u2019s required private owner choice and the `create` acceptance criteria therefore do not reach the surface that selects a broad shared step, so a focused plan can still commit to the change this plan means to defer.\n  - Fix: Cover the create step-proposal surface with the three-route owner decision and a fixture, then keep body synthesis consistent with that decision.\n- HIGH `[bounded-extension-eligibility]` [confidence: limited]: Architecture says \u201clocal adapter or bounded additive extension when current consumers retain their behavior,\u201d while Risks says the bounded-extension route \u201cremains available only when a local adapter cannot deliver the property\u201d; Scope guardrails also send shared `schema` changes to separate work. Steps 1 and 2, Testing, and Acceptance criteria do not resolve or test those conditions, so authors can either take a compatible shared extension despite a working adapter or defer it as a shared-schema change.\n  - Fix: Define the bounded-extension eligibility rule once, including its relationship to local adapters and shared schema, and pin it in both prompt-contract test suites.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit mechanism-reach-01-authoring` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Mechanism Reach 01 Authoring\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[create-owner-choice-reach]` [confidence: limited]: Step 1 (`Extend create guidance to choose unchanged reuse, a bounded local change, or separate shared work, with focused prompt tests`) limits the create change to `plan_tool/prompts/synthesize-body.md`, but `plan_tool/create.py:_prepare_create_plan` obtains `steps` through `propose_steps_from_claude` / `_render_from_prompt` before `propose_body_sections` synthesizes the body. Architecture\u2019s required private owner choice and the `create` acceptance criteria therefore do not reach the surface that selects a broad shared step, so a focused plan can still commit to the change this plan means to defer.\n- HIGH `[bounded-extension-eligibility]` [confidence: limited]: Architecture says \u201clocal adapter or bounded additive extension when current consumers retain their behavior,\u201d while Risks says the bounded-extension route \u201cremains available only when a local adapter cannot deliver the property\u201d; Scope guardrails also send shared `schema` changes to separate work. Steps 1 and 2, Testing, and Acceptance criteria do not resolve or test those conditions, so authors can either take a compatible shared extension despite a working adapter or defer it as a shared-schema change.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply mechanism-reach-01-authoring` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a0815e9d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Extend create guidance to choose unchanged reuse, a bounded local change, or separate shared work, with focused",
+      "body": "Step 1 (`Extend create guidance to choose unchanged reuse, a bounded local change, or separate shared work, with focused prompt tests`) limits the create change to `plan_tool/prompts/synthesize-body.md`, but `plan_tool/create.py:_prepare_create_plan` obtains `steps` through `propose_steps_from_claude` / `_render_from_prompt` before `propose_body_sections` synthesizes the body. Architecture\u2019s required private owner choice and the `create` acceptance criteria therefore do not reach the surface that selects a broad shared step, so a focused plan can still commit to the change this plan means to defer.",
+      "suggested_action": "Cover the create step-proposal surface with the three-route owner decision and a fixture, then keep body synthesis consistent with that decision.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "create-owner-choice-reach",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-185c019a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says \u201clocal adapter or bounded additive extension when current consumers retain their behavior,\u201d while Risk",
+      "body": "Architecture says \u201clocal adapter or bounded additive extension when current consumers retain their behavior,\u201d while Risks says the bounded-extension route \u201cremains available only when a local adapter cannot deliver the property\u201d; Scope guardrails also send shared `schema` changes to separate work. Steps 1 and 2, Testing, and Acceptance criteria do not resolve or test those conditions, so authors can either take a compatible shared extension despite a working adapter or defer it as a shared-schema change.",
+      "suggested_action": "Define the bounded-extension eligibility rule once, including its relationship to local adapters and shared schema, and pin it in both prompt-contract test suites.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "bounded-extension-eligibility",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "e264b1d54abfd4dbe85141c8368fdd003851e9cc41503c227a5d9307db1e9297",
+    "detail_bundle_digest": "d4934536fc36be5c00ca0d77bc17937ec169c610896fecfcebae01e74c3615ea",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-create-guidance-choose-unchanged.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-detail-guidance-preserve.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "dd8652c57ba7ea41d0a7e1695c2ed1bf978384016388172138cf4a306680c2e4",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "plan_slug": "security-check-command",
+  "plan_path": "docs/implementation-plans/2-security-check-command.md",
+  "created_at": "2026-06-14T02:22:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "dd37317b75e037bbfaf8da74d3dba4545d9967d1dc302f06f549a593dca35cd7",
+  "code_fingerprint": {
+    "BACKLOG.md": "f6e74b823c8569680d1b516d81b6bad691cb7350b74a538a441b2c25ddfbfbb4",
+    "CLAUDE.md": "9d55991c34043646a540580b88457d4d01884245562421aebaaff45579d8216e",
+    "README.md": "cc37783db1520704a97f8928d819139c1992a083d0579da8c387c726acffb3bd",
+    "RUNBOOK.md": "597c91f0f8cc557e17f3f83b03d7b3db23ee84b0d71f2a374fd36c8113ce8f29",
+    "TESTING.md": "b3efe9f42c9cf07758b188f0b5a5d2f298ce8bdc00db494768303ebaf7d78f1d",
+    "docs/AUDIT_FLOW.md": "bbfa2739357116d14f89f56dad2c41e2a7755d74670f6e906019bddc24e13d6c",
+    "docs/AUDIT_RESUME_FLOW.md": "4bc4cc97a1eaf7b604eff9dc1356c802a3302403372d6d24636e3ab482640e5e",
+    "docs/RESUME_FLOW.md": "0b48fa267b593e9637fb3d611c424b0ac1b48dd56918e0f38105dadd37840fa7",
+    "integrations/claude/SKILL.md": "452c47c0d539e9fe750299513cc80b8a5d47f7c36fd4db1bf3aba9e897677131",
+    "integrations/codex/SKILL.md": "ab5ec946b5d29583f555c89250c9122ca4aad923aa22cdd17a28d75674dd23f1",
+    "plan_tool/auto_reconcile.py": "d3921dfdea1059070807c2cfe654c2d4183f0fef7cbfeb579ee669994baa1d4c",
+    "plan_tool/cli/__init__.py": "909e58915fbfee7c8e45427642e554dd02064c921e1ada71b6b9699202be3f10",
+    "plan_tool/cli/app.py": "c2550409d1224aa1768867573daacf0532c019490e9985acb233831194804013",
+    "plan_tool/cli/completeness_cmd.py": "ab7ed960637427fe7e13d93418ecbbb6915c0d419c373ab8b435f4733cd95b46",
+    "plan_tool/cli/completeness_phases.py": "6b927776471e32ca76b0cdffb64149e8f7232930e1c4134589103b8481cbf560",
+    "plan_tool/cli/parser.py": "076e8bd1932c0cabf4c5554682c7557e093d5eae897fa7f044f18a6b52686916",
+    "plan_tool/cli/reconcile.py": "c3210ba6dca14b1d4c5b4901f070c8e7ceb6f52e607da28dee23fcc7d513b2b8",
+    "plan_tool/convergence.py": "b2704bb9e9528bd4692c9b0290d68664c31bbc0cb1a348bb5354ea2859e87199",
+    "plan_tool/prompts/security.md": "d9fb884b806571f99f8ea3a383439dc182813f54eaf1c0e9917c971f4b5deb49",
+    "plan_tool/review_walk.py": "cd612dde7a6e0c20a1497f7cbb9144dffab62b52d88ec689f19c2fedffb8bd1e",
+    "tests/cli/package_surface_help.golden.txt": "ef38e052b84984de7c70017940db3da6210708aea284d3f8ab39f1b148c547fe",
+    "tests/cli/test_completeness_cmd.py": "f6394a2d0cdc05da9eaba49d2d9676d1ba5ce2ced02b32eb5fd78a33b670de4e",
+    "tests/cli/test_reconcile_engine.py": "97140fe7f6d1fbec1cc43dd04de5fa09a705974d981887af385ddb73c3a310ee",
+    "tests/test_auto_reconcile.py": "92a3ea4a43721719dbb11723a930c1151518f21465a3d3453b34eb75c1c3420c",
+    "tests/test_cli.py": "0d16d0537fcfd5b0799442c00e7f7c136441b2b3d22d515ca3dba41953909a12",
+    "tests/test_convergence.py": "755c9ba5c20fb3eeeec78ece182db343624511aa61eca8ecd3059341523ce35f",
+    "tests/test_review_walk.py": "2acecdeca5e2c60f0f685d9fd54b20f73d13b2cd0f2ee88e5abac3fecfba059d"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Security Check Command\n\n`security-check-command` \u00b7 generated 2026-06-14T02:22:31Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 6 dispatched (6 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 9 (9 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] `resolve_reusable_security` (step 2, `add resolve_reusable_security`) is built as a flat newest-by-kind resolver, and step 2's Deferred section explicitly postpones \"per-target reuse scoping\" \u2014 yet the Architecture states the hard invariant \"A plan-audit reuse must never serve a code-audit report or vice versa,\" because `target=\"plan\"` and `target=\"code\"` saves share `kind=\"security\"`. No later step restores the scoping: step 3 (`register security subcommand`) consumes the resolver for `--target code` reuse and step 5 (`wire security dimension into completeness`) consumes it for the plan-only completeness dimension, so a newest-by-kind hit serves a code-target report to the plan-axis completeness caller (or vice versa) \u2014 exactly the forbidden cross-contamination. \u2014 - `docs/implementation-plans/2-security-check-command.md`: extended step 2 frontmatter title to make per-target/source (plan vs code) reuse scoping a step 2 deliverable so plan-axis and code-axis callers never reuse each other's saved report.\n- [APPLIED] The Architecture says `run_security_audit` \"takes ... a target (plan vs code vs **reconcile**),\" but step 1 (`add security_audit.py orchestrator`) implements only `target=\"plan\"` / `target=\"code\"`, and step 4 (`add security-reconcile ReconcileKind + run_auto_reconcile_on_drift hook`) edits the reconcile engine (`reconcile.py`, `auto_reconcile.py`) and the drift prompt \u2014 not `run_security_audit`'s dispatch. Meanwhile step 3 wires `cmd_security` to dispatch `--reconcile` by \"calling step 1's `run_security_audit(...)`,\" which has no reconcile branch. No step adds the reconcile target to the orchestrator, nor constructs the \"full plan\u21c4code surface (every step and its declared files) as in-scope\" drift scope the standalone command needs to run on a tree with no recorded file drift \u2014 so the acceptance criterion `plan-tool security --reconcile <name>` has no end-to-end data path.\n- [APPLIED] Step 8 (`document the security command`) is sequenced before step 9 (`deliver security auto-apply end-to-end`) and documents what \"steps 1\u20137 deliver,\" explicitly describing the \"advisory auto-apply primitive\" \u2014 i.e. step 7's inert, empty allowlist. Step 9 then seeds `SECURITY_AUTO_APPLY_ALLOWLIST` with the hardcoded-secret case and wires the apply loop, a user-facing behavior change (a security finding now mutates plan/detail prose), but no step re-documents it. Operators reading the docs see auto-apply as advisory-only after it has gone live. \u2014 - `docs/implementation-plans/2-security-check-command.md`: extended step 9's title with a RUNBOOK.md doc-update obligation for the now-active allowlist/apply-loop wiring, and added `RUNBOOK.md` to step 9's `files:` in YAML frontmatter.\n- [APPLIED] Step 4 (`add security-reconcile ReconcileKind + run_auto_reconcile_on_drift hook`) wires `run_security_audit(target=\"reconcile\")` to `plan_tool/auto_reconcile.py:run_auto_reconcile_on_drift`, but that primitive is **file-drift-gated** \u2014 it buckets a caller-supplied `drifted`/`file_to_step` set and, when nothing maps to a step, prints \"auto-reconcile skipped\" and returns `0` \u2014 and it returns an `int` count, not a `SecurityAuditResult`. This contradicts two committed concepts: the Architecture's promise that standalone `plan-tool security --reconcile` \"runs the intent-vs-posture comparison across the whole plan even on a tree with no recorded file drift\" (on a clean tree it would audit nothing), and step 3's `cmd_security`, which renders `result.findings` and persists via `write_security_report`. No step specifies how the reconcile branch synthesizes a whole-plan `drifted`/`file_to_step` set (e.g. via `scope_guard.build_file_to_step_map` over every step's files) or adapts the hook's `int`/self-persisted-`security-reconcile.json` output back into the `SecurityAuditResult` the caller expects. \u2014 - `docs/implementation-plans/2-security-check-command.md`: extended step 4 title to specify synthesizing the whole-plan `drifted`/`file_to_step` set via `scope_guard.build_file_to_step_map` over every step's declared files and adapting `run_auto_reconcile_on_drift`'s int/`security-reconcile.json` output back into a `SecurityAuditResult` for step 3's `cmd_security` to render and persist.\n- [APPLIED] The **Seam coverage gaps** risk states the `shell_security_invoker` seam and the TESTING.md/`conftest.py` updates land in **step 3**, but the seam, its TESTING.md \"Backend fallback seams\" row, and the no-new-conftest-edit decision actually land in **step 1** (`add security_audit.py orchestrator`); step 3 reuses the step-1 seam and no step edits `conftest.py` (the existing autouse gate already covers `claude_invoke`). A reviewer trusting the risk would look for the neutralization in the wrong step and expect a `conftest.py` change that never comes. \u2014 - `docs/implementation-plans/2-security-check-command.md`: reattributed the **Seam coverage gaps** risk mitigation to step 1 and noted no `conftest.py` edit is needed since the existing autouse gate covers the seam via `claude_invoke`.\n- [APPLIED] Step 4's `run_security_audit(target=\"reconcile\")` branch dispatches to `run_auto_reconcile_on_drift`, which returns an `int` (finding count) and persists its own `<ts>-security-reconcile.json` internally \u2014 but step 3's `cmd_security` consumes the call as a `SecurityAuditResult`, reading `result.report` / `result.findings`, rendering them, and re-persisting via `write_security_report(...)`. The two contracts are incompatible: `cmd_security` will fail on the int return (no `.report`/`.findings`) and, if adapted, double-write the sidecar. No detail reconciles the hook's int/self-persist contract with the orchestrator's `SecurityAuditResult` contract.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[step9-no-detail]`: Step 9 (`deliver security auto-apply end-to-end`) is the only step that makes auto-apply real \u2014 seeding the allowlist with hardcoded-secret, populating `rec.anchor` in `_security_recommendations`, emitting a `[category-slug]` from both security prompts, and wiring `security_finding_is_auto_applicable` into the `--iterate` apply loop \u2014 yet it has no detail file in the implementation bundle. Step 7's `security_auto_apply_category` extractor stays inert until this step populates the anchor/slug it reads, so the plan's central auto-apply promise has no concrete operationalization a developer can implement against.\n  - Address: `plan-tool completeness-apply security-check-command --anchor step9-no-detail`\n- MEDIUM `[security-low-severity-mapping]`: The severity-blocking policy requires security `LOW`/`NIT` to be non-blocking and forbids reusing `review.py:_CLAUDE_SEVERITY_MAP` (which folds `LOW`\u2192`medium`\u2192blocking), but the canonical `Recommendation.severity` set is `{critical, high, medium, nit, info}` \u2014 it has no `low`. The plan never states which canonical value a security `LOW` maps to (e.g. `nit` vs a newly introduced `low`), leaving rendering, ordering, and the non-blocking guarantee under-specified in step 1 (`_security_recommendations`).\n  - Address: `plan-tool completeness-apply security-check-command --anchor security-low-severity-mapping`\n- MEDIUM `[auto-reconcile-completeness-deferral]`: The Architecture defers \"wiring `run_auto_reconcile_on_drift`'s file-drift-gated path into the completeness/iteration loop ... to a follow-up step,\" but no step in this plan does it and the Deferred section never records it (it lists only the completeness default, auto-apply scope, and SAST). The deferral is asserted mid-prose with no owning step and no traceable backlog entry.\n  - Address: `plan-tool completeness-apply security-check-command --anchor auto-reconcile-completeness-deferral`\n- MEDIUM `[per-step-test-strategy]`: The Testing section's **Per-step test strategy** enumerates only steps 1\u20136 and labels \"step 6 (non-code)\", but the frontmatter declares nine steps and step 6 is `change_type: feature` (the `--with-security`/`--no-security` flag plus the `_security_is_cost_relevant` predicate). Steps 7 and 9 (both code features) and step 8 (the actual non-code doc step) have no per-step test-ordering directive, so the strategy is stale relative to the real step list and miscategorizes step 6.\n  - Address: `plan-tool completeness-apply security-check-command --anchor per-step-test-strategy`\n- HIGH `[reuse-target-scoping]`: The Architecture mandates that security reuse \"must scope by target/source as well as kind+fingerprint\" so \"a plan-audit reuse must never serve a code-audit report or vice versa,\" but no step operationalizes it: step 2 (`add resolve_reusable_security`) builds a flat newest-`-security.json`-by-suffix resolver and defers target scoping to step 3; step 3 defers the entire reuse path to a follow-up; and step 5's `_sample_security_audit` calls the flat `resolve_reusable_security` with no target filter. A `--target code --step` save (`source=\"security-code\"`, same `-security.json` suffix) is therefore the newest sidecar a plan-axis completeness run reuses, folding code findings into the plan dimension.\n  - Address: `plan-tool completeness-apply security-check-command --anchor reuse-target-scoping`\n- HIGH `[security-rollup-gate]`: Acceptance criterion \"Security findings pass through the existing findings-summarization/rollup gate (step 5) before reaching the completeness Security section\" and the *False-positive noise* risk (\"Reuse the existing findings-summarization/rollup gates\") promise LOW/NIT rollup, but step 5 (`wire security dimension into completeness`) renders `security_recs` one bullet per finding in `### Security` with no summarization/rollup step \u2014 no step in the bundle routes security findings through a rollup gate. The promised noise control is unimplemented, so a LOW/NIT-heavy security pass floods the completeness report.\n  - Address: `plan-tool completeness-apply security-check-command --anchor security-rollup-gate`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step1-files-coherence-4836da47]`: The detail body for step 1 cites `plan_tool/prompts/security.md`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/prompts/security-plan.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step1-files-coherence-16cf0414]`: `TESTING.md` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step3-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 3's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- INFO `[step4-files-coherence-4836da47]`: The detail body for step 4 cites `plan_tool/prompts/security.md`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/prompts/security-reconcile.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step4-files-coherence-74361171]`: The detail body for step 4 cites `prompts/security-reconcile.md`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/prompts/security-reconcile.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step8-files-coherence-32732139]`: `BACKLOG.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-1776785d]`: `CLAUDE.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-b404ada7]`: `README.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply security-check-command` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 9 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail security-check-command` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Security Check Command\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/prompts/security.md` resembling declared `plan_tool/prompts/security-plan.md` (typo/stale path?)\n- NIT: step 1 declared `TESTING.md` not mentioned in detail\n- NIT: step 3 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- INFO: step 4 detail cites `plan_tool/prompts/security.md` resembling declared `plan_tool/prompts/security-reconcile.md` (typo/stale path?)\n- INFO: step 4 detail cites `prompts/security-reconcile.md` resembling declared `plan_tool/prompts/security-reconcile.md` (typo/stale path?)\n- NIT: step 8 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 8 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 8 declared `README.md` not mentioned in detail\n- NIT: step 8 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[step9-no-detail]`: Step 9 (`deliver security auto-apply end-to-end`) is the only step that makes auto-apply real \u2014 seeding the allowlist with hardcoded-secret, populating `rec.anchor` in `_security_recommendations`, emitting a `[category-slug]` from both security prompts, and wiring `security_finding_is_auto_applicable` into the `--iterate` apply loop \u2014 yet it has no detail file in the implementation bundle. Step 7's `security_auto_apply_category` extractor stays inert until this step populates the anchor/slug it reads, so the plan's central auto-apply promise has no concrete operationalization a developer can implement against.\n- MEDIUM `[security-low-severity-mapping]`: The severity-blocking policy requires security `LOW`/`NIT` to be non-blocking and forbids reusing `review.py:_CLAUDE_SEVERITY_MAP` (which folds `LOW`\u2192`medium`\u2192blocking), but the canonical `Recommendation.severity` set is `{critical, high, medium, nit, info}` \u2014 it has no `low`. The plan never states which canonical value a security `LOW` maps to (e.g. `nit` vs a newly introduced `low`), leaving rendering, ordering, and the non-blocking guarantee under-specified in step 1 (`_security_recommendations`).\n- MEDIUM `[auto-reconcile-completeness-deferral]`: The Architecture defers \"wiring `run_auto_reconcile_on_drift`'s file-drift-gated path into the completeness/iteration loop ... to a follow-up step,\" but no step in this plan does it and the Deferred section never records it (it lists only the completeness default, auto-apply scope, and SAST). The deferral is asserted mid-prose with no owning step and no traceable backlog entry.\n- MEDIUM `[per-step-test-strategy]`: The Testing section's **Per-step test strategy** enumerates only steps 1\u20136 and labels \"step 6 (non-code)\", but the frontmatter declares nine steps and step 6 is `change_type: feature` (the `--with-security`/`--no-security` flag plus the `_security_is_cost_relevant` predicate). Steps 7 and 9 (both code features) and step 8 (the actual non-code doc step) have no per-step test-ordering directive, so the strategy is stale relative to the real step list and miscategorizes step 6.\n- HIGH `[reuse-target-scoping]`: The Architecture mandates that security reuse \"must scope by target/source as well as kind+fingerprint\" so \"a plan-audit reuse must never serve a code-audit report or vice versa,\" but no step operationalizes it: step 2 (`add resolve_reusable_security`) builds a flat newest-`-security.json`-by-suffix resolver and defers target scoping to step 3; step 3 defers the entire reuse path to a follow-up; and step 5's `_sample_security_audit` calls the flat `resolve_reusable_security` with no target filter. A `--target code --step` save (`source=\"security-code\"`, same `-security.json` suffix) is therefore the newest sidecar a plan-axis completeness run reuses, folding code findings into the plan dimension.\n- HIGH `[security-rollup-gate]`: Acceptance criterion \"Security findings pass through the existing findings-summarization/rollup gate (step 5) before reaching the completeness Security section\" and the *False-positive noise* risk (\"Reuse the existing findings-summarization/rollup gates\") promise LOW/NIT rollup, but step 5 (`wire security dimension into completeness`) renders `security_recs` one bullet per finding in `### Security` with no summarization/rollup step \u2014 no step in the bundle routes security findings through a rollup gate. The promised noise control is unimplemented, so a LOW/NIT-heavy security pass floods the completeness report.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk security-check-command` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply security-check-command` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-86149249",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 9 (`deliver security auto-apply end-to-end`) is the only step that makes auto-apply real \u2014 seeding the allowlist wi",
+      "body": "Step 9 (`deliver security auto-apply end-to-end`) is the only step that makes auto-apply real \u2014 seeding the allowlist with hardcoded-secret, populating `rec.anchor` in `_security_recommendations`, emitting a `[category-slug]` from both security prompts, and wiring `security_finding_is_auto_applicable` into the `--iterate` apply loop \u2014 yet it has no detail file in the implementation bundle. Step 7's `security_auto_apply_category` extractor stays inert until this step populates the anchor/slug it reads, so the plan's central auto-apply promise has no concrete operationalization a developer can implement against.",
+      "suggested_action": "author step 9's detail (or fold its design into the plan body) covering slug emission, anchor population, the allowlist seed, and the apply-loop wiring",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "step9-no-detail"
+    },
+    {
+      "id": "plan-plan-completeness-46a2db89",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The severity-blocking policy requires security `LOW`/`NIT` to be non-blocking and forbids reusing `review.py:_CLAUDE_SEV",
+      "body": "The severity-blocking policy requires security `LOW`/`NIT` to be non-blocking and forbids reusing `review.py:_CLAUDE_SEVERITY_MAP` (which folds `LOW`\u2192`medium`\u2192blocking), but the canonical `Recommendation.severity` set is `{critical, high, medium, nit, info}` \u2014 it has no `low`. The plan never states which canonical value a security `LOW` maps to (e.g. `nit` vs a newly introduced `low`), leaving rendering, ordering, and the non-blocking guarantee under-specified in step 1 (`_security_recommendations`).",
+      "suggested_action": "specify the canonical severity value security `LOW` resolves to so the non-blocking policy is operationalized against the existing severity set",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "security-low-severity-mapping"
+    },
+    {
+      "id": "plan-plan-completeness-b0e4abde",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture defers \"wiring `run_auto_reconcile_on_drift`'s file-drift-gated path into the completeness/iteration lo",
+      "body": "The Architecture defers \"wiring `run_auto_reconcile_on_drift`'s file-drift-gated path into the completeness/iteration loop ... to a follow-up step,\" but no step in this plan does it and the Deferred section never records it (it lists only the completeness default, auto-apply scope, and SAST). The deferral is asserted mid-prose with no owning step and no traceable backlog entry.",
+      "suggested_action": "record the completeness-loop drift-hook wiring in the Deferred section so the deferred work is tracked rather than lost in Architecture prose",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "auto-reconcile-completeness-deferral"
+    },
+    {
+      "id": "plan-plan-completeness-c1ff5203",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Testing section's **Per-step test strategy** enumerates only steps 1\u20136 and labels \"step 6 (non-code)\", but the front",
+      "body": "The Testing section's **Per-step test strategy** enumerates only steps 1\u20136 and labels \"step 6 (non-code)\", but the frontmatter declares nine steps and step 6 is `change_type: feature` (the `--with-security`/`--no-security` flag plus the `_security_is_cost_relevant` predicate). Steps 7 and 9 (both code features) and step 8 (the actual non-code doc step) have no per-step test-ordering directive, so the strategy is stale relative to the real step list and miscategorizes step 6.",
+      "suggested_action": "extend the per-step test strategy to cover steps 7\u20139 and correct step 6's change_type to feature",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-step-test-strategy"
+    },
+    {
+      "id": "plan-plan-completeness-fd8a64b3",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture mandates that security reuse \"must scope by target/source as well as kind+fingerprint\" so \"a plan-audit",
+      "body": "The Architecture mandates that security reuse \"must scope by target/source as well as kind+fingerprint\" so \"a plan-audit reuse must never serve a code-audit report or vice versa,\" but no step operationalizes it: step 2 (`add resolve_reusable_security`) builds a flat newest-`-security.json`-by-suffix resolver and defers target scoping to step 3; step 3 defers the entire reuse path to a follow-up; and step 5's `_sample_security_audit` calls the flat `resolve_reusable_security` with no target filter. A `--target code --step` save (`source=\"security-code\"`, same `-security.json` suffix) is therefore the newest sidecar a plan-axis completeness run reuses, folding code findings into the plan dimension.",
+      "suggested_action": "assign the per-target/source reuse scoping the Architecture requires to a concrete step (step 2 or step 3) so the plan and code axes never cross-serve",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-target-scoping"
+    },
+    {
+      "id": "plan-plan-completeness-1ef2c801",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Acceptance criterion \"Security findings pass through the existing findings-summarization/rollup gate (step 5) before rea",
+      "body": "Acceptance criterion \"Security findings pass through the existing findings-summarization/rollup gate (step 5) before reaching the completeness Security section\" and the *False-positive noise* risk (\"Reuse the existing findings-summarization/rollup gates\") promise LOW/NIT rollup, but step 5 (`wire security dimension into completeness`) renders `security_recs` one bullet per finding in `### Security` with no summarization/rollup step \u2014 no step in the bundle routes security findings through a rollup gate. The promised noise control is unimplemented, so a LOW/NIT-heavy security pass floods the completeness report.",
+      "suggested_action": "name the step that routes `security_recs` through the existing findings-summarization/rollup gate before rendering the completeness Security section, or drop the AC/risk claim",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "security-rollup-gate"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-86149249": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-security-check-command.md`: expanded the step 9 sentence in `## Architecture` into a four-item operationalization (slug emission from both prompts, `rec.anchor` population in `_security_recommendations`, the `{\"hardcoded-secret\"}` allowlist seed, and `security_finding_is_auto_applicable` apply-loop wiring, plus the RUNBOOK doc update).",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-46a2db89": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-b0e4abde": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-c1ff5203": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-security-check-command.md`: corrected step 6 to `(feature)` and added per-step test-strategy bullets for steps 7 (feature), 8 (non-code), and 9 (feature).",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-fd8a64b3": {
+      "status": "applied",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-1ef2c801": {
+      "status": "applied",
+      "note": "name the step",
+      "halt_reason": ""
+    }
+  }
+}

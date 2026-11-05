@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-plan-derivation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-derivation.md",
+  "created_at": "2026-10-16T17:58:02Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "85137e1064ee3d2970686f954dcd9f3026c931a1eee5b8961fd24e48f9d8025e",
+  "code_fingerprint": {
+    "BACKLOG.md": "7a299cd3ae15e3134355601f3e8ed1a01108365bd67015fdee81526ccd1ed0fd",
+    "docs/evidence/roadmap-plan-derivation-comparison.md": "72027616fe1abbd413e4ca5b5aecc7b7f6ae1c966440db553f3b01400b7abf05",
+    "docs/how-to/pipeline/create-from-existing.md": "745d0034fc4661918470be67bc73994644c97a536716b0d56716367d7a29a0ee",
+    "docs/how-to/roadmap.md": "23f48fcfec6981599baf977ab43006c6d71c0561f88fa4de110f6b365633c3b0",
+    "plan_tool/create.py": "62ebef543cae4e8050a4324b5ee5770c659b4c6e947a0d3281ec381b676a69ef",
+    "plan_tool/prompts/roadmap-plans.md": "9694d4ab25a3c7af084f583adf34369e197512a549c2c591cdbcd44d002bcadf",
+    "plan_tool/prompts/roadmap-seed.md": "78701e2887faa68335564c0921f4521093f64ce3561ce6311e5876ecdb6e99d2",
+    "tests/test_create.py": "15133405d0f4ead0e9d7eb2555ab93cfcf9033c899b05017e671b4e87cac6066",
+    "tests/test_roadmap.py": "28266d47a3c33ab520ca871abc5f38ad87abecbeff062f29f5966ffcb71c82c3"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 4 of 4 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

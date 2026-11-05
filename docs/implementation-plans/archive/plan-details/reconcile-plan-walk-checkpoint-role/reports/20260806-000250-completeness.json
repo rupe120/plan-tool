@@ -1,0 +1,39 @@
+{
+  "version": 3,
+  "plan_slug": "reconcile-plan-walk-checkpoint-role",
+  "plan_path": "docs/implementation-plans/2-reconcile-plan-walk-checkpoint-role.md",
+  "created_at": "2026-08-06T00:02:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "859622845a7ca325db7a67f23805d3a10c5c4b8d6f89a360757494aedb41a637",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b27f0b19110b52ef0125e9eed563330b2445e4ceadf4396ab669a87912c82739",
+    "docs/AUDIT_FLOW.md": "66074eee014722e60c2e2f5416137e71e46167e1c3f3fb5c5e5f7437fd4ba9f4",
+    "docs/cli/README.md": "96d117372599cf5ee438712732d989e15726f9ef868226d9e74844baa17339be",
+    "docs/cli/reconcile-plan-walk.md": "d650a7fcef0339805d7498e55400651010314e8dfce31e76adf9a4b6758ef73a",
+    "plan_tool/cli/review_cmd.py": "e9a8c9c2f974379039b5003bf8d08d7d6af35fece85ad41be5cb16bdf8c9724d",
+    "tests/cli/test_review_cmds.py": "8d8eec401462e0a716878d7e8497b5e15fff9af00498af682983e6e791e1818a",
+    "tests/test_review_persistence.py": "557d954e805b1d0b24836abc1494b34291858c70cede14b5d300ec335b1ddb39",
+    "tests/test_review_walk.py": "a8d021e901f7cb76e827cdd54af04b195f3b55adfd9a0eac7544c52707669548"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/reconcile-plan-walk-checkpoint-role/01-select-only-final-saved-reviews-direct.md": "fd2a34f75d87593cba205b8a168a1b6a38301935a56c744d962769243f60313f",
+    "docs/implementation-plans/plan-details/reconcile-plan-walk-checkpoint-role/02-document-safe-saved-review-selection.md": "7091f9c41d9112fe759ac527d7f0acbffa96dd20fc56cc1e8e07aa9ec3efedd6"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Reconcile Plan Walk Checkpoint Role\n\n`reconcile-plan-walk-checkpoint-role` \u00b7 generated 2026-08-06T00:02:50Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7eaf41f7]`: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run reconcile-plan-walk-checkpoint-role` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reconcile Plan Walk Checkpoint Role\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  },
+  "is_pre_apply_checkpoint": true
+}

@@ -1,0 +1,93 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T04:05:00Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "73736c4466df603448724f712d92bd0c04cc8848471b592a897058a3fcfcb088",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review.py": "7d0ee59cba958c291f5e933ca6557a7f9fba9b4c9b0d077c8273f274a1870d55",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md": "59420b9d4e73710c66a8f8ca54cf7c20940dc47c2538e1ffc1ba8a3ed85e1dff",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Annotation Entry\n\n`headless-review-annotation-entry` \u00b7 generated 2026-08-28T04:04:59Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `410d5821fa5c9c3b73c2c506a75942ca04b4f113cded3c5aa0195e726ab05693`\n- **Detail bundle digest:** `85f66ed80047080c2cf1af9a50f3c8b369d3c86805e8fb104fb9110b07c45351`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (-1 vs. first audit)\n- **Detail-bundle size:** 32898 bytes (+32898 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-f3cb7034]` [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e831b2b0]` [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e4d4701a]` [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4b21ec2e]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-00da194d]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-24744143]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run headless-review-annotation-entry` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Annotation Entry\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `410d5821fa5c9c3b73c2c506a75942ca04b4f113cded3c5aa0195e726ab05693`\n- **Detail bundle digest:** `85f66ed80047080c2cf1af9a50f3c8b369d3c86805e8fb104fb9110b07c45351`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "410d5821fa5c9c3b73c2c506a75942ca04b4f113cded3c5aa0195e726ab05693",
+      "detail_bundle_digest": "85f66ed80047080c2cf1af9a50f3c8b369d3c86805e8fb104fb9110b07c45351",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md",
+          "state": "present",
+          "digest": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md",
+          "state": "present",
+          "digest": "59420b9d4e73710c66a8f8ca54cf7c20940dc47c2538e1ffc1ba8a3ed85e1dff"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md",
+          "state": "present",
+          "digest": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+        }
+      ],
+      "source_seed_digest": "748ca5238e5348c160dc2f7467b284e02d4fff19040bdc2016294b6e841ca41c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 32898,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

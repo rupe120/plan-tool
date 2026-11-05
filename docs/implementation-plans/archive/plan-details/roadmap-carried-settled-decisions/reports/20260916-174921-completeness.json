@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-carried-settled-decisions",
+  "plan_path": "docs/implementation-plans/2-roadmap-carried-settled-decisions.md",
+  "created_at": "2026-09-16T17:49:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2548451c5b66a6e1779a9d86897380dd2544db36cede3b44a845ff5ff1de395a",
+  "code_fingerprint": {
+    "BACKLOG.md": "8981d8e3bf1cc8f2dc234cbb9a4f18271962b5b4ef4b0571c07c5919583b57cf",
+    "DATA_CONTRACT.md": "95399dad8144da1bc79f038e39114cae2c8912fb7b0627c829ed8a6654a84923",
+    "ROADMAP_FORMAT.md": "32ddec5099d440f0f87dcd0c09d7bd2d0b2c5f298a2075a14c39e9726943620b",
+    "docs/how-to/roadmap.md": "8f967486d52cbd3289b4e6770ca452c998036adb1525242b98072476098b254c",
+    "plan_tool/prompts/roadmap-components.md": "616c447aebd57844c09425aeac8f35b3e3fa0f1640850fced803eb4cd54a887e",
+    "plan_tool/prompts/roadmap-constraints.md": "a192218abc82e27638fa98ecf184394fd5ff52602c1590a4268c628d8a9a76a6",
+    "plan_tool/prompts/roadmap-domain.md": "879ee53b440a9380e92ca33da31f8ce859731b4a2c8b567c008a5636900f938e",
+    "plan_tool/prompts/roadmap-plans.md": "b55ca4621a3a2010f2425a3d43f7c4b7876431bc6ab54902a28b16c1eb535d88",
+    "plan_tool/roadmap.py": "0eebdad36cfe0752faf941a8cccd4a7f0018f564b8aa3eafbd56092dcfa9b3ce",
+    "plan_tool/roadmap_artifacts.py": "8b1d166df03a8ef3b2653d673b100417ba5300d41c9df8484d807c1a47db7f17",
+    "plan_tool/roadmap_gates.py": "e86aaaf99281ea836135c9bf372520f0dd6d48d637a4159a2ae0aa2060fcdab2",
+    "plan_tool/roadmap_source.py": "306b92fa4944d6e1d8b224f95400e6755c55a8c883532e175a95412b21701038",
+    "tests/test_roadmap.py": "567ec9da98c8ef5907a16e44269f037d7ac52d24a34d5d942bcdc5b22943a82c",
+    "tests/test_roadmap_artifacts.py": "879edec69df96c375a61a78f33b556e0565daa6e711b9eefa6118462a6df518c",
+    "tests/test_roadmap_gates.py": "8aeef26e4dbfaba2ed3dfe1b206c8ddcdf76ab949e3706bafa8f547fe4eb8d0d",
+    "tests/test_roadmap_source.py": "57e02394bc96b889cf4b0475242df737bba15811259ad90a8e52c76289e6951e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md": "2e76ccfcb2759c4f2dfc65209c70c7a70edffb24dd85bca914c294f9f19afcf4",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md": "53834969801f3910563241c1d603d1b6663aae8d10aada3db3421b2eae5dbcd0",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md": "fb7cb489a67f587e064ce565151fa0c4e24372a26c58008f5269db5b5a633f00",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-only-applicable-carried-decisions.md": "1ab62727e6581c54170c8c1dd479c9015caaaad9845619a8e6829253eb1f6721",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md": "c25f4dfd6757360ff0671e85f44ed9ea061e46949ddb480f3c96b8669b5c441f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Carried Settled Decisions\n\n`roadmap-carried-settled-decisions` \u00b7 generated 2026-09-16T17:49:21Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-carried-settled-decisions  # optional interactive review of the saved findings\n\n- HIGH `[carried-provenance-rebind]` [confidence: limited]: Step 1 (`Parse and validate the optional carried-decision block from the recorded Roadmap source while preserving atomic source.json creation and confirmed rebind replacement`) preserves a rebind that replaces the only recorded source baseline, while Architecture requires each inherited row\u2019s citation to resolve against confirmed material in that source. `plan_tool/roadmap.py:_write_brief_source` records only the current `brief_path` and `brief_digest`, so a confirmed rebind can remove or change material that already-published inherited rows cite; the plan does not say whether those rows remain valid, are revalidated, or require an explicit migration.  \n  ```text\n  Architecture: \u201cThe source citation proves a confirmed answer in the recorded source.\u201d\n  Step 01: \u201c...while preserving atomic source.json creation and confirmed rebind replacement\u201d\n  ```\n  - Fix: Define the carried-citation lifecycle across confirmed rebinds, including how published inherited rows retain or re-establish verifiable provenance before later revisions can publish.\n- MEDIUM `[carried-decision-placement]` [confidence: limited]: Step 4 (`Route only applicable carried decisions through the four stage prompts and preserve gate-before-atomic-overwrite publication with seed writes unchanged`) leaves \u201capplicable\u201d and \u201cevery relevant rendered artifact\u201d undefined. Existing `check_decision_records` permits a decision on later artifacts to anchor an upstream row, so one carried anchor can reasonably be rendered once at its owning stage or repeatedly in every later stage where it resolves; those outputs have different row inventories and citation obligations.  \n  ```text\n  Architecture: \u201cIt anchors to a live row in the artifact carrying it.\u201d\n  Acceptance criteria: \u201c...retains the source reference in every relevant rendered artifact.\u201d\n  Step 04: \u201cRoute only applicable carried decisions through the four stage prompts...\u201d\n  ```\n  - Fix: Define one deterministic placement rule for each carried decision, including whether an anchor may place the row in one artifact or multiple artifacts, and align all four prompts and gates to that rule.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-carried-settled-decisions` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Carried Settled Decisions\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[carried-provenance-rebind]` [confidence: limited]: Step 1 (`Parse and validate the optional carried-decision block from the recorded Roadmap source while preserving atomic source.json creation and confirmed rebind replacement`) preserves a rebind that replaces the only recorded source baseline, while Architecture requires each inherited row\u2019s citation to resolve against confirmed material in that source. `plan_tool/roadmap.py:_write_brief_source` records only the current `brief_path` and `brief_digest`, so a confirmed rebind can remove or change material that already-published inherited rows cite; the plan does not say whether those rows remain valid, are revalidated, or require an explicit migration.  \n  ```text\n  Architecture: \u201cThe source citation proves a confirmed answer in the recorded source.\u201d\n  Step 01: \u201c...while preserving atomic source.json creation and confirmed rebind replacement\u201d\n  ```\n- MEDIUM `[carried-decision-placement]` [confidence: limited]: Step 4 (`Route only applicable carried decisions through the four stage prompts and preserve gate-before-atomic-overwrite publication with seed writes unchanged`) leaves \u201capplicable\u201d and \u201cevery relevant rendered artifact\u201d undefined. Existing `check_decision_records` permits a decision on later artifacts to anchor an upstream row, so one carried anchor can reasonably be rendered once at its owning stage or repeatedly in every later stage where it resolves; those outputs have different row inventories and citation obligations.  \n  ```text\n  Architecture: \u201cIt anchors to a live row in the artifact carrying it.\u201d\n  Acceptance criteria: \u201c...retains the source reference in every relevant rendered artifact.\u201d\n  Step 04: \u201cRoute only applicable carried decisions through the four stage prompts...\u201d\n  ```\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2a384d1d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Parse and validate the optional carried-decision block from the recorded Roadmap source while preserving atomic",
+      "body": "Step 1 (`Parse and validate the optional carried-decision block from the recorded Roadmap source while preserving atomic source.json creation and confirmed rebind replacement`) preserves a rebind that replaces the only recorded source baseline, while Architecture requires each inherited row\u2019s citation to resolve against confirmed material in that source. `plan_tool/roadmap.py:_write_brief_source` records only the current `brief_path` and `brief_digest`, so a confirmed rebind can remove or change material that already-published inherited rows cite; the plan does not say whether those rows remain valid, are revalidated, or require an explicit migration.  \n  ```text\n  Architecture: \u201cThe source citation proves a confirmed answer in the recorded source.\u201d\n  Step 01: \u201c...while preserving atomic source.json creation and confirmed rebind replacement\u201d\n  ```",
+      "suggested_action": "Define the carried-citation lifecycle across confirmed rebinds, including how published inherited rows retain or re-establish verifiable provenance before later revisions can publish.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "carried-provenance-rebind",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0e2ce4e7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Route only applicable carried decisions through the four stage prompts and preserve gate-before-atomic-overwrit",
+      "body": "Step 4 (`Route only applicable carried decisions through the four stage prompts and preserve gate-before-atomic-overwrite publication with seed writes unchanged`) leaves \u201capplicable\u201d and \u201cevery relevant rendered artifact\u201d undefined. Existing `check_decision_records` permits a decision on later artifacts to anchor an upstream row, so one carried anchor can reasonably be rendered once at its owning stage or repeatedly in every later stage where it resolves; those outputs have different row inventories and citation obligations.  \n  ```text\n  Architecture: \u201cIt anchors to a live row in the artifact carrying it.\u201d\n  Acceptance criteria: \u201c...retains the source reference in every relevant rendered artifact.\u201d\n  Step 04: \u201cRoute only applicable carried decisions through the four stage prompts...\u201d\n  ```",
+      "suggested_action": "Define one deterministic placement rule for each carried decision, including whether an anchor may place the row in one artifact or multiple artifacts, and align all four prompts and gates to that rule.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "carried-decision-placement",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "2548451c5b66a6e1779a9d86897380dd2544db36cede3b44a845ff5ff1de395a",
+    "detail_bundle_digest": "a262757f81df192fee68b032925ff829c5193e7c78f571c4bd101db4d584ccd2",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-only-applicable-carried-decisions.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "d92ecf08f60e6af373e3a22e02093091022d78b18517eef2fa0589bb6852a76a",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

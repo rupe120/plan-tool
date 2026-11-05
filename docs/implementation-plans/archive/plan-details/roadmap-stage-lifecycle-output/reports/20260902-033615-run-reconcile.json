@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-stage-lifecycle-output",
+  "plan_path": "docs/implementation-plans/2-roadmap-stage-lifecycle-output.md",
+  "created_at": "2026-09-02T03:36:15Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "daf0dc4f4e50df16686fe9cbfa20cb56b7e284eaed833d38b1d80a5460d8df71",
+  "code_fingerprint": {
+    "BACKLOG.md": "7df2172a1b012d9cc021ecdc027617714277a5961f2a2662f8577929cccb2e94",
+    "README.md": "036dd2a41f27a6fe61aae339c55070f5e9b81584765f55516474ee53e8bd3b1a",
+    "RUNBOOK.md": "7df19f082b027b36a509776898f12c6ec45dc2e50d71d51769c2d9d3a9870d05",
+    "docs/ARCHITECTURE.md": "7eb66b25edab668f5dc6dbf25708cb0cc4d75dde1fe11ae343a52e125305a404",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "327890b49ce00a075f507d79c16d4eb95ef0dff08fd807f74635632d8274cae7",
+    "docs/ROADMAP_WALKTHROUGH.md": "47835b411649d62e74e65dc9412d2627ff564b0d6c8f278e9488f0e0e4eac19d",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "a85a0eae5e36067b8295e21b8a9eabdeec9a7edd8fecd5a566fa8d5d4ff88372",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "d37e65f02356c9e3ba4831747d0029433794e2b59e6222b2fc7555ecf6a4873f",
+    "plan_tool/cli/roadmap_cmd.py": "31cc28b0a2ae45a7db35d9b9badb2184664efac35eb75337523b5a2edfbb2a78",
+    "plan_tool/roadmap.py": "1823ad96b6c81749a055a91d29500148220bc3002d1a1ecf21b0301243ded47e",
+    "tests/cli/test_roadmap_cmd.py": "46b24fbce91796c3360badfacb9ccb50112639e6d8de71467406fc7bb13f1af1",
+    "tests/test_roadmap.py": "38e2c97d4d24648bc8f7b3a9dfe9d55000adaecda8df4c3c72c12be9a235002c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 4 of 4 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

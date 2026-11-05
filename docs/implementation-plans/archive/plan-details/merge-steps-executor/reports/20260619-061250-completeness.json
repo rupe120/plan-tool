@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "plan_slug": "merge-steps-executor",
+  "plan_path": "docs/implementation-plans/2-merge-steps-executor.md",
+  "created_at": "2026-06-19T06:12:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "759d98059de8ee5842032e40807075c7340c0af7112d37b5d76d21e9f6621162",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "55d7d58e5fa948c8afb0b97a1fbbaf51cec0de6118257f931c0e34f9be57c6fc",
+    "RUNBOOK.md": "c2f9bac4d5fa456fceaa228d1a8654671d1d388e5051901a2e66de4c204ef06d",
+    "docs/cli/README.md": "612b1df0eb2839d4f06f0e7603472496cfc0a5cb0f5b5dddf9ccd5544ec05637",
+    "integrations/claude/SKILL.md": "d6b655f7b9bf6f3d2749abf2473e1857d5169ded1a465638c3e46e30eaa4a62b",
+    "integrations/codex/SKILL.md": "3837ec61a9dd2dabbd3bdd5baf313a3f74953eddf3def74c8884f73425261051",
+    "plan_tool/cli/__init__.py": "6df12bf2fda35595eb3ed1f3368faffd1821a36f2478fab71982f03b60a45de6",
+    "plan_tool/cli/app.py": "46c30cab17e4c52d19038638e7f96e2777808dc7c61b59f7d1b2212e8e18d9b1",
+    "plan_tool/cli/authoring.py": "7d972d396074e4406c4b8e9e10870fb497f13557b016a5e4133eab6c3042abc2",
+    "plan_tool/create.py": "d0f830c9e39bbc44085ed0eb1f5159f17d797350d70612b387782280dc9b3f8d",
+    "plan_tool/detail.py": "b4acef5b8ae0783ab27cd9b135e2518f91ee176f860762e9edf5bb4d0391cdc6",
+    "plan_tool/prompts/detail.md": "53550bee6b1798864f6545d6261bfedcb1f6aff9a188f069713cc3f536d3f6e8",
+    "tests/cli/test_authoring_cmds.py": "cac4950830cd42f71eef19431679feb11b9921d19dfdf8fc57d01cb14431f978",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "1ab9eda370b3ea39b8caad3580cc8d3786e7e7a83fb62ffd152a72baff74898a"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Merge Steps Executor\n\n`merge-steps-executor` \u00b7 generated 2026-06-19T06:12:50Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 1 dispatched (1 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 1 (1 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Architecture's \"The prose must match the type\" section and its rejected-alternative callout claim that a re-tripped mixed-step / `granularity-split` finding from `cmd_merge`'s completeness tail (step 3) is \"recommend-only \u2026 never loop-driven,\" degrading to a manual `plan-tool split` suggestion. But the conceptual audit emits a mixed-step as a **Correctness** finding (source `plan-correctness`), which is in `APPLY_ELIGIBLE_SOURCES` (`review.py`) and IS auto-applied by `cmd_completeness`'s `--iterate` loop \u2014 `completeness_cmd.py` excludes only `plan-completeness` from convergence, not `plan-correctness`. So an imperfectly-integrated merged step's mixed-step finding is apply-eligible (the loop rewrites merged prose each round), not recommend-only; the real reason the merge is never undone is that the prose-only apply pass cannot create a new step to re-split it. The body conflates the advisor's recommend-only `granularity-split` finding with the auto-applied conceptual mixed-step finding. \u2014 - `docs/implementation-plans/2-merge-steps-executor.md`: rewrote the closing sentence of the \"prose must match the type\" Architecture paragraph to state the merged step's conceptual mixed-step finding is `plan-correctness` (apply-eligible, auto-applied under `--iterate`) and survives because prose-only apply integrates rather than re-splits, reserving \"recommend-only\" for the `detail-purity` self-check and the advisor's `granularity-*` findings.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[merged-step-features-gate]`: Step 2 (`merge-steps-orchestrator`) \u2014 its \"Assemble the `merged` Step\" list sets `title/files/creates/change_type/complexity/scope/id/depends_on/detail` but omits `features`, `gate`, and `enforce_test_authoring`, which the Architecture note \"A merged step takes the dominant `change_type`\" explicitly commits to (\"**unions its members' `features`** and **carries forward `gate` and `enforce_test_authoring`** so no per-step linkage is lost\"). Because step 1's `_apply_step_merge` sets only `id`/`depends_on` and inherits the rest from the caller-assembled `merged` Step \u2014 whose defaults are `features=[]`, `gate=[]`, `enforce_test_authoring=None` \u2014 the fold drops all three, producing exactly the plan\u2194feature-registry linkage loss the body warns \"make[s] feature X read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-runs.\" No step or acceptance criterion operationalizes the commitment.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor merged-step-features-gate`\n- MEDIUM `[merged-step-allowed-mentions]`: Step 2 (`merge-steps-orchestrator`) \u2014 the `merged`-Step assembly is silent on `Step.allowed_mentions`, the per-step scope-guard allow-list; like `features` it defaults to `[]` on the fold, so any member's allow-listed mentions are dropped and the merge's re-audit / scope-guard tail could re-flag references that were previously permitted. The body never names the field, leaving its fold behavior undefined.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor merged-step-allowed-mentions`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 2 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply merge-steps-executor --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Merge Steps Executor\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[merged-step-features-gate]`: Step 2 (`merge-steps-orchestrator`) \u2014 its \"Assemble the `merged` Step\" list sets `title/files/creates/change_type/complexity/scope/id/depends_on/detail` but omits `features`, `gate`, and `enforce_test_authoring`, which the Architecture note \"A merged step takes the dominant `change_type`\" explicitly commits to (\"**unions its members' `features`** and **carries forward `gate` and `enforce_test_authoring`** so no per-step linkage is lost\"). Because step 1's `_apply_step_merge` sets only `id`/`depends_on` and inherits the rest from the caller-assembled `merged` Step \u2014 whose defaults are `features=[]`, `gate=[]`, `enforce_test_authoring=None` \u2014 the fold drops all three, producing exactly the plan\u2194feature-registry linkage loss the body warns \"make[s] feature X read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-runs.\" No step or acceptance criterion operationalizes the commitment.\n- MEDIUM `[merged-step-allowed-mentions]`: Step 2 (`merge-steps-orchestrator`) \u2014 the `merged`-Step assembly is silent on `Step.allowed_mentions`, the per-step scope-guard allow-list; like `features` it defaults to `[]` on the fold, so any member's allow-listed mentions are dropped and the merge's re-audit / scope-guard tail could re-flag references that were previously permitted. The body never names the field, leaving its fold behavior undefined.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk merge-steps-executor` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-e6590a86",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`merge-steps-orchestrator`) \u2014 its \"Assemble the `merged` Step\" list sets `title/files/creates/change_type/comple",
+      "body": "Step 2 (`merge-steps-orchestrator`) \u2014 its \"Assemble the `merged` Step\" list sets `title/files/creates/change_type/complexity/scope/id/depends_on/detail` but omits `features`, `gate`, and `enforce_test_authoring`, which the Architecture note \"A merged step takes the dominant `change_type`\" explicitly commits to (\"**unions its members' `features`** and **carries forward `gate` and `enforce_test_authoring`** so no per-step linkage is lost\"). Because step 1's `_apply_step_merge` sets only `id`/`depends_on` and inherits the rest from the caller-assembled `merged` Step \u2014 whose defaults are `features=[]`, `gate=[]`, `enforce_test_authoring=None` \u2014 the fold drops all three, producing exactly the plan\u2194feature-registry linkage loss the body warns \"make[s] feature X read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-runs.\" No step or acceptance criterion operationalizes the commitment.",
+      "suggested_action": "add `features`-union (order-preserving dedup) plus `gate` and `enforce_test_authoring` carry-forward to step 2's `merged`-Step assembly, and lock it with a step-2 acceptance criterion + test.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "merged-step-features-gate"
+    },
+    {
+      "id": "plan-plan-completeness-011f0470",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`merge-steps-orchestrator`) \u2014 the `merged`-Step assembly is silent on `Step.allowed_mentions`, the per-step scop",
+      "body": "Step 2 (`merge-steps-orchestrator`) \u2014 the `merged`-Step assembly is silent on `Step.allowed_mentions`, the per-step scope-guard allow-list; like `features` it defaults to `[]` on the fold, so any member's allow-listed mentions are dropped and the merge's re-audit / scope-guard tail could re-flag references that were previously permitted. The body never names the field, leaving its fold behavior undefined.",
+      "suggested_action": "state in step 2 whether `allowed_mentions` is unioned across members or deliberately regenerated by the re-author, so the merged step's scope-guard posture is defined.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "merged-step-allowed-mentions"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-e6590a86": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-011f0470": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    }
+  }
+}

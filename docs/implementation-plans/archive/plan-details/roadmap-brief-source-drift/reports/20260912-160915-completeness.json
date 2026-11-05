@@ -1,0 +1,142 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-brief-source-drift",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-source-drift.md",
+  "created_at": "2026-09-12T16:09:15Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d6fd25705b0793f55bcadf2406c77da2565f776b2d9a0ac71712db83a2aad29c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "85ec88e5e4b4f1402041215923bea8de61a98824c4ad274da51ba9c0a8c17ed9",
+    "DATA_CONTRACT.md": "a487b831bcd4208bdc9b6dbfeb705bae2d43d4a7bdecb3b70249d3655c904d6b",
+    "README.md": "5077388d1a53ddee451a7e65c7da47c7b41a4ad997156abb0a0b5fd45a4229b4",
+    "ROADMAP_FORMAT.md": "eaf6de6bc867c6f874e3683730e97c2ad49d9dfc2ec64a63e67e62213b4eb972",
+    "RUNBOOK.md": "7df19f082b027b36a509776898f12c6ec45dc2e50d71d51769c2d9d3a9870d05",
+    "USE_CASES.md": "64bcd3c02ca8c0acd795ec98e735cf6932bfba51c95eb075aab64f141e47ec76",
+    "docs/ARCHITECTURE.md": "c5e02d5dde29de7e9d61df18f3c8632d3df09dac17fc263955899c1400eed45e",
+    "docs/ROADMAP_WALKTHROUGH.md": "47835b411649d62e74e65dc9412d2627ff564b0d6c8f278e9488f0e0e4eac19d",
+    "docs/cli/roadmap.md": "b36cd6a5c6d85dba883ff9d35a9a5812b9835dc391de407ac2994902d7ce7624",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "dc11e193562bc1e8f677def57997d9594c7d1fce3c34b40771abd37397f1de5e",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "5b196bb9ecb8d7be2e8beb6ef9d972b1cfcd10b39a69ad057be52da83e03bcb5",
+    "plan_tool/cli/__init__.py": "2bc81b031c52f6490752f78502c5ff2cea38a55a42714a2c226a5f197863320b",
+    "plan_tool/cli/roadmap_cmd.py": "ead8fe581c4aae7c483feaa5fc0a2e48ebfd3f65648a446ff1e506fcb0440c88",
+    "plan_tool/roadmap.py": "62d3d92e2ff921b30b44f9ce6348cba7911ec28a709301e9a4db9f28b46508b0",
+    "plan_tool/roadmap_source.py": "13c48715bc3fe222a1289f41064e4ecc4de1a5baf5af69066f6b205af8a06db7",
+    "plan_tool/run_log.py": "f806251a711e951eca186a84fd8a1a6e474e7dc6ec42f68768988db458583b93",
+    "tests/cli/package_surface_help.golden.txt": "93a9f349c6f9fa5e011b836ffde552cfd01a649037bf404e5de99396a76b84a1",
+    "tests/cli/test_roadmap_cmd.py": "b251e5d038cd53106d36059220f08fcff47a419dd18edd35078a2729683a4748",
+    "tests/test_roadmap.py": "43893941b8b7391b0ae5dae817c2eef50c2189cd6afc1614fa7ca88da56de9ca",
+    "tests/test_roadmap_format.py": "6f2b74355c6719bb3a1813deed5109bc708fe94db3d6ae2d137e99984d1e9cfa",
+    "tests/test_roadmap_source.py": "32a6223e5122af655121eae000ce16bbf1671bb4ced1bfd70f1fdf6d198dd84e",
+    "tests/test_run_log.py": "5db88e0b4f1eb7c00fa7a16430554fb436b6e4b4d6318426851cd8c35a6a0666"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md": "8e8ca17324dc55f77fa6c8c34e7b4425ae6953289b7305391b1a13946c5e5a76",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md": "fdf7d7ad14281cf46abb147eee1437fc295456480c06eba2af637db8b9a6425d",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-while.md": "4cbdcfc2bd82b7a867e94b21a390b515530704267ff10105461b51534ed79fc5",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md": "a7243760672b9aad1437b8d8f2b89c9949011657268c614272fb8254cdb10193"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Brief Source Drift\n\n`roadmap-brief-source-drift` \u00b7 generated 2026-09-12T16:09:15Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-brief-source-drift   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[semantic-change-guidance]` [confidence: limited]: Step 3 (`Accept same-path rebinding while isolating the baseline operation from artifact and seed effects`) does not require its CLI result or guide updates to name feedback or a successor lineage as the routes for semantic changes. The plan\u2019s acceptance criterion requires that statement, while step 3 only promises a baseline-only note; step 4 likewise documents non-regeneration without naming the routes. An operator can therefore accept a new baseline and still lack the required direction for making the roadmap reflect a changed brief.\n\n  Plan `## Acceptance criteria`:\n  ```\n  - Explicit acceptance updates the persisted baseline atomically without\n    artifact or seed effects from the baseline-replacement operation itself, and\n    states that semantic changes still belong in feedback or a successor\n    lineage.\n  ```\n\n  Step 3 `## Implementation`:\n  ```\n  - **Render the operator-visible boundary plainly.** Add one note near `plan_tool/cli/roadmap_cmd.py:_print_completed` and `_print_completed_no_change` that says the baseline was accepted without artifact or seed effects of its own, then render the ordinary stage outcome.\n  ```\n\n  Step 4 `## Implementation`:\n  ```\n  - **Preserve the one-shot binding boundary.** State in `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, and the operator guides that a changed brief does not re-ground, regenerate, reconcile, or rewrite an existing roadmap.\n  ```\n  - Fix: Require the step 3 result and step 4 operator guidance to say that rebinding changes only the source baseline and that semantic changes belong in reviewer feedback on the owning artifact or a successor roadmap lineage.\n- HIGH `[source-record-replaceability]` [confidence: limited]: Step 1\u2019s `Implementation \u2014 Keep absence categories separate`, `Tests \u2014 test_missing_source_record_is_reported_as_absent`, and acceptance criteria treat a non-file `source.json` as absent, while step 2\u2019s `Implementation \u2014 Preserve the initial write transaction shape` writes that path only after artifact publication. At HEAD, `plan_tool/fileio.py:atomic_write_text` uses `os.replace`, which cannot replace a directory; the published artifact can therefore be left without a source baseline and a later run can establish a different one.\n  - Fix: Classify a pre-existing non-replaceable source-record target as a pre-artifact source-record failure, while retaining only a genuinely absent target as eligible for initial binding, and cover that boundary across the reader and stage-preflight tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-27923d1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-brief-source-drift` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Brief Source Drift\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[semantic-change-guidance]` [confidence: limited]: Step 3 (`Accept same-path rebinding while isolating the baseline operation from artifact and seed effects`) does not require its CLI result or guide updates to name feedback or a successor lineage as the routes for semantic changes. The plan\u2019s acceptance criterion requires that statement, while step 3 only promises a baseline-only note; step 4 likewise documents non-regeneration without naming the routes. An operator can therefore accept a new baseline and still lack the required direction for making the roadmap reflect a changed brief.\n\n  Plan `## Acceptance criteria`:\n  ```\n  - Explicit acceptance updates the persisted baseline atomically without\n    artifact or seed effects from the baseline-replacement operation itself, and\n    states that semantic changes still belong in feedback or a successor\n    lineage.\n  ```\n\n  Step 3 `## Implementation`:\n  ```\n  - **Render the operator-visible boundary plainly.** Add one note near `plan_tool/cli/roadmap_cmd.py:_print_completed` and `_print_completed_no_change` that says the baseline was accepted without artifact or seed effects of its own, then render the ordinary stage outcome.\n  ```\n\n  Step 4 `## Implementation`:\n  ```\n  - **Preserve the one-shot binding boundary.** State in `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, and the operator guides that a changed brief does not re-ground, regenerate, reconcile, or rewrite an existing roadmap.\n  ```\n- HIGH `[source-record-replaceability]` [confidence: limited]: Step 1\u2019s `Implementation \u2014 Keep absence categories separate`, `Tests \u2014 test_missing_source_record_is_reported_as_absent`, and acceptance criteria treat a non-file `source.json` as absent, while step 2\u2019s `Implementation \u2014 Preserve the initial write transaction shape` writes that path only after artifact publication. At HEAD, `plan_tool/fileio.py:atomic_write_text` uses `os.replace`, which cannot replace a directory; the published artifact can therefore be left without a source baseline and a later run can establish a different one.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-brief-source-drift` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9b7e7388",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Accept same-path rebinding while isolating the baseline operation from artifact and seed effects`) does not req",
+      "body": "Step 3 (`Accept same-path rebinding while isolating the baseline operation from artifact and seed effects`) does not require its CLI result or guide updates to name feedback or a successor lineage as the routes for semantic changes. The plan\u2019s acceptance criterion requires that statement, while step 3 only promises a baseline-only note; step 4 likewise documents non-regeneration without naming the routes. An operator can therefore accept a new baseline and still lack the required direction for making the roadmap reflect a changed brief.\n\n  Plan `## Acceptance criteria`:\n  ```\n  - Explicit acceptance updates the persisted baseline atomically without\n    artifact or seed effects from the baseline-replacement operation itself, and\n    states that semantic changes still belong in feedback or a successor\n    lineage.\n  ```\n\n  Step 3 `## Implementation`:\n  ```\n  - **Render the operator-visible boundary plainly.** Add one note near `plan_tool/cli/roadmap_cmd.py:_print_completed` and `_print_completed_no_change` that says the baseline was accepted without artifact or seed effects of its own, then render the ordinary stage outcome.\n  ```\n\n  Step 4 `## Implementation`:\n  ```\n  - **Preserve the one-shot binding boundary.** State in `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, and the operator guides that a changed brief does not re-ground, regenerate, reconcile, or rewrite an existing roadmap.\n  ```",
+      "suggested_action": "Require the step 3 result and step 4 operator guidance to say that rebinding changes only the source baseline and that semantic changes belong in reviewer feedback on the owning artifact or a successor roadmap lineage.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "semantic-change-guidance",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-6577e2b5",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s `Implementation \u2014 Keep absence categories separate`, `Tests \u2014 test_missing_source_record_is_reported_as_absent`",
+      "body": "Step 1\u2019s `Implementation \u2014 Keep absence categories separate`, `Tests \u2014 test_missing_source_record_is_reported_as_absent`, and acceptance criteria treat a non-file `source.json` as absent, while step 2\u2019s `Implementation \u2014 Preserve the initial write transaction shape` writes that path only after artifact publication. At HEAD, `plan_tool/fileio.py:atomic_write_text` uses `os.replace`, which cannot replace a directory; the published artifact can therefore be left without a source baseline and a later run can establish a different one.",
+      "suggested_action": "Classify a pre-existing non-replaceable source-record target as a pre-artifact source-record failure, while retaining only a genuinely absent target as eligible for initial binding, and cover that boundary across the reader and stage-preflight tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "source-record-replaceability",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "e984cf385d3bd582479a9f68476051afca8ca9bbdcb865e42c453f621ea2610e",
+    "detail_bundle_digest": "93fb54c8373cc12fa855b6e1a142f5e5b8228bdf0dea177b4de8158afaba87fd",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md",
+        "state": "present",
+        "digest": "8e8ca17324dc55f77fa6c8c34e7b4425ae6953289b7305391b1a13946c5e5a76"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md",
+        "state": "present",
+        "digest": "fdf7d7ad14281cf46abb147eee1437fc295456480c06eba2af637db8b9a6425d"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-while.md",
+        "state": "present",
+        "digest": "4cbdcfc2bd82b7a867e94b21a390b515530704267ff10105461b51534ed79fc5"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md",
+        "state": "present",
+        "digest": "a7243760672b9aad1437b8d8f2b89c9949011657268c614272fb8254cdb10193"
+      }
+    ],
+    "source_seed_digest": "cff4201e20b529fdef754cb4ca1b72892108af99b00e1603e36657aaf436fc28",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

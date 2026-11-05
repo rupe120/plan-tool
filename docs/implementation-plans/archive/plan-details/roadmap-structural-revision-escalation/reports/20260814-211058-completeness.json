@@ -1,0 +1,223 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-revision-escalation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-revision-escalation.md",
+  "created_at": "2026-08-14T21:10:58Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3f416add1a4ab2c2eaa41e6a6c2df661f6a7f0edfd56c9e98d18c1ff9e00f3cf",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "afb753dd86d26eb2bc1506485247fffc072a60ec99c386bacda969df7e325a64",
+    "CLAUDE.md": "8fb431c12858a1d577ed60bde3d7a0e58711446a761d9638380f8cc6cd1395f1",
+    "DATA_CONTRACT.md": "2e76c419aa8d6695fbd02934738ec3e5b0b1dbfd1d6ec3591e3d7e859a8ea8f8",
+    "README.md": "1dbf5858642e538412558320782222faea1bc8032c6ffa40a4e8f25c9f420c50",
+    "ROADMAP_FORMAT.md": "94698942b45ed66579623b3f087a3815a38201bbb3990f6e9667a3ede9000191",
+    "RUNBOOK.md": "7bac353501c2061704daf71186b17d41833a882f4c8b88b84a9d9937a2aacd66",
+    "TESTING.md": "d97def2a36eb1b704077041dc2d2cecb8482cdfa29d061991a8014c3108ec3bc",
+    "docs/ARCHITECTURE.md": "1c79af5cde890c510ee07b6003cdf3274c91a085ea5b8aa19a7e1db6ab78479f",
+    "docs/ROADMAP_WALKTHROUGH.md": "67be7883e9d0344cc713ebd2b7992f2eb4815e51e282c00724d5e3ad41ad184e",
+    "docs/cli/roadmap.md": "2c16183a136b6c8991e9067de5b9644ae76506dfa5dd388fff36bc7f321ba2b6",
+    "plan_tool/cli/__init__.py": "af8f869d1ce82b395e0d32ed15ade91d351d28b9f2316404698e528de4b20036",
+    "plan_tool/cli/roadmap_cmd.py": "53f84fd678c24e4ab76dea1dc1837e74b86932e149d0d8861d47fa0db4db06df",
+    "plan_tool/fileio.py": "a4ec4b7fb932dded4d3908dd2b9a26a90c8e9a795a0cd1cd2c02c3cf4f79bf60",
+    "plan_tool/roadmap_artifacts.py": "078e89f9b700ef972ef698b0ddad9758b65835534307ccabf9f9bb93e9a0bbea",
+    "plan_tool/roadmap_revision.py": "e08406219dad9721726d64f41b657d97371ae52d5f834b22a92b777d64d03e42",
+    "plan_tool/run_log.py": "bb9a2b8c5c0808dd36fca449e947a8c144dcf5452d18098b28abf0972ae00da0",
+    "tests/cli/package_surface_help.golden.txt": "e1e971be8e9e962a3cec8764bd3b0aa5b790d40b648a091d439add7af2f21ebb",
+    "tests/cli/test_roadmap_cmd.py": "bf9b79187aebb88fdbe5f8c0a5d04de523ebabe179c0c79db9dd6996b08bd921",
+    "tests/test_fileio.py": "eb71b79bf93ddb987f6942e81382f1808ae00bae0f52c6ee1859fd71626902ca",
+    "tests/test_roadmap_artifacts.py": "2e82e3e1d31649f0b632d8b9cc63f7029ee716f1e96c1f884b070d1a9b748d9e",
+    "tests/test_roadmap_format.py": "a527a6a855129580d7b50a28aa86b782b1b90a7b1071324ce2c698f6336abece",
+    "tests/test_roadmap_revision.py": "e8b13fe2173908ee0740ce156ce75063863fed038a9898d2b4b8fb2d3ded4507",
+    "tests/test_run_log.py": "edc0c54b94f4bbaa957345bd24233b9d89c2bd4c21b87aa59f8d88a569718b97"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md": "c5412cb87e796b2642dd3835f6751759d8a6ec8e0d4bdf812f108f8e9f821bed",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md": "d56f937f19b279338a488ed8f46e82405eb00450d132387cbbfb6cdcead94459",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md": "ea3405968502c00d7cce7ed24ce7cddb5899796a81411decf756dc5e1327bc1e",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-durably-publish-receipts-redacted.md": "b986dad4ee731ba820ff85a2881be15cc9ecb2446371be0d4f96d4ae8d3f2122",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md": "de4b86b2ba2e8a9fb7596e10bbc35e6e84805bca1c752b0d118d41cef97d88c4",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md": "42b3ee9f72708d816cee93f5d991b7d1076d3e9b1b851b7e7d1cf12480e242b8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Escalation Receipt\n\n`roadmap-structural-revision-escalation` \u00b7 generated 2026-08-14T21:10:57Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `3f416add1a4ab2c2eaa41e6a6c2df661f6a7f0edfd56c9e98d18c1ff9e00f3cf`\n- **Detail bundle digest:** `20811e282c2eea31aae8399613e8ea5d26f146a74cd04ba59ce4e336d10694f0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 6\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (-1 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-revision-escalation   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-structural-revision-escalation  # alternative interactive review/apply\n\n- HIGH `[selected-artifact-byte-snapshot]`: Step 2 (`Define strict receipt selection, canonicality, and reason capture`) requires exact input-byte canonicality, while step 3 (`Define versioned, redacted immutable receipts for one selected artifact`) hashes that artifact and step 5 (`Wire exclusive escalation creation and log-free receipt views`) checks it later; Overview, Architecture, Input, Testing, and acceptance criteria 1 and 4 rely on one selected artifact. `plan_tool/roadmap_revision_run:run_local_feedback_revision` uses `Path.read_text`, and `plan_tool/roadmap_revision:preflight_feedback_revision` compares strings, so newline conversion can accept CRLF input whose raw bytes differ from the rendered UTF-8 bytes and can hash different evidence from what selection validated.\n  - Fix: Define one raw selected-artifact snapshot for strict UTF-8 decoding, byte-for-byte canonicality, parsing, digesting, receipt creation, and freshness views.\n- HIGH `[receipt-directory-durability]`: Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) fsyncs the receipt and its parent directory, but Architecture, the host-failure Risk, Testing, and acceptance criterion 3 do not define first creation of `<roadmap-dir>/escalations`. If that directory is new, its link in `<roadmap-dir>` can be lost after a host failure even though the receipt file and `escalations` directory were fsynced and `created` was emitted.\n  - Fix: Define durable first-use creation of the escalation directory, including its parent-directory boundary, before allowing a `created` outcome.\n- HIGH `[receipt-storage-path-boundary]`: Architecture\u2019s receipt location, publication and re-read rules, `--view escalations` rule, arbitrary-artifact Risk, Testing, and acceptance criteria 3 and 4 validate the stored stage path but not the receipt storage path itself. Step 4 and step 5 leave an `escalations` symlink or an existing final-file symlink able to redirect publication, loser re-read, or viewing outside the roadmap directory; current `plan_tool/roadmap_view:load_roadmap` also follows ordinary `Path` entries.\n  - Fix: Define receipt storage as a non-link directory containing only regular receipt files, and classify link or special entries as invalid without following them for creation, reuse, or views.\n- MEDIUM `[receipt-schema-closedness]`: Overview and Architecture say version-1 receipts record only a redacted field set, but step 3\u2019s schema, step 4\u2019s reuse validation, step 5\u2019s views, Testing, and acceptance criteria 3 through 5 never say that unknown fields make a receipt invalid. A version-1 file can add `feedback_request` or target prose while retaining a valid semantic id because the preimage covers only recorded fields, leaving reuse and display open to accepting forbidden content.\n  - Fix: Make the version-1 field set closed before identity validation or reuse, and limit invalid-evidence views to safe status and location metadata.\n- HIGH `[receipt-reuse-durability]`: Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) promises reuse only after file and parent-directory durability, but Architecture lets a loser re-read and emit `reused` immediately after the winner\u2019s exclusive link. The host-failure Risk, Testing\u2019s file-publication paragraph, and acceptance criterion 3 leave a window where the loser reports reusable evidence before either creator fsyncs the receipt directory.\n  - Fix: require a reuser to establish or observe the final receipt\u2019s file-and-directory durability before emitting `reused`, and test that interleaving\n- MEDIUM `[escalation-view-conflicts]`: Step 5 (`Wire exclusive escalation creation and log-free receipt views`) defines rejection for creation flags beside \u201can escalation view,\u201d but `plan_tool.cli.roadmap_cmd:register` already offers `--view summary`, `walk`, `ledger`, `index`, and `seeds`. Architecture\u2019s mode matrix, Testing\u2019s paired-option coverage, and acceptance criterion 2 do not say what a complete creation pair beside one of those views does, so it can be ignored or reach the old view dispatcher.\n  - Fix: State that either creation flag conflicts with every `--view` value and is rejected before any view or broad-mode dispatch.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Escalation Receipt\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `3f416add1a4ab2c2eaa41e6a6c2df661f6a7f0edfd56c9e98d18c1ff9e00f3cf`\n- **Detail bundle digest:** `20811e282c2eea31aae8399613e8ea5d26f146a74cd04ba59ce4e336d10694f0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[selected-artifact-byte-snapshot]`: Step 2 (`Define strict receipt selection, canonicality, and reason capture`) requires exact input-byte canonicality, while step 3 (`Define versioned, redacted immutable receipts for one selected artifact`) hashes that artifact and step 5 (`Wire exclusive escalation creation and log-free receipt views`) checks it later; Overview, Architecture, Input, Testing, and acceptance criteria 1 and 4 rely on one selected artifact. `plan_tool/roadmap_revision_run:run_local_feedback_revision` uses `Path.read_text`, and `plan_tool/roadmap_revision:preflight_feedback_revision` compares strings, so newline conversion can accept CRLF input whose raw bytes differ from the rendered UTF-8 bytes and can hash different evidence from what selection validated.\n- HIGH `[receipt-directory-durability]`: Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) fsyncs the receipt and its parent directory, but Architecture, the host-failure Risk, Testing, and acceptance criterion 3 do not define first creation of `<roadmap-dir>/escalations`. If that directory is new, its link in `<roadmap-dir>` can be lost after a host failure even though the receipt file and `escalations` directory were fsynced and `created` was emitted.\n- HIGH `[receipt-storage-path-boundary]`: Architecture\u2019s receipt location, publication and re-read rules, `--view escalations` rule, arbitrary-artifact Risk, Testing, and acceptance criteria 3 and 4 validate the stored stage path but not the receipt storage path itself. Step 4 and step 5 leave an `escalations` symlink or an existing final-file symlink able to redirect publication, loser re-read, or viewing outside the roadmap directory; current `plan_tool/roadmap_view:load_roadmap` also follows ordinary `Path` entries.\n- MEDIUM `[receipt-schema-closedness]`: Overview and Architecture say version-1 receipts record only a redacted field set, but step 3\u2019s schema, step 4\u2019s reuse validation, step 5\u2019s views, Testing, and acceptance criteria 3 through 5 never say that unknown fields make a receipt invalid. A version-1 file can add `feedback_request` or target prose while retaining a valid semantic id because the preimage covers only recorded fields, leaving reuse and display open to accepting forbidden content.\n- HIGH `[receipt-reuse-durability]`: Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) promises reuse only after file and parent-directory durability, but Architecture lets a loser re-read and emit `reused` immediately after the winner\u2019s exclusive link. The host-failure Risk, Testing\u2019s file-publication paragraph, and acceptance criterion 3 leave a window where the loser reports reusable evidence before either creator fsyncs the receipt directory.\n- MEDIUM `[escalation-view-conflicts]`: Step 5 (`Wire exclusive escalation creation and log-free receipt views`) defines rejection for creation flags beside \u201can escalation view,\u201d but `plan_tool.cli.roadmap_cmd:register` already offers `--view summary`, `walk`, `ledger`, `index`, and `seeds`. Architecture\u2019s mode matrix, Testing\u2019s paired-option coverage, and acceptance criterion 2 do not say what a complete creation pair beside one of those views does, so it can be ignored or reach the old view dispatcher.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-78da6e2c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Define strict receipt selection, canonicality, and reason capture`) requires exact input-byte canonicality, whi",
+      "body": "Step 2 (`Define strict receipt selection, canonicality, and reason capture`) requires exact input-byte canonicality, while step 3 (`Define versioned, redacted immutable receipts for one selected artifact`) hashes that artifact and step 5 (`Wire exclusive escalation creation and log-free receipt views`) checks it later; Overview, Architecture, Input, Testing, and acceptance criteria 1 and 4 rely on one selected artifact. `plan_tool/roadmap_revision_run:run_local_feedback_revision` uses `Path.read_text`, and `plan_tool/roadmap_revision:preflight_feedback_revision` compares strings, so newline conversion can accept CRLF input whose raw bytes differ from the rendered UTF-8 bytes and can hash different evidence from what selection validated.",
+      "suggested_action": "Define one raw selected-artifact snapshot for strict UTF-8 decoding, byte-for-byte canonicality, parsing, digesting, receipt creation, and freshness views.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "selected-artifact-byte-snapshot",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-2c4d431d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) fsyncs the receipt and its parent direct",
+      "body": "Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) fsyncs the receipt and its parent directory, but Architecture, the host-failure Risk, Testing, and acceptance criterion 3 do not define first creation of `<roadmap-dir>/escalations`. If that directory is new, its link in `<roadmap-dir>` can be lost after a host failure even though the receipt file and `escalations` directory were fsynced and `created` was emitted.",
+      "suggested_action": "Define durable first-use creation of the escalation directory, including its parent-directory boundary, before allowing a `created` outcome.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-directory-durability",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-fb8af221",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s receipt location, publication and re-read rules, `--view escalations` rule, arbitrary-artifact Risk, Test",
+      "body": "Architecture\u2019s receipt location, publication and re-read rules, `--view escalations` rule, arbitrary-artifact Risk, Testing, and acceptance criteria 3 and 4 validate the stored stage path but not the receipt storage path itself. Step 4 and step 5 leave an `escalations` symlink or an existing final-file symlink able to redirect publication, loser re-read, or viewing outside the roadmap directory; current `plan_tool/roadmap_view:load_roadmap` also follows ordinary `Path` entries.",
+      "suggested_action": "Define receipt storage as a non-link directory containing only regular receipt files, and classify link or special entries as invalid without following them for creation, reuse, or views.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-storage-path-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-888b2eca",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Overview and Architecture say version-1 receipts record only a redacted field set, but step 3\u2019s schema, step 4\u2019s reuse v",
+      "body": "Overview and Architecture say version-1 receipts record only a redacted field set, but step 3\u2019s schema, step 4\u2019s reuse validation, step 5\u2019s views, Testing, and acceptance criteria 3 through 5 never say that unknown fields make a receipt invalid. A version-1 file can add `feedback_request` or target prose while retaining a valid semantic id because the preimage covers only recorded fields, leaving reuse and display open to accepting forbidden content.",
+      "suggested_action": "Make the version-1 field set closed before identity validation or reuse, and limit invalid-evidence views to safe status and location metadata.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-schema-closedness",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c4b93bcf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) promises reuse only after file and paren",
+      "body": "Step 4 (`Durably publish receipts with redacted escalation lifecycle evidence`) promises reuse only after file and parent-directory durability, but Architecture lets a loser re-read and emit `reused` immediately after the winner\u2019s exclusive link. The host-failure Risk, Testing\u2019s file-publication paragraph, and acceptance criterion 3 leave a window where the loser reports reusable evidence before either creator fsyncs the receipt directory.",
+      "suggested_action": "require a reuser to establish or observe the final receipt\u2019s file-and-directory durability before emitting `reused`, and test that interleaving",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-reuse-durability",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-6153887f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Wire exclusive escalation creation and log-free receipt views`) defines rejection for creation flags beside \u201can",
+      "body": "Step 5 (`Wire exclusive escalation creation and log-free receipt views`) defines rejection for creation flags beside \u201can escalation view,\u201d but `plan_tool.cli.roadmap_cmd:register` already offers `--view summary`, `walk`, `ledger`, `index`, and `seeds`. Architecture\u2019s mode matrix, Testing\u2019s paired-option coverage, and acceptance criterion 2 do not say what a complete creation pair beside one of those views does, so it can be ignored or reach the old view dispatcher.",
+      "suggested_action": "State that either creation flag conflicts with every `--view` value and is rejected before any view or broad-mode dispatch.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "escalation-view-conflicts",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "3f416add1a4ab2c2eaa41e6a6c2df661f6a7f0edfd56c9e98d18c1ff9e00f3cf",
+      "detail_bundle_digest": "20811e282c2eea31aae8399613e8ea5d26f146a74cd04ba59ce4e336d10694f0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-durably-publish-receipts-redacted.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

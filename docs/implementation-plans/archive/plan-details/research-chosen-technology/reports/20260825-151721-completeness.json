@@ -1,0 +1,125 @@
+{
+  "version": 4,
+  "plan_slug": "research-chosen-technology",
+  "plan_path": "docs/implementation-plans/2-research-chosen-technology.md",
+  "created_at": "2026-08-25T15:17:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4c669d394fec8ba2a3840b32ccd3e1c9b2bc1f43ac8cd85d7d5fe758627c7094",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "d109674ca46194c62fdf4dc72e5e68b9601d7cb184a5199952815aa7c846ec5e",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/roadmap_artifacts.py": "587921875ae328966e3a048f1a150f0d7a09b87d7a84ef57ccf93eb845d03981",
+    "plan_tool/roadmap_revision.py": "e2c4b01ac90425a9323d80d8ab128ec6c994be3cb892c04cfb8102f8c86eeb81",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap_artifacts.py": "2a59d556433f5e1b3de3d0aa8ba4c8c2b2b65b03c870731c632dc5311c4f7af8",
+    "tests/test_roadmap_format.py": "7bd70cb888afb75bed535439d4f736c0800021badc3ebabfa8624b7bb253d5ce",
+    "tests/test_roadmap_revision.py": "aec40dad8f0cd2efe9e53137e968011dfa8baaae5e093c89ee57647ae9380631"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md": "50f54bd9af09783f0934a935df30298c290354e0cd5d884b891affda88e3144c",
+    "docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md": "12e5a5fc8b13a3c256793ab21e99b83248fce29cfa3048307562d73b5fdf3633",
+    "docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md": "b05af541c6767c7f20b713a2ace07be446f4fbb262378bb27b9ac2f654e23319",
+    "docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Research Chosen Technology\n\n`research-chosen-technology` \u00b7 generated 2026-08-25T15:17:21Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply research-chosen-technology   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[roadmap-source-selection]`: `Architecture > Source selection and research records`, step 2\u2019s tracked-source input and selection rules, Testing, and acceptance criteria require a tracked `--from-existing` seed to select its roadmap, but `cli/authoring.py:cmd_create` confirms that seed before `find_umbrella_root` can relocate the repo root. `roadmap_seed_state:render_seed_state_marker` stores promoted-seed state relative to the original root, while `locate_tracked_seed` resolves it against the later root and returns `None`; the step then silently takes its generic path, despite the existing relocated-`--from-existing` route in `tests/cli/test_direct_cmd.py`.\n  - Fix: Preserve the accepted tracked seed\u2019s sidecar identity across repo-root selection and cover a relocated promoted seed following the per-target research path.\n- MEDIUM `[refusal-side-effect-boundary]`: `Architecture > Refusal, checkpoint, and iteration contract` says the gate runs before \u201crollback cleanup,\u201d while step 3\u2019s `Input > CLI failure boundary` says it relies on `cmd_create` and \u201cdoes not modify the CLI.\u201d At HEAD, `cli/authoring.py:cmd_create` catches the refusal\u2019s `CreateError` and calls `_rollback_branch_collision`, so a refusal after a branch-collision choice does run cleanup; step 3\u2019s no-write test and acceptance criteria do not define this route or its checkpoint guarantee.\n  - Fix: Separate existing branch rollback from publication mutations, state its required refusal behavior, and prove retry checkpoints survive it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Research Chosen Technology\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[roadmap-source-selection]`: `Architecture > Source selection and research records`, step 2\u2019s tracked-source input and selection rules, Testing, and acceptance criteria require a tracked `--from-existing` seed to select its roadmap, but `cli/authoring.py:cmd_create` confirms that seed before `find_umbrella_root` can relocate the repo root. `roadmap_seed_state:render_seed_state_marker` stores promoted-seed state relative to the original root, while `locate_tracked_seed` resolves it against the later root and returns `None`; the step then silently takes its generic path, despite the existing relocated-`--from-existing` route in `tests/cli/test_direct_cmd.py`.\n- MEDIUM `[refusal-side-effect-boundary]`: `Architecture > Refusal, checkpoint, and iteration contract` says the gate runs before \u201crollback cleanup,\u201d while step 3\u2019s `Input > CLI failure boundary` says it relies on `cmd_create` and \u201cdoes not modify the CLI.\u201d At HEAD, `cli/authoring.py:cmd_create` catches the refusal\u2019s `CreateError` and calls `_rollback_branch_collision`, so a refusal after a branch-collision choice does run cleanup; step 3\u2019s no-write test and acceptance criteria do not define this route or its checkpoint guarantee.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk research-chosen-technology` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0a311883",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`Architecture > Source selection and research records`, step 2\u2019s tracked-source input and selection rules, Testing, and ",
+      "body": "`Architecture > Source selection and research records`, step 2\u2019s tracked-source input and selection rules, Testing, and acceptance criteria require a tracked `--from-existing` seed to select its roadmap, but `cli/authoring.py:cmd_create` confirms that seed before `find_umbrella_root` can relocate the repo root. `roadmap_seed_state:render_seed_state_marker` stores promoted-seed state relative to the original root, while `locate_tracked_seed` resolves it against the later root and returns `None`; the step then silently takes its generic path, despite the existing relocated-`--from-existing` route in `tests/cli/test_direct_cmd.py`.",
+      "suggested_action": "Preserve the accepted tracked seed\u2019s sidecar identity across repo-root selection and cover a relocated promoted seed following the per-target research path.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-source-selection",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-64b90fba",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`Architecture > Refusal, checkpoint, and iteration contract` says the gate runs before \u201crollback cleanup,\u201d while step 3\u2019",
+      "body": "`Architecture > Refusal, checkpoint, and iteration contract` says the gate runs before \u201crollback cleanup,\u201d while step 3\u2019s `Input > CLI failure boundary` says it relies on `cmd_create` and \u201cdoes not modify the CLI.\u201d At HEAD, `cli/authoring.py:cmd_create` catches the refusal\u2019s `CreateError` and calls `_rollback_branch_collision`, so a refusal after a branch-collision choice does run cleanup; step 3\u2019s no-write test and acceptance criteria do not define this route or its checkpoint guarantee.",
+      "suggested_action": "Separate existing branch rollback from publication mutations, state its required refusal behavior, and prove retry checkpoints survive it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refusal-side-effect-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "15f2b0c15d868ee7b01263688bda8298ac84916fb06e5aa63f11d361910ad6de",
+    "detail_bundle_digest": "2e656f3f96ca3e8d2e0e26bcbf8ca87c825f312479a12d0dff47c89151e1f087",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md",
+        "state": "present",
+        "digest": "50f54bd9af09783f0934a935df30298c290354e0cd5d884b891affda88e3144c"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md",
+        "state": "present",
+        "digest": "12e5a5fc8b13a3c256793ab21e99b83248fce29cfa3048307562d73b5fdf3633"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md",
+        "state": "present",
+        "digest": "b05af541c6767c7f20b713a2ace07be446f4fbb262378bb27b9ac2f654e23319"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md",
+        "state": "present",
+        "digest": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+      }
+    ],
+    "source_seed_digest": "9148d97382b8eea24943db46d9323eb3a750301afc8f7b0456ef309b3c7fe7e1",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

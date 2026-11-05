@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-revision-rollback",
+  "plan_path": "docs/implementation-plans/2-roadmap-revision-rollback.md",
+  "created_at": "2026-09-18T21:32:57Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "0828fe256ab3785c8de80f79bb85dea17d7f9ceec3e0b1d9f27a08164f12dd21",
+  "code_fingerprint": {
+    "BACKLOG.md": "087d871572b9c96d7767c8f0de750c569cfc3f07885ebb206d37cfbf8976b1bc",
+    "CAPABILITIES.md": "3db465913285974f128689242d4b9b532d3d98091fecf633c86d49b734fc80e6",
+    "ROADMAP_FORMAT.md": "30f9353712aaa37ee38803aa6c375b31e2597448a399113b96a4ec5b155baa6c",
+    "RUNBOOK.md": "2d828e204bc45ede8027b1b0835dbad51241d75d9f4e915cc98f0fbc223c9e8b",
+    "docs/ARCHITECTURE.md": "913c4685786867cccdfa37b012ce252dd219c9ed1ae96873a723e6c2dd69fa9f",
+    "docs/cli/roadmap.md": "5ab0a5cd44018dcd57594c6decbf2138201c4866f0e340d7669ad7b78863da20",
+    "docs/how-to/roadmap.md": "023f07488479f800034f782c300e136accde21e5e7fbf90baa184195989d193d",
+    "plan_tool/cli/roadmap_cmd.py": "33dadc00589d553655153986ce8b2cb5b7572ed3f6d6357eaabfbb9d2982346a",
+    "plan_tool/roadmap.py": "d5f9f48ed5cae2d2801b5c63e28969d4c644f9e18387df2f083a4d08c10ff283",
+    "plan_tool/roadmap_revision_checkpoint.py": "a26372b4aa44967e2358576110ec2448333e3339cb6675d618f5d09fc6565e9e",
+    "plan_tool/roadmap_revision_rollback.py": "449b414ae3b5933037bfe3d89d5b21340602f976fedecf566c4d3ee495520ace",
+    "tests/cli/test_roadmap_cmd.py": "462c88da65c444a04dffdc341dd9738a4b639712d9e150d439538019516492b3",
+    "tests/test_roadmap.py": "d651728c207666c5a4eec8e37d59fa23ecb17d665c09a43039cac5ca8f3d5613",
+    "tests/test_roadmap_revision_checkpoint.py": "b27c9a85f548cc83058288db9321c260f1904bbb7bcd8e83bdab3d792901ae65",
+    "tests/test_roadmap_revision_rollback.py": "22a32d80e113952c97eb952defc5ec4049e7b679e780072de40b5abfd8d857f9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 5 of 5 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

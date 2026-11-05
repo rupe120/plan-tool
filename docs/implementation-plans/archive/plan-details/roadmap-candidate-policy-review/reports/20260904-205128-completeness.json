@@ -1,0 +1,107 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T20:51:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5242b045f75db2d8db5b00a2717e0578f98973a72590966ce2d9f72eaf7b55eb",
+  "code_fingerprint": {
+    "BACKLOG.md": "959a19e0f666bcdcb4d638245dcbfac69ed51c1b68fe7804a9ff409f57333f17",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "7429196874201f70057dee425c5c3a073e88da40c458fa4d41aa377775f33959",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "51a186407997aa9227766da7ebdf03b00782ca2234e2dbabbd804f589ca614ce",
+    "plan_tool/cli/roadmap_cmd.py": "5a7888a74cd673741a2f5ec2640285fabfcb02df872ba17a152cf17af681d73d",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/cli/test_roadmap_cmd.py": "544e4c3ef9fee430ca5a615f7b147606570e14043faef98b4a9f390cc4c4c898",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md": "be52e490e485ebbfcd8652c3f5799ef17e124964c44dbc7a911b4e11af2e5ad7",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md": "e9e83b62ad1906a845947c2006dca9cbca782190b119ddf46a430294832e3f21",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md": "2fb80c740d778aa0f738b96e88a8ae4ef2281a78b3ac969b67c5d88918534bba",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md": "49b7d30124645b9305cbba63918bfbafe4ce2a025d235d7ea860e96138bc19f4",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md": "ae4df8b65c56ea239bc9aad4a33b7dead95e9bcf1d3443e582c78a5fae1a8f75"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Policy Review\n\n`roadmap-candidate-policy-review` \u00b7 generated 2026-09-04T20:51:28Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-candidate-policy-review` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Policy Review\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "777a82abb1e5cc74ca5499b5f197a95bfce35b33a5e167c45b118db9f932268b",
+    "detail_bundle_digest": "3557d7de9957d974415e9aca46d7fc973ae16f365a9b61b245258bc4432942ab",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md",
+        "state": "present",
+        "digest": "be52e490e485ebbfcd8652c3f5799ef17e124964c44dbc7a911b4e11af2e5ad7"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md",
+        "state": "present",
+        "digest": "e9e83b62ad1906a845947c2006dca9cbca782190b119ddf46a430294832e3f21"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md",
+        "state": "present",
+        "digest": "2fb80c740d778aa0f738b96e88a8ae4ef2281a78b3ac969b67c5d88918534bba"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md",
+        "state": "present",
+        "digest": "49b7d30124645b9305cbba63918bfbafe4ce2a025d235d7ea860e96138bc19f4"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md",
+        "state": "present",
+        "digest": "ae4df8b65c56ea239bc9aad4a33b7dead95e9bcf1d3443e582c78a5fae1a8f75"
+      }
+    ],
+    "source_seed_digest": "d1c71a9c01564ae431040abc26284ad3a4706cd9039a77760bee26c835fe1e08",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

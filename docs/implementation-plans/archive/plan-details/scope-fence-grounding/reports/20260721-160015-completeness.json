@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "plan_slug": "scope-fence-grounding",
+  "plan_path": "docs/implementation-plans/2-scope-fence-grounding.md",
+  "created_at": "2026-07-21T16:00:15Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2d2c26fb0d3b97255fb9147c55cb5b541339e4c9fbf7673c8149cc9702ceec39",
+  "code_fingerprint": {
+    "BACKLOG.md": "07c75826a79809677b1ebd772b3ac3c6636a1d5d739ab922f55b66d25d91d979",
+    "DATA_CONTRACT.md": "c065c142dfeae940d66751d6e4a8639f21126ed14e5e5e846f48231489ebe2a7",
+    "PLAN_FORMAT.md": "74ea5ae3734a8b02d0ce115ba73d8592cee918f044ccfde29b883a370ac2adca",
+    "docs/AUDIT_FLOW.md": "336e7e3063cce771d52a29c15cd069ed30b7e35608a49cf14356050c8ac4f85f",
+    "docs/cli/completeness-audit.md": "df800021d7e21f75de85f3ab8d1fb6e4cfbbd3a34063bd99d93ef926b35cf497",
+    "plan_tool/cli/authoring.py": "893dd6687f8650733bfa972be295837e9fb5b9d875be11eb27fe3c16a2027c56",
+    "plan_tool/cli/completeness_cmd.py": "12363d8216e53bc851b2a43f701ea218fdc2b291316c5dcac5d91520a9fdff75",
+    "plan_tool/create.py": "874257f33bd25aae569e623937340eb8f58dc1ec806513c97a926e68538d947e",
+    "plan_tool/detail.py": "11493c7d2d6ad703c3db72a002b339a4431a107e282965a92b8391c72b426ca9",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "plan_tool/prompts/plan-audit.md": "b930d25ef2a7c4198ae0fa13715850b83a08e03760b10493c459258a2eba49cb",
+    "plan_tool/prompts/synthesize-body.md": "82ef307bce49a5fdc45638229f5ad4753e2e33698869ff53f27faf5c3f029b0c",
+    "plan_tool/review.py": "47442b6f4ccc32321cd1c692bd8d17dc32c309b630257bc8e73dcbe7158a296a",
+    "plan_tool/schema.py": "b1686b8949b200e622f3db1e3046fc5ff89230367366d66d11ce0b6979f886e4",
+    "tests/cli/test_cli_reference.py": "322f09dbaf0a33c6ae02fbf3d62255cf6f37c123ba791ac1d228f4b396d95c40",
+    "tests/cli/test_completeness_cmd.py": "1f8630540b0777cd81ceb0c2af7eddd556855f151c6a5e4e4f319068a1aa0ba0",
+    "tests/test_create.py": "05187de05b578539c4e98bb507c6d2e0ef3da805fdb33aef76f911ff414238f9",
+    "tests/test_data_contract.py": "00bc2fbff4d218d7619124a86e9d9b88ada7c5c8f1f91cd47e3e25f4bd5ee64b",
+    "tests/test_detail.py": "2fe2e3e478a35f6971fcf1da7ec9f1567447a53e6336af42e3b02bd215e3a310",
+    "tests/test_review.py": "a230068038305a2847b216e005e0556e4101f3eb4161c88bcb3b2f0c7814034f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/scope-fence-grounding/01-record-seed-path-on-plans-created.md": "d44e73d9d24ece4fdc65d8a53ac07347e612197ca50850d966b05f43128d2416",
+    "docs/implementation-plans/plan-details/scope-fence-grounding/02-keep-guardrail-sections-separate-out.md": "a701c7d8da62913d75a61d1e41aac1c2af4cfac26f2f46e71be09c1929c8f310",
+    "docs/implementation-plans/plan-details/scope-fence-grounding/03-give-completeness-audits-originating.md": "0d4e770339d5168c220a800f2c1cc8cca58e4870f5e19a7388b81ad72affcbe7",
+    "docs/implementation-plans/plan-details/scope-fence-grounding/04-close-shipped-guardrail-backlog-entries.md": "533ec5e4e543477ad88b2802d882c9e5e9eba0adbc902bc1b844c6efd421c890"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Scope Fence Grounding\n\n`scope-fence-grounding` \u00b7 generated 2026-07-21T16:00:15Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 3 (0 missing-concept-link, 3 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply scope-fence-grounding   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk scope-fence-grounding  # alternative interactive review/apply\n\n- HIGH `[seed-override-reuse]`: step 3 (`Give completeness audits the originating scope contract`) adds `--seed <path>` but does not define its interaction with saved-audit reuse; at HEAD, `completeness_cmd._resolve_audit_reuse` allows explicit `--reuse-audit` to \u201calways win,\u201d so the command can return findings from a prior prompt without ever reading the override.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-0b3cc7b1]`: The plan's `## Acceptance criteria` names `derive_candidate_buckets`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1b4ce8aa]`: The plan's `## Acceptance criteria` names `render_plan_audit_prompt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-aae4cefc]`: The plan's `## Acceptance criteria` names `source_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step1-files-coherence-b744b86b]`: `DATA_CONTRACT.md` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step1-files-coherence-5de9c563]`: `PLAN_FORMAT.md` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply scope-fence-grounding` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- `plan-tool completeness-apply scope-fence-grounding` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (3 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Scope Fence Grounding\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[seed-override-reuse]`: step 3 (`Give completeness audits the originating scope contract`) adds `--seed <path>` but does not define its interaction with saved-audit reuse; at HEAD, `completeness_cmd._resolve_audit_reuse` allows explicit `--reuse-audit` to \u201calways win,\u201d so the command can return findings from a prior prompt without ever reading the override.\n\n### Files coherence\n\n- NIT: step 1 declared `DATA_CONTRACT.md` not mentioned in detail\n- NIT: step 1 declared `PLAN_FORMAT.md` not mentioned in detail\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `derive_candidate_buckets`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `render_plan_audit_prompt`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `source_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk scope-fence-grounding` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bdbf0b1e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 3 (`Give completeness audits the originating scope contract`) adds `--seed <path>` but does not define its interact",
+      "body": "step 3 (`Give completeness audits the originating scope contract`) adds `--seed <path>` but does not define its interaction with saved-audit reuse; at HEAD, `completeness_cmd._resolve_audit_reuse` allows explicit `--reuse-audit` to \u201calways win,\u201d so the command can return findings from a prior prompt without ever reading the override.",
+      "suggested_action": "Specify that an explicit `--seed` forces a fresh conceptual audit, or make reuse eligibility bind to the resolved override contract, so the override always grounds the findings it returns.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-override-reuse",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

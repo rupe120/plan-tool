@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-628dca5d": {
+      "code_anchor": null,
+      "field_or_key": "is_pre_apply_checkpoint",
+      "location": "docs/implementation-plans/plan-details/completeness-stage-bar-reporting/01-define-qualified-audit-result-contract.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/completeness-stage-bar-reporting/01-define-qualified-audit-result-contract.md",
+      "reason": "`SavedReview.is_pre_apply_checkpoint` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-9ee02ba7": {
+      "code_anchor": "plan_tool/review_persistence.py:SavedReview.qualified_result",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/completeness-stage-bar-reporting/04-document-result-interpretation-plan-gap.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/completeness-stage-bar-reporting/04-document-result-interpretation-plan-gap.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:SavedReview.qualified_result` names an unregistered field",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260812-164704-completeness"
+}

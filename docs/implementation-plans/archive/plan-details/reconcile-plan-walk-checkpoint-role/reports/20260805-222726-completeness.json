@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "plan_slug": "reconcile-plan-walk-checkpoint-role",
+  "plan_path": "docs/implementation-plans/2-reconcile-plan-walk-checkpoint-role.md",
+  "created_at": "2026-08-05T22:27:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "93e9c38cf6fb2ee6817ad7679ddd4e8057cf741c3f468c87dfb27438a73cdc39",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "b27f0b19110b52ef0125e9eed563330b2445e4ceadf4396ab669a87912c82739",
+    "docs/AUDIT_FLOW.md": "66074eee014722e60c2e2f5416137e71e46167e1c3f3fb5c5e5f7437fd4ba9f4",
+    "docs/cli/README.md": "96d117372599cf5ee438712732d989e15726f9ef868226d9e74844baa17339be",
+    "docs/cli/reconcile-plan-walk.md": "d650a7fcef0339805d7498e55400651010314e8dfce31e76adf9a4b6758ef73a",
+    "plan_tool/cli/review_cmd.py": "e9a8c9c2f974379039b5003bf8d08d7d6af35fece85ad41be5cb16bdf8c9724d",
+    "tests/cli/test_review_cmds.py": "8d8eec401462e0a716878d7e8497b5e15fff9af00498af682983e6e791e1818a",
+    "tests/test_review_persistence.py": "557d954e805b1d0b24836abc1494b34291858c70cede14b5d300ec335b1ddb39",
+    "tests/test_review_walk.py": "a8d021e901f7cb76e827cdd54af04b195f3b55adfd9a0eac7544c52707669548"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Reconcile Plan Walk Checkpoint Role\n\n`reconcile-plan-walk-checkpoint-role` \u00b7 generated 2026-08-05T22:27:25Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[no-eligible-unpinned-artifact]`: step 1 (`Select only final saved reviews for direct walks`) defines fallback to an older ordinary final but not the terminal outcome when every unpinned sidecar is unreadable, a checkpoint, or unknown-role. The command needs a defined no-walk, no-annotation failure rather than leaving the all-rejected case to implementation choice.\n  - Fix: Define and test the terminal error and no-mutation outcome when an unpinned scan finds no eligible saved artifact.\n\n## Suggested next steps\n\n- No structural gaps left to close in this bare-plan audit \u2014 `plan-tool run reconcile-plan-walk-checkpoint-role` executes the next runnable step. Detail-level/conceptual findings above are informational until a detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reconcile Plan Walk Checkpoint Role\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[no-eligible-unpinned-artifact]`: step 1 (`Select only final saved reviews for direct walks`) defines fallback to an older ordinary final but not the terminal outcome when every unpinned sidecar is unreadable, a checkpoint, or unknown-role. The command needs a defined no-walk, no-annotation failure rather than leaving the all-rejected case to implementation choice.\n\n### Suggested next steps\n\n- Detail-level and conceptual-completeness findings are informational in this bare-plan audit \u2014 apply is withheld until a detail bundle exists.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-6e4b7f6d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 1 (`Select only final saved reviews for direct walks`) defines fallback to an older ordinary final but not the term",
+      "body": "step 1 (`Select only final saved reviews for direct walks`) defines fallback to an older ordinary final but not the terminal outcome when every unpinned sidecar is unreadable, a checkpoint, or unknown-role. The command needs a defined no-walk, no-annotation failure rather than leaving the all-rejected case to implementation choice.",
+      "suggested_action": "Define and test the terminal error and no-mutation outcome when an unpinned scan finds no eligible saved artifact.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "no-eligible-unpinned-artifact",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  }
+}

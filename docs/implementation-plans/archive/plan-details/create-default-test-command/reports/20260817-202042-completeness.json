@@ -1,0 +1,136 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-17T20:20:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9ba5197e20f7ddfc165151fdbc688b706be7731d6ac1982a0b2f79008e14d5b6",
+  "code_fingerprint": {
+    "BACKLOG.md": "8e36795b6b8c975dd0764d4289027afa9f0dce75a00d0170d74a4cfc01f1f8cf",
+    "PLAN_FORMAT.md": "c4cb03837a31932578da1776ee96d9fc9047ea6e673c2505c3457fcded13ed6f",
+    "RUNBOOK.md": "57186b0f35d93dd436cc97a809423b74d15b55c1c0e6789901dbed683ea74f98",
+    "docs/ARCHITECTURE.md": "30fdc9991808d9f5112562a356083fed4824f1be30603f110cd6b7a52fe082af",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "9177cda9cd8e567e363a65f903722f40db77bedcf94b6eaa532d20dcb89424b2",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "tests/test_create.py": "7b77e167e8a8a2f847d1b8469d17d1baff4a5b2e11f89208f50e55cdc7f19d41"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md": "9a0e2fc6c19ed1ddadd59f5e8e1984df168e97f9fdecccab06cf2fb7fb029648",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-marker-table-module-that-detects-repo.md": "e5edc0075870d852703cf2fb6540a6dc7613761fbaee7f0b499637b82f548c55",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md": "cd1e927d6965d5babf94c889ca8d14b4627bc9b20590e7e0c6a7d62f3ef8c95c",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md": "22e4b0dc76ab24110bf578180e062c290fd07ea24ba80243d937440efaa87401",
+    "docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md": "efe32cadc4eec8e83c792fb19dc823d7673df71e4682aaf0c4b8d50f233a79e7"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-17T20:20:41Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ba5197e20f7ddfc165151fdbc688b706be7731d6ac1982a0b2f79008e14d5b6`\n- **Detail bundle digest:** `49baf1bc9dc596ea3cc57722c01fdb3927f4e61de915b2e000fa97746ebc9eab`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-9ffa3e49]`: The plan's `## Acceptance criteria` names `:84`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c115c068]`: The plan's `## Acceptance criteria` names `plan_format.md:82`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f17b1bd7]`: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ba5197e20f7ddfc165151fdbc688b706be7731d6ac1982a0b2f79008e14d5b6`\n- **Detail bundle digest:** `49baf1bc9dc596ea3cc57722c01fdb3927f4e61de915b2e000fa97746ebc9eab`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight]`: DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.\n- MEDIUM `[data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt]`: DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `:84`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_format.md:82`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-data-contract-a0c1406f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionPreflight' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-5a8d161e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionAttempt' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 0,
+    "failed_or_malformed_pass_count": 3
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "9ba5197e20f7ddfc165151fdbc688b706be7731d6ac1982a0b2f79008e14d5b6",
+      "detail_bundle_digest": "49baf1bc9dc596ea3cc57722c01fdb3927f4e61de915b2e000fa97746ebc9eab",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-marker-table-module-that-detects-repo.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

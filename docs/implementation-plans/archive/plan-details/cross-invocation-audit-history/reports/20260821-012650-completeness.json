@@ -1,0 +1,173 @@
+{
+  "version": 4,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T01:26:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fb4b73e616719db42b38ba4ac850cf167e802c3b3b10033f966ab02aa404de17",
+  "code_fingerprint": {
+    "BACKLOG.md": "fac7a785a1ce389f6e07882cea036f219d6d1ad7e63f26e5d06cf4e99ad6e6dc",
+    "DATA_CONTRACT.md": "c47bedfd099ed1d8b9c29fb5ea607d4a50d972dc454cc7c6d647cbe751e11d74",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "54db4e54f55ba1b3eb16af32c1127a04c4eb6c1fb354dcb9f9a3879d99626ad6",
+    "plan_tool/cli/completeness_phases.py": "d5ac2725b1a6eefbb534109e92152e94c1d64adb86d3eb93ba812feea99c655e",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/completeness_report.py": "df571c27e5c0aaa45edec4738d52883185b198bb7c5b334338878db3925ded53",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "plan_tool/review_persistence.py": "cbc0915c1db58334a87e71ef189f7b01ad75b90c1bdd5b2148dc0e40c84fa93c",
+    "tests/cli/test_completeness_cmd.py": "a2259ffc4e2522ccd0ff251cfc652672b2f6c48fcfe0229e317e528363d1bd08",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_completeness_report.py": "420820cbd75502e9b629d7d42a23165459bf82ee9d2953bd6343433813852a55",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275",
+    "tests/test_review_persistence.py": "17c89e515e0e1f182a337b2f20eb26cfd0a0389c243648d0b1f1abe45e9134cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-persist-durable-audit-sampling.md": "675535bd6e27d7e5c32f176166722f63be7f1ff1e33974ce8aac5df73dcd48ae",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/02-read-every-saved-audit-artifact.md": "922bb406b6e384b13ff08292001aa59647ab8a473dc85275ccae5b71eba82fa7",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/03-render-saved-audit-section-without.md": "ec854660429bf771a2f7ce10b10ca28997ef08209afd9486571550b56845df1f",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/04-document-saved-audit-identity-ordering.md": "183d9ce5140541b803797fabfeb49b6968a887459f07f47601f59dfc3947fe4a",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/05-mark-247-delivered-convergence-evidence.md": "c653476373048956e74d0964d2cf31cd44ea8ce597e8b4024111a34a9fdec06c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Cross Invocation Audit History\n\n`cross-invocation-audit-history` \u00b7 generated 2026-08-21T01:26:50Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply cross-invocation-audit-history   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk cross-invocation-audit-history  # alternative interactive review/apply\n\n- HIGH `[audit-sampling-provenance]`: Step 1 does not define which sampling configuration a final sidecar carries after `--reuse-audit`. `completeness_cmd.finalize_completeness_run` receives reused findings and coverage, while `completeness_phases._run_iterate_convergence_loop` can write a new final sidecar; replayed or legacy findings could be labelled with current flags and become comparable despite Architecture\u2019s \u201cvalue actually used\u201d and legacy non-confirmation rule.\n  - Fix: Preserve the source sampling provenance through reuse, or mark replayed legacy/config-mismatched evidence non-comparable, and test both cases.\n- HIGH `[jira-history-isolation]`: Architecture says jira grade records `purity: false` while the existing-diagnosis guarantee requires new history evidence not change telemetry `runs`. `completeness_cmd._warn_sidecar_suppressed` and `completeness_phases._persist_and_present_report` currently save no jira findings sidecar, but `convergence_diagnosis.HISTORY_KINDS` accepts final `kind=\"completeness\"` reports and `cmd_convergence` records `runs=len(history.runs)`. Persisting jira evidence as that kind breaks the guarantee; retaining suppression leaves the promised record unreachable.\n  - Fix: Define and test an isolated jira evidence lane that the new reader can use without entering the existing diagnosis, advisory, or telemetry history.\n- HIGH `[opaque-audit-boundaries]`: Step 2 (`Read every saved audit artifact in deterministic order`) does not cover a completed terminal-plan-quota audit that has only a Markdown report. `completeness_phases._persist_and_present_report` intentionally omits its final findings sidecar, and `completeness_report.write_completeness_report` then leaves no JSON entry, so surrounding sidecars can look adjacent and be compared across the incomplete audit.\n  - Fix: Make every report-only completed audit a visible no-bridge history boundary and add a three-invocation regression proving it prevents comparison across the gap.\n- MEDIUM `[severity-trajectory-order]`: Step 2 leaves the promised severity ordering open: `## Architecture` says \u201cusing the existing severity order,\u201d but `review._SEVERITY_BANNER_ORDER` includes `critical`, `high`, `medium`, `nit`, and `info`, while `convergence_diagnosis._SEVERITY_RANK` supports only the first three. Step 3, step 4, `## Testing`, and the third acceptance criterion promise severity row states, so exact links at `nit` or `info` can be omitted or classified differently.\n  - Fix: define one total severity order and the fail-closed treatment of unsupported saved severities across the classifier, rendering, documentation, and fixtures.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-572084d9]`: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit cross-invocation-audit-history` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Cross Invocation Audit History\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[audit-sampling-provenance]`: Step 1 does not define which sampling configuration a final sidecar carries after `--reuse-audit`. `completeness_cmd.finalize_completeness_run` receives reused findings and coverage, while `completeness_phases._run_iterate_convergence_loop` can write a new final sidecar; replayed or legacy findings could be labelled with current flags and become comparable despite Architecture\u2019s \u201cvalue actually used\u201d and legacy non-confirmation rule.\n- HIGH `[jira-history-isolation]`: Architecture says jira grade records `purity: false` while the existing-diagnosis guarantee requires new history evidence not change telemetry `runs`. `completeness_cmd._warn_sidecar_suppressed` and `completeness_phases._persist_and_present_report` currently save no jira findings sidecar, but `convergence_diagnosis.HISTORY_KINDS` accepts final `kind=\"completeness\"` reports and `cmd_convergence` records `runs=len(history.runs)`. Persisting jira evidence as that kind breaks the guarantee; retaining suppression leaves the promised record unreachable.\n- HIGH `[opaque-audit-boundaries]`: Step 2 (`Read every saved audit artifact in deterministic order`) does not cover a completed terminal-plan-quota audit that has only a Markdown report. `completeness_phases._persist_and_present_report` intentionally omits its final findings sidecar, and `completeness_report.write_completeness_report` then leaves no JSON entry, so surrounding sidecars can look adjacent and be compared across the incomplete audit.\n- MEDIUM `[severity-trajectory-order]`: Step 2 leaves the promised severity ordering open: `## Architecture` says \u201cusing the existing severity order,\u201d but `review._SEVERITY_BANNER_ORDER` includes `critical`, `high`, `medium`, `nit`, and `info`, while `convergence_diagnosis._SEVERITY_RANK` supports only the first three. Step 3, step 4, `## Testing`, and the third acceptance criterion promise severity row states, so exact links at `nit` or `info` can be omitted or classified differently.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply cross-invocation-audit-history` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-e5c87233",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 does not define which sampling configuration a final sidecar carries after `--reuse-audit`. `completeness_cmd.fin",
+      "body": "Step 1 does not define which sampling configuration a final sidecar carries after `--reuse-audit`. `completeness_cmd.finalize_completeness_run` receives reused findings and coverage, while `completeness_phases._run_iterate_convergence_loop` can write a new final sidecar; replayed or legacy findings could be labelled with current flags and become comparable despite Architecture\u2019s \u201cvalue actually used\u201d and legacy non-confirmation rule.",
+      "suggested_action": "Preserve the source sampling provenance through reuse, or mark replayed legacy/config-mismatched evidence non-comparable, and test both cases.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "audit-sampling-provenance",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c10ae14f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says jira grade records `purity: false` while the existing-diagnosis guarantee requires new history evidenc",
+      "body": "Architecture says jira grade records `purity: false` while the existing-diagnosis guarantee requires new history evidence not change telemetry `runs`. `completeness_cmd._warn_sidecar_suppressed` and `completeness_phases._persist_and_present_report` currently save no jira findings sidecar, but `convergence_diagnosis.HISTORY_KINDS` accepts final `kind=\"completeness\"` reports and `cmd_convergence` records `runs=len(history.runs)`. Persisting jira evidence as that kind breaks the guarantee; retaining suppression leaves the promised record unreachable.",
+      "suggested_action": "Define and test an isolated jira evidence lane that the new reader can use without entering the existing diagnosis, advisory, or telemetry history.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "jira-history-isolation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-25be06ec",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Read every saved audit artifact in deterministic order`) does not cover a completed terminal-plan-quota audit t",
+      "body": "Step 2 (`Read every saved audit artifact in deterministic order`) does not cover a completed terminal-plan-quota audit that has only a Markdown report. `completeness_phases._persist_and_present_report` intentionally omits its final findings sidecar, and `completeness_report.write_completeness_report` then leaves no JSON entry, so surrounding sidecars can look adjacent and be compared across the incomplete audit.",
+      "suggested_action": "Make every report-only completed audit a visible no-bridge history boundary and add a three-invocation regression proving it prevents comparison across the gap.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "opaque-audit-boundaries",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e3d9d856",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 leaves the promised severity ordering open: `## Architecture` says \u201cusing the existing severity order,\u201d but `revi",
+      "body": "Step 2 leaves the promised severity ordering open: `## Architecture` says \u201cusing the existing severity order,\u201d but `review._SEVERITY_BANNER_ORDER` includes `critical`, `high`, `medium`, `nit`, and `info`, while `convergence_diagnosis._SEVERITY_RANK` supports only the first three. Step 3, step 4, `## Testing`, and the third acceptance criterion promise severity row states, so exact links at `nit` or `info` can be omitted or classified differently.",
+      "suggested_action": "define one total severity order and the fail-closed treatment of unsupported saved severities across the classifier, rendering, documentation, and fixtures.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "severity-trajectory-order",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "fb4b73e616719db42b38ba4ac850cf167e802c3b3b10033f966ab02aa404de17",
+    "detail_bundle_digest": "e22d3456c2ce5d37869a6a4947c013c18d14899f6f1f1848fb739d91b20709c1",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/01-persist-durable-audit-sampling.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/02-read-every-saved-audit-artifact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/03-render-saved-audit-section-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/04-document-saved-audit-identity-ordering.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/05-mark-247-delivered-convergence-evidence.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "2f914d4b2a1003c4e6ec58fc89d9a7eea971e0c7091bbd40a249748053ac2658",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

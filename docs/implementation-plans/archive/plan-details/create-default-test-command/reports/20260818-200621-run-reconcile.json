@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T20:06:21Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "a51c345f15ea26dc6cdfa7ac506eb6373d132cd98777a772379349876f44f5e7",
+  "code_fingerprint": {
+    "BACKLOG.md": "701c54c9ab019ee6a87011e8c1a76133cf0728158820a090e28e3e1891bacdad",
+    "PLAN_FORMAT.md": "ebcbe9d71f0552172dfa288d057e8c87d76b35deb47bc5a5b2c2490aaa66cca0",
+    "docs/BENCHMARK_DESIGN.md": "f3909c6206966211e38fc82894cec1457ae4fe32cf7904fbdf5242df51bc0d21",
+    "plan_tool/create.py": "418f47a5ecb8ee3b91f55995aeadaabdf0eab14ba6f35569675e0f7e35e8a401",
+    "plan_tool/runner_detect.py": "3065fa8476bbb53cbce31ed131a1f286262b53b50447b586c87f33fd7575271b",
+    "tests/test_create.py": "dedfd37927b419445d8861bb47ebf66467e3282b755cd57636655cdde90165b9",
+    "tests/test_runner_detect.py": "9f54419241476594e9df56d6fad7d7f4cef499b6882cfda24acb73531bcef55b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 3 completed sibling step(s); 3 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

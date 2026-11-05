@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "plan_slug": "reuse-saved-reconcile-audit",
+  "plan_path": "docs/implementation-plans/6-reuse-saved-reconcile-audit.md",
+  "created_at": "2026-06-12T23:55:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "605170e66f58c60c6420d9e28426fdea81bcb08084f27c97b3870b8c55f95dc3",
+  "code_fingerprint": {
+    "RUNBOOK.md": "56592feb4562ce9c957ebc08c7ed5ce87e1a33c5f457ead7ab049cbcae46212f",
+    "docs/AUDIT_FLOW.md": "892944f9ef7d85020f72e0c1b045aa0b7e391d98610c6d5cb6655ed30621e902",
+    "docs/RESUME_FLOW.md": "3c0a774d287f6401db233a522b977f718a0b0d28bc737444e3f2b26bacbd236f",
+    "plan_tool/auto_reconcile.py": "89ba9da8ecf59c80b7e22b0b5330e67a2389ab5f9b8de7b67b13d6e99cbf85c7",
+    "plan_tool/cli/app.py": "613b300d8061db77c35c50e95e00fb22d4233e8d40a776b4ba6e073ecb82ec3f",
+    "plan_tool/cli/authoring.py": "0f9e9d336da0ee4745bb8a998da3a56b83482574ef15154584a072bee2e414f8",
+    "plan_tool/cli/completeness_phases.py": "abb72f5d90de57900ddf386fa7e43151ca8a56222cbf8f0fba7ffe5c1c73b75a",
+    "plan_tool/cli/reconcile.py": "9ba237124c799a4d93c35a0d4b3fbcc8bd7c89187f668b51b8d06058008c43c7",
+    "plan_tool/cli/review_actions.py": "9aca9ecf69ad1f0bdd7325479eef3235ce07d5d361f06cf4e9a1c3798ca0de10",
+    "plan_tool/cli/review_cmd.py": "203e77b1ef9a5c0132b3446188cfba3b1e5037868af153bd0e7518bdfe43d8af",
+    "plan_tool/cli/run_cmd.py": "d6ffee6ea0889e6ef6edcf65ef9ff4fca0e094cba405905fc540ce26686a8b70",
+    "plan_tool/completeness_report.py": "278b2620ea0d1f1a11f432c559f3a9f3deb6adf7c361c384f9ca9e74769be8e3",
+    "plan_tool/fingerprint.py": "eb20285c1bc6e8634aabd969ca7ad7fa956a7efb2b67df40446f69bde641ae33",
+    "tests/cli/test_reconcile_engine.py": "06bf7b8033d5b9ffbb4331335e771ff29684142ca69825ead561b048f44b6f74",
+    "tests/cli/test_review_cmds.py": "6529c4a17f3587f9b5ff7cae4ef7de4294d916ea353a6aa226e7302ac65a12db",
+    "tests/cli/test_run_cmd.py": "4dd8219932a7239b9b574b0952d57fbe5f0c3b0e66e2958072384d849bbd929b",
+    "tests/test_cli.py": "515527bf46e367b9f9037cc5ae472f36867ae64e6b1ff1dd989bde7d80876247",
+    "tests/test_fingerprint.py": "d3fd74cc4bbe8ceb5c424e0ab200f12f4ddd44bbe9f1183f1253f45bb58a19bf",
+    "tests/test_review.py": "ea3c4c7da9f91d39be6e9f0057e34a996d0ef08bc72c4fee23d719fe6647ae0e"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Reuse Saved Reconcile Audit (fingerprinted reconcile-family reuse)\n\n`reuse-saved-reconcile-audit` \u00b7 generated 2026-06-12T23:55:02Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 6 (6 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] `docs/implementation-plans/plan-details/reuse-saved-reconcile-audit/07-update-docs-resume-flow-md-docs-audit.md` lacks a populated `## Acceptance criteria` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria.\n- [APPLIED] The Architecture section claims step 1 promotes the leaf \"alongside a re-export of `compute_plan_fingerprint`... for a single import surface,\" but step 1's own detail says `fingerprint.py` \"imports only `drift_detection`/`scope_guard`/`schema` leaves\" and HEAD confirms it houses only `compute_code_fingerprint`; the seams import `compute_plan_fingerprint` straight from `review_persistence` (step 2). Following the body literally would add a `review_persistence \u2192 plan_tool.review` edge into the intended leaf and defeat step 1's acyclicity goal. \u2014 - `docs/implementation-plans/6-reuse-saved-reconcile-audit.md`: in Architecture's \"Shared compute_code_fingerprint (step 1)\" paragraph, dropped the `compute_plan_fingerprint` re-export claim and stated each seam imports the plan- and code-fingerprint producers from their own modules (`review_persistence` and `fingerprint`), two import lines, not one surface.\n- [APPLIED] Risks and Architecture state all four reuse helpers are de-risked by \"funneling all four through the one `resolve_reusable_reconcile`,\" but step 4 deliberately gates `_prompt_reuse_saved_review` **inline** (recompute + three-way diff) because its `kind=\"review\"` sidecar is absent from `_RECONCILE_KINDS` and has no resolver sibling \u2014 re-introducing the very divergence the risk warns against as a parallel copy of the diff logic.\n- [APPLIED] Risks says \"Five save seams across four files\" while step 2 enumerates and the code confirms **six** `save_review(...)` calls across four files (three in `reconcile.py`). \u2014 - `docs/implementation-plans/6-reuse-saved-reconcile-audit.md`: changed Risks count from \"Five save seams\" to \"Six save seams\" to match step 2 and the code.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[walk-replay-staleness]`: The Problem statement frames the harm as \"a saved reconcile replayed against a plan or codebase that has moved underneath it,\" yet the one command that *explicitly* replays a saved sidecar with no fresh Claude call \u2014 `reconcile-plan-walk` \u2014 is deferred (step 5/7 Deferred) and receives no staleness signal, leaving the most direct instance of the named harm uncovered while the auto-offer prompts are gated.\n  - Address: `plan-tool completeness-apply reuse-saved-reconcile-audit --anchor walk-replay-staleness`\n- MEDIUM `[per-seam-test]`: Risk three promises \"a per-seam test asserting the persisted sidecar carries both axes,\" but step 2 directly tests only four of the six save seams, deferring `_iterate_reconcile_loop` and the `review_actions` walk-sub-reconcile to \"transitive\" coverage \u2014 so a missed fingerprint at either of those two seams survives the suite, exactly the inconsistency the risk names.\n  - Address: `plan-tool completeness-apply reuse-saved-reconcile-audit --anchor per-seam-test`\n- MEDIUM `[seam-count]`: Risks states \"Five save seams across four files\" while step 2 enumerates six `save_review(...)` calls (the `detail-reconcile` save appears twice in `reconcile.py`), obscuring exactly which sites must carry both fingerprints.\n  - Address: `plan-tool completeness-apply reuse-saved-reconcile-audit --anchor seam-count`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step2-files-coherence-ed3e1e07]`: `plan_tool/auto_reconcile.py` is in step 2's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step2-files-coherence-baa30404]`: `plan_tool/cli/review_cmd.py` is in step 2's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- INFO `[step3-files-coherence-cf04db69]`: The detail body for step 3 cites `cli/reconcile.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/cli/reconcile.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step7-files-coherence-5d54f264]`: The detail body for step 7 cites `docs/AUDIT_RESUME_FLOW.md`, which isn't in the step's `files:` array but closely resembles the declared `docs/RESUME_FLOW.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step7-files-coherence-89ec989b]`: The detail body for step 7 cites `docs/RUN_FLOW.md`, which isn't in the step's `files:` array but closely resembles the declared `docs/RESUME_FLOW.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step7-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 7's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply reuse-saved-reconcile-audit` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 6 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail reuse-saved-reconcile-audit` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reuse Saved Reconcile Audit (fingerprinted reconcile-family reuse)\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 2 declared `plan_tool/auto_reconcile.py` not mentioned in detail\n- NIT: step 2 declared `plan_tool/cli/review_cmd.py` not mentioned in detail\n- INFO: step 3 detail cites `cli/reconcile.py` resembling declared `plan_tool/cli/reconcile.py` (typo/stale path?)\n- INFO: step 7 detail cites `docs/AUDIT_RESUME_FLOW.md` resembling declared `docs/RESUME_FLOW.md` (typo/stale path?)\n- INFO: step 7 detail cites `docs/RUN_FLOW.md` resembling declared `docs/RESUME_FLOW.md` (typo/stale path?)\n- NIT: step 7 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[walk-replay-staleness]`: The Problem statement frames the harm as \"a saved reconcile replayed against a plan or codebase that has moved underneath it,\" yet the one command that *explicitly* replays a saved sidecar with no fresh Claude call \u2014 `reconcile-plan-walk` \u2014 is deferred (step 5/7 Deferred) and receives no staleness signal, leaving the most direct instance of the named harm uncovered while the auto-offer prompts are gated.\n- MEDIUM `[per-seam-test]`: Risk three promises \"a per-seam test asserting the persisted sidecar carries both axes,\" but step 2 directly tests only four of the six save seams, deferring `_iterate_reconcile_loop` and the `review_actions` walk-sub-reconcile to \"transitive\" coverage \u2014 so a missed fingerprint at either of those two seams survives the suite, exactly the inconsistency the risk names.\n- MEDIUM `[seam-count]`: Risks states \"Five save seams across four files\" while step 2 enumerates six `save_review(...)` calls (the `detail-reconcile` save appears twice in `reconcile.py`), obscuring exactly which sites must carry both fingerprints.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk reuse-saved-reconcile-audit` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply reuse-saved-reconcile-audit` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-ad6ca039",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Problem statement frames the harm as \"a saved reconcile replayed against a plan or codebase that has moved underneat",
+      "body": "The Problem statement frames the harm as \"a saved reconcile replayed against a plan or codebase that has moved underneath it,\" yet the one command that *explicitly* replays a saved sidecar with no fresh Claude call \u2014 `reconcile-plan-walk` \u2014 is deferred (step 5/7 Deferred) and receives no staleness signal, leaving the most direct instance of the named harm uncovered while the auto-offer prompts are gated.",
+      "suggested_action": "scope the Problem statement to the reuse-offer prompts, or add a non-gating fingerprint-staleness warning when `reconcile-plan-walk` replays a stale sidecar.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "walk-replay-staleness"
+    },
+    {
+      "id": "plan-plan-completeness-45fe7b40",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Risk three promises \"a per-seam test asserting the persisted sidecar carries both axes,\" but step 2 directly tests only ",
+      "body": "Risk three promises \"a per-seam test asserting the persisted sidecar carries both axes,\" but step 2 directly tests only four of the six save seams, deferring `_iterate_reconcile_loop` and the `review_actions` walk-sub-reconcile to \"transitive\" coverage \u2014 so a missed fingerprint at either of those two seams survives the suite, exactly the inconsistency the risk names.",
+      "suggested_action": "add a direct fingerprint-presence assertion for the two transitively-covered seams, or soften risk three's \"per-seam test\" wording to match the actual coverage.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-seam-test"
+    },
+    {
+      "id": "plan-plan-completeness-12fa0ed4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Risks states \"Five save seams across four files\" while step 2 enumerates six `save_review(...)` calls (the `detail-recon",
+      "body": "Risks states \"Five save seams across four files\" while step 2 enumerates six `save_review(...)` calls (the `detail-reconcile` save appears twice in `reconcile.py`), obscuring exactly which sites must carry both fingerprints.",
+      "suggested_action": "align the count between the Risks entry and step 2 (six save calls across five conceptual kinds).",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "seam-count"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-ad6ca039": {
+      "status": "applied",
+      "note": "reuse",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-45fe7b40": {
+      "status": "applied",
+      "note": "add a direct fingerprint",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-12fa0ed4": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    }
+  }
+}

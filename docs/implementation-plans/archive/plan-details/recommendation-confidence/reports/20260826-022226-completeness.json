@@ -1,0 +1,168 @@
+{
+  "version": 4,
+  "plan_slug": "recommendation-confidence",
+  "plan_path": "docs/implementation-plans/2-recommendation-confidence.md",
+  "created_at": "2026-08-26T02:22:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "eede78d81c56634e8d8f1d24c340e30cb49b3918b0708a390b0cd0be0d829b5c",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "70085086e2cf0e13a63dd0842200a01a1a1afea6d0e9fdf34f753f272d45d54a",
+    "plan_tool/cli/completeness_phases.py": "3442e108776e9c920df707c454371afef518487cd8285ae248f7127780498552",
+    "plan_tool/cli/data_contract_cmd.py": "c0e582206178006d0af49ccef1d761e70a429914f8d8d4e829d2eaec2c74db1b",
+    "plan_tool/cli/inspect.py": "85b78ff399862eb4ad0035574b7f26a82527c4e5d5546c438df12b20e817a2fa",
+    "plan_tool/cli/reconcile.py": "e7feaed7b7fdba1182470acdfdbaf1953e1bca8737108c80737c140eb54698f9",
+    "plan_tool/cli/review_cmd.py": "200a885c82c9b196e67176d8164184b811764e3122f63f833f57673866040c8c",
+    "plan_tool/completeness_report.py": "a83d7ef2d525df20fc1cbeeb39f6999a9201bfc28262a01e105537756820d782",
+    "plan_tool/convergence_diagnosis.py": "4fd2d1146531a69cedf9bd0d18deedacb3a7524a90e1f0d943c56fc7d5c2ec58",
+    "plan_tool/detail.py": "386f57c733757e87c9437c8579837f5ad386414682c07d3829465126a63c2a67",
+    "plan_tool/granularity.py": "9301aa69ac7b17744e57d2bba658bf2445e791d4742eb91f503f27009849de04",
+    "plan_tool/launcher.py": "e37e66042a5d32f0315521dbe17a4f97f0b42ef756b683d483fd8476bfc26cc7",
+    "plan_tool/purity_cache.py": "31effa0c40f896832e7ad34147dbce0b7f0bc45cea30eb0e7085fe2c8bbb0bb9",
+    "plan_tool/review.py": "a227280b4e2dc40ad1e21eaedab4200f531f858166a208001ebad8ea746408e9",
+    "plan_tool/review_persistence.py": "c42089de3101798a51300c3dc9f90a908af0851865088cd72d438acbecaa4433",
+    "plan_tool/review_walk.py": "a8eba2e25c1eba2514c45d9bfbed21eb06bef32c55e31ad21614ac1afd571284",
+    "tests/cli/test_completeness_cmd.py": "aabbc617b82eeec2fdb566abf57c1072fac5b6a7a39590ea48c85efd20c7bb90",
+    "tests/cli/test_data_contract_cmd.py": "d17e9f282d7236a0936692215f74b4bd3e267a2e3e069498aedf8988d40fe4b7",
+    "tests/cli/test_inspect_cmds.py": "3fca4fff504229c62a1518f7542cca8315674047d635a804c0cd52c483c4b339",
+    "tests/cli/test_reconcile_engine.py": "dc6445b79029aa56cfb30e864322578fe79aaafcb6fb3d23cb21be08f28561fd",
+    "tests/cli/test_review_cmds.py": "0a8ed2abc78f6bfab439ba0ee9bddf602fca35692ddddd69121fabdf25f53696",
+    "tests/test_cli.py": "19f35bc7181b8b12db8db09522726c10ca0fe8ddc8cb9a4a30c86ec60dd396a2",
+    "tests/test_completeness_report.py": "420820cbd75502e9b629d7d42a23165459bf82ee9d2953bd6343433813852a55",
+    "tests/test_convergence_diagnosis.py": "b706609da609d5586a81e187b060458accfed8d82e5af170a686fdc87a4b804a",
+    "tests/test_data_contract.py": "c53a36e6f9d1bc8766ee9597498d63266862a37a73c38c13fc2792956f53c0f5",
+    "tests/test_detail.py": "a5edeb269396b7c47b2a08dac02ef4578f4d32b3f1ff2b15bd9765afb544bc7d",
+    "tests/test_granularity.py": "1428c4570f5ad075807ead80b0d7e9c5605a757ae6a3c57862d738fb0301dced",
+    "tests/test_launcher.py": "edfb81345303e0ca9341bd8f986435d8cad16c36deedb7b5fa4c7169c263ee1e",
+    "tests/test_purity_cache.py": "70ccec44b0c292f04d56b9af72a2595ce2325f48055667fb05b166755fd1ea2d",
+    "tests/test_review.py": "7ad52a1dcb4581b55cdbd03a038572cd43bcb8b90e6c412d6110cb0670f11c5b",
+    "tests/test_review_persistence.py": "579b411fa737dc9854ef6f750354376e723ada885d48181726e2d115b494531f",
+    "tests/test_review_walk.py": "29daad341a7775af6ee9f0dc97c364f2a7ea82e585cfe843a5aca38642f8faa3"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/recommendation-confidence/01-give-every-new-recommendation.md": "b72e20a01f4b8e40145c05302fe9df230d489e1a28827c5afc029ea58317bc4e",
+    "docs/implementation-plans/plan-details/recommendation-confidence/02-persist-recommendation-confidence.md": "74c4fb34deadce80d842aac592fbbd8ba9f091c159dfb0e362afd4e3803d225d",
+    "docs/implementation-plans/plan-details/recommendation-confidence/03-render-one-confidence-label-across.md": "6199ea8bc67aa0ecc042d1b0a09737ddeb62a3a73a9d9473bf0082b70347d828"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Recommendation Confidence\n\n`recommendation-confidence` \u00b7 generated 2026-08-26T02:22:26Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec23a7d815ee52061c91d539a5093f34d3098b118fef7274ada93ef89772b76a`\n- **Detail bundle digest:** `809df1cd61627fa7941ea3542a68191bcc1228bd91049c2f9c6a2480fb1704ec`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 35322 bytes (+35322 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply recommendation-confidence   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[persisted-confidence-contract]`: Step 1 adds `Recommendation.confidence` but leaves `DATA_CONTRACT.md` and `tests/test_data_contract.py` to dependent step 2. `plan_tool/data_contract.py:persisted_dataclass_contracts` discovers `Recommendation` fields dynamically, while `tests/test_data_contract.py:test_every_persisted_field_is_documented_in_own_section` requires each field in `DATA_CONTRACT.md:Recommendation`; that section has no `confidence` entry. Step 1\u2019s required full-suite gate therefore cannot pass before step 2 can make its only planned contract update.\n  - Fix: Resequence the persisted-field introduction so its required contract documentation lands in the same green step, then keep later loader work dependent on that executable baseline.\n- MEDIUM `[confidence-reader-coverage]`: Step 3 says confidence is visible \u201cwherever a person or follow-up prompt reads a finding,\u201d but its files, implementation, and tests omit `plan_tool/review.py:_render_extract_lessons_prompt`, which formats each `Recommendation` into `prompts/extract-lessons-review.md` using only severity, source, title, and body. That follow-up reader drops the stored label despite the stated every-reader rule.\n  - Fix: Route lesson-extraction findings through the canonical confidence display and test supported, limited, and legacy-unknown values without changing lesson selection.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[confidence-reader-coverage]`: Step 3 (`Render one confidence label across every finding reader`) still omits `plan_tool/review.py:_render_extract_lessons_prompt`, `plan_tool/create.py:_granularity_split_hints` \u2192 `_ask_change_type`, and `plan_tool/review_walk.py:walk_recommendations`\u2019 already-annotated skip output. Those routes pass a finding to a follow-up prompt or print its advice/title without the stored label; `tests/test_lessons.py:TestStrictCheckThreading.test_threads_through_review_extraction`, `tests/test_create.py:test_granularity_hint_printed`, and `tests/test_review_walk.py:TestWalkRecommendationsSkipsAnnotated.test_already_annotated_items_skipped_by_default` are also outside step 3\u2019s test sweep.\n  - Fix: extend step 3\u2019s all-reader contract to render and test the canonical stored-confidence label in these follow-up, create-review, and skipped-walk paths.\n  - Address: `plan-tool completeness-apply recommendation-confidence --anchor confidence-reader-coverage`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply recommendation-confidence` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Recommendation Confidence\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec23a7d815ee52061c91d539a5093f34d3098b118fef7274ada93ef89772b76a`\n- **Detail bundle digest:** `809df1cd61627fa7941ea3542a68191bcc1228bd91049c2f9c6a2480fb1704ec`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[persisted-confidence-contract]`: Step 1 adds `Recommendation.confidence` but leaves `DATA_CONTRACT.md` and `tests/test_data_contract.py` to dependent step 2. `plan_tool/data_contract.py:persisted_dataclass_contracts` discovers `Recommendation` fields dynamically, while `tests/test_data_contract.py:test_every_persisted_field_is_documented_in_own_section` requires each field in `DATA_CONTRACT.md:Recommendation`; that section has no `confidence` entry. Step 1\u2019s required full-suite gate therefore cannot pass before step 2 can make its only planned contract update.\n- MEDIUM `[confidence-reader-coverage]`: Step 3 says confidence is visible \u201cwherever a person or follow-up prompt reads a finding,\u201d but its files, implementation, and tests omit `plan_tool/review.py:_render_extract_lessons_prompt`, which formats each `Recommendation` into `prompts/extract-lessons-review.md` using only severity, source, title, and body. That follow-up reader drops the stored label despite the stated every-reader rule.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[confidence-reader-coverage]`: Step 3 (`Render one confidence label across every finding reader`) still omits `plan_tool/review.py:_render_extract_lessons_prompt`, `plan_tool/create.py:_granularity_split_hints` \u2192 `_ask_change_type`, and `plan_tool/review_walk.py:walk_recommendations`\u2019 already-annotated skip output. Those routes pass a finding to a follow-up prompt or print its advice/title without the stored label; `tests/test_lessons.py:TestStrictCheckThreading.test_threads_through_review_extraction`, `tests/test_create.py:test_granularity_hint_printed`, and `tests/test_review_walk.py:TestWalkRecommendationsSkipsAnnotated.test_already_annotated_items_skipped_by_default` are also outside step 3\u2019s test sweep.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit recommendation-confidence --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply recommendation-confidence` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-659eeeb2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 adds `Recommendation.confidence` but leaves `DATA_CONTRACT.md` and `tests/test_data_contract.py` to dependent ste",
+      "body": "Step 1 adds `Recommendation.confidence` but leaves `DATA_CONTRACT.md` and `tests/test_data_contract.py` to dependent step 2. `plan_tool/data_contract.py:persisted_dataclass_contracts` discovers `Recommendation` fields dynamically, while `tests/test_data_contract.py:test_every_persisted_field_is_documented_in_own_section` requires each field in `DATA_CONTRACT.md:Recommendation`; that section has no `confidence` entry. Step 1\u2019s required full-suite gate therefore cannot pass before step 2 can make its only planned contract update.",
+      "suggested_action": "Resequence the persisted-field introduction so its required contract documentation lands in the same green step, then keep later loader work dependent on that executable baseline.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "persisted-confidence-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ad36fbb8",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 says confidence is visible \u201cwherever a person or follow-up prompt reads a finding,\u201d but its files, implementation",
+      "body": "Step 3 says confidence is visible \u201cwherever a person or follow-up prompt reads a finding,\u201d but its files, implementation, and tests omit `plan_tool/review.py:_render_extract_lessons_prompt`, which formats each `Recommendation` into `prompts/extract-lessons-review.md` using only severity, source, title, and body. That follow-up reader drops the stored label despite the stated every-reader rule.",
+      "suggested_action": "Route lesson-extraction findings through the canonical confidence display and test supported, limited, and legacy-unknown values without changing lesson selection.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "confidence-reader-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-ad36fbb8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Render one confidence label across every finding reader`) still omits `plan_tool/review.py:_render_extract_less",
+      "body": "Step 3 (`Render one confidence label across every finding reader`) still omits `plan_tool/review.py:_render_extract_lessons_prompt`, `plan_tool/create.py:_granularity_split_hints` \u2192 `_ask_change_type`, and `plan_tool/review_walk.py:walk_recommendations`\u2019 already-annotated skip output. Those routes pass a finding to a follow-up prompt or print its advice/title without the stored label; `tests/test_lessons.py:TestStrictCheckThreading.test_threads_through_review_extraction`, `tests/test_create.py:test_granularity_hint_printed`, and `tests/test_review_walk.py:TestWalkRecommendationsSkipsAnnotated.test_already_annotated_items_skipped_by_default` are also outside step 3\u2019s test sweep.",
+      "suggested_action": "extend step 3\u2019s all-reader contract to render and test the canonical stored-confidence label in these follow-up, create-review, and skipped-walk paths.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "confidence-reader-coverage",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ec23a7d815ee52061c91d539a5093f34d3098b118fef7274ada93ef89772b76a",
+      "detail_bundle_digest": "809df1cd61627fa7941ea3542a68191bcc1228bd91049c2f9c6a2480fb1704ec",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/recommendation-confidence/01-give-every-new-recommendation.md",
+          "state": "present",
+          "digest": "b72e20a01f4b8e40145c05302fe9df230d489e1a28827c5afc029ea58317bc4e"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/recommendation-confidence/02-persist-recommendation-confidence.md",
+          "state": "present",
+          "digest": "74c4fb34deadce80d842aac592fbbd8ba9f091c159dfb0e362afd4e3803d225d"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/recommendation-confidence/03-render-one-confidence-label-across.md",
+          "state": "present",
+          "digest": "6199ea8bc67aa0ecc042d1b0a09737ddeb62a3a73a9d9473bf0082b70347d828"
+        }
+      ],
+      "source_seed_digest": null,
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 35322,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

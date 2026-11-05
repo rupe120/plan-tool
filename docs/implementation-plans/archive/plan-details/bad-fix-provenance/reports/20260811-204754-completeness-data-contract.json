@@ -1,0 +1,83 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-53297458": {
+      "code_anchor": null,
+      "field_or_key": "annotations",
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/01-route-existing-apply-annotations.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/01-route-existing-apply-annotations.md",
+      "reason": "`SavedReview.annotations` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-ef11ad30": {
+      "code_anchor": "plan_tool/convergence_diagnosis.py:RunSnapshot.annotations",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/02-persist-qualified-remedy-provenance-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/02-persist-qualified-remedy-provenance-on.md",
+      "reason": "code anchor `plan_tool/convergence_diagnosis.py:RunSnapshot.annotations` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-f8a55754": {
+      "code_anchor": null,
+      "field_or_key": "created_at",
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/02-persist-qualified-remedy-provenance-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/02-persist-qualified-remedy-provenance-on.md",
+      "reason": "`SavedReview.created_at` lacks a matching HEAD code-location anchor",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-9b626cd4": {
+      "code_anchor": "plan_tool/convergence_diagnosis.py:RunFinding.title",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/04-extract-shared-fuzzy-title-comparison.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/04-extract-shared-fuzzy-title-comparison.md",
+      "reason": "code anchor `plan_tool/convergence_diagnosis.py:RunFinding.title` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-06de13f4": {
+      "code_anchor": "plan_tool/convergence_diagnosis.py:_fuzzy_title_match",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md",
+      "reason": "code anchor `plan_tool/convergence_diagnosis.py:_fuzzy_title_match` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-393a05a3": {
+      "code_anchor": "plan_tool/convergence_diagnosis.py:CompatiblePass.annotations",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md",
+      "reason": "code anchor `plan_tool/convergence_diagnosis.py:CompatiblePass.annotations` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-66bc3527": {
+      "code_anchor": "plan_tool/cli/completeness_cmd.py:cmd_completeness_record",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/bad-fix-provenance/05-bad-fix-provenance-advisory-convergence.md",
+      "reason": "code anchor `plan_tool/cli/completeness_cmd.py:cmd_completeness_record` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260811-204754-completeness"
+}

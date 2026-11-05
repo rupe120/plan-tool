@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-brief-rebind-confirmation",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-rebind-confirmation.md",
+  "created_at": "2026-09-16T12:32:59Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "787f92e5d0ff43b1fb00b73f2095973aef01aed6f72297b178072e11d8ab4bca",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "DATA_CONTRACT.md": "0e87359ca2c285d8077d792cd677ca44b265698913fb6204f8aa18e95af798b3",
+    "README.md": "18a46a322dbdb12016c2513648e2eec649c490fb1770847eed32133ef00abf6c",
+    "ROADMAP_FORMAT.md": "34f19db8f248a2ee8e7f614e27243191c047ac5c69b7d30c0e60dab457aeea06",
+    "RUNBOOK.md": "403ad81deec2d8d72264ca504ddb7b8ba057eccb34eee5769242741459f9b2bc",
+    "USE_CASES.md": "6d295bde4ff6134800b3234ff0d964f9828dced881151d69751bb2b71a21042f",
+    "docs/ARCHITECTURE.md": "9afa68976f16c12ec645fbecf785e052cce8e3e4080e136f21769bbeb00e0d29",
+    "docs/ROADMAP_WALKTHROUGH.md": "cb1f4cc8ab849a412d502cc3a036ae46607a8cb0187b3e5154ec3ecc4a2f1838",
+    "docs/cli/roadmap.md": "fdadf7058ec993c8874bd2a6e0a604ddf181f1202635c95f4b951d7ef04a1d9c",
+    "integrations/claude/SKILL.md": "fc20d9261a86defcffc935452f380b583bebbfba3db0e0a19c9293f57658b991",
+    "plan_tool/cli/__init__.py": "fc677f2cfc297eb53cff494a94a5c5fb676c1e06f1b1bcc436fef7cf4827ed68",
+    "plan_tool/cli/roadmap_cmd.py": "9aa72e733bdc44a57877bc3607b34e0f8308903b839064abc7201123671daff3",
+    "plan_tool/roadmap.py": "6aafde4c4a1520eb3d127ef7a76ce1ea172b23743c4b866337e39b7598162116",
+    "tests/cli/package_surface_help.golden.txt": "e4d5da067aad2a96090d67a900338290501444e750d960ba7ba31424ca58a6e8",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_data_contract.py": "28dc478e96be59ef47369570e15fddc620665db2761c1e220b6d7a6ee6843efd",
+    "tests/test_roadmap.py": "2741ad9d2581f4982448fe991c0fcee9437c7a0fcc3f7dd253f66ac662cdfd62",
+    "tests/test_roadmap_format.py": "846667335486c426641ec83124ff61f9f7770c48a663fafe151dcf8bc32de708"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

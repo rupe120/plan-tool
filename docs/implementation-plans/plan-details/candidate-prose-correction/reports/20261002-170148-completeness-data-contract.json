@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step8-data-contract-c0525868": {
+      "code_anchor": "plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md",
+      "reason": "code anchor `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261002-170148-completeness"
+}

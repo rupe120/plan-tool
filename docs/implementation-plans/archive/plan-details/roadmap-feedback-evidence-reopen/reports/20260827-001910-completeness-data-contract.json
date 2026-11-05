@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-7f98674a": {
+      "code_anchor": "tests/cli/test_package_surface.py:TestHelpGoldenSnapshot.test_help_matches_golden",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-feedback-evidence-reopen/05-exclusive-retirement-import-reopen.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-feedback-evidence-reopen/05-exclusive-retirement-import-reopen.md",
+      "reason": "code anchor `tests/cli/test_package_surface.py:TestHelpGoldenSnapshot.test_help_matches_golden` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260827-001910-completeness"
+}

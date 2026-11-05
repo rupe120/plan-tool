@@ -1,0 +1,110 @@
+{
+  "version": 4,
+  "plan_slug": "escalation-receipt-persistence",
+  "plan_path": "docs/implementation-plans/2-escalation-receipt-persistence.md",
+  "created_at": "2026-08-28T13:18:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fc0a58a9c06c3f236a6aa8b8c6134533deebf9a2c231562bed537c448eab3f73",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "d0e364c1ad712cf686297c704250322a46dcbb1f7ecf7841915902d4655e77d1",
+    "BUG_BACKLOG.md": "f16a109f36b8d9575b35659d666037ea5100e313553f59b4aa3c74b084c51ac1",
+    "CAPABILITIES.md": "bc35b6a1bcc973e17e60b3f5f71a7863eb193a77eb6e845cb0f5e01a719a5c7e",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "README.md": "23b5708bac76c8df7835fb048309b99a82ba8760c6040842932aeae2e504661e",
+    "ROADMAP_FORMAT.md": "f71fff214c8ec3263e6da6ba3f48b266513d2afe5edf066ea99a198b4a1fa5c5",
+    "RUNBOOK.md": "81eb10715fd22b163d165a344ae560735bb704a400ded142ce75bc2213d19274",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "docs/ARCHITECTURE.md": "491a9b11c255e56fafebea94526f3a236a4af80b63958e0ad5cae161295b6a16",
+    "docs/ROADMAP_WALKTHROUGH.md": "3e49e31c5e8e793be3bc15ace8dc7a6eda919e08cf2acd33d598ccee464e26fc",
+    "docs/cli/roadmap.md": "eed7749f6cc52614c779c95a5aefea0d189209154fd65fd440951345a1451fb7",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "8b1c54c48839a38e968b3735358e3a2bf50b3cb325d4575a79f5c4fd1c866261",
+    "docs/implementation-plans/backlog-arcs/bug-backlog-draining-arc.md": "775294705716237a953cc855e0cabbe8a1ecef60f51f3766d36f55bf3e1a75d8",
+    "plan_tool/cli/gitcommit.py": "237e11b303ca704beccd2541574f9c20dbac012e29f40f18df9716250963ff47",
+    "plan_tool/cli/roadmap_cmd.py": "1997d5d952ce937fcea29aa03ab6a6d9c727d4864e18a5a91ab62b7a142977a7",
+    "plan_tool/roadmap_escalation_run.py": "4733cf5b8d58b86de03847d7a7c03642dd3853cfa7f00c1ba32dfaae1e628043",
+    "plan_tool/roadmap_impact_run.py": "40301a10027de6959cc2eb02ea7a82b936d07002f68656052ab1d4b9d3441054",
+    "plan_tool/roadmap_structural_revision.py": "4738d635cd4c2d96b2e16671ce536a5c7e7fd35dacc9971e8ee601c789319879",
+    "plan_tool/run_log.py": "0e02bbfd87afb5d3d016af0d57c90793633ecc89cf6ec20b0388928e2d5c8beb",
+    "tests/cli/test_gitcommit.py": "a0994b1c620e5370e1d5f482c6703191bd91fff2de84005593eac1a2fdcfccc4",
+    "tests/cli/test_roadmap_cmd.py": "9333d9992488a7adecead28985584544c80a1901842853f98a77db360901f990",
+    "tests/test_roadmap_escalation_run.py": "62b15c0a62cee58fba798e9596698ff895d3ef3bd74c4dec3676af0ac0be3331",
+    "tests/test_roadmap_impact_run.py": "4a6f71136616582d8919394700e4750393889967c00518dfcb181fd0fbac4f10",
+    "tests/test_roadmap_revision_publish.py": "14ab7793c00c62fd9cf96a63092fbbca25542c3c25bab0d9d1c7de4a6d762b97",
+    "tests/test_roadmap_structural_revision.py": "62aac56501341107719f0e6ee5ae0301882cb72132c34cb54c563cac906f4144",
+    "tests/test_run_log.py": "65f4b1217f524970d9fa28307fb41b23d257a0b3874f1019b1710b30cfd618cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-receipt-commit-helper-that.md": "6de0e20c6df3fa935d341d8d7673b6d391adbd523caabe82426eff9c5fc53fcd",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/02-complete-receipt-only-commit-shared.md": "ea481b5548ff80966964a264a582ba71543a2b5e4c744ab904f5a99757001e94",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md": "a7759d26ef3f27cd8b63de1777432242af4482609bafd0ef160f12b10c653b90",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md": "e11d891622d03442b19ec3462b540be3619953176714876c9ecdedf4100bc275"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Escalation Receipt Persistence\n\n`escalation-receipt-persistence` \u00b7 generated 2026-08-28T13:18:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-904caaff]` [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-split-3de39f0f]` [confidence: limited]: Step 2 \"Complete the receipt-only commit and shared-read lifecycle, retain local impact analyses, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit escalation-receipt-persistence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Escalation Receipt Persistence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 2 declared `.gitignore` not mentioned in detail\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 2 \"Complete the receipt-only commit and shared-read lifecycle, retain local impact analyses, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk escalation-receipt-persistence` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "a7be77f223f3801fa7cfee11b70adad7b2731cae7f8dba10f6da2573e17c1807",
+    "detail_bundle_digest": "5f772dad30fe990e99b226b875c1ebd926618d264b8b96b640cbcd9f18b9b6f1",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-receipt-commit-helper-that.md",
+        "state": "present",
+        "digest": "6de0e20c6df3fa935d341d8d7673b6d391adbd523caabe82426eff9c5fc53fcd"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/02-complete-receipt-only-commit-shared.md",
+        "state": "present",
+        "digest": "ea481b5548ff80966964a264a582ba71543a2b5e4c744ab904f5a99757001e94"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md",
+        "state": "present",
+        "digest": "a7759d26ef3f27cd8b63de1777432242af4482609bafd0ef160f12b10c653b90"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md",
+        "state": "present",
+        "digest": "e11d891622d03442b19ec3462b540be3619953176714876c9ecdedf4100bc275"
+      }
+    ],
+    "source_seed_digest": null,
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

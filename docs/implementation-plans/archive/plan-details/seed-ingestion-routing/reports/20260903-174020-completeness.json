@@ -1,0 +1,197 @@
+{
+  "version": 4,
+  "plan_slug": "seed-ingestion-routing",
+  "plan_path": "docs/implementation-plans/2-seed-ingestion-routing.md",
+  "created_at": "2026-09-03T17:40:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4d571d664a9785af36918dd5bbfe88cc57b312d410de204f19613f8dc7069dea",
+  "code_fingerprint": {
+    "BACKLOG.md": "b26eeff16069b7c8928b6991033d6dcb572df7669929a156ad70ff2425d80f51",
+    "README.md": "036dd2a41f27a6fe61aae339c55070f5e9b81584765f55516474ee53e8bd3b1a",
+    "SEED_FORMAT.md": "20a100da5071ceef20e8b8aa568bd813681fe7173f981246324f42fb05f24994",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "c96841fa7648a05062769f8313f2394d3f78bc9f53ec1f541545d3f658277aad",
+    "docs/CREATE_RESUME_FLOW.md": "7da66370ff9c6a9feff3b0b7d5bde6806dd60975bf4c58193ea917d4f6e0ce4f",
+    "docs/CREATE_SEED_INGESTION_CONTRACT.md": "dd3fc446bb21e9d24e9c5561447c3c59118ffb373ceef4da2931db7bf49d1c7b",
+    "docs/RESUME_FLOW.md": "59829f000d4d5ab1b2525c8c5a52ab86036aad6e0b02662a8fadd8b770c9c70c",
+    "docs/cli/create.md": "faecd3d78a1d85f5e7a2620eb90fb000b1ae46d4a6048cace0e9cef3080fc19b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "9c561209da07870498ddc634b7e65787760af551990d94176e1d060bc9c8c8fb",
+    "plan_tool/cli/authoring.py": "2d13b989e2afe5bfb1fd9dca20ed7c1c9017a823ea077fd8bc967042d9efb25d",
+    "plan_tool/create.py": "76d97a7cd9583b021b166c1ceba0bcbec0f037c880202f28a67644ca3d44352f",
+    "plan_tool/distill_thresholds.py": "2088c7a36c57d6d7c51fbc8a6dbd688fe40cc57d2412f3070319005c8a02c054",
+    "plan_tool/prompts/distill-seed.md": "b7ca52ecc292d8e093d74bb2fcdce98c5bc34a5862a2ad3c5e061491119da2bb",
+    "plan_tool/split_criteria.py": "9953efa97e5e457a3ed7619bf39cffbb9d38d230551e6e79244017fd25e762b6",
+    "tests/cli/test_authoring_cmds.py": "7832c51c359d90b56a268f70cd3ee2b83c334574a9299603f2ea9a7158e6a509",
+    "tests/test_create.py": "8fad4f0c25e4df7e96b7a89ef0f00acbd5ba7d2da35232b3ee3618a97d8f725d",
+    "tests/test_distill.py": "6a617944886e2d7b0660ab5998f5665e55e9940ae12572c77ce64176ebb94e72",
+    "tests/test_split_criteria.py": "ea2c48bcd490e3aac05d4fe2c1bac22f48b5467e7618863aa3d87da693dadf99"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md": "8e145b2a2f95920ba41a3d6cd6adb726cdf618bd9d4f3be3bf7f2e94f12dd7d2",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md": "efb34b19bc6b114a639c5172cb4993415a0a12e8077bf715a16231706a2a763a",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md": "66fe01d1352924365a029776c2d36ecd065b5907f1dd6b00a3586cca70ab47d7",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md": "bcba01809339207b83d8817849877596307a060d430f51d13285512a31254a7c",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md": "37a5b4389298ce25bfc5b6634f11e426245f9bb9ee4d1d5abe4ab78e5e315ace",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md": "493fc3f037d0d3c19ee75caa7871c898293ea7d65fc7e8b2091ddfc723741b1c",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md": "fe19e32f5aec8316e9db3df97ba7563cae36ef3b0f5820752389ce501ed4338e"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Seed Ingestion Routing\n\n`seed-ingestion-routing` \u00b7 generated 2026-09-03T17:40:20Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `b5caa32092c6c7b229573c5e0038014dd13ee1eeb86c12cb710f8a57b26084b9`\n- **Detail bundle digest:** `f73aa57cadd7d521c4a4d9398cdc809a345a8eee48022a5e7317854f11bbf6ae`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 2\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 79885 bytes (+79885 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply seed-ingestion-routing   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[normalized-evidence-grounding]` [confidence: limited]: The normalized-evidence safety promise has no way to prove source support. Architecture says unsupported evidence-only content \u201creturns `refused` before every subsequent authoring call\u201d; Risks, Testing, and Acceptance criteria repeat that scope, risks, tests, criteria, and deferrals are not fabricated, while steps 3 and 4 accept model-supplied non-null section strings and treat only `None` as unsupported. `plan_tool/prompts/distill-seed.md:## Field rules` asks the model to emit `null`, but at HEAD `create.py:_validate_distilled_sections` checks schema and types only, `_render_distilled_markdown` renders every non-null value, and `_prepare_create_plan` permits downstream work; invented non-null evidence can therefore publish as supported evidence.\n  - Fix: Define and test how preparation establishes source support for every evidence-only section, and keep later authoring from replacing that validated evidence with ungrounded content.\n- MEDIUM `[route-result-handoff-ordering]` [confidence: limited]: Step 6 declares only `depends_on: [2, 3]`, but its Input says \u201cStep 5 public route handoff: Read the selected route from `plan_tool/create.py:CreateResult`; do not infer it from `plan_path`, `split_proposal`, or `distilled_seed`.\u201d Step 5 owns that explicit `CreateResult` route field, so the dependency graph permits step 6 before the handoff it must consume; it must then duplicate, infer, or lack the lifecycle selector.\n  - Fix: Make step 6 depend on step 5 and state that lifecycle work consumes step 5\u2019s published route handoff while retaining its dependencies on steps 2 and 3.\n\n## Pending concept decisions\n\nConcept deferrals still awaiting a human decision \u2014 advisory, never blocking. Resolve each with `plan-tool scope-review seed-ingestion-routing`.\n\n### Unsigned deferrals \u2014 a proposed defer/wont_do not yet reviewed\n\n- INFO `[bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]` [confidence: limited]: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc]` [confidence: limited]: Concept `22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc` (terminal route lifecycle) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply seed-ingestion-routing` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Seed Ingestion Routing\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `b5caa32092c6c7b229573c5e0038014dd13ee1eeb86c12cb710f8a57b26084b9`\n- **Detail bundle digest:** `f73aa57cadd7d521c4a4d9398cdc809a345a8eee48022a5e7317854f11bbf6ae`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[normalized-evidence-grounding]` [confidence: limited]: The normalized-evidence safety promise has no way to prove source support. Architecture says unsupported evidence-only content \u201creturns `refused` before every subsequent authoring call\u201d; Risks, Testing, and Acceptance criteria repeat that scope, risks, tests, criteria, and deferrals are not fabricated, while steps 3 and 4 accept model-supplied non-null section strings and treat only `None` as unsupported. `plan_tool/prompts/distill-seed.md:## Field rules` asks the model to emit `null`, but at HEAD `create.py:_validate_distilled_sections` checks schema and types only, `_render_distilled_markdown` renders every non-null value, and `_prepare_create_plan` permits downstream work; invented non-null evidence can therefore publish as supported evidence.\n- MEDIUM `[route-result-handoff-ordering]` [confidence: limited]: Step 6 declares only `depends_on: [2, 3]`, but its Input says \u201cStep 5 public route handoff: Read the selected route from `plan_tool/create.py:CreateResult`; do not infer it from `plan_path`, `split_proposal`, or `distilled_seed`.\u201d Step 5 owns that explicit `CreateResult` route field, so the dependency graph permits step 6 before the handoff it must consume; it must then duplicate, infer, or lack the lifecycle selector.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-run-log-py:runlogwriter-phase-end]` [confidence: limited]: docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md:## Input cites `plan_tool/run_log.py:RunLogWriter.phase_end`, but code anchor `plan_tool/run_log.py:RunLogWriter.phase_end` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO `[concept-bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]` [confidence: limited]: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[concept-22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc]` [confidence: limited]: Concept `22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc` (terminal route lifecycle) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit seed-ingestion-routing --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3b64fb79",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The normalized-evidence safety promise has no way to prove source support. Architecture says unsupported evidence-only c",
+      "body": "The normalized-evidence safety promise has no way to prove source support. Architecture says unsupported evidence-only content \u201creturns `refused` before every subsequent authoring call\u201d; Risks, Testing, and Acceptance criteria repeat that scope, risks, tests, criteria, and deferrals are not fabricated, while steps 3 and 4 accept model-supplied non-null section strings and treat only `None` as unsupported. `plan_tool/prompts/distill-seed.md:## Field rules` asks the model to emit `null`, but at HEAD `create.py:_validate_distilled_sections` checks schema and types only, `_render_distilled_markdown` renders every non-null value, and `_prepare_create_plan` permits downstream work; invented non-null evidence can therefore publish as supported evidence.",
+      "suggested_action": "Define and test how preparation establishes source support for every evidence-only section, and keep later authoring from replacing that validated evidence with ungrounded content.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "normalized-evidence-grounding",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-bf870071",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6 declares only `depends_on: [2, 3]`, but its Input says \u201cStep 5 public route handoff: Read the selected route from",
+      "body": "Step 6 declares only `depends_on: [2, 3]`, but its Input says \u201cStep 5 public route handoff: Read the selected route from `plan_tool/create.py:CreateResult`; do not infer it from `plan_path`, `split_proposal`, or `distilled_seed`.\u201d Step 5 owns that explicit `CreateResult` route field, so the dependency graph permits step 6 before the handoff it must consume; it must then duplicate, infer, or lack the lifecycle selector.",
+      "suggested_action": "Make step 6 depend on step 5 and state that lifecycle work consumes step 5\u2019s published route handoff while retaining its dependencies on steps 2 and 3.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "route-result-handoff-ordering",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step5-data-contract-91af2186",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 5,
+      "title": "Stale Input contract reference `plan_tool/run_log.py:RunLogWriter.phase_end`",
+      "body": "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md:## Input cites `plan_tool/run_log.py:RunLogWriter.phase_end`, but code anchor `plan_tool/run_log.py:RunLogWriter.phase_end` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-run-log-py:runlogwriter-phase-end",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "b5caa32092c6c7b229573c5e0038014dd13ee1eeb86c12cb710f8a57b26084b9",
+      "detail_bundle_digest": "f73aa57cadd7d521c4a4d9398cdc809a345a8eee48022a5e7317854f11bbf6ae",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md",
+          "state": "present",
+          "digest": "8e145b2a2f95920ba41a3d6cd6adb726cdf618bd9d4f3be3bf7f2e94f12dd7d2"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md",
+          "state": "present",
+          "digest": "efb34b19bc6b114a639c5172cb4993415a0a12e8077bf715a16231706a2a763a"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md",
+          "state": "present",
+          "digest": "66fe01d1352924365a029776c2d36ecd065b5907f1dd6b00a3586cca70ab47d7"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md",
+          "state": "present",
+          "digest": "bcba01809339207b83d8817849877596307a060d430f51d13285512a31254a7c"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md",
+          "state": "present",
+          "digest": "37a5b4389298ce25bfc5b6634f11e426245f9bb9ee4d1d5abe4ab78e5e315ace"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md",
+          "state": "present",
+          "digest": "493fc3f037d0d3c19ee75caa7871c898293ea7d65fc7e8b2091ddfc723741b1c"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md",
+          "state": "present",
+          "digest": "fe19e32f5aec8316e9db3df97ba7563cae36ef3b0f5820752389ce501ed4338e"
+        }
+      ],
+      "source_seed_digest": "7c2196a3db0a82d1ca1dab770724352c0512cd585c60f961fd469f456f688d24",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 79885,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

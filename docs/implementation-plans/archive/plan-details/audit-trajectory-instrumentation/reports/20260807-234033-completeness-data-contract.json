@@ -1,0 +1,79 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-07ebee1f": {
+      "candidate": {
+        "field_or_key": "SoftEdge",
+        "owner": "SoftEdge",
+        "target_section": "SoftEdge"
+      },
+      "candidate_fields": {
+        "field_or_key": "SoftEdge",
+        "owner": "SoftEdge",
+        "target_section": "SoftEdge"
+      },
+      "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+      "field_or_key": "SoftEdge",
+      "freshness": {
+        "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+        "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4"
+      },
+      "operation": "remove",
+      "owner": "SoftEdge",
+      "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4",
+      "source_type": "dataclass",
+      "target_section": "SoftEdge"
+    },
+    "plan-data-contract-93490cc5": {
+      "candidate": {
+        "field_or_key": "PlanMass",
+        "owner": "PlanMass",
+        "target_section": "PlanMass"
+      },
+      "candidate_fields": {
+        "field_or_key": "PlanMass",
+        "owner": "PlanMass",
+        "target_section": "PlanMass"
+      },
+      "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+      "field_or_key": "PlanMass",
+      "freshness": {
+        "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+        "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4"
+      },
+      "operation": "remove",
+      "owner": "PlanMass",
+      "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4",
+      "source_type": "dataclass",
+      "target_section": "PlanMass"
+    },
+    "plan-data-contract-d9290da6": {
+      "candidate": {
+        "field": "plan_mass",
+        "field_or_key": "plan_mass",
+        "owner": "SavedReview",
+        "source_symbol": "plan_tool/review_persistence.py:SavedReview",
+        "target_section": "SavedReview"
+      },
+      "candidate_fields": {
+        "field": "plan_mass",
+        "field_or_key": "plan_mass",
+        "owner": "SavedReview",
+        "source_symbol": "plan_tool/review_persistence.py:SavedReview",
+        "target_section": "SavedReview"
+      },
+      "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+      "field_or_key": "plan_mass",
+      "freshness": {
+        "contract_fingerprint": "d69ba6b41890ae03216a28f6e6da0a507727283f9d234e3473d4698f9d8084ed",
+        "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4"
+      },
+      "operation": "remove",
+      "owner": "SavedReview",
+      "registry_fingerprint": "9c281b8c8e9e44bc49e0575cfaa53994d253148dd8863d7003efce994b783da4",
+      "source_type": "dataclass",
+      "target_section": "SavedReview"
+    }
+  },
+  "review_id": "20260807-234033-completeness"
+}

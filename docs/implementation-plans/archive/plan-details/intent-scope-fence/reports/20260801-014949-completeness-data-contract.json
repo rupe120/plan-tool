@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-14b4faef": {
+      "code_anchor": "parser.py:_explain_extra_field",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/01-optional-intent-fields-plan-step.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/01-optional-intent-fields-plan-step.md",
+      "reason": "code anchor path `parser.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-62451a1f": {
+      "code_anchor": "schema.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md",
+      "reason": "code anchor path `schema.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-dad5ec9c": {
+      "code_anchor": "reprocess.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md",
+      "reason": "code anchor path `reprocess.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260801-014949-completeness"
+}

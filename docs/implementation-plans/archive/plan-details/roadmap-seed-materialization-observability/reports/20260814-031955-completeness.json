@@ -1,0 +1,138 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T03:19:55Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "97397cb0887d59960877aa89e574c0a166dc98fa0824da25cfafd5031a4928db",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-shared-roadmap-run-log-setup.md": "8e76cf0b671733c2270f510cead3b73f83b5e7b5ab1e4f465332c77c94469767",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-log-materialization-phases-attempts.md": "038c715faa3ea6ea84dbf91e0d03faa24ab98efaf4a7344bdcb2fc775fe3e306",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-give-materialize-one-command-run-clean.md": "c9dc7bea2ee00b464fde88dac524bb5a37531102e96b8747cc03b3d3f1cafa5c",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-refresh-seeds-one-ordered-run.md": "8e63cbf3b273c66f8c7243984dd939245d3e69a52cd68e74cc9443d2c5328444",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-document-materialization-refresh-run.md": "12616c58ac8fba1098e8c1448f40c3385b51395e708cb2acb60ef147394d33d2"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Materialization Observability\n\n`roadmap-seed-materialization-observability` \u00b7 generated 2026-08-14T03:19:55Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-seed-materialization-observability   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-seed-materialization-observability  # alternative interactive review/apply\n\n- HIGH `[tool-input-redaction]`: Step 2 (`Log materialization phases and attempts by plan ID...`) must meet Architecture/Risks\u2019 \u201creuse the shipped redaction behavior\u201d and Acceptance\u2019s \u201cNo ... unredacted tool input\u201d promise, but `shell.claude_invoke` passes real `tool_input_summary` values through `backend_runner.run_streaming_once` to `RunLogWriter.claude_stream_event`; `TestRedactionReady.test_redaction_ready_does_not_affect_claude_stream_event_or_debug_passthrough` pins `echo secret-path` even with `redaction_ready=False`. Binding the shipped observer as written can therefore persist a materializer tool command in JSONL.\n  - Fix: define a materialization-specific observer boundary that preserves lifecycle/progress events and attribution while removing or sanitizing every tool-input summary before JSONL or snapshot writes, with deterministic coverage.\n- MEDIUM `[apply-log-boundary]`: `--apply` has conflicting logging requirements: step 1 says \u201cwithout changing stage or `--apply` JSONL records,\u201d while Testing says backend-free modes create no lifecycle log and Acceptance groups `--apply` with modes that do not create one. `roadmap.apply_roadmap_seeds` already starts `RunLogWriter` and emits `roadmap_seed_apply_result`; `DATA_CONTRACT.md` says that event is emitted for every `roadmap --apply` invocation, so preserving the existing record conflicts with the literal test criterion.\n  - Fix: state that views and `--accept-seed` remain log-free, while `--apply` retains its existing apply-specific run record unchanged and gains no materialization events.\n- MEDIUM `[materialize-all-lifecycle]`: `--materialize` without a plan ID lacks an observability contract: step 3 promises plan-ID visibility \u201cfor both one-plan and all-eligible materialization runs,\u201d but Architecture defines a phase only for `--materialize <plan-id>`, and Testing and Acceptance cover only the selected form. `roadmap_cmd._cmd_roadmap_materialize` already iterates every recoverable row in roadmap order and returns early when none are eligible, leaving different valid implementations for per-row phases, active IDs, and the no-op record.\n  - Fix: define all-eligible materialization, including zero eligible rows, as a command lifecycle with an explicit ordered per-plan phase and terminal/no-op policy, then lock it in acceptance and tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-5113ad49]`: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-230e3ecb]`: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bb6d6099]`: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2a2e5cfa]`: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-835bb881]`: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-materialization-observability` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Materialization Observability\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[tool-input-redaction]`: Step 2 (`Log materialization phases and attempts by plan ID...`) must meet Architecture/Risks\u2019 \u201creuse the shipped redaction behavior\u201d and Acceptance\u2019s \u201cNo ... unredacted tool input\u201d promise, but `shell.claude_invoke` passes real `tool_input_summary` values through `backend_runner.run_streaming_once` to `RunLogWriter.claude_stream_event`; `TestRedactionReady.test_redaction_ready_does_not_affect_claude_stream_event_or_debug_passthrough` pins `echo secret-path` even with `redaction_ready=False`. Binding the shipped observer as written can therefore persist a materializer tool command in JSONL.\n- MEDIUM `[apply-log-boundary]`: `--apply` has conflicting logging requirements: step 1 says \u201cwithout changing stage or `--apply` JSONL records,\u201d while Testing says backend-free modes create no lifecycle log and Acceptance groups `--apply` with modes that do not create one. `roadmap.apply_roadmap_seeds` already starts `RunLogWriter` and emits `roadmap_seed_apply_result`; `DATA_CONTRACT.md` says that event is emitted for every `roadmap --apply` invocation, so preserving the existing record conflicts with the literal test criterion.\n- MEDIUM `[materialize-all-lifecycle]`: `--materialize` without a plan ID lacks an observability contract: step 3 promises plan-ID visibility \u201cfor both one-plan and all-eligible materialization runs,\u201d but Architecture defines a phase only for `--materialize <plan-id>`, and Testing and Acceptance cover only the selected form. `roadmap_cmd._cmd_roadmap_materialize` already iterates every recoverable row in roadmap order and returns early when none are eligible, leaving different valid implementations for per-row phases, active IDs, and the no-op record.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-seed-materialization-observability` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-30052384",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Log materialization phases and attempts by plan ID...`) must meet Architecture/Risks\u2019 \u201creuse the shipped redact",
+      "body": "Step 2 (`Log materialization phases and attempts by plan ID...`) must meet Architecture/Risks\u2019 \u201creuse the shipped redaction behavior\u201d and Acceptance\u2019s \u201cNo ... unredacted tool input\u201d promise, but `shell.claude_invoke` passes real `tool_input_summary` values through `backend_runner.run_streaming_once` to `RunLogWriter.claude_stream_event`; `TestRedactionReady.test_redaction_ready_does_not_affect_claude_stream_event_or_debug_passthrough` pins `echo secret-path` even with `redaction_ready=False`. Binding the shipped observer as written can therefore persist a materializer tool command in JSONL.",
+      "suggested_action": "define a materialization-specific observer boundary that preserves lifecycle/progress events and attribution while removing or sanitizing every tool-input summary before JSONL or snapshot writes, with deterministic coverage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "tool-input-redaction",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-6b39355e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`--apply` has conflicting logging requirements: step 1 says \u201cwithout changing stage or `--apply` JSONL records,\u201d while T",
+      "body": "`--apply` has conflicting logging requirements: step 1 says \u201cwithout changing stage or `--apply` JSONL records,\u201d while Testing says backend-free modes create no lifecycle log and Acceptance groups `--apply` with modes that do not create one. `roadmap.apply_roadmap_seeds` already starts `RunLogWriter` and emits `roadmap_seed_apply_result`; `DATA_CONTRACT.md` says that event is emitted for every `roadmap --apply` invocation, so preserving the existing record conflicts with the literal test criterion.",
+      "suggested_action": "state that views and `--accept-seed` remain log-free, while `--apply` retains its existing apply-specific run record unchanged and gains no materialization events.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "apply-log-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-bfb718c4",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`--materialize` without a plan ID lacks an observability contract: step 3 promises plan-ID visibility \u201cfor both one-plan",
+      "body": "`--materialize` without a plan ID lacks an observability contract: step 3 promises plan-ID visibility \u201cfor both one-plan and all-eligible materialization runs,\u201d but Architecture defines a phase only for `--materialize <plan-id>`, and Testing and Acceptance cover only the selected form. `roadmap_cmd._cmd_roadmap_materialize` already iterates every recoverable row in roadmap order and returns early when none are eligible, leaving different valid implementations for per-row phases, active IDs, and the no-op record.",
+      "suggested_action": "define all-eligible materialization, including zero eligible rows, as a command lifecycle with an explicit ordered per-plan phase and terminal/no-op policy, then lock it in acceptance and tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "materialize-all-lifecycle",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "97397cb0887d59960877aa89e574c0a166dc98fa0824da25cfafd5031a4928db",
+    "detail_bundle_digest": "c226c0a7993c251d87e8296c6073b60c5be7c92fcc5d72262e1497445657abc2",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-shared-roadmap-run-log-setup.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-log-materialization-phases-attempts.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-give-materialize-one-command-run-clean.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-refresh-seeds-one-ordered-run.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-document-materialization-refresh-run.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

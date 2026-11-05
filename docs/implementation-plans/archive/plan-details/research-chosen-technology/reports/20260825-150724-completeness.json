@@ -1,0 +1,139 @@
+{
+  "version": 4,
+  "plan_slug": "research-chosen-technology",
+  "plan_path": "docs/implementation-plans/2-research-chosen-technology.md",
+  "created_at": "2026-08-25T15:07:24Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c051fd8116e4ea3fe124575e19ef97ae87e6e8568b53f9c87e4ae2d32b17fe56",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "d109674ca46194c62fdf4dc72e5e68b9601d7cb184a5199952815aa7c846ec5e",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/roadmap_artifacts.py": "587921875ae328966e3a048f1a150f0d7a09b87d7a84ef57ccf93eb845d03981",
+    "plan_tool/roadmap_revision.py": "e2c4b01ac90425a9323d80d8ab128ec6c994be3cb892c04cfb8102f8c86eeb81",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap_artifacts.py": "2a59d556433f5e1b3de3d0aa8ba4c8c2b2b65b03c870731c632dc5311c4f7af8",
+    "tests/test_roadmap_format.py": "7bd70cb888afb75bed535439d4f736c0800021badc3ebabfa8624b7bb253d5ce",
+    "tests/test_roadmap_revision.py": "aec40dad8f0cd2efe9e53137e968011dfa8baaae5e093c89ee57647ae9380631"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md": "50f54bd9af09783f0934a935df30298c290354e0cd5d884b891affda88e3144c",
+    "docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md": "58e51afcf5d9d0a6e9a33f76e65abc59326beac4b487f691ee2ca2d6dc1df59a",
+    "docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md": "e8e1ea91b88ed581330642a0f6b57c1c9e6af668469d8fb205bff59d15f85329",
+    "docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Research Chosen Technology\n\n`research-chosen-technology` \u00b7 generated 2026-08-25T15:07:24Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ad034f0705ae4c901c1e2e16cdc3fc2526b650ffc0b9adb2e3fac0458e10d04e`\n- **Detail bundle digest:** `4c396f88b33773b832cc6756969bacead6b8934552d0649f9ad9c3a53b36249e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 39798 bytes (+39798 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply research-chosen-technology   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[per-target-source-validity]`: Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) calls the target protocol strict, but Architecture\u2019s `Source selection and research records`, step 2\u2019s `Use a strict product-research protocol` and `Reject protocol defects, not empty evidence`, its protocol-failure test, step 3\u2019s `Evaluate only step-2-valid verdicts`, and `test_roadmap_protocol_failure_is_not_reported_as_an_ungrounded_product` do not define an invalid individual `Reference` inside a non-empty target source list. `plan_tool/create.py:_parse_references_json` currently drops invalid URLs or titles and can turn such a list into an empty verdict, causing step 3 to offer description advice for a malformed response.\n  - Fix: define invalid source entries as protocol failures distinct from explicit empty source lists, and cover that rule in the target parser and refusal tests.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[description-gate-ceremony]`: The `Risks` bullet `Ceremony, and the tell to watch for` requires measuring routine one-line descriptions before tuning the gate, but step 1 (`Preserve optional operator descriptions on every hosting and store row path`), step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`), step 3 (`Refuse an ungrounded roadmap product before publication and retain its retry checkpoint`), `Testing`, and `Acceptance criteria` only prove that a description is present and never produce a measurement or name its owner. The plan cannot act on that stated tell before changing the gate.\n  - Fix: define a bounded post-ship measurement, owner, and review trigger for description-based passes without adding a quality judgment to the gate.\n  - Address: `plan-tool completeness-apply research-chosen-technology --anchor description-gate-ceremony`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply research-chosen-technology` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Research Chosen Technology\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ad034f0705ae4c901c1e2e16cdc3fc2526b650ffc0b9adb2e3fac0458e10d04e`\n- **Detail bundle digest:** `4c396f88b33773b832cc6756969bacead6b8934552d0649f9ad9c3a53b36249e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[per-target-source-validity]`: Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) calls the target protocol strict, but Architecture\u2019s `Source selection and research records`, step 2\u2019s `Use a strict product-research protocol` and `Reject protocol defects, not empty evidence`, its protocol-failure test, step 3\u2019s `Evaluate only step-2-valid verdicts`, and `test_roadmap_protocol_failure_is_not_reported_as_an_ungrounded_product` do not define an invalid individual `Reference` inside a non-empty target source list. `plan_tool/create.py:_parse_references_json` currently drops invalid URLs or titles and can turn such a list into an empty verdict, causing step 3 to offer description advice for a malformed response.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[description-gate-ceremony]`: The `Risks` bullet `Ceremony, and the tell to watch for` requires measuring routine one-line descriptions before tuning the gate, but step 1 (`Preserve optional operator descriptions on every hosting and store row path`), step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`), step 3 (`Refuse an ungrounded roadmap product before publication and retain its retry checkpoint`), `Testing`, and `Acceptance criteria` only prove that a description is present and never produce a measurement or name its owner. The plan cannot act on that stated tell before changing the gate.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply research-chosen-technology` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-8de0fd59",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) calls the target p",
+      "body": "Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) calls the target protocol strict, but Architecture\u2019s `Source selection and research records`, step 2\u2019s `Use a strict product-research protocol` and `Reject protocol defects, not empty evidence`, its protocol-failure test, step 3\u2019s `Evaluate only step-2-valid verdicts`, and `test_roadmap_protocol_failure_is_not_reported_as_an_ungrounded_product` do not define an invalid individual `Reference` inside a non-empty target source list. `plan_tool/create.py:_parse_references_json` currently drops invalid URLs or titles and can turn such a list into an empty verdict, causing step 3 to offer description advice for a malformed response.",
+      "suggested_action": "define invalid source entries as protocol failures distinct from explicit empty source lists, and cover that rule in the target parser and refusal tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "per-target-source-validity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-f3cf683e",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `Risks` bullet `Ceremony, and the tell to watch for` requires measuring routine one-line descriptions before tuning ",
+      "body": "The `Risks` bullet `Ceremony, and the tell to watch for` requires measuring routine one-line descriptions before tuning the gate, but step 1 (`Preserve optional operator descriptions on every hosting and store row path`), step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`), step 3 (`Refuse an ungrounded roadmap product before publication and retain its retry checkpoint`), `Testing`, and `Acceptance criteria` only prove that a description is present and never produce a measurement or name its owner. The plan cannot act on that stated tell before changing the gate.",
+      "suggested_action": "define a bounded post-ship measurement, owner, and review trigger for description-based passes without adding a quality judgment to the gate.",
+      "impact": "low",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "description-gate-ceremony",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ad034f0705ae4c901c1e2e16cdc3fc2526b650ffc0b9adb2e3fac0458e10d04e",
+      "detail_bundle_digest": "4c396f88b33773b832cc6756969bacead6b8934552d0649f9ad9c3a53b36249e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md",
+          "state": "present",
+          "digest": "50f54bd9af09783f0934a935df30298c290354e0cd5d884b891affda88e3144c"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md",
+          "state": "present",
+          "digest": "58e51afcf5d9d0a6e9a33f76e65abc59326beac4b487f691ee2ca2d6dc1df59a"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md",
+          "state": "present",
+          "digest": "e8e1ea91b88ed581330642a0f6b57c1c9e6af668469d8fb205bff59d15f85329"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md",
+          "state": "present",
+          "digest": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+        }
+      ],
+      "source_seed_digest": "9148d97382b8eea24943db46d9323eb3a750301afc8f7b0456ef309b3c7fe7e1",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 39798,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

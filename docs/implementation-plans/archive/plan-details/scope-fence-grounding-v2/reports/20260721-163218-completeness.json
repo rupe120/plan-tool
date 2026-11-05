@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "plan_slug": "scope-fence-grounding-v2",
+  "plan_path": "docs/implementation-plans/2-scope-fence-grounding-v2.md",
+  "created_at": "2026-07-21T16:32:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4dbfe2503277bbbd9189c9ef46f53c8cd44d9f9baedcf0f81a7d38b50d66f487",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "74ea5ae3734a8b02d0ce115ba73d8592cee918f044ccfde29b883a370ac2adca",
+    "docs/AUDIT_FLOW.md": "336e7e3063cce771d52a29c15cd069ed30b7e35608a49cf14356050c8ac4f85f",
+    "docs/cli/completeness-audit.md": "df800021d7e21f75de85f3ab8d1fb6e4cfbbd3a34063bd99d93ef926b35cf497",
+    "plan_tool/cli/authoring.py": "893dd6687f8650733bfa972be295837e9fb5b9d875be11eb27fe3c16a2027c56",
+    "plan_tool/cli/completeness_cmd.py": "12363d8216e53bc851b2a43f701ea218fdc2b291316c5dcac5d91520a9fdff75",
+    "plan_tool/create.py": "874257f33bd25aae569e623937340eb8f58dc1ec806513c97a926e68538d947e",
+    "plan_tool/detail.py": "11493c7d2d6ad703c3db72a002b339a4431a107e282965a92b8391c72b426ca9",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "plan_tool/prompts/plan-audit.md": "b930d25ef2a7c4198ae0fa13715850b83a08e03760b10493c459258a2eba49cb",
+    "plan_tool/prompts/synthesize-body.md": "82ef307bce49a5fdc45638229f5ad4753e2e33698869ff53f27faf5c3f029b0c",
+    "plan_tool/review.py": "47442b6f4ccc32321cd1c692bd8d17dc32c309b630257bc8e73dcbe7158a296a",
+    "plan_tool/schema.py": "b1686b8949b200e622f3db1e3046fc5ff89230367366d66d11ce0b6979f886e4",
+    "tests/cli/test_authoring_cmds.py": "e5125af66b969bde1488c0b7932f30e18d3656da9848ecdafc273c5615624936",
+    "tests/cli/test_cli_reference.py": "322f09dbaf0a33c6ae02fbf3d62255cf6f37c123ba791ac1d228f4b396d95c40",
+    "tests/cli/test_completeness_cmd.py": "1f8630540b0777cd81ceb0c2af7eddd556855f151c6a5e4e4f319068a1aa0ba0",
+    "tests/test_create.py": "05187de05b578539c4e98bb507c6d2e0ef3da805fdb33aef76f911ff414238f9",
+    "tests/test_detail.py": "2fe2e3e478a35f6971fcf1da7ec9f1567447a53e6336af42e3b02bd215e3a310",
+    "tests/test_parser.py": "1cdcb017d268bafd723d9df1e219db056b2ab1ef83ca86763d40ec0343a6bd30",
+    "tests/test_review.py": "a230068038305a2847b216e005e0556e4101f3eb4161c88bcb3b2f0c7814034f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/01-keep-supplied-guardrail-sections-new.md": "b0e50fa9a5ef8b9064c724347944e24d28ca1f5d3f5fff1f702724c14487fbfe",
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/02-ask-before-adding-missing-guardrails.md": "a9cd5c13d8ae13e6b14b2c00f4837e0e1d531bb7fadf317666a8ce2fe9af8f3e",
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/03-keep-guardrails-out-defer-buckets.md": "c998fcb1eebbfff8c3462e8916b5b7519365885f4eb0a69dddaba74fb538b7d1",
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/04-save-usable-source-seed-new-plans.md": "9a5d07cb42f1d65853b2eb2f04edfa4f3992b54fa02f9cd5d06c54b706a35d32",
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/05-completeness-audit-seed-option.md": "63685b1fdc80c50a63c0f87a55609f160f16c0a7ede731b42cc8a3262cf975cc",
+    "docs/implementation-plans/plan-details/scope-fence-grounding-v2/06-ground-conceptual-audits-source-contract.md": "f05812a2327102de7d6762e541721f071ed99d283560c518cd6acc2a7bfc4561"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Scope Fence Grounding V2\n\n`scope-fence-grounding-v2` \u00b7 generated 2026-07-21T16:32:18Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 2 (0 missing-concept-link, 2 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply scope-fence-grounding-v2   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk scope-fence-grounding-v2  # alternative interactive review/apply\n\n- MEDIUM `[source-seed-provenance]`: `Architecture`, `Input`, and the `Plan.source_seed` acceptance criterion restrict stored provenance to a seed \u201cresolved through an existing explicit canonical provenance pointer,\u201d but step 4 (`Save a usable source seed with new plans`) explicitly stores a direct `--from-existing` file as well. This makes the canonical plan contract reject a supported durable-provenance path.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-0a85c30b]`: The plan's `## Acceptance criteria` names `plan.source_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'plan_tool/prompts/distill-seed.md', 'plan_tool/prompts/synthesize-body.md', 'tests/test_create.py']).\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-5de9c563]`: `PLAN_FORMAT.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- INFO `[step6-files-coherence-4f8a3b3b]`: The detail body for step 6 cites `plan_tool/cli/completeness_phases.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/cli/completeness_cmd.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply scope-fence-grounding-v2` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- `plan-tool completeness-apply scope-fence-grounding-v2` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (2 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Scope Fence Grounding V2\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[source-seed-provenance]`: `Architecture`, `Input`, and the `Plan.source_seed` acceptance criterion restrict stored provenance to a seed \u201cresolved through an existing explicit canonical provenance pointer,\u201d but step 4 (`Save a usable source seed with new plans`) explicitly stores a direct `--from-existing` file as well. This makes the canonical plan contract reject a supported durable-provenance path.\n\n### Files coherence\n\n- NIT: step 4 declared `PLAN_FORMAT.md` not mentioned in detail\n- INFO: step 6 detail cites `plan_tool/cli/completeness_phases.py` resembling declared `plan_tool/cli/completeness_cmd.py` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `plan.source_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'plan_tool/prompts/distill-seed.md', 'plan_tool/prompts/synthesize-body.md', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk scope-fence-grounding-v2` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-dfd5eaa5",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`Architecture`, `Input`, and the `Plan.source_seed` acceptance criterion restrict stored provenance to a seed \u201cresolved ",
+      "body": "`Architecture`, `Input`, and the `Plan.source_seed` acceptance criterion restrict stored provenance to a seed \u201cresolved through an existing explicit canonical provenance pointer,\u201d but step 4 (`Save a usable source seed with new plans`) explicitly stores a direct `--from-existing` file as well. This makes the canonical plan contract reject a supported durable-provenance path.",
+      "suggested_action": "Define `source_seed` consistently as the verified repo-relative direct seed or the verified original named by canonical provenance.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "source-seed-provenance",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

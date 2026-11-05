@@ -1,0 +1,190 @@
+{
+  "version": 4,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T01:40:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6aa91cfb6b9bdb44deb471a39a451b982db718433fabc1ba4e1a4ad72106d813",
+  "code_fingerprint": {
+    "BACKLOG.md": "fac7a785a1ce389f6e07882cea036f219d6d1ad7e63f26e5d06cf4e99ad6e6dc",
+    "DATA_CONTRACT.md": "c47bedfd099ed1d8b9c29fb5ea607d4a50d972dc454cc7c6d647cbe751e11d74",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "54db4e54f55ba1b3eb16af32c1127a04c4eb6c1fb354dcb9f9a3879d99626ad6",
+    "plan_tool/cli/completeness_cmd.py": "bb18adfe078dfea2b1edce73ffecf71a492a520e281011aae108c34eb980fc7a",
+    "plan_tool/cli/completeness_phases.py": "d5ac2725b1a6eefbb534109e92152e94c1d64adb86d3eb93ba812feea99c655e",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/completeness_report.py": "df571c27e5c0aaa45edec4738d52883185b198bb7c5b334338878db3925ded53",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "plan_tool/review_persistence.py": "cbc0915c1db58334a87e71ef189f7b01ad75b90c1bdd5b2148dc0e40c84fa93c",
+    "tests/cli/test_completeness_cmd.py": "a2259ffc4e2522ccd0ff251cfc652672b2f6c48fcfe0229e317e528363d1bd08",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_completeness_report.py": "420820cbd75502e9b629d7d42a23165459bf82ee9d2953bd6343433813852a55",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275",
+    "tests/test_review_persistence.py": "17c89e515e0e1f182a337b2f20eb26cfd0a0389c243648d0b1f1abe45e9134cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-persist-run-grade-sampling-provenance.md": "0120d7e86b9fd55a7164a6a163c13db79c7c2ae126b75c73f95a008e87ccc078",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/02-read-every-saved-audit-report.md": "3687902ff25f58eecdf2c68c4e61407d34b8eda9e073f1ffea76071e2a8cebfa",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/03-render-saved-audit-section-without.md": "ec854660429bf771a2f7ce10b10ca28997ef08209afd9486571550b56845df1f",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/04-document-saved-audit-identity-ordering.md": "183d9ce5140541b803797fabfeb49b6968a887459f07f47601f59dfc3947fe4a",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/05-mark-247-delivered-convergence-evidence.md": "c653476373048956e74d0964d2cf31cd44ea8ce597e8b4024111a34a9fdec06c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Cross Invocation Audit History\n\n`cross-invocation-audit-history` \u00b7 generated 2026-08-21T01:40:14Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply cross-invocation-audit-history   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk cross-invocation-audit-history  # alternative interactive review/apply\n\n- HIGH `[sampling-provenance-purity]`: Reuse-derived final reports can mix two purity modes: Architecture requires a valid source `audit_sampling_config` be copied exactly, while `plan_tool/cli/completeness_cmd.py:finalize_completeness_run` reruns purity from current `args.purity` and `plan_tool/cli/completeness_phases.py:_persist_and_present_report` appends current `granularity-split` rows. `--reuse-audit --purity` after a source run without purity, or the reverse, labels findings made under different settings with one configuration; step 1, Testing, and acceptance criterion 1 do not choose a policy.\n  - Fix: Define one reuse policy that prevents a final sidecar from mixing findings from different effective purity settings, and test both flag-direction changes.\n- HIGH `[coverage-unconfirmed-history]`: Step 2 admits any \u201cvalid final run-grade report\u201d with matching configuration but does not exclude coverage-unconfirmed sidecars. At HEAD, `review_persistence.audit_coverage_withholds_final_findings_sidecar` withholds only `plan-quota`, while `completeness_phases._conceptual_bar_from_audit_recs` marks `budget_limited` sampling incomplete; two pass-cap-limited reports can therefore render reliable anchor/severity rows. Architecture, Input\u2019s identity-key boundary, Testing\u2019s terminal-plan-quota case, and acceptance criteria 2\u20133 leave no no-bridge rule or fixture for this evidence.\n  - Fix: Use coverage only as a fail-closed eligibility check, not an identity key, and render every coverage-unconfirmed final sample as a typed no-bridge boundary.\n- HIGH `[orphan-sidecar-boundary]`: Architecture says the reader will \u201cenumerate `*-completeness.md` reports\u201d and attach JSON only to \u201cits own Markdown report,\u201d but also says an \u201corphan sidecar is also a typed opaque boundary\u201d and \u201cwill not make an opaque artifact disappear.\u201d A JSON sidecar without Markdown never enters the proposed stream, so it cannot block a comparison across its timestamp; Testing and acceptance criterion 2 omit this fixture.\n  - Fix: Include unmatched completeness sidecars in the ordered evidence stream as opaque boundaries and test that they block adjacent comparison.\n- MEDIUM `[identity-coverage-unsupported-severity]`: Architecture says \u201ceach exact link contributes two rows to the numerator,\u201d but an unsupported severity is \u201craw, affected evidence\u201d and makes the pair `identity-uncertain`. It does not say whether those exact-anchor rows count as 2/2 identity coverage or 0/2 unusable coverage; Testing\u2019s unsupported-severity case and acceptance criterion 4 do not settle it.\n  - Fix: Define whether identity coverage measures anchor identity independently of classifiable severity, then assert the count and percentage for unsupported severities.\n- MEDIUM `[empty-pair-trajectory]`: Architecture says only that a pair with no finding rows displays `not-applicable`, not a percentage. It does not define whether two otherwise compatible empty reports yield a reliable empty trajectory or `identity-uncertain`, nor their operator next action; Testing\u2019s two-empty-report fixture and acceptance criterion 4 cover only the coverage display.\n  - Fix: Define the pair-level state and operator guidance for two compatible empty reports, and pin both in tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit cross-invocation-audit-history` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Cross Invocation Audit History\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[sampling-provenance-purity]`: Reuse-derived final reports can mix two purity modes: Architecture requires a valid source `audit_sampling_config` be copied exactly, while `plan_tool/cli/completeness_cmd.py:finalize_completeness_run` reruns purity from current `args.purity` and `plan_tool/cli/completeness_phases.py:_persist_and_present_report` appends current `granularity-split` rows. `--reuse-audit --purity` after a source run without purity, or the reverse, labels findings made under different settings with one configuration; step 1, Testing, and acceptance criterion 1 do not choose a policy.\n- HIGH `[coverage-unconfirmed-history]`: Step 2 admits any \u201cvalid final run-grade report\u201d with matching configuration but does not exclude coverage-unconfirmed sidecars. At HEAD, `review_persistence.audit_coverage_withholds_final_findings_sidecar` withholds only `plan-quota`, while `completeness_phases._conceptual_bar_from_audit_recs` marks `budget_limited` sampling incomplete; two pass-cap-limited reports can therefore render reliable anchor/severity rows. Architecture, Input\u2019s identity-key boundary, Testing\u2019s terminal-plan-quota case, and acceptance criteria 2\u20133 leave no no-bridge rule or fixture for this evidence.\n- HIGH `[orphan-sidecar-boundary]`: Architecture says the reader will \u201cenumerate `*-completeness.md` reports\u201d and attach JSON only to \u201cits own Markdown report,\u201d but also says an \u201corphan sidecar is also a typed opaque boundary\u201d and \u201cwill not make an opaque artifact disappear.\u201d A JSON sidecar without Markdown never enters the proposed stream, so it cannot block a comparison across its timestamp; Testing and acceptance criterion 2 omit this fixture.\n- MEDIUM `[identity-coverage-unsupported-severity]`: Architecture says \u201ceach exact link contributes two rows to the numerator,\u201d but an unsupported severity is \u201craw, affected evidence\u201d and makes the pair `identity-uncertain`. It does not say whether those exact-anchor rows count as 2/2 identity coverage or 0/2 unusable coverage; Testing\u2019s unsupported-severity case and acceptance criterion 4 do not settle it.\n- MEDIUM `[empty-pair-trajectory]`: Architecture says only that a pair with no finding rows displays `not-applicable`, not a percentage. It does not define whether two otherwise compatible empty reports yield a reliable empty trajectory or `identity-uncertain`, nor their operator next action; Testing\u2019s two-empty-report fixture and acceptance criterion 4 cover only the coverage display.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply cross-invocation-audit-history` \u2014 walk the 5 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-183289f6",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Reuse-derived final reports can mix two purity modes: Architecture requires a valid source `audit_sampling_config` be co",
+      "body": "Reuse-derived final reports can mix two purity modes: Architecture requires a valid source `audit_sampling_config` be copied exactly, while `plan_tool/cli/completeness_cmd.py:finalize_completeness_run` reruns purity from current `args.purity` and `plan_tool/cli/completeness_phases.py:_persist_and_present_report` appends current `granularity-split` rows. `--reuse-audit --purity` after a source run without purity, or the reverse, labels findings made under different settings with one configuration; step 1, Testing, and acceptance criterion 1 do not choose a policy.",
+      "suggested_action": "Define one reuse policy that prevents a final sidecar from mixing findings from different effective purity settings, and test both flag-direction changes.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "sampling-provenance-purity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-6b4c6c6c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 admits any \u201cvalid final run-grade report\u201d with matching configuration but does not exclude coverage-unconfirmed s",
+      "body": "Step 2 admits any \u201cvalid final run-grade report\u201d with matching configuration but does not exclude coverage-unconfirmed sidecars. At HEAD, `review_persistence.audit_coverage_withholds_final_findings_sidecar` withholds only `plan-quota`, while `completeness_phases._conceptual_bar_from_audit_recs` marks `budget_limited` sampling incomplete; two pass-cap-limited reports can therefore render reliable anchor/severity rows. Architecture, Input\u2019s identity-key boundary, Testing\u2019s terminal-plan-quota case, and acceptance criteria 2\u20133 leave no no-bridge rule or fixture for this evidence.",
+      "suggested_action": "Use coverage only as a fail-closed eligibility check, not an identity key, and render every coverage-unconfirmed final sample as a typed no-bridge boundary.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "coverage-unconfirmed-history",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-21adf3ae",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says the reader will \u201cenumerate `*-completeness.md` reports\u201d and attach JSON only to \u201cits own Markdown repo",
+      "body": "Architecture says the reader will \u201cenumerate `*-completeness.md` reports\u201d and attach JSON only to \u201cits own Markdown report,\u201d but also says an \u201corphan sidecar is also a typed opaque boundary\u201d and \u201cwill not make an opaque artifact disappear.\u201d A JSON sidecar without Markdown never enters the proposed stream, so it cannot block a comparison across its timestamp; Testing and acceptance criterion 2 omit this fixture.",
+      "suggested_action": "Include unmatched completeness sidecars in the ordered evidence stream as opaque boundaries and test that they block adjacent comparison.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "orphan-sidecar-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-98af8241",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says \u201ceach exact link contributes two rows to the numerator,\u201d but an unsupported severity is \u201craw, affected",
+      "body": "Architecture says \u201ceach exact link contributes two rows to the numerator,\u201d but an unsupported severity is \u201craw, affected evidence\u201d and makes the pair `identity-uncertain`. It does not say whether those exact-anchor rows count as 2/2 identity coverage or 0/2 unusable coverage; Testing\u2019s unsupported-severity case and acceptance criterion 4 do not settle it.",
+      "suggested_action": "Define whether identity coverage measures anchor identity independently of classifiable severity, then assert the count and percentage for unsupported severities.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "identity-coverage-unsupported-severity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f9bbd4e0",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says only that a pair with no finding rows displays `not-applicable`, not a percentage. It does not define ",
+      "body": "Architecture says only that a pair with no finding rows displays `not-applicable`, not a percentage. It does not define whether two otherwise compatible empty reports yield a reliable empty trajectory or `identity-uncertain`, nor their operator next action; Testing\u2019s two-empty-report fixture and acceptance criterion 4 cover only the coverage display.",
+      "suggested_action": "Define the pair-level state and operator guidance for two compatible empty reports, and pin both in tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "empty-pair-trajectory",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "6aa91cfb6b9bdb44deb471a39a451b982db718433fabc1ba4e1a4ad72106d813",
+    "detail_bundle_digest": "acdffa963eb8629b1e5ca677e4e6841fb3251127f4ca89e4fa0cd710eda1de72",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/01-persist-run-grade-sampling-provenance.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/02-read-every-saved-audit-report.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/03-render-saved-audit-section-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/04-document-saved-audit-identity-ordering.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/05-mark-247-delivered-convergence-evidence.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "2f914d4b2a1003c4e6ec58fc89d9a7eea971e0c7091bbd40a249748053ac2658",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

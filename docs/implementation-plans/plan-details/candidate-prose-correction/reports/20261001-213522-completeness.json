@@ -1,0 +1,219 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-prose-correction",
+  "plan_path": "docs/implementation-plans/2-candidate-prose-correction.md",
+  "created_at": "2026-10-01T21:35:22Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fe0a51274191303384ddf24f979b2dec5af14fc17746a3ba33cf0001f0568f0c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "11a36ca8344dd704e30e2f57616523321489df1f5f8ba600b30151608b691fbb",
+    "plan_tool/roadmap_candidate.py": "935bb51d5e61f75a830a538462d03df5a96e011dd76f27a3cf0ef02983b2b8d6",
+    "plan_tool/roadmap_candidate_context.py": "9f162b8136ba4b65c4a227b78060c372c35a432f0a56156e376057fdb9b70818",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_candidate_run.py": "3919a5da38a5d5087d1e0b97d75f24291d43ebac27573ddf384e09f284905b71",
+    "plan_tool/roadmap_compare.py": "7bc97fd64f913191619469a6866c1469b59bf674201a46b7163497c1176cd06c",
+    "plan_tool/roadmap_compare_render.py": "5354da4ef701349915b50d8658cb31309f51d644ca64317ca44b3434f9708a30",
+    "plan_tool/roadmap_compare_run.py": "0da4484db3481a5e679c4cedfe1ee69ab9c1467a9590ebac82d3f475a1861cd5",
+    "plan_tool/roadmap_revision.py": "941e651f7eb2be3f426d0026b3b6c75de1d9815930f37f7ee85415aba9e6aa06",
+    "plan_tool/roadmap_revision_patch.py": "f579998564a2012ea3ff28e02765d4c38c14aa7c5df0253752eaaed4c7dfadf1",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate.py": "1632254c78f96f7c2ffc410523cd04d6a4681fbd32d3f11590ddcac2bf1e9124",
+    "tests/test_roadmap_candidate_context.py": "8a9340a0a50cbed29e2d72ae2632685ba2ff0c1529585685ffe23ed2bf40b2f6",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_candidate_run.py": "a63f0f704e02f84664e5714b6dc729c1873e604c1dd85e9358073c27f06b222f",
+    "tests/test_roadmap_compare_render.py": "80bb6a2de5f044e33d36e756b6d0a2cb507d53945f245335978d2cf6df55ffbe",
+    "tests/test_roadmap_compare_run.py": "340befa0ee89666fc773fb4f67f1f882ee29be70ab5385a8f3b1680d8ff78c6b",
+    "tests/test_roadmap_revision.py": "1d1cc7dfd2bfdb212bc0b4a6b7c51fc50adfa01ed70e258c8fc4e34ad0cf5048",
+    "tests/test_roadmap_revision_patch.py": "786dad25c23c07d30bcda0e4531f9336eed49442ac178d713b9d66b52dd89e02"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md": "6d358a23a0a56d02c51062aabc3081c572ce25597e572e41f9153c0e81848ab8",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md": "2cc408ab55b60658f98a6aed8ee9fef898b4d4e1c025cb2a7f6db19e87b2b1f1",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md": "5c87e117815eb2e23e3284529d17c3d1be51057e5616c53b55469c0d45b43d32",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md": "5dbe14133863ab23cf2a8dbd7cb4ef99d91a8fc31cd5f24e568a49add78f5bd7",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md": "fedb36d8856e40580220e1d4dbe538f672369979b43362e722e47ffa66d9713b",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/08-bind-correction-before-after-records.md": "b0c68ca4d99b6c629f9c3c5766192dc707f3b2efc6e9470368f253de06e3aec4",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/09-sync-roadmap-format-md-landed-symbols.md": "5d34b2053266ff67a601a655cf3d2571ef79ab000badd0a31fda925d838776cb"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Prose Correction\n\n`candidate-prose-correction` \u00b7 generated 2026-10-01T21:35:21Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8d35e7228746db93210b341734db12e29d8f76789bd56d2e3446fd000f8a0cf4`\n- **Detail bundle digest:** `b50b667e8fb26459b8d7dcb2bfe9e89c4e634f43b6a32747d305c3fdf744f65d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 3 (0 missing-concept-link, 3 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 9 (+0 vs. first audit)\n- **Detail-bundle size:** 114993 bytes (+114993 vs. first audit)\n- **Keystone fan-out:** 0.38\n- **Satellite ratio:** 0.22\n- **Inert-step ratio:** 0.29\n- **Audit-induced growth:** 0.00\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[shared-span-visibility-risk]` [confidence: limited]: The Risks section names only a too-loose or too-tight span *definition*. It does not name the issuance condition, \"A shared span is issued only when every live row in its owning set is visible in the candidate context; otherwise it is not issued\". That condition can also leave the motivating Integration Decisions paragraph uncorrectable if a run's context omits one of the rows the paragraph names. Step 3 (widen candidate span issuance) implements the condition and step 7 (end-to-end Integration proof) exercises it on the fixture. But no stated risk or acceptance criterion says what an operator sees when a shared span is withheld for partial visibility, and step 1's stop condition covers only authority beyond the named block. The Testing list does cover the not-issued case, so this is a gap in how the risk is documented, not in coverage.\n  - Fix: Add one line to Risks: partial context visibility withholds a shared span and leaves the paragraph uncorrectable. Say that the operator-facing outcome is a not-issued span, not a silent narrowing, and tie it to step 7's end-to-end case.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step4-files-coherence-655af064]` [confidence: limited]: The detail body for step 4 cites `plan_tool/roadmap_candidate_run.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/roadmap_candidate.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- MEDIUM `[data-contract-input-roadmap-candidate-run-py]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md:## Input cites `roadmap_candidate_run.py`, but code anchor path `roadmap_candidate_run.py` does not exist.\n- MEDIUM `[data-contract-input-roadmap-cmd-py]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md:## Input cites `roadmap_cmd.py`, but code anchor path `roadmap_cmd.py` does not exist.\n\n## Suggested next steps\n\n- Close 1 conceptual-completeness gap(s) through a session-directed edit (advisory, not auto-applied; each needs your judgment).\n- Resolve 3 structural diagnostic(s) directly:\n    \u2022 `plan-tool completeness-apply candidate-prose-correction` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Prose Correction\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8d35e7228746db93210b341734db12e29d8f76789bd56d2e3446fd000f8a0cf4`\n- **Detail bundle digest:** `b50b667e8fb26459b8d7dcb2bfe9e89c4e634f43b6a32747d305c3fdf744f65d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 4 detail cites `plan_tool/roadmap_candidate_run.py` resembling declared `plan_tool/roadmap_candidate.py` (typo/stale path?)\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-roadmap-candidate-run-py]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md:## Input cites `roadmap_candidate_run.py`, but code anchor path `roadmap_candidate_run.py` does not exist.\n- MEDIUM `[data-contract-input-roadmap-cmd-py]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md:## Input cites `roadmap_cmd.py`, but code anchor path `roadmap_cmd.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[shared-span-visibility-risk]` [confidence: limited]: The Risks section names only a too-loose or too-tight span *definition*. It does not name the issuance condition, \"A shared span is issued only when every live row in its owning set is visible in the candidate context; otherwise it is not issued\". That condition can also leave the motivating Integration Decisions paragraph uncorrectable if a run's context omits one of the rows the paragraph names. Step 3 (widen candidate span issuance) implements the condition and step 7 (end-to-end Integration proof) exercises it on the fixture. But no stated risk or acceptance criterion says what an operator sees when a shared span is withheld for partial visibility, and step 1's stop condition covers only authority beyond the named block. The Testing list does cover the not-issued case, so this is a gap in how the risk is documented, not in coverage.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk candidate-prose-correction` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-7e2e8eea",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section names only a too-loose or too-tight span *definition*. It does not name the issuance condition, \"A sha",
+      "body": "The Risks section names only a too-loose or too-tight span *definition*. It does not name the issuance condition, \"A shared span is issued only when every live row in its owning set is visible in the candidate context; otherwise it is not issued\". That condition can also leave the motivating Integration Decisions paragraph uncorrectable if a run's context omits one of the rows the paragraph names. Step 3 (widen candidate span issuance) implements the condition and step 7 (end-to-end Integration proof) exercises it on the fixture. But no stated risk or acceptance criterion says what an operator sees when a shared span is withheld for partial visibility, and step 1's stop condition covers only authority beyond the named block. The Testing list does cover the not-issued case, so this is a gap in how the risk is documented, not in coverage.",
+      "suggested_action": "Add one line to Risks: partial context visibility withholds a shared span and leaves the paragraph uncorrectable. Say that the operator-facing outcome is a not-issued span, not a silent narrowing, and tie it to step 7's end-to-end case.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "shared-span-visibility-risk",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step6-data-contract-eb1aa121",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 6,
+      "title": "Stale Input contract reference `roadmap_candidate_run.py`",
+      "body": "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md:## Input cites `roadmap_candidate_run.py`, but code anchor path `roadmap_candidate_run.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-roadmap-candidate-run-py",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step7-data-contract-6417de45",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 7,
+      "title": "Stale Input contract reference `roadmap_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md:## Input cites `roadmap_cmd.py`, but code anchor path `roadmap_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-roadmap-cmd-py",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "8d35e7228746db93210b341734db12e29d8f76789bd56d2e3446fd000f8a0cf4",
+      "detail_bundle_digest": "b50b667e8fb26459b8d7dcb2bfe9e89c4e634f43b6a32747d305c3fdf744f65d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md",
+          "state": "present",
+          "digest": "6d358a23a0a56d02c51062aabc3081c572ce25597e572e41f9153c0e81848ab8"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md",
+          "state": "present",
+          "digest": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md",
+          "state": "present",
+          "digest": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md",
+          "state": "present",
+          "digest": "2cc408ab55b60658f98a6aed8ee9fef898b4d4e1c025cb2a7f6db19e87b2b1f1"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md",
+          "state": "present",
+          "digest": "5c87e117815eb2e23e3284529d17c3d1be51057e5616c53b55469c0d45b43d32"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md",
+          "state": "present",
+          "digest": "5dbe14133863ab23cf2a8dbd7cb4ef99d91a8fc31cd5f24e568a49add78f5bd7"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md",
+          "state": "present",
+          "digest": "fedb36d8856e40580220e1d4dbe538f672369979b43362e722e47ffa66d9713b"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/08-bind-correction-before-after-records.md",
+          "state": "present",
+          "digest": "b0c68ca4d99b6c629f9c3c5766192dc707f3b2efc6e9470368f253de06e3aec4"
+        },
+        {
+          "step_id": 9,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/09-sync-roadmap-format-md-landed-symbols.md",
+          "state": "present",
+          "digest": "5d34b2053266ff67a601a655cf3d2571ef79ab000badd0a31fda925d838776cb"
+        }
+      ],
+      "source_seed_digest": "05abece707d1ddece8c5835beb777b5a9460f600fbce63bcee5b1ccfc1daa568",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 9,
+    "detail_bundle_bytes": 114993,
+    "keystone_fan_out": 0.375,
+    "satellite_ratio": 0.2222222222222222,
+    "inert_step_ratio": 0.2857142857142857,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

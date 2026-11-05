@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-29c241f6": {
+      "code_anchor": "scope_out_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md",
+      "reason": "code anchor path `scope_out_cmd.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-d1e6865d": {
+      "code_anchor": "convergence_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md",
+      "reason": "code anchor path `convergence_cmd.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260709-180247-completeness"
+}

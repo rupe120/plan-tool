@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T02:55:12Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7d9e5c694f05d87c5e03a2c93797c6a22f1522963c6f6036a426282cbcc70bb5",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/01-annotation-only-walk-mode-that.md": "f31fe0bb48fb127e922682d3197533308460315cc6a01d640e377eeb802923ba",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md": "e7e71efb9fcdcaae2bb1f6f15958a91aefa796eb59bc33e2d608b9f1d7b6c354",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md": "fd9f4f762b2bff892302f7cd7e7157c11ebeb7b1d16b4b4ba2e261bbbfda0a0c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Annotation Entry\n\n`headless-review-annotation-entry` \u00b7 generated 2026-08-28T02:55:12Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply headless-review-annotation-entry   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk headless-review-annotation-entry  # alternative interactive review/apply\n\n- MEDIUM `[saved-review-request-entry]` [confidence: limited]: Step 2, Overview, Testing, and the first Acceptance criterion promise that fresh and eligible `--reuse` runs reach provider request records. At HEAD, `plan_tool.cli.review_cmd._cmd_review_body` skips zero-recommendation reviews, and `plan_tool.review_walk.walk_recommendations` skips prior annotations and normally hidden info findings; those saves can still be fresh and eligible.\n  - Fix: limit the request-record proof to visible unanswered findings, or explicitly select a remote rewalk policy for prior annotations. - INFO: [scope-completion-check] The final Acceptance criterion says the completed scope is \u201cchecked against\u201d named terms, but Testing and step 3 do not define a review surface or passing result; a word search, changed-file check, and caller sweep are materially different checks. \u2192 fix: define one final scope check with its inspected boundary and pass condition.\n- MEDIUM `[restricted-response-set]` [confidence: limited]: Step 1, Overview, and Architecture promise \u201conly remote skip and quit responses,\u201d but Testing and Acceptance criteria cover skip plus blank/apply/run/apply-all only. `plan_tool.review_walk._prompt_for_annotation` currently also accepts `a`, `d`/`done`, `aa`/`all`, and feedback aliases; the plan does not require proving those cannot dispatch an action or emit `review-walk.feedback`.\n  - Fix: define the complete accepted and rejected response spellings once and require coverage that every rejected spelling remains non-mutating and annotation-only.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[restricted-response-set]` [confidence: limited]: Step 1 (`Add an annotation-only walk mode that preserves skip and quit and blocks blank, apply, run, and apply-all action dispatch`), Overview, and Architecture promise a closed skip-or-quit response set, but Testing and Acceptance prove remote skip and rejected action commands without proving remote quit remains allowed and leaves no annotation. `plan_tool.review_walk._prompt_for_annotation` and `TestWalkRecommendationsQuit` cover quit only in the existing full walk, not the new restricted mode.\n  - Fix: Add selected-mode acceptance and coverage for remote quit as the other allowed response, including its no-action and no-annotation result.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-4b21ec2e]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-24744143]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit headless-review-annotation-entry` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Annotation Entry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[saved-review-request-entry]` [confidence: limited]: Step 2, Overview, Testing, and the first Acceptance criterion promise that fresh and eligible `--reuse` runs reach provider request records. At HEAD, `plan_tool.cli.review_cmd._cmd_review_body` skips zero-recommendation reviews, and `plan_tool.review_walk.walk_recommendations` skips prior annotations and normally hidden info findings; those saves can still be fresh and eligible.\n- MEDIUM `[restricted-response-set]` [confidence: limited]: Step 1, Overview, and Architecture promise \u201conly remote skip and quit responses,\u201d but Testing and Acceptance criteria cover skip plus blank/apply/run/apply-all only. `plan_tool.review_walk._prompt_for_annotation` currently also accepts `a`, `d`/`done`, `aa`/`all`, and feedback aliases; the plan does not require proving those cannot dispatch an action or emit `review-walk.feedback`.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[restricted-response-set]` [confidence: limited]: Step 1 (`Add an annotation-only walk mode that preserves skip and quit and blocks blank, apply, run, and apply-all action dispatch`), Overview, and Architecture promise a closed skip-or-quit response set, but Testing and Acceptance prove remote skip and rejected action commands without proving remote quit remains allowed and leaves no annotation. `plan_tool.review_walk._prompt_for_annotation` and `TestWalkRecommendationsQuit` cover quit only in the existing full walk, not the new restricted mode.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply headless-review-annotation-entry` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4d06c672",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2, Overview, Testing, and the first Acceptance criterion promise that fresh and eligible `--reuse` runs reach provi",
+      "body": "Step 2, Overview, Testing, and the first Acceptance criterion promise that fresh and eligible `--reuse` runs reach provider request records. At HEAD, `plan_tool.cli.review_cmd._cmd_review_body` skips zero-recommendation reviews, and `plan_tool.review_walk.walk_recommendations` skips prior annotations and normally hidden info findings; those saves can still be fresh and eligible.",
+      "suggested_action": "limit the request-record proof to visible unanswered findings, or explicitly select a remote rewalk policy for prior annotations. - INFO: [scope-completion-check] The final Acceptance criterion says the completed scope is \u201cchecked against\u201d named terms, but Testing and step 3 do not define a review surface or passing result; a word search, changed-file check, and caller sweep are materially different checks. \u2192 fix: define one final scope check with its inspected boundary and pass condition.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-review-request-entry",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-e9b612b2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1, Overview, and Architecture promise \u201conly remote skip and quit responses,\u201d but Testing and Acceptance criteria co",
+      "body": "Step 1, Overview, and Architecture promise \u201conly remote skip and quit responses,\u201d but Testing and Acceptance criteria cover skip plus blank/apply/run/apply-all only. `plan_tool.review_walk._prompt_for_annotation` currently also accepts `a`, `d`/`done`, `aa`/`all`, and feedback aliases; the plan does not require proving those cannot dispatch an action or emit `review-walk.feedback`.",
+      "suggested_action": "define the complete accepted and rejected response spellings once and require coverage that every rejected spelling remains non-mutating and annotation-only.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "restricted-response-set",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-e9b612b2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Add an annotation-only walk mode that preserves skip and quit and blocks blank, apply, run, and apply-all actio",
+      "body": "Step 1 (`Add an annotation-only walk mode that preserves skip and quit and blocks blank, apply, run, and apply-all action dispatch`), Overview, and Architecture promise a closed skip-or-quit response set, but Testing and Acceptance prove remote skip and rejected action commands without proving remote quit remains allowed and leaves no annotation. `plan_tool.review_walk._prompt_for_annotation` and `TestWalkRecommendationsQuit` cover quit only in the existing full walk, not the new restricted mode.",
+      "suggested_action": "Add selected-mode acceptance and coverage for remote quit as the other allowed response, including its no-action and no-annotation result.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "restricted-response-set",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "7d9e5c694f05d87c5e03a2c93797c6a22f1522963c6f6036a426282cbcc70bb5",
+    "detail_bundle_digest": "2f0ed6a52792f92b8da3e51103e9dc4f990507651d11c6362d9201ac50608862",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/01-annotation-only-walk-mode-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "748ca5238e5348c160dc2f7467b284e02d4fff19040bdc2016294b6e841ca41c",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

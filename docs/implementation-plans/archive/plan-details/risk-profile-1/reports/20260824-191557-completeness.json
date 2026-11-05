@@ -1,0 +1,156 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-1",
+  "plan_path": "docs/implementation-plans/2-risk-profile-1.md",
+  "created_at": "2026-08-24T19:15:57Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "72d3766cb5d7e5e192efba7c8cbe7675e2da7b77f9bfafe5cc3e2429a114664d",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "f9d63d19deb08c441a2aa998f7ed0be7cc152d6eadb583ba649dc75f2e694c3a",
+    "README.md": "6afd7dc70b9cebfc7a03b92f3a573c6ffb3dbc9c2ec3a787201a5c93b56e7294",
+    "TESTING.md": "f3e71a3b4043083bf3cef87b210f0346b8f7d563e80605c0221a88dad2e720f6",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "docs/CREATE_RESUME_FLOW.md": "2ec94959ffc5cc84ffa0810f622b293e3a212ce6dc1a3e6473c82c285e943e18",
+    "plan_tool/__init__.py": "1bb896aee2673a4eda90764d308096f65a366d9b1f2c1023e97a7d00140241e1",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/cli/manifest.py": "a535ee9f3db5967cef448f28f17acfa2bf54408ec933b344487bbf10379a1828",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/schema.py": "af9e469ce92591f79aafdfcac09105918fdcd061abea6f17f568548b9aa8946a",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_inspect_cmds.py": "fbcc4053d80a889af4fc6850d13af8179a466ad93d5f189b6ad3d7e5ecff1b0b",
+    "tests/cli/test_manifest_cmds.py": "8100ba050b64e974625ce71c4b451b863940841968321634259614661b7eddd0",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_distill.py": "3d7a5fb04fb7764e8fba20297ba4f6aff6b9216c4e88f1c8b929387b13c6c105",
+    "tests/test_parser.py": "653c6ec41947aaa99928090f63de4dec06d0df6a97cd6c3310b41a1f7582d630"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md": "19734410b1fd0ab2eedd63c4f891cecb4db268e884ac3c7e4a877717f6872c9c",
+    "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md": "21156fc99b65dcb0aeb2cffaf8010c60a371a23289ccf73ca370a4f0d2e36c70",
+    "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md": "b842e1906dfee584efe26700ebd803e1e244764bf28315d70319c23e506f52a3",
+    "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md": "8b597d5689950687712f41da7dc20eae4df7a97632f4a1d1cf5ab6a60406b523",
+    "docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md": "c3a00bbabe4f711c39f133ddb13e2b30360668d265a51ef7aed965a7a9474fb0"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 1\n\n`risk-profile-1` \u00b7 generated 2026-08-24T19:15:56Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `0f5697a30cf060133635b4e9b6b29673219a933b6dfb919eb8fce890a618ab2b`\n- **Detail bundle digest:** `c59b62980784b5ed40a3778d373c2f9c61feacdbb43067a87039ce97d6120e9c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 63508 bytes (+63508 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply risk-profile-1   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[post-publication-recovery-state]`: Step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) says \u201cOnce a plan file exists, recovery is deliberately manual\u201d and \u201cOnly a parse-valid artifact may be explicitly registered/adopted\u201d; step 5 (`Verify safe create boundaries and partial-publication recovery`) says the parse-valid partial \u201cstays unregistered.\u201d At HEAD, `plan_tool/create.py:_publish_create_plan` calls `append_to_manifest` before `_converge_create_plan` and `_finalize_create_plan`; with default `create --iterate`, `_finalize_create_plan` can then fail at `synchronize_concepts`. That tail failure leaves a registered artifact with no `register` adoption boundary, and step 5 has no recovery or test outcome for it.\n  - Fix: Define one recovery state for failures after manifest publication, then align manifest timing or registered-tail handling, checkpoint cleanup, CLI reporting, and steps 3 and 5 coverage to it.\n- MEDIUM `[adoption-checkpoint-finality]`: Step 3 requires successful `register` adoption to clear its originating classifier and decision checkpoints, while step 5 requires a later matching create not to replay that decision. `plan_tool/cli/manifest.py:cmd_register` registers through `append_to_manifest`, and the individual `plan_tool/checkpoint.py:discard_checkpoint` operations can fail; the bundle does not define an order or recovery result when registration and checkpoint cleanup only partly complete. With general publication transactions deferred to BACKLOG #126, an implementation can either lose a resumable attempt before registration or leave an adopted decision replayable after registration.\n  - Fix: Specify a failure-safe adoption-completion rule that preserves retry state until registration succeeds and prevents replay until both risk checkpoints are cleared, with cleanup-failure coverage.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-1` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 1\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `0f5697a30cf060133635b4e9b6b29673219a933b6dfb919eb8fce890a618ab2b`\n- **Detail bundle digest:** `c59b62980784b5ed40a3778d373c2f9c61feacdbb43067a87039ce97d6120e9c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[post-publication-recovery-state]`: Step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) says \u201cOnce a plan file exists, recovery is deliberately manual\u201d and \u201cOnly a parse-valid artifact may be explicitly registered/adopted\u201d; step 5 (`Verify safe create boundaries and partial-publication recovery`) says the parse-valid partial \u201cstays unregistered.\u201d At HEAD, `plan_tool/create.py:_publish_create_plan` calls `append_to_manifest` before `_converge_create_plan` and `_finalize_create_plan`; with default `create --iterate`, `_finalize_create_plan` can then fail at `synchronize_concepts`. That tail failure leaves a registered artifact with no `register` adoption boundary, and step 5 has no recovery or test outcome for it.\n- MEDIUM `[adoption-checkpoint-finality]`: Step 3 requires successful `register` adoption to clear its originating classifier and decision checkpoints, while step 5 requires a later matching create not to replay that decision. `plan_tool/cli/manifest.py:cmd_register` registers through `append_to_manifest`, and the individual `plan_tool/checkpoint.py:discard_checkpoint` operations can fail; the bundle does not define an order or recovery result when registration and checkpoint cleanup only partly complete. With general publication transactions deferred to BACKLOG #126, an implementation can either lose a resumable attempt before registration or leave an adopted decision replayable after registration.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk risk-profile-1` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-50832dd0",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) says \u201cOnce a plan file exists, recov",
+      "body": "Step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) says \u201cOnce a plan file exists, recovery is deliberately manual\u201d and \u201cOnly a parse-valid artifact may be explicitly registered/adopted\u201d; step 5 (`Verify safe create boundaries and partial-publication recovery`) says the parse-valid partial \u201cstays unregistered.\u201d At HEAD, `plan_tool/create.py:_publish_create_plan` calls `append_to_manifest` before `_converge_create_plan` and `_finalize_create_plan`; with default `create --iterate`, `_finalize_create_plan` can then fail at `synchronize_concepts`. That tail failure leaves a registered artifact with no `register` adoption boundary, and step 5 has no recovery or test outcome for it.",
+      "suggested_action": "Define one recovery state for failures after manifest publication, then align manifest timing or registered-tail handling, checkpoint cleanup, CLI reporting, and steps 3 and 5 coverage to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "post-publication-recovery-state",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-51be0d26",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 requires successful `register` adoption to clear its originating classifier and decision checkpoints, while step ",
+      "body": "Step 3 requires successful `register` adoption to clear its originating classifier and decision checkpoints, while step 5 requires a later matching create not to replay that decision. `plan_tool/cli/manifest.py:cmd_register` registers through `append_to_manifest`, and the individual `plan_tool/checkpoint.py:discard_checkpoint` operations can fail; the bundle does not define an order or recovery result when registration and checkpoint cleanup only partly complete. With general publication transactions deferred to BACKLOG #126, an implementation can either lose a resumable attempt before registration or leave an adopted decision replayable after registration.",
+      "suggested_action": "Specify a failure-safe adoption-completion rule that preserves retry state until registration succeeds and prevents replay until both risk checkpoints are cleared, with cleanup-failure coverage.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "adoption-checkpoint-finality",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "0f5697a30cf060133635b4e9b6b29673219a933b6dfb919eb8fce890a618ab2b",
+      "detail_bundle_digest": "c59b62980784b5ed40a3778d373c2f9c61feacdbb43067a87039ce97d6120e9c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md",
+          "state": "present",
+          "digest": "19734410b1fd0ab2eedd63c4f891cecb4db268e884ac3c7e4a877717f6872c9c"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+          "state": "present",
+          "digest": "21156fc99b65dcb0aeb2cffaf8010c60a371a23289ccf73ca370a4f0d2e36c70"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+          "state": "present",
+          "digest": "b842e1906dfee584efe26700ebd803e1e244764bf28315d70319c23e506f52a3"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+          "state": "present",
+          "digest": "8b597d5689950687712f41da7dc20eae4df7a97632f4a1d1cf5ab6a60406b523"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md",
+          "state": "present",
+          "digest": "c3a00bbabe4f711c39f133ddb13e2b30360668d265a51ef7aed965a7a9474fb0"
+        }
+      ],
+      "source_seed_digest": "c2359e6517c23e2e14f32a9caa94b18f6119f4c1fe6a5a3faf31d7b7fb3e0b3d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 63508,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

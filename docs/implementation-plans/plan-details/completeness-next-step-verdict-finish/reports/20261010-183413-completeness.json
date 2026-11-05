@@ -1,0 +1,174 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "plan_path": "docs/implementation-plans/2-completeness-next-step-verdict-finish.md",
+  "created_at": "2026-10-10T18:34:13Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a737a5a0cd7bfcc99b12bf32124aa120012277ac49a367a5054e5e91caf3f7f4",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md": "8572690f6dd85792f201dd7e50493f2d0b0ad77b070bfb718af30731e5239e7c",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md": "45dedcb276e8eac3d74ae96a3afec8c54f19dd0a57dd55389897010a73d3e30a",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md": "e8cc2a9f6619f94af4fb28e890c8b3ecc9b25ad5e194fad8091cfe4fd9b9fb09",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md": "6c3a20e98fe4e1657d64c6c45ae4fc77f86cbba768ad9bdceb6ba0deedb7a258",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md": "d3bfc636565e9872aeba80f8359c2cce61f538bdcbc67b0f3e5877b94157ef92"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Step Verdict Finish\n\n`completeness-next-step-verdict-finish` \u00b7 generated 2026-10-10T18:34:13Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk completeness-next-step-verdict-finish  # optional interactive review of the saved findings\n\n- MEDIUM `[untrusted-cause-precedence]` [confidence: limited]: The Architecture precedence list leaves two results the current classifier handles with no cause. `_verdict_untrusted_cause` today sends a `no-qualified-current-evidence` headline and the awaiting-action headline (`QUALIFIED_RESULT_AWAITING_ACTION`, deferrals waiting on a person) to `persistent`. The plan's list covers only these cases:\n  ```\n  (1) **stale revision** \u2014 `QualifiedAuditResult.revision_status` is `stale` or `unknown-legacy`, under the `no-qualified-current-evidence` headline\n  ```\n  Rule (4) is \"`terminal_hand_apply` / `manual_fix_blocking_findings`\". A result with a current revision, headline `no-qualified-current-evidence` or awaiting-action, and no stop reason matches none of rules 1\u20134. Step 1 (cause split) and its test table (\"transient \u00d7 persistent hand-apply stop on a qualified result\") do not say which cause it gets, so two implementers could return `\"\"` (trusted) or `persistent` for it. Returning `\"\"` would bring back the \"no gaps remain\" message this plan exists to remove.\n  - Fix: State a final catch-all in the precedence list: any untrusted result with a current revision that matches no earlier rule (unqualified headline, awaiting-action deferrals) is persistent. Add that row to the Testing table and the step 1 intent.\n- MEDIUM `[incomplete-ids-consumers]` [confidence: limited]: Step 2 changes `_conceptual_bar_from_audit_recs` to return ids for an incomplete audit, but the tuple's ids also feed other consumers. These include `_remap_iterate_stop_for_conceptual_bar` (guarded by `not audit_incomplete`) and the call sites in `completeness_cmd.py` (the line-723 caller) and `completeness_phases.py` (the line-3212 caller). The plan's Risks section names only `has_blocking_findings`. Step 2 and the acceptance criterion \"the gate's bool, `--json`, and exit codes are unchanged\" do not oblige checking that the other consumers still treat non-empty ids with `audit_incomplete=True` as non-blocking. The Testing section asserts `--json`, `--fail-on-findings`, and the exit code, but not the stop-reason remap.\n  - Fix: Add to step 2's intent and the Testing table that every consumer of the returned ids is enumerated, and that the stop-reason remap and the iterate stop reason are asserted identical for an incomplete audit with and without ids.\n- MEDIUM `[untrusted-cause-vocabulary]` [confidence: limited]: The plan promises three causes in the Overview, Problem statement, and step 1 (transient, persistent coverage, stale revision). The precedence list then gives incomplete / budget-limited its own outcome with no named cause value.\n  - **Where it bites:** step 2 and the Testing section require incomplete results to name their ids with hand triage and no stage. Step 4's console must label `incomplete` properly instead of \"verdict unavailable\".\n  - **Gap:** without a stated cause value, readers can map incomplete to persistent coverage or to a separate label and disagree.\n  -\n  - Fix: State whether incomplete is a fourth cause value or a sub-case of persistent coverage. Use that one label in step 1, step 4, and the Testing section.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[untrusted-cause-vocabulary]` [confidence: limited]: The plan promises three causes (transient, persistent coverage, stale revision) in the Overview, Problem statement, and Architecture's opening lines. The precedence list then names a fourth result, \"Incomplete / budget-limited\", that sends the reader to hand triage with ids and no stage. The plan never says whether that result is a sub-case of persistent coverage or a separate cause value, so step 1's cause set and step 4's readers could branch on different vocabularies.\n  - Fix: State that the incomplete / budget-limited case is carried as persistent coverage with retained ids, or name it as a distinct cause, and reuse that one phrase across Architecture, Testing, and the step 1 and step 4 titles.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-6b161ed7]` [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Step Verdict Finish\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[untrusted-cause-precedence]` [confidence: limited]: The Architecture precedence list leaves two results the current classifier handles with no cause. `_verdict_untrusted_cause` today sends a `no-qualified-current-evidence` headline and the awaiting-action headline (`QUALIFIED_RESULT_AWAITING_ACTION`, deferrals waiting on a person) to `persistent`. The plan's list covers only these cases:\n  ```\n  (1) **stale revision** \u2014 `QualifiedAuditResult.revision_status` is `stale` or `unknown-legacy`, under the `no-qualified-current-evidence` headline\n  ```\n  Rule (4) is \"`terminal_hand_apply` / `manual_fix_blocking_findings`\". A result with a current revision, headline `no-qualified-current-evidence` or awaiting-action, and no stop reason matches none of rules 1\u20134. Step 1 (cause split) and its test table (\"transient \u00d7 persistent hand-apply stop on a qualified result\") do not say which cause it gets, so two implementers could return `\"\"` (trusted) or `persistent` for it. Returning `\"\"` would bring back the \"no gaps remain\" message this plan exists to remove.\n- MEDIUM `[incomplete-ids-consumers]` [confidence: limited]: Step 2 changes `_conceptual_bar_from_audit_recs` to return ids for an incomplete audit, but the tuple's ids also feed other consumers. These include `_remap_iterate_stop_for_conceptual_bar` (guarded by `not audit_incomplete`) and the call sites in `completeness_cmd.py` (the line-723 caller) and `completeness_phases.py` (the line-3212 caller). The plan's Risks section names only `has_blocking_findings`. Step 2 and the acceptance criterion \"the gate's bool, `--json`, and exit codes are unchanged\" do not oblige checking that the other consumers still treat non-empty ids with `audit_incomplete=True` as non-blocking. The Testing section asserts `--json`, `--fail-on-findings`, and the exit code, but not the stop-reason remap.\n- MEDIUM `[untrusted-cause-vocabulary]` [confidence: limited]: The plan promises three causes in the Overview, Problem statement, and step 1 (transient, persistent coverage, stale revision). The precedence list then gives incomplete / budget-limited its own outcome with no named cause value.\n  - **Where it bites:** step 2 and the Testing section require incomplete results to name their ids with hand triage and no stage. Step 4's console must label `incomplete` properly instead of \"verdict unavailable\".\n  - **Gap:** without a stated cause value, readers can map incomplete to persistent coverage or to a separate label and disagree.\n  -\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[untrusted-cause-vocabulary]` [confidence: limited]: The plan promises three causes (transient, persistent coverage, stale revision) in the Overview, Problem statement, and Architecture's opening lines. The precedence list then names a fourth result, \"Incomplete / budget-limited\", that sends the reader to hand triage with ids and no stage. The plan never says whether that result is a sub-case of persistent coverage or a separate cause value, so step 1's cause set and step 4's readers could branch on different vocabularies.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-34a8293d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture precedence list leaves two results the current classifier handles with no cause. `_verdict_untrusted_ca",
+      "body": "The Architecture precedence list leaves two results the current classifier handles with no cause. `_verdict_untrusted_cause` today sends a `no-qualified-current-evidence` headline and the awaiting-action headline (`QUALIFIED_RESULT_AWAITING_ACTION`, deferrals waiting on a person) to `persistent`. The plan's list covers only these cases:\n  ```\n  (1) **stale revision** \u2014 `QualifiedAuditResult.revision_status` is `stale` or `unknown-legacy`, under the `no-qualified-current-evidence` headline\n  ```\n  Rule (4) is \"`terminal_hand_apply` / `manual_fix_blocking_findings`\". A result with a current revision, headline `no-qualified-current-evidence` or awaiting-action, and no stop reason matches none of rules 1\u20134. Step 1 (cause split) and its test table (\"transient \u00d7 persistent hand-apply stop on a qualified result\") do not say which cause it gets, so two implementers could return `\"\"` (trusted) or `persistent` for it. Returning `\"\"` would bring back the \"no gaps remain\" message this plan exists to remove.",
+      "suggested_action": "State a final catch-all in the precedence list: any untrusted result with a current revision that matches no earlier rule (unqualified headline, awaiting-action deferrals) is persistent. Add that row to the Testing table and the step 1 intent.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-b4420796",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 changes `_conceptual_bar_from_audit_recs` to return ids for an incomplete audit, but the tuple's ids also feed ot",
+      "body": "Step 2 changes `_conceptual_bar_from_audit_recs` to return ids for an incomplete audit, but the tuple's ids also feed other consumers. These include `_remap_iterate_stop_for_conceptual_bar` (guarded by `not audit_incomplete`) and the call sites in `completeness_cmd.py` (the line-723 caller) and `completeness_phases.py` (the line-3212 caller). The plan's Risks section names only `has_blocking_findings`. Step 2 and the acceptance criterion \"the gate's bool, `--json`, and exit codes are unchanged\" do not oblige checking that the other consumers still treat non-empty ids with `audit_incomplete=True` as non-blocking. The Testing section asserts `--json`, `--fail-on-findings`, and the exit code, but not the stop-reason remap.",
+      "suggested_action": "Add to step 2's intent and the Testing table that every consumer of the returned ids is enumerated, and that the stop-reason remap and the iterate stop reason are asserted identical for an incomplete audit with and without ids.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "incomplete-ids-consumers",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-5b7fa1cc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan promises three causes in the Overview, Problem statement, and step 1 (transient, persistent coverage, stale rev",
+      "body": "The plan promises three causes in the Overview, Problem statement, and step 1 (transient, persistent coverage, stale revision). The precedence list then gives incomplete / budget-limited its own outcome with no named cause value.\n  - **Where it bites:** step 2 and the Testing section require incomplete results to name their ids with hand triage and no stage. Step 4's console must label `incomplete` properly instead of \"verdict unavailable\".\n  - **Gap:** without a stated cause value, readers can map incomplete to persistent coverage or to a separate label and disagree.\n  -",
+      "suggested_action": "State whether incomplete is a fourth cause value or a sub-case of persistent coverage. Use that one label in step 1, step 4, and the Testing section.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-vocabulary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-5b7fa1cc",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan promises three causes (transient, persistent coverage, stale revision) in the Overview, Problem statement, and ",
+      "body": "The plan promises three causes (transient, persistent coverage, stale revision) in the Overview, Problem statement, and Architecture's opening lines. The precedence list then names a fourth result, \"Incomplete / budget-limited\", that sends the reader to hand triage with ids and no stage. The plan never says whether that result is a sub-case of persistent coverage or a separate cause value, so step 1's cause set and step 4's readers could branch on different vocabularies.",
+      "suggested_action": "State that the incomplete / budget-limited case is carried as persistent coverage with retained ids, or name it as a distinct cause, and reuse that one phrase across Architecture, Testing, and the step 1 and step 4 titles.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-vocabulary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "a737a5a0cd7bfcc99b12bf32124aa120012277ac49a367a5054e5e91caf3f7f4",
+    "detail_bundle_digest": "c2e87c29b9802137a8c4df304eda27517642028200aa53dd00d4290539d2d492",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "d3ad2373cec38bb40436faa604b3e13653eedc1a7374e5e87a3528fb813796a7",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

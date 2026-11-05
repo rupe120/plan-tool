@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "plan_slug": "feature-health-declaration-and-smell-checks",
+  "plan_path": "docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md",
+  "created_at": "2026-06-18T20:07:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1c756efbf0c726c923bf3207b02b26e69c2662ff60c8c3e7b4c0aba4ab1f31e5",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "d9527ec89128d88e1ffb7cc32813ce8b5f2055dada562f6784d03a86ba496bbe",
+    "plan_tool/cli/completeness_phases.py": "61a544b4214ff2755a45ded661b8d4b638c5afbeb64ffec3712ba0a98a8f54d2",
+    "plan_tool/cli/inspect.py": "2b1acb83890db11be18d258c9d04a053d981dbfd13235dfd7de088964c0f4c3d",
+    "plan_tool/completeness_report.py": "7578305e9f6adad77753a19094ad9b40987636331681909f0225e5ceaec696ae",
+    "plan_tool/project_config.py": "044e0bd678644d9de9e984f828a7ca042bc728f6f9e8119f71db6d3ecff258ed",
+    "plan_tool/review.py": "c881ae1ca89c9fce5b0d77eb8e19f9254bb136610a03b3f6e00826486f5f2dca",
+    "plan_tool/schema.py": "6decaaec9074956bc971242373bb94246fe98cf3184446f0f6664db8bcee9f9e",
+    "tests/cli/test_completeness_cmd.py": "e037ffba402210725a24a2ec304bf0b8251f28758ac6ff18c41bacff95dcf80b",
+    "tests/cli/test_inspect_cmds.py": "02ff0d726716d75465b407b19a3c19d50ddd8560fadfc6b22c9b08c23dc97f5f",
+    "tests/test_completeness_report.py": "8b960af2429a35d9e5df2df31b545c0e0ad207e565bb35a884c961de5b870ed2",
+    "tests/test_parser.py": "d0fa77f54b951a0005b045bc13b5ba17ba9ba3ceff2d487e04c2d13bebf950d3",
+    "tests/test_project_config.py": "679dfbcf9622212a1bb9583a39a600005f6d7d52e924f8b775b238559dd1d3f3",
+    "tests/test_review.py": "1e23eb74e6335217fe654143f2d1bb052e08154a7d9288d0740baa91a0c85d31"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Feature Health Declaration And Smell Checks\n\n`feature-health-declaration-and-smell-checks` \u00b7 generated 2026-06-18T20:07:28Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 2 (2 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Acceptance-criteria bullet \"The validation-machinery path set is part of the base application: `.plan-tool/config.json` resolves to application defaults \u2014 and is created with those defaults when the file does not exist \u2014 so the self-referential check is live out of the box\" directly contradicts the rest of the design. Architecture states the check \"reads its path set from project config \u2026 and is **inert when unconfigured** \u2014 never hardcode plan-tool's own paths into the shipped tool\"; the Risks \"Self-referential check is not general\" mitigation is \"config-driven and inert when unconfigured\"; and step 2 (`02-advisory-feature-ref-validation.md`) implements `validation_machinery_paths` with \"default `[]` when unconfigured (not a `DEFAULT_*` constant \u2014 empty means 'no check')\" and `detect_self_referential_features` \"Return `[]` immediately when it is empty.\" No step ships defaults or creates a config file, and `project_config.py` readers never write \u2014 so the criterion is both unsatisfiable and at war with a load-bearing constraint. \u2014 - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: rewrote the validation-machinery acceptance criterion to state the path set reads from project config with no tool-written defaults, resolves to `[]` (check inert) when unconfigured, and is made live only by committing a repo-local `.plan-tool/config.json`.\n- [APPLIED] The Acceptance-criteria bullet requiring `collect_smell_findings` to emit **zero** suppression-shape findings over this plan's own bundle cannot be met by step 2's specified guard. The plan body Part B names a third non-trip class \u2014 \"a deliverable whose action is to *detect/flag* suppression rather than perform it \u2026 a suppression-detector step \u2026 whose own `## Summary` \u2026 catches a step 'whose own deliverable suppresses an existing audit gate' must **not** trip\" \u2014 but step 2's `_SUPPRESSION_REASONING_RE` is specified only as class-of-units phrases (`any step that\u2026`, `a step that\u2026`, `the detector that\u2026`, `steps that suppress\u2026`). Step 2's own `## Summary` reads \"detect_suppression_shape (a step/feature whose own deliverable suppresses an existing audit gate)\", which the intent regex (`suppress\u2026gate` within 30 chars) trips and none of the class-of-units alternatives suppress \u2014 so the shipped detector self-flags, the exact false positive the plan warns about. \u2014 - `docs/implementation-plans/plan-details/feature-health-declaration-and-smell-checks/02-advisory-feature-ref-validation.md`: extended the `_SUPPRESSION_REASONING_RE` non-trip guard spec to add a detect/flag-verb signal (`detect|flag|catch|identify|surface|find`) so a detector/flagging deliverable does not trip, alongside the existing class-of-units phrasing.\n- [APPLIED] The Testing section says the self-referential check trips when \"a feature whose tagged steps' `step.files` union overlaps the configured machinery path set,\" but the Architecture and Acceptance sections specify the footprint as `all_files` (`files` + `creates`), and step 2 (`02-advisory-feature-ref-validation.md`) resolves it to \"Use `step.all_files` to include `creates`.\" The body Testing line undersells the decided footprint, excluding `creates`-only files from overlap. \u2014 - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: changed the Testing self-referential smell check footprint from `step.files` to `all_files` (`files` + `creates`)\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[machinery-config-undocumented]`: The new `smell_checks.validation_machinery_paths` key in `.plan-tool/config.json` (step 2, `project_config.py`) is the only switch that turns the self-referential check from inert to live, yet no step documents it \u2014 step 5 (`05-document-features-registry-step.md`) edits only `PLAN_FORMAT.md` (frontmatter), and the existing config surface lives in `docs/BRANCH_AWARENESS.md`, not the frontmatter spec. As written the self-referential check ships effectively dead with no documented way for an operator to enable it.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor machinery-config-undocumented`\n- MEDIUM `[self-referential-footprint-wording]`: The Testing section says the self-referential check trips when \"a feature whose tagged steps' `step.files` union overlaps the configured machinery path set\", but Architecture Part B, the Acceptance criteria, and step 2 all settle on `all_files` (`files` + `creates`) \u2014 and Part B explicitly warns \"not the literal `step.files`, which excludes `creates`\". The Testing prose lags the decided footprint definition and would under-test created-file overlap.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor self-referential-footprint-wording`\n- MEDIUM `[suppression-self-flag-guard]`: The Acceptance-criteria bullet requiring `collect_smell_findings`, run over **this plan's own detail bundle**, to emit zero suppression-shape findings is not bound to any concrete regression check. Step 2's own `## Summary` states its deliverable as a step \"whose own deliverable **suppresses** an existing audit **gate**\" \u2014 exactly the verb\u2192gate-object shape `_SUPPRESSION_INTENT_RE` trips on \u2014 so the guard rests entirely on `_SUPPRESSION_REASONING_RE` excluding it. Testing covers only a synthetic \"self-describing-detector body case,\" not the shipped detector run against the actual step 2/3/4 bodies, so a regex-balance regression that self-flags the plan would pass the suite while violating the acceptance bullet.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor suppression-self-flag-guard`\n- MEDIUM `[suppression-missing-detail-file]`: The suppression check scans each step's detail-body (`## Summary`/`## Why`) in addition to its title, and `validate` (step 4) runs it as the cheapest pre-Claude pass \u2014 but `validate` is commonly run on a created-but-not-yet-detailed plan whose steps have no detail file. No step names the missing/empty-detail-file case for the `## Summary`/`## Why` extraction helper, so its behavior (degrade to title-only vs. error) is unspecified.\n  - Address: `plan-tool completeness-apply feature-health-declaration-and-smell-checks --anchor suppression-missing-detail-file`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step3-files-coherence-a9509b15]`: The detail body for step 3 cites `plan_tool/cli/completeness_cmd.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/cli/completeness_phases.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step5-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks` \u2014 walk the 4 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (2 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Feature Health Declaration And Smell Checks\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 3 detail cites `plan_tool/cli/completeness_cmd.py` resembling declared `plan_tool/cli/completeness_phases.py` (typo/stale path?)\n- NIT: step 5 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[machinery-config-undocumented]`: The new `smell_checks.validation_machinery_paths` key in `.plan-tool/config.json` (step 2, `project_config.py`) is the only switch that turns the self-referential check from inert to live, yet no step documents it \u2014 step 5 (`05-document-features-registry-step.md`) edits only `PLAN_FORMAT.md` (frontmatter), and the existing config surface lives in `docs/BRANCH_AWARENESS.md`, not the frontmatter spec. As written the self-referential check ships effectively dead with no documented way for an operator to enable it.\n- MEDIUM `[self-referential-footprint-wording]`: The Testing section says the self-referential check trips when \"a feature whose tagged steps' `step.files` union overlaps the configured machinery path set\", but Architecture Part B, the Acceptance criteria, and step 2 all settle on `all_files` (`files` + `creates`) \u2014 and Part B explicitly warns \"not the literal `step.files`, which excludes `creates`\". The Testing prose lags the decided footprint definition and would under-test created-file overlap.\n- MEDIUM `[suppression-self-flag-guard]`: The Acceptance-criteria bullet requiring `collect_smell_findings`, run over **this plan's own detail bundle**, to emit zero suppression-shape findings is not bound to any concrete regression check. Step 2's own `## Summary` states its deliverable as a step \"whose own deliverable **suppresses** an existing audit **gate**\" \u2014 exactly the verb\u2192gate-object shape `_SUPPRESSION_INTENT_RE` trips on \u2014 so the guard rests entirely on `_SUPPRESSION_REASONING_RE` excluding it. Testing covers only a synthetic \"self-describing-detector body case,\" not the shipped detector run against the actual step 2/3/4 bodies, so a regex-balance regression that self-flags the plan would pass the suite while violating the acceptance bullet.\n- MEDIUM `[suppression-missing-detail-file]`: The suppression check scans each step's detail-body (`## Summary`/`## Why`) in addition to its title, and `validate` (step 4) runs it as the cheapest pre-Claude pass \u2014 but `validate` is commonly run on a created-but-not-yet-detailed plan whose steps have no detail file. No step names the missing/empty-detail-file case for the `## Summary`/`## Why` extraction helper, so its behavior (degrade to title-only vs. error) is unspecified.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk feature-health-declaration-and-smell-checks` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply feature-health-declaration-and-smell-checks` \u2014 walk the 4 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-6e68a6a9",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The new `smell_checks.validation_machinery_paths` key in `.plan-tool/config.json` (step 2, `project_config.py`) is the o",
+      "body": "The new `smell_checks.validation_machinery_paths` key in `.plan-tool/config.json` (step 2, `project_config.py`) is the only switch that turns the self-referential check from inert to live, yet no step documents it \u2014 step 5 (`05-document-features-registry-step.md`) edits only `PLAN_FORMAT.md` (frontmatter), and the existing config surface lives in `docs/BRANCH_AWARENESS.md`, not the frontmatter spec. As written the self-referential check ships effectively dead with no documented way for an operator to enable it.",
+      "suggested_action": "add a documentation surface (a config-docs note or a step-5 extension) describing the `smell_checks.validation_machinery_paths` key and how to populate it to activate the check",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "machinery-config-undocumented"
+    },
+    {
+      "id": "plan-plan-completeness-3ae026dd",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Testing section says the self-referential check trips when \"a feature whose tagged steps' `step.files` union overlap",
+      "body": "The Testing section says the self-referential check trips when \"a feature whose tagged steps' `step.files` union overlaps the configured machinery path set\", but Architecture Part B, the Acceptance criteria, and step 2 all settle on `all_files` (`files` + `creates`) \u2014 and Part B explicitly warns \"not the literal `step.files`, which excludes `creates`\". The Testing prose lags the decided footprint definition and would under-test created-file overlap.",
+      "suggested_action": "correct the Testing bullet to say `all_files` (files + creates), matching the authoritative Part B/acceptance/step-2 decision",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "self-referential-footprint-wording"
+    },
+    {
+      "id": "plan-plan-completeness-ab322ddd",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Acceptance-criteria bullet requiring `collect_smell_findings`, run over **this plan's own detail bundle**, to emit z",
+      "body": "The Acceptance-criteria bullet requiring `collect_smell_findings`, run over **this plan's own detail bundle**, to emit zero suppression-shape findings is not bound to any concrete regression check. Step 2's own `## Summary` states its deliverable as a step \"whose own deliverable **suppresses** an existing audit **gate**\" \u2014 exactly the verb\u2192gate-object shape `_SUPPRESSION_INTENT_RE` trips on \u2014 so the guard rests entirely on `_SUPPRESSION_REASONING_RE` excluding it. Testing covers only a synthetic \"self-describing-detector body case,\" not the shipped detector run against the actual step 2/3/4 bodies, so a regex-balance regression that self-flags the plan would pass the suite while violating the acceptance bullet.",
+      "suggested_action": "add a test/criterion that runs the landed `collect_smell_findings` over this plan's real detail bundle and asserts zero suppression findings, pinning the self-flag guard to the actual prose",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "suppression-self-flag-guard"
+    },
+    {
+      "id": "plan-plan-completeness-f3c9049a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The suppression check scans each step's detail-body (`## Summary`/`## Why`) in addition to its title, and `validate` (st",
+      "body": "The suppression check scans each step's detail-body (`## Summary`/`## Why`) in addition to its title, and `validate` (step 4) runs it as the cheapest pre-Claude pass \u2014 but `validate` is commonly run on a created-but-not-yet-detailed plan whose steps have no detail file. No step names the missing/empty-detail-file case for the `## Summary`/`## Why` extraction helper, so its behavior (degrade to title-only vs. error) is unspecified.",
+      "suggested_action": "state that the detail-body extraction degrades to title-only when a step has no detail file, so `validate` on an undetailed plan still runs cleanly",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "suppression-missing-detail-file"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-6e68a6a9": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: extended step 5's title and added `docs/BRANCH_AWARENESS.md` to its `files:` to cover documenting the `smell_checks.validation_machinery_paths` config key and how to populate it to activate the self-referential check.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-3ae026dd": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-ab322ddd": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: added a \"Suppression self-flag regression\" bullet to the Testing section pinning `collect_smell_findings` over this plan's real detail bundle (steps 2/3/4) to assert zero suppression findings.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-f3c9049a": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-feature-health-declaration-and-smell-checks.md`: in the Part B suppression-check description, state that detail-body extraction degrades to title-only (no error) when a step has no/empty detail file, so `validate` on an undetailed plan still runs cleanly.",
+      "halt_reason": ""
+    }
+  }
+}

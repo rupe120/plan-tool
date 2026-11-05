@@ -1,0 +1,141 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-revision-escalation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-revision-escalation.md",
+  "created_at": "2026-08-15T13:55:51Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "392c64055a40afe5355384f31e32f709aae507e53ec7f33494a49a090e73b03e",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "afb753dd86d26eb2bc1506485247fffc072a60ec99c386bacda969df7e325a64",
+    "CLAUDE.md": "8fb431c12858a1d577ed60bde3d7a0e58711446a761d9638380f8cc6cd1395f1",
+    "DATA_CONTRACT.md": "2e76c419aa8d6695fbd02934738ec3e5b0b1dbfd1d6ec3591e3d7e859a8ea8f8",
+    "README.md": "1dbf5858642e538412558320782222faea1bc8032c6ffa40a4e8f25c9f420c50",
+    "ROADMAP_FORMAT.md": "94698942b45ed66579623b3f087a3815a38201bbb3990f6e9667a3ede9000191",
+    "RUNBOOK.md": "7bac353501c2061704daf71186b17d41833a882f4c8b88b84a9d9937a2aacd66",
+    "TESTING.md": "d97def2a36eb1b704077041dc2d2cecb8482cdfa29d061991a8014c3108ec3bc",
+    "docs/ARCHITECTURE.md": "1146090e259902042581ba8cda2d09c28858b37049b5ea6fa5a85a27e054dbb7",
+    "docs/ROADMAP_WALKTHROUGH.md": "67be7883e9d0344cc713ebd2b7992f2eb4815e51e282c00724d5e3ad41ad184e",
+    "docs/cli/roadmap.md": "2c16183a136b6c8991e9067de5b9644ae76506dfa5dd388fff36bc7f321ba2b6",
+    "plan_tool/cli/__init__.py": "af8f869d1ce82b395e0d32ed15ade91d351d28b9f2316404698e528de4b20036",
+    "plan_tool/cli/roadmap_cmd.py": "53f84fd678c24e4ab76dea1dc1837e74b86932e149d0d8861d47fa0db4db06df",
+    "plan_tool/roadmap_artifacts.py": "078e89f9b700ef972ef698b0ddad9758b65835534307ccabf9f9bb93e9a0bbea",
+    "plan_tool/roadmap_revision.py": "e08406219dad9721726d64f41b657d97371ae52d5f834b22a92b777d64d03e42",
+    "plan_tool/run_log.py": "bb9a2b8c5c0808dd36fca449e947a8c144dcf5452d18098b28abf0972ae00da0",
+    "tests/cli/package_surface_help.golden.txt": "e1e971be8e9e962a3cec8764bd3b0aa5b790d40b648a091d439add7af2f21ebb",
+    "tests/cli/test_roadmap_cmd.py": "bf9b79187aebb88fdbe5f8c0a5d04de523ebabe179c0c79db9dd6996b08bd921",
+    "tests/test_roadmap_artifacts.py": "2e82e3e1d31649f0b632d8b9cc63f7029ee716f1e96c1f884b070d1a9b748d9e",
+    "tests/test_roadmap_format.py": "a527a6a855129580d7b50a28aa86b782b1b90a7b1071324ce2c698f6336abece",
+    "tests/test_roadmap_revision.py": "e8b13fe2173908ee0740ce156ce75063863fed038a9898d2b4b8fb2d3ded4507",
+    "tests/test_run_log.py": "edc0c54b94f4bbaa957345bd24233b9d89c2bd4c21b87aa59f8d88a569718b97"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md": "c5412cb87e796b2642dd3835f6751759d8a6ec8e0d4bdf812f108f8e9f821bed",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md": "d56f937f19b279338a488ed8f46e82405eb00450d132387cbbfb6cdcead94459",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md": "ea3405968502c00d7cce7ed24ce7cddb5899796a81411decf756dc5e1327bc1e",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md": "ce26c40d4a521bed32fc4a6bf063f26345eb06c88e094f8b5e1e7dc12c7706ac",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md": "de4b86b2ba2e8a9fb7596e10bbc35e6e84805bca1c752b0d118d41cef97d88c4",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md": "42b3ee9f72708d816cee93f5d991b7d1076d3e9b1b851b7e7d1cf12480e242b8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Escalation Receipt\n\n`roadmap-structural-revision-escalation` \u00b7 generated 2026-08-15T13:55:50Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `392c64055a40afe5355384f31e32f709aae507e53ec7f33494a49a090e73b03e`\n- **Detail bundle digest:** `1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (-1 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-revision-escalation   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-structural-revision-escalation  # alternative interactive review/apply\n\n- MEDIUM `[receipt-source-path-base]`: The Architecture `source` schema row calls `relative_stage_path` \u201cselector-derived normalized relative POSIX path\u201d but never names its root; `roadmap_artifacts:roadmap_dir` permits roadmap-, plans-, or repo-relative representations. Step 3, the runner/view validation in steps 4\u20135, the receipt-substitution Risk, Testing\u2019s path-substitution coverage, and acceptance criteria 1, 4, and 5 therefore permit incompatible v1 semantic ids for the same artifact.\n  - Fix: Define one exact root and POSIX representation for `relative_stage_path`, then use it consistently for receipt identity, reuse, views, and path-binding tests. - INFO: [immutable-evidence-storage-boundary] The Architecture prerequisite boundary, receipt-substitution Risk, and steps 4\u20135 rely on fixed evidence storage, but `roadmap_evidence_store:_ensure_namespace` and `_existing_namespace` accept directory symlinks while `_read_exact_existing` and `scan_evidence` follow final-name symlinks. Valid-looking opaque bytes can therefore come from outside the roadmap directory; this is already filed in `BUG_BACKLOG.md` and remains outside this plan\u2019s storage boundary. [out-of-scope-deferred] \u2192 fix: Keep the prerequisite hardening tracked in `BUG_BACKLOG.md` for non-link namespace traversal and regular-final checks.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]`: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae3effe6]`: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c44534ae]`: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7eaf41f7]`: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-structural-revision-escalation` \u2014 apply the 1 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Escalation Receipt\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `392c64055a40afe5355384f31e32f709aae507e53ec7f33494a49a090e73b03e`\n- **Detail bundle digest:** `1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Converged (low-yield):** this audit stopped at 2 pass(es) once only advisory (nit/info) findings remained \u2014 no material (medium+) finding resurfaced. Some listed advisory findings may be residual precision noise the sampler never fully explored.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[receipt-source-path-base]`: The Architecture `source` schema row calls `relative_stage_path` \u201cselector-derived normalized relative POSIX path\u201d but never names its root; `roadmap_artifacts:roadmap_dir` permits roadmap-, plans-, or repo-relative representations. Step 3, the runner/view validation in steps 4\u20135, the receipt-substitution Risk, Testing\u2019s path-substitution coverage, and acceptance criteria 1, 4, and 5 therefore permit incompatible v1 semantic ids for the same artifact.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-structural-revision-escalation` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f6667097",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture `source` schema row calls `relative_stage_path` \u201cselector-derived normalized relative POSIX path\u201d but n",
+      "body": "The Architecture `source` schema row calls `relative_stage_path` \u201cselector-derived normalized relative POSIX path\u201d but never names its root; `roadmap_artifacts:roadmap_dir` permits roadmap-, plans-, or repo-relative representations. Step 3, the runner/view validation in steps 4\u20135, the receipt-substitution Risk, Testing\u2019s path-substitution coverage, and acceptance criteria 1, 4, and 5 therefore permit incompatible v1 semantic ids for the same artifact.",
+      "suggested_action": "Define one exact root and POSIX representation for `relative_stage_path`, then use it consistently for receipt identity, reuse, views, and path-binding tests. - INFO: [immutable-evidence-storage-boundary] The Architecture prerequisite boundary, receipt-substitution Risk, and steps 4\u20135 rely on fixed evidence storage, but `roadmap_evidence_store:_ensure_namespace` and `_existing_namespace` accept directory symlinks while `_read_exact_existing` and `scan_evidence` follow final-name symlinks. Valid-looking opaque bytes can therefore come from outside the roadmap directory; this is already filed in `BUG_BACKLOG.md` and remains outside this plan\u2019s storage boundary. [out-of-scope-deferred] \u2192 fix: Keep the prerequisite hardening tracked in `BUG_BACKLOG.md` for non-link namespace traversal and regular-final checks.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-source-path-base",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-low-yield",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "392c64055a40afe5355384f31e32f709aae507e53ec7f33494a49a090e73b03e",
+      "detail_bundle_digest": "1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

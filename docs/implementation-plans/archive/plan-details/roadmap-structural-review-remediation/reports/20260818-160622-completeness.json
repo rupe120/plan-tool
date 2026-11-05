@@ -1,0 +1,96 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-review-remediation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-review-remediation.md",
+  "created_at": "2026-08-18T16:06:22Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ae536dc4270743798bb540e1b36d5e53316d0c433f1432577d5556d1f7bf3c44",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "70086e23afe68540cfef5476fdc5a7f5a3078846e30596c5cca86c83d2ca4063",
+    "CLAUDE.md": "9b8896d2ee3013183dd2aff56acce5f358f35ee8c02eb11e0471f3700449f5b6",
+    "README.md": "151a22851b94f9db120c7830796d1c358576c4008e5c4db66cc6e4e7777cf64b",
+    "ROADMAP_FORMAT.md": "a11b4b00c4c4fa930003857bf9b93c55688095f3a909ebf06725f8fb7daef205",
+    "RUNBOOK.md": "0d2d0c65d6a928173616a12e5de72d0036b657b2125b08ec25f01e72843d87ea",
+    "docs/ARCHITECTURE.md": "5e97c39fe271e108095c1baca5aeeb55bc2603f645e56e7e38f2b86f35ff28d9",
+    "docs/CODEX_CLI_CONTRACT.md": "487d5fa1127eec3d625f0a01c0d8e77f349176b55cde0a963680540866e4f392",
+    "docs/ROADMAP_WALKTHROUGH.md": "5589fd1ec828fe914d87a9f105bc12e6afd473ed4d46d1125863a99f3cbb5e88",
+    "docs/cli/roadmap.md": "db3757fc4b6caa1f10834cec87c7f2d9d47e94b9c7ae5f87bc1515f6e4061b1c",
+    "integrations/claude/SKILL.md": "4791bea0eda7051d6494fcfeb0f3c4f63f35a42406ca6ef0bdda5fd3a8d38d7b",
+    "plan_tool/cli/roadmap_cmd.py": "557a558588b19df257e8e8b6f277273fcb630f4f73ebbbf73cdcbd891165223a",
+    "plan_tool/roadmap_structural_revision_patch.py": "8f8ea7c33685f4a058f431b0e5f67e96dd81719e7dfc7ae2cdafd008ab19e6fb",
+    "plan_tool/roadmap_structural_revision_run.py": "87a4262d82ef876d034429e19678923a670e6efabea9f1f258d3194484d8f9d4",
+    "tests/cli/test_cli_reference.py": "ee848179f21e3703c9d8669729be3a00181d7352ee89428b887819581bdcba25",
+    "tests/test_roadmap_format.py": "f2af9b585469bb3d8810fefed5b7ece0669d9ca8bf84b6a12e6a5490da26dee2",
+    "tests/test_roadmap_structural_revision_patch.py": "1be65ba19c463ab75f79258483e5d1d6d3db855d64123f002acc19371051059b",
+    "tests/test_roadmap_structural_revision_run.py": "c77fdb62105c9c7537631a0264f4911b8c46cc5244094a82932a40bb11605852"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md": "cc1eef7e650a5519c4cef1310b257d7e64a726067d881b8aa2e2fc11ea137038",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-prove-generic-repository-owned.md": "680f6f2950efe787168213ca0a77d3bb73853f69eaa5c3bba6eb42069741039e",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md": "352c0b2ef0c6ba1d77f6e439cf9ef1e9f08f56491eb3fe2924367a7f3aee46de"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Review Remediation\n\n`roadmap-structural-review-remediation` \u00b7 generated 2026-08-18T16:06:21Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `cdbf8e210335a74273a32dba98e251dbbc05a45747ed6f9da2b9e659c5d413b1`\n- **Detail bundle digest:** `65dab53d616d07b17c02355cb1c718ea34a2d8f7b454b35dc398883b05ecf533`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 29878 bytes (+29878 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.67\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-structural-review-remediation` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Review Remediation\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `cdbf8e210335a74273a32dba98e251dbbc05a45747ed6f9da2b9e659c5d413b1`\n- **Detail bundle digest:** `65dab53d616d07b17c02355cb1c718ea34a2d8f7b454b35dc398883b05ecf533`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run roadmap-structural-review-remediation` executes the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "cdbf8e210335a74273a32dba98e251dbbc05a45747ed6f9da2b9e659c5d413b1",
+      "detail_bundle_digest": "65dab53d616d07b17c02355cb1c718ea34a2d8f7b454b35dc398883b05ecf533",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md",
+          "state": "present",
+          "digest": "cc1eef7e650a5519c4cef1310b257d7e64a726067d881b8aa2e2fc11ea137038"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-prove-generic-repository-owned.md",
+          "state": "present",
+          "digest": "680f6f2950efe787168213ca0a77d3bb73853f69eaa5c3bba6eb42069741039e"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md",
+          "state": "present",
+          "digest": "352c0b2ef0c6ba1d77f6e439cf9ef1e9f08f56491eb3fe2924367a7f3aee46de"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 29878,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.6666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

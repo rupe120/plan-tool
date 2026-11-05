@@ -1,0 +1,149 @@
+{
+  "version": 4,
+  "plan_slug": "skill-router-and-shared-reference",
+  "plan_path": "docs/implementation-plans/2-skill-router-and-shared-reference.md",
+  "created_at": "2026-09-16T23:31:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d712ea50ec4da4da3d3716769b0bdb93243fb8ee77de3acfcecdc6119eb2ab1e",
+  "code_fingerprint": {
+    "BACKLOG.md": "6c14c89aef7f4167918dac5e373575b961f0e3a08847705ecade9f59aa9d1980",
+    "README.md": "8fbea936d77daf00c75408abe9de4e7f90307cbc21b6ae1640a9dc0998154336",
+    "docs/ARCHITECTURE.md": "87589ff6f9b3a58618a1a1321fba6ed318714661ce242e5be7b36bfbb9a25e81",
+    "docs/cli/README.md": "e61dd086e6e5be9f8ff9ee3197a7891c001fc4e84c159fbfa3326f21f4188ec7",
+    "docs/cli/install-skill.md": "1c8eca129c46f1d1039aaba6a9ad452efae9b1237d0d2b9c4d1864e6c57fcc24",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "98977129198fa68a01c8142e17aff0c27a193b6a4f4cf35c664add52b38cffd9",
+    "handoffs/2026-09-16-roadmap-orchestration-primer.md": "10c0bf950b360c555364af3604583bc1b450c41eb043f5457725ff7a0755e46d",
+    "integrations/claude/SKILL.md": "e4457f4e0a6d2c4b58b602a670ddfbae46a24ecaaccacbf91d3dea4b0fccc055",
+    "integrations/codex/SKILL.md": "00abf3a0f0745d8787e82728ce32a3c5c578b009b497a49e43d60cb9db89e4ef",
+    "integrations/shared/DIRECTIVES.md": "d49f6f00ef4937602cfb780c44a20f8f5dd0df7ffc38a5d64ccd6ab8082c1d49",
+    "plan_tool/cli/__init__.py": "3c8ab5eafcb706ddc4812588e1f7a6bc9fb0c9c3896e87509743d82f0e967bb6",
+    "plan_tool/cli/inspect.py": "a9d0f1d287f0853e88d24b1ce1027a63820acd7b9aea4755e1f7bfb47c1db291",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "plan_tool/cli/review_cmd.py": "82732f5ef96a0a22c1983db363985a979c7876a96d89e923aee650dbd9e2409e",
+    "plan_tool/cli/skill_cmd.py": "8574b907e41240f7358888f88606989cdf610153a636325e2a18cb43707fde5c",
+    "tests/cli/package_surface_help.golden.txt": "c53151e9b97399c92ad1016715b554dee8842d44936ac32af3a533979bb5ac79",
+    "tests/cli/test_skill_cmd.py": "2a6f9a421f1fbe02853d91488366eb10a88861f2e4ecfed617ab16e158dda8d7",
+    "tests/test_backend.py": "7973c99a92cbafc90d57da45448edbdf358ec263214214d74a29a5da31266aed",
+    "tests/test_model_specs.py": "d2ba21b320ca154bace6df64407d5912b0704992df794b908107ed0bed255f2c",
+    "tests/test_roadmap_format.py": "a85d3538e62114c2c5a647da418c17db9c21ef21edc9a6eed28e2f4df939cf5e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md": "8f529bdce62284b3f89c98d02a21259c232470f9891b8041c6b1dd57e4693aaf",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md": "277e785a30f066638fb924c33bb5f3a657c913b6af89685bb5d60c8fb832564b",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md": "1b4a8ff10311df886d36d65f2ff1ef2daa7b1f9abd294e31893f53b871b0ff6b"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Skill Router And Shared Reference\n\n`skill-router-and-shared-reference` \u00b7 generated 2026-09-16T23:31:27Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[step5-change-type-mismatch]` [confidence: limited]: Step 5's own detail file contradicts the plan's machine-readable contract for its `change_type`. The plan frontmatter declares step 5 as\n\n  ```\n  - id: 5\n    ...\n    complexity: low\n    change_type: refactor\n  ```\n\n  but step 5's detail (`05-update-install-skill-docs-including.md`) states twice \u2014 in its `## Tests` section body and its `### Verification (non-code step)` sub-heading \u2014 \"This step's `change_type` is `non-code`; the production-code surface it touches (`plan_tool/cli/__init__.py`'s docstring) is a string constant, not behavior, so `run`'s automatic test-authorship gate has nothing to attach a new unit test to.\" `PLAN_FORMAT.md`'s own definition of `non-code` is \"the step changes no production code\"; step 5 edits `plan_tool/cli/__init__.py`, a production Python file, so per the tool's own classification rule the frontmatter's `refactor` is the correct call and the detail's claim is false. Since this plan sets `enforce_step_tests: true`, a `refactor`-classified step *is* gated on a test file being created/modified during the step (unlike `non-code`, which is \"never gated\"), so the detail's stated reasoning for skipping that gate is wrong \u2014 even though the step's own golden-snapshot regeneration under `tests/cli/package_surface_help.golden.txt` would likely satisfy the gate's path-based check anyway, since that path sits under a `tests/` directory. This is a checkable, false claim about the plan's own contract, in the same commitment class as a false claim about code at HEAD.\n  - Fix: Correct both occurrences in step 5's detail (the `## Tests` body sentence and the `### Verification (non-code step)` heading) to state `change_type: refactor`, matching the frontmatter, and explain that the test-authorship gate is satisfied because the step modifies `tests/cli/package_surface_help.golden.txt` (a path under `tests/`), rather than claiming the gate does not apply.\n- MEDIUM `[codex-worktrees-link-label]` [confidence: limited]: Step 3's cross-file link-repointing instructions leave a pre-existing display-text/target mismatch in Codex's router unresolved. At HEAD, `integrations/codex/SKILL.md`'s \"run two plans at once\" decision-tree row and its \"Workspaces\" Subcommands-at-a-glance row both render link text \"README\" while the href points at `../../docs/OPERATIONS.md#worktrees-parallel-plans` \u2014 a different file than the text names (confirmed: both `README.md` and `docs/OPERATIONS.md` carry their own `## Worktrees (parallel plans)` section). Step 3's Implementation section says to \"preserve that existing per-router difference\" while converting the link to the plain-name-plus-repo-caveat form, but never states whether the converted prose should use the current display text (\"README\") or the actual target (`docs/OPERATIONS.md`) \u2014 mechanically preserving the display text would commit a permanent, unlinked prose claim that Codex's worktree caveats live in README.md when the router actually cites `docs/OPERATIONS.md`. Real-world consequence stays small since both candidate docs carry an equivalent section, which is why this is LOW rather than blocking.\n  - Fix: State explicitly, in step 3's cross-file link-repointing instructions for Codex's Workspaces/worktrees pointers, whether the converted plain-name form should follow the link's current display text (\"README\") or its actual href target (`docs/OPERATIONS.md`), resolving the pre-existing mismatch rather than silently carrying it forward.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-f9866a59]` [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit skill-router-and-shared-reference` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Skill Router And Shared Reference\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[step5-change-type-mismatch]` [confidence: limited]: Step 5's own detail file contradicts the plan's machine-readable contract for its `change_type`. The plan frontmatter declares step 5 as\n\n  ```\n  - id: 5\n    ...\n    complexity: low\n    change_type: refactor\n  ```\n\n  but step 5's detail (`05-update-install-skill-docs-including.md`) states twice \u2014 in its `## Tests` section body and its `### Verification (non-code step)` sub-heading \u2014 \"This step's `change_type` is `non-code`; the production-code surface it touches (`plan_tool/cli/__init__.py`'s docstring) is a string constant, not behavior, so `run`'s automatic test-authorship gate has nothing to attach a new unit test to.\" `PLAN_FORMAT.md`'s own definition of `non-code` is \"the step changes no production code\"; step 5 edits `plan_tool/cli/__init__.py`, a production Python file, so per the tool's own classification rule the frontmatter's `refactor` is the correct call and the detail's claim is false. Since this plan sets `enforce_step_tests: true`, a `refactor`-classified step *is* gated on a test file being created/modified during the step (unlike `non-code`, which is \"never gated\"), so the detail's stated reasoning for skipping that gate is wrong \u2014 even though the step's own golden-snapshot regeneration under `tests/cli/package_surface_help.golden.txt` would likely satisfy the gate's path-based check anyway, since that path sits under a `tests/` directory. This is a checkable, false claim about the plan's own contract, in the same commitment class as a false claim about code at HEAD.\n- MEDIUM `[codex-worktrees-link-label]` [confidence: limited]: Step 3's cross-file link-repointing instructions leave a pre-existing display-text/target mismatch in Codex's router unresolved. At HEAD, `integrations/codex/SKILL.md`'s \"run two plans at once\" decision-tree row and its \"Workspaces\" Subcommands-at-a-glance row both render link text \"README\" while the href points at `../../docs/OPERATIONS.md#worktrees-parallel-plans` \u2014 a different file than the text names (confirmed: both `README.md` and `docs/OPERATIONS.md` carry their own `## Worktrees (parallel plans)` section). Step 3's Implementation section says to \"preserve that existing per-router difference\" while converting the link to the plain-name-plus-repo-caveat form, but never states whether the converted prose should use the current display text (\"README\") or the actual target (`docs/OPERATIONS.md`) \u2014 mechanically preserving the display text would commit a permanent, unlinked prose claim that Codex's worktree caveats live in README.md when the router actually cites `docs/OPERATIONS.md`. Real-world consequence stays small since both candidate docs carry an equivalent section, which is why this is LOW rather than blocking.\n\n### Files coherence\n\n- INFO: step 3 detail cites `integrations/cursor/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 4 detail cites `<root>/skills/plan-tool/SKILL.md` resembling declared `integrations/cursor/SKILL.md` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk skill-router-and-shared-reference` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a1e0b431",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5's own detail file contradicts the plan's machine-readable contract for its `change_type`. The plan frontmatter de",
+      "body": "Step 5's own detail file contradicts the plan's machine-readable contract for its `change_type`. The plan frontmatter declares step 5 as\n\n  ```\n  - id: 5\n    ...\n    complexity: low\n    change_type: refactor\n  ```\n\n  but step 5's detail (`05-update-install-skill-docs-including.md`) states twice \u2014 in its `## Tests` section body and its `### Verification (non-code step)` sub-heading \u2014 \"This step's `change_type` is `non-code`; the production-code surface it touches (`plan_tool/cli/__init__.py`'s docstring) is a string constant, not behavior, so `run`'s automatic test-authorship gate has nothing to attach a new unit test to.\" `PLAN_FORMAT.md`'s own definition of `non-code` is \"the step changes no production code\"; step 5 edits `plan_tool/cli/__init__.py`, a production Python file, so per the tool's own classification rule the frontmatter's `refactor` is the correct call and the detail's claim is false. Since this plan sets `enforce_step_tests: true`, a `refactor`-classified step *is* gated on a test file being created/modified during the step (unlike `non-code`, which is \"never gated\"), so the detail's stated reasoning for skipping that gate is wrong \u2014 even though the step's own golden-snapshot regeneration under `tests/cli/package_surface_help.golden.txt` would likely satisfy the gate's path-based check anyway, since that path sits under a `tests/` directory. This is a checkable, false claim about the plan's own contract, in the same commitment class as a false claim about code at HEAD.",
+      "suggested_action": "Correct both occurrences in step 5's detail (the `## Tests` body sentence and the `### Verification (non-code step)` heading) to state `change_type: refactor`, matching the frontmatter, and explain that the test-authorship gate is satisfied because the step modifies `tests/cli/package_surface_help.golden.txt` (a path under `tests/`), rather than claiming the gate does not apply.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "step5-change-type-mismatch",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-90338fc7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's cross-file link-repointing instructions leave a pre-existing display-text/target mismatch in Codex's router unr",
+      "body": "Step 3's cross-file link-repointing instructions leave a pre-existing display-text/target mismatch in Codex's router unresolved. At HEAD, `integrations/codex/SKILL.md`'s \"run two plans at once\" decision-tree row and its \"Workspaces\" Subcommands-at-a-glance row both render link text \"README\" while the href points at `../../docs/OPERATIONS.md#worktrees-parallel-plans` \u2014 a different file than the text names (confirmed: both `README.md` and `docs/OPERATIONS.md` carry their own `## Worktrees (parallel plans)` section). Step 3's Implementation section says to \"preserve that existing per-router difference\" while converting the link to the plain-name-plus-repo-caveat form, but never states whether the converted prose should use the current display text (\"README\") or the actual target (`docs/OPERATIONS.md`) \u2014 mechanically preserving the display text would commit a permanent, unlinked prose claim that Codex's worktree caveats live in README.md when the router actually cites `docs/OPERATIONS.md`. Real-world consequence stays small since both candidate docs carry an equivalent section, which is why this is LOW rather than blocking.",
+      "suggested_action": "State explicitly, in step 3's cross-file link-repointing instructions for Codex's Workspaces/worktrees pointers, whether the converted plain-name form should follow the link's current display text (\"README\") or its actual href target (`docs/OPERATIONS.md`), resolving the pre-existing mismatch rather than silently carrying it forward.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "codex-worktrees-link-label",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "f3b3f9d4c2e4e260d43d52401e52335391e24d467f739a227babcc32fdf9f8be",
+    "detail_bundle_digest": "250651f00e7fd08202c3196689f93a48adbe121603def709a83c9dee244d9afa",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md",
+        "state": "present",
+        "digest": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md",
+        "state": "present",
+        "digest": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md",
+        "state": "present",
+        "digest": "8f529bdce62284b3f89c98d02a21259c232470f9891b8041c6b1dd57e4693aaf"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md",
+        "state": "present",
+        "digest": "277e785a30f066638fb924c33bb5f3a657c913b6af89685bb5d60c8fb832564b"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md",
+        "state": "present",
+        "digest": "1b4a8ff10311df886d36d65f2ff1ef2daa7b1f9abd294e31893f53b871b0ff6b"
+      }
+    ],
+    "source_seed_digest": "468393fadc9abf27bfc7d16eb80620532a615842fa7f0794a395f190db902755",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

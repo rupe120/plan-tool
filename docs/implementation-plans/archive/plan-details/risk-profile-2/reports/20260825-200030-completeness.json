@@ -1,0 +1,103 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T20:00:30Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2b505490685533145647fd3d4d0d9428af09f45346ee47dcec079acafa7616a3",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-render-one-advisory-risk-context.md": "760fe6f3870880cff16d2e7316d433a30f5ff76348bf9bd1e60acbeaf86b78f5",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context-every-run.md": "0c21541982ca265817b3f9f44c00b78a4e2b0f0c9c696e82e7c2e9336dbb2b59"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T20:00:29Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4`\n- **Detail bundle digest:** `bf4e0ec2386881ac9c430827b2f54f0735f9bf4b34c506020ce0e300e4251a07`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (-2 vs. first audit)\n- **Detail-bundle size:** 18582 bytes (+18582 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply risk-profile-2   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[declaration-refresh-boundary]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`) promises later authoring and review see an accepted declaration update, but `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps its initial parsed `plan` for later `render_detail_prompt` calls; only `collect_detail_quality_findings` reparses from disk. Architecture \u2192 \u201cOne advisory context,\u201d Scope contract \u2192 Outcome/Verification, Test strategy, Testing, Acceptance criteria, and step 2\u2019s Summary, Implementation, Tests, and Acceptance criteria all require both routes to refresh, so an update accepted while converging step 1 reaches later review but not serial authoring for step 2.\n  - Fix: define the serial after-apply refresh boundary so later authoring and quality-review contexts read the accepted declaration while the current apply keeps its captured context.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-2` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4`\n- **Detail bundle digest:** `bf4e0ec2386881ac9c430827b2f54f0735f9bf4b34c506020ce0e300e4251a07`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[declaration-refresh-boundary]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`) promises later authoring and review see an accepted declaration update, but `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps its initial parsed `plan` for later `render_detail_prompt` calls; only `collect_detail_quality_findings` reparses from disk. Architecture \u2192 \u201cOne advisory context,\u201d Scope contract \u2192 Outcome/Verification, Test strategy, Testing, Acceptance criteria, and step 2\u2019s Summary, Implementation, Tests, and Acceptance criteria all require both routes to refresh, so an update accepted while converging step 1 reaches later review but not serial authoring for step 2.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk risk-profile-2` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-84db6587",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`) promises later authoring and review see an acce",
+      "body": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`) promises later authoring and review see an accepted declaration update, but `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps its initial parsed `plan` for later `render_detail_prompt` calls; only `collect_detail_quality_findings` reparses from disk. Architecture \u2192 \u201cOne advisory context,\u201d Scope contract \u2192 Outcome/Verification, Test strategy, Testing, Acceptance criteria, and step 2\u2019s Summary, Implementation, Tests, and Acceptance criteria all require both routes to refresh, so an update accepted while converging step 1 reaches later review but not serial authoring for step 2.",
+      "suggested_action": "define the serial after-apply refresh boundary so later authoring and quality-review contexts read the accepted declaration while the current apply keeps its captured context.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "declaration-refresh-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4",
+      "detail_bundle_digest": "bf4e0ec2386881ac9c430827b2f54f0735f9bf4b34c506020ce0e300e4251a07",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-render-one-advisory-risk-context.md",
+          "state": "present",
+          "digest": "760fe6f3870880cff16d2e7316d433a30f5ff76348bf9bd1e60acbeaf86b78f5"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context-every-run.md",
+          "state": "present",
+          "digest": "0c21541982ca265817b3f9f44c00b78a4e2b0f0c9c696e82e7c2e9336dbb2b59"
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 18582,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

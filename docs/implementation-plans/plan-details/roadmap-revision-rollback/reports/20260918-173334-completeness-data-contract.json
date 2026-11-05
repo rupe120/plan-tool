@@ -1,0 +1,105 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-09718a24": {
+      "code_anchor": "roadmap_revision_publish.py:_member_state",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_revision_publish.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-33b3cac3": {
+      "code_anchor": "roadmap_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_artifacts.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-358349d7": {
+      "code_anchor": "roadmap_revision_publish.py:publish_roadmap_generation",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_revision_publish.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-d9d26a41": {
+      "code_anchor": "roadmap_revision_publish.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_revision_publish.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-e30d6ae1": {
+      "code_anchor": "roadmap_seed_state.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_seed_state.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-f6846e94": {
+      "code_anchor": "roadmap_source_identity.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+      "reason": "code anchor path `roadmap_source_identity.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-0c26c1ae": {
+      "code_anchor": "roadmap_revision_publish.py:_publication_members",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/02-move-run-roadmap-confirmed-brief-rebind.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/02-move-run-roadmap-confirmed-brief-rebind.md",
+      "reason": "code anchor path `roadmap_revision_publish.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-00c55838": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-8a457902": {
+      "code_anchor": "plan_tool/cli/roadmap_cmd.py:_print_restore_hint",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md",
+      "reason": "code anchor `plan_tool/cli/roadmap_cmd.py:_print_restore_hint` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260918-173334-completeness"
+}

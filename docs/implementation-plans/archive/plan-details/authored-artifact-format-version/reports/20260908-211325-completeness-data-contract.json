@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-f40d3e32": {
+      "code_anchor": "parser.py:parse_plan_text",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/authored-artifact-format-version/02-stamp-plan-format-version-both-eligible.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/authored-artifact-format-version/02-stamp-plan-format-version-both-eligible.md",
+      "reason": "code anchor path `parser.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-7b0df405": {
+      "code_anchor": "detail.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/authored-artifact-format-version/04-make-detail-py-sole-authority-current.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/authored-artifact-format-version/04-make-detail-py-sole-authority-current.md",
+      "reason": "code anchor path `detail.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260908-211325-completeness"
+}

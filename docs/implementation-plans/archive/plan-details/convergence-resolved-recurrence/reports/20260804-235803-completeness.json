@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-04T23:58:03Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2d05fc73b549d6de0ba63125b080dbe4f764dc0c5c753a8501b9fdcb93dbd004",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "0431ad02dacbb06bcc4d8bc43e91e09c19a2a24e6155243efa3d1f18ffb2ccbb",
+    "plan_tool/convergence_diagnosis.py": "1d99fceb3f5cecfb56058a69a1bdfc611d515646240989a0c5b441737559b906",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "tests/cli/test_convergence_cmd.py": "70e17a3104cd7485340262371140876426661c60a7a320fad9a5a944bcbb453b",
+    "tests/test_convergence_diagnosis.py": "c86d18784ab03315bc093f9b6ce4a3d731d9fee71f2173814ee8a67276347d3f",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "f92a6ad24f58b737b360e1b774a41a6ebc81d208ac65546d4244ae6dafbc3ddb",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "896e3b424330110e6913031345b3fc0cd371f781f4e6298b0ab6d8f39b849519",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "ae47c1c107ae0c428dbfecfbc34dca0bac865782b245b2a3f792d2312f3d92c8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-04T23:58:03Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply convergence-resolved-recurrence   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[newest-run-evidence]`: Step 1 (`Make an absent or applied latest finding end recurrence`) treats a missing final-run match as clearance even for `run-reconcile` sidecars with false or unknown `outcome_evidence_valid`. `RunSnapshot` defines unknown evidence as \u201cmust not be treated as evidence that an absent finding was cleared,\u201d and `plan_tool/cli/reconcile.py` records invalid output as false; the proposed rule could end a real structural recurrence after a malformed or legacy code-side audit.\n  - Fix: Require explicit valid outcome evidence before a run-reconcile no-match ends recurrence, and cover invalid and legacy saved-sidecar cases.\n- HIGH `[legacy-structural-history]`: Step 2 (`Limit re-decompose advice to structural findings`) says to reuse `STRUCTURAL_SOURCES` \u201cas-is,\u201d but HEAD `plan_tool/review.py:STRUCTURAL_SOURCES` contains only `granularity-split` and `structural-split`, while `docs/ARCHITECTURE.md` says `granularity-split` \u201cgeneralizes the former `detail-purity` finding.\u201d `load_review()` preserves old sources, so a persisted v1 unresolved `detail-purity` series would be excluded and falsely converge instead of retaining structural guidance.\n  - Fix: Define a read-time legacy source bridge and regression so persisted `detail-purity` records count as structural without rewriting sidecars or changing the canonical taxonomy.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[structural-cli-control]`: Step 2 (`Limit re-decompose advice to structural findings`) requires an \u201cexisting CLI positive control\u201d for structural recurrence, but HEAD `tests/cli/test_convergence_cmd.py:test_structural_spinning_emits_reseed` uses `plan-correctness`, and the named fixture update ends with an empty latest run. No consumer test loads a full recurrence of structural-source sidecars and verifies that the retained command renders.\n  - Fix: Add an explicit persisted-sidecar CLI regression with unresolved medium-or-higher structural evidence in every run and assert the spinning recommendation remains.\n  - Address: `plan-tool completeness-apply convergence-resolved-recurrence --anchor structural-cli-control`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Audit shape advisory \u2014 `arm-clustering`\n\nMaterial conceptual findings concentrate in one contiguous plan arm. Decide whether that arm belongs in this plan or should be carved into a separate plan.\n\n- **Arm steps:** 1 \u2014 Make an absent or applied latest finding end recurrence; 2 \u2014 Limit re-decompose advice to structural findings\n- **Stored evidence:** 3 of 3 material finding(s) map to this arm across 3 committed step(s).\n- **Correctness anchors:** `[newest-run-evidence]`, `[legacy-structural-history]`\n- **Completeness anchors:** `[structural-cli-control]`\n\n**Keep or carve?** Continuing with the current arm overrides this signal. It is non-blocking and does not change the apply queue.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[newest-run-evidence]`: Step 1 (`Make an absent or applied latest finding end recurrence`) treats a missing final-run match as clearance even for `run-reconcile` sidecars with false or unknown `outcome_evidence_valid`. `RunSnapshot` defines unknown evidence as \u201cmust not be treated as evidence that an absent finding was cleared,\u201d and `plan_tool/cli/reconcile.py` records invalid output as false; the proposed rule could end a real structural recurrence after a malformed or legacy code-side audit.\n- HIGH `[legacy-structural-history]`: Step 2 (`Limit re-decompose advice to structural findings`) says to reuse `STRUCTURAL_SOURCES` \u201cas-is,\u201d but HEAD `plan_tool/review.py:STRUCTURAL_SOURCES` contains only `granularity-split` and `structural-split`, while `docs/ARCHITECTURE.md` says `granularity-split` \u201cgeneralizes the former `detail-purity` finding.\u201d `load_review()` preserves old sources, so a persisted v1 unresolved `detail-purity` series would be excluded and falsely converge instead of retaining structural guidance.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[structural-cli-control]`: Step 2 (`Limit re-decompose advice to structural findings`) requires an \u201cexisting CLI positive control\u201d for structural recurrence, but HEAD `tests/cli/test_convergence_cmd.py:test_structural_spinning_emits_reseed` uses `plan-correctness`, and the named fixture update ends with an empty latest run. No consumer test loads a full recurrence of structural-source sidecars and verifies that the retained command renders.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-resolved-recurrence` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3321f6d2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Make an absent or applied latest finding end recurrence`) treats a missing final-run match as clearance even fo",
+      "body": "Step 1 (`Make an absent or applied latest finding end recurrence`) treats a missing final-run match as clearance even for `run-reconcile` sidecars with false or unknown `outcome_evidence_valid`. `RunSnapshot` defines unknown evidence as \u201cmust not be treated as evidence that an absent finding was cleared,\u201d and `plan_tool/cli/reconcile.py` records invalid output as false; the proposed rule could end a real structural recurrence after a malformed or legacy code-side audit.",
+      "suggested_action": "Require explicit valid outcome evidence before a run-reconcile no-match ends recurrence, and cover invalid and legacy saved-sidecar cases.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "newest-run-evidence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-546bb0cc",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Limit re-decompose advice to structural findings`) says to reuse `STRUCTURAL_SOURCES` \u201cas-is,\u201d but HEAD `plan_t",
+      "body": "Step 2 (`Limit re-decompose advice to structural findings`) says to reuse `STRUCTURAL_SOURCES` \u201cas-is,\u201d but HEAD `plan_tool/review.py:STRUCTURAL_SOURCES` contains only `granularity-split` and `structural-split`, while `docs/ARCHITECTURE.md` says `granularity-split` \u201cgeneralizes the former `detail-purity` finding.\u201d `load_review()` preserves old sources, so a persisted v1 unresolved `detail-purity` series would be excluded and falsely converge instead of retaining structural guidance.",
+      "suggested_action": "Define a read-time legacy source bridge and regression so persisted `detail-purity` records count as structural without rewriting sidecars or changing the canonical taxonomy.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "legacy-structural-history",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-9a4b9482",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Limit re-decompose advice to structural findings`) requires an \u201cexisting CLI positive control\u201d for structural r",
+      "body": "Step 2 (`Limit re-decompose advice to structural findings`) requires an \u201cexisting CLI positive control\u201d for structural recurrence, but HEAD `tests/cli/test_convergence_cmd.py:test_structural_spinning_emits_reseed` uses `plan-correctness`, and the named fixture update ends with an empty latest run. No consumer test loads a full recurrence of structural-source sidecars and verifies that the retained command renders.",
+      "suggested_action": "Add an explicit persisted-sidecar CLI regression with unresolved medium-or-higher structural evidence in every run and assert the spinning recommendation remains.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "structural-cli-control",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_shape_advisory": {
+    "shape_id": "arm-clustering",
+    "source_plan_fingerprint": "fcbb8d7148e2ef547a448a1d369442e8de0f98d1b3b097bdf4a674318d7affd5",
+    "arm_step_ids": [
+      1,
+      2
+    ],
+    "material_finding_ids": [
+      "plan-plan-correctness-3321f6d2",
+      "plan-plan-correctness-546bb0cc",
+      "plan-plan-completeness-9a4b9482"
+    ],
+    "arm_finding_ids": [
+      "plan-plan-correctness-3321f6d2",
+      "plan-plan-correctness-546bb0cc",
+      "plan-plan-completeness-9a4b9482"
+    ],
+    "material_finding_evidence": [
+      {
+        "finding_id": "plan-plan-correctness-3321f6d2",
+        "anchor": "newest-run-evidence",
+        "source": "plan-correctness"
+      },
+      {
+        "finding_id": "plan-plan-correctness-546bb0cc",
+        "anchor": "legacy-structural-history",
+        "source": "plan-correctness"
+      },
+      {
+        "finding_id": "plan-plan-completeness-9a4b9482",
+        "anchor": "structural-cli-control",
+        "source": "plan-completeness"
+      }
+    ],
+    "material_finding_count": 3,
+    "arm_finding_count": 3,
+    "committed_step_count": 3
+  }
+}

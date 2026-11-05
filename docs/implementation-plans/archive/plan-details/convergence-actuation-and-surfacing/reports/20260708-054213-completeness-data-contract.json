@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-491d9fb9": {
+      "code_anchor": "convergence_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md",
+      "reason": "code anchor path `convergence_cmd.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-2817144b": {
+      "code_anchor": "cli/completeness_phases.py:_persist_and_present_report",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md",
+      "reason": "code anchor path `cli/completeness_phases.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260708-054213-completeness"
+}

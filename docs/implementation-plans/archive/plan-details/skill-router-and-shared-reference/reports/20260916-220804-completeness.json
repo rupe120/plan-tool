@@ -1,0 +1,110 @@
+{
+  "version": 4,
+  "plan_slug": "skill-router-and-shared-reference",
+  "plan_path": "docs/implementation-plans/2-skill-router-and-shared-reference.md",
+  "created_at": "2026-09-16T22:08:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1b356356a6794bb8c8de4eca94992d0b70452c7a7a00de47c446ca41379f0adc",
+  "code_fingerprint": {
+    "BACKLOG.md": "6c14c89aef7f4167918dac5e373575b961f0e3a08847705ecade9f59aa9d1980",
+    "README.md": "8fbea936d77daf00c75408abe9de4e7f90307cbc21b6ae1640a9dc0998154336",
+    "docs/ARCHITECTURE.md": "87589ff6f9b3a58618a1a1321fba6ed318714661ce242e5be7b36bfbb9a25e81",
+    "docs/cli/README.md": "e61dd086e6e5be9f8ff9ee3197a7891c001fc4e84c159fbfa3326f21f4188ec7",
+    "docs/cli/install-skill.md": "1c8eca129c46f1d1039aaba6a9ad452efae9b1237d0d2b9c4d1864e6c57fcc24",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "98977129198fa68a01c8142e17aff0c27a193b6a4f4cf35c664add52b38cffd9",
+    "handoffs/2026-09-16-roadmap-orchestration-primer.md": "10c0bf950b360c555364af3604583bc1b450c41eb043f5457725ff7a0755e46d",
+    "integrations/claude/SKILL.md": "e4457f4e0a6d2c4b58b602a670ddfbae46a24ecaaccacbf91d3dea4b0fccc055",
+    "integrations/codex/SKILL.md": "00abf3a0f0745d8787e82728ce32a3c5c578b009b497a49e43d60cb9db89e4ef",
+    "integrations/shared/DIRECTIVES.md": "d49f6f00ef4937602cfb780c44a20f8f5dd0df7ffc38a5d64ccd6ab8082c1d49",
+    "plan_tool/cli/__init__.py": "3c8ab5eafcb706ddc4812588e1f7a6bc9fb0c9c3896e87509743d82f0e967bb6",
+    "plan_tool/cli/inspect.py": "a9d0f1d287f0853e88d24b1ce1027a63820acd7b9aea4755e1f7bfb47c1db291",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "plan_tool/cli/review_cmd.py": "82732f5ef96a0a22c1983db363985a979c7876a96d89e923aee650dbd9e2409e",
+    "plan_tool/cli/skill_cmd.py": "8574b907e41240f7358888f88606989cdf610153a636325e2a18cb43707fde5c",
+    "tests/cli/test_skill_cmd.py": "2a6f9a421f1fbe02853d91488366eb10a88861f2e4ecfed617ab16e158dda8d7",
+    "tests/test_backend.py": "7973c99a92cbafc90d57da45448edbdf358ec263214214d74a29a5da31266aed",
+    "tests/test_model_specs.py": "d2ba21b320ca154bace6df64407d5912b0704992df794b908107ed0bed255f2c",
+    "tests/test_roadmap_format.py": "a85d3538e62114c2c5a647da418c17db9c21ef21edc9a6eed28e2f4df939cf5e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md": "03611e2ddc825eb8a8e525ebc86ee74532a911d428c705a6143072cf20b87886",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md": "e22ce77d76279fd10386433affce1ea0cb4cc10a81a3a90df1157afe9bc09a94",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md": "b19ecb9c5517d1008b82384d7cac59700d7109b060644f57db0006174a9aaa19"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Skill Router And Shared Reference\n\n`skill-router-and-shared-reference` \u00b7 generated 2026-09-16T22:08:04Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-f9866a59]` [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit skill-router-and-shared-reference` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Skill Router And Shared Reference\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 3 detail cites `integrations/cursor/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 4 detail cites `<root>/skills/plan-tool/SKILL.md` resembling declared `integrations/cursor/SKILL.md` (typo/stale path?)\n- INFO: step 4 detail cites `integrations/claude/SKILL.md` resembling declared `integrations/cursor/SKILL.md` (typo/stale path?)\n- INFO: step 4 detail cites `integrations/codex/SKILL.md` resembling declared `integrations/cursor/SKILL.md` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk skill-router-and-shared-reference` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "ef04a4fd55e132a82fd858b0a24b229139a2a8a04ddf250932a47b4a2ef8dae8",
+    "detail_bundle_digest": "2eda21f6e2506de2abfb28538d3654b1ce8db83b4ca0ee5266ebaf5999296690",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md",
+        "state": "present",
+        "digest": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md",
+        "state": "present",
+        "digest": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md",
+        "state": "present",
+        "digest": "03611e2ddc825eb8a8e525ebc86ee74532a911d428c705a6143072cf20b87886"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md",
+        "state": "present",
+        "digest": "e22ce77d76279fd10386433affce1ea0cb4cc10a81a3a90df1157afe9bc09a94"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md",
+        "state": "present",
+        "digest": "b19ecb9c5517d1008b82384d7cac59700d7109b060644f57db0006174a9aaa19"
+      }
+    ],
+    "source_seed_digest": "468393fadc9abf27bfc7d16eb80620532a615842fa7f0794a395f190db902755",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

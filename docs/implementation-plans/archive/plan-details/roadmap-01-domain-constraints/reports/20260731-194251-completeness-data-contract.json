@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step7-data-contract-b80daf1a": {
+      "code_anchor": "path/to/file.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-01-domain-constraints/07-wire-roadmap-command-cli-help-catalog.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-01-domain-constraints/07-wire-roadmap-command-cli-help-catalog.md",
+      "reason": "code anchor path `path/to/file.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260731-194251-completeness"
+}

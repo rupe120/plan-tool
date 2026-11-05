@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-50c882aa": {
+      "code_anchor": "plan_tool/schema.py:Plan.source_seed",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/sibling-planned-input-paths/01-select-eligible-sibling-creates.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/sibling-planned-input-paths/01-select-eligible-sibling-creates.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.source_seed` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-7a0aa028": {
+      "code_anchor": "plan_tool/schema.py:Step.creates",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/sibling-planned-input-paths/01-select-eligible-sibling-creates.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/sibling-planned-input-paths/01-select-eligible-sibling-creates.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.creates` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261016-013927-completeness"
+}

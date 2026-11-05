@@ -1,0 +1,243 @@
+{
+  "version": 4,
+  "plan_slug": "batch-authoring-observability",
+  "plan_path": "docs/implementation-plans/2-batch-authoring-observability.md",
+  "created_at": "2026-08-12T22:02:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0a048604e70e68b9a911c34a6a50916554bc25e9656632c4da10b7db43ef20ee",
+  "code_fingerprint": {
+    "CLAUDE.md": "ecbbd38f8c30f51e24b58c0426982d577a29e7e23cadfd70999b4f4f359a3e6d",
+    "DATA_CONTRACT.md": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+    "README.md": "04740b32833c11dcca0894604449649819748eab663b339371192a51eceae8eb",
+    "TESTING.md": "d458676d9b84c8b7a6ab5d42f8aed8dd767c3ae6dfb9b7284c62e295745e1827",
+    "docs/ARCHITECTURE.md": "2d876c211e77bb38f9ac248771b134f63bda4b03d0fbd770b39d58f43da63904",
+    "docs/CODEX_CLI_CONTRACT.md": "35b3b6ac1407053ea238ed849cac4b61b94abd46b9a72df1547a01c06b1ce7d3",
+    "docs/RUN_FLOW.md": "3479b3e7b90386a18854671b61e5897090339dbe15340b53450fd3661bae5226",
+    "plan_tool/backend.py": "0cb2657b7bf492a944783ad67a689d06ead740a833a2a61e0618846d870ef876",
+    "plan_tool/claude_errors.py": "f3a97a6fc6faaf4203b8fd41c72880e269333e05e71e686a79e75dab89cd7989",
+    "plan_tool/cli/review_cmd.py": "2d1aa0949bd9036c1277e13159ee30f92714d3e79d3123e916428a28b899ab75",
+    "plan_tool/cli/roadmap_cmd.py": "fbd467295201da2d95a2a9d57007fb7b686633e94462aa222b4f1f2f4aea1137",
+    "plan_tool/cli/run_cmd.py": "0e5a7779d8bb188686b95891aad8f0fb7dff7f22c7bf09802460438cbffad045",
+    "plan_tool/data_contract.py": "d587f1b44758b01376fdd01b7b5d86b268ba82d807c93f1161a41eac98b86551",
+    "plan_tool/launcher.py": "f36a81f51090e898a5e910ba6c79585f91281899c073ef28556b808c3256e05b",
+    "plan_tool/roadmap.py": "4f1b944c0326b3c008dc11dfcc134c67222f8a891132435b84c04e4867e9b750",
+    "plan_tool/run_log.py": "c33ad0f9599aa9f9fde80a7f304917754ef534c311e9d5e0c987caf0d724979d",
+    "plan_tool/shell.py": "3f91d25812323c4325241419d2929c44d7b0c2ddc1e5905dd825c57af3c16d07",
+    "tests/cli/test_roadmap_cmd.py": "157ddbe3eef8ac5071f7fbe5eda4372405b3cf841a585957734dbe318bcc52b9",
+    "tests/cli/test_run_cmd.py": "5320e7fe240f45010915af0cd0b8e84638f7171b3a28e51280e7458b86a15102",
+    "tests/subprocess_doubles.py": "32b5cf7dd19efb3ad378f70b1443c6817117856d132e40f7d9070e186c2cd7c3",
+    "tests/test_backend.py": "6cb6f1d9951eb5268644ace34f159004f0ff11ad2d228aaf1de02bd7323e3301",
+    "tests/test_claude_errors.py": "3fedc581221ad2f83941f0affafafd7b12f88a5b3a5394b13d07f0ea7985a7b3",
+    "tests/test_data_contract.py": "5db247f16dc21ffa6082ce4041426c64e4f12679107078abebb6e6f542c075aa",
+    "tests/test_launcher.py": "4d554155805818f54de4717ffe824d7b8b7315ff006238a703f3945f20420e34",
+    "tests/test_roadmap.py": "6fbdfe45a7c5cc68e18edbbb2a646b99d9ba3ee84031548bcba77997ffe3dced",
+    "tests/test_run_log.py": "7b2910918688d27282104b7c29aa41b27d6373f5732a78823da0af97efcdfa80",
+    "tests/test_shell.py": "8ae0352d8000a38154dc478d0a939605dc5730242e825d8d72f232e8340f54a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/batch-authoring-observability/01-pin-today-batch-call-logging-timeout.md": "02b2eecaa5ba24583adb2e01fcbaafe58bd07f7cfce19f391d1788eeb247a92e",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md": "5f3964e3aff2a4f4f9c7df59558b65c0adfa9e6656f7929c25004b2879fd4462",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/03-kill-on-any-exception-safety-net-around.md": "52bb00c8569d75cc31befb9132de0612bdbce803c3cee44e3d85f9491c29da98",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/04-configured-timeout-kill-termination.md": "793201b738eeb22fa1b0c935a23ff19044e01f9935c6faca61f58a35484f42f1",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md": "0726d7f93bb8b9a540641adea5a9f10793e8a0931e3f68aa301dfc2c811e136a",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md": "010022266aec0e9ee135296836ec367902e21930aac855afd17ced3869526a8c",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md": "481a5e011d30fbc71c57633f3a5a60e4f1846b8aa30a6fb10d4659d87aa0e085",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/08-record-ctrl-interrupt-reap-child.md": "08ea4af6deae167e9948706a3cf8521429b869110d96722ab7e7b89b81446a35",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/09-keep-flight-json-current-whole-life-call.md": "d061a710141c42b6d3cf1de71267a3f2317a229f3030f1c1f9a504bb983e1e6e",
+    "docs/implementation-plans/plan-details/batch-authoring-observability/10-redact-tool-input-summaries-all-three.md": "224743c70d0bdd85859a47d0157d5d8f5db7c7c33efa13024dd5adad839401b3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Batch Authoring Observability\n\n`batch-authoring-observability` \u00b7 generated 2026-08-12T22:02:39Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `0a048604e70e68b9a911c34a6a50916554bc25e9656632c4da10b7db43ef20ee`\n- **Detail bundle digest:** `623592777de553ce1f8e2a5fe9fd0f47627df65e41a90a29bfa31f7dc93198ee`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 10 (-2 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.22\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.20\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply batch-authoring-observability   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk batch-authoring-observability  # alternative interactive review/apply\n\n- MEDIUM `[verbose-summary-redaction-scope]`: Step 6 (Run batch claude calls through the shared runner instead of subprocess.run) says `run`'s existing call sites pass `redaction_ready=True`, \"matching their current unredacted -v posture,\" and Architecture's closed \"allowed behavior changes\" list (five items) names no change to `run`'s console output. But `run`'s `-v` line comes from the same `parse_stream_line` \u2192 `_summarize_tool_input` path `claude_invoke`'s batch calls use \u2014 `backend.py`'s `CliBackend` wires one `parse_stream_line` function to both `batch_argv` and `streaming_argv`, and `launcher._run_streaming_once` reads `tool_input_summary` off that same parsed event for its own `-v` print. `redaction_ready` only controls whether the runner prints the line at all \u2014 it does not gate what `_summarize_tool_input` puts in it. Once step 7 (and step 10, for codex/cursor) add the actual redaction rule inside that shared function, `run`'s and `apply_finding`'s own `-v` output starts showing `[REDACTED]`/`[OMITTED]` text where it shows the real command/path today, for every backend \u2014 a real, user-visible change to `run`'s existing output that the plan's own exhaustive change list omits and that \"matching their current unredacted posture\" reads as denying.\n  - Fix: add a sixth item to Architecture's allowed-behavior-changes list stating that `run`'s and `apply_finding`'s own `-v` tool-input summaries also become redacted once steps 7 and 10 land (every caller through the shared parser, not just batch), correct step 6's \"unredacted posture\" phrasing to scope it to line-suppression only, and extend the Testing section's secret-fixture proof to cover a `run` step call under each backend the redaction reaches.\n- MEDIUM `[backend-spawn-effective-timeout]`: Architecture's `backend_spawn` event schema lists a field `effective_timeout_ms` with no stated meaning. A `claude_invoke` caller can have two thresholds in play \u2014 the configured `PLAN_TOOL_CLAUDE_TIMEOUT`/`scoped_claude_timeout` value (step 4) and the 900-second silence threshold (or step 4's per-caller override) \u2014 while a `run` step call only ever has the silence threshold, since `run`'s call sites stay exempt from the configured timeout (Architecture, Out of scope). Nothing says whether `effective_timeout_ms` reports the configured timeout, the silence threshold, the smaller of the two, or is left null for a caller with no configured timeout. Two implementers could populate the same `run` spawn event differently, and an operator reading `in-flight.json`/the JSONL would draw a different conclusion about how much time a stalled call has left.\n  - Fix: define `effective_timeout_ms` per caller shape \u2014 what it reports when only the silence threshold applies (`run`, and any `claude_invoke` caller under a silence override with no configured timeout) versus when both thresholds apply \u2014 at the point the field is introduced.\n- HIGH `[recovery-wait-observer-plumbing]`: Step 5 (Add the backend_spawn, backend_termination, run_interrupted, and backend_recovery_wait run-log events) has `claude_invoke`'s wait/sleep wrapper emit `backend_recovery_wait`, and its Ctrl-C-during-wait handling emit `run_interrupted` \u2014 both need a `RunLogWriter`/observer reference to write into the JSONL for the batch lane. Architecture's own \"Observer wiring\" bullet says that reference doesn't exist for `claude_invoke` until step 7: at HEAD (confirmed in `shell.py`), `shell.get_active_sink()` returns only the narrow `MetaSink` (`Callable[[ClaudeCallEnd], None]`) with \"no path back to the writer itself,\" and the second ContextVar that \"carries the writer itself\" is explicitly what \"step 7 adds.\" Step 5 is sequenced two steps earlier with no inert-until-wired fallback described for this gap (unlike step 6/7's `redaction_ready` flag and step 7/8's trivial fallback observer, both of which the plan deliberately calls out as safe-to-land-alone), so a developer implementing step 5 cannot pass its own Testing requirement that a `roadmap` batch call emit `backend_recovery_wait` \"for both lanes\" \u2014 the run lane works today because `shell_invoker` already reads the real writer directly off `launcher._run_logger_var` (confirmed at `launcher.py:614`) before building its wait seam, but `claude_invoke` has nothing to write through.\n  - Fix: give step 5 the minimal writer-carrying hook `claude_invoke` needs (pulling forward the piece of step 7's ContextVar it depends on), or explicitly scope step 5's batch-lane wrap as inert-until-step-7 the same way step 6 states `redaction_ready`'s inertness \u2014 apply this to both new batch-lane events step 5 introduces (`backend_recovery_wait` and the Ctrl-C-during-wait `run_interrupted`), and update step 5's own Testing bullet plus the plan Testing section's \"both lanes\" claim to match.\n- HIGH `[run-end-termination-reason]`: Architecture states \"`run_end` carries a normalized `termination_reason` alongside its existing compatibility fields,\" and Risks says a multi-spawn bracket's `run_end.termination_reason` must reflect the terminal spawn's reason (not the first), calling this \"not automatic.\" But at HEAD, `RunLogWriter.run_end()` (`plan_tool/run_log.py`) only takes `outcome`/`rc`/`error`, and it is called from roughly twenty separate sites across `roadmap.py` (\u00d74), `cli/run_cmd.py` (\u00d72), `cli/authoring.py` (\u00d78), `cli/completeness_cmd.py` (\u00d73), `cli/gates_cmd.py`, `cli/lessons_cmd.py`, `cli/review_cmd.py`, and `cli/reconcile.py` (\u00d73) \u2014 none of which any of the ten steps touches. No step says which layer remembers \"the last spawn's reason\" across a call's own retry loop (or across an entire multi-stage `roadmap` run) and carries it up to whichever call site eventually invokes `run_end()`, nor which of the \"interrupt always wins\" precedence rules gets applied where. It is also unstated whether this field is meant for every writer-holding caller (`create`, `detail`, `completeness-audit`, `gates`, `lessons`, `review`, `reconcile`) or only `roadmap`/`run`, the two names Testing and Acceptance criteria actually cite.\n  - Fix: add a step (or extend step 7/8) specifying that `RunLogWriter` itself tracks the most recent termination reason as `backend_termination`/`run_interrupted` events pass through it \u2014 applying the interrupt-wins precedence there \u2014 that `run_end()` reads that value by default, and state explicitly which commands/call sites are in scope for the new field.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[unknown-termination-reason]`: Architecture's closed termination-reason enum lists `unknown` beside `completed`, `configured_timeout`, `silence_timeout`, `operator_interrupt`, `spawn_failure`, and `backend_nonzero`, but no step or Testing bullet says what produces it. Every other value has an owning step and an explicit test (step 4 for `configured_timeout`/`silence_timeout`/`spawn_failure`, step 8 for `operator_interrupt`, Testing's dedicated bullet for `backend_nonzero`) \u2014 `unknown` has neither. Step 3 wraps `proc.wait()` so \"any exception, including KeyboardInterrupt, kills the child\"; step 4 gives KeyboardInterrupt its own `operator_interrupt` reason, but a different exception surfacing from `proc.wait()` (say a stray `OSError`) also triggers step 3's kill and has nowhere else to land \u2014 `unknown` reads as the obvious catch, but the plan never says so, and no Testing case proves it.\n  - Fix: add a sentence to Architecture stating what `unknown` covers (a `proc.wait()` exception that is neither `KeyboardInterrupt` nor a monitor-thread-initiated timeout kill) and add a Testing bullet proving that case is classified `unknown` with the child still reaped.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d1bcc7b7]`: The plan's `## Acceptance criteria` names `_run_once`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-fb3a2caf]`: The plan's `## Acceptance criteria` names `claude_errors.backend_timeout_sentinel`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bfaf486d]`: The plan's `## Acceptance criteria` names `configured_timeout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2a2e5cfa]`: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-54a6a6ea]`: The plan's `## Acceptance criteria` names `plan_tool_shell_debug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5ddacea9]`: The plan's `## Acceptance criteria` names `shell._normalize_batch_stdout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-02d29fe8]`: The plan's `## Acceptance criteria` names `shell._run_once`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae66fed2]`: The plan's `## Acceptance criteria` names `silence_timeout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f3c13dcc]`: The plan's `## Acceptance criteria` names `subprocess.timeoutexpired`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit batch-authoring-observability` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Batch Authoring Observability\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `0a048604e70e68b9a911c34a6a50916554bc25e9656632c4da10b7db43ef20ee`\n- **Detail bundle digest:** `623592777de553ce1f8e2a5fe9fd0f47627df65e41a90a29bfa31f7dc93198ee`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 10 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[verbose-summary-redaction-scope]`: Step 6 (Run batch claude calls through the shared runner instead of subprocess.run) says `run`'s existing call sites pass `redaction_ready=True`, \"matching their current unredacted -v posture,\" and Architecture's closed \"allowed behavior changes\" list (five items) names no change to `run`'s console output. But `run`'s `-v` line comes from the same `parse_stream_line` \u2192 `_summarize_tool_input` path `claude_invoke`'s batch calls use \u2014 `backend.py`'s `CliBackend` wires one `parse_stream_line` function to both `batch_argv` and `streaming_argv`, and `launcher._run_streaming_once` reads `tool_input_summary` off that same parsed event for its own `-v` print. `redaction_ready` only controls whether the runner prints the line at all \u2014 it does not gate what `_summarize_tool_input` puts in it. Once step 7 (and step 10, for codex/cursor) add the actual redaction rule inside that shared function, `run`'s and `apply_finding`'s own `-v` output starts showing `[REDACTED]`/`[OMITTED]` text where it shows the real command/path today, for every backend \u2014 a real, user-visible change to `run`'s existing output that the plan's own exhaustive change list omits and that \"matching their current unredacted posture\" reads as denying.\n- MEDIUM `[backend-spawn-effective-timeout]`: Architecture's `backend_spawn` event schema lists a field `effective_timeout_ms` with no stated meaning. A `claude_invoke` caller can have two thresholds in play \u2014 the configured `PLAN_TOOL_CLAUDE_TIMEOUT`/`scoped_claude_timeout` value (step 4) and the 900-second silence threshold (or step 4's per-caller override) \u2014 while a `run` step call only ever has the silence threshold, since `run`'s call sites stay exempt from the configured timeout (Architecture, Out of scope). Nothing says whether `effective_timeout_ms` reports the configured timeout, the silence threshold, the smaller of the two, or is left null for a caller with no configured timeout. Two implementers could populate the same `run` spawn event differently, and an operator reading `in-flight.json`/the JSONL would draw a different conclusion about how much time a stalled call has left.\n- HIGH `[recovery-wait-observer-plumbing]`: Step 5 (Add the backend_spawn, backend_termination, run_interrupted, and backend_recovery_wait run-log events) has `claude_invoke`'s wait/sleep wrapper emit `backend_recovery_wait`, and its Ctrl-C-during-wait handling emit `run_interrupted` \u2014 both need a `RunLogWriter`/observer reference to write into the JSONL for the batch lane. Architecture's own \"Observer wiring\" bullet says that reference doesn't exist for `claude_invoke` until step 7: at HEAD (confirmed in `shell.py`), `shell.get_active_sink()` returns only the narrow `MetaSink` (`Callable[[ClaudeCallEnd], None]`) with \"no path back to the writer itself,\" and the second ContextVar that \"carries the writer itself\" is explicitly what \"step 7 adds.\" Step 5 is sequenced two steps earlier with no inert-until-wired fallback described for this gap (unlike step 6/7's `redaction_ready` flag and step 7/8's trivial fallback observer, both of which the plan deliberately calls out as safe-to-land-alone), so a developer implementing step 5 cannot pass its own Testing requirement that a `roadmap` batch call emit `backend_recovery_wait` \"for both lanes\" \u2014 the run lane works today because `shell_invoker` already reads the real writer directly off `launcher._run_logger_var` (confirmed at `launcher.py:614`) before building its wait seam, but `claude_invoke` has nothing to write through.\n- HIGH `[run-end-termination-reason]`: Architecture states \"`run_end` carries a normalized `termination_reason` alongside its existing compatibility fields,\" and Risks says a multi-spawn bracket's `run_end.termination_reason` must reflect the terminal spawn's reason (not the first), calling this \"not automatic.\" But at HEAD, `RunLogWriter.run_end()` (`plan_tool/run_log.py`) only takes `outcome`/`rc`/`error`, and it is called from roughly twenty separate sites across `roadmap.py` (\u00d74), `cli/run_cmd.py` (\u00d72), `cli/authoring.py` (\u00d78), `cli/completeness_cmd.py` (\u00d73), `cli/gates_cmd.py`, `cli/lessons_cmd.py`, `cli/review_cmd.py`, and `cli/reconcile.py` (\u00d73) \u2014 none of which any of the ten steps touches. No step says which layer remembers \"the last spawn's reason\" across a call's own retry loop (or across an entire multi-stage `roadmap` run) and carries it up to whichever call site eventually invokes `run_end()`, nor which of the \"interrupt always wins\" precedence rules gets applied where. It is also unstated whether this field is meant for every writer-holding caller (`create`, `detail`, `completeness-audit`, `gates`, `lessons`, `review`, `reconcile`) or only `roadmap`/`run`, the two names Testing and Acceptance criteria actually cite.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[unknown-termination-reason]`: Architecture's closed termination-reason enum lists `unknown` beside `completed`, `configured_timeout`, `silence_timeout`, `operator_interrupt`, `spawn_failure`, and `backend_nonzero`, but no step or Testing bullet says what produces it. Every other value has an owning step and an explicit test (step 4 for `configured_timeout`/`silence_timeout`/`spawn_failure`, step 8 for `operator_interrupt`, Testing's dedicated bullet for `backend_nonzero`) \u2014 `unknown` has neither. Step 3 wraps `proc.wait()` so \"any exception, including KeyboardInterrupt, kills the child\"; step 4 gives KeyboardInterrupt its own `operator_interrupt` reason, but a different exception surfacing from `proc.wait()` (say a stray `OSError`) also triggers step 3's kill and has nowhere else to land \u2014 `unknown` reads as the obvious catch, but the plan never says so, and no Testing case proves it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_run_once`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `claude_errors.backend_timeout_sentinel`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `configured_timeout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_tool_shell_debug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `shell._normalize_batch_stdout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `shell._run_once`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `silence_timeout`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `subprocess.timeoutexpired`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit batch-authoring-observability` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-c378d01d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6 (Run batch claude calls through the shared runner instead of subprocess.run) says `run`'s existing call sites pas",
+      "body": "Step 6 (Run batch claude calls through the shared runner instead of subprocess.run) says `run`'s existing call sites pass `redaction_ready=True`, \"matching their current unredacted -v posture,\" and Architecture's closed \"allowed behavior changes\" list (five items) names no change to `run`'s console output. But `run`'s `-v` line comes from the same `parse_stream_line` \u2192 `_summarize_tool_input` path `claude_invoke`'s batch calls use \u2014 `backend.py`'s `CliBackend` wires one `parse_stream_line` function to both `batch_argv` and `streaming_argv`, and `launcher._run_streaming_once` reads `tool_input_summary` off that same parsed event for its own `-v` print. `redaction_ready` only controls whether the runner prints the line at all \u2014 it does not gate what `_summarize_tool_input` puts in it. Once step 7 (and step 10, for codex/cursor) add the actual redaction rule inside that shared function, `run`'s and `apply_finding`'s own `-v` output starts showing `[REDACTED]`/`[OMITTED]` text where it shows the real command/path today, for every backend \u2014 a real, user-visible change to `run`'s existing output that the plan's own exhaustive change list omits and that \"matching their current unredacted posture\" reads as denying.",
+      "suggested_action": "add a sixth item to Architecture's allowed-behavior-changes list stating that `run`'s and `apply_finding`'s own `-v` tool-input summaries also become redacted once steps 7 and 10 land (every caller through the shared parser, not just batch), correct step 6's \"unredacted posture\" phrasing to scope it to line-suppression only, and extend the Testing section's secret-fixture proof to cover a `run` step call under each backend the redaction reaches.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "verbose-summary-redaction-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-0e780aab",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture's `backend_spawn` event schema lists a field `effective_timeout_ms` with no stated meaning. A `claude_invok",
+      "body": "Architecture's `backend_spawn` event schema lists a field `effective_timeout_ms` with no stated meaning. A `claude_invoke` caller can have two thresholds in play \u2014 the configured `PLAN_TOOL_CLAUDE_TIMEOUT`/`scoped_claude_timeout` value (step 4) and the 900-second silence threshold (or step 4's per-caller override) \u2014 while a `run` step call only ever has the silence threshold, since `run`'s call sites stay exempt from the configured timeout (Architecture, Out of scope). Nothing says whether `effective_timeout_ms` reports the configured timeout, the silence threshold, the smaller of the two, or is left null for a caller with no configured timeout. Two implementers could populate the same `run` spawn event differently, and an operator reading `in-flight.json`/the JSONL would draw a different conclusion about how much time a stalled call has left.",
+      "suggested_action": "define `effective_timeout_ms` per caller shape \u2014 what it reports when only the silence threshold applies (`run`, and any `claude_invoke` caller under a silence override with no configured timeout) versus when both thresholds apply \u2014 at the point the field is introduced.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "backend-spawn-effective-timeout",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-cdba408a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (Add the backend_spawn, backend_termination, run_interrupted, and backend_recovery_wait run-log events) has `clau",
+      "body": "Step 5 (Add the backend_spawn, backend_termination, run_interrupted, and backend_recovery_wait run-log events) has `claude_invoke`'s wait/sleep wrapper emit `backend_recovery_wait`, and its Ctrl-C-during-wait handling emit `run_interrupted` \u2014 both need a `RunLogWriter`/observer reference to write into the JSONL for the batch lane. Architecture's own \"Observer wiring\" bullet says that reference doesn't exist for `claude_invoke` until step 7: at HEAD (confirmed in `shell.py`), `shell.get_active_sink()` returns only the narrow `MetaSink` (`Callable[[ClaudeCallEnd], None]`) with \"no path back to the writer itself,\" and the second ContextVar that \"carries the writer itself\" is explicitly what \"step 7 adds.\" Step 5 is sequenced two steps earlier with no inert-until-wired fallback described for this gap (unlike step 6/7's `redaction_ready` flag and step 7/8's trivial fallback observer, both of which the plan deliberately calls out as safe-to-land-alone), so a developer implementing step 5 cannot pass its own Testing requirement that a `roadmap` batch call emit `backend_recovery_wait` \"for both lanes\" \u2014 the run lane works today because `shell_invoker` already reads the real writer directly off `launcher._run_logger_var` (confirmed at `launcher.py:614`) before building its wait seam, but `claude_invoke` has nothing to write through.",
+      "suggested_action": "give step 5 the minimal writer-carrying hook `claude_invoke` needs (pulling forward the piece of step 7's ContextVar it depends on), or explicitly scope step 5's batch-lane wrap as inert-until-step-7 the same way step 6 states `redaction_ready`'s inertness \u2014 apply this to both new batch-lane events step 5 introduces (`backend_recovery_wait` and the Ctrl-C-during-wait `run_interrupted`), and update step 5's own Testing bullet plus the plan Testing section's \"both lanes\" claim to match.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recovery-wait-observer-plumbing",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-1a6e8e1a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture states \"`run_end` carries a normalized `termination_reason` alongside its existing compatibility fields,\" a",
+      "body": "Architecture states \"`run_end` carries a normalized `termination_reason` alongside its existing compatibility fields,\" and Risks says a multi-spawn bracket's `run_end.termination_reason` must reflect the terminal spawn's reason (not the first), calling this \"not automatic.\" But at HEAD, `RunLogWriter.run_end()` (`plan_tool/run_log.py`) only takes `outcome`/`rc`/`error`, and it is called from roughly twenty separate sites across `roadmap.py` (\u00d74), `cli/run_cmd.py` (\u00d72), `cli/authoring.py` (\u00d78), `cli/completeness_cmd.py` (\u00d73), `cli/gates_cmd.py`, `cli/lessons_cmd.py`, `cli/review_cmd.py`, and `cli/reconcile.py` (\u00d73) \u2014 none of which any of the ten steps touches. No step says which layer remembers \"the last spawn's reason\" across a call's own retry loop (or across an entire multi-stage `roadmap` run) and carries it up to whichever call site eventually invokes `run_end()`, nor which of the \"interrupt always wins\" precedence rules gets applied where. It is also unstated whether this field is meant for every writer-holding caller (`create`, `detail`, `completeness-audit`, `gates`, `lessons`, `review`, `reconcile`) or only `roadmap`/`run`, the two names Testing and Acceptance criteria actually cite.",
+      "suggested_action": "add a step (or extend step 7/8) specifying that `RunLogWriter` itself tracks the most recent termination reason as `backend_termination`/`run_interrupted` events pass through it \u2014 applying the interrupt-wins precedence there \u2014 that `run_end()` reads that value by default, and state explicitly which commands/call sites are in scope for the new field.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "run-end-termination-reason",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-f8e87486",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture's closed termination-reason enum lists `unknown` beside `completed`, `configured_timeout`, `silence_timeout",
+      "body": "Architecture's closed termination-reason enum lists `unknown` beside `completed`, `configured_timeout`, `silence_timeout`, `operator_interrupt`, `spawn_failure`, and `backend_nonzero`, but no step or Testing bullet says what produces it. Every other value has an owning step and an explicit test (step 4 for `configured_timeout`/`silence_timeout`/`spawn_failure`, step 8 for `operator_interrupt`, Testing's dedicated bullet for `backend_nonzero`) \u2014 `unknown` has neither. Step 3 wraps `proc.wait()` so \"any exception, including KeyboardInterrupt, kills the child\"; step 4 gives KeyboardInterrupt its own `operator_interrupt` reason, but a different exception surfacing from `proc.wait()` (say a stray `OSError`) also triggers step 3's kill and has nowhere else to land \u2014 `unknown` reads as the obvious catch, but the plan never says so, and no Testing case proves it.",
+      "suggested_action": "add a sentence to Architecture stating what `unknown` covers (a `proc.wait()` exception that is neither `KeyboardInterrupt` nor a monitor-thread-initiated timeout kill) and add a Testing bullet proving that case is classified `unknown` with the child still reaped.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unknown-termination-reason",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "0a048604e70e68b9a911c34a6a50916554bc25e9656632c4da10b7db43ef20ee",
+      "detail_bundle_digest": "623592777de553ce1f8e2a5fe9fd0f47627df65e41a90a29bfa31f7dc93198ee",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/01-pin-today-batch-call-logging-timeout.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/03-kill-on-any-exception-safety-net-around.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/04-configured-timeout-kill-termination.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 8,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/08-record-ctrl-interrupt-reap-child.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 9,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/09-keep-flight-json-current-whole-life-call.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 10,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/batch-authoring-observability/10-redact-tool-input-summaries-all-three.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 10,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2222222222222222,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.2,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

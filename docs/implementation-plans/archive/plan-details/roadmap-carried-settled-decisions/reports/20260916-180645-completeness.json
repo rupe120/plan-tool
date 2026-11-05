@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-carried-settled-decisions",
+  "plan_path": "docs/implementation-plans/2-roadmap-carried-settled-decisions.md",
+  "created_at": "2026-09-16T18:06:45Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "819b9182e0971799672335dbdd04ba949f1f6c6596f12ebb4fb7271125e87576",
+  "code_fingerprint": {
+    "BACKLOG.md": "8981d8e3bf1cc8f2dc234cbb9a4f18271962b5b4ef4b0571c07c5919583b57cf",
+    "DATA_CONTRACT.md": "95399dad8144da1bc79f038e39114cae2c8912fb7b0627c829ed8a6654a84923",
+    "ROADMAP_FORMAT.md": "32ddec5099d440f0f87dcd0c09d7bd2d0b2c5f298a2075a14c39e9726943620b",
+    "docs/how-to/roadmap.md": "8f967486d52cbd3289b4e6770ca452c998036adb1525242b98072476098b254c",
+    "plan_tool/prompts/roadmap-components.md": "616c447aebd57844c09425aeac8f35b3e3fa0f1640850fced803eb4cd54a887e",
+    "plan_tool/prompts/roadmap-constraints.md": "a192218abc82e27638fa98ecf184394fd5ff52602c1590a4268c628d8a9a76a6",
+    "plan_tool/prompts/roadmap-domain.md": "879ee53b440a9380e92ca33da31f8ce859731b4a2c8b567c008a5636900f938e",
+    "plan_tool/prompts/roadmap-plans.md": "b55ca4621a3a2010f2425a3d43f7c4b7876431bc6ab54902a28b16c1eb535d88",
+    "plan_tool/roadmap.py": "0eebdad36cfe0752faf941a8cccd4a7f0018f564b8aa3eafbd56092dcfa9b3ce",
+    "plan_tool/roadmap_artifacts.py": "8b1d166df03a8ef3b2653d673b100417ba5300d41c9df8484d807c1a47db7f17",
+    "plan_tool/roadmap_gates.py": "e86aaaf99281ea836135c9bf372520f0dd6d48d637a4159a2ae0aa2060fcdab2",
+    "plan_tool/roadmap_source.py": "306b92fa4944d6e1d8b224f95400e6755c55a8c883532e175a95412b21701038",
+    "tests/test_roadmap.py": "567ec9da98c8ef5907a16e44269f037d7ac52d24a34d5d942bcdc5b22943a82c",
+    "tests/test_roadmap_artifacts.py": "879edec69df96c375a61a78f33b556e0565daa6e711b9eefa6118462a6df518c",
+    "tests/test_roadmap_gates.py": "8aeef26e4dbfaba2ed3dfe1b206c8ddcdf76ab949e3706bafa8f547fe4eb8d0d",
+    "tests/test_roadmap_source.py": "57e02394bc96b889cf4b0475242df737bba15811259ad90a8e52c76289e6951e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md": "4944b78370c5d3a6c8e14e3facd80e48e319b266f1daa1542c725de708efebe0",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md": "072a4db8f39ce2f41f27c6d398a9d8ea57756b22211b379a0bc60e03f4f6107a",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md": "9cd8b4c03ad8283b5687f40771486004dd140d0d8f04f9d7b42f24aaa12a11e0",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-each-carried-decision-only-its.md": "e19fd4040a175ee33b14645df939bfe47cddb5866c0404194f948579c8b1c32a",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md": "2e5b320f16ba330cf650230e1e98e84d062a3ee09b3cc7122f31aa2c6e74197f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Carried Settled Decisions\n\n`roadmap-carried-settled-decisions` \u00b7 generated 2026-09-16T18:06:45Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c39ff75fa3d0b2b1e9f6ac8c3151fb961c89dcc98698dcfb47f63bca6380bc80`\n- **Detail bundle digest:** `4698f91f074925fe1fa5de3c8e10e7c69519b4b1d77de68f456743146f455e53`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 54531 bytes (+54531 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[inherited-decision-revision-contract]` [confidence: limited]: Step 2\u2019s `## Implementation` says \u201c`DecisionRow` has construction sites outside this step\u2019s file list, including `plan_tool/roadmap_revision.py:_row_from_wire_record`,\u201d but that symbol does not exist. The actual revision path is `plan_tool/roadmap_revision.py:DecisionRowPayload` and `_decode_row_payload`; both require Roadmap-derived rationale and alternatives and forbid an inherited `source` field. Step 4\u2019s bounded revision route (`plan_tool/roadmap.py:_run_bounded_stage_feedback`) uses that path, so a feedback revision of an inherited row cannot preserve its provenance and cannot meet the Architecture rule that later revisions re-gate carried rows against the current source.\n  - Fix: Extend the inherited-row contract through the bounded revision payload, merge, and tests so revisions preserve or explicitly validate inherited provenance before the step 3 gate rechecks it.\n- HIGH `[carried-decision-source-admission]` [confidence: limited]: Step 1 (`Parse and validate the optional carried-decision block\u2026`) defines how `source.json` parses and persists carried decisions, but not how a caller supplies that block. At HEAD, `plan_tool/roadmap.py:_resolve_brief_path` accepts only a brief path and `_write_brief_source` constructs `source.json` from that path and digest, so the new collection cannot enter an initial or rebind write through the stated workflow. This prevents the plan\u2019s central outcome from being produced without hand-editing an internal record.  \n  \n  ```text\n  Architecture: \u201cAccept one closed, generic block of carried decisions associated with the already recorded Roadmap source.\u201d\n  ```\n  - Fix: Specify the closed caller-to-recorded-source input route and its ownership for initial recording and confirmed rebind, while preserving the no-free-form and atomic lifecycle boundaries.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Carried Settled Decisions\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c39ff75fa3d0b2b1e9f6ac8c3151fb961c89dcc98698dcfb47f63bca6380bc80`\n- **Detail bundle digest:** `4698f91f074925fe1fa5de3c8e10e7c69519b4b1d77de68f456743146f455e53`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[inherited-decision-revision-contract]` [confidence: limited]: Step 2\u2019s `## Implementation` says \u201c`DecisionRow` has construction sites outside this step\u2019s file list, including `plan_tool/roadmap_revision.py:_row_from_wire_record`,\u201d but that symbol does not exist. The actual revision path is `plan_tool/roadmap_revision.py:DecisionRowPayload` and `_decode_row_payload`; both require Roadmap-derived rationale and alternatives and forbid an inherited `source` field. Step 4\u2019s bounded revision route (`plan_tool/roadmap.py:_run_bounded_stage_feedback`) uses that path, so a feedback revision of an inherited row cannot preserve its provenance and cannot meet the Architecture rule that later revisions re-gate carried rows against the current source.\n- HIGH `[carried-decision-source-admission]` [confidence: limited]: Step 1 (`Parse and validate the optional carried-decision block\u2026`) defines how `source.json` parses and persists carried decisions, but not how a caller supplies that block. At HEAD, `plan_tool/roadmap.py:_resolve_brief_path` accepts only a brief path and `_write_brief_source` constructs `source.json` from that path and digest, so the new collection cannot enter an initial or rebind write through the stated workflow. This prevents the plan\u2019s central outcome from being produced without hand-editing an internal record.  \n  \n  ```text\n  Architecture: \u201cAccept one closed, generic block of carried decisions associated with the already recorded Roadmap source.\u201d\n  ```\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-carried-settled-decisions --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-be6903dd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2\u2019s `## Implementation` says \u201c`DecisionRow` has construction sites outside this step\u2019s file list, including `plan_t",
+      "body": "Step 2\u2019s `## Implementation` says \u201c`DecisionRow` has construction sites outside this step\u2019s file list, including `plan_tool/roadmap_revision.py:_row_from_wire_record`,\u201d but that symbol does not exist. The actual revision path is `plan_tool/roadmap_revision.py:DecisionRowPayload` and `_decode_row_payload`; both require Roadmap-derived rationale and alternatives and forbid an inherited `source` field. Step 4\u2019s bounded revision route (`plan_tool/roadmap.py:_run_bounded_stage_feedback`) uses that path, so a feedback revision of an inherited row cannot preserve its provenance and cannot meet the Architecture rule that later revisions re-gate carried rows against the current source.",
+      "suggested_action": "Extend the inherited-row contract through the bounded revision payload, merge, and tests so revisions preserve or explicitly validate inherited provenance before the step 3 gate rechecks it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "inherited-decision-revision-contract",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-5507dc28",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Parse and validate the optional carried-decision block\u2026`) defines how `source.json` parses and persists carried",
+      "body": "Step 1 (`Parse and validate the optional carried-decision block\u2026`) defines how `source.json` parses and persists carried decisions, but not how a caller supplies that block. At HEAD, `plan_tool/roadmap.py:_resolve_brief_path` accepts only a brief path and `_write_brief_source` constructs `source.json` from that path and digest, so the new collection cannot enter an initial or rebind write through the stated workflow. This prevents the plan\u2019s central outcome from being produced without hand-editing an internal record.  \n  \n  ```text\n  Architecture: \u201cAccept one closed, generic block of carried decisions associated with the already recorded Roadmap source.\u201d\n  ```",
+      "suggested_action": "Specify the closed caller-to-recorded-source input route and its ownership for initial recording and confirmed rebind, while preserving the no-free-form and atomic lifecycle boundaries.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "carried-decision-source-admission",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c39ff75fa3d0b2b1e9f6ac8c3151fb961c89dcc98698dcfb47f63bca6380bc80",
+      "detail_bundle_digest": "4698f91f074925fe1fa5de3c8e10e7c69519b4b1d77de68f456743146f455e53",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md",
+          "state": "present",
+          "digest": "4944b78370c5d3a6c8e14e3facd80e48e319b266f1daa1542c725de708efebe0"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md",
+          "state": "present",
+          "digest": "072a4db8f39ce2f41f27c6d398a9d8ea57756b22211b379a0bc60e03f4f6107a"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md",
+          "state": "present",
+          "digest": "9cd8b4c03ad8283b5687f40771486004dd140d0d8f04f9d7b42f24aaa12a11e0"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-each-carried-decision-only-its.md",
+          "state": "present",
+          "digest": "e19fd4040a175ee33b14645df939bfe47cddb5866c0404194f948579c8b1c32a"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md",
+          "state": "present",
+          "digest": "2e5b320f16ba330cf650230e1e98e84d062a3ee09b3cc7122f31aa2c6e74197f"
+        }
+      ],
+      "source_seed_digest": "d92ecf08f60e6af373e3a22e02093091022d78b18517eef2fa0589bb6852a76a",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 54531,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,116 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-2bebf5db": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/01-replace-scattered-step-number-deferral.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/01-replace-scattered-step-number-deferral.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-eeea17ab": {
+      "code_anchor": "plan_tool/scope_out.py:NarrowPreview.new_steps",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/01-replace-scattered-step-number-deferral.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/01-replace-scattered-step-number-deferral.md",
+      "reason": "code anchor `plan_tool/scope_out.py:NarrowPreview.new_steps` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step10-data-contract-b569f106": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/10-machine-readable-accounting-existing-re.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/10-machine-readable-accounting-existing-re.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 10,
+      "target": "plan-detail"
+    },
+    "step11-data-contract-b01e4a43": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/11-machine-readable-accounting-existing.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/11-machine-readable-accounting-existing.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 11,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-557b006a": {
+      "code_anchor": null,
+      "field_or_key": "source_metadata",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/04-persist-resume-include-transition.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/04-persist-resume-include-transition.md",
+      "reason": "`ConceptNode.source_metadata` lacks a matching HEAD code-location anchor",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-151b0a3a": {
+      "code_anchor": "plan_tool/detail.py:DetailResult.written",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/05-publish-detail-accounting-changes-only.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/05-publish-detail-accounting-changes-only.md",
+      "reason": "code anchor `plan_tool/detail.py:DetailResult.written` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-dc781ff3": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/06-require-structured-accounting-wont.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/06-require-structured-accounting-wont.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-b587093c": {
+      "code_anchor": "plan_tool/detail.py:SplitResult.renumber",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/07-extend-existing-split-checks-non.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/07-extend-existing-split-checks-non.md",
+      "reason": "code anchor `plan_tool/detail.py:SplitResult.renumber` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-c88b5243": {
+      "code_anchor": null,
+      "field_or_key": "source_metadata",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/08-extend-existing-ownership-merge-non.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/08-extend-existing-ownership-merge-non.md",
+      "reason": "`ConceptNode.source_metadata` lacks a matching HEAD code-location anchor",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-85a6a8c7": {
+      "code_anchor": "plan_tool/scope_out.py:NarrowPreview.new_steps",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/09-publish-structured-non-delivery-records.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3-ownership-lifecycle-accounting/09-publish-structured-non-delivery-records.md",
+      "reason": "code anchor `plan_tool/scope_out.py:NarrowPreview.new_steps` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260713-170126-completeness"
+}

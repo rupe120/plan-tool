@@ -1,0 +1,184 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T14:39:48Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f9d99923ed690d1f449e5ef15447c7c05b24e67d66c21fd84eae4ad58964ab75",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "62cf1723b2cf4ec2107a32bdb3d9c364d667dd7dab885dd08485820a38daea3a",
+    "DETAIL_FORMAT.md": "02686f8092e077844acdcf2f408e6f456aab8381f200acc64f03c7963ba3ccae",
+    "docs/ARCHITECTURE.md": "491a9b11c255e56fafebea94526f3a236a4af80b63958e0ad5cae161295b6a16",
+    "docs/AUDIT_FLOW.md": "3226b66ac93154285746c62186b078bc8a546212796ac21c9e52064b4f49575c",
+    "docs/cli/completeness-apply.md": "0ec1e203b71307c5370ec821aa66176aee88d994d95fd6a2fc05f682f103ae08",
+    "docs/cli/completeness-audit.md": "4b89b767f91ae60614d2d63f8f6d63b5ce0a1b7968c5b5ba5c6e2efb6b0f00c2",
+    "plan_tool/cli/completeness_cmd.py": "bb18adfe078dfea2b1edce73ffecf71a492a520e281011aae108c34eb980fc7a",
+    "plan_tool/cli/completeness_phases.py": "79adbb4ed442d5093068af4c506a1d29b8516bb9d8c9c729e19284d7f4b77e26",
+    "plan_tool/completeness_report.py": "a83d7ef2d525df20fc1cbeeb39f6999a9201bfc28262a01e105537756820d782",
+    "plan_tool/convergence.py": "8a87acd8d04446074a91abf06e94e4f16efd9a7c3656379a0709c0d69a96eac5",
+    "plan_tool/convergence_diagnosis.py": "4fd2d1146531a69cedf9bd0d18deedacb3a7524a90e1f0d943c56fc7d5c2ec58",
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "plan_tool/prompts/plan-audit.md": "e3a4f78150c2596aa51bdc369a8715dac812f56e88e4fa29f69a77797fb3fdcd",
+    "plan_tool/review.py": "a227280b4e2dc40ad1e21eaedab4200f531f858166a208001ebad8ea746408e9",
+    "tests/cli/test_completeness_cmd.py": "aabbc617b82eeec2fdb566abf57c1072fac5b6a7a39590ea48c85efd20c7bb90",
+    "tests/test_completeness_report.py": "420820cbd75502e9b629d7d42a23165459bf82ee9d2953bd6343433813852a55",
+    "tests/test_convergence.py": "a26ac39f5cabfe250f01ba4239d353dd01c111fb6d081fd810a1e425e69e7950",
+    "tests/test_convergence_diagnosis.py": "b706609da609d5586a81e187b060458accfed8d82e5af170a686fdc87a4b804a",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_review.py": "7ad52a1dcb4581b55cdbd03a038572cd43bcb8b90e6c412d6110cb0670f11c5b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-one-shared-low-risk-directives-block.md": "ff6fe085ca4e3e2c8e426938f966ce7793b425de72346c7cbf08e04ea22c1f0a",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-honor-low-risk-every-detail-writing.md": "c1ecbb28c45da45d2e25417e01504fd17cbba07ef4b89df660898c7ba207bbbf",
+    "docs/implementation-plans/plan-details/risk-profile-2/03-tier-challenge-blocking-eligible-manual.md": "e03ac59205b183937477936242decb0d1943df7ba72fc948b94bfa46374b30d1",
+    "docs/implementation-plans/plan-details/risk-profile-2/04-make-every-low-risk-audit-pass-replace.md": "7bf43d069325017b2e2436db6b5ae4dedc43ef8bfac10e363f23d6aacbe7e811"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T14:39:47Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f9d99923ed690d1f449e5ef15447c7c05b24e67d66c21fd84eae4ad58964ab75`\n- **Detail bundle digest:** `63b9a767e3d28757daf2c091ba02fa35c06c4d74c2c60ddf28f771de3d4728d0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply risk-profile-2   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk risk-profile-2  # alternative interactive review/apply\n\n- HIGH `[ceremony-authorization]`: Step 2 (`Honor low risk in every detail-writing prompt...`) promises no ceremony-class procedure \u201cunprompted\u201d in the Overview, Architecture \u2192 Prompt-contract shape, Scope contract \u2192 Outcome, and Acceptance criteria, but no source defines an explicit authorization. `plan_tool/detail.py:render_detail_prompt` receives only step data, references, and the scope fence; `render_detail_quality_prompt` and `collect_detail_quality_findings` receive less, while `plan_tool/scope_fence.py:extract_plan_guardrails` exposes only guardrail and Out of scope sections. A ceremony explicitly required elsewhere in the plan body is therefore invisible, so authors can either suppress required procedure or add procedure that low should forbid.\n  - Fix: Define one explicit ceremony-authorization source visible to initial authoring and revision, and test both an authorized procedure and its absence.\n- HIGH `[detail-revision-ceremony-guard]`: Architecture \u2192 The directives channel says passing the block to `detail-quality.md` means \u201ca revision cannot restore a forbidden procedure,\u201d and the Scope contract \u2192 Outcome and Acceptance criteria repeat that guarantee, but `plan_tool/detail.py:collect_detail_quality_findings` only sends the block to the reviewer. `detail.py:_converge_run_grade_step_detail` performs the actual rewrite through `plan_tool/launcher.py:apply_finding`, which renders `plan_tool/prompts/apply-finding.md` through `plan_tool/renderer.py:render_prompt`; none is in step 2\u2019s footprint or receives the directives block. The writer can therefore restore ceremony during a quality revision.\n  - Fix: Carry or enforce the low-tier ceremony constraint on the revision-write path and add an end-to-end low-tier revision regression.\n- HIGH `[tier-challenge-suppression-boundary]`: Architecture \u2192 Prompt-contract shape says tier evidence yields one `tier-challenge` \u201cinstead of ceremony-class findings,\u201d then says the tier \u201csuppresses ceremony-class findings only, never grounded correctness findings\u201d; the Scope contract \u2192 Outcome and Testing retain \u201cindependent grounded correctness findings.\u201d A confirmation gate, credential-custody procedure, or deploy-ordering rule tied to a named consumer or credential fits both categories, so step 4 can either suppress it as challenge-only or report it as correctness alongside the challenge.\n  - Fix: Define the precedence and output set for evidence that is both ceremony-class and grounded correctness, with an overlap fixture.\n- MEDIUM `[tier-challenge-blocking]`: Step 3, Architecture \u2192 `tier-challenge` finding kind, and Acceptance criteria call the challenge \u201cblocking-eligible\u201d and say it may block despite medium-severity demotion, but do not define when it blocks or which audit axis carries it. At HEAD, `plan_tool/review.py:_PLAN_AUDIT_RESPONSE_CONTRACT` assigns only correctness or completeness, and `plan_tool/convergence.py:is_blocking_finding` / `is_blocking_impact` derive blocking from that axis, severity, and impact; the same medium challenge can therefore be advisory or blocking.\n  - Fix: Specify the challenge\u2019s required audit axis and blocking rule for bare and detail stages, then test report, convergence, and apply behavior.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-2` \u2014 apply the 4 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f9d99923ed690d1f449e5ef15447c7c05b24e67d66c21fd84eae4ad58964ab75`\n- **Detail bundle digest:** `63b9a767e3d28757daf2c091ba02fa35c06c4d74c2c60ddf28f771de3d4728d0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[ceremony-authorization]`: Step 2 (`Honor low risk in every detail-writing prompt...`) promises no ceremony-class procedure \u201cunprompted\u201d in the Overview, Architecture \u2192 Prompt-contract shape, Scope contract \u2192 Outcome, and Acceptance criteria, but no source defines an explicit authorization. `plan_tool/detail.py:render_detail_prompt` receives only step data, references, and the scope fence; `render_detail_quality_prompt` and `collect_detail_quality_findings` receive less, while `plan_tool/scope_fence.py:extract_plan_guardrails` exposes only guardrail and Out of scope sections. A ceremony explicitly required elsewhere in the plan body is therefore invisible, so authors can either suppress required procedure or add procedure that low should forbid.\n- HIGH `[detail-revision-ceremony-guard]`: Architecture \u2192 The directives channel says passing the block to `detail-quality.md` means \u201ca revision cannot restore a forbidden procedure,\u201d and the Scope contract \u2192 Outcome and Acceptance criteria repeat that guarantee, but `plan_tool/detail.py:collect_detail_quality_findings` only sends the block to the reviewer. `detail.py:_converge_run_grade_step_detail` performs the actual rewrite through `plan_tool/launcher.py:apply_finding`, which renders `plan_tool/prompts/apply-finding.md` through `plan_tool/renderer.py:render_prompt`; none is in step 2\u2019s footprint or receives the directives block. The writer can therefore restore ceremony during a quality revision.\n- HIGH `[tier-challenge-suppression-boundary]`: Architecture \u2192 Prompt-contract shape says tier evidence yields one `tier-challenge` \u201cinstead of ceremony-class findings,\u201d then says the tier \u201csuppresses ceremony-class findings only, never grounded correctness findings\u201d; the Scope contract \u2192 Outcome and Testing retain \u201cindependent grounded correctness findings.\u201d A confirmation gate, credential-custody procedure, or deploy-ordering rule tied to a named consumer or credential fits both categories, so step 4 can either suppress it as challenge-only or report it as correctness alongside the challenge.\n- MEDIUM `[tier-challenge-blocking]`: Step 3, Architecture \u2192 `tier-challenge` finding kind, and Acceptance criteria call the challenge \u201cblocking-eligible\u201d and say it may block despite medium-severity demotion, but do not define when it blocks or which audit axis carries it. At HEAD, `plan_tool/review.py:_PLAN_AUDIT_RESPONSE_CONTRACT` assigns only correctness or completeness, and `plan_tool/convergence.py:is_blocking_finding` / `is_blocking_impact` derive blocking from that axis, severity, and impact; the same medium challenge can therefore be advisory or blocking.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-2` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-57f72952",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Honor low risk in every detail-writing prompt...`) promises no ceremony-class procedure \u201cunprompted\u201d in the Ove",
+      "body": "Step 2 (`Honor low risk in every detail-writing prompt...`) promises no ceremony-class procedure \u201cunprompted\u201d in the Overview, Architecture \u2192 Prompt-contract shape, Scope contract \u2192 Outcome, and Acceptance criteria, but no source defines an explicit authorization. `plan_tool/detail.py:render_detail_prompt` receives only step data, references, and the scope fence; `render_detail_quality_prompt` and `collect_detail_quality_findings` receive less, while `plan_tool/scope_fence.py:extract_plan_guardrails` exposes only guardrail and Out of scope sections. A ceremony explicitly required elsewhere in the plan body is therefore invisible, so authors can either suppress required procedure or add procedure that low should forbid.",
+      "suggested_action": "Define one explicit ceremony-authorization source visible to initial authoring and revision, and test both an authorized procedure and its absence.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "ceremony-authorization",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-788ef605",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture \u2192 The directives channel says passing the block to `detail-quality.md` means \u201ca revision cannot restore a f",
+      "body": "Architecture \u2192 The directives channel says passing the block to `detail-quality.md` means \u201ca revision cannot restore a forbidden procedure,\u201d and the Scope contract \u2192 Outcome and Acceptance criteria repeat that guarantee, but `plan_tool/detail.py:collect_detail_quality_findings` only sends the block to the reviewer. `detail.py:_converge_run_grade_step_detail` performs the actual rewrite through `plan_tool/launcher.py:apply_finding`, which renders `plan_tool/prompts/apply-finding.md` through `plan_tool/renderer.py:render_prompt`; none is in step 2\u2019s footprint or receives the directives block. The writer can therefore restore ceremony during a quality revision.",
+      "suggested_action": "Carry or enforce the low-tier ceremony constraint on the revision-write path and add an end-to-end low-tier revision regression.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "detail-revision-ceremony-guard",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-43c4cf6c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture \u2192 Prompt-contract shape says tier evidence yields one `tier-challenge` \u201cinstead of ceremony-class findings,",
+      "body": "Architecture \u2192 Prompt-contract shape says tier evidence yields one `tier-challenge` \u201cinstead of ceremony-class findings,\u201d then says the tier \u201csuppresses ceremony-class findings only, never grounded correctness findings\u201d; the Scope contract \u2192 Outcome and Testing retain \u201cindependent grounded correctness findings.\u201d A confirmation gate, credential-custody procedure, or deploy-ordering rule tied to a named consumer or credential fits both categories, so step 4 can either suppress it as challenge-only or report it as correctness alongside the challenge.",
+      "suggested_action": "Define the precedence and output set for evidence that is both ceremony-class and grounded correctness, with an overlap fixture.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "tier-challenge-suppression-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d044721f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3, Architecture \u2192 `tier-challenge` finding kind, and Acceptance criteria call the challenge \u201cblocking-eligible\u201d and",
+      "body": "Step 3, Architecture \u2192 `tier-challenge` finding kind, and Acceptance criteria call the challenge \u201cblocking-eligible\u201d and say it may block despite medium-severity demotion, but do not define when it blocks or which audit axis carries it. At HEAD, `plan_tool/review.py:_PLAN_AUDIT_RESPONSE_CONTRACT` assigns only correctness or completeness, and `plan_tool/convergence.py:is_blocking_finding` / `is_blocking_impact` derive blocking from that axis, severity, and impact; the same medium challenge can therefore be advisory or blocking.",
+      "suggested_action": "Specify the challenge\u2019s required audit axis and blocking rule for bare and detail stages, then test report, convergence, and apply behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "tier-challenge-blocking",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "f9d99923ed690d1f449e5ef15447c7c05b24e67d66c21fd84eae4ad58964ab75",
+      "detail_bundle_digest": "63b9a767e3d28757daf2c091ba02fa35c06c4d74c2c60ddf28f771de3d4728d0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-one-shared-low-risk-directives-block.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-honor-low-risk-every-detail-writing.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/03-tier-challenge-blocking-eligible-manual.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/04-make-every-low-risk-audit-pass-replace.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

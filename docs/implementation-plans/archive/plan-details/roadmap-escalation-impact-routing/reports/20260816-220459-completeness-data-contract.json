@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step9-data-contract-76e443b5": {
+      "code_anchor": "plan_tool/roadmap_evidence_store.py:EvidenceNamespace.IMPACT_ANALYSES",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/09-wire-exact-exclusive-impact-analysis.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/09-wire-exact-exclusive-impact-analysis.md",
+      "reason": "code anchor `plan_tool/roadmap_evidence_store.py:EvidenceNamespace.IMPACT_ANALYSES` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260816-220459-completeness"
+}

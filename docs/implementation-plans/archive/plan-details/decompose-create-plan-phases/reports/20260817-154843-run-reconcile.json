@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "plan_slug": "decompose-create-plan-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-create-plan-phases.md",
+  "created_at": "2026-08-17T15:48:43Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "1f9bbb30396595dd3229fbc86d74dc90fdf5e6355ce30bfe3c7974c7b8aa9a3c",
+  "code_fingerprint": {
+    "plan_tool/create.py": "799c0d9d75ddb35ed360fcd849f07d995c9e2a3809b3a2493118e99e4c4b029d",
+    "tests/test_create.py": "05bd8e6272d5be585474cbef27dde2abbcdf0bba07b9b01415b951d06382cfbd"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context: considered 3 completed sibling step(s); 0 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step3-run-reconcile-d4259662",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "`TestCreatePlanPostWriteReparse.test_post_write_reparse_failure_raises` in `tests/test_create.py` (step 3 \u201cExtract creat",
+      "body": "`TestCreatePlanPostWriteReparse.test_post_write_reparse_failure_raises` in `tests/test_create.py` (step 3 \u201cExtract create_plan publication into a same-file phase\u201d) raises on invalid post-write bytes but does not prove the new plan was never appended to the manifest, leaving the required ordering guarantee unpinned",
+      "suggested_action": "assert `manifest` does not exist or contains no new plan entry after the `CreateError`",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

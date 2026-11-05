@@ -1,0 +1,190 @@
+{
+  "version": 4,
+  "plan_slug": "bad-fix-provenance",
+  "plan_path": "docs/implementation-plans/2-bad-fix-provenance.md",
+  "created_at": "2026-08-19T20:13:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ff94900b46859a09c2a5c7a7a5974580a82569b4f080f82dbdf7014e94ef05f4",
+  "code_fingerprint": {
+    "BACKLOG.md": "459aa71566db9f3c5a3b2570b15b0d0d3f7a6e87aa063879482d8cb7fa2c224b",
+    "CAPABILITIES.md": "09e270751f7345b5b6e0dd7c2ebe53043fe6aa4c5e76323ea7fdf95c3b23b18c",
+    "CLAUDE.md": "79efc1fa421734a52fa98d7370c9fe0dc5ef7081aa2d1566f76b49c69f348a11",
+    "DATA_CONTRACT.md": "9d2d6982fba5c01e190c6a59aef0d7b3da5eb8c2ed760b2f142c05b1eae75ddc",
+    "README.md": "2ce65273752d3ef08302dc7acc9984935e97606d3227ff605a949522e0dc3ae9",
+    "RUNBOOK.md": "bc3eeaacff3696054823f30a5ca897ed7eca22629e68ce83b78cf3f8f78d7061",
+    "USE_CASES.md": "2797e685fb74dd901c80def5b522b4847aa749bdce99dfc8d36e1fdd5d5ff340",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/AUDIT_FLOW.md": "3b595fdc86b715e8c1f2de7be4de820ce17988a711a5544accea016456d0c6cf",
+    "docs/cli/README.md": "eeb293111f07837f86be146b35b337c73c2474fc089483b6ab9310f8e255de72",
+    "integrations/shared/DIRECTIVES.md": "146b89949a966aefdf5ec0d92ac7ad2ab1bcaa5a22b2687a75a1e323da8303f6",
+    "plan_tool/cli/__init__.py": "5c0b98b708e24910bd69c66ff02590e7d9bdd91223ed163e90894a1965f12e74",
+    "plan_tool/cli/app.py": "89f5913209278b43844b74f346d99bfeba45139d203789e4af7e5a350756c6a3",
+    "plan_tool/cli/completeness_apply_parallel.py": "b73a8764d43cfd4dcbfe4347e70fb169c08b4f5301bbff27749210d428bef26e",
+    "plan_tool/cli/completeness_cmd.py": "8fb5db92b56b76b87707b75f0057ff4f727bcab4ab3193caa0a81e038eb9142f",
+    "plan_tool/cli/completeness_phases.py": "0b1c6f84d4c8143f79b1a53e4c3ce1bbd8623c84f168784f57898e8d908e8ab5",
+    "plan_tool/cli/parser.py": "d9a6d982b25ec727aa8905816798058a831d8e43134b3299c029e7658cd44184",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "plan_tool/review.py": "324ff53eff1ea904d761f4462eca123a5abcd25fb21f99c37b3022dda76181e5",
+    "plan_tool/review_persistence.py": "c4473636b8b3db2c631dd9285a01cdb80dbd6815639de69b0e72be6bd5686d7b",
+    "tests/cli/package_surface_help.golden.txt": "a6d38b7b22a87872f6ab9b43f4c38a8ac0264a2695da88e7e275c62e8d0823c3",
+    "tests/cli/test_app_lock.py": "45b70ee62863b2acf4cfd1bb7d446e0e66ab0a9f1efd1f75677b1d11419b2493",
+    "tests/cli/test_cli_parser.py": "25de3f827fa13cb8ae4f31be97b00101332cf2264ee4550bb9ee7b5e4a0412f5",
+    "tests/cli/test_completeness_apply_parallel.py": "8794e6879e624535b4de3648e008d18543a50c35633a960570b4a06bd48bb730",
+    "tests/cli/test_completeness_cmd.py": "601ef6f7cba42762c84185f8c19c7aebaa78826ffc5e6a5f1049c8a598265090",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/cli/test_package_surface.py": "d4eaea994a44ed8c38f2d848775c91d9c77ed9ec0ee291482a856800ac6fcbe1",
+    "tests/test_capability_catalog.py": "48ca716ac698b323e0e61f91d9d5e74b541d5c8b3268040ceb00ca227537326e",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275",
+    "tests/test_data_contract.py": "529484802115f663123f5d701874f8fed5e005ff1fb18abb90ccd40f31a1f242",
+    "tests/test_review.py": "127795f09a1cbf584fb23a29af941d8efab86086d70c4b1b3e0f1163d58673a0",
+    "tests/test_review_persistence.py": "414efcb5e0165bfcfa8008e025f90e83d94262d5dd045021c6c28521e25c4824",
+    "tests/test_review_walk.py": "29daad341a7775af6ee9f0dc97c364f2a7ea82e585cfe843a5aca38642f8faa3"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/bad-fix-provenance/01-immutable-ordered-remedy-event-history.md": "6575aa6b0db3514a892a5ce75efd49f61a06f7d8194c33871a0c77fcb791a7d8",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/02-save-qualified-parallel-remedy-events.md": "9124c2ee2d48cdafa4fa67dae915e6f0998555ed86db9cf07d4de7366c53c1c2",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/03-exact-completeness-record-selection.md": "cc54082dda76e03371b390dd10ec803a033adb7075c39b1ee7f5767618f31010",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/04-share-conservative-issue-skeleton-fuzzy.md": "a269b707e41ffaedfe27926b142343b13c3f586584ffc624ee6a40fdd8061a37",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/05-match-eligible-recurring-completeness.md": "d9a12814c8d4fdee83d7277596cf3e43f4a229280678d4646b3cfbbc79ebc49f",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/06-show-likely-bad-fix-advice-while.md": "2bee63ea79c1bd473b43ed9c0f1cfa52b0786ae470c264237be49993fa1a1743",
+    "docs/implementation-plans/plan-details/bad-fix-provenance/07-document-remedy-note-provenance-close.md": "78a264cfae34c399c24ba1c4d6ab0b272ccea66ef3699ecda75d2b6529a520c4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Bad Fix Provenance\n\n`bad-fix-provenance` \u00b7 generated 2026-08-19T20:13:49Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply bad-fix-provenance   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk bad-fix-provenance  # alternative interactive review/apply\n\n- HIGH `[remedy-event-lifecycle]`: Step 1 (`Add immutable ordered remedy-event history to annotations, migrate legacy sidecars, and preserve serialized sidecar updates`) leaves the event lifecycle unchosen: `## Architecture` says \u201cA retry with the same writer identity is idempotent\u201d and \u201ca distinct accepted remedy remains a distinct event,\u201d while `## Testing` requires ordering \u201cincluding ties\u201d; steps 2 and 3 are further writers. `## Risks` and the acceptance criterion require distinct remedies exactly once, but never define event identity, retry versus a new accepted remedy, or the tie break that makes the persisted key a total order. At HEAD, `review_persistence.Annotation` is one mutable `rec_id` map and `update_annotation` overwrites it, so valid implementations can either duplicate retries or erase distinct causal evidence and select different \u201cclosest\u201d remedies.\n  - Fix: Define the shared remedy-event identity, retry/dedup boundary, and persisted total-order tie break for every writer and report collapse.\n- MEDIUM `[hand-record-eligibility]`: Step 3 (`Add exact completeness-record selection for hand-applied or declined remedies and serialize the chosen sidecar update`) calls for one \u201ccurrent\u201d saved audit, while `## Architecture` says missing, stale, or ambiguous selection writes nothing, but neither defines which sidecars are eligible or what makes one stale. At HEAD, `data_contract_cmd.cmd_data_contract_apply` treats only a current, final, qualified completeness sidecar as actionable, whereas `review_persistence.resolve_saved_review` only resolves a requested filename; recording against a checkpoint, legacy sidecar, reconcile report, or incompatible stage can appear to succeed yet be excluded from the completeness history that steps 5\u20136 consume.\n  - Fix: Define the exact final/current completeness-sidecar and selected-finding eligibility rule, including its compatible-stage boundary and write-nothing failures.\n- HIGH `[identity-tier-precedence]`: Step 5 (`Match eligible recurring completeness findings to the closest earlier qualified remedy by id, anchor, issue skeleton, and title`) does not define whether conflicting higher-tier evidence rejects a candidate or falls through to a lower tier. `## Architecture`, `## Input`, step 4, `## Risks`, `## Testing`, and the acceptance criterion all name id \u2192 anchor \u2192 skeleton \u2192 title, but \u201cunder the stated order\u201d does not say what happens when anchors differ but skeletons or titles match. At HEAD, `convergence_diagnosis._matches` can fall through to fuzzy title after unequal anchors; copying that behavior or treating the first usable mismatch as final produces different causal advice despite the plan\u2019s conservative-association promise.\n  - Fix: State the ordered decision rule for unavailable versus mismatched evidence and cover cross-tier conflicts in the matching acceptance tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit bad-fix-provenance` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Bad Fix Provenance\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[remedy-event-lifecycle]`: Step 1 (`Add immutable ordered remedy-event history to annotations, migrate legacy sidecars, and preserve serialized sidecar updates`) leaves the event lifecycle unchosen: `## Architecture` says \u201cA retry with the same writer identity is idempotent\u201d and \u201ca distinct accepted remedy remains a distinct event,\u201d while `## Testing` requires ordering \u201cincluding ties\u201d; steps 2 and 3 are further writers. `## Risks` and the acceptance criterion require distinct remedies exactly once, but never define event identity, retry versus a new accepted remedy, or the tie break that makes the persisted key a total order. At HEAD, `review_persistence.Annotation` is one mutable `rec_id` map and `update_annotation` overwrites it, so valid implementations can either duplicate retries or erase distinct causal evidence and select different \u201cclosest\u201d remedies.\n- MEDIUM `[hand-record-eligibility]`: Step 3 (`Add exact completeness-record selection for hand-applied or declined remedies and serialize the chosen sidecar update`) calls for one \u201ccurrent\u201d saved audit, while `## Architecture` says missing, stale, or ambiguous selection writes nothing, but neither defines which sidecars are eligible or what makes one stale. At HEAD, `data_contract_cmd.cmd_data_contract_apply` treats only a current, final, qualified completeness sidecar as actionable, whereas `review_persistence.resolve_saved_review` only resolves a requested filename; recording against a checkpoint, legacy sidecar, reconcile report, or incompatible stage can appear to succeed yet be excluded from the completeness history that steps 5\u20136 consume.\n- HIGH `[identity-tier-precedence]`: Step 5 (`Match eligible recurring completeness findings to the closest earlier qualified remedy by id, anchor, issue skeleton, and title`) does not define whether conflicting higher-tier evidence rejects a candidate or falls through to a lower tier. `## Architecture`, `## Input`, step 4, `## Risks`, `## Testing`, and the acceptance criterion all name id \u2192 anchor \u2192 skeleton \u2192 title, but \u201cunder the stated order\u201d does not say what happens when anchors differ but skeletons or titles match. At HEAD, `convergence_diagnosis._matches` can fall through to fuzzy title after unequal anchors; copying that behavior or treating the first usable mismatch as final produces different causal advice despite the plan\u2019s conservative-association promise.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply bad-fix-provenance` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4d1c2383",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add immutable ordered remedy-event history to annotations, migrate legacy sidecars, and preserve serialized sid",
+      "body": "Step 1 (`Add immutable ordered remedy-event history to annotations, migrate legacy sidecars, and preserve serialized sidecar updates`) leaves the event lifecycle unchosen: `## Architecture` says \u201cA retry with the same writer identity is idempotent\u201d and \u201ca distinct accepted remedy remains a distinct event,\u201d while `## Testing` requires ordering \u201cincluding ties\u201d; steps 2 and 3 are further writers. `## Risks` and the acceptance criterion require distinct remedies exactly once, but never define event identity, retry versus a new accepted remedy, or the tie break that makes the persisted key a total order. At HEAD, `review_persistence.Annotation` is one mutable `rec_id` map and `update_annotation` overwrites it, so valid implementations can either duplicate retries or erase distinct causal evidence and select different \u201cclosest\u201d remedies.",
+      "suggested_action": "Define the shared remedy-event identity, retry/dedup boundary, and persisted total-order tie break for every writer and report collapse.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remedy-event-lifecycle",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ccfe0071",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Add exact completeness-record selection for hand-applied or declined remedies and serialize the chosen sidecar ",
+      "body": "Step 3 (`Add exact completeness-record selection for hand-applied or declined remedies and serialize the chosen sidecar update`) calls for one \u201ccurrent\u201d saved audit, while `## Architecture` says missing, stale, or ambiguous selection writes nothing, but neither defines which sidecars are eligible or what makes one stale. At HEAD, `data_contract_cmd.cmd_data_contract_apply` treats only a current, final, qualified completeness sidecar as actionable, whereas `review_persistence.resolve_saved_review` only resolves a requested filename; recording against a checkpoint, legacy sidecar, reconcile report, or incompatible stage can appear to succeed yet be excluded from the completeness history that steps 5\u20136 consume.",
+      "suggested_action": "Define the exact final/current completeness-sidecar and selected-finding eligibility rule, including its compatible-stage boundary and write-nothing failures.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hand-record-eligibility",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-cd0119c6",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Match eligible recurring completeness findings to the closest earlier qualified remedy by id, anchor, issue ske",
+      "body": "Step 5 (`Match eligible recurring completeness findings to the closest earlier qualified remedy by id, anchor, issue skeleton, and title`) does not define whether conflicting higher-tier evidence rejects a candidate or falls through to a lower tier. `## Architecture`, `## Input`, step 4, `## Risks`, `## Testing`, and the acceptance criterion all name id \u2192 anchor \u2192 skeleton \u2192 title, but \u201cunder the stated order\u201d does not say what happens when anchors differ but skeletons or titles match. At HEAD, `convergence_diagnosis._matches` can fall through to fuzzy title after unequal anchors; copying that behavior or treating the first usable mismatch as final produces different causal advice despite the plan\u2019s conservative-association promise.",
+      "suggested_action": "State the ordered decision rule for unavailable versus mismatched evidence and cover cross-tier conflicts in the matching acceptance tests.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "identity-tier-precedence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 2,
+    "detail_grade": "run",
+    "plan_digest": "ff94900b46859a09c2a5c7a7a5974580a82569b4f080f82dbdf7014e94ef05f4",
+    "detail_bundle_digest": "7d20a1e2e558a605cfa838bb9b239a9417a251a4b26751c617da2706264ada0d",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/01-immutable-ordered-remedy-event-history.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/02-save-qualified-parallel-remedy-events.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/03-exact-completeness-record-selection.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/04-share-conservative-issue-skeleton-fuzzy.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/05-match-eligible-recurring-completeness.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/06-show-likely-bad-fix-advice-while.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bad-fix-provenance/07-document-remedy-note-provenance-close.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

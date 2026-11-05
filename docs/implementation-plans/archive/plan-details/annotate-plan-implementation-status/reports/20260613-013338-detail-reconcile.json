@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "plan_slug": "annotate-plan-implementation-status",
+  "plan_path": "docs/implementation-plans/2-annotate-plan-implementation-status.md",
+  "created_at": "2026-06-13T01:33:38Z",
+  "kind": "detail-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "",
+  "code_fingerprint": {},
+  "code_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 1 nits",
+  "recommendations": [
+    {
+      "id": "step1-detail-reconcile-1eba3546",
+      "source": "detail-reconcile",
+      "severity": "nit",
+      "step_id": 1,
+      "title": "in the plan's `## Architecture`, drop the stale `:2425` and `:2827` line numbers from the `verify_plan` and `propose_dis",
+      "body": "in the plan's `## Architecture`, drop the stale `:2425` and `:2827` line numbers from the `verify_plan` and `propose_distilled_seed_from_claude` citations \u2014 use symbol-only anchors (`plan_tool/launcher.py:verify_plan`, `plan_tool/create.py:propose_distilled_seed_from_claude`) per the repo's prefer-symbols-over-line-numbers convention",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {}
+}

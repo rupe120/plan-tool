@@ -1,0 +1,151 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-stack-propagation",
+  "plan_path": "docs/implementation-plans/2-roadmap-stack-propagation.md",
+  "created_at": "2026-10-08T15:20:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cef92e98381bbdba7312d837185d01881b496d79982b60c828d9fee7fcc5fb10",
+  "code_fingerprint": {
+    "BACKLOG.md": "45b0e2296d43691c1ffba7fe56f78a90869ad647c69af34262076bc55b17c80e",
+    "ROADMAP_FORMAT.md": "063b3b5f610cd719fec0f51960e21242c2e5beb739a995c356bcfc264a1445ac",
+    "docs/how-to/roadmap.md": "fbeea56d079e7f4375a16d071ef158d72304c99f9a0c596f6712d65897295827",
+    "plan_tool/create.py": "5bdbf0d5b433c345ca706c8599bdc83a18e500607f73b9b3343bd3b8345c6c68",
+    "plan_tool/detail.py": "1086ab04b8557b444a46fdce211c2c90fa4fa0a725966b3952f78497f767a591",
+    "plan_tool/prompts/detail.md": "198620833e5d75284bd8f6c1ec7540f7ff1cac9383de24bb17b711c3d4f44611",
+    "plan_tool/prompts/roadmap-seed.md": "4d7e4ceba9680805258372a4f2a1759136ec6fb4e9a010ca8b97a58ac8df4d04",
+    "plan_tool/prompts/synthesize-body.md": "3aa3f4cb81c076e4cbb509f11713447284cac683cdfc81a35a8efae594702418",
+    "plan_tool/roadmap.py": "3b417be6024ae8809ec33e28cab7135de500aa1fe7ef00cb9930224738798166",
+    "tests/test_create.py": "7b133305096b8e5bc33b9c0166276777eda04456312347fa398f82b194f7950d",
+    "tests/test_detail.py": "fd7e5092242f0b8a9d8e42a4ca33afda45d7d18655f597ebd5a1c7e14fa4dfee",
+    "tests/test_roadmap.py": "49127f2e6f3998899d4d392a6ade6dc60e9cc6a134791c9be2a17351d031c317",
+    "tests/test_roadmap_seed_manifest.py": "bcae4154b80b648a8feaf1c4a50247d594a73007ed92a8c55e70cd14fb70489c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-stack-propagation/01-render-accepted-hosting-store-stack.md": "af7a9e54f7e0228f0b20b31f8ea4e830aedbb439b9fe1f62ff94105a6b31e3b5",
+    "docs/implementation-plans/plan-details/roadmap-stack-propagation/02-carry-seed-stack-plan-body-settled.md": "2a6147530a833efc9836902cefccebe789e265dcbe4394cbefe44c50e4395f40",
+    "docs/implementation-plans/plan-details/roadmap-stack-propagation/03-have-detail-treat-plan-settled-stack.md": "9f1bbe1ff8ce8e008c9643fe256fb6eca1e57e616540db106f21ad2a3356f510",
+    "docs/implementation-plans/plan-details/roadmap-stack-propagation/04-document-draft-seed-stack-section-stack.md": "c511e2af696be268967eff187e6b6a5a666a77a527d8ac64e03e5d8e07f2ede4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Stack Propagation\n\n`roadmap-stack-propagation` \u00b7 generated 2026-10-08T15:20:18Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-stack-propagation  # optional interactive review of the saved findings\n\n- MEDIUM `[stack-conflict-recognition]` [confidence: limited]: The plan never says how `create` (step 2) and `detail` (step 3) recognize a stack conflict. Step 2 reports a contradiction \"in a callout\". The verification says a plan \"cannot select SQLite without a reported conflict\". The Architecture section also says gating would \"mean judging meaning rather than checking a fact\". It doesn't name who decides that SQLite contradicts the PostgreSQL `store-app-db` row, or that a vendor name contradicts the open `hosting-compute` product. That could be a deterministic check, the model, or the reader. Two implementers could ship a prompt-only instruction or a string-match check, and the Integration acceptance case would then behave differently.\n  - Fix: State once who decides a conflict (a deterministic comparison against the rendered stack rows, or a model-authored callout that the tool only surfaces). Then make steps 2 and 3 and the verification bullet agree with that choice.\n- MEDIUM `[seed-stack-carry-route]` [confidence: limited]: Step 2 says a plan built from a stack-bearing seed keeps the roadmap's choices. The plan does not say whether `create` reads the stack from the seed's rendered text or re-derives it from the accepted version through `_load_roadmap_research_targets`. It also doesn't say what `create` does with a seed that has no stack section, such as an older draft or a promoted seed (both named in Risks). If both sources can disagree, no precedence is given.\n  - Fix: Name the source of truth for the carried stack in step 2. Define the no-stack-section case (carry nothing, or fall back to the accepted version).\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[stack-verification-ownership]` [confidence: limited]: No step owns the tests for the Testing/Acceptance matrix. The matrix covers open-product wording, a changed accepted row changing the rendered stack on rematerialization, advisory-only conflicts, and `validate_draft_seed_content` / `classify_draft_seeds` staying green. Steps 1\u20133 describe behavior only, and step 4 covers docs and #460. The Risks entry about surviving draft-seed validation and identity classification is mitigated by no step.\n  - Fix: Make the tests part of steps 1\u20133's stated outcomes, or add a criterion that ties each matrix case to the step that delivers it. Include the draft-seed validation and rematerialization-identity case under step 1. I filed these through the findings report. The repo checks I ran found the named symbols at HEAD: `materialize_plan_seed`, `validate_draft_seed_content`, `classify_draft_seeds`, `_load_roadmap_research_targets`, and `HostingRow` with its optional `product`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-stack-propagation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Stack Propagation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[stack-conflict-recognition]` [confidence: limited]: The plan never says how `create` (step 2) and `detail` (step 3) recognize a stack conflict. Step 2 reports a contradiction \"in a callout\". The verification says a plan \"cannot select SQLite without a reported conflict\". The Architecture section also says gating would \"mean judging meaning rather than checking a fact\". It doesn't name who decides that SQLite contradicts the PostgreSQL `store-app-db` row, or that a vendor name contradicts the open `hosting-compute` product. That could be a deterministic check, the model, or the reader. Two implementers could ship a prompt-only instruction or a string-match check, and the Integration acceptance case would then behave differently.\n- MEDIUM `[seed-stack-carry-route]` [confidence: limited]: Step 2 says a plan built from a stack-bearing seed keeps the roadmap's choices. The plan does not say whether `create` reads the stack from the seed's rendered text or re-derives it from the accepted version through `_load_roadmap_research_targets`. It also doesn't say what `create` does with a seed that has no stack section, such as an older draft or a promoted seed (both named in Risks). If both sources can disagree, no precedence is given.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[stack-verification-ownership]` [confidence: limited]: No step owns the tests for the Testing/Acceptance matrix. The matrix covers open-product wording, a changed accepted row changing the rendered stack on rematerialization, advisory-only conflicts, and `validate_draft_seed_content` / `classify_draft_seeds` staying green. Steps 1\u20133 describe behavior only, and step 4 covers docs and #460. The Risks entry about surviving draft-seed validation and identity classification is mitigated by no step.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-52bf9cba",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan never says how `create` (step 2) and `detail` (step 3) recognize a stack conflict. Step 2 reports a contradicti",
+      "body": "The plan never says how `create` (step 2) and `detail` (step 3) recognize a stack conflict. Step 2 reports a contradiction \"in a callout\". The verification says a plan \"cannot select SQLite without a reported conflict\". The Architecture section also says gating would \"mean judging meaning rather than checking a fact\". It doesn't name who decides that SQLite contradicts the PostgreSQL `store-app-db` row, or that a vendor name contradicts the open `hosting-compute` product. That could be a deterministic check, the model, or the reader. Two implementers could ship a prompt-only instruction or a string-match check, and the Integration acceptance case would then behave differently.",
+      "suggested_action": "State once who decides a conflict (a deterministic comparison against the rendered stack rows, or a model-authored callout that the tool only surfaces). Then make steps 2 and 3 and the verification bullet agree with that choice.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-conflict-recognition",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-549dde72",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 says a plan built from a stack-bearing seed keeps the roadmap's choices. The plan does not say whether `create` r",
+      "body": "Step 2 says a plan built from a stack-bearing seed keeps the roadmap's choices. The plan does not say whether `create` reads the stack from the seed's rendered text or re-derives it from the accepted version through `_load_roadmap_research_targets`. It also doesn't say what `create` does with a seed that has no stack section, such as an older draft or a promoted seed (both named in Risks). If both sources can disagree, no precedence is given.",
+      "suggested_action": "Name the source of truth for the carried stack in step 2. Define the no-stack-section case (carry nothing, or fall back to the accepted version).",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-stack-carry-route",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-98b4d1b8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "No step owns the tests for the Testing/Acceptance matrix. The matrix covers open-product wording, a changed accepted row",
+      "body": "No step owns the tests for the Testing/Acceptance matrix. The matrix covers open-product wording, a changed accepted row changing the rendered stack on rematerialization, advisory-only conflicts, and `validate_draft_seed_content` / `classify_draft_seeds` staying green. Steps 1\u20133 describe behavior only, and step 4 covers docs and #460. The Risks entry about surviving draft-seed validation and identity classification is mitigated by no step.",
+      "suggested_action": "Make the tests part of steps 1\u20133's stated outcomes, or add a criterion that ties each matrix case to the step that delivers it. Include the draft-seed validation and rematerialization-identity case under step 1. I filed these through the findings report. The repo checks I ran found the named symbols at HEAD: `materialize_plan_seed`, `validate_draft_seed_content`, `classify_draft_seeds`, `_load_roadmap_research_targets`, and `HostingRow` with its optional `product`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-verification-ownership",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "cef92e98381bbdba7312d837185d01881b496d79982b60c828d9fee7fcc5fb10",
+    "detail_bundle_digest": "48ca4a0a8efd01ac94cdae0f09d5902cd34c0a8fc6802a9b16fff9f8d83ec6fe",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-propagation/01-render-accepted-hosting-store-stack.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-propagation/02-carry-seed-stack-plan-body-settled.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-propagation/03-have-detail-treat-plan-settled-stack.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-propagation/04-document-draft-seed-stack-section-stack.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "e2e7aab1b424f51b5c8d5c3dcbc005a2c7af50604d5c4614e4f05b9f36525084",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

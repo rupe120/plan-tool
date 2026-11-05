@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "jira-developer-handoff-companion",
+  "plan_path": "docs/implementation-plans/2-jira-developer-handoff-companion.md",
+  "created_at": "2026-08-21T22:19:47Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cdbce1189485acf2cca0f0ac349c2b82d9b51cbef3a9d9c6d2ddae952b641d49",
+  "code_fingerprint": {
+    "BACKLOG.md": "74c593d2c2c4e3d0bf585d8a831d4fc76104af89d56eacfcbe5ea45d2b77fae9",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "439c77531bd841dbed0fa6972c7e02aa891da7420181748df9287137845389b2",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "7f7809f3d079e01d9647a5d935f2039281f87a558754da821504511fa8d62ab4",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md": "31db143508fb70419e2394157d0ed42886b72e086ce86ff079d651c08b199425",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-prepare-pair-aware-story-publisher.md": "35d2eef6d9be60531cbb572c1ba200f8bff0362b2fabefe8410dab39e9149b3d",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-define-generated-jira-developer-handoff.md": "11b2eaf163bc549ef9069af9166e1654a4f67a70e086ebd91c1ebcb07d7ed93d",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-publish-recover-verifiable-paired.md": "ac843d9c8936838b6b176fc6dd3018cc96abf586a561f56b175c8003cb3bfc08",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-opt-jira-companion-cli-mode-explicit.md": "bab842a3ec5a697f2bd3ff394e6a3530ba7cefc48116869c16b48726f316089e",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-finish-jira-companion-docs-mark-backlog.md": "cc85cd7c4ba8b2d1a2bbdae4f33f1ba842a1f4ce4fa757b27dad4654f14249a1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Jira Developer Handoff Companion\n\n`jira-developer-handoff-companion` \u00b7 generated 2026-08-21T22:19:47Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply jira-developer-handoff-companion   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk jira-developer-handoff-companion  # alternative interactive review/apply\n\n- HIGH `[plan-body-snapshot]`: The input snapshot names \u201cthe parsed plan and its source path,\u201d but Overview promises why and guardrails and Architecture puts plan risks in the suggested route. At HEAD, `plan_tool.parser:parse_plan` returns only frontmatter and `plan_tool.jira:render_jira_prompt` consumes that `Plan`, so body edits have no captured source or fingerprint change; steps 1, 3, and 4, Testing, and acceptance criteria 1, 2, and 5 can omit those promises or mark stale guidance fresh.\n  - Fix: Capture a defined plan-body representation with the frontmatter, fingerprint it, and render the promised why, guardrails, and risks from that snapshot.\n- HIGH `[pair-recovery-output-integrity]`: Architecture permits pending-pair recovery when inputs have the same fingerprint, but it never binds the pending snapshot to the story and companion bytes expected from that publication. Step 2 (`Prepare a pair-aware story publisher without changing frozen-ticket behavior`), step 4 (`Publish and recover a verifiable paired handoff without overwriting human guidance`), Risks, Testing, and acceptance criteria 1 and 4 therefore allow a human edit after a partial write to be sealed by a new manifest as fresh guidance.\n  - Fix: Require recovery to verify the pending snapshot\u2019s expected artifact digests before finalizing, refuse mismatches, and test post-failure artifact changes.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step1-granularity-merge-023cf701]`: Steps 1 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step2-granularity-merge-ffe748e5]`: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Jira Developer Handoff Companion\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[plan-body-snapshot]`: The input snapshot names \u201cthe parsed plan and its source path,\u201d but Overview promises why and guardrails and Architecture puts plan risks in the suggested route. At HEAD, `plan_tool.parser:parse_plan` returns only frontmatter and `plan_tool.jira:render_jira_prompt` consumes that `Plan`, so body edits have no captured source or fingerprint change; steps 1, 3, and 4, Testing, and acceptance criteria 1, 2, and 5 can omit those promises or mark stale guidance fresh.\n- HIGH `[pair-recovery-output-integrity]`: Architecture permits pending-pair recovery when inputs have the same fingerprint, but it never binds the pending snapshot to the story and companion bytes expected from that publication. Step 2 (`Prepare a pair-aware story publisher without changing frozen-ticket behavior`), step 4 (`Publish and recover a verifiable paired handoff without overwriting human guidance`), Risks, Testing, and acceptance criteria 1 and 4 therefore allow a human edit after a partial write to be sealed by a new manifest as fresh guidance.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 1 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply jira-developer-handoff-companion` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3cdcca84",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The input snapshot names \u201cthe parsed plan and its source path,\u201d but Overview promises why and guardrails and Architectur",
+      "body": "The input snapshot names \u201cthe parsed plan and its source path,\u201d but Overview promises why and guardrails and Architecture puts plan risks in the suggested route. At HEAD, `plan_tool.parser:parse_plan` returns only frontmatter and `plan_tool.jira:render_jira_prompt` consumes that `Plan`, so body edits have no captured source or fingerprint change; steps 1, 3, and 4, Testing, and acceptance criteria 1, 2, and 5 can omit those promises or mark stale guidance fresh.",
+      "suggested_action": "Capture a defined plan-body representation with the frontmatter, fingerprint it, and render the promised why, guardrails, and risks from that snapshot.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "plan-body-snapshot",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e426e666",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture permits pending-pair recovery when inputs have the same fingerprint, but it never binds the pending snapsho",
+      "body": "Architecture permits pending-pair recovery when inputs have the same fingerprint, but it never binds the pending snapshot to the story and companion bytes expected from that publication. Step 2 (`Prepare a pair-aware story publisher without changing frozen-ticket behavior`), step 4 (`Publish and recover a verifiable paired handoff without overwriting human guidance`), Risks, Testing, and acceptance criteria 1 and 4 therefore allow a human edit after a partial write to be sealed by a new manifest as fresh guidance.",
+      "suggested_action": "Require recovery to verify the pending snapshot\u2019s expected artifact digests before finalizing, refuse mismatches, and test post-failure artifact changes.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pair-recovery-output-integrity",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "cdbce1189485acf2cca0f0ac349c2b82d9b51cbef3a9d9c6d2ddae952b641d49",
+    "detail_bundle_digest": "10e3c3695514d15b1cd196869600c17bdb19ba952e50e04d5d61944a204c113a",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-prepare-pair-aware-story-publisher.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-define-generated-jira-developer-handoff.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-publish-recover-verifiable-paired.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-opt-jira-companion-cli-mode-explicit.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-finish-jira-companion-docs-mark-backlog.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "14f8a11652141ab52994fb0c37ebb1227594d2b824b38b942dea3a0dfd86b32b",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T13:08:16Z",
+  "kind": "run-reconcile",
+  "step_id": 6,
+  "plan_fingerprint": "77f425d8bacbced45d859e1ce1944e66cc9780270776693673bdba8579a2bb2f",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "e2fae57163a8efe948dd30a121b0635166d7aa131ac492ced24734947ed2c579",
+    "DATA_CONTRACT.md": "c7e90ff770da370e104c27a165334b3e3914c6098ba7546be432cc3f3f1d55ff",
+    "README.md": "afd7e1dd563b4f45d83a062e24a533ec24de6b32f9ebd01f0e4bccb2243c3e17",
+    "TESTING.md": "e50e2805856e5a2f550345be9ba164160b8306349430c50e3571b2163e3b4c4c",
+    "plan_tool/cli/roadmap_cmd.py": "d5b91f151bf7747e2815288f639522f0b7b1ebbc137c2728df2cd34d9b059d2d",
+    "plan_tool/roadmap.py": "13ae6ae5c380989ece5aeb236af698a792ae70ce68322c08181a25a94bf2fd86",
+    "plan_tool/run_log.py": "a1dc4492940d7471d25cdca57b8cf0c15334543ff2c928892eb8696334cdd19f",
+    "tests/cli/test_roadmap_cmd.py": "22955886785695fcf3be6fc8c1b011c5097da613b8f4d3b68dc10ba6fc55d15f",
+    "tests/test_roadmap.py": "8aa7cf3d7083725f494e5d0d59fdca98e8965af1d4deabb304e12da86162a92e",
+    "tests/test_run_log.py": "1cec984beeb81cec135c614ef0ff0956b6a166d07fd168a8c63babd6e0251564"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 6 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 5 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

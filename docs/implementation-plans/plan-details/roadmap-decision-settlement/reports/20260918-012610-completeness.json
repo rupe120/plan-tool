@@ -1,0 +1,172 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-decision-settlement",
+  "plan_path": "docs/implementation-plans/2-roadmap-decision-settlement.md",
+  "created_at": "2026-09-18T01:26:10Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a46a71c716d248a88e061542166c8ce570d2a8c39087337436f64f67e30e323c",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "bcfce1fa3bd7e1f3a8080ffb8ddf72dee81ac46971556b1ff0a411f426eeb408",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "CLAUDE.md": "1141af3b4ab1974c5b3afdbda1e9b4b0fd1a9957a08f3ad920b9c1abf0a3ff49",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "integrations/shared/DIRECTIVES.md": "7192d800437e52964ac265bb02046284bbd3a9db29721c6d5e362b06c8411fb8",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_artifacts.py": "1928d1f1fbba7733d39a0fc57c2383d9a5f0b0fb1a83467ac129ddefa69d3e5a",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "plan_tool/roadmap_revision_publish.py": "1503a6839e5c7abc3543cc3373c1a43c90f6a031c7608eae00d837233d0a8afa",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_artifacts.py": "999e009cec8d866fa7dce50ec1a0bb277bc8a1e7c2299b62c7d3cce7da4ba171",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072",
+    "tests/test_roadmap_gates.py": "4b52ed512a58f8c04b12b681ebcd586b4a2904e485b3c32d9e3df0f63488a856",
+    "tests/test_roadmap_revision_publish.py": "04732b48fd13bf91a093750462e986df30f80e37bd9a730568c9cbb56734cff8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md": "4ce39982298acdcba3ca1345585257320e0cfe4d7e9a584933b2072bb8dff9d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md": "52e896aca9d3402c2a94218121c9fe291dcc05499aaea5ee028a23f2190c011d",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md": "980a2ea8d9849d75d89270473d480351633c2f5d212b0885eb488f32450912ce",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md": "b080edf8894abe55e7604561d5232202910f1817b6a110263eb390405bf463a6",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md": "cfeabe112d58b6c2f1d845a435f4381743df8fdf27df21304c785798c3c9121f",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md": "ee721bd3406d9364b90c2955d663a44f3451bdbbc8ce69b2377f76bb709a6b9e",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md": "8079ac7b0e74671c9a1af085a6b2cd69e8bf565e36c660964af95363322357d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md": "2a6beb3a5b45888f531935def85e70543f151024a8fe757c0727c1f0475dccf9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Decision Settlement\n\n`roadmap-decision-settlement` \u00b7 generated 2026-09-18T01:26:10Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-decision-settlement  # optional interactive review of the saved findings\n\n- HIGH `[settled-decision-enrolled-immutability]` [confidence: limited]: The plan's References section claims `check_settled_decisions` keeps a settled decision immutable once this route produces one:\n\n  ```\n  `plan_tool/roadmap_gates.py` (`check_settled_decisions`) \u2014 the complementary gate that must keep making a settled decision immutable once this route produces one.\n  ```\n\n  but `check_settled_decisions` compares only against `envelope.predecessor` and skips any row whose predecessor status isn't already `SETTLED`, while the enrolled-roadmap content-validity check step 5 reuses \u2014 `check_complete_roadmap_gates` \u2192 `_evaluate_full_roadmap_gates` in `roadmap_impact_snapshot.py`, the same evaluator `promote_review_seal`'s `_recheck_stored_candidate` runs on every later candidate promotion \u2014 never builds an `ArtifactEnvelope` with a `predecessor` at all, so the gate is unconditionally a no-op on that path. Once step 5 settles a decision on an enrolled roadmap, the next ordinary candidate proposal and promotion can change that same decision's `status`, `chosen_option`, or `anchor` back and nothing refuses it, recreating the \"internally contradictory\" state the Problem statement names as the harm this plan exists to close \u2014 except now behind a receipt that falsely attests permanence. This is a new exposure, not a pre-existing one: an enrolled roadmap has no other live route to a Roadmap-derived `settled` decision (inherited rows arrive pre-settled at carry time), so step 5 is the first mutation path to reach this gap. Step 7's acceptance (\"prove... `check_settled_decisions` still refuses drift on a row this route settled\") cannot be demonstrated against the real enrolled pipeline this way \u2014 it can only be shown by calling the gate directly on a hand-built envelope, which proves nothing about whether a real subsequent promotion is actually blocked.\n  - Fix: For the enrolled lineage, either add a dedicated drift check to the candidate-promotion validity path that compares a proposed candidate's decisions against the currently accepted version's settled decisions (the same comparison `check_settled_decisions` already makes, given a real predecessor), or state plainly in Risks/Deferred that a settled decision on an enrolled roadmap has no protection against a later candidate promotion until a separate effort adds it \u2014 rather than leaving the References/Out-of-scope framing assert a protection this lineage does not have.\n- MEDIUM `[escalation-selection-precedent-claim]` [confidence: limited]: The References section states:\n\n  ```\n  both are wired only for an un-enrolled roadmap today via `require_unenrolled_roadmap_writer` (`plan_tool/roadmap_revision_publish.py`), confirming the enrolled side has no narrow-route precedent to reuse as-is.\n  ```\n\n  about `roadmap_feedback_reopen.py` and `roadmap_escalation_selection.py`, but this is only true of `--reopen-feedback`. `roadmap_escalation_selection.py` and its runner `roadmap_escalation_run.py` never call `require_unenrolled_roadmap_writer`, acquire no writer guard, and check no enrollment state \u2014 escalation-receipt creation already runs unchanged on an enrolled roadmap because it only writes into the immutable evidence store, never the canonical artifact. An enrolled-compatible narrow-route precedent therefore already exists for the receipt half of this design (step 3); the \"no narrow-route precedent\" claim only holds for the canonical-artifact-mutation half (step 5).\n  - Fix: Narrow the References claim to the canonical-artifact-mutation precedent only, and note that escalation-receipt creation is itself a working enrolled-and-un-enrolled precedent for step 3's evidence-namespace write.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-decision-settlement` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Decision Settlement\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[settled-decision-enrolled-immutability]` [confidence: limited]: The plan's References section claims `check_settled_decisions` keeps a settled decision immutable once this route produces one:\n\n  ```\n  `plan_tool/roadmap_gates.py` (`check_settled_decisions`) \u2014 the complementary gate that must keep making a settled decision immutable once this route produces one.\n  ```\n\n  but `check_settled_decisions` compares only against `envelope.predecessor` and skips any row whose predecessor status isn't already `SETTLED`, while the enrolled-roadmap content-validity check step 5 reuses \u2014 `check_complete_roadmap_gates` \u2192 `_evaluate_full_roadmap_gates` in `roadmap_impact_snapshot.py`, the same evaluator `promote_review_seal`'s `_recheck_stored_candidate` runs on every later candidate promotion \u2014 never builds an `ArtifactEnvelope` with a `predecessor` at all, so the gate is unconditionally a no-op on that path. Once step 5 settles a decision on an enrolled roadmap, the next ordinary candidate proposal and promotion can change that same decision's `status`, `chosen_option`, or `anchor` back and nothing refuses it, recreating the \"internally contradictory\" state the Problem statement names as the harm this plan exists to close \u2014 except now behind a receipt that falsely attests permanence. This is a new exposure, not a pre-existing one: an enrolled roadmap has no other live route to a Roadmap-derived `settled` decision (inherited rows arrive pre-settled at carry time), so step 5 is the first mutation path to reach this gap. Step 7's acceptance (\"prove... `check_settled_decisions` still refuses drift on a row this route settled\") cannot be demonstrated against the real enrolled pipeline this way \u2014 it can only be shown by calling the gate directly on a hand-built envelope, which proves nothing about whether a real subsequent promotion is actually blocked.\n- MEDIUM `[escalation-selection-precedent-claim]` [confidence: limited]: The References section states:\n\n  ```\n  both are wired only for an un-enrolled roadmap today via `require_unenrolled_roadmap_writer` (`plan_tool/roadmap_revision_publish.py`), confirming the enrolled side has no narrow-route precedent to reuse as-is.\n  ```\n\n  about `roadmap_feedback_reopen.py` and `roadmap_escalation_selection.py`, but this is only true of `--reopen-feedback`. `roadmap_escalation_selection.py` and its runner `roadmap_escalation_run.py` never call `require_unenrolled_roadmap_writer`, acquire no writer guard, and check no enrollment state \u2014 escalation-receipt creation already runs unchanged on an enrolled roadmap because it only writes into the immutable evidence store, never the canonical artifact. An enrolled-compatible narrow-route precedent therefore already exists for the receipt half of this design (step 3); the \"no narrow-route precedent\" claim only holds for the canonical-artifact-mutation half (step 5).\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2554a9bc",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The plan's References section claims `check_settled_decisions` keeps a settled decision immutable once this route produc",
+      "body": "The plan's References section claims `check_settled_decisions` keeps a settled decision immutable once this route produces one:\n\n  ```\n  `plan_tool/roadmap_gates.py` (`check_settled_decisions`) \u2014 the complementary gate that must keep making a settled decision immutable once this route produces one.\n  ```\n\n  but `check_settled_decisions` compares only against `envelope.predecessor` and skips any row whose predecessor status isn't already `SETTLED`, while the enrolled-roadmap content-validity check step 5 reuses \u2014 `check_complete_roadmap_gates` \u2192 `_evaluate_full_roadmap_gates` in `roadmap_impact_snapshot.py`, the same evaluator `promote_review_seal`'s `_recheck_stored_candidate` runs on every later candidate promotion \u2014 never builds an `ArtifactEnvelope` with a `predecessor` at all, so the gate is unconditionally a no-op on that path. Once step 5 settles a decision on an enrolled roadmap, the next ordinary candidate proposal and promotion can change that same decision's `status`, `chosen_option`, or `anchor` back and nothing refuses it, recreating the \"internally contradictory\" state the Problem statement names as the harm this plan exists to close \u2014 except now behind a receipt that falsely attests permanence. This is a new exposure, not a pre-existing one: an enrolled roadmap has no other live route to a Roadmap-derived `settled` decision (inherited rows arrive pre-settled at carry time), so step 5 is the first mutation path to reach this gap. Step 7's acceptance (\"prove... `check_settled_decisions` still refuses drift on a row this route settled\") cannot be demonstrated against the real enrolled pipeline this way \u2014 it can only be shown by calling the gate directly on a hand-built envelope, which proves nothing about whether a real subsequent promotion is actually blocked.",
+      "suggested_action": "For the enrolled lineage, either add a dedicated drift check to the candidate-promotion validity path that compares a proposed candidate's decisions against the currently accepted version's settled decisions (the same comparison `check_settled_decisions` already makes, given a real predecessor), or state plainly in Risks/Deferred that a settled decision on an enrolled roadmap has no protection against a later candidate promotion until a separate effort adds it \u2014 rather than leaving the References/Out-of-scope framing assert a protection this lineage does not have.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "settled-decision-enrolled-immutability",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-615c9d6b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The References section states:",
+      "body": "The References section states:\n\n  ```\n  both are wired only for an un-enrolled roadmap today via `require_unenrolled_roadmap_writer` (`plan_tool/roadmap_revision_publish.py`), confirming the enrolled side has no narrow-route precedent to reuse as-is.\n  ```\n\n  about `roadmap_feedback_reopen.py` and `roadmap_escalation_selection.py`, but this is only true of `--reopen-feedback`. `roadmap_escalation_selection.py` and its runner `roadmap_escalation_run.py` never call `require_unenrolled_roadmap_writer`, acquire no writer guard, and check no enrollment state \u2014 escalation-receipt creation already runs unchanged on an enrolled roadmap because it only writes into the immutable evidence store, never the canonical artifact. An enrolled-compatible narrow-route precedent therefore already exists for the receipt half of this design (step 3); the \"no narrow-route precedent\" claim only holds for the canonical-artifact-mutation half (step 5).",
+      "suggested_action": "Narrow the References claim to the canonical-artifact-mutation precedent only, and note that escalation-receipt creation is itself a working enrolled-and-un-enrolled precedent for step 3's evidence-namespace write.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "escalation-selection-precedent-claim",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "a46a71c716d248a88e061542166c8ce570d2a8c39087337436f64f67e30e323c",
+    "detail_bundle_digest": "cd44043951359557e33082b20f7634c9cd5d71f8d28500e099d06a89d948ce94",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "057f1e27940bef911e911cb4337e640fc4a26e2f9a9d6f245413704db5eb159f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

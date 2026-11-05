@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "plan_slug": "escalate-structural-findings-to-split",
+  "plan_path": "docs/implementation-plans/2-escalate-structural-findings-to-split.md",
+  "created_at": "2026-06-20T15:21:23Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b07d7b11a58d8d84e91a8183937fbae2ecc3b6907a1478ab20cc51a7bad6743a",
+  "code_fingerprint": {
+    "CLAUDE.md": "de1c16a580b8a9fb380d63bf79a406bec63ff265f2ae2f9e44370e691b0dcaa7",
+    "RUNBOOK.md": "0b5107d5a37d22f46863d8b575a3ddb1f1b3cddf91ebad6a1e3bc531d8ff6b61",
+    "plan_tool/cli/review_actions.py": "2cf36304f0508e5a1a15d547cfcfbe67c99a4340232806f46c1b100cbf78c7d9",
+    "plan_tool/detail.py": "594cdc2144e74ad0defe18e309189a8025e90ff52e867898274b4c6124226f8a",
+    "plan_tool/launcher.py": "643167658df522dc04b626b13aad37aeec6f94100e28719ee0465a7e31a070e8",
+    "plan_tool/prompts/apply-finding.md": "485b47294819146fbf33b1106f58f7c929de4d85133826a9f1776601c2176696",
+    "plan_tool/review.py": "6f172ef0f0126c80a9a553edc992b9fdd3758bb8bec78d08dbbc6fd40f69d554",
+    "tests/cli/test_review_actions.py": "720996ec35d035d1216731dae1c1fff4d42ae5f2f1f99e8a19560fbd2d826bab",
+    "tests/test_detail.py": "db41044099060e7a0649e471b5d7bd171d2018b0086cea16b6f144477581ec5b",
+    "tests/test_launcher.py": "147511d8de4cd81ad7306874f382b0a09b6ffc55352697c728026d0afa31872b",
+    "tests/test_review.py": "f2dc2997acb47ae6cfc0b1cecfb85a3cf7a1f3a82e6d40241760e3bab075dd8e"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Escalate Structural Findings To Split\n\n`escalate-structural-findings-to-split` \u00b7 generated 2026-06-20T15:21:23Z \u00b7 mode: audit-only\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[step7-real-apply-path-test]`: Step 7 (`isolate-loop-renumbering-contract`) drives every test with \"a stubbed module-level `apply_finding` returning a chosen verdict,\" and its detail-file Acceptance criteria omit the real-apply requirement \u2014 yet the plan-level acceptance criterion demands \"a step-7 test exercises the **real apply path emitting `BLOCKED-STRUCTURAL`** \u2014 not only a stubbed `apply_finding` return \u2014 so step 7's machinery is proven live, not inert.\" With only stubbed-verdict cases, the named detail-side trigger-2 scenario (a `detail-body` apply turning structural) is asserted but never exercised through real `apply_finding` \u2192 `parse_apply_verdict`, leaving exactly the live-but-inert risk the criterion guards against.\n  - Address: `plan-tool completeness-apply escalate-structural-findings-to-split --anchor step7-real-apply-path-test`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply escalate-structural-findings-to-split` \u2014 walk the 1 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Escalate Structural Findings To Split\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[guard-b-create-side]`: The Problem statement says **\"Step 3 ships guard (b) \u2026 a minimal create-side recommend-only surface \u2026 that catches a `BLOCKED-STRUCTURAL` verdict from a create-side `apply_finding` and records a split recommendation,\"** but step 3's detail file (`03-blocked-structural-verdict-bucket-parse.md`, Files) edits only `plan_tool/launcher.py` / `plan_tool/prompts/apply-finding.md` / `tests/test_launcher.py`, no detail file edits `create.py`, and step 9 documents the reverse (\"the `create` path surfaces none until create-side trigger 2 lands\"). Because step 3 widens the *shared* `apply-finding.md` prompt `create` also renders, a create-side `apply_finding` can now return `BLOCKED-STRUCTURAL`, but `create.py:5548` branches only on `if apply_result.verdict == \"APPLIED\":`, so it falls through and re-collects each iteration \u2014 silently skipped, violating invariant 1's \"never silently skipped\" on the create path and undercutting the Deferred rationale that `BLOCKED-STRUCTURAL` is \"actively routed \u2026 never reaches the completeness summary.\"\n\n### Files coherence\n\n- NIT: step 9 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[step7-real-apply-path-test]`: Step 7 (`isolate-loop-renumbering-contract`) drives every test with \"a stubbed module-level `apply_finding` returning a chosen verdict,\" and its detail-file Acceptance criteria omit the real-apply requirement \u2014 yet the plan-level acceptance criterion demands \"a step-7 test exercises the **real apply path emitting `BLOCKED-STRUCTURAL`** \u2014 not only a stubbed `apply_finding` return \u2014 so step 7's machinery is proven live, not inert.\" With only stubbed-verdict cases, the named detail-side trigger-2 scenario (a `detail-body` apply turning structural) is asserted but never exercised through real `apply_finding` \u2192 `parse_apply_verdict`, leaving exactly the live-but-inert risk the criterion guards against.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit escalate-structural-findings-to-split --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply escalate-structural-findings-to-split` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f633a230",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Problem statement says **\"Step 3 ships guard (b) \u2026 a minimal create-side recommend-only surface \u2026 that catches a `BL",
+      "body": "The Problem statement says **\"Step 3 ships guard (b) \u2026 a minimal create-side recommend-only surface \u2026 that catches a `BLOCKED-STRUCTURAL` verdict from a create-side `apply_finding` and records a split recommendation,\"** but step 3's detail file (`03-blocked-structural-verdict-bucket-parse.md`, Files) edits only `plan_tool/launcher.py` / `plan_tool/prompts/apply-finding.md` / `tests/test_launcher.py`, no detail file edits `create.py`, and step 9 documents the reverse (\"the `create` path surfaces none until create-side trigger 2 lands\"). Because step 3 widens the *shared* `apply-finding.md` prompt `create` also renders, a create-side `apply_finding` can now return `BLOCKED-STRUCTURAL`, but `create.py:5548` branches only on `if apply_result.verdict == \"APPLIED\":`, so it falls through and re-collects each iteration \u2014 silently skipped, violating invariant 1's \"never silently skipped\" on the create path and undercutting the Deferred rationale that `BLOCKED-STRUCTURAL` is \"actively routed \u2026 never reaches the completeness summary.\"",
+      "suggested_action": "either give a step the create-side recommend-only catch the body assigns to step 3, or correct the body/step-decomposition to mark guard (b) Deferred \u2014 noting `create` already tolerates a bare-`BLOCKED` dead-end, so the leak is no new regression.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "guard-b-create-side"
+    },
+    {
+      "id": "plan-plan-completeness-386e7bf1",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7 (`isolate-loop-renumbering-contract`) drives every test with \"a stubbed module-level `apply_finding` returning a ",
+      "body": "Step 7 (`isolate-loop-renumbering-contract`) drives every test with \"a stubbed module-level `apply_finding` returning a chosen verdict,\" and its detail-file Acceptance criteria omit the real-apply requirement \u2014 yet the plan-level acceptance criterion demands \"a step-7 test exercises the **real apply path emitting `BLOCKED-STRUCTURAL`** \u2014 not only a stubbed `apply_finding` return \u2014 so step 7's machinery is proven live, not inert.\" With only stubbed-verdict cases, the named detail-side trigger-2 scenario (a `detail-body` apply turning structural) is asserted but never exercised through real `apply_finding` \u2192 `parse_apply_verdict`, leaving exactly the live-but-inert risk the criterion guards against.",
+      "suggested_action": "restore the real-apply-path `BLOCKED-STRUCTURAL` case to step 7's Tests and Acceptance, driving real `apply_finding` with a fake invoker that emits a `## Verdict: BLOCKED-STRUCTURAL` body rather than stubbing the function.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "step7-real-apply-path-test"
+    }
+  ],
+  "annotations": {}
+}

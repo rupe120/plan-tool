@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-revision-escalation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-revision-escalation.md",
+  "created_at": "2026-08-15T14:58:43Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "84d2b1d57af553163c7e3d7565839c3e3b87e769a91316ad3b29537a7f088a6d",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "afb753dd86d26eb2bc1506485247fffc072a60ec99c386bacda969df7e325a64",
+    "CLAUDE.md": "8fb431c12858a1d577ed60bde3d7a0e58711446a761d9638380f8cc6cd1395f1",
+    "DATA_CONTRACT.md": "2e76c419aa8d6695fbd02934738ec3e5b0b1dbfd1d6ec3591e3d7e859a8ea8f8",
+    "README.md": "1dbf5858642e538412558320782222faea1bc8032c6ffa40a4e8f25c9f420c50",
+    "ROADMAP_FORMAT.md": "94698942b45ed66579623b3f087a3815a38201bbb3990f6e9667a3ede9000191",
+    "RUNBOOK.md": "7bac353501c2061704daf71186b17d41833a882f4c8b88b84a9d9937a2aacd66",
+    "TESTING.md": "d97def2a36eb1b704077041dc2d2cecb8482cdfa29d061991a8014c3108ec3bc",
+    "docs/ARCHITECTURE.md": "1146090e259902042581ba8cda2d09c28858b37049b5ea6fa5a85a27e054dbb7",
+    "docs/ROADMAP_WALKTHROUGH.md": "67be7883e9d0344cc713ebd2b7992f2eb4815e51e282c00724d5e3ad41ad184e",
+    "docs/cli/roadmap.md": "2c16183a136b6c8991e9067de5b9644ae76506dfa5dd388fff36bc7f321ba2b6",
+    "plan_tool/cli/__init__.py": "af8f869d1ce82b395e0d32ed15ade91d351d28b9f2316404698e528de4b20036",
+    "plan_tool/cli/roadmap_cmd.py": "53f84fd678c24e4ab76dea1dc1837e74b86932e149d0d8861d47fa0db4db06df",
+    "plan_tool/roadmap_artifacts.py": "078e89f9b700ef972ef698b0ddad9758b65835534307ccabf9f9bb93e9a0bbea",
+    "plan_tool/roadmap_revision.py": "e08406219dad9721726d64f41b657d97371ae52d5f834b22a92b777d64d03e42",
+    "plan_tool/run_log.py": "bb9a2b8c5c0808dd36fca449e947a8c144dcf5452d18098b28abf0972ae00da0",
+    "tests/cli/package_surface_help.golden.txt": "e1e971be8e9e962a3cec8764bd3b0aa5b790d40b648a091d439add7af2f21ebb",
+    "tests/cli/test_roadmap_cmd.py": "bf9b79187aebb88fdbe5f8c0a5d04de523ebabe179c0c79db9dd6996b08bd921",
+    "tests/test_roadmap_artifacts.py": "2e82e3e1d31649f0b632d8b9cc63f7029ee716f1e96c1f884b070d1a9b748d9e",
+    "tests/test_roadmap_format.py": "a527a6a855129580d7b50a28aa86b782b1b90a7b1071324ce2c698f6336abece",
+    "tests/test_roadmap_revision.py": "e8b13fe2173908ee0740ce156ce75063863fed038a9898d2b4b8fb2d3ded4507",
+    "tests/test_run_log.py": "edc0c54b94f4bbaa957345bd24233b9d89c2bd4c21b87aa59f8d88a569718b97"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md": "acff9a5dcfcd2e55371f7f371745af52bc87879fa96c9c5efd8ec4616f2c611d",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md": "dc7f5ec9d05ac82babf7e4a8e752dbb91f358a775741c92c9cd408257d673642",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md": "aef9031e2737ba832ac4f2367d1facee7e27082c1be507e12d111f948dca8249",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md": "b39ff43bbf61356a6d72ed36097b9795d3c3bd07bafa58258458a7c9db2c18b2",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md": "b63c169dd0695aac625be6120b18fce9c85392b0a437edacd1ca27fd718649e2",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md": "7ac5517a65ec042a5df2c4b07011eb71143a94b70246200a4068f07e9cd56969"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Escalation Receipt\n\n`roadmap-structural-revision-escalation` \u00b7 generated 2026-08-15T14:58:43Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-revision-escalation   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[receipt-preflight-precedence]`: Receipt creation preflight is not total: Architecture\u2019s precedence table, Testing, acceptance criterion 2, and step 5\u2019s \u201cGive creation precedence\u201d rule require a logged `mode-rejected` result for conflicting creation input, but `plan_tool/cli/roadmap_cmd.py:register` keeps `--apply`, `--refresh-seeds`, `--accept-seed`, `--materialize`, `--from-stage`, and `--view` in one argparse mutually exclusive group. A creation command with two of those options aborts during parsing before step 4 can emit its required redacted event pair.\n  - Fix: define receipt-aware parsing that gives creation preflight precedence over all conflicting combinations, then preserves current mutual-exclusion errors when receipt creation is absent.\n- MEDIUM `[prerequisite-gate]`: Overview says \u201cThe receipt plan remains a bare-plan design gate\u201d and that it may receive no detail bundle or execution until the prerequisite lands, but this plan already declares all six `detail:` files and supplies that bundle. The stale gate leaves the plan\u2019s execution state contradictory and can wrongly block its next stage.\n  - Fix: replace the stale prerequisite gate with the current prerequisite and detail-bundle state. - INFO: [immutable-evidence-storage-boundary] `plan_tool/roadmap_evidence_store.py:_ensure_namespace`, `_existing_namespace`, `_read_exact_existing`, and `scan_evidence` follow namespace and matching-final symlinks, so steps 4\u20135 can receive opaque bytes outside the configured roadmap directory despite Architecture and the receipt-substitution risk relying on a fixed namespace. This is outside this plan\u2019s immutable-storage boundary and is already filed in `BUG_BACKLOG.md`. [out-of-scope-deferred] \u2192 fix: keep descriptor-relative non-link traversal and regular-final attestation as a hardened prerequisite task in `BUG_BACKLOG.md`.\n- HIGH `[receipt-log-slug-boundary]`: Step 4 starts `RunLogWriter` for receipt creation while Architecture derives receipt paths from `roadmap_dir(plans_dir, slug)`, but neither step 4 nor step 5 requires slug validation before logging. At HEAD, `run_log:run_dir` appends an unchecked slug, while `roadmap_artifacts:roadmap_dir` is the validator; a separator or `..` slug can therefore create telemetry outside the intended run directory before receipt source or storage validation.\n  - Fix: Require receipt creation to validate the slug before opening a log, source, or storage path, with invalid slugs returning a log-free usage result. - INFO: [immutable-evidence-storage-boundary] Steps 4\u20135 rely on the prerequisite\u2019s fixed evidence namespace, but `roadmap_evidence_store:_ensure_namespace`, `_existing_namespace`, `_read_exact_existing`, and `scan_evidence` follow namespace and final-name symlinks. This prerequisite hardening is outside this plan\u2019s storage boundary and is already filed in `BUG_BACKLOG.md`. \u2192 fix: Keep non-link namespace traversal and regular-final attestation in `BUG_BACKLOG.md`; do not add that storage protocol to this receipt plan. [out-of-scope-deferred]\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]`: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae3effe6]`: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c44534ae]`: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7eaf41f7]`: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Escalation Receipt\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[receipt-preflight-precedence]`: Receipt creation preflight is not total: Architecture\u2019s precedence table, Testing, acceptance criterion 2, and step 5\u2019s \u201cGive creation precedence\u201d rule require a logged `mode-rejected` result for conflicting creation input, but `plan_tool/cli/roadmap_cmd.py:register` keeps `--apply`, `--refresh-seeds`, `--accept-seed`, `--materialize`, `--from-stage`, and `--view` in one argparse mutually exclusive group. A creation command with two of those options aborts during parsing before step 4 can emit its required redacted event pair.\n- MEDIUM `[prerequisite-gate]`: Overview says \u201cThe receipt plan remains a bare-plan design gate\u201d and that it may receive no detail bundle or execution until the prerequisite lands, but this plan already declares all six `detail:` files and supplies that bundle. The stale gate leaves the plan\u2019s execution state contradictory and can wrongly block its next stage.\n- HIGH `[receipt-log-slug-boundary]`: Step 4 starts `RunLogWriter` for receipt creation while Architecture derives receipt paths from `roadmap_dir(plans_dir, slug)`, but neither step 4 nor step 5 requires slug validation before logging. At HEAD, `run_log:run_dir` appends an unchecked slug, while `roadmap_artifacts:roadmap_dir` is the validator; a separator or `..` slug can therefore create telemetry outside the intended run directory before receipt source or storage validation.\n\n### Files coherence\n\n- INFO: step 3 detail cites `plan_tool/roadmap_escalation_selection.py` resembling declared `plan_tool/roadmap_escalation.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/roadmap_escalation.py` resembling declared `plan_tool/roadmap_escalation_run.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/roadmap_escalation_selection.py` resembling declared `plan_tool/roadmap_escalation_run.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/roadmap_revision_run.py` resembling declared `plan_tool/roadmap_escalation_run.py` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-structural-revision-escalation` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-26d42e18",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Receipt creation preflight is not total: Architecture\u2019s precedence table, Testing, acceptance criterion 2, and step 5\u2019s ",
+      "body": "Receipt creation preflight is not total: Architecture\u2019s precedence table, Testing, acceptance criterion 2, and step 5\u2019s \u201cGive creation precedence\u201d rule require a logged `mode-rejected` result for conflicting creation input, but `plan_tool/cli/roadmap_cmd.py:register` keeps `--apply`, `--refresh-seeds`, `--accept-seed`, `--materialize`, `--from-stage`, and `--view` in one argparse mutually exclusive group. A creation command with two of those options aborts during parsing before step 4 can emit its required redacted event pair.",
+      "suggested_action": "define receipt-aware parsing that gives creation preflight precedence over all conflicting combinations, then preserves current mutual-exclusion errors when receipt creation is absent.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-preflight-precedence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-8d6914a9",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Overview says \u201cThe receipt plan remains a bare-plan design gate\u201d and that it may receive no detail bundle or execution u",
+      "body": "Overview says \u201cThe receipt plan remains a bare-plan design gate\u201d and that it may receive no detail bundle or execution until the prerequisite lands, but this plan already declares all six `detail:` files and supplies that bundle. The stale gate leaves the plan\u2019s execution state contradictory and can wrongly block its next stage.",
+      "suggested_action": "replace the stale prerequisite gate with the current prerequisite and detail-bundle state. - INFO: [immutable-evidence-storage-boundary] `plan_tool/roadmap_evidence_store.py:_ensure_namespace`, `_existing_namespace`, `_read_exact_existing`, and `scan_evidence` follow namespace and matching-final symlinks, so steps 4\u20135 can receive opaque bytes outside the configured roadmap directory despite Architecture and the receipt-substitution risk relying on a fixed namespace. This is outside this plan\u2019s immutable-storage boundary and is already filed in `BUG_BACKLOG.md`. [out-of-scope-deferred] \u2192 fix: keep descriptor-relative non-link traversal and regular-final attestation as a hardened prerequisite task in `BUG_BACKLOG.md`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "prerequisite-gate",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-4fa77b55",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 starts `RunLogWriter` for receipt creation while Architecture derives receipt paths from `roadmap_dir(plans_dir, ",
+      "body": "Step 4 starts `RunLogWriter` for receipt creation while Architecture derives receipt paths from `roadmap_dir(plans_dir, slug)`, but neither step 4 nor step 5 requires slug validation before logging. At HEAD, `run_log:run_dir` appends an unchecked slug, while `roadmap_artifacts:roadmap_dir` is the validator; a separator or `..` slug can therefore create telemetry outside the intended run directory before receipt source or storage validation.",
+      "suggested_action": "Require receipt creation to validate the slug before opening a log, source, or storage path, with invalid slugs returning a log-free usage result. - INFO: [immutable-evidence-storage-boundary] Steps 4\u20135 rely on the prerequisite\u2019s fixed evidence namespace, but `roadmap_evidence_store:_ensure_namespace`, `_existing_namespace`, `_read_exact_existing`, and `scan_evidence` follow namespace and final-name symlinks. This prerequisite hardening is outside this plan\u2019s storage boundary and is already filed in `BUG_BACKLOG.md`. \u2192 fix: Keep non-link namespace traversal and regular-final attestation in `BUG_BACKLOG.md`; do not add that storage protocol to this receipt plan. [out-of-scope-deferred]",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-log-slug-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "9f3298c3a0183f58eb49b5fcca0662c822771d2d23b6d84f2fb5cf17226b971f",
+    "detail_bundle_digest": "62eae936a1d81ea4db34ea23390f7c5b102fd981049a1b5d6e54e905d4222d26",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md",
+        "state": "present",
+        "digest": "acff9a5dcfcd2e55371f7f371745af52bc87879fa96c9c5efd8ec4616f2c611d"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md",
+        "state": "present",
+        "digest": "dc7f5ec9d05ac82babf7e4a8e752dbb91f358a775741c92c9cd408257d673642"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md",
+        "state": "present",
+        "digest": "aef9031e2737ba832ac4f2367d1facee7e27082c1be507e12d111f948dca8249"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md",
+        "state": "present",
+        "digest": "b39ff43bbf61356a6d72ed36097b9795d3c3bd07bafa58258458a7c9db2c18b2"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md",
+        "state": "present",
+        "digest": "b63c169dd0695aac625be6120b18fce9c85392b0a437edacd1ca27fd718649e2"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md",
+        "state": "present",
+        "digest": "7ac5517a65ec042a5df2c4b07011eb71143a94b70246200a4068f07e9cd56969"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

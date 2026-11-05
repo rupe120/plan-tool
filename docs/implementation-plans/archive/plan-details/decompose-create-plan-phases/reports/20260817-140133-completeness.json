@@ -1,0 +1,108 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-create-plan-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-create-plan-phases.md",
+  "created_at": "2026-08-17T14:01:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9f2e63cb4d75835ab5f93d21cd77171a4104c6d1207be1a7ee0344d36082772e",
+  "code_fingerprint": {
+    "plan_tool/create.py": "339edec2cfdac4de6c4b715372d827888e5b2bde4eb256215d5ca246697f7afa",
+    "tests/test_create.py": "de390fb51025f16f536dd4a7e89768b66e71c1c0327f7e8fb958936c34cf6522"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/01-characterize-create-plan-exact.md": "64160f8a6ea4cfadb6b34fde72c5a676234ab42e89c4a93085a666c8cec0e1f2",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md": "6d9a3a0877d9c819233c5b2846c36a4f9901f39b0d4155a3915b944f25e9032d",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/03-move-create-plan-publication-named.md": "52888850fb442d022f1540e23f87258dafdca4e48fe00c28417a5ba6be9a88e6",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/04-move-create-plan-finalization-named.md": "595de7efa8d635029ea848ed9995b77fb8b27480b2ccbfa0bb9fcde2c602c0b3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Create Plan Phases\n\n`decompose-create-plan-phases` \u00b7 generated 2026-08-17T14:01:33Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply decompose-create-plan-phases   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk decompose-create-plan-phases  # alternative interactive review/apply\n\n- HIGH `[split-proposal-phase-exit]`: Architecture requires `_prepare_create_plan` through `_finalize_create_plan` in a fixed sequence, while step 2 (`Move create_plan setup, authoring, and its initial-only rationale guard\u2026`) moves seed distillation into preparation and step 4 (`Move create_plan finalization\u2026`) pins that sequence. `plan_tool/create.py:create_plan` currently returns `CreateResult(plan_path=None, split_proposal=...)` immediately when `distilled.is_split`, before publication, manifest work, convergence, or finalization; the plan never says that this path bypasses the four phases.\n  - Fix: define the split-proposal result as a preparation exit that bypasses publish, converge, and finalize, and characterize both the normal phase sequence and this early-return path.\n- HIGH `[convergence-terminal-outcome]`: Architecture calls for explicit convergence input and return state, and step 4 promises failed-run checkpoint retention, but neither defines the terminal outcome passed from step 1 (`Characterize create_plan's exact signature and loop contracts\u2026`) to finalization. `plan_tool/create.py:create_plan` distinguishes an unparseable or invalid step re-proposal with `stage_failure`: it still patches a non-empty `refs_proposal`, returns `CreateResult.iteration_stage_failure`, retains checkpoints, and avoids a normal convergence result; normal stops clear checkpoints. `tests/test_create.py:TestCreatePlanIterationLoop.test_iteration_step_failure_aborts_with_failure_signal` and `test_iteration_stage_failure_preserves_checkpoints_for_resume` lock in that distinction.\n  - Fix: specify the convergence result and finalization rules for normal stops, stage failure, and uncaught failure, including result status, References patching, and checkpoint cleanup or retention.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-230af187]`: The plan's `## Acceptance criteria` names `advise_path_issues`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-73f9027c]`: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9109e159]`: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a02a2cbc]`: The plan's `## Acceptance criteria` names `plan_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-286e1354]`: The plan's `## Acceptance criteria` names `refs_proposal`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-95c7cf48]`: The plan's `## Acceptance criteria` names `write_new_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-21e77265]`: The plan's `## Acceptance criteria` names `write_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-2e7cebc0]`: Step 1 \"Characterize create_plan's exact signature and loop contracts, then move its convergence loop into one explicit-state function\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step2-granularity-split-c353f6d2]`: Step 2 \"Move create_plan setup, authoring, and its initial-only rationale guard into named functions, keeping checkpoint overwrites and backend-call order unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step3-granularity-split-5aa81f74]`: Step 3 \"Move create_plan publication into named functions, keeping collision archival and manifest removal, write_new_plan and concept rollback, detail renames, and manifest append unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step4-granularity-split-958871d7]`: Step 4 \"Move create_plan finalization into named functions and pin its prepare \u2192 publish \u2192 converge \u2192 finalize sequence, keeping clean-run checkpoint deletion, failed-run retention, post-loop plan and concept sync, and sidecar clearing unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit decompose-create-plan-phases` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Create Plan Phases\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[split-proposal-phase-exit]`: Architecture requires `_prepare_create_plan` through `_finalize_create_plan` in a fixed sequence, while step 2 (`Move create_plan setup, authoring, and its initial-only rationale guard\u2026`) moves seed distillation into preparation and step 4 (`Move create_plan finalization\u2026`) pins that sequence. `plan_tool/create.py:create_plan` currently returns `CreateResult(plan_path=None, split_proposal=...)` immediately when `distilled.is_split`, before publication, manifest work, convergence, or finalization; the plan never says that this path bypasses the four phases.\n- HIGH `[convergence-terminal-outcome]`: Architecture calls for explicit convergence input and return state, and step 4 promises failed-run checkpoint retention, but neither defines the terminal outcome passed from step 1 (`Characterize create_plan's exact signature and loop contracts\u2026`) to finalization. `plan_tool/create.py:create_plan` distinguishes an unparseable or invalid step re-proposal with `stage_failure`: it still patches a non-empty `refs_proposal`, returns `CreateResult.iteration_stage_failure`, retains checkpoints, and avoids a normal convergence result; normal stops clear checkpoints. `tests/test_create.py:TestCreatePlanIterationLoop.test_iteration_step_failure_aborts_with_failure_signal` and `test_iteration_stage_failure_preserves_checkpoints_for_resume` lock in that distinction.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `advise_path_issues`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `refs_proposal`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_new_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 1 \"Characterize create_plan's exact signature and loop contracts, then move its convergence loop into one explicit-state function\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 2 \"Move create_plan setup, authoring, and its initial-only rationale guard into named functions, keeping checkpoint overwrites and backend-call order unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 3 \"Move create_plan publication into named functions, keeping collision archival and manifest removal, write_new_plan and concept rollback, detail renames, and manifest append unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 4 \"Move create_plan finalization into named functions and pin its prepare \u2192 publish \u2192 converge \u2192 finalize sequence, keeping clean-run checkpoint deletion, failed-run retention, post-loop plan and concept sync, and sidecar clearing unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply decompose-create-plan-phases` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-22708073",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture requires `_prepare_create_plan` through `_finalize_create_plan` in a fixed sequence, while step 2 (`Move cr",
+      "body": "Architecture requires `_prepare_create_plan` through `_finalize_create_plan` in a fixed sequence, while step 2 (`Move create_plan setup, authoring, and its initial-only rationale guard\u2026`) moves seed distillation into preparation and step 4 (`Move create_plan finalization\u2026`) pins that sequence. `plan_tool/create.py:create_plan` currently returns `CreateResult(plan_path=None, split_proposal=...)` immediately when `distilled.is_split`, before publication, manifest work, convergence, or finalization; the plan never says that this path bypasses the four phases.",
+      "suggested_action": "define the split-proposal result as a preparation exit that bypasses publish, converge, and finalize, and characterize both the normal phase sequence and this early-return path.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-proposal-phase-exit",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-a86e6332",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture calls for explicit convergence input and return state, and step 4 promises failed-run checkpoint retention,",
+      "body": "Architecture calls for explicit convergence input and return state, and step 4 promises failed-run checkpoint retention, but neither defines the terminal outcome passed from step 1 (`Characterize create_plan's exact signature and loop contracts\u2026`) to finalization. `plan_tool/create.py:create_plan` distinguishes an unparseable or invalid step re-proposal with `stage_failure`: it still patches a non-empty `refs_proposal`, returns `CreateResult.iteration_stage_failure`, retains checkpoints, and avoids a normal convergence result; normal stops clear checkpoints. `tests/test_create.py:TestCreatePlanIterationLoop.test_iteration_step_failure_aborts_with_failure_signal` and `test_iteration_stage_failure_preserves_checkpoints_for_resume` lock in that distinction.",
+      "suggested_action": "specify the convergence result and finalization rules for normal stops, stage failure, and uncaught failure, including result status, References patching, and checkpoint cleanup or retention.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "convergence-terminal-outcome",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "9f2e63cb4d75835ab5f93d21cd77171a4104c6d1207be1a7ee0344d36082772e",
+    "detail_bundle_digest": "6cf1928249d86df96b31ab71af63184763a0c3d066578f9f1efe0f644b9efdaf",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/01-characterize-create-plan-exact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/03-move-create-plan-publication-named.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/04-move-create-plan-finalization-named.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

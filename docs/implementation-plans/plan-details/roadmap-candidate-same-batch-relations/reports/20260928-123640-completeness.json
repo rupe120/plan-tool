@@ -1,0 +1,83 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-same-batch-relations",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-same-batch-relations.md",
+  "created_at": "2026-09-28T12:36:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a966258d4cad4ceba5971e7164568443fab423185fec88ba3a7fbeb39c41fe17",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "e24b6eb1eec1be9fc871943a5548dcd70e34b37cc3437be3ee833df55991eee5",
+    "plan_tool/roadmap_candidate.py": "2a71c75a98552cfb7fc50694b09915cd25a21fd9a5f41aa4b9436f5fc30b2abe",
+    "tests/test_roadmap_candidate.py": "9c2fa6ea7cc9316e696cd42d4ac70995c0e979c032649c82c806232b1b341436",
+    "tests/test_roadmap_candidate_run.py": "6ae8e6c4bdc9163993709fe8ec7444f301c2e31b3440703b4249f6245a0ae040"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/01-allow-exact-same-batch-relation.md": "105ad2c54ed1e206be804f9d93070e06e71bcaf71db44c5e90a20d2fa14942fd",
+    "docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/02-remove-resolved-candidate-relation-bug.md": "d09b49d1fdac97f60ff574833f17ecd202acbcb8b998559a55d7f60998e09224"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Same Batch Relations\n\n`roadmap-candidate-same-batch-relations` \u00b7 generated 2026-09-28T12:36:39Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `367637cf12c1da104353f343bbbbec1f255cc63d472505618856db8ab91a323b`\n- **Detail bundle digest:** `75096077f7aabac611152a0891c8e4dd8a3753fd85a653067e6ee7fb6b4e0faf`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 17016 bytes (+17016 vs. first audit)\n- **Keystone fan-out:** 0.00\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-candidate-same-batch-relations` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Same Batch Relations\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `367637cf12c1da104353f343bbbbec1f255cc63d472505618856db8ab91a323b`\n- **Detail bundle digest:** `75096077f7aabac611152a0891c8e4dd8a3753fd85a653067e6ee7fb6b4e0faf`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run roadmap-candidate-same-batch-relations` \u2014 no gaps left \u2014 execute the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "367637cf12c1da104353f343bbbbec1f255cc63d472505618856db8ab91a323b",
+      "detail_bundle_digest": "75096077f7aabac611152a0891c8e4dd8a3753fd85a653067e6ee7fb6b4e0faf",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/01-allow-exact-same-batch-relation.md",
+          "state": "present",
+          "digest": "105ad2c54ed1e206be804f9d93070e06e71bcaf71db44c5e90a20d2fa14942fd"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/02-remove-resolved-candidate-relation-bug.md",
+          "state": "present",
+          "digest": "d09b49d1fdac97f60ff574833f17ecd202acbcb8b998559a55d7f60998e09224"
+        }
+      ],
+      "source_seed_digest": "f1ee40e87d17025117818a7cb9a86c6aec0f4768e416920b59bb97621a830569",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 17016,
+    "keystone_fan_out": 0.0,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

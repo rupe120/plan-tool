@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "plan_slug": "direct-pipeline-commands",
+  "plan_path": "docs/implementation-plans/2-direct-pipeline-commands.md",
+  "created_at": "2026-07-17T12:03:08Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "d12342912dfebf4b39b8f0c263ec8750a84427189db03398a59765ff76fe3a3a",
+  "code_fingerprint": {
+    "BACKLOG.md": "8530176906da621e037f2335a3081c476a0622339dedf7382b1fb4e26939e31b",
+    "CAPABILITIES.md": "a3c5ebdcd021aec361640508b38063b2fe0cabb2a47912fc77c27d379fa7cef7",
+    "README.md": "5b3319781e1fcbb281da02e77b881d836c21d9029c6c0a4696d6e3a0fcdde5ee",
+    "USE_CASES.md": "5b5851635bef7e0cf9eb3530b1b271a1b3725cedca085f32da9fcfaa13b8ba2c",
+    "docs/DIRECT_PIPELINE_FLOW.md": "660997bd2ab1a0a079d9237dae4c6a52c965607b163a8f00c1c515e9f47b12c2",
+    "docs/cli/README.md": "3e8a26a5f20c4de636ceef66b589220567307bd368f4139e93bfff39b0582bec",
+    "docs/cli/direct-jira.md": "de7de5eec007804d5d6facd1f07c186289595962e853097fbaba3beb4370a5b6",
+    "docs/cli/direct-run.md": "cafc58830be87c60919600048518aa0119ddcd412f1589e0557a81176cbf81c2",
+    "plan_tool/cli/app.py": "ef079f42e5b4df93f964ff0a7472b6c06b5a414d511defdb67b6ceefa010f2ee",
+    "plan_tool/cli/authoring.py": "893dd6687f8650733bfa972be295837e9fb5b9d875be11eb27fe3c16a2027c56",
+    "plan_tool/cli/direct_cmd.py": "c0681ee49ac96760a2d66bfcd97ac0a11d9d1700c17bc17f11a0c3f97d14d9ca",
+    "plan_tool/cli/parser.py": "387ec944cd7b49c14d6905c7ea050df96b7204c622dd8d61cba6677de87d858d",
+    "tests/cli/test_authoring_cmds.py": "e5125af66b969bde1488c0b7932f30e18d3656da9848ecdafc273c5615624936",
+    "tests/cli/test_cli_reference.py": "322f09dbaf0a33c6ae02fbf3d62255cf6f37c123ba791ac1d228f4b396d95c40",
+    "tests/cli/test_direct_cmd.py": "16c665bf5367a5bff85c40e189d72f8a1f0b87411b81d3246dc24570c50b785c",
+    "tests/test_create.py": "c5a7967488996b9c7efc75cc08ba5063130c9024090a68fcf8e0d9feb25b704d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

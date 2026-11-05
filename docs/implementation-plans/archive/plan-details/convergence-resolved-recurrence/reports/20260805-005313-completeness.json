@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-05T00:53:13Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "afaae2833668cb6482d04e94b1f366726870a07b64be7a455a86e76c75d49e00",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "51ee624b09b4e5d428360c2336877385458fd9a39b5c7dfec7d20256efc1031f",
+    "plan_tool/convergence_diagnosis.py": "95e73e1e818289c33c5cf824e1fd7da1afd128ae3a083dab5a71f193f4f97252",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "plan_tool/telemetry_analysis.py": "e9bbd89b364320ecf9f2b6091687568dc9a3d0d82301fd6f85bb272aa9fa6082",
+    "tests/cli/test_convergence_cmd.py": "70e17a3104cd7485340262371140876426661c60a7a320fad9a5a944bcbb453b",
+    "tests/test_convergence_diagnosis.py": "407d10d0fe1177c5402ac177db1a8d247fd23e1b160f3df4ae1ca1edd862c81f",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56",
+    "tests/test_telemetry_analysis.py": "9edc7ec0a783feb5fd42ce1b727f80eac63149a131a1bfc8e7a60eb05082ded5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "25a5a75ea17d6ce46a6653734a23511dfd47f164167cd68d936b25523b6cfb50",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "85faacb16af4670d5809eda915284c470ddd682c48fed65740b129e94b2b330a",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "275fe8a439be7ede14ef9c7f2c2f580c6b7efbf991876e56ebda5456b65565d4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-05T00:53:13Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run convergence-resolved-recurrence` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run convergence-resolved-recurrence` executes the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {}
+}

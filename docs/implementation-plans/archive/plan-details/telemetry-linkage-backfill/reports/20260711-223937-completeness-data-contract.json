@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-73133cec": {
+      "code_anchor": "telemetry.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-telemetry-linkage-backfill.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-telemetry-linkage-backfill.md",
+      "reason": "code anchor path `telemetry.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-4060e1ef": {
+      "code_anchor": "data_contract.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/04-record-per-finding-apply-verdict.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/04-record-per-finding-apply-verdict.md",
+      "reason": "code anchor path `data_contract.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-b85e7409": {
+      "code_anchor": "launcher.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/04-record-per-finding-apply-verdict.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/04-record-per-finding-apply-verdict.md",
+      "reason": "code anchor path `launcher.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-eee093c0": {
+      "code_anchor": "plan_tool/launcher.py:EscalateResult.outcome",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/05-record-escalate-split-outcome-decision.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-linkage-backfill/05-record-escalate-split-outcome-decision.md",
+      "reason": "code anchor `plan_tool/launcher.py:EscalateResult.outcome` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260711-223937-completeness"
+}

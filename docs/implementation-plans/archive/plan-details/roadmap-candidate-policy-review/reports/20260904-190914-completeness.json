@@ -1,0 +1,121 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T19:09:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "514712215c6ce0d624fbf93d908357d6e4b8759aa966725636157415372d5de4",
+  "code_fingerprint": {
+    "BACKLOG.md": "959a19e0f666bcdcb4d638245dcbfac69ed51c1b68fe7804a9ff409f57333f17",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "7429196874201f70057dee425c5c3a073e88da40c458fa4d41aa377775f33959",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "51a186407997aa9227766da7ebdf03b00782ca2234e2dbabbd804f589ca614ce",
+    "plan_tool/cli/roadmap_cmd.py": "5a7888a74cd673741a2f5ec2640285fabfcb02df872ba17a152cf17af681d73d",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/cli/test_roadmap_cmd.py": "544e4c3ef9fee430ca5a615f7b147606570e14043faef98b4a9f390cc4c4c898",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md": "51f88e4582709fd1defc85a0593ee4d4d60e4ac38d02c5bbf48a195fc4cd0368",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md": "a9178e0619be5499303f4b4fb8a5d96c71fd3d692be7c541f072c50961a33c8c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md": "40f9c73d5291c5432b90b330fda1cbfc649662622f3a53044f0cdc1624c82380",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md": "964e37424b8a02d24d8e97cde7fa65930ee99ff5a92e8e315021a9dc4c77d729",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md": "d4c7f1f3af726ba0c8fc47f15bb1b8bf88cc5647e0974010b95b4c06c08ffd79"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Policy Review\n\n`roadmap-candidate-policy-review` \u00b7 generated 2026-09-04T19:09:13Z \u00b7 mode: iterate \u00b7 loop stopped: manual_fix_blocking_findings after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4fa2799a5f7576ae8e83b82b3366bb3c1659b1823304ddad3a8cd0ad76bcb8e9`\n- **Detail bundle digest:** `6e3b8a41b50ea033c5b37e224fd967ee9e273978b1b2d82187ea1d2494e5ee49`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 67118 bytes (+67118 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[step3-orphaned-deliverable-eb0cbb15]` [confidence: limited]: Step 3 declares `plan_tool/cli/roadmap_cmd.py`, but no other in-scope step or plan claim (`## Acceptance criteria` / `## Overview`) consumes it, and the step defers its own wiring (`## Deferred` / `## Out of scope`). A deliverable nothing consumes lands dead on arrival. Confirm it is needed now, or move it to the step that wires it in.\n\n## Suggested next steps\n\n- Resolve 1 structural diagnostic(s) directly \u2014 see each finding's suggested fix above.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Policy Review\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4fa2799a5f7576ae8e83b82b3366bb3c1659b1823304ddad3a8cd0ad76bcb8e9`\n- **Detail bundle digest:** `6e3b8a41b50ea033c5b37e224fd967ee9e273978b1b2d82187ea1d2494e5ee49`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Self-consistency\n\n_Blocking-capable plan-internal consistency findings (a medium+ finding here blocks, unlike the advisory smells above): claims the plan makes that its own steps don't deliver, or deliverables no step consumes, including signed-off concepts with neither an explicit committed owner nor a valid structured deferral, plus a plan or step declaring no `intent`._\n\n- MEDIUM [confidence: limited]: Step 3 declares `plan_tool/cli/roadmap_cmd.py`, but no other in-scope step or plan claim (`## Acceptance criteria` / `## Overview`) consumes it, and the step defers its own wiring (`## Deferred` / `## Out of scope`). A deliverable nothing consumes lands dead on arrival. Confirm it is needed now, or move it to the step that wires it in.\n\n### Suggested next steps\n\n- Close the 1 blocking self-consistency finding(s) above (orphaned-deliverable) \u2014 edit the plan by hand. No apply verb targets them.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "4fa2799a5f7576ae8e83b82b3366bb3c1659b1823304ddad3a8cd0ad76bcb8e9",
+      "detail_bundle_digest": "6e3b8a41b50ea033c5b37e224fd967ee9e273978b1b2d82187ea1d2494e5ee49",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md",
+          "state": "present",
+          "digest": "51f88e4582709fd1defc85a0593ee4d4d60e4ac38d02c5bbf48a195fc4cd0368"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md",
+          "state": "present",
+          "digest": "a9178e0619be5499303f4b4fb8a5d96c71fd3d692be7c541f072c50961a33c8c"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md",
+          "state": "present",
+          "digest": "40f9c73d5291c5432b90b330fda1cbfc649662622f3a53044f0cdc1624c82380"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md",
+          "state": "present",
+          "digest": "964e37424b8a02d24d8e97cde7fa65930ee99ff5a92e8e315021a9dc4c77d729"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md",
+          "state": "present",
+          "digest": "d4c7f1f3af726ba0c8fc47f15bb1b8bf88cc5647e0974010b95b4c06c08ffd79"
+        }
+      ],
+      "source_seed_digest": "d1c71a9c01564ae431040abc26284ad3a4706cd9039a77760bee26c835fe1e08",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 67118,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

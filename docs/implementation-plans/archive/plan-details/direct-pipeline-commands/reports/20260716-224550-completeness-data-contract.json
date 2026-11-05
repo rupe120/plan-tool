@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-c8598bd4": {
+      "code_anchor": "plan_tool/cli/direct_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/direct-pipeline-commands/04-direct-jira-verb-that-chains-create.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/direct-pipeline-commands/04-direct-jira-verb-that-chains-create.md",
+      "reason": "code anchor path `plan_tool/cli/direct_cmd.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-5d4caa36": {
+      "code_anchor": "plan_tool/cli/direct_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/direct-pipeline-commands/05-direct-run-verb-that-chains-create.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/direct-pipeline-commands/05-direct-run-verb-that-chains-create.md",
+      "reason": "code anchor path `plan_tool/cli/direct_cmd.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-43d13967": {
+      "code_anchor": "plan_tool/cli/direct_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/direct-pipeline-commands/06-register-two-verbs-regenerate-cli.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/direct-pipeline-commands/06-register-two-verbs-regenerate-cli.md",
+      "reason": "code anchor path `plan_tool/cli/direct_cmd.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-31ef807a": {
+      "code_anchor": "plan_tool/cli/direct_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/direct-pipeline-commands/07-update-readme-capabilities-use-cases.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/direct-pipeline-commands/07-update-readme-capabilities-use-cases.md",
+      "reason": "code anchor path `plan_tool/cli/direct_cmd.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260716-224550-completeness"
+}

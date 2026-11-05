@@ -1,0 +1,170 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-generate-detail-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-generate-detail-phases.md",
+  "created_at": "2026-08-17T18:22:00Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d17d4c62c2e15d1e7bf21da1a48af36d5e9f4f8494951aaf582f4c1bc67c6b34",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "2fc5b90a678602adf36677c9b022f14b734d2a11115bcb108dfc2a74e202d2af",
+    "tests/test_detail.py": "603c905fa827a06c5c7954e3e81e1111cdb20ff3efc8278eb006c9645f7761a0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md": "0f7bed8c1bc233cf0e18041a8e29f5c8109fca96145f02e4ba2b9df8e7b3bf8a",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-run-grade-setup-after-jira-fork.md": "cc903459ad57356ccc1317e92569115f9a4c1a206c79841dce9c3cc500c20498",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-run-grade-authoring-lifecycle.md": "3eecc6e6743ee1b6b8ad23efaef0f7291731ee7e541ad12e5ad4e52bb083d707",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-first-post-loop-split.md": "59b7b40c50cb42a13246e16cc8b90121aa91b0f3e045ce983960f3d3ccaf743f",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-second-post-loop-split.md": "7251d81e0e6297384d379e8d0f604fa52a21081701b4820ee149a3d65d525937",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-final-concept-persistence.md": "8a0c32d058a3562c42225407061183505192a420fe5c62d6e7e6481c0a17ca9b"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Generate Detail Phases\n\n`decompose-generate-detail-phases` \u00b7 generated 2026-08-17T18:21:59Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `bce85ef20498f4990456da7b885f207c68b628f1d195f3f4d61ff1a6cb037052`\n- **Detail bundle digest:** `5a087aa4fa16edad35850bea9c395f57caf9fb66a282c71e47dde530480ce8ae`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 61385 bytes (+61385 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply decompose-generate-detail-phases   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[final-persistence-scope]`: `Architecture` says \u201cFinal concept persistence runs only after authoring and both post-loop handlers,\u201d while step 6 says to persist \u201cexactly once after all post-loop result handling finishes\u201d; yet `plan_tool/detail.py:generate_detail`\u2019s Phase B and Trigger 2 re-entry blocks both recursively call `generate_detail`, so nested calls reach the persistence tail before their outer handler returns. Step 5 explicitly preserves those public-entry re-calls, leaving save timing and save-failure result handling materially open.\n  - Fix: define and characterize the persistence boundary for recursive split recovery so the phase-map guarantee and current observable save behavior agree for both handlers.\n- MEDIUM `[split-reentry-contract]`: Step 4 says \u201cselect only detail-less halves\u201d and accepts that Phase B \u201cre-authors only detail-less halves,\u201d but `plan_tool/detail.py:generate_detail`\u2019s Phase B block selects every final-plan step with `Step.detail is None`; step 5 correctly describes that wider rule for Trigger 2. A targeted Phase B run can therefore re-author later unselected steps, so following step 4 literally changes HEAD behavior.\n  - Fix: align Phase B\u2019s re-entry contract and tests with HEAD\u2019s all-detail-less target selection, including a targeted invocation with unrelated unset steps.\n- MEDIUM `[structural-seen-lifetime]`: Step 3 requires finding deduplication but does not state that `structural_seen` spans the whole lifecycle; `plan_tool/detail.py:generate_detail` creates it before the serial loop, while `plan_tool/review.py:_claude_recommendations` gives same-body Claude findings plan-scoped ids. `tests/test_detail.py:TestInLoopStructuralEscalation.test_seen_set_suppresses_reproposal` covers repeated scans of one step only, so a helper-local set can escalate the same finding again on a later step.\n  - Fix: define `structural_seen` as lifecycle-wide state passed to each convergence call and characterize duplicate findings across two steps.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7e73bab7]`: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9109e159]`: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step5-granularity-merge-3dfeca58]`: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-plan-tool-detail-py:parse-plan]`: docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md:## Input cites `plan_tool/detail.py:parse_plan`, but code anchor `plan_tool/detail.py:parse_plan` does not resolve in HEAD.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply decompose-generate-detail-phases` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n- Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Generate Detail Phases\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `bce85ef20498f4990456da7b885f207c68b628f1d195f3f4d61ff1a6cb037052`\n- **Detail bundle digest:** `5a087aa4fa16edad35850bea9c395f57caf9fb66a282c71e47dde530480ce8ae`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[final-persistence-scope]`: `Architecture` says \u201cFinal concept persistence runs only after authoring and both post-loop handlers,\u201d while step 6 says to persist \u201cexactly once after all post-loop result handling finishes\u201d; yet `plan_tool/detail.py:generate_detail`\u2019s Phase B and Trigger 2 re-entry blocks both recursively call `generate_detail`, so nested calls reach the persistence tail before their outer handler returns. Step 5 explicitly preserves those public-entry re-calls, leaving save timing and save-failure result handling materially open.\n- MEDIUM `[split-reentry-contract]`: Step 4 says \u201cselect only detail-less halves\u201d and accepts that Phase B \u201cre-authors only detail-less halves,\u201d but `plan_tool/detail.py:generate_detail`\u2019s Phase B block selects every final-plan step with `Step.detail is None`; step 5 correctly describes that wider rule for Trigger 2. A targeted Phase B run can therefore re-author later unselected steps, so following step 4 literally changes HEAD behavior.\n- MEDIUM `[structural-seen-lifetime]`: Step 3 requires finding deduplication but does not state that `structural_seen` spans the whole lifecycle; `plan_tool/detail.py:generate_detail` creates it before the serial loop, while `plan_tool/review.py:_claude_recommendations` gives same-body Claude findings plan-scoped ids. `tests/test_detail.py:TestInLoopStructuralEscalation.test_seen_set_suppresses_reproposal` covers repeated scans of one step only, so a helper-local set can escalate the same finding again on a later step.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-detail-py:parse-plan]`: docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md:## Input cites `plan_tool/detail.py:parse_plan`, but code anchor `plan_tool/detail.py:parse_plan` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk decompose-generate-detail-phases` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2e1acf46",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`Architecture` says \u201cFinal concept persistence runs only after authoring and both post-loop handlers,\u201d while step 6 says",
+      "body": "`Architecture` says \u201cFinal concept persistence runs only after authoring and both post-loop handlers,\u201d while step 6 says to persist \u201cexactly once after all post-loop result handling finishes\u201d; yet `plan_tool/detail.py:generate_detail`\u2019s Phase B and Trigger 2 re-entry blocks both recursively call `generate_detail`, so nested calls reach the persistence tail before their outer handler returns. Step 5 explicitly preserves those public-entry re-calls, leaving save timing and save-failure result handling materially open.",
+      "suggested_action": "define and characterize the persistence boundary for recursive split recovery so the phase-map guarantee and current observable save behavior agree for both handlers.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "final-persistence-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-5cfae24f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 says \u201cselect only detail-less halves\u201d and accepts that Phase B \u201cre-authors only detail-less halves,\u201d but `plan_to",
+      "body": "Step 4 says \u201cselect only detail-less halves\u201d and accepts that Phase B \u201cre-authors only detail-less halves,\u201d but `plan_tool/detail.py:generate_detail`\u2019s Phase B block selects every final-plan step with `Step.detail is None`; step 5 correctly describes that wider rule for Trigger 2. A targeted Phase B run can therefore re-author later unselected steps, so following step 4 literally changes HEAD behavior.",
+      "suggested_action": "align Phase B\u2019s re-entry contract and tests with HEAD\u2019s all-detail-less target selection, including a targeted invocation with unrelated unset steps.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-reentry-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-11bbc9c7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 requires finding deduplication but does not state that `structural_seen` spans the whole lifecycle; `plan_tool/de",
+      "body": "Step 3 requires finding deduplication but does not state that `structural_seen` spans the whole lifecycle; `plan_tool/detail.py:generate_detail` creates it before the serial loop, while `plan_tool/review.py:_claude_recommendations` gives same-body Claude findings plan-scoped ids. `tests/test_detail.py:TestInLoopStructuralEscalation.test_seen_set_suppresses_reproposal` covers repeated scans of one step only, so a helper-local set can escalate the same finding again on a later step.",
+      "suggested_action": "define `structural_seen` as lifecycle-wide state passed to each convergence call and characterize duplicate findings across two steps.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "structural-seen-lifetime",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-de88d52a",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `plan_tool/detail.py:parse_plan`",
+      "body": "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md:## Input cites `plan_tool/detail.py:parse_plan`, but code anchor `plan_tool/detail.py:parse_plan` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-detail-py:parse-plan",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "bce85ef20498f4990456da7b885f207c68b628f1d195f3f4d61ff1a6cb037052",
+      "detail_bundle_digest": "5a087aa4fa16edad35850bea9c395f57caf9fb66a282c71e47dde530480ce8ae",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md",
+          "state": "present",
+          "digest": "0f7bed8c1bc233cf0e18041a8e29f5c8109fca96145f02e4ba2b9df8e7b3bf8a"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-run-grade-setup-after-jira-fork.md",
+          "state": "present",
+          "digest": "cc903459ad57356ccc1317e92569115f9a4c1a206c79841dce9c3cc500c20498"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-run-grade-authoring-lifecycle.md",
+          "state": "present",
+          "digest": "3eecc6e6743ee1b6b8ad23efaef0f7291731ee7e541ad12e5ad4e52bb083d707"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-first-post-loop-split.md",
+          "state": "present",
+          "digest": "59b7b40c50cb42a13246e16cc8b90121aa91b0f3e045ce983960f3d3ccaf743f"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-second-post-loop-split.md",
+          "state": "present",
+          "digest": "7251d81e0e6297384d379e8d0f604fa52a21081701b4820ee149a3d65d525937"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-final-concept-persistence.md",
+          "state": "present",
+          "digest": "8a0c32d058a3562c42225407061183505192a420fe5c62d6e7e6481c0a17ca9b"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 61385,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

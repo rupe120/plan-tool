@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T19:03:12Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ac7ae2aba42759dfc9c6451654995f1b3caa97768183f03259e7b53376cb4935",
+  "code_fingerprint": {
+    "BACKLOG.md": "959a19e0f666bcdcb4d638245dcbfac69ed51c1b68fe7804a9ff409f57333f17",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "7429196874201f70057dee425c5c3a073e88da40c458fa4d41aa377775f33959",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "51a186407997aa9227766da7ebdf03b00782ca2234e2dbabbd804f589ca614ce",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md": "51f88e4582709fd1defc85a0593ee4d4d60e4ac38d02c5bbf48a195fc4cd0368",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md": "2460e82187761e463043dd0c84d1609d3a0249b3876692bc9aac173f76f51bf7",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md": "048f8be529a98dcb14e7c53aac9889a17a7b68b08b00cf6fdfd780af9e1a323e",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md": "09d4906b3570da60a2c43d9906b8569470cbd38c0f4839a4328d000d423e6c98",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md": "1a4890f101269c278f008bd80127955c05b11687fb78fb4d920d009707dd58ac"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Policy Review\n\n`roadmap-candidate-policy-review` \u00b7 generated 2026-09-04T19:03:12Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-candidate-policy-review   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[gate-clean-record-compatibility]` [confidence: limited]: Steps 2 (`Store review-required initial candidates while preserving atomic admission replacement and append-only candidate evidence`) and 3 (`Bind the exact requirement into the one question inventory while keeping question records create-only`) add requirement state to persisted v1 records but do not define how pre-change gate-clean evidence and inventories continue to parse and retain their identities. At HEAD, `CandidateQuestionInventory._requires_exact_identity` recomputes `_inventory_preimage`, while `load_stored_candidate_proposal` and `_validate_inventory` reload persisted files; adding a `None` field to that preimage breaks existing inventory IDs, while requiring the new field rejects existing evidence. The bundle tests only newly created gate-clean records, so an already stored gate-clean review cannot reliably replay, expand, seal, or promote after upgrade.\n\n  ```text\n  Existing gate-clean candidate replay,\n  including its existing expansion behavior, and promotion tests remain green.\n  ```\n  - Fix: Specify a backward-compatible identity and parsing rule for no-requirement evidence, inventories, and replacements, then test completion of a pre-change gate-clean lineage.\n- HIGH `[review-required-disclosure]` [confidence: limited]: Step 3 binds the requirement into `CandidateQuestionInventory` and sends it to `render_candidate_question_prompt`, but does not deliver it deterministically to the human review contact. At HEAD, `parse_candidate_question_response` accepts arbitrary opaque question text and `plan_tool/cli/roadmap_cmd.py:_render_candidate_review_result` renders only the predecessor diff and that model-written question; the requirement\u2019s reason, affected members, normalized operations, and identity are not rendered. The model can omit or distort those facts, so the reviewer cannot reliably judge the exact materializer concern.\n\n  ```text\n  The existing question inventory binds the initial requirement\n  and surfaces its complete affected facts in the same review contact.\n  ```\n  - Fix: Make the existing review result deterministically present the stored requirement\u2019s complete facts alongside its one question, while preserving opaque answer handling and adding an end-to-end rendering test.\n- MEDIUM `[stale-review-lineage]` [confidence: limited]: Step 4 binds replacements to the original predecessor but never requires that predecessor to remain the accepted head before `request_replacement` stores a replacement or `seal_review` writes a seal. At HEAD, only `plan_tool/roadmap_version_promotion.py:promote_review_seal` checks current-head staleness, so `answer_candidate_question` can still create both artifacts for a stale lineage before promotion refuses it.\n\n  ```text\n  An answer-bound replacement recomputes its own impact identity and can\n  eliminate the requirement or prove its complete impact is contained by the\n  initial disclosure; stale, different, wider, or additional impacts refuse\n  without a candidate or seal.\n  ```\n  - Fix: Define and test a current-head check for review-required replacements before storage and sealing, while retaining promotion\u2019s final race check.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-candidate-policy-review` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Policy Review\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[gate-clean-record-compatibility]` [confidence: limited]: Steps 2 (`Store review-required initial candidates while preserving atomic admission replacement and append-only candidate evidence`) and 3 (`Bind the exact requirement into the one question inventory while keeping question records create-only`) add requirement state to persisted v1 records but do not define how pre-change gate-clean evidence and inventories continue to parse and retain their identities. At HEAD, `CandidateQuestionInventory._requires_exact_identity` recomputes `_inventory_preimage`, while `load_stored_candidate_proposal` and `_validate_inventory` reload persisted files; adding a `None` field to that preimage breaks existing inventory IDs, while requiring the new field rejects existing evidence. The bundle tests only newly created gate-clean records, so an already stored gate-clean review cannot reliably replay, expand, seal, or promote after upgrade.\n\n  ```text\n  Existing gate-clean candidate replay,\n  including its existing expansion behavior, and promotion tests remain green.\n  ```\n- HIGH `[review-required-disclosure]` [confidence: limited]: Step 3 binds the requirement into `CandidateQuestionInventory` and sends it to `render_candidate_question_prompt`, but does not deliver it deterministically to the human review contact. At HEAD, `parse_candidate_question_response` accepts arbitrary opaque question text and `plan_tool/cli/roadmap_cmd.py:_render_candidate_review_result` renders only the predecessor diff and that model-written question; the requirement\u2019s reason, affected members, normalized operations, and identity are not rendered. The model can omit or distort those facts, so the reviewer cannot reliably judge the exact materializer concern.\n\n  ```text\n  The existing question inventory binds the initial requirement\n  and surfaces its complete affected facts in the same review contact.\n  ```\n- MEDIUM `[stale-review-lineage]` [confidence: limited]: Step 4 binds replacements to the original predecessor but never requires that predecessor to remain the accepted head before `request_replacement` stores a replacement or `seal_review` writes a seal. At HEAD, only `plan_tool/roadmap_version_promotion.py:promote_review_seal` checks current-head staleness, so `answer_candidate_question` can still create both artifacts for a stale lineage before promotion refuses it.\n\n  ```text\n  An answer-bound replacement recomputes its own impact identity and can\n  eliminate the requirement or prove its complete impact is contained by the\n  initial disclosure; stale, different, wider, or additional impacts refuse\n  without a candidate or seal.\n  ```\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-candidate-policy-review` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a7c65154",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Steps 2 (`Store review-required initial candidates while preserving atomic admission replacement and append-only candida",
+      "body": "Steps 2 (`Store review-required initial candidates while preserving atomic admission replacement and append-only candidate evidence`) and 3 (`Bind the exact requirement into the one question inventory while keeping question records create-only`) add requirement state to persisted v1 records but do not define how pre-change gate-clean evidence and inventories continue to parse and retain their identities. At HEAD, `CandidateQuestionInventory._requires_exact_identity` recomputes `_inventory_preimage`, while `load_stored_candidate_proposal` and `_validate_inventory` reload persisted files; adding a `None` field to that preimage breaks existing inventory IDs, while requiring the new field rejects existing evidence. The bundle tests only newly created gate-clean records, so an already stored gate-clean review cannot reliably replay, expand, seal, or promote after upgrade.\n\n  ```text\n  Existing gate-clean candidate replay,\n  including its existing expansion behavior, and promotion tests remain green.\n  ```",
+      "suggested_action": "Specify a backward-compatible identity and parsing rule for no-requirement evidence, inventories, and replacements, then test completion of a pre-change gate-clean lineage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "gate-clean-record-compatibility",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-f41fe97e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 binds the requirement into `CandidateQuestionInventory` and sends it to `render_candidate_question_prompt`, but d",
+      "body": "Step 3 binds the requirement into `CandidateQuestionInventory` and sends it to `render_candidate_question_prompt`, but does not deliver it deterministically to the human review contact. At HEAD, `parse_candidate_question_response` accepts arbitrary opaque question text and `plan_tool/cli/roadmap_cmd.py:_render_candidate_review_result` renders only the predecessor diff and that model-written question; the requirement\u2019s reason, affected members, normalized operations, and identity are not rendered. The model can omit or distort those facts, so the reviewer cannot reliably judge the exact materializer concern.\n\n  ```text\n  The existing question inventory binds the initial requirement\n  and surfaces its complete affected facts in the same review contact.\n  ```",
+      "suggested_action": "Make the existing review result deterministically present the stored requirement\u2019s complete facts alongside its one question, while preserving opaque answer handling and adding an end-to-end rendering test.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "review-required-disclosure",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-5e0259be",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 binds replacements to the original predecessor but never requires that predecessor to remain the accepted head be",
+      "body": "Step 4 binds replacements to the original predecessor but never requires that predecessor to remain the accepted head before `request_replacement` stores a replacement or `seal_review` writes a seal. At HEAD, only `plan_tool/roadmap_version_promotion.py:promote_review_seal` checks current-head staleness, so `answer_candidate_question` can still create both artifacts for a stale lineage before promotion refuses it.\n\n  ```text\n  An answer-bound replacement recomputes its own impact identity and can\n  eliminate the requirement or prove its complete impact is contained by the\n  initial disclosure; stale, different, wider, or additional impacts refuse\n  without a candidate or seal.\n  ```",
+      "suggested_action": "Define and test a current-head check for review-required replacements before storage and sealing, while retaining promotion\u2019s final race check.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stale-review-lineage",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "810597c32ddd33ff90273f21f0e62d77eb07f6cbf178ee0d39072691ce3edf0c",
+    "detail_bundle_digest": "5f19ef05cd29e5ae7a2fb083c51d69590ca25e81fc7239e6f711c549e12e2dd8",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md",
+        "state": "present",
+        "digest": "51f88e4582709fd1defc85a0593ee4d4d60e4ac38d02c5bbf48a195fc4cd0368"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md",
+        "state": "present",
+        "digest": "2460e82187761e463043dd0c84d1609d3a0249b3876692bc9aac173f76f51bf7"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md",
+        "state": "present",
+        "digest": "048f8be529a98dcb14e7c53aac9889a17a7b68b08b00cf6fdfd780af9e1a323e"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md",
+        "state": "present",
+        "digest": "09d4906b3570da60a2c43d9906b8569470cbd38c0f4839a4328d000d423e6c98"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md",
+        "state": "present",
+        "digest": "1a4890f101269c278f008bd80127955c05b11687fb78fb4d920d009707dd58ac"
+      }
+    ],
+    "source_seed_digest": "d1c71a9c01564ae431040abc26284ad3a4706cd9039a77760bee26c835fe1e08",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

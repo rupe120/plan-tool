@@ -1,0 +1,160 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-brief-source-drift",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-source-drift.md",
+  "created_at": "2026-09-12T15:55:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d6c8f228e20ab7fe73e2debaf939cbde38141651478d909aa3a3b057da2612d6",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "85ec88e5e4b4f1402041215923bea8de61a98824c4ad274da51ba9c0a8c17ed9",
+    "DATA_CONTRACT.md": "a487b831bcd4208bdc9b6dbfeb705bae2d43d4a7bdecb3b70249d3655c904d6b",
+    "README.md": "5077388d1a53ddee451a7e65c7da47c7b41a4ad997156abb0a0b5fd45a4229b4",
+    "ROADMAP_FORMAT.md": "eaf6de6bc867c6f874e3683730e97c2ad49d9dfc2ec64a63e67e62213b4eb972",
+    "RUNBOOK.md": "7df19f082b027b36a509776898f12c6ec45dc2e50d71d51769c2d9d3a9870d05",
+    "USE_CASES.md": "64bcd3c02ca8c0acd795ec98e735cf6932bfba51c95eb075aab64f141e47ec76",
+    "docs/ARCHITECTURE.md": "c5e02d5dde29de7e9d61df18f3c8632d3df09dac17fc263955899c1400eed45e",
+    "docs/ROADMAP_WALKTHROUGH.md": "47835b411649d62e74e65dc9412d2627ff564b0d6c8f278e9488f0e0e4eac19d",
+    "docs/cli/roadmap.md": "b36cd6a5c6d85dba883ff9d35a9a5812b9835dc391de407ac2994902d7ce7624",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "dc11e193562bc1e8f677def57997d9594c7d1fce3c34b40771abd37397f1de5e",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "5b196bb9ecb8d7be2e8beb6ef9d972b1cfcd10b39a69ad057be52da83e03bcb5",
+    "plan_tool/cli/__init__.py": "2bc81b031c52f6490752f78502c5ff2cea38a55a42714a2c226a5f197863320b",
+    "plan_tool/cli/roadmap_cmd.py": "ead8fe581c4aae7c483feaa5fc0a2e48ebfd3f65648a446ff1e506fcb0440c88",
+    "plan_tool/roadmap.py": "62d3d92e2ff921b30b44f9ce6348cba7911ec28a709301e9a4db9f28b46508b0",
+    "plan_tool/roadmap_source.py": "13c48715bc3fe222a1289f41064e4ecc4de1a5baf5af69066f6b205af8a06db7",
+    "plan_tool/run_log.py": "f806251a711e951eca186a84fd8a1a6e474e7dc6ec42f68768988db458583b93",
+    "tests/cli/package_surface_help.golden.txt": "93a9f349c6f9fa5e011b836ffde552cfd01a649037bf404e5de99396a76b84a1",
+    "tests/cli/test_roadmap_cmd.py": "b251e5d038cd53106d36059220f08fcff47a419dd18edd35078a2729683a4748",
+    "tests/test_roadmap.py": "43893941b8b7391b0ae5dae817c2eef50c2189cd6afc1614fa7ca88da56de9ca",
+    "tests/test_roadmap_format.py": "6f2b74355c6719bb3a1813deed5109bc708fe94db3d6ae2d137e99984d1e9cfa",
+    "tests/test_roadmap_source.py": "32a6223e5122af655121eae000ce16bbf1671bb4ced1bfd70f1fdf6d198dd84e",
+    "tests/test_run_log.py": "5db88e0b4f1eb7c00fa7a16430554fb436b6e4b4d6318426851cd8c35a6a0666"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md": "8e8ca17324dc55f77fa6c8c34e7b4425ae6953289b7305391b1a13946c5e5a76",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md": "c331d7438c1e6443516c0c5a6d77d663fd946577391b4af0ed6f02bc997d9eaf",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-atomically.md": "2b97559586fb5e899f082254b09f73df85fbd1c64f99584618ba8b507d4ef7a8",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md": "ae23d3384be53fe9c1aee4e2d70cbdf0bbe9f00f900ce1001c8407db6f53396a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Brief Source Drift\n\n`roadmap-brief-source-drift` \u00b7 generated 2026-09-12T15:55:14Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-brief-source-drift   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[malformed-admission-order]` [confidence: limited]: Step 2 (`Persist and check brief digests before artifact admission`) requires malformed metadata to emit `refused-malformed`, but it also requires every admission event after the brief read. Step 1 rejects malformed `source.json` through `RoadmapSourceError`, and current `roadmap.py:_resolve_brief_path` handles that before `read_brief_text`; invalid JSON or `brief_path` also leaves no brief reference to log. The Architecture, step 2 Implementation, tests, and acceptance criteria therefore require a durable malformed decision but do not define its pre-read ordering or safe source-reference fact.\n\n```text\nStep 2 Implementation: \u201cAfter `read_brief_text` succeeds, decide whether the run is `initial`, `matched`, `refused-legacy`, `refused-changed`, or `refused-malformed`\u2026\u201d\n```\n\n```text\nStep 2 Implementation: \u201c`RunLogWriter` must emit exactly one `roadmap_source_admission` event after the brief is read and before artifact admission.\u201d\n```\n\n```text\nStep 1 Implementation: \u201cReject empty strings, non-strings, wrong lengths, and non-hex values through `RoadmapSourceError`\u2026\u201d\n```\n  - Fix: Define the malformed-source admission as a pre-read decision, including the source-record reference it records, and reconcile the lifecycle ordering, tests, and data contract to that exception.\n- MEDIUM `[rebind-artifact-preservation]` [confidence: limited]: The plan\u2019s `Acceptance criteria` promises that explicit acceptance \u201cpreserves all existing roadmap artifacts,\u201d while step 3 deliberately keeps ordinary feedback, gate, retry, and publication behavior after rebinding. A same-path invocation with existing feedback can therefore publish an ordinary stage change; the body must limit preservation to the rebinding operation rather than promise an artifact-free whole run.\n\n```text\nPlan Acceptance criteria: \u201cExplicit acceptance updates the persisted baseline atomically, preserves all existing roadmap artifacts\u2026\u201d\n```\n\n```text\nStep 3 Implementation: \u201cAny subsequent stage behavior remains governed by the existing stage table, feedback routes, gates, retry budget, and publication rules\u2026\u201d\n```\n  - Fix: Qualify artifact and seed preservation throughout the rebind contract as applying to the baseline-replacement operation itself, while retaining ordinary subsequent stage behavior.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-27923d1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-brief-source-drift` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Brief Source Drift\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[malformed-admission-order]` [confidence: limited]: Step 2 (`Persist and check brief digests before artifact admission`) requires malformed metadata to emit `refused-malformed`, but it also requires every admission event after the brief read. Step 1 rejects malformed `source.json` through `RoadmapSourceError`, and current `roadmap.py:_resolve_brief_path` handles that before `read_brief_text`; invalid JSON or `brief_path` also leaves no brief reference to log. The Architecture, step 2 Implementation, tests, and acceptance criteria therefore require a durable malformed decision but do not define its pre-read ordering or safe source-reference fact.\n\n```text\nStep 2 Implementation: \u201cAfter `read_brief_text` succeeds, decide whether the run is `initial`, `matched`, `refused-legacy`, `refused-changed`, or `refused-malformed`\u2026\u201d\n```\n\n```text\nStep 2 Implementation: \u201c`RunLogWriter` must emit exactly one `roadmap_source_admission` event after the brief is read and before artifact admission.\u201d\n```\n\n```text\nStep 1 Implementation: \u201cReject empty strings, non-strings, wrong lengths, and non-hex values through `RoadmapSourceError`\u2026\u201d\n```\n- MEDIUM `[rebind-artifact-preservation]` [confidence: limited]: The plan\u2019s `Acceptance criteria` promises that explicit acceptance \u201cpreserves all existing roadmap artifacts,\u201d while step 3 deliberately keeps ordinary feedback, gate, retry, and publication behavior after rebinding. A same-path invocation with existing feedback can therefore publish an ordinary stage change; the body must limit preservation to the rebinding operation rather than promise an artifact-free whole run.\n\n```text\nPlan Acceptance criteria: \u201cExplicit acceptance updates the persisted baseline atomically, preserves all existing roadmap artifacts\u2026\u201d\n```\n\n```text\nStep 3 Implementation: \u201cAny subsequent stage behavior remains governed by the existing stage table, feedback routes, gates, retry budget, and publication rules\u2026\u201d\n```\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-run-log-py:roadmapsourceadmission]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md:## Input cites `plan_tool/run_log.py:RoadmapSourceAdmission`, but code anchor `plan_tool/run_log.py:RoadmapSourceAdmission` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-brief-source-drift` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-fd5284fc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Persist and check brief digests before artifact admission`) requires malformed metadata to emit `refused-malfor",
+      "body": "Step 2 (`Persist and check brief digests before artifact admission`) requires malformed metadata to emit `refused-malformed`, but it also requires every admission event after the brief read. Step 1 rejects malformed `source.json` through `RoadmapSourceError`, and current `roadmap.py:_resolve_brief_path` handles that before `read_brief_text`; invalid JSON or `brief_path` also leaves no brief reference to log. The Architecture, step 2 Implementation, tests, and acceptance criteria therefore require a durable malformed decision but do not define its pre-read ordering or safe source-reference fact.\n\n```text\nStep 2 Implementation: \u201cAfter `read_brief_text` succeeds, decide whether the run is `initial`, `matched`, `refused-legacy`, `refused-changed`, or `refused-malformed`\u2026\u201d\n```\n\n```text\nStep 2 Implementation: \u201c`RunLogWriter` must emit exactly one `roadmap_source_admission` event after the brief is read and before artifact admission.\u201d\n```\n\n```text\nStep 1 Implementation: \u201cReject empty strings, non-strings, wrong lengths, and non-hex values through `RoadmapSourceError`\u2026\u201d\n```",
+      "suggested_action": "Define the malformed-source admission as a pre-read decision, including the source-record reference it records, and reconcile the lifecycle ordering, tests, and data contract to that exception.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "malformed-admission-order",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-9f823653",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan\u2019s `Acceptance criteria` promises that explicit acceptance \u201cpreserves all existing roadmap artifacts,\u201d while ste",
+      "body": "The plan\u2019s `Acceptance criteria` promises that explicit acceptance \u201cpreserves all existing roadmap artifacts,\u201d while step 3 deliberately keeps ordinary feedback, gate, retry, and publication behavior after rebinding. A same-path invocation with existing feedback can therefore publish an ordinary stage change; the body must limit preservation to the rebinding operation rather than promise an artifact-free whole run.\n\n```text\nPlan Acceptance criteria: \u201cExplicit acceptance updates the persisted baseline atomically, preserves all existing roadmap artifacts\u2026\u201d\n```\n\n```text\nStep 3 Implementation: \u201cAny subsequent stage behavior remains governed by the existing stage table, feedback routes, gates, retry budget, and publication rules\u2026\u201d\n```",
+      "suggested_action": "Qualify artifact and seed preservation throughout the rebind contract as applying to the baseline-replacement operation itself, while retaining ordinary subsequent stage behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rebind-artifact-preservation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step4-data-contract-f96137f3",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "Stale Input contract reference `plan_tool/run_log.py:RoadmapSourceAdmission`",
+      "body": "docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md:## Input cites `plan_tool/run_log.py:RoadmapSourceAdmission`, but code anchor `plan_tool/run_log.py:RoadmapSourceAdmission` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-run-log-py:roadmapsourceadmission",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "3bc3f9927132351393b70836dcf931f272c496c9ec3353472763a5c1a8044209",
+    "detail_bundle_digest": "7043c75782bf66cc48d1954b28bae1c0b15bc412730bd40d333695c4810e2f01",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md",
+        "state": "present",
+        "digest": "8e8ca17324dc55f77fa6c8c34e7b4425ae6953289b7305391b1a13946c5e5a76"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md",
+        "state": "present",
+        "digest": "c331d7438c1e6443516c0c5a6d77d663fd946577391b4af0ed6f02bc997d9eaf"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-atomically.md",
+        "state": "present",
+        "digest": "2b97559586fb5e899f082254b09f73df85fbd1c64f99584618ba8b507d4ef7a8"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-source-admission-lifecycle.md",
+        "state": "present",
+        "digest": "ae23d3384be53fe9c1aee4e2d70cbdf0bbe9f00f900ce1001c8407db6f53396a"
+      }
+    ],
+    "source_seed_digest": "cff4201e20b529fdef754cb4ca1b72892108af99b00e1603e36657aaf436fc28",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

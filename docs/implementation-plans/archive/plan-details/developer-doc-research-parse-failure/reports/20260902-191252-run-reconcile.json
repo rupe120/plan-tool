@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "plan_slug": "developer-doc-research-parse-failure",
+  "plan_path": "docs/implementation-plans/2-developer-doc-research-parse-failure.md",
+  "created_at": "2026-09-02T19:12:52Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "ff3e77ae4a4bd0e5c77c450cbda8e6b914fc03d32308a5b7821fa8c2badd3b7b",
+  "code_fingerprint": {
+    "plan_tool/create.py": "923384660a6617b28f473e27a2ede0f7145381806cb0cd3d0fed17b91c079935",
+    "tests/cli/test_authoring_cmds.py": "8ef68b6bb06cfac755a9d281d8ec1ce2fe6acdb14fac4310baa33b4cc59cbac5",
+    "tests/test_bench.py": "a5c7ab92ba01fe9a32987ef775385c61607580486e48c08398dbbfb1bdb0baee",
+    "tests/test_create.py": "428fd64f94c3d7d4683d933fb7518d62195c5f114f9d55adfc3c4033f5f97bbf"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 3 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-fbcbf6e6",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "`propose_references_from_claude()` in `plan_tool/create.py` (step 1 \u201cUse typed generic reference-research results\u201d) retr",
+      "body": "`propose_references_from_claude()` in `plan_tool/create.py` (step 1 \u201cUse typed generic reference-research results\u201d) retries malformed generic research and allows the repaired response to control progress and checkpoint behavior, while this step requires one cache-miss invocation and defers repair to step 2; `TestProposeReferencesFromClaude::test_unparseable_first_response_retries_once` deliberately pins that behavior\n\n## Redirect\n\n- **Reason**: the selected detail\u2019s one-invocation boundary conflicts with intentionally tested current repair behavior, so the step contract needs reconciliation rather than a code rollback\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": {
+        "reason": "the selected detail\u2019s one-invocation boundary conflicts with intentionally tested current repair behavior, so the step contract needs reconciliation rather than a code rollback",
+        "suggested_next": "detail --reconcile"
+      },
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

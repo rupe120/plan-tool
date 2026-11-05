@@ -1,0 +1,168 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T18:28:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "03086d2565ec2d7ec033b7179043e6361a3fd9c43eaa25fb063353468bea6935",
+  "code_fingerprint": {
+    "BACKLOG.md": "b7ce7a0b815fd5c9f2bfeb74b89a2f6c17d3fa9e30547fd8eaaef149765926c0",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "RUNBOOK.md": "0d2d0c65d6a928173616a12e5de72d0036b657b2125b08ec25f01e72843d87ea",
+    "docs/ARCHITECTURE.md": "0245b81856fe7b8e4cbf90aab3136c947794796f920c395f83a3e14668050b8a",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md": "9a0e2fc6c19ed1ddadd59f5e8e1984df168e97f9fdecccab06cf2fb7fb029648",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-conservative-marker-table-module-that.md": "42b4054769f56a53da9b21f80ac1e9b8ec8935225678f7ee9a9f0567bc2b259a",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md": "cd1e927d6965d5babf94c889ca8d14b4627bc9b20590e7e0c6a7d62f3ef8c95c",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md": "22e4b0dc76ab24110bf578180e062c290fd07ea24ba80243d937440efaa87401",
+    "docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md": "efe32cadc4eec8e83c792fb19dc823d7673df71e4682aaf0c4b8d50f233a79e7"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-18T18:28:30Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `03086d2565ec2d7ec033b7179043e6361a3fd9c43eaa25fb063353468bea6935`\n- **Detail bundle digest:** `f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply create-default-test-command   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk create-default-test-command  # alternative interactive review/apply\n\n- MEDIUM `[pre-existing-red-suite-messaging]`: The Risks section says a pre-existing red suite blocking step 1 is \"defensible, and the point \u2014 but ... the stderr/status_note path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers that. The Out of scope section fences off the only mechanism that could (\"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field\"), and Allowed behavior changes repeats \"No change to ... `run`'s gate mechanics.\" The plan states a \"must\" it has scoped itself out of ever satisfying, and nothing confirms the existing status_note failure-tail (which already prints the raw pytest output) actually meets it.\n  - Fix: reword the risk to say the plan relies on the existing status_note failure-tail to make the cause legible (and say why that's enough), instead of leaving a \"must\" that no step in this plan owns.\n- MEDIUM `[test-command-checkpoint-resume]`: The Architecture section commits to a detailed checkpoint/resume contract for the operator-supplied answer \u2014 checkpoint identity, \"wins on `--resume`,\" discard on success vs. retain on interruption/stage failure, `--no-resume` overriding it \u2014 and the Testing section plus two acceptance criteria repeat the same contract. No step names this responsibility: step 4's title and intent (\"Ask the operator for a test command when detection is unknown, and skip it with a note when unattended\") describe only the prompt and the unattended-omit path, never checkpointing or resuming. The Architecture text also names a `--resume` flag that doesn't exist at HEAD \u2014 `plan_tool/cli/authoring.py`'s `p_create` parser defines only `--no-resume`; resuming is the default `create` already uses for its other checkpointed phases (initial-steps, references, reference-docs, body-sections). A builder or tester following the plan's own words could go looking for a flag that isn't there.\n  - Fix: name checkpoint/resume in step 4's intent (the only step touching the interactive/unattended path in `create.py`), and reword \"wins on `--resume`\" to match the actual default-on/`--no-resume`-opts-out surface.\n- MEDIUM `[detection-table-conflict-unknown]`: The Testing section requires proving \"a conflicting row remains unknown,\" and the acceptance criteria repeat it: \"every missing or conflicting row is unknown and receives no automatic command.\" But the Architecture is explicit that \"the initial table has exactly one row,\" and a conflict \u2014 two rows matching at once \u2014 is impossible with one row in the table. As written, step 2's tests can only satisfy this bullet by giving the detection module a general N-row, exactly-one-match evaluator and feeding it a synthetic second row inside the test, but nothing in the plan says that generality is intended; a narrower implementer could read the closed-table design (deliberately one row, no future rows in scope) as license to hardcode a single boolean check with no notion of \"conflict\" at all, silently leaving this Testing/acceptance bullet unsatisfiable.\n  - Fix: state whether step 2's detector must be built as a general multi-row table (so its own tests can inject a synthetic second row to prove the conflict-means-unknown rule) or whether that bullet is deferred until a second real row exists.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[pre-existing-red-suite-messaging]`: The Risks section commits to specific behavior for a pre-existing red suite: \"the stderr/`status_note` path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers this, and the code that would need to change it is explicitly fenced off \u2014 Out of scope names \"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field.\" Checked against `launcher.py:1855-1858`, the actual message on a gate failure is generic regardless of cause: `\"test gate failed (rc={tg_rc}); step not advanced. Tail: {tg_tail[:400]}\"` \u2014 it does not say whether the suite was already broken before the step ran or was broken by the step. `launcher.py` also already has a \"baseline\" concept (`git_test_baseline`, line 1611) but it's scoped to the test-authoring gate, not this one, so there's no existing pre-existing-red detection to lean on. Nothing in the plan resolves this without either touching the out-of-scope module or delivering the clarity some other way (e.g., operator-facing documentation in step 5, or a Testing/acceptance bullet).\n  - Fix: add an acceptance criterion (or extend step 5's doc work) that names how an operator learns a step-1 `test_command` failure reflects a suite that was already red, without requiring a change to `launcher.py`'s gate mechanics.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-00c20530]`: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-506a692c]`: The plan's `## Acceptance criteria` names `enforce_step_tests`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f17b1bd7]`: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply create-default-test-command` \u2014 apply the 3 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `03086d2565ec2d7ec033b7179043e6361a3fd9c43eaa25fb063353468bea6935`\n- **Detail bundle digest:** `f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[pre-existing-red-suite-messaging]`: The Risks section says a pre-existing red suite blocking step 1 is \"defensible, and the point \u2014 but ... the stderr/status_note path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers that. The Out of scope section fences off the only mechanism that could (\"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field\"), and Allowed behavior changes repeats \"No change to ... `run`'s gate mechanics.\" The plan states a \"must\" it has scoped itself out of ever satisfying, and nothing confirms the existing status_note failure-tail (which already prints the raw pytest output) actually meets it.\n- MEDIUM `[test-command-checkpoint-resume]`: The Architecture section commits to a detailed checkpoint/resume contract for the operator-supplied answer \u2014 checkpoint identity, \"wins on `--resume`,\" discard on success vs. retain on interruption/stage failure, `--no-resume` overriding it \u2014 and the Testing section plus two acceptance criteria repeat the same contract. No step names this responsibility: step 4's title and intent (\"Ask the operator for a test command when detection is unknown, and skip it with a note when unattended\") describe only the prompt and the unattended-omit path, never checkpointing or resuming. The Architecture text also names a `--resume` flag that doesn't exist at HEAD \u2014 `plan_tool/cli/authoring.py`'s `p_create` parser defines only `--no-resume`; resuming is the default `create` already uses for its other checkpointed phases (initial-steps, references, reference-docs, body-sections). A builder or tester following the plan's own words could go looking for a flag that isn't there.\n- MEDIUM `[detection-table-conflict-unknown]`: The Testing section requires proving \"a conflicting row remains unknown,\" and the acceptance criteria repeat it: \"every missing or conflicting row is unknown and receives no automatic command.\" But the Architecture is explicit that \"the initial table has exactly one row,\" and a conflict \u2014 two rows matching at once \u2014 is impossible with one row in the table. As written, step 2's tests can only satisfy this bullet by giving the detection module a general N-row, exactly-one-match evaluator and feeding it a synthetic second row inside the test, but nothing in the plan says that generality is intended; a narrower implementer could read the closed-table design (deliberately one row, no future rows in scope) as license to hardcode a single boolean check with no notion of \"conflict\" at all, silently leaving this Testing/acceptance bullet unsatisfiable.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[pre-existing-red-suite-messaging]`: The Risks section commits to specific behavior for a pre-existing red suite: \"the stderr/`status_note` path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers this, and the code that would need to change it is explicitly fenced off \u2014 Out of scope names \"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field.\" Checked against `launcher.py:1855-1858`, the actual message on a gate failure is generic regardless of cause: `\"test gate failed (rc={tg_rc}); step not advanced. Tail: {tg_tail[:400]}\"` \u2014 it does not say whether the suite was already broken before the step ran or was broken by the step. `launcher.py` also already has a \"baseline\" concept (`git_test_baseline`, line 1611) but it's scoped to the test-authoring gate, not this one, so there's no existing pre-existing-red detection to lean on. Nothing in the plan resolves this without either touching the out-of-scope module or delivering the clarity some other way (e.g., operator-facing documentation in step 5, or a Testing/acceptance bullet).\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `enforce_step_tests`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply create-default-test-command` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-66147ab3",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section says a pre-existing red suite blocking step 1 is \"defensible, and the point \u2014 but ... the stderr/statu",
+      "body": "The Risks section says a pre-existing red suite blocking step 1 is \"defensible, and the point \u2014 but ... the stderr/status_note path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers that. The Out of scope section fences off the only mechanism that could (\"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field\"), and Allowed behavior changes repeats \"No change to ... `run`'s gate mechanics.\" The plan states a \"must\" it has scoped itself out of ever satisfying, and nothing confirms the existing status_note failure-tail (which already prints the raw pytest output) actually meets it.",
+      "suggested_action": "reword the risk to say the plan relies on the existing status_note failure-tail to make the cause legible (and say why that's enough), instead of leaving a \"must\" that no step in this plan owns.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pre-existing-red-suite-messaging",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9fa77417",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture section commits to a detailed checkpoint/resume contract for the operator-supplied answer \u2014 checkpoint ",
+      "body": "The Architecture section commits to a detailed checkpoint/resume contract for the operator-supplied answer \u2014 checkpoint identity, \"wins on `--resume`,\" discard on success vs. retain on interruption/stage failure, `--no-resume` overriding it \u2014 and the Testing section plus two acceptance criteria repeat the same contract. No step names this responsibility: step 4's title and intent (\"Ask the operator for a test command when detection is unknown, and skip it with a note when unattended\") describe only the prompt and the unattended-omit path, never checkpointing or resuming. The Architecture text also names a `--resume` flag that doesn't exist at HEAD \u2014 `plan_tool/cli/authoring.py`'s `p_create` parser defines only `--no-resume`; resuming is the default `create` already uses for its other checkpointed phases (initial-steps, references, reference-docs, body-sections). A builder or tester following the plan's own words could go looking for a flag that isn't there.",
+      "suggested_action": "name checkpoint/resume in step 4's intent (the only step touching the interactive/unattended path in `create.py`), and reword \"wins on `--resume`\" to match the actual default-on/`--no-resume`-opts-out surface.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "test-command-checkpoint-resume",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-fedbe64c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Testing section requires proving \"a conflicting row remains unknown,\" and the acceptance criteria repeat it: \"every ",
+      "body": "The Testing section requires proving \"a conflicting row remains unknown,\" and the acceptance criteria repeat it: \"every missing or conflicting row is unknown and receives no automatic command.\" But the Architecture is explicit that \"the initial table has exactly one row,\" and a conflict \u2014 two rows matching at once \u2014 is impossible with one row in the table. As written, step 2's tests can only satisfy this bullet by giving the detection module a general N-row, exactly-one-match evaluator and feeding it a synthetic second row inside the test, but nothing in the plan says that generality is intended; a narrower implementer could read the closed-table design (deliberately one row, no future rows in scope) as license to hardcode a single boolean check with no notion of \"conflict\" at all, silently leaving this Testing/acceptance bullet unsatisfiable.",
+      "suggested_action": "state whether step 2's detector must be built as a general multi-row table (so its own tests can inject a synthetic second row to prove the conflict-means-unknown rule) or whether that bullet is deferred until a second real row exists.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "detection-table-conflict-unknown",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-66147ab3",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section commits to specific behavior for a pre-existing red suite: \"the stderr/`status_note` path must make th",
+      "body": "The Risks section commits to specific behavior for a pre-existing red suite: \"the stderr/`status_note` path must make the cause obvious rather than reading as a plan-tool defect.\" No step or acceptance criterion delivers this, and the code that would need to change it is explicitly fenced off \u2014 Out of scope names \"`run`'s gate semantics (`launcher.py`). The `test_command` gate already works; this effort only populates the field.\" Checked against `launcher.py:1855-1858`, the actual message on a gate failure is generic regardless of cause: `\"test gate failed (rc={tg_rc}); step not advanced. Tail: {tg_tail[:400]}\"` \u2014 it does not say whether the suite was already broken before the step ran or was broken by the step. `launcher.py` also already has a \"baseline\" concept (`git_test_baseline`, line 1611) but it's scoped to the test-authoring gate, not this one, so there's no existing pre-existing-red detection to lean on. Nothing in the plan resolves this without either touching the out-of-scope module or delivering the clarity some other way (e.g., operator-facing documentation in step 5, or a Testing/acceptance bullet).",
+      "suggested_action": "add an acceptance criterion (or extend step 5's doc work) that names how an operator learns a step-1 `test_command` failure reflects a suite that was already red, without requiring a change to `launcher.py`'s gate mechanics.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pre-existing-red-suite-messaging",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "03086d2565ec2d7ec033b7179043e6361a3fd9c43eaa25fb063353468bea6935",
+      "detail_bundle_digest": "f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-conservative-marker-table-module-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

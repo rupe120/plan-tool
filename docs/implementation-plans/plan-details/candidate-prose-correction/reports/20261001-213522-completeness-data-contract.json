@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step6-data-contract-eb1aa121": {
+      "code_anchor": "roadmap_candidate_run.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md",
+      "reason": "code anchor path `roadmap_candidate_run.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-6417de45": {
+      "code_anchor": "roadmap_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md",
+      "reason": "code anchor path `roadmap_cmd.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261001-213522-completeness"
+}

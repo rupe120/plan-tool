@@ -1,0 +1,149 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-cf001e78": {
+      "code_anchor": null,
+      "field_or_key": "decision",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/01-move-legacy-detail-deferral-handling.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/01-move-legacy-detail-deferral-handling.md",
+      "reason": "`ConceptNode.decision` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-3c66f348": {
+      "code_anchor": "plan_tool/concept_tree.py:NonDeliveryRecord",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/03-migrate-valid-legacy-deferrals-non.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/03-migrate-valid-legacy-deferrals-non.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:NonDeliveryRecord` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-d2b3557b": {
+      "code_anchor": "plan_tool/concept_tree.py:NonDeliveryRecord",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:NonDeliveryRecord` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-de1450e7": {
+      "code_anchor": "plan_tool/schema.py:Step.id",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.id` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-f55bc75a": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/04-reject-invalid-accounting-before.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-e5653dd8": {
+      "code_anchor": "plan_tool/concept_tree.py:NonDeliveryRecord",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/05-review-approve-non-delivery-records.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/05-review-approve-non-delivery-records.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:NonDeliveryRecord` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-fa557187": {
+      "code_anchor": null,
+      "field_or_key": "non_delivery_records",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/05-review-approve-non-delivery-records.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/05-review-approve-non-delivery-records.md",
+      "reason": "`ConceptTree.non_delivery_records` is not a registered persisted field or alias",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-1ab40abf": {
+      "code_anchor": null,
+      "field_or_key": "non_delivery_records",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/06-persist-pending-include-regeneration.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/06-persist-pending-include-regeneration.md",
+      "reason": "`ConceptTree.non_delivery_records` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-31ef0030": {
+      "code_anchor": "plan_tool/concept_tree.py:NonDeliveryRecord",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/06-persist-pending-include-regeneration.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/06-persist-pending-include-regeneration.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:NonDeliveryRecord` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-e50edec7": {
+      "code_anchor": "plan_tool/concept_tree.py:ConceptTree.include_regeneration_requests",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/07-resume-include-regeneration-publish-one.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/07-resume-include-regeneration-publish-one.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:ConceptTree.include_regeneration_requests` names an unregistered field",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-3ff7ebb3": {
+      "code_anchor": "plan_tool/concept_tree.py:ConceptTree.non_delivery_records",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:ConceptTree.non_delivery_records` names an unregistered field",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-bf1f4bd0": {
+      "code_anchor": "plan_tool/concept_tree.py:ConceptTree.include_regeneration_requests",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md",
+      "reason": "code anchor `plan_tool/concept_tree.py:ConceptTree.include_regeneration_requests` names an unregistered field",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-e4b0a632": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-3a-accounting-core/08-enforce-concept-conservation-through.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260713-182630-completeness"
+}

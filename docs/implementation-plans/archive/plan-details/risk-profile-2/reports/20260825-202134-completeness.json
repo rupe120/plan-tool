@@ -1,0 +1,86 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T20:21:34Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "40f1c1a645461544827502f742db35f59caafc301c4ad8e34dd4e67428e015ca",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-render-one-advisory-risk-context.md": "760fe6f3870880cff16d2e7316d433a30f5ff76348bf9bd1e60acbeaf86b78f5",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context-every-run.md": "99705f7285bd305b6343a8412c58d1559dc2a2af7e32a45309f711efcef81352"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T20:21:33Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4`\n- **Detail bundle digest:** `521081bcf94ef519d34a7305a2dd2d8429a2e07196d17205293d16159e5a45ff`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (-2 vs. first audit)\n- **Detail-bundle size:** 19701 bytes (+19701 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run risk-profile-2` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4`\n- **Detail bundle digest:** `521081bcf94ef519d34a7305a2dd2d8429a2e07196d17205293d16159e5a45ff`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run risk-profile-2` \u2014 no gaps left \u2014 execute the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ec3f53cf5a22a2b51aea5f6104235d2f752438a3afd1335ab49cc57e0d0146a4",
+      "detail_bundle_digest": "521081bcf94ef519d34a7305a2dd2d8429a2e07196d17205293d16159e5a45ff",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-render-one-advisory-risk-context.md",
+          "state": "present",
+          "digest": "760fe6f3870880cff16d2e7316d433a30f5ff76348bf9bd1e60acbeaf86b78f5"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context-every-run.md",
+          "state": "present",
+          "digest": "99705f7285bd305b6343a8412c58d1559dc2a2af7e32a45309f711efcef81352"
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 19701,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

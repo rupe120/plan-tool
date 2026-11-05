@@ -1,0 +1,127 @@
+{
+  "version": 4,
+  "plan_slug": "human-input-seam",
+  "plan_path": "docs/implementation-plans/2-human-input-seam.md",
+  "created_at": "2026-08-27T20:07:46Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6d42fcce084143d47b7197a8daf53304f7c421d5778e6fafb816f109095aae07",
+  "code_fingerprint": {
+    "BACKLOG.md": "ebdab3f41ef26da050fd56536cb4dd17a5f3404df79476a0146ad8a27c414537",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/review_walk.py": "3659f569bcb0fb475cbd59fd0f7d81c85bb3bcf7818f4ddc3737e33ff523ce40",
+    "tests/test_review_walk.py": "239c74b675ef878f46ab2001b0071cb32d9c867e2cf605d957f2c3618b7d1d9e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/human-input-seam/01-injectable-review-walk-human-input-seam.md": "0e48f8c728bca5e76043edacec16cf69fc998b411c5fbf3cff48632dac680dc0",
+    "docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md": "fb3012a9e4f6294ebacd23c54e5626db868b18c1547d997f8ccc544f200961a7",
+    "docs/implementation-plans/plan-details/human-input-seam/03-document-vertical-slice-record-protocol.md": "dca4aec06036f9113cd46bbfb5c043eac95ded0b2b56c851b0067730faed994f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Human Input Seam Vertical Slice\n\n`human-input-seam` \u00b7 generated 2026-08-27T20:07:46Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `85f6899dab9eb7d8fca2c028f27414a2e3e0f6ef58fb29c0e1f0f0eed4e1c516`\n- **Detail bundle digest:** `a9a12e1c7e9dfe9c4b9833026a91c8fa7ab7df14bb42b70c3e4fd46e9e6288e4`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (-20 vs. first audit)\n- **Detail-bundle size:** 30402 bytes (+30402 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply human-input-seam   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[record-publication]` [confidence: limited]: `## Architecture > Filesystem records`, step 1 (`Add an injectable review-walk human-input seam with an always-ask filesystem remote provider`) implementation/tests, and step 3 (`Document the vertical-slice record protocol and retain the wider migration as a deferred backlog item`) `Document the operator lifecycle` let either JSON path appear before it is complete, while requiring the provider to poll and reject malformed JSON. A normal write can expose empty or partial JSON, causing the operator to read a bad request or a valid resolution to terminate the walk; `plan_tool/fileio.py:durable_create_text` already provides no-clobber complete publication.\n  - Fix: Define complete-before-visible, no-clobber publication for both record types, document the operator-side rule, and test in-progress records.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1b2ac37f]` [confidence: limited]: The plan's `## Acceptance criteria` names `input_fn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-416ce0b3]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io_dir`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply human-input-seam` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Human Input Seam Vertical Slice\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `85f6899dab9eb7d8fca2c028f27414a2e3e0f6ef58fb29c0e1f0f0eed4e1c516`\n- **Detail bundle digest:** `a9a12e1c7e9dfe9c4b9833026a91c8fa7ab7df14bb42b70c3e4fd46e9e6288e4`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[record-publication]` [confidence: limited]: `## Architecture > Filesystem records`, step 1 (`Add an injectable review-walk human-input seam with an always-ask filesystem remote provider`) implementation/tests, and step 3 (`Document the vertical-slice record protocol and retain the wider migration as a deferred backlog item`) `Document the operator lifecycle` let either JSON path appear before it is complete, while requiring the provider to poll and reject malformed JSON. A normal write can expose empty or partial JSON, causing the operator to read a bad request or a valid resolution to terminate the walk; `plan_tool/fileio.py:durable_create_text` already provides no-clobber complete publication.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-review-walk-py:walkstate-pending-feedback]` [confidence: limited]: docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md:## Input cites `plan_tool/review_walk.py:WalkState.pending_feedback`, but code anchor `plan_tool/review_walk.py:WalkState.pending_feedback` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `input_fn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io_dir`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit human-input-seam --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-dde90107",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`## Architecture > Filesystem records`, step 1 (`Add an injectable review-walk human-input seam with an always-ask files",
+      "body": "`## Architecture > Filesystem records`, step 1 (`Add an injectable review-walk human-input seam with an always-ask filesystem remote provider`) implementation/tests, and step 3 (`Document the vertical-slice record protocol and retain the wider migration as a deferred backlog item`) `Document the operator lifecycle` let either JSON path appear before it is complete, while requiring the provider to poll and reject malformed JSON. A normal write can expose empty or partial JSON, causing the operator to read a bad request or a valid resolution to terminate the walk; `plan_tool/fileio.py:durable_create_text` already provides no-clobber complete publication.",
+      "suggested_action": "Define complete-before-visible, no-clobber publication for both record types, document the operator-side rule, and test in-progress records.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "record-publication",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "step2-data-contract-8647b0d6",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `plan_tool/review_walk.py:WalkState.pending_feedback`",
+      "body": "docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md:## Input cites `plan_tool/review_walk.py:WalkState.pending_feedback`, but code anchor `plan_tool/review_walk.py:WalkState.pending_feedback` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-review-walk-py:walkstate-pending-feedback",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "85f6899dab9eb7d8fca2c028f27414a2e3e0f6ef58fb29c0e1f0f0eed4e1c516",
+      "detail_bundle_digest": "a9a12e1c7e9dfe9c4b9833026a91c8fa7ab7df14bb42b70c3e4fd46e9e6288e4",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/human-input-seam/01-injectable-review-walk-human-input-seam.md",
+          "state": "present",
+          "digest": "0e48f8c728bca5e76043edacec16cf69fc998b411c5fbf3cff48632dac680dc0"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md",
+          "state": "present",
+          "digest": "fb3012a9e4f6294ebacd23c54e5626db868b18c1547d997f8ccc544f200961a7"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/human-input-seam/03-document-vertical-slice-record-protocol.md",
+          "state": "present",
+          "digest": "dca4aec06036f9113cd46bbfb5c043eac95ded0b2b56c851b0067730faed994f"
+        }
+      ],
+      "source_seed_digest": "957c924cdf36c843893ea8bdc142401c50b67e3c57e2a8ecc4950f2135c06550",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 30402,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

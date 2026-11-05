@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-46d39710": {
+      "code_anchor": null,
+      "field_or_key": "source",
+      "location": "docs/implementation-plans/2-calibrate-impact-drift.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/2-calibrate-impact-drift.md",
+      "reason": "`Recommendation.source` lacks a matching HEAD code-location anchor",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-43e75752": {
+      "code_anchor": null,
+      "field_or_key": "redirect",
+      "location": "docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md",
+      "reason": "`Recommendation.redirect` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260720-133118-completeness"
+}

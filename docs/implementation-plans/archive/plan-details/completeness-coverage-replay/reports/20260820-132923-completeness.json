@@ -1,0 +1,125 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T13:29:23Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a7ea2a139ca51e001634643f39bb295d40b61ef39ff1a4c601033e3dbbb1dee5",
+  "code_fingerprint": {
+    "BACKLOG.md": "e8133619d58e8bfee3697f3912f5d329bf53ce78504db04876d3311624292db7",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/backend.py": "31819cb12d9d272943f20516d19e858e0415a0ff44e6d2245de09cae027d5e55",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/test_backend.py": "13344d689bdaa18e38c9b69330620b84a6dd9e0fca5ed5a68c577817539ac186",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "64f6e742ac76a0053d6f8e84ec13e95ba9a6bd8107b7861393040cf0908b4257",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "84b527dd1e1af7d7ed55bf6a25dbb5e3aa292c65cae2cb96f36a299db170f294",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "2753223011dcb3143599fd4158c860f9eb1bc24a5ebe6fe8774d7a5dc0f69f00",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "0b1498ae78e769f8ef4df7aab7fe3d140c9f0870f9494f3529fbb89188a870ea"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T13:29:23Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[model-visible-input-boundary]`: The Architecture\u2019s \u201cevery model-visible\u201d and sealed-inventory contract, step 1\u2019s `Seal and retain the visible worktree` / `Capture the exact model-visible inputs` and capture tests, and step 3\u2019s `Seal the entire audit lifecycle` do not pin or probe the full read surface. At HEAD, `review:render_plan_audit_prompt` loads `renderer:prompts_dir()/plan-audit.md` from the installed package, while `backend_runner:run_streaming_once` only sets `cwd` for generic `backend:CliBackend` / `shell:claude_invoke`; only separate `shell:structural_codex_invoke` applies a Seatbelt wrapper. A capture can therefore use host-runner prompt code or read ambient, Git-admin, or outside-root files without changing the before/after inventory, while its commit/tree identity claims a sealed worktree.\n  - Fix: define and test one capture environment that pins the renderer and discovery engine to retained worktree state, permits only the sealed inventory, denies all other reads, and excludes cases when that proof is unavailable.\n- HIGH `[unmapped-label-terminal]`: The Problem statement says, \u201cMissing or ambiguous identity is not absence of a finding; it makes the case ineligible,\u201d while the Architecture says, \u201cAn unmapped or ambiguous fresh finding remains unresolved and is published as such.\u201d Step 1\u2019s admission and label rules, step 2\u2019s `Compare declared labels`, `Report gaps instead of stopping early`, and `Make terminal outcomes ordered and fail closed`, step 3\u2019s `Label only supported findings`, and step 4\u2019s publication rules never decide which outcome wins: step 2 makes only an *eligible* unresolved comparison produce `insufficient-evidence`, so a conforming fresh snapshot with an unmapped finding can be reported as an exclusion, omitted from every candidate universe, and still allow a cadence to select.\n  - Fix: treat every conforming fresh snapshot with an unmapped or ambiguous finding as required unresolved evidence that forces `insufficient-evidence` until it is explicitly labelled, across corpus admission, replay, capture, and publication.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d03f3f4b]`: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-coverage-replay` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[model-visible-input-boundary]`: The Architecture\u2019s \u201cevery model-visible\u201d and sealed-inventory contract, step 1\u2019s `Seal and retain the visible worktree` / `Capture the exact model-visible inputs` and capture tests, and step 3\u2019s `Seal the entire audit lifecycle` do not pin or probe the full read surface. At HEAD, `review:render_plan_audit_prompt` loads `renderer:prompts_dir()/plan-audit.md` from the installed package, while `backend_runner:run_streaming_once` only sets `cwd` for generic `backend:CliBackend` / `shell:claude_invoke`; only separate `shell:structural_codex_invoke` applies a Seatbelt wrapper. A capture can therefore use host-runner prompt code or read ambient, Git-admin, or outside-root files without changing the before/after inventory, while its commit/tree identity claims a sealed worktree.\n- HIGH `[unmapped-label-terminal]`: The Problem statement says, \u201cMissing or ambiguous identity is not absence of a finding; it makes the case ineligible,\u201d while the Architecture says, \u201cAn unmapped or ambiguous fresh finding remains unresolved and is published as such.\u201d Step 1\u2019s admission and label rules, step 2\u2019s `Compare declared labels`, `Report gaps instead of stopping early`, and `Make terminal outcomes ordered and fail closed`, step 3\u2019s `Label only supported findings`, and step 4\u2019s publication rules never decide which outcome wins: step 2 makes only an *eligible* unresolved comparison produce `insufficient-evidence`, so a conforming fresh snapshot with an unmapped finding can be reported as an exclusion, omitted from every candidate universe, and still allow a cadence to select.\n\n### Files coherence\n\n- NIT: step 3 declared `benchmarks/corpus/completeness-coverage/fixtures.bundle` not mentioned in detail\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk completeness-coverage-replay` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-45c75962",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture\u2019s \u201cevery model-visible\u201d and sealed-inventory contract, step 1\u2019s `Seal and retain the visible worktree` ",
+      "body": "The Architecture\u2019s \u201cevery model-visible\u201d and sealed-inventory contract, step 1\u2019s `Seal and retain the visible worktree` / `Capture the exact model-visible inputs` and capture tests, and step 3\u2019s `Seal the entire audit lifecycle` do not pin or probe the full read surface. At HEAD, `review:render_plan_audit_prompt` loads `renderer:prompts_dir()/plan-audit.md` from the installed package, while `backend_runner:run_streaming_once` only sets `cwd` for generic `backend:CliBackend` / `shell:claude_invoke`; only separate `shell:structural_codex_invoke` applies a Seatbelt wrapper. A capture can therefore use host-runner prompt code or read ambient, Git-admin, or outside-root files without changing the before/after inventory, while its commit/tree identity claims a sealed worktree.",
+      "suggested_action": "define and test one capture environment that pins the renderer and discovery engine to retained worktree state, permits only the sealed inventory, denies all other reads, and excludes cases when that proof is unavailable.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "model-visible-input-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-57b9ccc0",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Problem statement says, \u201cMissing or ambiguous identity is not absence of a finding; it makes the case ineligible,\u201d w",
+      "body": "The Problem statement says, \u201cMissing or ambiguous identity is not absence of a finding; it makes the case ineligible,\u201d while the Architecture says, \u201cAn unmapped or ambiguous fresh finding remains unresolved and is published as such.\u201d Step 1\u2019s admission and label rules, step 2\u2019s `Compare declared labels`, `Report gaps instead of stopping early`, and `Make terminal outcomes ordered and fail closed`, step 3\u2019s `Label only supported findings`, and step 4\u2019s publication rules never decide which outcome wins: step 2 makes only an *eligible* unresolved comparison produce `insufficient-evidence`, so a conforming fresh snapshot with an unmapped finding can be reported as an exclusion, omitted from every candidate universe, and still allow a cadence to select.",
+      "suggested_action": "treat every conforming fresh snapshot with an unmapped or ambiguous finding as required unresolved evidence that forces `insufficient-evidence` until it is explicitly labelled, across corpus admission, replay, capture, and publication.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unmapped-label-terminal",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "c1eeb236016cf28f5c6971f50a86fcb2c303dddb24af57484a9b3962943b567a",
+    "detail_bundle_digest": "719d87c7fecee9181b301dd41048388804ae3cf227f423ffa299741971dd2feb",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+        "state": "present",
+        "digest": "64f6e742ac76a0053d6f8e84ec13e95ba9a6bd8107b7861393040cf0908b4257"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+        "state": "present",
+        "digest": "84b527dd1e1af7d7ed55bf6a25dbb5e3aa292c65cae2cb96f36a299db170f294"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+        "state": "present",
+        "digest": "2753223011dcb3143599fd4158c860f9eb1bc24a5ebe6fe8774d7a5dc0f69f00"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+        "state": "present",
+        "digest": "0b1498ae78e769f8ef4df7aab7fe3d140c9f0870f9494f3529fbb89188a870ea"
+      }
+    ],
+    "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

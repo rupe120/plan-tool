@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-812dea7e": {
+      "code_anchor": "plan_tool/backend.py:PromptTransport.prompt_bytes",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/01-extract-shell-prompt-budget-backstop.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/01-extract-shell-prompt-budget-backstop.md",
+      "reason": "code anchor `plan_tool/backend.py:PromptTransport.prompt_bytes` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260707-215920-completeness"
+}

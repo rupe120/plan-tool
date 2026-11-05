@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-507aa11a": {
+      "code_anchor": "plan_tool/roadmap_artifacts.py:Reopen315Record",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/04-guarded-315-reopen-orchestrator-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/04-guarded-315-reopen-orchestrator-that.md",
+      "reason": "code anchor `plan_tool/roadmap_artifacts.py:Reopen315Record` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260827-125318-completeness"
+}

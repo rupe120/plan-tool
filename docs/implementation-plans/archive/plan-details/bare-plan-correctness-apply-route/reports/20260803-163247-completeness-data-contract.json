@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-0d65f6dd": {
+      "code_anchor": null,
+      "field_or_key": "source",
+      "location": "docs/implementation-plans/plan-details/bare-plan-correctness-apply-route/05-name-completeness-apply-correctness.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/bare-plan-correctness-apply-route/05-name-completeness-apply-correctness.md",
+      "reason": "`Recommendation.source` lacks a matching HEAD code-location anchor",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260803-163247-completeness"
+}

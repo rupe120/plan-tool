@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "plan_slug": "2-visualize-split-criteria",
+  "plan_path": "docs/implementation-plans/2-visualize-split-criteria.md",
+  "created_at": "2026-07-04T23:18:27Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "16ae97a672d3a42a52f13e563d8a0d5265b0623a9d28b6de2b0fe1f6288ab5eb",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "3641cff9f59d9c3ad00754665a9aa05f8b49107666732a5f815e6c9458800fab",
+    "DATA_CONTRACT.md": "590f1c9f228537fb64eba7c18a9e8d73aee0b9f7114960a1a13ed48738ed0626",
+    "README.md": "cc72710c58fb1ac48ce722dc86773cf42bb6df984736d6a8ef7caa9a12ea5c04",
+    "RUNBOOK.md": "5ca3a5b3a8b853b688591c1c1ecabb82599e5931edb8389bcb376a0d7857ec0a",
+    "USE_CASES.md": "3b858397f3498014e06a64434c3e58a0d03d14c0c0ea85d00a18a1c20091d2d1",
+    "docs/cli/README.md": "c9ad409e3236ead3115bd5551f23081a8252c2cf5c8738418258af079395d409",
+    "docs/cli/split-criteria.md": "84ddd6f77f002adafc1dc06011f991b10fb1f651f61b1dba9ccf0682b4b7ca9f",
+    "plan_tool/cli/__init__.py": "d0286d806070024bbd41830eb46edac20a5e12bb21c8a53e671e8910ee249948",
+    "plan_tool/cli/app.py": "654ffebd3294865d49e7928be1080016f2a0c2d7bd7a39ebf9380eab6c5b9a17",
+    "plan_tool/cli/parser.py": "107160455dd365115682b74030489cd2f4a37880d9d8bb14b9d1064a886035e1",
+    "plan_tool/cli/split_criteria_cmd.py": "6c51d2d60ea2c8f78e2375e724c0ab73df8a2db1a4499415873f7b9f573c3e4d",
+    "plan_tool/split_criteria.py": "54fb5c6c34194464b1d7b63f1ceb93212f1ab98dbd7fe56e1be169169090736a",
+    "plan_tool/telemetry.py": "457f08ed9b2b006b563de708d5d48712ee67ac07d817bd44876e5066beab883e",
+    "tests/test_data_contract.py": "83b1cdca0733dfce35bb1a36b309e7560c71df6501574cc89613de399425bdc8",
+    "tests/test_split_criteria.py": "caded9e69b54f0fd2aa8c2888b1eb4289ebcbaf24839011e44f3457cb9311a41",
+    "tests/test_telemetry.py": "7bec5224e96286ed61a318ee49962d6047c17b5fdc1b63aed8e0bfeb84e71514"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

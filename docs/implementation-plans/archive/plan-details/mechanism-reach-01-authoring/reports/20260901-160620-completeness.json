@@ -1,0 +1,88 @@
+{
+  "version": 4,
+  "plan_slug": "mechanism-reach-01-authoring",
+  "plan_path": "docs/implementation-plans/2-mechanism-reach-01-authoring.md",
+  "created_at": "2026-09-01T16:06:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d9e81df150bb3ab69157d40b8c5c735e519d341f7d3412635f4cf99404429d38",
+  "code_fingerprint": {
+    "plan_tool/create.py": "b3a688bb07cae29b0914266cef0068df745916f9c518f5fd23dafea7a15779b9",
+    "plan_tool/prompts/detail.md": "93951b1e17952e6278f2c9f02d86225590c22b280a3e06443c488ecc51764221",
+    "plan_tool/prompts/synthesize-body.md": "afad452ea48fbf70eb87b74d184fced1f8b93ae8867d2ffeaed848831fc8868c",
+    "tests/test_create.py": "57ea8ad322d3b8d0da90e42b6f5f46e93c094568356df65fafa4eab4191c0296",
+    "tests/test_detail.py": "163215ca6bd86a0afd020d7cecb8223e54d3c2fd22c04a15b5d64a1bbaa5233d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-create-step-body-guidance-choose.md": "c7472eb57a086fe9ede9a53b8311e5bd271e6938112f393211ae86865cff25b2",
+    "docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-detail-guidance-apply-unchanged.md": "4478bcf53517ded8cb3b44b0236c60e133c0779eca46d126d0ffa1ea7d6ac4bf"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Mechanism Reach 01 Authoring\n\n`mechanism-reach-01-authoring` \u00b7 generated 2026-09-01T16:06:20Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply mechanism-reach-01-authoring   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk mechanism-reach-01-authoring  # alternative interactive review/apply\n\n- HIGH `[semantic-reach]` [confidence: limited]: The \u201cevery authoring surface\u201d rule in Architecture, Scope guardrails, Testing, and Acceptance criteria leaves the live split-mode owner decisions unchanged: step 1 (`Extend create step and body guidance\u2026`) does not cover `plan_tool/foundational_logic.py:render_foundational_logic_prompt` or `plan_tool/create.py:propose_steps_from_claude`, which can merge a suggested `consolidate` step after finding duplicate or parallel code; step 2 (`Extend detail guidance\u2026`) does not cover `plan_tool/detail.py:_render_foundational_finds_section` and `_DETAIL_FOUNDATIONAL_SPLIT_DIRECTIVE`, which direct detail authors to place those findings. `plan_tool/cli/authoring.py:cmd_create` and `cmd_detail` enable these paths in `--prompt-mode split`, so a focused run can still widen shared semantics based on a shared location instead of the stated contract boundary.\n  - Fix: Apply and test the same three-route semantic-reach rule in both combined and split authoring paths before a sweep may add, place, or defer shared-work findings.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit mechanism-reach-01-authoring` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Mechanism Reach 01 Authoring\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[semantic-reach]` [confidence: limited]: The \u201cevery authoring surface\u201d rule in Architecture, Scope guardrails, Testing, and Acceptance criteria leaves the live split-mode owner decisions unchanged: step 1 (`Extend create step and body guidance\u2026`) does not cover `plan_tool/foundational_logic.py:render_foundational_logic_prompt` or `plan_tool/create.py:propose_steps_from_claude`, which can merge a suggested `consolidate` step after finding duplicate or parallel code; step 2 (`Extend detail guidance\u2026`) does not cover `plan_tool/detail.py:_render_foundational_finds_section` and `_DETAIL_FOUNDATIONAL_SPLIT_DIRECTIVE`, which direct detail authors to place those findings. `plan_tool/cli/authoring.py:cmd_create` and `cmd_detail` enable these paths in `--prompt-mode split`, so a focused run can still widen shared semantics based on a shared location instead of the stated contract boundary.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply mechanism-reach-01-authoring` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b12b022e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The \u201cevery authoring surface\u201d rule in Architecture, Scope guardrails, Testing, and Acceptance criteria leaves the live s",
+      "body": "The \u201cevery authoring surface\u201d rule in Architecture, Scope guardrails, Testing, and Acceptance criteria leaves the live split-mode owner decisions unchanged: step 1 (`Extend create step and body guidance\u2026`) does not cover `plan_tool/foundational_logic.py:render_foundational_logic_prompt` or `plan_tool/create.py:propose_steps_from_claude`, which can merge a suggested `consolidate` step after finding duplicate or parallel code; step 2 (`Extend detail guidance\u2026`) does not cover `plan_tool/detail.py:_render_foundational_finds_section` and `_DETAIL_FOUNDATIONAL_SPLIT_DIRECTIVE`, which direct detail authors to place those findings. `plan_tool/cli/authoring.py:cmd_create` and `cmd_detail` enable these paths in `--prompt-mode split`, so a focused run can still widen shared semantics based on a shared location instead of the stated contract boundary.",
+      "suggested_action": "Apply and test the same three-route semantic-reach rule in both combined and split authoring paths before a sweep may add, place, or defer shared-work findings.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "semantic-reach",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "d9e81df150bb3ab69157d40b8c5c735e519d341f7d3412635f4cf99404429d38",
+    "detail_bundle_digest": "dd6a8524ff58f700fde989b1869b36fa3fde702325d2b50d721562393b596d1a",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/01-extend-create-step-body-guidance-choose.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/mechanism-reach-01-authoring/02-extend-detail-guidance-apply-unchanged.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "dd8652c57ba7ea41d0a7e1695c2ed1bf978384016388172138cf4a306680c2e4",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

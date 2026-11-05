@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "plan_slug": "symbol-aware-prompt-excerpts",
+  "plan_path": "docs/implementation-plans/2-symbol-aware-prompt-excerpts.md",
+  "created_at": "2026-07-07T02:20:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8805ce8aa149a7a3bb85ab53017cf51d9a4f718659178e6fe0ab66b2da7b078d",
+  "code_fingerprint": {
+    "RUNBOOK.md": "c083c902c29bb2094fa8ff0873070ba02696ad4c4f3d3e9b06f9e5e2edc4fc92",
+    "plan_tool/annotate.py": "8e3006681884d6da432960e70c26454005fb003ba68cbc7369f4d93d46e1fc0f",
+    "plan_tool/detail.py": "3f670c122d3c0ed94ee2ce02615805317aaa08afbc329eb7742eac4fa7a0a6a4",
+    "plan_tool/jira.py": "0b8955d322c455fc89b1380757253c1f59a279254eb5872e796d030026b4fcaf",
+    "plan_tool/review.py": "c6f1d0803c2e2bc88e884f69a1cad4f6798d346165eac36070e8639f9fdd8f41",
+    "tests/test_annotate.py": "808fdd918cf2e20b2d736ca47fdc1351fa460260b905685dcbc1fabf00790f7c",
+    "tests/test_detail.py": "f6fa0351520d3eb1046a853f789df7c9c5df8bf465a610ab98d453ab7d5b36f6",
+    "tests/test_jira.py": "b58dffa0138998dcf31c68f2092afb9951587e4da5c7feaade533448eb81a990",
+    "tests/test_review.py": "fe67723c5bda6eb469f98b0b74b688923030fa1a3471d456686f34a19bffb28e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/01-stdlib-only-prompt-excerpt-helpers.md": "8931dc0660e9c74c91f4f7be66274404d5f8840581f2f1be49e3d7f801cbfb89",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/02-use-prompt-excerpts-review-reconcile.md": "75ed85033f4729947cc304f8b667ad3cd178d6b2e7a236c1151dba200ab2f26c",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/03-use-prompt-excerpts-detail-detail.md": "9addf3873032b21d2b5f04ff4ea670f5065b4350e06ab278f411b1bd50225bd0",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/04-use-prompt-excerpts-criteria.md": "2fe5041328b12955a16388dc46c37d76e1f0a1ac6111ff702479ebebd0fcc720",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/05-use-conservative-prompt-excerpts-jira.md": "b6026ce5ac9fde7e7ce04c93929600b9b241b2f59841a7788f2b9a412bfc2a6f",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/06-use-prompt-excerpts-annotate-grounding.md": "403cdce69c6a631a2c37fbb5e79252203168cca9543ec98d579192b0c4f8ebfe",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/07-remove-old-prompt-head-slicing-helpers.md": "e834ea6d3f357bd051b27855dc0cc20262f9a5d0012b9bb8b6da6540bb7e1d0f",
+    "docs/implementation-plans/plan-details/symbol-aware-prompt-excerpts/08-document-prompt-excerpt-policy-run.md": "12546b6614636922a7af864f80172f132ea73c472ab58448eaa2ebff234dc795"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Symbol Aware Prompt Excerpts\n\n`symbol-aware-prompt-excerpts` \u00b7 generated 2026-07-07T02:20:36Z \u00b7 mode: iterate \u00b7 loop stopped: all_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 2 (2 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply symbol-aware-prompt-excerpts   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk symbol-aware-prompt-excerpts  # alternative interactive review/apply\n\n- MEDIUM `[candidate-symbol-ownership]`: `plan_tool.prompt_excerpt` input ownership is still inconsistent: Architecture says \u201cPrompt renderers pass declared file paths, step text, and prompt-specific byte budgets into this helper,\u201d but the same Architecture says \u201cCallers derive bounded candidate symbols,\u201d and step 1 says \u201cDo not duplicate that stopword logic in `plan_tool/prompt_excerpt.py`.\u201d The step 1 detail is the more concrete API decision; leaving \u201cstep text\u201d as a helper input invites helper-owned title parsing or a second tokenizer.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step1-files-coherence-1be086ec]`: `tests/test_review.py` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply symbol-aware-prompt-excerpts` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- `plan-tool completeness-apply symbol-aware-prompt-excerpts` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (2 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Symbol Aware Prompt Excerpts\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[candidate-symbol-ownership]`: `plan_tool.prompt_excerpt` input ownership is still inconsistent: Architecture says \u201cPrompt renderers pass declared file paths, step text, and prompt-specific byte budgets into this helper,\u201d but the same Architecture says \u201cCallers derive bounded candidate symbols,\u201d and step 1 says \u201cDo not duplicate that stopword logic in `plan_tool/prompt_excerpt.py`.\u201d The step 1 detail is the more concrete API decision; leaving \u201cstep text\u201d as a helper input invites helper-owned title parsing or a second tokenizer.\n\n### Files coherence\n\n- NIT: step 1 declared `tests/test_review.py` not mentioned in detail\n- NIT: step 8 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk symbol-aware-prompt-excerpts` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9ca8f63f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`plan_tool.prompt_excerpt` input ownership is still inconsistent: Architecture says \u201cPrompt renderers pass declared file",
+      "body": "`plan_tool.prompt_excerpt` input ownership is still inconsistent: Architecture says \u201cPrompt renderers pass declared file paths, step text, and prompt-specific byte budgets into this helper,\u201d but the same Architecture says \u201cCallers derive bounded candidate symbols,\u201d and step 1 says \u201cDo not duplicate that stopword logic in `plan_tool/prompt_excerpt.py`.\u201d The step 1 detail is the more concrete API decision; leaving \u201cstep text\u201d as a helper input invites helper-owned title parsing or a second tokenizer.",
+      "suggested_action": "revise the Architecture helper boundary to say call sites pass repo-relative path, full text, bounded candidate symbols, and the prompt-specific budget, with step prose consumed only by caller-side candidate derivation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "candidate-symbol-ownership"
+    }
+  ],
+  "annotations": {}
+}

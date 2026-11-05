@@ -1,0 +1,209 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-escalation-impact-routing",
+  "plan_path": "docs/implementation-plans/2-roadmap-escalation-impact-routing.md",
+  "created_at": "2026-08-16T19:57:24Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a1387d185626b65c64cca169b3b50145ea30a21b7861e8d8931f76a92511a6ed",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "d0b9818752724108dc9f2003670a401478e5c915d8f52a1b94b797be1ff43bf5",
+    "CLAUDE.md": "63fa361062dcc727ef8111ef0991500e4e8786a0ed9c37fa279f0aeb81b8bf0f",
+    "DATA_CONTRACT.md": "18c068f4d36e66d9c54884ac4bcf51a8003bb1374795b9723a217b2b79a07ef6",
+    "README.md": "4663ae91ec7d7833ba1b9a12f095fa2256034bde1c5a7937bb05ccca68a744cd",
+    "ROADMAP_FORMAT.md": "e2e8618c90628f13a1ead933a471bc312a5766b28e5f104e7e9e6a2e71ffdc04",
+    "RUNBOOK.md": "56787635eaf7f1c4ab7065409376d31b1f3d98b55679caa970d91c89b28052ed",
+    "TESTING.md": "5e2273c2b74f0c6d84016d0d4ff827dd968bbb0faacf814a6b22cc307a88cd40",
+    "docs/ARCHITECTURE.md": "cd8914fa60ec639e929364a190d1ffeb9388c052e25f4c020f75fc7defb8e927",
+    "docs/ROADMAP_WALKTHROUGH.md": "a1c527a88cfa9ffc3e3e8c783f45911dd50ce6f47da834010423c80a31b7bfd7",
+    "docs/cli/roadmap.md": "10910e91e88d626c4b346e2ff0b9f9052791bea45b13ad836e4d909c53abc642",
+    "plan_tool/cli/__init__.py": "b1046285e38d82dec0aea923aadecc22404e62ded4270c41243f662cf0ba92ca",
+    "plan_tool/cli/roadmap_cmd.py": "95aaf13b8c5f28ef9edb8d0cb4c289eb7314f48a5853992f4ef492228d00700d",
+    "plan_tool/roadmap.py": "4384e677a5f996b086f0af1c9db65839801d27209cadcc4310353863c290ee03",
+    "plan_tool/roadmap_evidence_store.py": "66bf343950a918ae4592841155c6fa0f14f0767c2617f6cf4dc63f9d00e170bd",
+    "plan_tool/roadmap_view.py": "91e394a35f24682212f237a8fe77b2e1b96be2aa48527cadfda71fedd62a4c7d",
+    "plan_tool/run_log.py": "f8f5189fb3196ca3adf9e77d24a8a0ff04ca8ccafafc51dcc340d728273f2fd7",
+    "tests/cli/package_surface_help.golden.txt": "52804d15b491d7e5d73772253c7ae894c4ee10d104732141c800a225c370ac6f",
+    "tests/cli/test_roadmap_cmd.py": "f0964dadeda9991a42ed33229abe4be10d6ac65549dfe9bf3f39371e86200822",
+    "tests/test_roadmap_evidence_store.py": "534867df72d974c60074ca32233f68cf5d6881aca9c46bd2240c6699e89c8fd8",
+    "tests/test_roadmap_format.py": "0fb252c68c8ce9005eec93e32e602d19d3b3748b2c34d6e1130bf39d38169b4a",
+    "tests/test_roadmap_gates.py": "e23271e79ab36cd6488bbf71240c05e07622f6f94b0e7237e7501bed8ee70549",
+    "tests/test_roadmap_view.py": "3c0703c6224604821c324439d7857531019fd6a24d5a315ad3e8ebb5db8e4cb9",
+    "tests/test_run_log.py": "87c7bf443580eb06d749bd0f347e3126f1cdc9ef1c327d18c936e0feab1d37a7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/01-extract-typed-roadmap-relations-without.md": "f38720ed6fd944766c2b069b76993310d9f63e895a2b33934fbc0620176e0205",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/02-deterministic-bidirectional-impact.md": "dd0fbe8f11de1d7ffb4113700fadafcd2389bc69f4b5e17045394fb0feed0423",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/03-extract-recorded-brief-readers-preserve.md": "d905b7af16849ab222433889d2a775cb5a1b35b6694699bb32826b50d00312d2",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/04-capture-gate-validate-recheck-one.md": "098f243fc451ed045d1437eb0c41830f1e106b5847261c866ddcb3be96880437",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/05-define-closed-impact-identity-immutable.md": "de1c4004ecdcd62de2b9f53c2cffe9f892fec30c65ebd8714cee8b2cbe986ff2",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/06-impact-analysis-evidence-namespace.md": "09a19fe61f58b265722003fe04699e8c188dc9f8c9219cd1f76a85d1ad0fe228",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/07-closed-redacted-impact-analysis.md": "d57029388a242365e08eb884f06b9f365995b636ca9650699190177077c04bd7",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/08-run-guarded-impact-analysis-no.md": "95a58c5ac351c247837a569e54462d32865580a3e09b454372288c0d360e0878",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/09-wire-exact-exclusive-impact-analysis.md": "9284abb04560fb617db56008add4e50f791245bb616e20de6aaa99ebcb3a5a99",
+    "docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/10-document-impact-analysis-schema.md": "3393d772342fd0c5e0fc0510989b0787df3caefe6faf166dbf55c29982644836"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Escalation Impact Routing\n\n`roadmap-escalation-impact-routing` \u00b7 generated 2026-08-16T19:57:24Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-escalation-impact-routing   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-escalation-impact-routing  # alternative interactive review/apply\n\n- HIGH `[declared-relation-inventory]`: Step 1 (`Extract typed roadmap relations without changing views or gates`), the Architecture\u2019s \u201cevery gate-validated roadmap relation\u201d rule, Testing\u2019s closure coverage, and acceptance criterion 2 never give the closed relation inventory or say whether review-owned `FeedbackTarget.row_id` and `RemovalRecord.feedback_ids` participate. `plan_tool/roadmap_view:build_citation_map` includes those alongside design references, while `plan_tool/roadmap_gates:check_entity_references`, `check_constraint_anchors`, `check_decision_records`, `check_component_entity_references`, `check_component_pattern_references`, `check_component_constraint_references`, `check_plan_component_references`, `check_plan_ordering_totality`, `check_assumption_plan_references`, `check_feedback_integrity`, and `check_design_row_continuity` cover different subsets. The stated \u201ccomplete when every emitted relation\u201d test permits an omitted relation class to yield a false `same-artifact` route, or permits unselected review data to affect closure.\n  - Fix: define one closed, test-enforced inventory of included design relation fields, owners, directions, and ordering, explicitly excluding or bounding review-side references.\n- MEDIUM `[snapshot-gate-context]`: Step 4 (`Capture, gate validate, and recheck one coherent roadmap and brief snapshot`) says staged gates run against a \u201csame captured predecessor set,\u201d but the Architecture, Risks\u2019 mixed-evidence rule, Testing\u2019s \u201cevery full-gate failure,\u201d and acceptance criteria 1 and 4 never define those predecessors. `plan_tool/roadmap_gates:ArtifactEnvelope.predecessor` enables `check_design_row_continuity`, `check_feedback_integrity`, and `check_settled_decisions`, while `plan_tool/roadmap:_load_and_regate_below` performs read-only current-state gating with `predecessor=None`; the analysis has no historical artifacts to supply. Those choices accept and reject different snapshots.\n  - Fix: define the snapshot\u2019s exact staged gate envelopes, using `predecessor=None` for current-state validation unless the plan adds a bounded historical source, and state that boundary in testing and acceptance.\n- HIGH `[view-freshness-boundary]`: `--view impact-analyses` promises not to render an invalid or noncurrent route, but the Architecture defines a guarded capture-and-recheck only for creation and gives the view only a scan plus recomputation. Step 9, the **A stored analysis becomes authority** risk, Testing, and acceptance criterion 5 rely on that promise; at HEAD `plan_tool/roadmap_revision_publish.py:roadmap_writer_guard` is the only participating-writer boundary, while `plan_tool/roadmap_evidence_store.py:scan_evidence` and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` read without one, so a writer can change an input after validation and before rendering.\n  - Fix: Define a non-writing snapshot boundary coordinated with roadmap writers for scan, revalidation, and rendering, and test an interleaved write after validation.\n- MEDIUM `[existing-analysis-collision]`: Step 5\u2019s result contract conflicts for an occupied analysis final: the Architecture\u2019s immutable-analysis paragraph says \u201ca different existing byte sequence is a collision and never reused,\u201d while the route table says `invalid` when \u201cstored-analysis validation fails.\u201d Step 6\u2019s exact namespace, step 8\u2019s publication/reuse, the telemetry `collision` outcome, Testing\u2019s collision/reuse coverage, and acceptance criteria 4\u20135 need one result; malformed or nonmatching bytes at the expected final name meet both descriptions.\n  - Fix: Separate invalid creation/view inputs from an occupied-final collision, then align the route table, telemetry, retry behavior, Testing, and acceptance criteria to those distinct outcomes.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-escalation-impact-routing` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Escalation Impact Routing\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 10 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[declared-relation-inventory]`: Step 1 (`Extract typed roadmap relations without changing views or gates`), the Architecture\u2019s \u201cevery gate-validated roadmap relation\u201d rule, Testing\u2019s closure coverage, and acceptance criterion 2 never give the closed relation inventory or say whether review-owned `FeedbackTarget.row_id` and `RemovalRecord.feedback_ids` participate. `plan_tool/roadmap_view:build_citation_map` includes those alongside design references, while `plan_tool/roadmap_gates:check_entity_references`, `check_constraint_anchors`, `check_decision_records`, `check_component_entity_references`, `check_component_pattern_references`, `check_component_constraint_references`, `check_plan_component_references`, `check_plan_ordering_totality`, `check_assumption_plan_references`, `check_feedback_integrity`, and `check_design_row_continuity` cover different subsets. The stated \u201ccomplete when every emitted relation\u201d test permits an omitted relation class to yield a false `same-artifact` route, or permits unselected review data to affect closure.\n- MEDIUM `[snapshot-gate-context]`: Step 4 (`Capture, gate validate, and recheck one coherent roadmap and brief snapshot`) says staged gates run against a \u201csame captured predecessor set,\u201d but the Architecture, Risks\u2019 mixed-evidence rule, Testing\u2019s \u201cevery full-gate failure,\u201d and acceptance criteria 1 and 4 never define those predecessors. `plan_tool/roadmap_gates:ArtifactEnvelope.predecessor` enables `check_design_row_continuity`, `check_feedback_integrity`, and `check_settled_decisions`, while `plan_tool/roadmap:_load_and_regate_below` performs read-only current-state gating with `predecessor=None`; the analysis has no historical artifacts to supply. Those choices accept and reject different snapshots.\n- HIGH `[view-freshness-boundary]`: `--view impact-analyses` promises not to render an invalid or noncurrent route, but the Architecture defines a guarded capture-and-recheck only for creation and gives the view only a scan plus recomputation. Step 9, the **A stored analysis becomes authority** risk, Testing, and acceptance criterion 5 rely on that promise; at HEAD `plan_tool/roadmap_revision_publish.py:roadmap_writer_guard` is the only participating-writer boundary, while `plan_tool/roadmap_evidence_store.py:scan_evidence` and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` read without one, so a writer can change an input after validation and before rendering.\n- MEDIUM `[existing-analysis-collision]`: Step 5\u2019s result contract conflicts for an occupied analysis final: the Architecture\u2019s immutable-analysis paragraph says \u201ca different existing byte sequence is a collision and never reused,\u201d while the route table says `invalid` when \u201cstored-analysis validation fails.\u201d Step 6\u2019s exact namespace, step 8\u2019s publication/reuse, the telemetry `collision` outcome, Testing\u2019s collision/reuse coverage, and acceptance criteria 4\u20135 need one result; malformed or nonmatching bytes at the expected final name meet both descriptions.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-escalation-impact-routing` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-c421d135",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Extract typed roadmap relations without changing views or gates`), the Architecture\u2019s \u201cevery gate-validated roa",
+      "body": "Step 1 (`Extract typed roadmap relations without changing views or gates`), the Architecture\u2019s \u201cevery gate-validated roadmap relation\u201d rule, Testing\u2019s closure coverage, and acceptance criterion 2 never give the closed relation inventory or say whether review-owned `FeedbackTarget.row_id` and `RemovalRecord.feedback_ids` participate. `plan_tool/roadmap_view:build_citation_map` includes those alongside design references, while `plan_tool/roadmap_gates:check_entity_references`, `check_constraint_anchors`, `check_decision_records`, `check_component_entity_references`, `check_component_pattern_references`, `check_component_constraint_references`, `check_plan_component_references`, `check_plan_ordering_totality`, `check_assumption_plan_references`, `check_feedback_integrity`, and `check_design_row_continuity` cover different subsets. The stated \u201ccomplete when every emitted relation\u201d test permits an omitted relation class to yield a false `same-artifact` route, or permits unselected review data to affect closure.",
+      "suggested_action": "define one closed, test-enforced inventory of included design relation fields, owners, directions, and ordering, explicitly excluding or bounding review-side references.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "declared-relation-inventory",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d35e7d58",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Capture, gate validate, and recheck one coherent roadmap and brief snapshot`) says staged gates run against a \u201c",
+      "body": "Step 4 (`Capture, gate validate, and recheck one coherent roadmap and brief snapshot`) says staged gates run against a \u201csame captured predecessor set,\u201d but the Architecture, Risks\u2019 mixed-evidence rule, Testing\u2019s \u201cevery full-gate failure,\u201d and acceptance criteria 1 and 4 never define those predecessors. `plan_tool/roadmap_gates:ArtifactEnvelope.predecessor` enables `check_design_row_continuity`, `check_feedback_integrity`, and `check_settled_decisions`, while `plan_tool/roadmap:_load_and_regate_below` performs read-only current-state gating with `predecessor=None`; the analysis has no historical artifacts to supply. Those choices accept and reject different snapshots.",
+      "suggested_action": "define the snapshot\u2019s exact staged gate envelopes, using `predecessor=None` for current-state validation unless the plan adds a bounded historical source, and state that boundary in testing and acceptance.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "snapshot-gate-context",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e47d85a3",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`--view impact-analyses` promises not to render an invalid or noncurrent route, but the Architecture defines a guarded c",
+      "body": "`--view impact-analyses` promises not to render an invalid or noncurrent route, but the Architecture defines a guarded capture-and-recheck only for creation and gives the view only a scan plus recomputation. Step 9, the **A stored analysis becomes authority** risk, Testing, and acceptance criterion 5 rely on that promise; at HEAD `plan_tool/roadmap_revision_publish.py:roadmap_writer_guard` is the only participating-writer boundary, while `plan_tool/roadmap_evidence_store.py:scan_evidence` and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` read without one, so a writer can change an input after validation and before rendering.",
+      "suggested_action": "Define a non-writing snapshot boundary coordinated with roadmap writers for scan, revalidation, and rendering, and test an interleaved write after validation.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "view-freshness-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-2f87574a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5\u2019s result contract conflicts for an occupied analysis final: the Architecture\u2019s immutable-analysis paragraph says ",
+      "body": "Step 5\u2019s result contract conflicts for an occupied analysis final: the Architecture\u2019s immutable-analysis paragraph says \u201ca different existing byte sequence is a collision and never reused,\u201d while the route table says `invalid` when \u201cstored-analysis validation fails.\u201d Step 6\u2019s exact namespace, step 8\u2019s publication/reuse, the telemetry `collision` outcome, Testing\u2019s collision/reuse coverage, and acceptance criteria 4\u20135 need one result; malformed or nonmatching bytes at the expected final name meet both descriptions.",
+      "suggested_action": "Separate invalid creation/view inputs from an occupied-final collision, then align the route table, telemetry, retry behavior, Testing, and acceptance criteria to those distinct outcomes.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "existing-analysis-collision",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "a1387d185626b65c64cca169b3b50145ea30a21b7861e8d8931f76a92511a6ed",
+    "detail_bundle_digest": "9988e57d71c3e360ac4764c260d472af3e5b5295800da2172e9f84329ba403c0",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/01-extract-typed-roadmap-relations-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/02-deterministic-bidirectional-impact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/03-extract-recorded-brief-readers-preserve.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/04-capture-gate-validate-recheck-one.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/05-define-closed-impact-identity-immutable.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/06-impact-analysis-evidence-namespace.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/07-closed-redacted-impact-analysis.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/08-run-guarded-impact-analysis-no.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 9,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/09-wire-exact-exclusive-impact-analysis.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 10,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-escalation-impact-routing/10-document-impact-analysis-schema.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

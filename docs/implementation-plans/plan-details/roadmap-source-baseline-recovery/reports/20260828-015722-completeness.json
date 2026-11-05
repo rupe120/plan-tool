@@ -1,0 +1,125 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-source-baseline-recovery",
+  "plan_path": "docs/implementation-plans/2-roadmap-source-baseline-recovery.md",
+  "created_at": "2026-08-28T01:57:22Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ca8ec05e31875cc7437f52f8d9d1e0720c9b28f236f68a7f0b935500bc7dd432",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "f71fff214c8ec3263e6da6ba3f48b266513d2afe5edf066ea99a198b4a1fa5c5",
+    "RUNBOOK.md": "81eb10715fd22b163d165a344ae560735bb704a400ded142ce75bc2213d19274",
+    "docs/cli/roadmap.md": "eed7749f6cc52614c779c95a5aefea0d189209154fd65fd440951345a1451fb7",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "e4a01db63bc333275298ad6e2ad78e638c599d0329707a77bff9026df8a19f81",
+    "handoffs/2026-08-27-integration-roadmap-evidence-preflight.md": "915d1dff693dc0d4cfd29028d64d913f78e7bc32241f2063ca990e095d8a8fcd",
+    "plan_tool/cli/__init__.py": "4861fc8a30561c62df7e1197d803099552c8f9994ef221010e5dbb76d440d11a",
+    "plan_tool/cli/roadmap_cmd.py": "1997d5d952ce937fcea29aa03ab6a6d9c727d4864e18a5a91ab62b7a142977a7",
+    "plan_tool/roadmap.py": "5c233f422b7326663616be1fd76d68016ba3b75dd66efb4cb72ce0cd01c2ec1a",
+    "plan_tool/roadmap_revision_publish.py": "f46f41ed1852392dd83402ff16f22e0a578be4a3bfaca6f05c88939d93cc46b1",
+    "plan_tool/roadmap_seed_state.py": "1b39bc9ef7b54d37e17163fc901052ccc595a007be777d828028c5f005f1b3a8",
+    "plan_tool/roadmap_source_identity.py": "2b8055b4fbdc240717407b093c6bb3cf1cb274f460fe9c8c1adf91b41027ad9f",
+    "tests/cli/test_roadmap_cmd.py": "9333d9992488a7adecead28985584544c80a1901842853f98a77db360901f990",
+    "tests/test_roadmap.py": "2ca5da4cfedc0b3d79ff664d44ab1afa08d759d0c5a9dc9d03d870bb741b34d4",
+    "tests/test_roadmap_escalation_run.py": "62b15c0a62cee58fba798e9596698ff895d3ef3bd74c4dec3676af0ac0be3331",
+    "tests/test_roadmap_impact_run.py": "4a6f71136616582d8919394700e4750393889967c00518dfcb181fd0fbac4f10",
+    "tests/test_roadmap_revision_publish.py": "14ab7793c00c62fd9cf96a63092fbbca25542c3c25bab0d9d1c7de4a6d762b97",
+    "tests/test_roadmap_seed_state.py": "a0aee51e890a0b7334c968851cf9986969220810442f8b1037e6edd2a079dffe",
+    "tests/test_roadmap_source_identity.py": "998e1341e4b80fb339b1a49e7c0e80a63a043e7c58f07b273424d7976293705e",
+    "tests/test_roadmap_structural_revision.py": "62aac56501341107719f0e6ee5ae0301882cb72132c34cb54c563cac906f4144"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/01-confirmed-selected-range-source.md": "db7f1c55c6a54e6f5eb2703dd67e46d47102c401aad6c3ed1e53250a87f790d2",
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/02-expose-document-explicit-recovery.md": "722eedf5651a5d53ed5bf3c96c46b04488eacbbceeb08cbf888fc5b073502ef3",
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/03-verify-evidence-currentness-close.md": "b9c722027083fcbebd40cc50bc0ce7b12b38c780e832940a3fd360ff713d4a8c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Source Baseline Recovery\n\n`roadmap-source-baseline-recovery` \u00b7 generated 2026-08-28T01:57:21Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `ca8ec05e31875cc7437f52f8d9d1e0720c9b28f236f68a7f0b935500bc7dd432`\n- **Detail bundle digest:** `ce2c4344c83cde8787219c9444c17823e9d3fa869a005b50b897d6a49913a5a6`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-source-baseline-recovery   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-source-baseline-recovery  # alternative interactive review/apply\n\n- MEDIUM `[selected-range-admission]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), `Architecture`, `Risks`, `Testing`, and acceptance criteria require intentional source changes and say every selected baseline advances, but do not say whether a selected stage must differ from its existing baseline. `plan_tool/roadmap_source_identity.py:compare_baseline` treats an exact-canonical source with the same semantic projection as already admitted, so a contiguous range can mix changed and unchanged stages and still leave \u201cevery selected baseline advances\u201d impossible to verify.\n  - Fix: Define selected-range eligibility so every selected stage has an existing valid baseline and a semantic change from it, refusing ranges that include an already admitted stage.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-source-baseline-recovery` \u2014 apply the 1 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Source Baseline Recovery\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `ca8ec05e31875cc7437f52f8d9d1e0720c9b28f236f68a7f0b935500bc7dd432`\n- **Detail bundle digest:** `ce2c4344c83cde8787219c9444c17823e9d3fa869a005b50b897d6a49913a5a6`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[selected-range-admission]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), `Architecture`, `Risks`, `Testing`, and acceptance criteria require intentional source changes and say every selected baseline advances, but do not say whether a selected stage must differ from its existing baseline. `plan_tool/roadmap_source_identity.py:compare_baseline` treats an exact-canonical source with the same semantic projection as already admitted, so a contiguous range can mix changed and unchanged stages and still leave \u201cevery selected baseline advances\u201d impossible to verify.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-source-baseline-recovery` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0d3f9f5e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), `Architecture`, `Risks`, `Testing`, and accep",
+      "body": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), `Architecture`, `Risks`, `Testing`, and acceptance criteria require intentional source changes and say every selected baseline advances, but do not say whether a selected stage must differ from its existing baseline. `plan_tool/roadmap_source_identity.py:compare_baseline` treats an exact-canonical source with the same semantic projection as already admitted, so a contiguous range can mix changed and unchanged stages and still leave \u201cevery selected baseline advances\u201d impossible to verify.",
+      "suggested_action": "Define selected-range eligibility so every selected stage has an existing valid baseline and a semantic change from it, refusing ranges that include an already admitted stage.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "selected-range-admission",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ca8ec05e31875cc7437f52f8d9d1e0720c9b28f236f68a7f0b935500bc7dd432",
+      "detail_bundle_digest": "ce2c4344c83cde8787219c9444c17823e9d3fa869a005b50b897d6a49913a5a6",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/01-confirmed-selected-range-source.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/02-expose-document-explicit-recovery.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/03-verify-evidence-currentness-close.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "cb50ad0a2103b40ccc1e6c99dea023e912a9d1f5b253580b7e6bd11ae985e5af",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

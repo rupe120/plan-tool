@@ -1,0 +1,183 @@
+{
+  "version": 4,
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "plan_path": "docs/implementation-plans/2-quality-bench-01-corpus-and-noise-floor.md",
+  "created_at": "2026-08-26T18:26:09Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4e9bc89382024519908898e6b6796ac4d495f1ded5941656f193794ff98b674b",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "4cfeee2b10a3812e10cf8e0f10e786314fe4c091bbdda1a304f7f4b0978e2d8c",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md": "554ec514b05af81a9fd3379d479640983ee92f7a744014bf173d39b2581c57c6",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md": "38194491c4163e1bc36cc3c2674d7fd91da93186a2f46951cde26b55acffed27",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md": "64fa6390f81eb2c68f170ed453f78239c7be91ba3e0c4567392ac991e9c15124",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md": "05dbf59996b70ec181603bfe8445f01aab56c35f8dd88ee5a22e5f5533bfbace",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md": "e1f29ee74878a271b1de5910ae78d36ce729b804f98e4ff6dc642cde9937cb60",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md": "4335ebfd65a534fcdf8fa9b160b69707a171e3e3b2c07242fe874452cd6cd0fa",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md": "7096eb3b0517bddf6f1a5daf9d3f94da6e8573060857062ccbe83fe72f6570f5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Quality Bench 01 Corpus And Noise Floor\n\n`quality-bench-01-corpus-and-noise-floor` \u00b7 generated 2026-08-26T18:26:08Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `4e9bc89382024519908898e6b6796ac4d495f1ded5941656f193794ff98b674b`\n- **Detail bundle digest:** `caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk quality-bench-01-corpus-and-noise-floor  # alternative interactive review/apply\n\n- MEDIUM `[corpus-item-identity]` [confidence: limited]: The Architecture\u2019s `Registry v1` ordering rule and `Each corpus item` paragraph, step 1 (`Parse and version the self-contained quality-bench corpus format`), step 3 (`Build the corpus replay engine and label-keyed artifact/run-log store`), Testing, and the `run` acceptance criterion use a manifest item id as an ordering and storage key but never require it to be unique. Duplicate ids can collide in stored evidence and make the corpus vector order unreliable.\n  - Fix: make manifest item id a unique v1 corpus key, reject duplicates before replay, and use that key consistently for ordering and stored evidence\n- HIGH `[registry-v1-value-contract]` [confidence: limited]: Registry v1 promises a fixed encoded value for every metric, but the Architecture table leaves `domain_reference_counts` unclear on which `02-constraints.md` references count and whether repeated `anchor_ids` count, leaves `required_section_presence` unclear on YAML collections versus prose headings, and leaves `cost_usd` unclear on how to combine retrying calls. `plan_tool/prompts/roadmap-constraints.md` supplies `anchor_ids`, while `plan_tool/roadmap.py:_run_stage`, `plan_tool/shell:claude_invoke_outcome`, and `plan_tool/run_log:ClaudeCallEnd` can record several backend costs for one selected stage; step 2, Testing, and the `compare` acceptance criterion therefore permit different values from the same stored evidence.\n  - Fix: define one exact stored-bytes-to-value rule, including retry aggregation and missing-data treatment, for every registry-v1 metric and use it for the registry, floors, comparisons, and fixtures\n- MEDIUM `[noise-floor-stop-condition]` [confidence: limited]: The `Metrics may be dominated by noise rather than signal` risk says to stop and file a smaller claim, but step 5 (`Add plan-tool quality-bench floor`), Testing, and the `floor` acceptance criterion only persist floor values. They do not name the review owner, the evidence that triggers the stop decision, or where that finding is filed, so the command can meet every criterion while the stated mitigation never happens.\n  - Fix: add a post-floor, non-gating review criterion that names the evidence to inspect, the decision owner, and the report location for this risk outcome\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]` [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO `[step3-granularity-split-e25c9d8a]` [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force archives its prior generation before replacement)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 apply the 3 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Quality Bench 01 Corpus And Noise Floor\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `4e9bc89382024519908898e6b6796ac4d495f1ded5941656f193794ff98b674b`\n- **Detail bundle digest:** `caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[corpus-item-identity]` [confidence: limited]: The Architecture\u2019s `Registry v1` ordering rule and `Each corpus item` paragraph, step 1 (`Parse and version the self-contained quality-bench corpus format`), step 3 (`Build the corpus replay engine and label-keyed artifact/run-log store`), Testing, and the `run` acceptance criterion use a manifest item id as an ordering and storage key but never require it to be unique. Duplicate ids can collide in stored evidence and make the corpus vector order unreliable.\n- HIGH `[registry-v1-value-contract]` [confidence: limited]: Registry v1 promises a fixed encoded value for every metric, but the Architecture table leaves `domain_reference_counts` unclear on which `02-constraints.md` references count and whether repeated `anchor_ids` count, leaves `required_section_presence` unclear on YAML collections versus prose headings, and leaves `cost_usd` unclear on how to combine retrying calls. `plan_tool/prompts/roadmap-constraints.md` supplies `anchor_ids`, while `plan_tool/roadmap.py:_run_stage`, `plan_tool/shell:claude_invoke_outcome`, and `plan_tool/run_log:ClaudeCallEnd` can record several backend costs for one selected stage; step 2, Testing, and the `compare` acceptance criterion therefore permit different values from the same stored evidence.\n- MEDIUM `[noise-floor-stop-condition]` [confidence: limited]: The `Metrics may be dominated by noise rather than signal` risk says to stop and file a smaller claim, but step 5 (`Add plan-tool quality-bench floor`), Testing, and the `floor` acceptance criterion only persist floor values. They do not name the review owner, the evidence that triggers the stop decision, or where that finding is filed, so the command can meet every criterion while the stated mitigation never happens.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force archives its prior generation before replacement)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-843025cf",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture\u2019s `Registry v1` ordering rule and `Each corpus item` paragraph, step 1 (`Parse and version the self-con",
+      "body": "The Architecture\u2019s `Registry v1` ordering rule and `Each corpus item` paragraph, step 1 (`Parse and version the self-contained quality-bench corpus format`), step 3 (`Build the corpus replay engine and label-keyed artifact/run-log store`), Testing, and the `run` acceptance criterion use a manifest item id as an ordering and storage key but never require it to be unique. Duplicate ids can collide in stored evidence and make the corpus vector order unreliable.",
+      "suggested_action": "make manifest item id a unique v1 corpus key, reject duplicates before replay, and use that key consistently for ordering and stored evidence",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "corpus-item-identity",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-de0bba22",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Registry v1 promises a fixed encoded value for every metric, but the Architecture table leaves `domain_reference_counts`",
+      "body": "Registry v1 promises a fixed encoded value for every metric, but the Architecture table leaves `domain_reference_counts` unclear on which `02-constraints.md` references count and whether repeated `anchor_ids` count, leaves `required_section_presence` unclear on YAML collections versus prose headings, and leaves `cost_usd` unclear on how to combine retrying calls. `plan_tool/prompts/roadmap-constraints.md` supplies `anchor_ids`, while `plan_tool/roadmap.py:_run_stage`, `plan_tool/shell:claude_invoke_outcome`, and `plan_tool/run_log:ClaudeCallEnd` can record several backend costs for one selected stage; step 2, Testing, and the `compare` acceptance criterion therefore permit different values from the same stored evidence.",
+      "suggested_action": "define one exact stored-bytes-to-value rule, including retry aggregation and missing-data treatment, for every registry-v1 metric and use it for the registry, floors, comparisons, and fixtures",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "registry-v1-value-contract",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-12345d23",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `Metrics may be dominated by noise rather than signal` risk says to stop and file a smaller claim, but step 5 (`Add ",
+      "body": "The `Metrics may be dominated by noise rather than signal` risk says to stop and file a smaller claim, but step 5 (`Add plan-tool quality-bench floor`), Testing, and the `floor` acceptance criterion only persist floor values. They do not name the review owner, the evidence that triggers the stop decision, or where that finding is filed, so the command can meet every criterion while the stated mitigation never happens.",
+      "suggested_action": "add a post-floor, non-gating review criterion that names the evidence to inspect, the decision owner, and the report location for this risk outcome",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "noise-floor-stop-condition",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "4e9bc89382024519908898e6b6796ac4d495f1ded5941656f193794ff98b674b",
+      "detail_bundle_digest": "caf2ef1b4b27f7676801454b07c5b927b37e07b4416ad2cd38c7a605c49f7127",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "5fa7acdfa1da7ed67a6a9d4d572c3c2303bc7878006de5005e782eee74b01ce5",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

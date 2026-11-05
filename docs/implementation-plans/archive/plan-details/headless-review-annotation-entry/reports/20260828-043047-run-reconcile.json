@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T04:30:47Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "b8d646e846e201ade943f3097e65242d18dd8c830b541611837370fdf380ee6a",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "76f1cd662a25ccb44fa8a114c221ad37300493ef372b33fe75b42024ceac7507",
+    "docs/cli/reconcile-plan.md": "d47fbfa54ffe45a951d72a908f77ef99e18b3048f9a4b0316344a8a0355b7ba4",
+    "plan_tool/cli/review_cmd.py": "fe0ec2acdd7bf039b7cb5aab1b9c5c0d6726253fe4e90bfa2f5e59f7160b66c6",
+    "plan_tool/review_walk.py": "c55864512d9515957583c440b608fe95a363a3cdd33c9d4811b779e7d69bff5c",
+    "tests/test_review.py": "12a73e4316005597f3bcac6508972921976f5cdb029c0ea12929433e084d4978",
+    "tests/test_review_walk.py": "5f0d3341d671d12375a64412159c357a5cce4eb3d959e16dd8d038eec23f389c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

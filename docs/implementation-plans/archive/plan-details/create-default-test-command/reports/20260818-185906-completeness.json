@@ -1,0 +1,78 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T18:59:06Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "aba1dfad8b6c60f5f9982b66dc89264500a71f2816c5ee90de0257ae0db38a3f",
+  "code_fingerprint": {
+    "BACKLOG.md": "8d07769552866afab47f41d71bb8663e8bd145988067738a60e8ce2fb2daad6a",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md": "fe1a586bd6e6c4444feca045ae4db2b066c5906177cb3102963dfb78dddc1917",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-qualify-one-uv-pytest-candidate.md": "84e67c1246ab2bfa9394a5ac4039692cd1963660f542d4ca1a45ca0e50b882a6",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md": "3eb2dddfba4665fc0a9bb0e7665a9e0ca2018fb3e419d171762f2330ffa5ab42",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md": "1522c29d5a73103847aa49c12a583c5e64d9c6aa98a28fddd8fdbd14e3df70e4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-18T18:59:06Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail create-default-test-command` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "aba1dfad8b6c60f5f9982b66dc89264500a71f2816c5ee90de0257ae0db38a3f",
+    "detail_bundle_digest": "c3fdb29d459a377f1ca64002c69927fe5621ada3fb44a1da1ac88a71b3e9e5d9",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-test-command-field-contract.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-qualify-one-uv-pytest-candidate.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-resolve-new-plan-test-command-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-publish-new-default-reconcile-backlog.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

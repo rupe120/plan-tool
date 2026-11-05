@@ -1,0 +1,162 @@
+{
+  "version": 4,
+  "plan_slug": "parser-h2-splitter-fence-awareness",
+  "plan_path": "docs/implementation-plans/2-parser-h2-splitter-fence-awareness.md",
+  "created_at": "2026-09-02T21:24:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "46a0651208285b801f1f9f03e3c41ca5aa5473cdaae2b354683ae19f9e80fb12",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "70cb33c1fe8c72d428dac6d4566cae28209a5f4857ac88a03882aab6e224c56a",
+    "ROADMAP_FORMAT.md": "3ee00713fab987a46cc53471ba9a719efe9576b6ba8f66cf5dc471b86a8f2b75",
+    "plan_tool/annotate_render.py": "257faab1cabfd90825a4a5fc6940cb017287db850498e3eed94466b1967d2cfb",
+    "plan_tool/cli/annotate_cmd.py": "e8252cfa52677b4783993e1c93b257870518313bc86764dacd8a14364f1e81dd",
+    "plan_tool/cli/app.py": "13ec6244eb4610ade2e29fe7770308e9047fd597b489ee06f1740e18fd17165a",
+    "plan_tool/cli/inspect.py": "e5e3d483c398ef20fca7987e12ef36e6e378a2f25c88a2eb104d37df8c92a227",
+    "plan_tool/cli/scope_review_cmd.py": "d3bc09bcf42c419d7e8931ed43a67d4e7eddc29a2634bab0b9c4dd73e28a1c7e",
+    "plan_tool/concept_sync.py": "d89f496d772d2bbe197a2108b42fd0a7b7e528c005953ebaa37b9fef9958028b",
+    "plan_tool/create.py": "df12da0ecff996811748d104054b79cec135eaab2be1ebd8a55c752e4f7134ce",
+    "plan_tool/detail.py": "5b4a6a5a96a355dda2dc06bbd861b17efa864ef395793beca1911ab1751cd456",
+    "plan_tool/grounding.py": "ab675fbc59fbbabe2612b17f55d7a783c62a8345f44a3c93c1f765a154c7f0d6",
+    "plan_tool/jira_handoff.py": "98b7da8da9e00a2cb3457eb15156b0f510b438add4b82ea6df5ff990d85992b6",
+    "plan_tool/launcher.py": "ae5fae42c073d409308ac7ac74d36f7a492b5c7a9a12a14ff8739683935e8f34",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/renderer.py": "0305b9390e84f50d52cfb539d22f3c3ee158087406250670afacd68da5338762",
+    "plan_tool/reprocess.py": "c4d2b15eaaac2c327ee23e6e0fe2feab3223b5a19b59251060da5ef2160abf57",
+    "plan_tool/review.py": "512b6e4b5c282f06c39fcb911a51e331c7822e0495130660d81b0870894df051",
+    "plan_tool/roadmap_gates.py": "133c22c1605d2559242049871e477cd50165a259b6eb2b5063d37b4d30488acd",
+    "plan_tool/scope_fence.py": "68319b2462342e2e80c4922f108d22e751478ed798862705238166fb46c3ff20",
+    "plan_tool/scope_out.py": "3ceeb971b571cd3703fc953dcbdc4f804f71f0caa55531d4d39a7691577ef047",
+    "tests/cli/test_annotate_cmd.py": "900f099900ef4c3f3e509905d8cb9e7a78bb427aa191ca7c906dc03f6ae53c8a",
+    "tests/cli/test_app.py": "ae00035a357fe8b18020ce8f2c651a82b4eb79de029bb4eb7a2f5c263ca4c754",
+    "tests/cli/test_inspect_cmds.py": "f62fc844fd71513d66132073c385c4453c3decc0834266bf174e8ae075f7c17f",
+    "tests/cli/test_scope_review_cmd.py": "10dae39f58b4dc21362d5818da03eb0eeb5d82fd1a4e08b4dd01caf7e841cf6f",
+    "tests/test_concept_sync.py": "798f6af53a040a082122dc6682bd7bed183d1265c7dc2ba60cda67f578884876",
+    "tests/test_create.py": "bcfc65b78d5a8501d7af397da938cc88a56edcb1cc158d7235d1566237ad067d",
+    "tests/test_detail.py": "27dc0b619b4cbe0ab717e462f991f0153a619f636689898cca6282fbc5016fd1",
+    "tests/test_grounding.py": "23d83c9de81c98ee740fdcfca4a73d54986c6b1f2e9156650839994d3af4658b",
+    "tests/test_jira_handoff.py": "6225c5aa6fea51a75e36054e1845516a24958dad1b66e2650ac515d0f0b33fa7",
+    "tests/test_launcher.py": "d970745ed5eb6d2195977292e36584d819409ee137b3a413a7a3c54943e62fb8",
+    "tests/test_parser.py": "ea24b2f9bcf3fbabc32aac0fc099688d4f0d28f1bd309602e64ca549dcccacb8",
+    "tests/test_renderer.py": "50fa492ec9a8cccd50dfaafceb85ead06bd0c1b460da97a9138bd5e721af977f",
+    "tests/test_reprocess.py": "e6dbafee11e5fdd34050c22f79597160bd65f527b1f2447390fdbed036de3d1a",
+    "tests/test_review.py": "47d0c26651a09a1456be8fd8fcff0d546940deaf992479973ede4fd2651e2a34",
+    "tests/test_roadmap_format.py": "ca2f9cf02a5c52bcc942365d8bb9090a1a7b004704f7debd726a14200016cd47",
+    "tests/test_roadmap_gates.py": "307863af7109f10b616dfb63c9b948ee8b612f284ccfc7b7442d78b0c1cc3699",
+    "tests/test_scope_fence.py": "a5a07c3d0589d74d0deed0fd48870b98b3e03b4f4d50a7e3b5e604f4bbd491e2",
+    "tests/test_scope_out.py": "8da060d9d28ff78265b5e76374e710f657ea1ebe01a193833fcdf3e2b56f97fe"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/01-opt-fence-safe-h2-parsing-detect.md": "c2f993e8aa6f02c1142cfeaa9782f9bb721282fd81caed1615566569eeae8feb",
+    "docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/02-use-fence-safe-h2-parsing-every-read.md": "6dd0aa6e9e8083a24852d69b4850ec6a4821a6dc07707e21ebaac0ea5e6fbb22",
+    "docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/03-reject-unmatched-opening-fence-before.md": "08177a1a323927780bcae1b91c1061fd7d4b8a989b15d04e2d135d5e9a72c4d2",
+    "docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/04-make-concept-sync-compare-replace-only.md": "94ca0244b7d076fea5b005895c3570f0d23a8bbfc6fc10eb2a1ad93ba43938fb",
+    "docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/05-close-parser-fence-bug-unmatched.md": "1acd459703ec6613c5f1cd5f08d47724c7d107ef857be9f980379f965a008a2a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Parser H2 Splitter Fence Awareness\n\n`parser-h2-splitter-fence-awareness` \u00b7 generated 2026-09-02T21:24:27Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `46a0651208285b801f1f9f03e3c41ca5aa5473cdaae2b354683ae19f9e80fb12`\n- **Detail bundle digest:** `1d4df7f84044bbef554b87e488623a3bf64018db9e384098470fddb8b7f8d3fd`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply parser-h2-splitter-fence-awareness   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk parser-h2-splitter-fence-awareness  # alternative interactive review/apply\n\n- HIGH `[unmatched-opening-write-fence]` [confidence: limited]: Step 3 and `## Architecture` omit `jira`, although `plan_tool.jira_handoff._plan_context_sections` feeds `render_handoff_body`, and `plan_tool.jira.render_jira_export` then publishes the paired story and developer-handoff artifacts through `plan_tool.cli.jira_cmd.cmd_jira`. An unmatched supported fence can still hide later real sections in a published handoff, despite the Architecture rule covering H2 readers that produce targets.\n  - Fix: Include Jira paired export in the unmatched-opening refusal boundary and verify it leaves both output targets unchanged.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-de4f5559]` [confidence: limited]: The plan's `## Acceptance criteria` names `ignore_fenced_code`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2625f1d7]` [confidence: limited]: The plan's `## Acceptance criteria` names `parser.py`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-974e8c44]` [confidence: limited]: The plan's `## Acceptance criteria` names `strip_fenced_code`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply parser-h2-splitter-fence-awareness` \u2014 apply the 1 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Parser H2 Splitter Fence Awareness\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `46a0651208285b801f1f9f03e3c41ca5aa5473cdaae2b354683ae19f9e80fb12`\n- **Detail bundle digest:** `1d4df7f84044bbef554b87e488623a3bf64018db9e384098470fddb8b7f8d3fd`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[unmatched-opening-write-fence]` [confidence: limited]: Step 3 and `## Architecture` omit `jira`, although `plan_tool.jira_handoff._plan_context_sections` feeds `render_handoff_body`, and `plan_tool.jira.render_jira_export` then publishes the paired story and developer-handoff artifacts through `plan_tool.cli.jira_cmd.cmd_jira`. An unmatched supported fence can still hide later real sections in a published handoff, despite the Architecture rule covering H2 readers that produce targets.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `ignore_fenced_code`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `parser.py`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `strip_fenced_code`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply parser-h2-splitter-fence-awareness` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a566d345",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 and `## Architecture` omit `jira`, although `plan_tool.jira_handoff._plan_context_sections` feeds `render_handoff",
+      "body": "Step 3 and `## Architecture` omit `jira`, although `plan_tool.jira_handoff._plan_context_sections` feeds `render_handoff_body`, and `plan_tool.jira.render_jira_export` then publishes the paired story and developer-handoff artifacts through `plan_tool.cli.jira_cmd.cmd_jira`. An unmatched supported fence can still hide later real sections in a published handoff, despite the Architecture rule covering H2 readers that produce targets.",
+      "suggested_action": "Include Jira paired export in the unmatched-opening refusal boundary and verify it leaves both output targets unchanged.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unmatched-opening-write-fence",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "46a0651208285b801f1f9f03e3c41ca5aa5473cdaae2b354683ae19f9e80fb12",
+      "detail_bundle_digest": "1d4df7f84044bbef554b87e488623a3bf64018db9e384098470fddb8b7f8d3fd",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/01-opt-fence-safe-h2-parsing-detect.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/02-use-fence-safe-h2-parsing-every-read.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/03-reject-unmatched-opening-fence-before.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/04-make-concept-sync-compare-replace-only.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/parser-h2-splitter-fence-awareness/05-close-parser-fence-bug-unmatched.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "218d335bad15ea20aa640e491b56b51a607f1d077f12df381506ef07aa73b993",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

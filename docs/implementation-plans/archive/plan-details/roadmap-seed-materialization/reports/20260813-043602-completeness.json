@@ -1,0 +1,217 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-materialization",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization.md",
+  "created_at": "2026-08-13T04:36:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "977fac39e7acc55721e7b13699e2e35583d6d7e297eba07cf0a2fa61ef767373",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "899df9b41c913450b7fa7c4f23b68236aade0e22a5f9b6565074e12d17e37174",
+    "CLAUDE.md": "ecbbd38f8c30f51e24b58c0426982d577a29e7e23cadfd70999b4f4f359a3e6d",
+    "DATA_CONTRACT.md": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+    "ROADMAP_FORMAT.md": "44ea729b381cb58c80cd5e2eb0466faefe4a67fdc866490d896d1ecbc9d7ebc9",
+    "TESTING.md": "d458676d9b84c8b7a6ab5d42f8aed8dd767c3ae6dfb9b7284c62e295745e1827",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "2513d73c683f37c9fa801c55c42c58ad7723604f50e01678e548509b0fd8c872",
+    "docs/ROADMAP_WALKTHROUGH.md": "5452be18e6d4b658b51d83c6f62727397ee4fbc469553dfd3f6c202e5091878c",
+    "plan_tool/cli/roadmap_cmd.py": "fbd467295201da2d95a2a9d57007fb7b686633e94462aa222b4f1f2f4aea1137",
+    "plan_tool/prompts/roadmap-plans.md": "55a1ea44c40475af4f769d6a32fc107a378c3b6461d2cd68fa91cf14acc5d2e4",
+    "plan_tool/prompts/roadmap-refresh-seeds.md": "d7244c661d2d84cfd7400d5bc14f1d5782b8749c18305c1fa17a648f650bc320",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap.py": "4f1b944c0326b3c008dc11dfcc134c67222f8a891132435b84c04e4867e9b750",
+    "plan_tool/roadmap_artifacts.py": "84100525e837dbea2ae3d0a7455b4c8254c0088ded194a2e354f41c550106c15",
+    "plan_tool/roadmap_gates.py": "17b9e7009fbd9f5ae1fa69bd633f5611dc2018e4d763a582ccfc6559e54f8dc6",
+    "plan_tool/roadmap_seed_state.py": "95194405cb4f9036e2c60debb842dc8048a8e670230bd9e39530f717cf995208",
+    "plan_tool/roadmap_view.py": "fe68ab5bda63cfd2ab1326f38515e01b673c493068efd13ca1e558ae8883616e",
+    "tests/cli/test_roadmap_cmd.py": "157ddbe3eef8ac5071f7fbe5eda4372405b3cf841a585957734dbe318bcc52b9",
+    "tests/test_roadmap.py": "6fbdfe45a7c5cc68e18edbbb2a646b99d9ba3ee84031548bcba77997ffe3dced",
+    "tests/test_roadmap_artifacts.py": "0c19385ffd5b0ab3bc71cdd195f15c1b6b090e096e2d42754a44a620945f7eee",
+    "tests/test_roadmap_format.py": "2d6b096ff60f964bc882b75f3c8bc745df4c4beeb7b5b1c21f591d8dd30b35bf",
+    "tests/test_roadmap_gates.py": "35d510fa8b4c8a6dcba100e2a00fe7a301e7af17f29b77c7bbc8aaed693395b2",
+    "tests/test_roadmap_seed_state.py": "30f393bb4b36108d9506b860481b5a5911161bcaba5b3a7391dab5da9268c2bf",
+    "tests/test_roadmap_view.py": "b5b0f4b925175c4adac78a72b85c5b329bf9829c366a9f173e6dbd57eced48cc"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md": "f70a0a38d4714291515a5b85ff46699386044f4a7f0dd74b909d5c6c48a77547",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/02-call-that-generates-validates-one-plan.md": "ce60f2028f159de5bfb41802c11a4da154d24768f375c607701239fb47784cff",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md": "36eb9fef20553bc96440d467269bbe5c567583fe8fe9a96630188663eda16e4a",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/04-make-explicit-seed-refresh-generate.md": "8ce6e4e82a12ae96098f0d0b7d0d91036993a25efa5caa33b6b0a9f94db0530e",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/05-cli-flag-materialize-recoverable-draft.md": "2f0c34e9ac30f4e9acbdd46832cd84884068191b5e32f55d96c042764607a6dc",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/06-make-seed-promotion-refuse-missing.md": "b876d94ebe2bb35ed3c2bd34bffba4751a42a7a6a7dd36aef8ad504075b35df4",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/07-route-roadmap-view-seed-summary-through.md": "cd2e3c5bd277ae908820105379d54d6448d5d6117749afecf7e784c940f9134f",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/08-show-missing-stale-malformed-path.md": "502e344e4e91b58918c273d1245999cc071b9361348182999413a5b5ad0fd695",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/09-stop-stage-generating-any-seed-body.md": "ecf7e55aefd78cb5a62abc3fceb9b87318634f453e0baffc410ac36cf5985d55",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/10-cli-action-accept-hand-edited-draft.md": "8c1faa0a663acd47e8b1019e6c0130c7720c03e69295cc4165a6f99288edd630",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/11-update-roadmap-docs-per-seed-draft.md": "b036630a62816be22de58f2d3779659229c3e18126e065a802ee279f176a376a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Materialization\n\n`roadmap-seed-materialization` \u00b7 generated 2026-08-13T04:36:02Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- HIGH `[roadmap-format-doc-sweep]`: The rename and gate removal this plan makes are swept into `prompts/roadmap-plans.md` (step 1), `DATA_CONTRACT.md` and `cli/roadmap_cmd.py` (step 9), and `docs/ROADMAP_WALKTHROUGH.md` / `docs/ROADMAP_DEMO_ORCHESTRATION.md` (step 11), but not into `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, or `CAPABILITIES.md` \u2014 the three docs that state the contract this plan is changing. `ROADMAP_FORMAT.md` still says the default draft directory is `<plans_dir>/roadmaps/<slug>/seeds/`, that `draft_seed_path` \"must begin with `seeds/`\" (its worked examples show `draft_seed_path: seeds/checkout-core.md`), and its gate table still lists `check_draft_seed_bundle_alignment` checked against `draft_seed_bundle` with violations `missing-draft-seed-bundle-entry`/`dangling-draft-seed-bundle-entry` \u2014 precisely the bundle-dependent rule step 9 removes from `PLANS_GATES`. `docs/ARCHITECTURE.md`'s Roadmap paragraph still says \"Five modules\" (step 3 adds a sixth, leaf-level module) and \"Default completion prints runnable `create --from-existing` lines against draft paths\" (step 9 makes that conditional on step 3 classifying the draft `current`). `CAPABILITIES.md`'s `architecture-roadmap` entry repeats the same two stale claims.\n  - Fix: extend step 9's doc edits (it already touches `ROADMAP_FORMAT.md`'s gate table via step 3, and already updates `DATA_CONTRACT.md`/`roadmap-plans.md`/`roadmap_cmd.py` for this same rename) to also update `ROADMAP_FORMAT.md`'s default-location prose, its `draft_seed_path` prefix rule, and its worked examples, and widen step 11's doc sweep to also cover `docs/ARCHITECTURE.md`'s Roadmap paragraph and `CAPABILITIES.md`'s `architecture-roadmap` entry.\n- HIGH `[apply-refusal-reason-reporting]`: `roadmap --apply`'s refusal path only carries two refusal reasons today \u2014 `RoadmapApplyResult.missing_drafts` and `.unparseable_drafts`, printed by `cli/roadmap_cmd.py`'s `_render_apply_result` as \"missing draft source\" / \"draft provenance not parseable\" lines. Step 6 makes `_apply_roadmap_seeds` refuse on any of the six non-`current` classifications (missing, stale, malformed, path-escaping, duplicate, digest-mismatched), but its intent text and `files:` list (`plan_tool/roadmap.py`, `tests/test_roadmap.py`) never say how the other four reasons \u2014 `stale`, `path-escaping`, `duplicate`, `digest-mismatched` \u2014 reach the operator: today's renderer would print only \"refusing seed promotion \u2014 nothing was copied\" with no reason line for those. The same two fields feed `RoadmapSeedApplyResult`'s `missing_draft_count`/`unparseable_draft_count` telemetry (documented in `DATA_CONTRACT.md`), so those four states would also go uncounted there; neither `plan_tool/run_log.py` nor `DATA_CONTRACT.md` is in step 6's `files:` list. This is also an internal inconsistency with step 5, whose own acceptance criterion commits `--materialize` to \"refuses naming that actual classification\" for the same step-3 classification \u2014 step 6 makes no equivalent commitment for `--apply`.\n  - Fix: extend step 6 to decide how `RoadmapApplyResult` and `_render_apply_result` name each refused draft's actual classification for all six non-`current` states (mirroring step 5's classification-naming commitment), and extend the same decision to `RoadmapSeedApplyResult`'s telemetry fields and their `DATA_CONTRACT.md` documentation, adding `plan_tool/run_log.py` and `DATA_CONTRACT.md` to step 6's `files:` list\n- MEDIUM `[per-plan-call-volume]`: The Risks section names only the digest/content-identity data-loss risk (owned by step 3) and says nothing about backend-call volume. Moving seed generation from stage 4's single batched call to step 2's per-plan primitive means a full `--refresh-seeds` or `--materialize` run on an N-plan roadmap now issues N backend calls instead of one \u2014 confirmed by the plan's own Overview, which says each independent call runs \"against its plan row, upstream roadmap context, and the current repository,\" and by `plan_tool/prompts/roadmap-refresh-seeds.md`, whose current template already embeds the full `01-domain.md`/`02-constraints.md`/`03-components.md` text inline for one combined call. Under step 4 and step 5 that same upstream text gets resent N times instead of once for the common refresh-all/materialize-all case.\n  - Fix: add a Risks entry naming this backend-call and token-cost tradeoff for per-plan materialization, and say whether it's accepted as the cost of resumability or bounded some other way.\n- MEDIUM `[orphan-seed-scan-legacy-prefix]`: Step 8 (\"Show missing, stale, malformed, path-escaping, duplicate, and digest-mismatched seed states in roadmap views\") and its matching acceptance criterion (\"Views report a sidecar entry or `plan-seed-drafts/` file matching no current plan row, without deleting it\") both scope the new directory-file orphan scan to `plan-seed-drafts/` by name. But Architecture states a pre-existing roadmap's `seeds/`-prefixed drafts keep resolving and classifying forever \u2014 \"both prefixes remain, and always will remain, structurally valid\" \u2014 so every roadmap that predates this plan stays on `seeds/` permanently. A stray file with no sidecar entry left behind in a legacy `seeds/` directory (e.g. by a roadmap rewrite that dropped a plan) would never be caught by a scan that only walks `plan-seed-drafts/`, even though every other per-prefix rule in this plan (step 1's widened path validator, step 3's classification order) explicitly names both prefixes. The sidecar-entry half of the check is prefix-agnostic (it reads `draft_seed_path` strings, not a directory listing), but the filesystem-scan half is not.\n  - Fix: state whether step 8's directory-file orphan scan also walks a roadmap's legacy `seeds/` directory when one exists, and update the acceptance criterion wording to say so explicitly, matching the both-prefix language used everywhere else in this plan.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d49498d5]`: The plan's `## Acceptance criteria` names `plan-seeds/<id>.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]`: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6317d754]`: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step7-granularity-merge-638f09a3]`: Steps 7 and 8 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap_view.py', 'tests/test_roadmap_view.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-materialization` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Materialization\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 11 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[roadmap-format-doc-sweep]`: The rename and gate removal this plan makes are swept into `prompts/roadmap-plans.md` (step 1), `DATA_CONTRACT.md` and `cli/roadmap_cmd.py` (step 9), and `docs/ROADMAP_WALKTHROUGH.md` / `docs/ROADMAP_DEMO_ORCHESTRATION.md` (step 11), but not into `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, or `CAPABILITIES.md` \u2014 the three docs that state the contract this plan is changing. `ROADMAP_FORMAT.md` still says the default draft directory is `<plans_dir>/roadmaps/<slug>/seeds/`, that `draft_seed_path` \"must begin with `seeds/`\" (its worked examples show `draft_seed_path: seeds/checkout-core.md`), and its gate table still lists `check_draft_seed_bundle_alignment` checked against `draft_seed_bundle` with violations `missing-draft-seed-bundle-entry`/`dangling-draft-seed-bundle-entry` \u2014 precisely the bundle-dependent rule step 9 removes from `PLANS_GATES`. `docs/ARCHITECTURE.md`'s Roadmap paragraph still says \"Five modules\" (step 3 adds a sixth, leaf-level module) and \"Default completion prints runnable `create --from-existing` lines against draft paths\" (step 9 makes that conditional on step 3 classifying the draft `current`). `CAPABILITIES.md`'s `architecture-roadmap` entry repeats the same two stale claims.\n- HIGH `[apply-refusal-reason-reporting]`: `roadmap --apply`'s refusal path only carries two refusal reasons today \u2014 `RoadmapApplyResult.missing_drafts` and `.unparseable_drafts`, printed by `cli/roadmap_cmd.py`'s `_render_apply_result` as \"missing draft source\" / \"draft provenance not parseable\" lines. Step 6 makes `_apply_roadmap_seeds` refuse on any of the six non-`current` classifications (missing, stale, malformed, path-escaping, duplicate, digest-mismatched), but its intent text and `files:` list (`plan_tool/roadmap.py`, `tests/test_roadmap.py`) never say how the other four reasons \u2014 `stale`, `path-escaping`, `duplicate`, `digest-mismatched` \u2014 reach the operator: today's renderer would print only \"refusing seed promotion \u2014 nothing was copied\" with no reason line for those. The same two fields feed `RoadmapSeedApplyResult`'s `missing_draft_count`/`unparseable_draft_count` telemetry (documented in `DATA_CONTRACT.md`), so those four states would also go uncounted there; neither `plan_tool/run_log.py` nor `DATA_CONTRACT.md` is in step 6's `files:` list. This is also an internal inconsistency with step 5, whose own acceptance criterion commits `--materialize` to \"refuses naming that actual classification\" for the same step-3 classification \u2014 step 6 makes no equivalent commitment for `--apply`.\n- MEDIUM `[per-plan-call-volume]`: The Risks section names only the digest/content-identity data-loss risk (owned by step 3) and says nothing about backend-call volume. Moving seed generation from stage 4's single batched call to step 2's per-plan primitive means a full `--refresh-seeds` or `--materialize` run on an N-plan roadmap now issues N backend calls instead of one \u2014 confirmed by the plan's own Overview, which says each independent call runs \"against its plan row, upstream roadmap context, and the current repository,\" and by `plan_tool/prompts/roadmap-refresh-seeds.md`, whose current template already embeds the full `01-domain.md`/`02-constraints.md`/`03-components.md` text inline for one combined call. Under step 4 and step 5 that same upstream text gets resent N times instead of once for the common refresh-all/materialize-all case.\n- MEDIUM `[orphan-seed-scan-legacy-prefix]`: Step 8 (\"Show missing, stale, malformed, path-escaping, duplicate, and digest-mismatched seed states in roadmap views\") and its matching acceptance criterion (\"Views report a sidecar entry or `plan-seed-drafts/` file matching no current plan row, without deleting it\") both scope the new directory-file orphan scan to `plan-seed-drafts/` by name. But Architecture states a pre-existing roadmap's `seeds/`-prefixed drafts keep resolving and classifying forever \u2014 \"both prefixes remain, and always will remain, structurally valid\" \u2014 so every roadmap that predates this plan stays on `seeds/` permanently. A stray file with no sidecar entry left behind in a legacy `seeds/` directory (e.g. by a roadmap rewrite that dropped a plan) would never be caught by a scan that only walks `plan-seed-drafts/`, even though every other per-prefix rule in this plan (step 1's widened path validator, step 3's classification order) explicitly names both prefixes. The sidecar-entry half of the check is prefix-agnostic (it reads `draft_seed_path` strings, not a directory listing), but the filesystem-scan half is not.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `plan-seeds/<id>.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 7 and 8 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap_view.py', 'tests/test_roadmap_view.py']).\n\n### Suggested next steps\n\n- Detail-level and conceptual-completeness findings are informational in this bare-plan audit \u2014 apply is withheld until a detail bundle exists.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-c2809bf8",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The rename and gate removal this plan makes are swept into `prompts/roadmap-plans.md` (step 1), `DATA_CONTRACT.md` and `",
+      "body": "The rename and gate removal this plan makes are swept into `prompts/roadmap-plans.md` (step 1), `DATA_CONTRACT.md` and `cli/roadmap_cmd.py` (step 9), and `docs/ROADMAP_WALKTHROUGH.md` / `docs/ROADMAP_DEMO_ORCHESTRATION.md` (step 11), but not into `ROADMAP_FORMAT.md`, `docs/ARCHITECTURE.md`, or `CAPABILITIES.md` \u2014 the three docs that state the contract this plan is changing. `ROADMAP_FORMAT.md` still says the default draft directory is `<plans_dir>/roadmaps/<slug>/seeds/`, that `draft_seed_path` \"must begin with `seeds/`\" (its worked examples show `draft_seed_path: seeds/checkout-core.md`), and its gate table still lists `check_draft_seed_bundle_alignment` checked against `draft_seed_bundle` with violations `missing-draft-seed-bundle-entry`/`dangling-draft-seed-bundle-entry` \u2014 precisely the bundle-dependent rule step 9 removes from `PLANS_GATES`. `docs/ARCHITECTURE.md`'s Roadmap paragraph still says \"Five modules\" (step 3 adds a sixth, leaf-level module) and \"Default completion prints runnable `create --from-existing` lines against draft paths\" (step 9 makes that conditional on step 3 classifying the draft `current`). `CAPABILITIES.md`'s `architecture-roadmap` entry repeats the same two stale claims.",
+      "suggested_action": "extend step 9's doc edits (it already touches `ROADMAP_FORMAT.md`'s gate table via step 3, and already updates `DATA_CONTRACT.md`/`roadmap-plans.md`/`roadmap_cmd.py` for this same rename) to also update `ROADMAP_FORMAT.md`'s default-location prose, its `draft_seed_path` prefix rule, and its worked examples, and widen step 11's doc sweep to also cover `docs/ARCHITECTURE.md`'s Roadmap paragraph and `CAPABILITIES.md`'s `architecture-roadmap` entry.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-format-doc-sweep",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-d7e27b43",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`roadmap --apply`'s refusal path only carries two refusal reasons today \u2014 `RoadmapApplyResult.missing_drafts` and `.unpa",
+      "body": "`roadmap --apply`'s refusal path only carries two refusal reasons today \u2014 `RoadmapApplyResult.missing_drafts` and `.unparseable_drafts`, printed by `cli/roadmap_cmd.py`'s `_render_apply_result` as \"missing draft source\" / \"draft provenance not parseable\" lines. Step 6 makes `_apply_roadmap_seeds` refuse on any of the six non-`current` classifications (missing, stale, malformed, path-escaping, duplicate, digest-mismatched), but its intent text and `files:` list (`plan_tool/roadmap.py`, `tests/test_roadmap.py`) never say how the other four reasons \u2014 `stale`, `path-escaping`, `duplicate`, `digest-mismatched` \u2014 reach the operator: today's renderer would print only \"refusing seed promotion \u2014 nothing was copied\" with no reason line for those. The same two fields feed `RoadmapSeedApplyResult`'s `missing_draft_count`/`unparseable_draft_count` telemetry (documented in `DATA_CONTRACT.md`), so those four states would also go uncounted there; neither `plan_tool/run_log.py` nor `DATA_CONTRACT.md` is in step 6's `files:` list. This is also an internal inconsistency with step 5, whose own acceptance criterion commits `--materialize` to \"refuses naming that actual classification\" for the same step-3 classification \u2014 step 6 makes no equivalent commitment for `--apply`.",
+      "suggested_action": "extend step 6 to decide how `RoadmapApplyResult` and `_render_apply_result` name each refused draft's actual classification for all six non-`current` states (mirroring step 5's classification-naming commitment), and extend the same decision to `RoadmapSeedApplyResult`'s telemetry fields and their `DATA_CONTRACT.md` documentation, adding `plan_tool/run_log.py` and `DATA_CONTRACT.md` to step 6's `files:` list",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "apply-refusal-reason-reporting",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-299f0ab0",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section names only the digest/content-identity data-loss risk (owned by step 3) and says nothing about backend",
+      "body": "The Risks section names only the digest/content-identity data-loss risk (owned by step 3) and says nothing about backend-call volume. Moving seed generation from stage 4's single batched call to step 2's per-plan primitive means a full `--refresh-seeds` or `--materialize` run on an N-plan roadmap now issues N backend calls instead of one \u2014 confirmed by the plan's own Overview, which says each independent call runs \"against its plan row, upstream roadmap context, and the current repository,\" and by `plan_tool/prompts/roadmap-refresh-seeds.md`, whose current template already embeds the full `01-domain.md`/`02-constraints.md`/`03-components.md` text inline for one combined call. Under step 4 and step 5 that same upstream text gets resent N times instead of once for the common refresh-all/materialize-all case.",
+      "suggested_action": "add a Risks entry naming this backend-call and token-cost tradeoff for per-plan materialization, and say whether it's accepted as the cost of resumability or bounded some other way.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "per-plan-call-volume",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-3b203130",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 8 (\"Show missing, stale, malformed, path-escaping, duplicate, and digest-mismatched seed states in roadmap views\") ",
+      "body": "Step 8 (\"Show missing, stale, malformed, path-escaping, duplicate, and digest-mismatched seed states in roadmap views\") and its matching acceptance criterion (\"Views report a sidecar entry or `plan-seed-drafts/` file matching no current plan row, without deleting it\") both scope the new directory-file orphan scan to `plan-seed-drafts/` by name. But Architecture states a pre-existing roadmap's `seeds/`-prefixed drafts keep resolving and classifying forever \u2014 \"both prefixes remain, and always will remain, structurally valid\" \u2014 so every roadmap that predates this plan stays on `seeds/` permanently. A stray file with no sidecar entry left behind in a legacy `seeds/` directory (e.g. by a roadmap rewrite that dropped a plan) would never be caught by a scan that only walks `plan-seed-drafts/`, even though every other per-prefix rule in this plan (step 1's widened path validator, step 3's classification order) explicitly names both prefixes. The sidecar-entry half of the check is prefix-agnostic (it reads `draft_seed_path` strings, not a directory listing), but the filesystem-scan half is not.",
+      "suggested_action": "state whether step 8's directory-file orphan scan also walks a roadmap's legacy `seeds/` directory when one exists, and update the acceptance criterion wording to say so explicitly, matching the both-prefix language used everywhere else in this plan.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "orphan-seed-scan-legacy-prefix",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "977fac39e7acc55721e7b13699e2e35583d6d7e297eba07cf0a2fa61ef767373",
+    "detail_bundle_digest": "42618aa84c3d1a8f4ef8f5f4f1692ada463093066d19907bb53ef5e614050cb8",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/02-call-that-generates-validates-one-plan.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/04-make-explicit-seed-refresh-generate.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/05-cli-flag-materialize-recoverable-draft.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/06-make-seed-promotion-refuse-missing.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/07-route-roadmap-view-seed-summary-through.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/08-show-missing-stale-malformed-path.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 9,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/09-stop-stage-generating-any-seed-body.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 10,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/10-cli-action-accept-hand-edited-draft.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 11,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/11-update-roadmap-docs-per-seed-draft.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

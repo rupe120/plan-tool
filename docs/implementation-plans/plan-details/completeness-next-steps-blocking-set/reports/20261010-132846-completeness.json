@@ -1,0 +1,155 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T13:28:46Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8cdda29c9c09ce2d76812d51b18d7de3a0ffcdc3a6056bbc62beed02c6408e0b",
+  "code_fingerprint": {
+    "BACKLOG.md": "4095a24da1efa313ce8270ffdba03a09f2085bf81126009dcae67f25885467a2",
+    "docs/how-to/pipeline/audit.md": "21012dde3125aec12dc575501533c9540d50cb68939d957314ea15f288d889e5",
+    "plan_tool/cli/authoring.py": "945eb4cd8377cfb0eeea343ab1699a0ea66dd2e24cd3c7990fd2211d81b59347",
+    "plan_tool/cli/completeness_cmd.py": "d3da4d5b5025da4010bd29e88ce0602670676f82c5e66048072033bc6c76dc00",
+    "plan_tool/cli/completeness_phases.py": "e6d616e9b5a6d442c35066fafe33285e90eede030dd8f9660e0e9463ff1baed6",
+    "plan_tool/completeness_report.py": "35e48c256fe0b2277a3d2743119b614e470d1393d449727022d6818cc6684e2a",
+    "tests/cli/test_completeness_cmd.py": "6a55ac4d4dcf3d65f6416be80a51fdf9109cfb8ed6abe9bf9713dacbe5e465eb",
+    "tests/test_completeness_report.py": "8321f9064241f3fdeada202a12c4d061dea577ba5a1b019e18f17ae697c8d211"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-pass-audit-blocking-verdict-saved.md": "1f9054187613acedb5c7675992a804ac41dcfd46d76f659533627524ef477bc5",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-hand-outcome-conceptual-bar-blocking.md": "438078c4835178d165da9e1c947f366f55dfb2d8d1aafdecbe49d658b68d7950",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md": "e01395a95eb6c22e49e97bca6bc02df11e2f4b645a117ea76ff8ded7aa3e10f3",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md": "48160a8a1a7aa03222d22cdd4adf7830cdc11836f87d4263e492e3a9c502b629",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md": "5995e7de05f1bc96e1e70e9221f1b5554ed463b5d51965b461147bfb7e45c4a4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Steps Blocking Set\n\n`completeness-next-steps-blocking-set` \u00b7 generated 2026-10-10T13:28:46Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk completeness-next-steps-blocking-set  # optional interactive review of the saved findings\n\n- HIGH `[blocking-set-includes-deterministic]` [confidence: limited]: The plan claims one set that already contains blocking deterministic findings, but `compute_conceptual_bar_blocking_ids` / `outcome.conceptual_bar_blocking_ids` covers only conceptual findings. Affects Architecture (\"One blocking set, computed once\"), Overview, the seed scope bullet, step 1, step 2 and step 4's \"deterministic\" finding kind. Verified at HEAD: `compute_conceptual_bar_blocking_ids` in `plan_tool/cli/completeness_phases.py` filters `rec.source in CONCEPTUAL_SOURCES` (`plan-correctness`, `plan-completeness`). The deterministic arms (`path_style_hint`, `dep_issues`, `body_issues`, missing detail files, `detail_body_issues`, `lessons_issues`, data-contract, self-consistency and purity-coverage recs) are folded in only inside `_completeness_has_blocking_findings` in `plan_tool/cli/completeness_cmd.py`. Handing readers `conceptual_bar_blocking_ids` alone leaves a missing-`intent:` plan with an empty set, so readers print \"no gaps remain\" and offer the stage transition. That is the original symptom, in the lane the plan says it covers. Passing the finalize bool instead gives readers no ids to name. The \"no second predicate\" fence is not at risk, because the existing gate is already the one verdict.\n  - Fix: State that the verdict readers receive is the finalize gate's own result: the deterministic arms plus the conceptual ids, with the gate's bool and its ids passed together. Reword Overview, Architecture, step 1 and step 2 to match, and make the deterministic rows in step 4's table exercise the real gate output.\n- MEDIUM `[absent-verdict-clean-report]` [confidence: limited]: The \"absent\" state offers only a fresh re-audit \"in every reader and parent\", so a reused saved report or `list --status` row for a cleanly converged plan never offers the next stage. The Outcome's \"an advisory gap \u2026 holds back no stage\" and the audit how-to's next-stage guidance do not cover it. Architecture says only that \"Incomplete and absent behave alike\". The plan does not say whether a clean persisted report keeps its transition, nor does it choose between that and a deliberate loss. Two implementers could ship opposite behavior for `list --status`.\n  - Fix: State explicitly, in step 2's caller list and the acceptance criteria, what an absent verdict yields for a reused saved report and for `list --status`, and give the reason for that choice (for example, the report persists no verdict, so no transition is claimed).\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[loop-stop-banner-scope]` [confidence: limited]: The seed's Out of scope says the `open_findings=` banner is only relabeled to say it counts deterministic findings. The plan body's Out of scope says the banner is \"left untouched\". The plan body wins on conflict, but the Overview's \"every message that tells the operator \u2026 whether to move on\" is not bounded by that exclusion. Step 2 should name the banner as a deliberately excluded non-reader, so an auditor does not re-raise it as a fifth reader.\n  - Fix: Add the banner to step 2's caller list as \"deliberately not a reader\", with the reason that it reports the loop-stop count and is not a next-step message.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1eb03b12]` [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-steps-blocking-set` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Steps Blocking Set\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[blocking-set-includes-deterministic]` [confidence: limited]: The plan claims one set that already contains blocking deterministic findings, but `compute_conceptual_bar_blocking_ids` / `outcome.conceptual_bar_blocking_ids` covers only conceptual findings. Affects Architecture (\"One blocking set, computed once\"), Overview, the seed scope bullet, step 1, step 2 and step 4's \"deterministic\" finding kind. Verified at HEAD: `compute_conceptual_bar_blocking_ids` in `plan_tool/cli/completeness_phases.py` filters `rec.source in CONCEPTUAL_SOURCES` (`plan-correctness`, `plan-completeness`). The deterministic arms (`path_style_hint`, `dep_issues`, `body_issues`, missing detail files, `detail_body_issues`, `lessons_issues`, data-contract, self-consistency and purity-coverage recs) are folded in only inside `_completeness_has_blocking_findings` in `plan_tool/cli/completeness_cmd.py`. Handing readers `conceptual_bar_blocking_ids` alone leaves a missing-`intent:` plan with an empty set, so readers print \"no gaps remain\" and offer the stage transition. That is the original symptom, in the lane the plan says it covers. Passing the finalize bool instead gives readers no ids to name. The \"no second predicate\" fence is not at risk, because the existing gate is already the one verdict.\n- MEDIUM `[absent-verdict-clean-report]` [confidence: limited]: The \"absent\" state offers only a fresh re-audit \"in every reader and parent\", so a reused saved report or `list --status` row for a cleanly converged plan never offers the next stage. The Outcome's \"an advisory gap \u2026 holds back no stage\" and the audit how-to's next-stage guidance do not cover it. Architecture says only that \"Incomplete and absent behave alike\". The plan does not say whether a clean persisted report keeps its transition, nor does it choose between that and a deliberate loss. Two implementers could ship opposite behavior for `list --status`.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[loop-stop-banner-scope]` [confidence: limited]: The seed's Out of scope says the `open_findings=` banner is only relabeled to say it counts deterministic findings. The plan body's Out of scope says the banner is \"left untouched\". The plan body wins on conflict, but the Overview's \"every message that tells the operator \u2026 whether to move on\" is not bounded by that exclusion. Step 2 should name the banner as a deliberately excluded non-reader, so an auditor does not re-raise it as a fifth reader.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f628e8a9",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The plan claims one set that already contains blocking deterministic findings, but `compute_conceptual_bar_blocking_ids`",
+      "body": "The plan claims one set that already contains blocking deterministic findings, but `compute_conceptual_bar_blocking_ids` / `outcome.conceptual_bar_blocking_ids` covers only conceptual findings. Affects Architecture (\"One blocking set, computed once\"), Overview, the seed scope bullet, step 1, step 2 and step 4's \"deterministic\" finding kind. Verified at HEAD: `compute_conceptual_bar_blocking_ids` in `plan_tool/cli/completeness_phases.py` filters `rec.source in CONCEPTUAL_SOURCES` (`plan-correctness`, `plan-completeness`). The deterministic arms (`path_style_hint`, `dep_issues`, `body_issues`, missing detail files, `detail_body_issues`, `lessons_issues`, data-contract, self-consistency and purity-coverage recs) are folded in only inside `_completeness_has_blocking_findings` in `plan_tool/cli/completeness_cmd.py`. Handing readers `conceptual_bar_blocking_ids` alone leaves a missing-`intent:` plan with an empty set, so readers print \"no gaps remain\" and offer the stage transition. That is the original symptom, in the lane the plan says it covers. Passing the finalize bool instead gives readers no ids to name. The \"no second predicate\" fence is not at risk, because the existing gate is already the one verdict.",
+      "suggested_action": "State that the verdict readers receive is the finalize gate's own result: the deterministic arms plus the conceptual ids, with the gate's bool and its ids passed together. Reword Overview, Architecture, step 1 and step 2 to match, and make the deterministic rows in step 4's table exercise the real gate output.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "blocking-set-includes-deterministic",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-02b146ce",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The \"absent\" state offers only a fresh re-audit \"in every reader and parent\", so a reused saved report or `list --status",
+      "body": "The \"absent\" state offers only a fresh re-audit \"in every reader and parent\", so a reused saved report or `list --status` row for a cleanly converged plan never offers the next stage. The Outcome's \"an advisory gap \u2026 holds back no stage\" and the audit how-to's next-stage guidance do not cover it. Architecture says only that \"Incomplete and absent behave alike\". The plan does not say whether a clean persisted report keeps its transition, nor does it choose between that and a deliberate loss. Two implementers could ship opposite behavior for `list --status`.",
+      "suggested_action": "State explicitly, in step 2's caller list and the acceptance criteria, what an absent verdict yields for a reused saved report and for `list --status`, and give the reason for that choice (for example, the report persists no verdict, so no transition is claimed).",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "absent-verdict-clean-report",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-3900ac04",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The seed's Out of scope says the `open_findings=` banner is only relabeled to say it counts deterministic findings. The ",
+      "body": "The seed's Out of scope says the `open_findings=` banner is only relabeled to say it counts deterministic findings. The plan body's Out of scope says the banner is \"left untouched\". The plan body wins on conflict, but the Overview's \"every message that tells the operator \u2026 whether to move on\" is not bounded by that exclusion. Step 2 should name the banner as a deliberately excluded non-reader, so an auditor does not re-raise it as a fifth reader.",
+      "suggested_action": "Add the banner to step 2's caller list as \"deliberately not a reader\", with the reason that it reports the loop-stop count and is not a next-step message.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "loop-stop-banner-scope",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "8cdda29c9c09ce2d76812d51b18d7de3a0ffcdc3a6056bbc62beed02c6408e0b",
+    "detail_bundle_digest": "e92c5a0b546c6364ca8bc36ae85cb78f4dd2224b43962b19a659209033da9596",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-pass-audit-blocking-verdict-saved.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-hand-outcome-conceptual-bar-blocking.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "29c8756422c7eab3b8b05dcb8702d92898d6b2ac150d987cdf3752c1cc00fd0d",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

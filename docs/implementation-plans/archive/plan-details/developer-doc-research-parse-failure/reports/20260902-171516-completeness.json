@@ -1,0 +1,173 @@
+{
+  "version": 4,
+  "plan_slug": "developer-doc-research-parse-failure",
+  "plan_path": "docs/implementation-plans/2-developer-doc-research-parse-failure.md",
+  "created_at": "2026-09-02T17:15:16Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fa7b445604a511844b021b007fa7467f498b3e8c10f2a92d56f7a8dc596b87d5",
+  "code_fingerprint": {
+    "plan_tool/create.py": "7c180bf27c66bc371cf080977dea09e23aca9010151a8fe70b94c9479e16bc68",
+    "tests/cli/test_authoring_cmds.py": "a97066b0daf75360882528497a435ef2c9521f6fb62caf8f1c9a55caa88810ac",
+    "tests/test_create.py": "a5327f166f0ce0ebe9351b3b24a704a6b03de8558faadbc0335342ecf8a22491"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/01-use-typed-generic-reference-research.md": "2a9e0cb4876be6c274660904859d2f4932f8feaf1bd919d702e78db29e28456e",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md": "18b8b0b2df6b14183bf366991a5d8c6912800d7af78ba0fc719594075060a447",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/03-fail-initial-malformed-research-through.md": "70b4b549fdc7acd15200ca05a6062487a5305964df218af8ae48146e9fda8142",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md": "f89d476dff3c6a9c1a331a8e2322d8a8a60239d1fede312bb193d912d8770c60"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Developer Doc Research Parse Failure\n\n`developer-doc-research-parse-failure` \u00b7 generated 2026-09-02T17:15:15Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a3a588578c0f70e7391984db046a6bbb734c793530c55fa9230b8447b4e284e2`\n- **Detail bundle digest:** `d2f95a90c6501ffa0d4e5b9da85c56c45aceb8c3fd888f70eb3ac0356a075b3d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 40852 bytes (+40852 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply developer-doc-research-parse-failure   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[initial-failure-guidance]` [confidence: limited]: Step 3 leaves the initial failure message unspecified even though the Architecture promises:\n\n  ```text\n  The controlled failure identifies the research phase and directs the operator to retry `create`; existing earlier checkpoints remain resumable.\n  ```\n\n  Step 3\u2019s Summary, Implementation, Tests, and Acceptance criteria require `CreateError`, an `error` phase, and no writes, while `plan_tool/cli/authoring.py:cmd_create` only displays `str(exc)`. A generic error can meet every listed test without naming failed reference research or telling the operator how to resume.\n  - Fix: Define and test a phase-specific initial `CreateError` diagnostic that names terminal reference research and directs a resumable `create` retry.\n- MEDIUM `[iteration-publication-preservation]` [confidence: limited]: Step 4 gives two different preservation boundaries. The plan body says:\n\n  ```text\n  A failed reference refresh stays visible in the run log without changing the already-published plan.\n  ```\n\n  ```text\n  ...a terminal unparseable outcome records `error`, enters the existing explicit iteration-stage failure path, and leaves both the published steps and References body unchanged.\n  ```\n\n  But Step 4\u2019s Implementation says:\n\n  ```text\n  Earlier `apply_finding` edits retain their existing behavior; this boundary protects the iteration\u2019s proposed steps and refreshed References content.\n  ```\n\n  At HEAD, `plan_tool/create.py:_converge_create_plan` runs `apply_finding` before iteration research, so malformed research can follow an earlier mutation to the plan and still satisfy the detail. Choose whether preservation includes those edits; the current bundle permits a result that violates the step intent and acceptance criterion.\n  - Fix: Choose one preservation boundary, then align Step 4\u2019s intent, Architecture, detail, acceptance criteria, and snapshots/tests to it.\n- MEDIUM `[iteration-failure-presentation]` [confidence: limited]: Step 4 sends its visible malformed-reference FAILURE assertion to `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail`, but that test replaces `authoring.create_plan`; `cmd_create` only handles the returned `CreateResult` and does not emit the stage banner. The detail also requires `cmd_create` remain unchanged, while `plan_tool/create.py:_converge_create_plan` owns the current banner and still says the failed stage is step re-proposal and that it exits non-zero. The listed CLI test therefore cannot prove the required reference-research presentation.\n\n  ```text\n  Step 4 Tests:\n  ...assert the visible failure presentation names reference research, `cmd_create` returns 0...\n\n  Step 4 Implementation / Reuse existing failure consumers:\n  Keep `plan_tool/create.py:_finalize_create_plan`, `plan_tool/cli/authoring.py:cmd_create`, and ... unchanged.\n  ```\n  - Fix: Give the shared `_converge_create_plan` failure presentation emitter-level coverage, while retaining the CLI test for its separate exit-0 and completed-tail contract.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[iteration-failure-presentation]` [confidence: limited]: Step 4 requires the terminal malformed-refresh presentation to name reference research, but its listed `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail` replaces `authoring.create_plan` with a fake result, and `plan_tool/cli/authoring.py:cmd_create` does not render `iteration_stage_failure`. The real banner is emitted by `plan_tool/create.py:_converge_create_plan`, so the Step 4 Implementation, Tests, and first Acceptance criterion have no test that can prove the promised wording.\n  - Fix: Assert the reference-stage banner in the real malformed-iteration `_converge_create_plan` test, while keeping the CLI fake test focused on exit `0` and completed-create handling.\n  - Address: `plan-tool completeness-apply developer-doc-research-parse-failure --anchor iteration-failure-presentation`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]` [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-73f9027c]` [confidence: limited]: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-db606b65]` [confidence: limited]: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-002b2efe]` [confidence: limited]: The plan's `## Acceptance criteria` names `createresult.iteration_stage_failure`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3b23433b]` [confidence: limited]: The plan's `## Acceptance criteria` names `propose_references`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]` [confidence: limited]: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n- INFO `[step2-granularity-merge-03c4c638]` [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply developer-doc-research-parse-failure` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Developer Doc Research Parse Failure\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a3a588578c0f70e7391984db046a6bbb734c793530c55fa9230b8447b4e284e2`\n- **Detail bundle digest:** `d2f95a90c6501ffa0d4e5b9da85c56c45aceb8c3fd888f70eb3ac0356a075b3d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[initial-failure-guidance]` [confidence: limited]: Step 3 leaves the initial failure message unspecified even though the Architecture promises:\n\n  ```text\n  The controlled failure identifies the research phase and directs the operator to retry `create`; existing earlier checkpoints remain resumable.\n  ```\n\n  Step 3\u2019s Summary, Implementation, Tests, and Acceptance criteria require `CreateError`, an `error` phase, and no writes, while `plan_tool/cli/authoring.py:cmd_create` only displays `str(exc)`. A generic error can meet every listed test without naming failed reference research or telling the operator how to resume.\n- MEDIUM `[iteration-publication-preservation]` [confidence: limited]: Step 4 gives two different preservation boundaries. The plan body says:\n\n  ```text\n  A failed reference refresh stays visible in the run log without changing the already-published plan.\n  ```\n\n  ```text\n  ...a terminal unparseable outcome records `error`, enters the existing explicit iteration-stage failure path, and leaves both the published steps and References body unchanged.\n  ```\n\n  But Step 4\u2019s Implementation says:\n\n  ```text\n  Earlier `apply_finding` edits retain their existing behavior; this boundary protects the iteration\u2019s proposed steps and refreshed References content.\n  ```\n\n  At HEAD, `plan_tool/create.py:_converge_create_plan` runs `apply_finding` before iteration research, so malformed research can follow an earlier mutation to the plan and still satisfy the detail. Choose whether preservation includes those edits; the current bundle permits a result that violates the step intent and acceptance criterion.\n- MEDIUM `[iteration-failure-presentation]` [confidence: limited]: Step 4 sends its visible malformed-reference FAILURE assertion to `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail`, but that test replaces `authoring.create_plan`; `cmd_create` only handles the returned `CreateResult` and does not emit the stage banner. The detail also requires `cmd_create` remain unchanged, while `plan_tool/create.py:_converge_create_plan` owns the current banner and still says the failed stage is step re-proposal and that it exits non-zero. The listed CLI test therefore cannot prove the required reference-research presentation.\n\n  ```text\n  Step 4 Tests:\n  ...assert the visible failure presentation names reference research, `cmd_create` returns 0...\n\n  Step 4 Implementation / Reuse existing failure consumers:\n  Keep `plan_tool/create.py:_finalize_create_plan`, `plan_tool/cli/authoring.py:cmd_create`, and ... unchanged.\n  ```\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[iteration-failure-presentation]` [confidence: limited]: Step 4 requires the terminal malformed-refresh presentation to name reference research, but its listed `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail` replaces `authoring.create_plan` with a fake result, and `plan_tool/cli/authoring.py:cmd_create` does not render `iteration_stage_failure`. The real banner is emitted by `plan_tool/create.py:_converge_create_plan`, so the Step 4 Implementation, Tests, and first Acceptance criterion have no test that can prove the promised wording.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `createresult.iteration_stage_failure`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `propose_references`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n- INFO [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk developer-doc-research-parse-failure` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply developer-doc-research-parse-failure` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4589e5e6",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 leaves the initial failure message unspecified even though the Architecture promises:",
+      "body": "Step 3 leaves the initial failure message unspecified even though the Architecture promises:\n\n  ```text\n  The controlled failure identifies the research phase and directs the operator to retry `create`; existing earlier checkpoints remain resumable.\n  ```\n\n  Step 3\u2019s Summary, Implementation, Tests, and Acceptance criteria require `CreateError`, an `error` phase, and no writes, while `plan_tool/cli/authoring.py:cmd_create` only displays `str(exc)`. A generic error can meet every listed test without naming failed reference research or telling the operator how to resume.",
+      "suggested_action": "Define and test a phase-specific initial `CreateError` diagnostic that names terminal reference research and directs a resumable `create` retry.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "initial-failure-guidance",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-577576ce",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 gives two different preservation boundaries. The plan body says:",
+      "body": "Step 4 gives two different preservation boundaries. The plan body says:\n\n  ```text\n  A failed reference refresh stays visible in the run log without changing the already-published plan.\n  ```\n\n  ```text\n  ...a terminal unparseable outcome records `error`, enters the existing explicit iteration-stage failure path, and leaves both the published steps and References body unchanged.\n  ```\n\n  But Step 4\u2019s Implementation says:\n\n  ```text\n  Earlier `apply_finding` edits retain their existing behavior; this boundary protects the iteration\u2019s proposed steps and refreshed References content.\n  ```\n\n  At HEAD, `plan_tool/create.py:_converge_create_plan` runs `apply_finding` before iteration research, so malformed research can follow an earlier mutation to the plan and still satisfy the detail. Choose whether preservation includes those edits; the current bundle permits a result that violates the step intent and acceptance criterion.",
+      "suggested_action": "Choose one preservation boundary, then align Step 4\u2019s intent, Architecture, detail, acceptance criteria, and snapshots/tests to it.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iteration-publication-preservation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a64fd9e2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 sends its visible malformed-reference FAILURE assertion to `tests/cli/test_authoring_cmds.py::test_iteration_inco",
+      "body": "Step 4 sends its visible malformed-reference FAILURE assertion to `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail`, but that test replaces `authoring.create_plan`; `cmd_create` only handles the returned `CreateResult` and does not emit the stage banner. The detail also requires `cmd_create` remain unchanged, while `plan_tool/create.py:_converge_create_plan` owns the current banner and still says the failed stage is step re-proposal and that it exits non-zero. The listed CLI test therefore cannot prove the required reference-research presentation.\n\n  ```text\n  Step 4 Tests:\n  ...assert the visible failure presentation names reference research, `cmd_create` returns 0...\n\n  Step 4 Implementation / Reuse existing failure consumers:\n  Keep `plan_tool/create.py:_finalize_create_plan`, `plan_tool/cli/authoring.py:cmd_create`, and ... unchanged.\n  ```",
+      "suggested_action": "Give the shared `_converge_create_plan` failure presentation emitter-level coverage, while retaining the CLI test for its separate exit-0 and completed-tail contract.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iteration-failure-presentation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-a64fd9e2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 requires the terminal malformed-refresh presentation to name reference research, but its listed `tests/cli/test_a",
+      "body": "Step 4 requires the terminal malformed-refresh presentation to name reference research, but its listed `tests/cli/test_authoring_cmds.py::test_iteration_incomplete_still_runs_completed_create_tail` replaces `authoring.create_plan` with a fake result, and `plan_tool/cli/authoring.py:cmd_create` does not render `iteration_stage_failure`. The real banner is emitted by `plan_tool/create.py:_converge_create_plan`, so the Step 4 Implementation, Tests, and first Acceptance criterion have no test that can prove the promised wording.",
+      "suggested_action": "Assert the reference-stage banner in the real malformed-iteration `_converge_create_plan` test, while keeping the CLI fake test focused on exit `0` and completed-create handling.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iteration-failure-presentation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "a3a588578c0f70e7391984db046a6bbb734c793530c55fa9230b8447b4e284e2",
+      "detail_bundle_digest": "d2f95a90c6501ffa0d4e5b9da85c56c45aceb8c3fd888f70eb3ac0356a075b3d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/01-use-typed-generic-reference-research.md",
+          "state": "present",
+          "digest": "2a9e0cb4876be6c274660904859d2f4932f8feaf1bd919d702e78db29e28456e"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md",
+          "state": "present",
+          "digest": "18b8b0b2df6b14183bf366991a5d8c6912800d7af78ba0fc719594075060a447"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/03-fail-initial-malformed-research-through.md",
+          "state": "present",
+          "digest": "70b4b549fdc7acd15200ca05a6062487a5305964df218af8ae48146e9fda8142"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md",
+          "state": "present",
+          "digest": "f89d476dff3c6a9c1a331a8e2322d8a8a60239d1fede312bb193d912d8770c60"
+        }
+      ],
+      "source_seed_digest": "6535f44bacd6fc4ba567eef3014e11466724f1972baeac671c9ca782874fa2d9",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 40852,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

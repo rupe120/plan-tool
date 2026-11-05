@@ -1,0 +1,91 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-generate-detail-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-generate-detail-phases.md",
+  "created_at": "2026-08-17T18:30:45Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2825facea5e471f2b80208017e9e9ee002d510ed84e08fe3d753a1758f946c52",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "2fc5b90a678602adf36677c9b022f14b734d2a11115bcb108dfc2a74e202d2af",
+    "tests/test_detail.py": "603c905fa827a06c5c7954e3e81e1111cdb20ff3efc8278eb006c9645f7761a0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md": "c79a24f1fee410ab801682ea2a728f619449d7df30c45fc4e063fe5172c4ea16",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-run-grade-setup-after-jira-fork.md": "cc903459ad57356ccc1317e92569115f9a4c1a206c79841dce9c3cc500c20498",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-run-grade-authoring-lifecycle.md": "b29c6baa5fab2e1f2b0c386c2e24981d0703237b74169b9ee664f55287c1dacc",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-first-post-loop-split.md": "5f753abbad069236bced464b289ac23c2d12f165106fe78c64974524fcd07a63",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-second-post-loop-split.md": "42f88d809253185a32042215de9e71e1e995473a8ba88adb2c08770a79a82e88",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-final-concept-persistence.md": "0dfa713214cf62e3b09ba76edf0b1e61054280b1b9b4292240a0e6f29a5e7bff"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Generate Detail Phases\n\n`decompose-generate-detail-phases` \u00b7 generated 2026-08-17T18:30:45Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7e73bab7]`: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9109e159]`: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step5-granularity-merge-3dfeca58]`: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit decompose-generate-detail-phases` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Generate Detail Phases\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "22e3a8287e01fcdd5f3dd1994b7ee8eeacc8cb11ab91750947916e033b6ab986",
+    "detail_bundle_digest": "73b3989352762dfa6de1f234a298e6dc23536de43f66bc8f5db91ad3cf75090b",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md",
+        "state": "present",
+        "digest": "c79a24f1fee410ab801682ea2a728f619449d7df30c45fc4e063fe5172c4ea16"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-run-grade-setup-after-jira-fork.md",
+        "state": "present",
+        "digest": "cc903459ad57356ccc1317e92569115f9a4c1a206c79841dce9c3cc500c20498"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-run-grade-authoring-lifecycle.md",
+        "state": "present",
+        "digest": "b29c6baa5fab2e1f2b0c386c2e24981d0703237b74169b9ee664f55287c1dacc"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-first-post-loop-split.md",
+        "state": "present",
+        "digest": "5f753abbad069236bced464b289ac23c2d12f165106fe78c64974524fcd07a63"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-second-post-loop-split.md",
+        "state": "present",
+        "digest": "42f88d809253185a32042215de9e71e1e995473a8ba88adb2c08770a79a82e88"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-final-concept-persistence.md",
+        "state": "present",
+        "digest": "0dfa713214cf62e3b09ba76edf0b1e61054280b1b9b4292240a0e6f29a5e7bff"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

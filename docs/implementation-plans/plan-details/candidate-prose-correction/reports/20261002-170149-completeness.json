@@ -1,0 +1,169 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-prose-correction",
+  "plan_path": "docs/implementation-plans/2-candidate-prose-correction.md",
+  "created_at": "2026-10-02T17:01:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "53c63be171b35980b73327a46b01c6e39fb78748afa100b2a7bb24fad9efc396",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "11a36ca8344dd704e30e2f57616523321489df1f5f8ba600b30151608b691fbb",
+    "plan_tool/roadmap_candidate.py": "935bb51d5e61f75a830a538462d03df5a96e011dd76f27a3cf0ef02983b2b8d6",
+    "plan_tool/roadmap_candidate_context.py": "9f162b8136ba4b65c4a227b78060c372c35a432f0a56156e376057fdb9b70818",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_candidate_run.py": "3919a5da38a5d5087d1e0b97d75f24291d43ebac27573ddf384e09f284905b71",
+    "plan_tool/roadmap_revision.py": "941e651f7eb2be3f426d0026b3b6c75de1d9815930f37f7ee85415aba9e6aa06",
+    "plan_tool/roadmap_revision_patch.py": "f579998564a2012ea3ff28e02765d4c38c14aa7c5df0253752eaaed4c7dfadf1",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate.py": "1632254c78f96f7c2ffc410523cd04d6a4681fbd32d3f11590ddcac2bf1e9124",
+    "tests/test_roadmap_candidate_context.py": "8a9340a0a50cbed29e2d72ae2632685ba2ff0c1529585685ffe23ed2bf40b2f6",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_candidate_run.py": "a63f0f704e02f84664e5714b6dc729c1873e604c1dd85e9358073c27f06b222f",
+    "tests/test_roadmap_revision.py": "1d1cc7dfd2bfdb212bc0b4a6b7c51fc50adfa01ed70e258c8fc4e34ad0cf5048",
+    "tests/test_roadmap_revision_patch.py": "786dad25c23c07d30bcda0e4531f9336eed49442ac178d713b9d66b52dd89e02"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md": "e06f522a0f2e5583ee19f719e0ab0172ab182885c9df303d75b5572a7ac64131",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md": "2e44c83a1963fc1fe3d9f57b4737a8487104a2fd8a96779f65e444e0d867ed43",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md": "f64f1540dc81c8a6721454867216c809e652baa4601e7721984302beece66f5c",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md": "fb1ede610c0b1b1e1cf4d3e00d9ed69989fea9a302a5880df642f7187e73b1d0",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md": "ed77a6b43049ae1599945d09260b3a58d570ec6497e6115f556f784f9ef9638c",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md": "69ab03dac906b2825e5fd7462898eb007d51de8bb84ebbc1b74837bd2135701e"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Prose Correction\n\n`candidate-prose-correction` \u00b7 generated 2026-10-02T17:01:48Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ded251e430c2b7434413d565e30cbf693e5f220c94ce3aac9e473cc7654cd621`\n- **Detail bundle digest:** `066a304511aa5ae8711fe4589fc91d0f390a398434ae0bd98ee3336166d5ef22`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 2 (0 missing-concept-link, 2 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 8 (-1 vs. first audit)\n- **Detail-bundle size:** 107035 bytes (+107035 vs. first audit)\n- **Keystone fan-out:** 0.43\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.17\n- **Audit-induced growth:** 0.00\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step4-files-coherence-655af064]` [confidence: limited]: The detail body for step 4 cites `plan_tool/roadmap_candidate_run.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/roadmap_candidate.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- MEDIUM `[data-contract-input-plan-tool-cli-roadmap-cmd-py:-edit-structural-candidate]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md:## Input cites `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate`, but code anchor `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate` does not resolve in HEAD.\n\n## Suggested next steps\n\n- Resolve 2 structural diagnostic(s) directly:\n    \u2022 `plan-tool completeness-apply candidate-prose-correction` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Prose Correction\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ded251e430c2b7434413d565e30cbf693e5f220c94ce3aac9e473cc7654cd621`\n- **Detail bundle digest:** `066a304511aa5ae8711fe4589fc91d0f390a398434ae0bd98ee3336166d5ef22`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 4 detail cites `plan_tool/roadmap_candidate_run.py` resembling declared `plan_tool/roadmap_candidate.py` (typo/stale path?)\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-cli-roadmap-cmd-py:-edit-structural-candidate]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md:## Input cites `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate`, but code anchor `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate` does not resolve in HEAD.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk candidate-prose-correction` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "step8-data-contract-c0525868",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 8,
+      "title": "Stale Input contract reference `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate`",
+      "body": "docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md:## Input cites `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate`, but code anchor `plan_tool/cli/roadmap_cmd.py:_edit_structural_candidate` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-cli-roadmap-cmd-py:-edit-structural-candidate",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ded251e430c2b7434413d565e30cbf693e5f220c94ce3aac9e473cc7654cd621",
+      "detail_bundle_digest": "066a304511aa5ae8711fe4589fc91d0f390a398434ae0bd98ee3336166d5ef22",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md",
+          "state": "present",
+          "digest": "e06f522a0f2e5583ee19f719e0ab0172ab182885c9df303d75b5572a7ac64131"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md",
+          "state": "present",
+          "digest": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md",
+          "state": "present",
+          "digest": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md",
+          "state": "present",
+          "digest": "2e44c83a1963fc1fe3d9f57b4737a8487104a2fd8a96779f65e444e0d867ed43"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md",
+          "state": "present",
+          "digest": "f64f1540dc81c8a6721454867216c809e652baa4601e7721984302beece66f5c"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md",
+          "state": "present",
+          "digest": "fb1ede610c0b1b1e1cf4d3e00d9ed69989fea9a302a5880df642f7187e73b1d0"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md",
+          "state": "present",
+          "digest": "ed77a6b43049ae1599945d09260b3a58d570ec6497e6115f556f784f9ef9638c"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/08-sync-roadmap-format-md-landed-symbols.md",
+          "state": "present",
+          "digest": "69ab03dac906b2825e5fd7462898eb007d51de8bb84ebbc1b74837bd2135701e"
+        }
+      ],
+      "source_seed_digest": "05abece707d1ddece8c5835beb777b5a9460f600fbce63bcee5b1ccfc1daa568",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 8,
+    "detail_bundle_bytes": 107035,
+    "keystone_fan_out": 0.42857142857142855,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.16666666666666666,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

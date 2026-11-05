@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "plan_slug": "human-input-seam",
+  "plan_path": "docs/implementation-plans/2-human-input-seam.md",
+  "created_at": "2026-08-28T01:10:06Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "8fe8aa6c3db83e588331793128c815b27a73212baf5c2956310ac6b6e58403e7",
+  "code_fingerprint": {
+    "BACKLOG.md": "d651dd16d75836e84be060d6d9d31d632711fa3dfe5ac8401b5a7e322b11de62",
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "TESTING.md": "3606a35be59ed6dd830f24286126097a190e49d01c4b46c3b3f74cd5be2f9af9",
+    "plan_tool/human_io.py": "27768f04e983d53617c9c0aa347f6f2c724a6014a1ce8c9f449eeae84f7c7902",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_human_io.py": "1b32de1a102b27e90d55f53715ca98244c8cae5af562d095d0e33e3a39a61f7a",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

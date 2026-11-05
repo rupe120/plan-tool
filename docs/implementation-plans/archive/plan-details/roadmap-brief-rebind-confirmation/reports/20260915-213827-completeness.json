@@ -1,0 +1,104 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-brief-rebind-confirmation",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-rebind-confirmation.md",
+  "created_at": "2026-09-15T21:38:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "432a9ac31e0f26f6739c678c23ce2d7b39d50b31828dd1928541c0016c90935b",
+  "code_fingerprint": {
+    "BACKLOG.md": "6c492a90a0529859e3598c41a0c98d29cefa35f069aa4c7d46199c3b342d3624",
+    "CAPABILITIES.md": "c14e38ab6631204ea96f8967a1607a0c71830b1c32ee648e93f04f995f472e5d",
+    "DATA_CONTRACT.md": "5bee95fb5ace30fa42bf52599c49d0ceaf60625933f27b4d868324f6905f1d7f",
+    "README.md": "ad1650e13e09150da1ad6a60d281dcee39258dcb8513288b6f49719089dee05b",
+    "ROADMAP_FORMAT.md": "b754e3c3cb074a1995370332cbc9c44743ac22e8426be6e7448f8d4bc7149bb4",
+    "RUNBOOK.md": "0a0ca9937d907a5e7d99c3b496dd9f2b7349e67aea2c70da84c545a96c4c2638",
+    "USE_CASES.md": "871a87c66b3e85944c54710ff4415379b12e90fc68e803792ba3b8e68492dfca",
+    "docs/ARCHITECTURE.md": "5ba0f0291bab9ba06982ecef95488d1b901df7fe549cf5a5646d4bd4f85c970b",
+    "docs/ROADMAP_WALKTHROUGH.md": "3212cbe2881924a2bdc12d66dedb8f23fdd292e268935772107e45f873901447",
+    "docs/cli/roadmap.md": "aa9a8e42b5c9db882a0473b9908970b286d81156a5a766233c88c540018b633e",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "b6bd8da4fd4216be660270925b2da2f85b3a125a60f329369cd3fcf9e1169812",
+    "handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md": "2d928ab72457b86351cd9563322b12f7ecc7da3b2572497acb24b2f9febb5b39",
+    "integrations/claude/SKILL.md": "d8a8d76bc0a200087f153e22e62d9d758e582cd73e39b830cfc19ebfe8ff8ec1",
+    "plan_tool/cli/__init__.py": "1af01cbb3e42ac02112e69836c002a577ca1f9c0be092933c157bc8fe01c0698",
+    "plan_tool/cli/roadmap_cmd.py": "d550176659f4990f1620574839180ff01116feccb23e52d3e6cbfa94f6213d1e",
+    "plan_tool/roadmap.py": "9f3b779ed1525c38be1fdeb8c53bd3840f526b01f8bec4be672641c475fbedaf",
+    "tests/cli/package_surface_help.golden.txt": "95a304b944e1b1145f482bcca6c5724546b1db976ed5c70243e5cb0c4f032316",
+    "tests/cli/test_roadmap_cmd.py": "aab6d52a97e2d8e9d5b4bf39f70e2fc22e73da0c647a5112d955ab0e4f5fdd73",
+    "tests/test_data_contract.py": "6faf1351f5ef0537db7924c7e406eaf0d1ec0d6e7986322d4593322ef29c7532",
+    "tests/test_roadmap.py": "3bd3b2d130b123f1de6e1cd18a5969228bdaaf388df7c6519b278fb313bb33d6",
+    "tests/test_roadmap_format.py": "85209bffb04ef445a4cd69644c330924bd20b89e5d45603313cf7c981a3755f1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md": "434972b7b116604aece1caa30f1750d55f0ae1601b81809d921f7ae7169e846c",
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/02-confirm-brief-rebind-only-stage-runs.md": "09c452f2a21b08e1ae2767c65cf495f2fd072336ad949046d3bd011cec398bc9",
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/03-document-confirmed-brief-rebinds-across.md": "456242f62cc5ee96fef825f16190cf474deddfbca3515cec14f2921bb7e9d82c",
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/04-after-implementation-reconciliation.md": "8d053635569e68addb1dc5ac206b27ebc037d919bef77ab2c308c4df0f633a5b"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Brief Rebind Confirmation\n\n`roadmap-brief-rebind-confirmation` \u00b7 generated 2026-09-15T21:38:27Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-brief-rebind-confirmation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Brief Rebind Confirmation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "432a9ac31e0f26f6739c678c23ce2d7b39d50b31828dd1928541c0016c90935b",
+    "detail_bundle_digest": "57cef8cf3cb2bce93f15765e8f32a5913694562228a953badb3b25e95208cbab",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/02-confirm-brief-rebind-only-stage-runs.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/03-document-confirmed-brief-rebinds-across.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/04-after-implementation-reconciliation.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "e4f159889caf7dd7bb7ff6e308f3b4d704796bf4bf02b201c3939b794ead224c",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

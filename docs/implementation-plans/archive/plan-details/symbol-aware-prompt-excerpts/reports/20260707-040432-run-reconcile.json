@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "plan_slug": "symbol-aware-prompt-excerpts",
+  "plan_path": "docs/implementation-plans/2-symbol-aware-prompt-excerpts.md",
+  "created_at": "2026-07-07T04:04:32Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "daeb1040af62f7b3e97cf66f16c8a90a504762f52fa68de97eef6f027ed5eb7e",
+  "code_fingerprint": {
+    "RUNBOOK.md": "c55aa4b6c1105b84d3b8fdd70d915324426fc17c40e10080c69f1f0a846eb2df",
+    "plan_tool/annotate.py": "c43a98bd21b5494e46f6496773c57e009dadaead45d67f00fdd6abd600e7a691",
+    "plan_tool/detail.py": "741bba284b99e033877094742e3ab668af45fad6c762b5eda7b51b15d3504cc4",
+    "plan_tool/jira.py": "d5e6fb8d241462a9f38e3cedae931b065e4adf362b9a0c8400ad7cbbd222154f",
+    "plan_tool/prompt_excerpt.py": "915aab3ba4efd8bec72d5311f3b82b011b0a1ced664110d439c6a952bf765717",
+    "plan_tool/review.py": "9720a18f070c716e08685c694277f3ed26a85ea3e22991cad1bd5a6470306fb8",
+    "tests/test_annotate.py": "be9ee8e798190b02fd2ad56a6a06b7145b99ab2ebd6e6ba59d40be9881eaec94",
+    "tests/test_detail.py": "8d151c331647e3ce7adedd785749a9726cd2731bd10e88a5cbdd4fbe5b8377a6",
+    "tests/test_jira.py": "4fe9cbd1e60543a825b92ada1365b4ba87cc466f8b0136bf1b757664555e2a07",
+    "tests/test_prompt_excerpt.py": "f034997ce5dac903d64832cebaf315ff7e2f03338e23c19da475bc5d2b9e4a4b",
+    "tests/test_review.py": "683910f021326121a92622e74c2449b9af7ae101dc2e9ce986f9d1614486f8e1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

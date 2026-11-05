@@ -1,0 +1,119 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T19:05:47Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2f896428e80f22791dbd3d8764d6fb45f3b04aa4750fb77eff6f23d06077e08b",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md": "491b7b501501959350dcd456ed748a3678fd960cdd9e37cd1c34ff8e00a0620e",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md": "d50fbe858a3753c1fc80bd80130d269ad48367151aad28cd20251cd76b65636f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T19:05:47Z \u00b7 mode: iterate \u00b7 loop stopped: marginal after 1 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `confirmed`\n- **Audit revision:** `stale`\n- **Audit stage:** `bare`\n- **Plan digest:** `9e09b001d1f646e4366599574a87a4537b5d7c634f54d862b1db39bc730d5eee`\n- **Detail bundle digest:** `dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 6 dispatched (6 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 2 (0 missing-concept-link, 2 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (-2 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Applied this run\n\n- [APPLIED] required H2 section `## Problem statement` is absent from the plan body\n\nRecommended content shape: What's broken or missing today, why fixing it matters, and the user-visible symptom that motivates this work. Cite existing code/spec by symbolic anchor where relevant. \u2014 - Add a problem statement defining the missing advisory risk context and its prompt-visible symptom.\n- [APPLIED] required H2 section `## Steps` is absent from the plan body\n\nRecommended content shape: Pointer to the `steps:` block in the frontmatter. The machine-readable list lives there; restating it in prose is the most common drift source. \u2014 - `docs/implementation-plans/2-risk-profile-2.md`: Add a `## Steps` pointer to the authoritative frontmatter list.\n- [APPLIED] required H2 section `## Out of scope` is absent from the plan body\n\nRecommended content shape: Bulleted exclusions with a one-line rationale each. Captures the work this plan deliberately doesn't tackle, so future reviewers don't re-litigate the boundary. \u2014 - `docs/implementation-plans/2-risk-profile-2.md`: Add a scoped exclusion section with rationales.\n- [APPLIED] required H2 section `## Risks` is absent from the plan body\n\nRecommended content shape: Bulleted failure modes, each with: the failure shape, the severity, the mitigation if any, and any unresolved gap. Aim for honest exposure (e.g. 'apply_finding can wander out of scope; guarded by scope_guard'), not aspirational risk-free framing. \u2014 - `docs/implementation-plans/2-risk-profile-2.md`: Add `## Risks` with failure shapes, severities, mitigations, and unresolved gaps.\n- [APPLIED] required H2 section `## Testing` is absent from the plan body\n\nRecommended content shape: How the plan's behavior is verified. Follow the project's unit-first convention: default to unit tests that exercise one function or class in isolation; add INTEGRATION tests ONLY for cross-module wiring (driving CLI entry points, calling orchestrators, exercising end-to-end pipelines where a unit test on any single piece would miss the bug). Use whatever marker / file split the project already uses to distinguish the two tiers (e.g. `@pytest.mark.integration` for pytest projects, `*.integration.test.ts` for TS/JS projects, build tags for Go) -- if `TESTING.md` exists at the repo root, follow its convention. For each test file: cite the path; for each test case: cite the class / function / describe-block name. List existing suites that must still pass. If this plan touches a conceptual area covered by the project's integration tier, name the specific integration tests the iterator should run when modifying the affected source files. NOTE: the rendered section ends with a deterministic per-step test-strategy enumeration derived from each step's `change_type` (code steps \u2192 tests covering the changed behavior, green before completion; non-code \u2192 artifact-appropriate verification); give cross-cutting test guidance here and do NOT re-list per-step test strategy \u2014 the enumeration owns that. \u2014 - `docs/implementation-plans/2-risk-profile-2.md`: Add `## Testing` with unit and detail-loop integration coverage.\n- [APPLIED] required H2 section `## Deferred` is absent from the plan body\n\nRecommended content shape: Bulleted items deliberately dropped or postponed during implementation, each with a one-line note explaining why (too large, blocked, separate concern). Distinct from `## Out of scope`: deferred items might come back; out-of-scope items are permanent exclusions. \u2014 - `docs/implementation-plans/2-risk-profile-2.md`: Add a deferred enforcement proposal with its rationale.\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply risk-profile-2   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk risk-profile-2  # alternative interactive review/apply\n\n- MEDIUM `[risk-declaration-pair]`: Step 1 (`Render one advisory risk context for explicit declarations`) makes the Test strategy cover \u201coptional rationale, and field absence,\u201d but Overview, Architecture, Scope contract Outcome, and Acceptance criteria all require an explicit profile *and* rationale. `PLAN_FORMAT.md` says \u201cBoth fields must be present with values or both omitted,\u201d and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` rejects a one-sided declaration, so the renderer cannot receive the stated optional-rationale case.\n  - Fix: define the renderer and tests around valid explicit profile\u2013rationale pairs and the omitted legacy pair.\n- MEDIUM `[advisory-context-safety-review]`: Step 1\u2019s Architecture lists the renderer instructions as \u201ckeep the work proportionate, preserve grounded requirements and tests, and explain a material mismatch,\u201d omitting safety review. That conflicts with Overview\u2019s \u201csafety review still apply,\u201d Scope contract Outcome\u2019s requirement to preserve \u201csafety review,\u201d and the Acceptance criterion that the context retain it; `detail.md`, `detail-quality.md`, and `apply-finding.md` do not already provide that instruction.\n  - Fix: include preservation of safety review in the shared advisory context and align its tests with the full grounding, tests, and safety-review commitment.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[step1-detail-coverage-98e7dc95]`: Step 1 declares `detail: docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md` but the file isn't present under the repo root.\n- MEDIUM `[step2-detail-coverage-89695580]`: Step 2 declares `detail: docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md` but the file isn't present under the repo root.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-2` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `confirmed`\n- **Audit revision:** `stale`\n- **Audit stage:** `bare`\n- **Plan digest:** `9e09b001d1f646e4366599574a87a4537b5d7c634f54d862b1db39bc730d5eee`\n- **Detail bundle digest:** `dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Converged (low-yield):** this audit stopped at 2 pass(es) once only advisory (nit/info) findings remained \u2014 no material (medium+) finding resurfaced. Some listed advisory findings may be residual precision noise the sampler never fully explored.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[risk-declaration-pair]`: Step 1 (`Render one advisory risk context for explicit declarations`) makes the Test strategy cover \u201coptional rationale, and field absence,\u201d but Overview, Architecture, Scope contract Outcome, and Acceptance criteria all require an explicit profile *and* rationale. `PLAN_FORMAT.md` says \u201cBoth fields must be present with values or both omitted,\u201d and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` rejects a one-sided declaration, so the renderer cannot receive the stated optional-rationale case.\n- MEDIUM `[advisory-context-safety-review]`: Step 1\u2019s Architecture lists the renderer instructions as \u201ckeep the work proportionate, preserve grounded requirements and tests, and explain a material mismatch,\u201d omitting safety review. That conflicts with Overview\u2019s \u201csafety review still apply,\u201d Scope contract Outcome\u2019s requirement to preserve \u201csafety review,\u201d and the Acceptance criterion that the context retain it; `detail.md`, `detail-quality.md`, and `apply-finding.md` do not already provide that instruction.\n\n### Detail coverage\n\n- WARN: step 1 detail `docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md` declared but missing on disk\n- WARN: step 2 detail `docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md` declared but missing on disk\n\n### Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-2` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ec80f46d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Render one advisory risk context for explicit declarations`) makes the Test strategy cover \u201coptional rationale,",
+      "body": "Step 1 (`Render one advisory risk context for explicit declarations`) makes the Test strategy cover \u201coptional rationale, and field absence,\u201d but Overview, Architecture, Scope contract Outcome, and Acceptance criteria all require an explicit profile *and* rationale. `PLAN_FORMAT.md` says \u201cBoth fields must be present with values or both omitted,\u201d and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` rejects a one-sided declaration, so the renderer cannot receive the stated optional-rationale case.",
+      "suggested_action": "define the renderer and tests around valid explicit profile\u2013rationale pairs and the omitted legacy pair.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-declaration-pair",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9fb7bf9d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s Architecture lists the renderer instructions as \u201ckeep the work proportionate, preserve grounded requirements an",
+      "body": "Step 1\u2019s Architecture lists the renderer instructions as \u201ckeep the work proportionate, preserve grounded requirements and tests, and explain a material mismatch,\u201d omitting safety review. That conflicts with Overview\u2019s \u201csafety review still apply,\u201d Scope contract Outcome\u2019s requirement to preserve \u201csafety review,\u201d and the Acceptance criterion that the context retain it; `detail.md`, `detail-quality.md`, and `apply-finding.md` do not already provide that instruction.",
+      "suggested_action": "include preservation of safety review in the shared advisory context and align its tests with the full grounding, tests, and safety-review commitment.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "advisory-context-safety-review",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-low-yield",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "stale",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "9e09b001d1f646e4366599574a87a4537b5d7c634f54d862b1db39bc730d5eee",
+      "detail_bundle_digest": "dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

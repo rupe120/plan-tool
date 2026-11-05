@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-eadebf0f": {
+      "code_anchor": "plan_tool/schema.py:RiskProfile",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+      "reason": "code anchor `plan_tool/schema.py:RiskProfile` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-bd547bb0": {
+      "code_anchor": "plan_tool/schema.py:RiskProfile",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+      "reason": "code anchor `plan_tool/schema.py:RiskProfile` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-79c01bf9": {
+      "code_anchor": "plan_tool/schema.py:Plan.risk_profile",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.risk_profile` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260824-173230-completeness"
+}

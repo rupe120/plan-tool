@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "plan_slug": "pluggable-backends",
+  "plan_path": "docs/implementation-plans/2-pluggable-backends.md",
+  "created_at": "2026-06-11T18:54:35Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Pluggable Backends\n\n`pluggable-backends` \u00b7 generated 2026-06-11T18:54:35Z \u00b7 mode: audit-only\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[unknown-backend-key-warning]`: Both Architecture (\"override application emits a warning naming the unknown key and the registered backend names\") and an Acceptance criterion promise a warning for a `backends.<name>` key matching no registered backend \u2014 but step 4 defers registry-name validation to step 6, and step 6 (line \"Registry-name validation \u2026 is deferred\") defers it back. No step operationalizes the warning, so the criterion is dangling.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor unknown-backend-key-warning`\n- MEDIUM `[duplicate-manifest-name]`: Discovery's register-over semantics (step 5) leave the outcome of two `integrations/<dir>/backend.json` manifests declaring the same `name` unspecified (last-iterated wins, order undefined); the design implies uniqueness but never names the collision case.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor duplicate-manifest-name`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 2 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Pluggable Backends\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[classification-regex-flags]`: Architecture states the loader \"compiles with no hardcoded flags\" and manifests carry inline `(?i)` \"so a manifest can express a case-sensitive or otherwise-flagged pattern\" \u2014 but steps 2 and 3 do the opposite: the loader hardcodes `re.IGNORECASE` and manifests store **bare** patterns (\"Do **not** prepend an inline `(?i)`\"). The body's design would break the round-trip golden (decoded `.pattern` would carry `(?i)`, mismatching the literal's bare `.pattern`), and the per-manifest case-sensitivity flexibility the body advertises is unachievable under the implemented design.\n- MEDIUM `[model-flag-missing-guard]`: Step 6's `build_effective_backend` raises `ValueError` when a model is requested but `base.model_flag is None`, but the `app.py` selection block only wraps `resolve_backend`/`BackendConfigError`; a misconfigured manifest would surface as an unhandled traceback rather than the clean rc=2 path used for sibling failures.\n\n### Files coherence\n\n- NIT: step 1 declared `(no declared files cited in detail body)` not mentioned in detail\n- INFO: step 2 detail cites `integrations/*/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/<backend>/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/claude/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/backend.py` resembling declared `plan_tool/backend_config.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[unknown-backend-key-warning]`: Both Architecture (\"override application emits a warning naming the unknown key and the registered backend names\") and an Acceptance criterion promise a warning for a `backends.<name>` key matching no registered backend \u2014 but step 4 defers registry-name validation to step 6, and step 6 (line \"Registry-name validation \u2026 is deferred\") defers it back. No step operationalizes the warning, so the criterion is dangling.\n- MEDIUM `[duplicate-manifest-name]`: Discovery's register-over semantics (step 5) leave the outcome of two `integrations/<dir>/backend.json` manifests declaring the same `name` unspecified (last-iterated wins, order undefined); the design implies uniqueness but never names the collision case.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit pluggable-backends --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-8f69aa54",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Both Architecture (\"override application emits a warning naming the unknown key and the registered backend names\") and a",
+      "body": "Both Architecture (\"override application emits a warning naming the unknown key and the registered backend names\") and an Acceptance criterion promise a warning for a `backends.<name>` key matching no registered backend \u2014 but step 4 defers registry-name validation to step 6, and step 6 (line \"Registry-name validation \u2026 is deferred\") defers it back. No step operationalizes the warning, so the criterion is dangling.",
+      "suggested_action": null,
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "unknown-backend-key-warning"
+    },
+    {
+      "id": "plan-plan-completeness-df840b04",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Discovery's register-over semantics (step 5) leave the outcome of two `integrations/<dir>/backend.json` manifests declar",
+      "body": "Discovery's register-over semantics (step 5) leave the outcome of two `integrations/<dir>/backend.json` manifests declaring the same `name` unspecified (last-iterated wins, order undefined); the design implies uniqueness but never names the collision case.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "duplicate-manifest-name"
+    }
+  ],
+  "annotations": {}
+}

@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "plan_slug": "merge-steps-executor",
+  "plan_path": "docs/implementation-plans/2-merge-steps-executor.md",
+  "created_at": "2026-06-17T23:47:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0e236af2713a43d5940e5e76198218cd6298d2de913fab1b99502ef4e1111fd3",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "d9527ec89128d88e1ffb7cc32813ce8b5f2055dada562f6784d03a86ba496bbe",
+    "RUNBOOK.md": "c2f9bac4d5fa456fceaa228d1a8654671d1d388e5051901a2e66de4c204ef06d",
+    "docs/cli/README.md": "4b3d58b6ca65b8bb4eb9abd1524aa3024672c244e6c009cb731de3265a405bd9",
+    "integrations/claude/SKILL.md": "5c2b494b9aa8ad75a15117046d26032a7fb6528249d4ea26db944705a036b709",
+    "integrations/codex/SKILL.md": "3837ec61a9dd2dabbd3bdd5baf313a3f74953eddf3def74c8884f73425261051",
+    "plan_tool/cli/__init__.py": "f4d6e96729c9f34ce4db5e609844bef8c046581606be4142702738862e079776",
+    "plan_tool/cli/app.py": "82e9d5e9e77f93218a989059c7a5b91c796b3b06ed393460ef62f96e802ad7d9",
+    "plan_tool/cli/authoring.py": "99d7544e270df2a4dd86110234887ee8d7bc768dfc7abcc8298725285d4db844",
+    "plan_tool/create.py": "60b4edec0ec506bc40fb3bb3d8e82c2e50cb9e4991c5190d9644ec3c3937a08c",
+    "plan_tool/detail.py": "e64da0759cc0f562545e1dbd97c0aeb71f9d50a92d8d7cc9c43380a2811fe8e8",
+    "plan_tool/prompts/detail.md": "0c2061267d1823aa280a8cbdcc68d92f52f8422a0318309ec1bfdddd0fe48c5d",
+    "plan_tool/schema.py": "6decaaec9074956bc971242373bb94246fe98cf3184446f0f6664db8bcee9f9e",
+    "tests/cli/test_authoring_cmds.py": "3222a1aac0fcddfbd4bf6441530921d819d7f7765eaf19f46cb5a0aa499133e0",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "0387f3fea5e91e46ee2d629678272b16976bdaf7d8584257710f42e815eb93d2"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Merge Steps Executor\n\n`merge-steps-executor` \u00b7 generated 2026-06-17T23:47:27Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 1 (1 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The plan body's Architecture (\"Type-impurity is allowed by design\") makes a persisted `type_impure: true` per-step frontmatter flag the load-bearing convergence mechanism (\"the `type_impure` flag is the mechanism that makes the merged step converge\"), but `plan_tool/schema.py:Step` declares `model_config = ConfigDict(extra=\"forbid\")`, so writing `type_impure` to a `steps:` entry raises a Pydantic validation error \u2014 and no step adds the field. Step 4 compounds this by explicitly asserting \"No schema change.\" As specified the flag cannot be persisted at all, so the suppression it gates can never fire. \u2014 - `docs/implementation-plans/2-merge-steps-executor.md`: expanded step 2's `files:` to add `plan_tool/schema.py` and `tests/test_schema.py` and updated its title to cover adding an optional `type_impure` field to the `Step` schema. (+ follow-up: - `docs/implementation-plans/plan-details/merge-steps-executor/02-merge-steps-orchestrator-merge-safe.md`: added a `tests/test_schema.py` bullet to the Files section noting it covers the `Step.type_impure` field round-trip and the `extra=\"forbid\"` guard.)\n- [APPLIED] Step 1's Summary claims a \"run-started set raises `CreateError` with the input untouched,\" but the pure `_apply_step_merge` transform has no run-state knowledge \u2014 its actual validation list (\u22652 ids, exist, contiguous, connected, dry-run cycle) correctly omits run state, which is `_merge_is_safe`'s job in step 2. The summary overstates the transform's responsibility and could mislead an implementer into adding a run-state check to the pure layer. \u2014 - `docs/implementation-plans/plan-details/merge-steps-executor/01-apply-step-merge-pure-transform-merge.md`: dropped \"run-started\" from the step 1 Summary's `CreateError` cases and attributed the non-PENDING run-state gate to step 2's `_merge_is_safe`.\n- [APPLIED] Step 1 (`Add _apply_step_merge pure transform`) Summary states \"an ambiguous (non-adjacent / **fork-join**) or run-started set raises `CreateError`,\" directly contradicting the plan body (Architecture, Out of scope, and the acceptance criterion \"an internally-branching but connected set collapses legally\"), which classifies a fork/join among members as undirected-connected and therefore a *legal* collapse. A developer implementing Step 1 as its Summary reads would reject the very fork/join sets the body promises to fold, failing that acceptance criterion. \u2014 - `docs/implementation-plans/plan-details/merge-steps-executor/01-apply-step-merge-pure-transform-merge.md`: rewrote the Summary's rejection clause to reject only non-adjacent (gapped) or disjoint (unconnected) sets and state that a fork/join (internally-branching but connected) set collapses legally.\n- [APPLIED] The Risks entry on already-run steps says `_confirm_merge` treats \"non-TTY as a bypass\" (the `getattr(args,\"yes\",False) or not sys.stdin.isatty()` pattern) so merge \"runs to completion unattended \u2026 rather than auto-declining with rc 2,\" but Step 2 (`Add merge_steps orchestrator`) defines `_confirm_merge` as a mirror of `_split_is_safe`'s sibling `_confirm_split` \u2014 which returns `False` (declines) on non-TTY (detail.py:2871). Mirroring `_confirm_split` yields the opposite of the Risk's stated bypass. Moreover the cited precedent is wrong: `cmd_split`/`split_step` never call `_confirm_split` at all \u2014 split's only CLI-path gate is `_split_is_safe` raising `DetailError` (detail.py:2992) \u2014 so \"reconciling with cmd_split's no-gate posture\" actually argues for merge having *no* interactive confirm, not a `_confirm_merge` mirror. \u2014 - `docs/implementation-plans/2-merge-steps-executor.md`: rewrote the already-run-steps Risk entry to state `_confirm_merge` returns proceed-`True` on `--yes`/non-TTY (does not mirror `_confirm_split`'s non-TTY decline) and that split's CLI path has no interactive confirm gate, only `_split_is_safe`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- CRITICAL `[type-impurity-suppression]`: The plan body declares that `cmd_merge`'s completeness tail (`--iterate` default ON) must check the merged step's `type_impure` flag and downgrade a `granularity-split`/mixed-step finding to advisory so the loop \"cannot re-split (and thus auto-reverse) the merge\" \u2014 yet no step operationalizes the downgrade gate in `cmd_completeness`'s finding-application loop (`plan_tool/cli/completeness_cmd.py`), nor does any step write the flag. Step 2 only sets `change_type=None` and `allow_split=False` (which the body itself says \"does **not** reach this gate\"). A merged refactor+feature step yields a `plan-correctness` mixed-step finding, which the convergence loop routes to `open_apply` and `apply_finding` every iteration (only `plan-completeness` conceptual findings are auto-deferred as advisory) \u2014 so the headline \"trivial refactor feeding one feature step\" fold never converges under the default `--iterate`.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor type-impurity-suppression`\n- MEDIUM `[merged-files-creates-partition]`: Step 2 assembles the merged step's `files` as the union of members' `all_files` and sets `creates=[]`, collapsing every folded member's to-be-created path into `files`. Because a merge requires an all-PENDING set, those created paths do not exist on disk yet, and `review.py:check_file_existence` only exempts `created=True` entries from missing-target warnings \u2014 so each genuinely-new file, now `created=False`, classifies as NEW/MISSING_PARENT and draws a missing-modify-target finding that the merge's own completeness tail then chews on. Step 2 notes the gap and defers \"a precise files-vs-creates partition,\" leaving a known convergence irritant unaddressed.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor merged-files-creates-partition`\n- MEDIUM `[type-impure-acceptance]`: The plan body's Architecture commits to \"marking the merged step as intentionally type-impure\" as the convergence-critical behavior, but no Acceptance criterion locks it in \u2014 the Acceptance list covers the transform, safety gate, detail combine, and CLI, yet is silent on persisting/honoring `type_impure`. A behavior the design calls load-bearing has no checkable signal, so an implementation that omits it passes acceptance.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor type-impure-acceptance`\n- MEDIUM `[type-impurity-flag]`: The Architecture commits to a persisted per-step frontmatter flag `type_impure: true` on the merged `steps:` entry, but no step adds `type_impure` to the `Step` schema or `PLAN_FORMAT.md` frontmatter spec \u2014 the field does not exist at HEAD. Step 2 assembles the merged step and Step 4 only documents the `merge` command; none introduces the schema field the suppression mechanism reads and writes, so the flag cannot round-trip through `safe_load`/`safe_dump` of the plan frontmatter.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor type-impurity-flag`\n- MEDIUM `[merge-reauthor-partial-failure]`: Step 2 (`merge_steps`) rewrites the plan frontmatter (renumber/rewire), migrates downstream detail files, and archives folded-away files **before** re-authoring the combined detail via Claude through the seven-section gate, but no section names what state the plan is left in if that re-author/re-audit fails after the disk mutations land. The merged step would persist renumbered-but-undetailed with sibling details already renamed \u2014 a partial-failure the design implies but never addresses.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor merge-reauthor-partial-failure`\n- MEDIUM `[confirm-merge-nontty-posture]`: The Risks entry on already-run steps and step 2/3 specify that `_confirm_merge` is bypassed under `--yes` *or* non-TTY (`getattr(args,\"yes\",False) or not sys.stdin.isatty()`), so an unattended merge proceeds \u2014 a deliberate divergence from `_confirm_split`, which auto-*declines* non-TTY. The plan justifies headless execution but does not state the data-safety basis (that `_merge_is_safe` already blocks every run-started member/downstream step before the bypass can mutate anything), leaving the divergence reading as a weakened safety gate.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor confirm-merge-nontty-posture`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply merge-steps-executor --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Merge Steps Executor\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- CRITICAL `[type-impurity-suppression]`: The plan body declares that `cmd_merge`'s completeness tail (`--iterate` default ON) must check the merged step's `type_impure` flag and downgrade a `granularity-split`/mixed-step finding to advisory so the loop \"cannot re-split (and thus auto-reverse) the merge\" \u2014 yet no step operationalizes the downgrade gate in `cmd_completeness`'s finding-application loop (`plan_tool/cli/completeness_cmd.py`), nor does any step write the flag. Step 2 only sets `change_type=None` and `allow_split=False` (which the body itself says \"does **not** reach this gate\"). A merged refactor+feature step yields a `plan-correctness` mixed-step finding, which the convergence loop routes to `open_apply` and `apply_finding` every iteration (only `plan-completeness` conceptual findings are auto-deferred as advisory) \u2014 so the headline \"trivial refactor feeding one feature step\" fold never converges under the default `--iterate`.\n- MEDIUM `[merged-files-creates-partition]`: Step 2 assembles the merged step's `files` as the union of members' `all_files` and sets `creates=[]`, collapsing every folded member's to-be-created path into `files`. Because a merge requires an all-PENDING set, those created paths do not exist on disk yet, and `review.py:check_file_existence` only exempts `created=True` entries from missing-target warnings \u2014 so each genuinely-new file, now `created=False`, classifies as NEW/MISSING_PARENT and draws a missing-modify-target finding that the merge's own completeness tail then chews on. Step 2 notes the gap and defers \"a precise files-vs-creates partition,\" leaving a known convergence irritant unaddressed.\n- MEDIUM `[type-impure-acceptance]`: The plan body's Architecture commits to \"marking the merged step as intentionally type-impure\" as the convergence-critical behavior, but no Acceptance criterion locks it in \u2014 the Acceptance list covers the transform, safety gate, detail combine, and CLI, yet is silent on persisting/honoring `type_impure`. A behavior the design calls load-bearing has no checkable signal, so an implementation that omits it passes acceptance.\n- MEDIUM `[type-impurity-flag]`: The Architecture commits to a persisted per-step frontmatter flag `type_impure: true` on the merged `steps:` entry, but no step adds `type_impure` to the `Step` schema or `PLAN_FORMAT.md` frontmatter spec \u2014 the field does not exist at HEAD. Step 2 assembles the merged step and Step 4 only documents the `merge` command; none introduces the schema field the suppression mechanism reads and writes, so the flag cannot round-trip through `safe_load`/`safe_dump` of the plan frontmatter.\n- MEDIUM `[merge-reauthor-partial-failure]`: Step 2 (`merge_steps`) rewrites the plan frontmatter (renumber/rewire), migrates downstream detail files, and archives folded-away files **before** re-authoring the combined detail via Claude through the seven-section gate, but no section names what state the plan is left in if that re-author/re-audit fails after the disk mutations land. The merged step would persist renumbered-but-undetailed with sibling details already renamed \u2014 a partial-failure the design implies but never addresses.\n- MEDIUM `[confirm-merge-nontty-posture]`: The Risks entry on already-run steps and step 2/3 specify that `_confirm_merge` is bypassed under `--yes` *or* non-TTY (`getattr(args,\"yes\",False) or not sys.stdin.isatty()`), so an unattended merge proceeds \u2014 a deliberate divergence from `_confirm_split`, which auto-*declines* non-TTY. The plan justifies headless execution but does not state the data-safety basis (that `_merge_is_safe` already blocks every run-started member/downstream step before the bypass can mutate anything), leaving the divergence reading as a weakened safety gate.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk merge-steps-executor` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-11fcf1c5",
+      "source": "plan-completeness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "The plan body declares that `cmd_merge`'s completeness tail (`--iterate` default ON) must check the merged step's `type_",
+      "body": "The plan body declares that `cmd_merge`'s completeness tail (`--iterate` default ON) must check the merged step's `type_impure` flag and downgrade a `granularity-split`/mixed-step finding to advisory so the loop \"cannot re-split (and thus auto-reverse) the merge\" \u2014 yet no step operationalizes the downgrade gate in `cmd_completeness`'s finding-application loop (`plan_tool/cli/completeness_cmd.py`), nor does any step write the flag. Step 2 only sets `change_type=None` and `allow_split=False` (which the body itself says \"does **not** reach this gate\"). A merged refactor+feature step yields a `plan-correctness` mixed-step finding, which the convergence loop routes to `open_apply` and `apply_finding` every iteration (only `plan-completeness` conceptual findings are auto-deferred as advisory) \u2014 so the headline \"trivial refactor feeding one feature step\" fold never converges under the default `--iterate`.",
+      "suggested_action": "add a step that operationalizes the suppression \u2014 write `type_impure` on `change_type` disagreement in `merge_steps` and teach the completeness iterate loop to downgrade mixed-step/`granularity-split` findings on flagged steps to advisory.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "type-impurity-suppression"
+    },
+    {
+      "id": "plan-plan-completeness-fdb02cbd",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 assembles the merged step's `files` as the union of members' `all_files` and sets `creates=[]`, collapsing every ",
+      "body": "Step 2 assembles the merged step's `files` as the union of members' `all_files` and sets `creates=[]`, collapsing every folded member's to-be-created path into `files`. Because a merge requires an all-PENDING set, those created paths do not exist on disk yet, and `review.py:check_file_existence` only exempts `created=True` entries from missing-target warnings \u2014 so each genuinely-new file, now `created=False`, classifies as NEW/MISSING_PARENT and draws a missing-modify-target finding that the merge's own completeness tail then chews on. Step 2 notes the gap and defers \"a precise files-vs-creates partition,\" leaving a known convergence irritant unaddressed.",
+      "suggested_action": "preserve the members' `files`-vs-`creates` partition on the merged step (union `creates` separately) rather than folding created paths into `files`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "merged-files-creates-partition"
+    },
+    {
+      "id": "plan-plan-completeness-8c9d1b56",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan body's Architecture commits to \"marking the merged step as intentionally type-impure\" as the convergence-critic",
+      "body": "The plan body's Architecture commits to \"marking the merged step as intentionally type-impure\" as the convergence-critical behavior, but no Acceptance criterion locks it in \u2014 the Acceptance list covers the transform, safety gate, detail combine, and CLI, yet is silent on persisting/honoring `type_impure`. A behavior the design calls load-bearing has no checkable signal, so an implementation that omits it passes acceptance.",
+      "suggested_action": "add an acceptance criterion asserting the merged step is flagged type-impure on member `change_type` disagreement and that the completeness loop downgrades its mixed-step finding to advisory.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "type-impure-acceptance"
+    },
+    {
+      "id": "plan-plan-completeness-0c57ce48",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture commits to a persisted per-step frontmatter flag `type_impure: true` on the merged `steps:` entry, but ",
+      "body": "The Architecture commits to a persisted per-step frontmatter flag `type_impure: true` on the merged `steps:` entry, but no step adds `type_impure` to the `Step` schema or `PLAN_FORMAT.md` frontmatter spec \u2014 the field does not exist at HEAD. Step 2 assembles the merged step and Step 4 only documents the `merge` command; none introduces the schema field the suppression mechanism reads and writes, so the flag cannot round-trip through `safe_load`/`safe_dump` of the plan frontmatter.",
+      "suggested_action": "add a step (or fold into Step 2) that defines `type_impure` as an optional `Step` field in the schema and documents it in `PLAN_FORMAT.md`, so the merge can persist and the loop can read it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "type-impurity-flag"
+    },
+    {
+      "id": "plan-plan-completeness-d0641715",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`merge_steps`) rewrites the plan frontmatter (renumber/rewire), migrates downstream detail files, and archives f",
+      "body": "Step 2 (`merge_steps`) rewrites the plan frontmatter (renumber/rewire), migrates downstream detail files, and archives folded-away files **before** re-authoring the combined detail via Claude through the seven-section gate, but no section names what state the plan is left in if that re-author/re-audit fails after the disk mutations land. The merged step would persist renumbered-but-undetailed with sibling details already renamed \u2014 a partial-failure the design implies but never addresses.",
+      "suggested_action": "state the partial-failure posture for a failed combine re-author (rollback vs. leave-and-resume), even if only to declare it mirrors split's existing behavior. - INFO: [merge-default-title] The CLI spec and Step 3 make `--title` optional with \"default = derive from the merged set's titles,\" but no step or acceptance criterion specifies *how* the default is derived (concatenation, first member's title, or LLM-synthesized) or where it is computed (Step 2's caller-assembled `merged` Step vs. Step 3's handler). The criterion is unfalsifiable as written. \u2192 fix: pin the default-title derivation rule and assign its owner step so the behavior is testable.",
+      "impact": "low",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "merge-reauthor-partial-failure"
+    },
+    {
+      "id": "plan-plan-completeness-a97ee010",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks entry on already-run steps and step 2/3 specify that `_confirm_merge` is bypassed under `--yes` *or* non-TTY (",
+      "body": "The Risks entry on already-run steps and step 2/3 specify that `_confirm_merge` is bypassed under `--yes` *or* non-TTY (`getattr(args,\"yes\",False) or not sys.stdin.isatty()`), so an unattended merge proceeds \u2014 a deliberate divergence from `_confirm_split`, which auto-*declines* non-TTY. The plan justifies headless execution but does not state the data-safety basis (that `_merge_is_safe` already blocks every run-started member/downstream step before the bypass can mutate anything), leaving the divergence reading as a weakened safety gate.",
+      "suggested_action": "note in the Risks mitigation that the non-TTY bypass is safe only because `_merge_is_safe` gates run-started steps first, so the bypass never restructures completed work.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "confirm-merge-nontty-posture"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-11fcf1c5": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: added step 5 (feature, `depends_on: [2, 3]`, files `plan_tool/detail.py` / `plan_tool/cli/completeness_cmd.py` / tests) to persist `type_impure` on `change_type` disagreement in `merge_steps` and downgrade mixed-step/`granularity-split` findings on flagged steps to advisory in `cmd_completeness`'s iterate loop.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-fdb02cbd": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-8c9d1b56": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-0c57ce48": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: extended Step 4's title to also document the optional `type_impure` step field in `PLAN_FORMAT.md` alongside the merge command.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-d0641715": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: added a partial-failure posture statement to the Architecture \"Detail-file handling\" paragraph declaring `merge_steps` leaves a renumbered-but-undetailed step (no rollback, leave-and-resume) when the combine re-author/re-audit fails after disk mutations, mirroring split.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-a97ee010": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: added a note to the already-run-steps Risks mitigation that the non-TTY `_confirm_merge` bypass is safe only because `_merge_is_safe` gates run-started members/downstream steps first, so an unattended merge never restructures completed work.",
+      "halt_reason": ""
+    }
+  }
+}

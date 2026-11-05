@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "plan_slug": "scope-fence-continuity",
+  "plan_path": "docs/implementation-plans/2-scope-fence-continuity.md",
+  "created_at": "2026-07-21T17:54:45Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "8cc177984ae53a4ef630b1e5fc2776081758f9b7d5982a14e080bfc8c2ad348f",
+  "code_fingerprint": {
+    "plan_tool/create.py": "ee9e572d0745f2891be9ac9ee14eef337f53ec2fe78dbcde0b6d77fd74fac10e",
+    "plan_tool/prompts/distill-seed.md": "a2ff82226aae79232a170b90ee60ea7c0a9b65cefbb77f09964ded75093f83a1",
+    "plan_tool/prompts/synthesize-body.md": "0eecae65b5eb7ffd2d986566e5aff280387d5f4c9f79359e035f403fbcc123f3",
+    "tests/test_create.py": "60158fc4755e73a243d11947dd11b5b71ae0eb5fc51d48ba8d2c5f0e17855d6b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

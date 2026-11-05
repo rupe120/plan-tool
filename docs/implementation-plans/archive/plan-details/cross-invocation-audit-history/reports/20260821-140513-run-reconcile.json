@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T14:05:13Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "e8112a3275f9f89f79c8bfa22cb1fc88dcf6549c63ccc6cb46347afd8edfdff6",
+  "code_fingerprint": {
+    "BACKLOG.md": "8db3ecbd1715e89835fef37db7a290e8cd62b7f3d9dfbcfdd32dcffcec9b276f",
+    "docs/ARCHITECTURE.md": "8137f574ead49c636395cf9f72c898b589905c681d95db9fe3a6f6fe92703cc6",
+    "docs/AUDIT_FLOW.md": "31cf7772f418431338de8d884d453cec636cf4626c1d05ca2136fa50b5ae763f",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "1d39ae8763275c80e74d9682e03644f27a91f60080cfc0d2c73a267ff7537bd4",
+    "plan_tool/cli/convergence_cmd.py": "a9060d2291b22f3a50459c7ba7774ed7e0d3421865454e95f017327f87ea8ce4",
+    "plan_tool/convergence_diagnosis.py": "eec4f9a288143d324069e8373f538762767f2a2efd90950a9975b961a056c880",
+    "plan_tool/review_persistence.py": "8a4f5ac3889ab4428c04bff1706c520baf90b3e04e99ded0ba51f504faa3c66b",
+    "tests/cli/test_convergence_cmd.py": "1caa953105a8ff617235c125f2d0a06952922b8b3bf3f04c50983cfcd646e9ce",
+    "tests/fixtures/convergence/audit-history-ledger.json": "1206316d198a05f9f8228625cf4bfd5375aaf41e8546d27aa03f92c7f0a0b163",
+    "tests/test_convergence_diagnosis.py": "333e4378ce0f34febcd7960ea8eb096c8957f75809d427e00c673eaef0c704b7",
+    "tests/test_review_persistence.py": "6a1d8314dc409702e5977c631f1ba5b5fa5136230009fdea4be7cfa9f45b9af5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 3 of 3 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

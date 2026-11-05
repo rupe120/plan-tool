@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "plan_slug": "bare-plan-correctness-apply-route",
+  "plan_path": "docs/implementation-plans/2-bare-plan-correctness-apply-route.md",
+  "created_at": "2026-08-03T19:00:08Z",
+  "kind": "run-reconcile",
+  "step_id": 6,
+  "plan_fingerprint": "8fe8f26f5cc20c1e0303060555f2d22f62b51fec31782d3b842a67d9f30db2e1",
+  "code_fingerprint": {
+    "BACKLOG.md": "93f69816519e34c234e81abb0bfc474e816f4c13faaf4a140e8c6cdf717d4ff6",
+    "CLAUDE.md": "9d85a9e2c9794829f1b5d6388d03323f5ef9be60e3300edd36a97f32352d7972",
+    "docs/AUDIT_FLOW.md": "64f12e66defe606e61c2eafb33fb9ad5332bfa9fab4ae805ab45d263082aae06",
+    "docs/cli/README.md": "517c8e3ee339e226cf91b16107e6e3e89851d148fb63871e0fd55f08e6ed4dec",
+    "docs/cli/completeness-apply.md": "5533aabcb14376eee833be82af75d6d78a7667459063f12f2c420ac85a4d530a",
+    "plan_tool/cli/completeness_cmd.py": "f07594be49d200d5d9b065d30a5366b38b51796a41516407964ba4b6a6a84f96",
+    "plan_tool/cli/completeness_phases.py": "1c4c2486afc1a3ac95f802ff83e7230845d775eb045378034a721d7db0215984",
+    "plan_tool/completeness_report.py": "33ad2bac74d693f704b42691a3058c977ec51279703b8101ad8dbea636028747",
+    "plan_tool/launcher.py": "d6fc80e54155774a4d02f10a43e629fde3a603323e5cc14b99a13e2b6e3279bf",
+    "plan_tool/review.py": "a95eb74783685e092e5e06debca4a7c145ea024bca23bf768d78231b9a6080ee",
+    "tests/cli/package_surface_help.golden.txt": "110421fb302671195102d38a763ef41443f7d7d7442aa666f9a392663d5b47f5",
+    "tests/cli/test_completeness_cmd.py": "18115ba8e663ace19292c4922bd2610931adffe3755f104ed5f33b845218aaab",
+    "tests/test_completeness_report.py": "2f13521423cc265f3d382ed6984485589dd44c411f800f1be56cdd0c31745eba",
+    "tests/test_launcher.py": "5dfed1af331e6e74f97390ad1a785bee034ea3a33bea6eed488831d628734e26",
+    "tests/test_review.py": "dcc206c8d847f3226bcfa5e3acd8c0b874ce010b44b965f4ca176f930224d8b3"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 6 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

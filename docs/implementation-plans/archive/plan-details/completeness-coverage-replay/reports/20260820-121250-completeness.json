@@ -1,0 +1,151 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T12:12:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fc2c3d2fc328e7a93ba7ce32de59b90627a5e4f2275d51da5b5d48589b83036c",
+  "code_fingerprint": {
+    "BACKLOG.md": "52b862e08448e310fd2c65e096f285d47a42e6262bcbe1b3ca50b7f397686b63",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "1548b41dc570c27eaeb1f7a6575c29dbbcbe7b6a857f6f2fd48ccf8a79ec259e",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "8a480a08356f78d0652146d2befea45e458cabcde72385f490f24d9e08b77ff6",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "02c9eb99a4392ece6156bebe8de8d9b25f0ecb533d915a6075bbcd42e67266e4",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "441ca1efdd4f1e78ee49335a927d59126e8f5f2dec8d332d07e61d009affc1fd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T12:12:49Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d0a18fee9812a4ce44dc675caa55fee1f182b1b1ac765016c48a0eee75493d18`\n- **Detail bundle digest:** `67230fc771e1bab3d6b7a1043ad414d118bc53bf6882884bc74bf1d4142288f6`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 5 (0 missing-concept-link, 5 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 53192 bytes (+53192 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[schedule-observation-policy]`: Architecture says a schedule observes labels \u201cwhen it chooses full discovery\u201d; step 1 `Implementation` declares only an interval and terminal confirmation; step 2 `Model discovery and reuse explicitly` says a changed key \u201cfollows its declared discovery path\u201d; and step 3 `Exercise the declared comparison set` records changed-input snapshots. None defines the initial phase or whether a changed key between interval ticks forces full discovery or stays unresolved, so compliant replayers can select a cadence or return `insufficient-evidence` from the same corpus.\n  - Fix: define the initial, periodic, changed-input, and terminal observation rules once and require the manifest, capture records, replay, and tests to follow them\n- HIGH `[fresh-label-authority]`: Architecture and Risks reject recommendation IDs and prose as cross-run finding identity; step 1 `Make authoritative labels explicit` and its corpus tests require labels; step 2 `Use the fresh-label comparison as the only loss rule` compares only labels; step 3 `Label findings explicitly` maps findings to observations and gives each label a scope; and step 4 publishes the resulting losses. The bundle never says what captured fresh output a label proves or how labels are declared the same or different across snapshots, so inconsistent labeling can change whether #173 receives a safe cadence.\n  - Fix: define label authority that binds every label to recorded fresh output and makes cross-snapshot identity either explicit or unresolved throughout capture, validation, replay, and publication\n- HIGH `[complete-worktree-evidence]`: Architecture and the first acceptance criterion make clean commit/tree identity prove the complete model-visible repository state; step 1 `Separate full worktree identity from scoped provenance` and its clean-worktree test enforce that boundary; step 3 `Capture authority at the audit boundary` and `Clean reports after every snapshot` remove scratch state; and step 4 publishes the resulting corpus provenance. At HEAD, `review.py:render_plan_audit_prompt` gives the audit a repository Read/Grep surface while `.gitignore` permits runtime files, and `cli/gitcommit.py:worktree_remove` removes a checkout without preserving a durable corpus reference; the bundle neither covers ignored model-readable files nor requires recorded commit/tree objects to remain resolvable after cleanup.\n  - Fix: define admission and retention rules that account for every model-readable non-committed file and keep each recorded worktree identity resolvable to a future corpus verifier\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step1-files-coherence-afac5c1b]`: The detail body for step 1 cites `benchmarks/corpus/completeness-coverage/cases.json`, which isn't in the step's `files:` array but closely resembles the declared `benchmarks/corpus/completeness-coverage/manifest.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step1-files-coherence-ce9fc2cb]`: The detail body for step 1 cites `plan_tool/completeness_coverage_replay.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/completeness_coverage_corpus.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step1-files-coherence-21b3da4e]`: The detail body for step 1 cites `tests/test_completeness_coverage_replay.py`, which isn't in the step's `files:` array but closely resembles the declared `tests/test_completeness_coverage_corpus.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-0021e954]`: The detail body for step 2 cites `plan_tool/completeness_coverage_corpus.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/completeness_coverage_replay.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step3-files-coherence-91c25a6d]`: The detail body for step 3 cites `benchmarks/corpus/completeness-coverage/manifest.json`, which isn't in the step's `files:` array but closely resembles the declared `benchmarks/corpus/completeness-coverage/cases.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply completeness-coverage-replay` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n- `plan-tool completeness-apply completeness-coverage-replay` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (5 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d0a18fee9812a4ce44dc675caa55fee1f182b1b1ac765016c48a0eee75493d18`\n- **Detail bundle digest:** `67230fc771e1bab3d6b7a1043ad414d118bc53bf6882884bc74bf1d4142288f6`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[schedule-observation-policy]`: Architecture says a schedule observes labels \u201cwhen it chooses full discovery\u201d; step 1 `Implementation` declares only an interval and terminal confirmation; step 2 `Model discovery and reuse explicitly` says a changed key \u201cfollows its declared discovery path\u201d; and step 3 `Exercise the declared comparison set` records changed-input snapshots. None defines the initial phase or whether a changed key between interval ticks forces full discovery or stays unresolved, so compliant replayers can select a cadence or return `insufficient-evidence` from the same corpus.\n- HIGH `[fresh-label-authority]`: Architecture and Risks reject recommendation IDs and prose as cross-run finding identity; step 1 `Make authoritative labels explicit` and its corpus tests require labels; step 2 `Use the fresh-label comparison as the only loss rule` compares only labels; step 3 `Label findings explicitly` maps findings to observations and gives each label a scope; and step 4 publishes the resulting losses. The bundle never says what captured fresh output a label proves or how labels are declared the same or different across snapshots, so inconsistent labeling can change whether #173 receives a safe cadence.\n- HIGH `[complete-worktree-evidence]`: Architecture and the first acceptance criterion make clean commit/tree identity prove the complete model-visible repository state; step 1 `Separate full worktree identity from scoped provenance` and its clean-worktree test enforce that boundary; step 3 `Capture authority at the audit boundary` and `Clean reports after every snapshot` remove scratch state; and step 4 publishes the resulting corpus provenance. At HEAD, `review.py:render_plan_audit_prompt` gives the audit a repository Read/Grep surface while `.gitignore` permits runtime files, and `cli/gitcommit.py:worktree_remove` removes a checkout without preserving a durable corpus reference; the bundle neither covers ignored model-readable files nor requires recorded commit/tree objects to remain resolvable after cleanup.\n\n### Files coherence\n\n- INFO: step 1 detail cites `benchmarks/corpus/completeness-coverage/cases.json` resembling declared `benchmarks/corpus/completeness-coverage/manifest.json` (typo/stale path?)\n- INFO: step 1 detail cites `plan_tool/completeness_coverage_replay.py` resembling declared `plan_tool/completeness_coverage_corpus.py` (typo/stale path?)\n- INFO: step 1 detail cites `tests/test_completeness_coverage_replay.py` resembling declared `tests/test_completeness_coverage_corpus.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/completeness_coverage_corpus.py` resembling declared `plan_tool/completeness_coverage_replay.py` (typo/stale path?)\n- INFO: step 3 detail cites `benchmarks/corpus/completeness-coverage/manifest.json` resembling declared `benchmarks/corpus/completeness-coverage/cases.json` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk completeness-coverage-replay` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f0b38e85",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says a schedule observes labels \u201cwhen it chooses full discovery\u201d; step 1 `Implementation` declares only an ",
+      "body": "Architecture says a schedule observes labels \u201cwhen it chooses full discovery\u201d; step 1 `Implementation` declares only an interval and terminal confirmation; step 2 `Model discovery and reuse explicitly` says a changed key \u201cfollows its declared discovery path\u201d; and step 3 `Exercise the declared comparison set` records changed-input snapshots. None defines the initial phase or whether a changed key between interval ticks forces full discovery or stays unresolved, so compliant replayers can select a cadence or return `insufficient-evidence` from the same corpus.",
+      "suggested_action": "define the initial, periodic, changed-input, and terminal observation rules once and require the manifest, capture records, replay, and tests to follow them",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "schedule-observation-policy",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-50975a3c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture and Risks reject recommendation IDs and prose as cross-run finding identity; step 1 `Make authoritative lab",
+      "body": "Architecture and Risks reject recommendation IDs and prose as cross-run finding identity; step 1 `Make authoritative labels explicit` and its corpus tests require labels; step 2 `Use the fresh-label comparison as the only loss rule` compares only labels; step 3 `Label findings explicitly` maps findings to observations and gives each label a scope; and step 4 publishes the resulting losses. The bundle never says what captured fresh output a label proves or how labels are declared the same or different across snapshots, so inconsistent labeling can change whether #173 receives a safe cadence.",
+      "suggested_action": "define label authority that binds every label to recorded fresh output and makes cross-snapshot identity either explicit or unresolved throughout capture, validation, replay, and publication",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-label-authority",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-54ca8c77",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture and the first acceptance criterion make clean commit/tree identity prove the complete model-visible reposit",
+      "body": "Architecture and the first acceptance criterion make clean commit/tree identity prove the complete model-visible repository state; step 1 `Separate full worktree identity from scoped provenance` and its clean-worktree test enforce that boundary; step 3 `Capture authority at the audit boundary` and `Clean reports after every snapshot` remove scratch state; and step 4 publishes the resulting corpus provenance. At HEAD, `review.py:render_plan_audit_prompt` gives the audit a repository Read/Grep surface while `.gitignore` permits runtime files, and `cli/gitcommit.py:worktree_remove` removes a checkout without preserving a durable corpus reference; the bundle neither covers ignored model-readable files nor requires recorded commit/tree objects to remain resolvable after cleanup.",
+      "suggested_action": "define admission and retention rules that account for every model-readable non-committed file and keep each recorded worktree identity resolvable to a future corpus verifier",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "complete-worktree-evidence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "d0a18fee9812a4ce44dc675caa55fee1f182b1b1ac765016c48a0eee75493d18",
+      "detail_bundle_digest": "67230fc771e1bab3d6b7a1043ad414d118bc53bf6882884bc74bf1d4142288f6",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+          "state": "present",
+          "digest": "1548b41dc570c27eaeb1f7a6575c29dbbcbe7b6a857f6f2fd48ccf8a79ec259e"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+          "state": "present",
+          "digest": "8a480a08356f78d0652146d2befea45e458cabcde72385f490f24d9e08b77ff6"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+          "state": "present",
+          "digest": "02c9eb99a4392ece6156bebe8de8d9b25f0ecb533d915a6075bbcd42e67266e4"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+          "state": "present",
+          "digest": "441ca1efdd4f1e78ee49335a927d59126e8f5f2dec8d332d07e61d009affc1fd"
+        }
+      ],
+      "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 53192,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

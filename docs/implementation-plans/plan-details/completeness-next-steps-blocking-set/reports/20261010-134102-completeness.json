@@ -1,0 +1,169 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T13:41:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "adafa772706776d8c07c79021e2da16b79b3effedc42759a457077cef0a55b62",
+  "code_fingerprint": {
+    "BACKLOG.md": "4095a24da1efa313ce8270ffdba03a09f2085bf81126009dcae67f25885467a2",
+    "docs/how-to/pipeline/audit.md": "21012dde3125aec12dc575501533c9540d50cb68939d957314ea15f288d889e5",
+    "plan_tool/cli/authoring.py": "945eb4cd8377cfb0eeea343ab1699a0ea66dd2e24cd3c7990fd2211d81b59347",
+    "plan_tool/cli/completeness_cmd.py": "d3da4d5b5025da4010bd29e88ce0602670676f82c5e66048072033bc6c76dc00",
+    "plan_tool/cli/completeness_phases.py": "e6d616e9b5a6d442c35066fafe33285e90eede030dd8f9660e0e9463ff1baed6",
+    "plan_tool/completeness_report.py": "35e48c256fe0b2277a3d2743119b614e470d1393d449727022d6818cc6684e2a",
+    "tests/cli/test_completeness_cmd.py": "6a55ac4d4dcf3d65f6416be80a51fdf9109cfb8ed6abe9bf9713dacbe5e465eb",
+    "tests/test_completeness_report.py": "8321f9064241f3fdeada202a12c4d061dea577ba5a1b019e18f17ae697c8d211"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md": "a2e17ccec934b5ff88f4a99e32a19daea03b642a37eb0290a2c6fb83431f0596",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md": "d85489eadadb4256b7aa9dab37f630a3eebded054796120a8becd2c50cb56dd6",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md": "acd605a32a4814dbe0f345a96a32a0ddad8fb170a2f3660dc49d566654ac7f1b",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md": "81bff63809b4ec1f5aa079922e1250890b230ef90a6577436cc8af216715d04e",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Steps Blocking Set\n\n`completeness-next-steps-blocking-set` \u00b7 generated 2026-10-10T13:41:01Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `650051f5cb246f1c90e63124c73f032b6dd0330d7b125eafa1aa859ca2297b31`\n- **Detail bundle digest:** `a541b20a015931ae39523df37ef4754c8f99efcab6e7fa488d5cf27c48550c94`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 62183 bytes (+62183 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.25\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[verdict-deterministic-carrier]` [confidence: limited]: Step 2 (`Build step 1's verdict from the finalize gate's own result\u2026`) states the verdict is \"built once from the gate's own values (`has_blocking`, `audit_incomplete`, `conceptual_bar_blocking_ids`)\". The Architecture section and step 1 instead say the verdict carries the blocking deterministic findings themselves (\"the plan collects those arms as findings in one computation\"). A bool plus ids cannot name a missing `intent:` or a purity gap, so the readers cannot \"name each blocking gap\" for deterministic kinds. Step 2 also forbids changing `_completeness_has_blocking_findings`, so it never says where the collected findings come from. Step 1, step 2 and the Architecture section must state one carrier.\n  - Fix: Specify in step 2 that the deterministic arms are collected as findings once, that the gate's bool is derived from that collection, and that the verdict wraps both the collected findings and the conceptual ids. Align the step 2 summary and Input wording to that.\n- MEDIUM `[verdict-state-precedence]` [confidence: limited]: The plan defines the verdict states set, incomplete and absent, but does not say which wins when the audit is incomplete and a deterministic arm also blocks. Architecture says \"Incomplete and absent behave alike: offer only the fresh re-audit\", while the gate's `has_blocking` is true from the deterministic arms. Two readers can reasonably differ on whether the deterministic gap is named in the incomplete state. The step 4 table crosses finding kind with verdict state, so the expected output for that cell is undefined.\n  - Fix: State in the Architecture section and step 1 whether an incomplete verdict still lists known blocking deterministic findings, and make the step 4 table assert that one outcome.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[parent-tail-not-run]` [confidence: limited]: Step 3 drops `run` when the tail \"returned no verdict\". Neither the plan nor step 3 distinguishes a tail that did not run at all (for example, the completeness tail skipped or failed to start) from one that ran and returned `absent`. In the first case, dropping `run` may be the intended conservative answer, but it is not stated, and no test row covers it.\n  - Fix: Add one sentence to step 3 and the plan's Testing section stating whether a tail that never ran is treated as `absent` (no `run`), and add a case for it to the parent tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1eb03b12]` [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Steps Blocking Set\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `650051f5cb246f1c90e63124c73f032b6dd0330d7b125eafa1aa859ca2297b31`\n- **Detail bundle digest:** `a541b20a015931ae39523df37ef4754c8f99efcab6e7fa488d5cf27c48550c94`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[verdict-deterministic-carrier]` [confidence: limited]: Step 2 (`Build step 1's verdict from the finalize gate's own result\u2026`) states the verdict is \"built once from the gate's own values (`has_blocking`, `audit_incomplete`, `conceptual_bar_blocking_ids`)\". The Architecture section and step 1 instead say the verdict carries the blocking deterministic findings themselves (\"the plan collects those arms as findings in one computation\"). A bool plus ids cannot name a missing `intent:` or a purity gap, so the readers cannot \"name each blocking gap\" for deterministic kinds. Step 2 also forbids changing `_completeness_has_blocking_findings`, so it never says where the collected findings come from. Step 1, step 2 and the Architecture section must state one carrier.\n- MEDIUM `[verdict-state-precedence]` [confidence: limited]: The plan defines the verdict states set, incomplete and absent, but does not say which wins when the audit is incomplete and a deterministic arm also blocks. Architecture says \"Incomplete and absent behave alike: offer only the fresh re-audit\", while the gate's `has_blocking` is true from the deterministic arms. Two readers can reasonably differ on whether the deterministic gap is named in the incomplete state. The step 4 table crosses finding kind with verdict state, so the expected output for that cell is undefined.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[parent-tail-not-run]` [confidence: limited]: Step 3 drops `run` when the tail \"returned no verdict\". Neither the plan nor step 3 distinguishes a tail that did not run at all (for example, the completeness tail skipped or failed to start) from one that ran and returned `absent`. In the first case, dropping `run` may be the intended conservative answer, but it is not stated, and no test row covers it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk completeness-next-steps-blocking-set` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ad846ae1",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Build step 1's verdict from the finalize gate's own result\u2026`) states the verdict is \"built once from the gate's",
+      "body": "Step 2 (`Build step 1's verdict from the finalize gate's own result\u2026`) states the verdict is \"built once from the gate's own values (`has_blocking`, `audit_incomplete`, `conceptual_bar_blocking_ids`)\". The Architecture section and step 1 instead say the verdict carries the blocking deterministic findings themselves (\"the plan collects those arms as findings in one computation\"). A bool plus ids cannot name a missing `intent:` or a purity gap, so the readers cannot \"name each blocking gap\" for deterministic kinds. Step 2 also forbids changing `_completeness_has_blocking_findings`, so it never says where the collected findings come from. Step 1, step 2 and the Architecture section must state one carrier.",
+      "suggested_action": "Specify in step 2 that the deterministic arms are collected as findings once, that the gate's bool is derived from that collection, and that the verdict wraps both the collected findings and the conceptual ids. Align the step 2 summary and Input wording to that.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "verdict-deterministic-carrier",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a57b5be9",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan defines the verdict states set, incomplete and absent, but does not say which wins when the audit is incomplete",
+      "body": "The plan defines the verdict states set, incomplete and absent, but does not say which wins when the audit is incomplete and a deterministic arm also blocks. Architecture says \"Incomplete and absent behave alike: offer only the fresh re-audit\", while the gate's `has_blocking` is true from the deterministic arms. Two readers can reasonably differ on whether the deterministic gap is named in the incomplete state. The step 4 table crosses finding kind with verdict state, so the expected output for that cell is undefined.",
+      "suggested_action": "State in the Architecture section and step 1 whether an incomplete verdict still lists known blocking deterministic findings, and make the step 4 table assert that one outcome.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "verdict-state-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-337866b4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 drops `run` when the tail \"returned no verdict\". Neither the plan nor step 3 distinguishes a tail that did not ru",
+      "body": "Step 3 drops `run` when the tail \"returned no verdict\". Neither the plan nor step 3 distinguishes a tail that did not run at all (for example, the completeness tail skipped or failed to start) from one that ran and returned `absent`. In the first case, dropping `run` may be the intended conservative answer, but it is not stated, and no test row covers it.",
+      "suggested_action": "Add one sentence to step 3 and the plan's Testing section stating whether a tail that never ran is treated as `absent` (no `run`), and add a case for it to the parent tests.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "parent-tail-not-run",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "650051f5cb246f1c90e63124c73f032b6dd0330d7b125eafa1aa859ca2297b31",
+      "detail_bundle_digest": "a541b20a015931ae39523df37ef4754c8f99efcab6e7fa488d5cf27c48550c94",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md",
+          "state": "present",
+          "digest": "a2e17ccec934b5ff88f4a99e32a19daea03b642a37eb0290a2c6fb83431f0596"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md",
+          "state": "present",
+          "digest": "d85489eadadb4256b7aa9dab37f630a3eebded054796120a8becd2c50cb56dd6"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md",
+          "state": "present",
+          "digest": "acd605a32a4814dbe0f345a96a32a0ddad8fb170a2f3660dc49d566654ac7f1b"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md",
+          "state": "present",
+          "digest": "81bff63809b4ec1f5aa079922e1250890b230ef90a6577436cc8af216715d04e"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md",
+          "state": "present",
+          "digest": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+        }
+      ],
+      "source_seed_digest": "29c8756422c7eab3b8b05dcb8702d92898d6b2ac150d987cdf3752c1cc00fd0d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 62183,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.25,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

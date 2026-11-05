@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-91af2186": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.phase_end",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.phase_end` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260903-174020-completeness"
+}

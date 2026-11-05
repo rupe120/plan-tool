@@ -1,0 +1,189 @@
+{
+  "version": 4,
+  "plan_slug": "jira-developer-handoff-companion",
+  "plan_path": "docs/implementation-plans/2-jira-developer-handoff-companion.md",
+  "created_at": "2026-08-22T04:41:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ab8bf0535a0b38cb18e4dc23698b3f6074caf215f8b9c770a5a3605aa9a5e244",
+  "code_fingerprint": {
+    "BACKLOG.md": "6741c28d21fdc5c995dd0423526523f115d7c1d2aab0decd24a13e966cc1b342",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "ec08f476bc4e5b83c8c0e21ae7606c3219d86e05c84aa576a018f40a8ad028c6",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "33adbb45f8e5a383b04ed189e90d8c56c13a3c3f3b1340c15192d97d2a2e9fa0",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_concept_sync.py": "a5ed2cd6e34cb160eb317e257889befb732faef5dcb5e0d429331ee0404c89fd",
+    "tests/test_detail.py": "a152a622453bf18511f288850e69e3953158e983369682fcfa8f1a43cb31cb3e",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c",
+    "tests/test_review_persistence.py": "9a6eb8b6937953c26175db7cc220e108047deb4c60351b065cab212f75d4875a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md": "205ed1be9dc608d0600fbc9a5a645a117b92f99189d8c2d91a42425aff84a13f",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md": "27c7b2840293b2c5fd50e97cdeed9763818d5259d139fab9471d8b3f71f0fddc",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md": "a532f544daccd1ada1d27b85f5467e0996c9d194d2dc246d82c1cfebd9ccb53e",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md": "340729ad5e8f8cc42b60af9e0cde13cb5c6844459a2603e2db10e21ade817802",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md": "fbf860d9bf3e19e0fc14f668f3b07c8e39bb3da41dce9c25e62c27b70f2c1306",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md": "51d90bfbcce606584c85e558f427812ad70895960e8b6fe2eeba72009d957bcd",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md": "7604f40ed61f86364ab72d00609dd7679e04a996c1d1b0b1bd78331e7a451a84"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Jira Developer Handoff Companion\n\n`jira-developer-handoff-companion` \u00b7 generated 2026-08-22T04:41:18Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply jira-developer-handoff-companion   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[target-validation-order]`: Architecture requires target refusal \u201cBefore invoking or staging,\u201d but step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) accepts \u201calready-rendered outputs\u201d from steps 3 and 4 and validates destinations only \u201cbefore staging.\u201d A human-owned, pair-mismatched, or prohibited target can therefore trigger a model invocation before the command refuses it.\n  - Fix: define a companion target preflight after capture but before steps 3 and 4 render or invoke, retain final content-state confirmation, and test that a refused target invokes neither renderer nor model.\n- HIGH `[generated-target-detail-protection]`: Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) narrows Architecture\u2019s \u201cany generated target equal to the plan source or a detail artifact from either grade\u201d to \u201ceither target equal to the plan source or a selected detail artifact.\u201d With `--grade jira`, an explicit story output can equal a run-grade detail file that is neither selected nor in the Jira authoring lane; this misses the Testing and Acceptance criteria requirement to reject \u201cany detail artifact\u201d and can overwrite human guidance.\n  - Fix: Reject either generated target when it equals any run- or Jira-grade detail artifact, including the unselected grade, and test that path before invocation or staging.\n- HIGH `[dropped-story-id-collision]`: Architecture, Testing, and acceptance criterion 5 retain dropped records as unchanged story-source history, but step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) does not reserve those IDs before parsing new stories. At HEAD, `plan_tool.jira:compute_start_number` excludes the current output and `parse_jira_response` only rejects supplied `known_ids`, so a regenerated story can reuse a retained dropped record\u2019s `<EPIC>-S<N>` and produce two conflicting story identities.\n  - Fix: Reserve every retained historical story ID while validating regenerated stories and test that an ID collision refuses publication.\n- HIGH `[created-ticket-lifecycle-notice]`: Architecture reclassifies a record covering only parked or removed work as dropped history even when it has a Jira key, but step 3 returns update metadata only when a created record is \u201creattached to regenerated story content,\u201d and step 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) reports only changed regenerated stories. A keyed created ticket that leaves committed coverage receives no manual cancel-or-repurpose notice; `plan_tool.jira:_export_jira_append` and `plan_tool.cli.jira_cmd:_print_jira_followups` already surface this exact lifecycle transition as `dropped_in_jira`.\n  - Fix: Carry keyed created-to-dropped transitions through the companion result and CLI as a distinct manual Jira follow-up, with lifecycle tests for parked and removed coverage.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-56e85ccc]`: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e88a7362]`: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-807aded8]`: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a685c5cb]`: The plan's `## Acceptance criteria` names `wont_do`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-a5f5459e]`: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Jira Developer Handoff Companion\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[target-validation-order]`: Architecture requires target refusal \u201cBefore invoking or staging,\u201d but step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) accepts \u201calready-rendered outputs\u201d from steps 3 and 4 and validates destinations only \u201cbefore staging.\u201d A human-owned, pair-mismatched, or prohibited target can therefore trigger a model invocation before the command refuses it.\n- HIGH `[generated-target-detail-protection]`: Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) narrows Architecture\u2019s \u201cany generated target equal to the plan source or a detail artifact from either grade\u201d to \u201ceither target equal to the plan source or a selected detail artifact.\u201d With `--grade jira`, an explicit story output can equal a run-grade detail file that is neither selected nor in the Jira authoring lane; this misses the Testing and Acceptance criteria requirement to reject \u201cany detail artifact\u201d and can overwrite human guidance.\n- HIGH `[dropped-story-id-collision]`: Architecture, Testing, and acceptance criterion 5 retain dropped records as unchanged story-source history, but step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) does not reserve those IDs before parsing new stories. At HEAD, `plan_tool.jira:compute_start_number` excludes the current output and `parse_jira_response` only rejects supplied `known_ids`, so a regenerated story can reuse a retained dropped record\u2019s `<EPIC>-S<N>` and produce two conflicting story identities.\n- HIGH `[created-ticket-lifecycle-notice]`: Architecture reclassifies a record covering only parked or removed work as dropped history even when it has a Jira key, but step 3 returns update metadata only when a created record is \u201creattached to regenerated story content,\u201d and step 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) reports only changed regenerated stories. A keyed created ticket that leaves committed coverage receives no manual cancel-or-repurpose notice; `plan_tool.jira:_export_jira_append` and `plan_tool.cli.jira_cmd:_print_jira_followups` already surface this exact lifecycle transition as `dropped_in_jira`.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `wont_do`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk jira-developer-handoff-companion` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-8ab26114",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture requires target refusal \u201cBefore invoking or staging,\u201d but step 5 (`Publish synchronized story and handoff s",
+      "body": "Architecture requires target refusal \u201cBefore invoking or staging,\u201d but step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) accepts \u201calready-rendered outputs\u201d from steps 3 and 4 and validates destinations only \u201cbefore staging.\u201d A human-owned, pair-mismatched, or prohibited target can therefore trigger a model invocation before the command refuses it.",
+      "suggested_action": "define a companion target preflight after capture but before steps 3 and 4 render or invoke, retain final content-state confirmation, and test that a refused target invokes neither renderer nor model.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "target-validation-order",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-de0455b2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) narrows Architecture\u2019s",
+      "body": "Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) narrows Architecture\u2019s \u201cany generated target equal to the plan source or a detail artifact from either grade\u201d to \u201ceither target equal to the plan source or a selected detail artifact.\u201d With `--grade jira`, an explicit story output can equal a run-grade detail file that is neither selected nor in the Jira authoring lane; this misses the Testing and Acceptance criteria requirement to reject \u201cany detail artifact\u201d and can overwrite human guidance.",
+      "suggested_action": "Reject either generated target when it equals any run- or Jira-grade detail artifact, including the unselected grade, and test that path before invocation or staging.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "generated-target-detail-protection",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9bc41b4f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture, Testing, and acceptance criterion 5 retain dropped records as unchanged story-source history, but step 3 (",
+      "body": "Architecture, Testing, and acceptance criterion 5 retain dropped records as unchanged story-source history, but step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) does not reserve those IDs before parsing new stories. At HEAD, `plan_tool.jira:compute_start_number` excludes the current output and `parse_jira_response` only rejects supplied `known_ids`, so a regenerated story can reuse a retained dropped record\u2019s `<EPIC>-S<N>` and produce two conflicting story identities.",
+      "suggested_action": "Reserve every retained historical story ID while validating regenerated stories and test that an ID collision refuses publication.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "dropped-story-id-collision",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-14a9bd31",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture reclassifies a record covering only parked or removed work as dropped history even when it has a Jira key, ",
+      "body": "Architecture reclassifies a record covering only parked or removed work as dropped history even when it has a Jira key, but step 3 returns update metadata only when a created record is \u201creattached to regenerated story content,\u201d and step 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) reports only changed regenerated stories. A keyed created ticket that leaves committed coverage receives no manual cancel-or-repurpose notice; `plan_tool.jira:_export_jira_append` and `plan_tool.cli.jira_cmd:_print_jira_followups` already surface this exact lifecycle transition as `dropped_in_jira`.",
+      "suggested_action": "Carry keyed created-to-dropped transitions through the companion result and CLI as a distinct manual Jira follow-up, with lifecycle tests for parked and removed coverage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "created-ticket-lifecycle-notice",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 5,
+    "cap": 5,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 5,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "54dac7ce702bc3ad0db6fdab25c1ae36538dc72a7f1173520a0844a33208b0b7",
+    "detail_bundle_digest": "cca0fc69fc368baf72e7737c49c9df8b6d1cc82d765aad5e4599ba7c53923e82",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md",
+        "state": "present",
+        "digest": "205ed1be9dc608d0600fbc9a5a645a117b92f99189d8c2d91a42425aff84a13f"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md",
+        "state": "present",
+        "digest": "27c7b2840293b2c5fd50e97cdeed9763818d5259d139fab9471d8b3f71f0fddc"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md",
+        "state": "present",
+        "digest": "a532f544daccd1ada1d27b85f5467e0996c9d194d2dc246d82c1cfebd9ccb53e"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md",
+        "state": "present",
+        "digest": "340729ad5e8f8cc42b60af9e0cde13cb5c6844459a2603e2db10e21ade817802"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md",
+        "state": "present",
+        "digest": "fbf860d9bf3e19e0fc14f668f3b07c8e39bb3da41dce9c25e62c27b70f2c1306"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md",
+        "state": "present",
+        "digest": "51d90bfbcce606584c85e558f427812ad70895960e8b6fe2eeba72009d957bcd"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md",
+        "state": "present",
+        "digest": "7604f40ed61f86364ab72d00609dd7679e04a996c1d1b0b1bd78331e7a451a84"
+      }
+    ],
+    "source_seed_digest": "14f8a11652141ab52994fb0c37ebb1227594d2b824b38b942dea3a0dfd86b32b",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

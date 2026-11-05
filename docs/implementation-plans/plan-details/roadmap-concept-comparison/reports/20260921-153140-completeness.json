@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-concept-comparison",
+  "plan_path": "docs/implementation-plans/2-roadmap-concept-comparison.md",
+  "created_at": "2026-09-21T15:31:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "eafa7061902916c4c5b536974a8cb32083159988062ef5fc297a290264046f96",
+  "code_fingerprint": {
+    "BACKLOG.md": "5a04ca849e7397826786bee96b3a21aaa37debee0a0fc975afd870a650b4bdd4",
+    "CAPABILITIES.md": "7ea4e0da3a2ce66917d755b564dee35e33edaeecda7a28219b7096d18f4a5206",
+    "CLAUDE.md": "3d350ea4550fd068aac06112c4eb8f803dd0648126f7ee6757d929522c95c7be",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/cli/roadmap.md": "30d505ee75bef5f4ac81df533a47905526e529046e4bb28ffc2346a32e391471",
+    "docs/how-to/roadmap.md": "8b9991202338b787b123445dd7df55bf885655609639c0384459edfb7b96f497",
+    "docs/reference/commands.md": "8147bd006d72c89409144957c30ff73652383a1164aa0cfc627aa3c12d98db80",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap_candidate.py": "1dbe9abb634bc8872c644f780670df691ffae90b40fc3c7ece87de18e8ded602",
+    "plan_tool/roadmap_versions.py": "35528bbea5b455b4b7f234bb4895f9f98bd334dc1e33d451d40fc3395d242c08",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap_candidate.py": "e5ca9a562ad194c501ebebed264120bbb2e5e97dada454b4047c8a4f6f88f969",
+    "tests/test_roadmap_format.py": "983c1b957113833eb0f9dc579dcbd6315360f9175e95b3c559758c0da7cd6b61",
+    "tests/test_roadmap_versions.py": "25af58c31ba449755c27c0c1aea62d4eda31fcd1e6fe20a71608417019a8a40a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md": "fc93a4479f0d652d7f2803312c28a9118ab9ac953791f09d60a81b23901e2457",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-evidence.md": "1b58aae1b208656ab36d5ee7d5e7ac8a0a8eef9d5dd4a7448905ceb9f4040db0",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md": "ff784a2e6dbe246539ee9b7574b8882b535baa6a326d75f94e714de3ecbaed08",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md": "dd85a563cce09ecdb65c2da7cd8f2f575d07aa6517c3b1c8efda18aa2fdcf31d",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md": "dac4caa50e2b75f4fe2b806377a1ce740c59ad46cb4ebc0cd17646f21a305791",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md": "712377f1f8fb86ff085e835ec729819a1470579ba8b5d0e6bc02bb4be445e96c",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md": "4769621dde4d8989c94b6de80a37bb4f82e7ea5c76f6570ef8a034e09d3478ed"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Concept Comparison\n\n`roadmap-concept-comparison` \u00b7 generated 2026-09-21T15:31:39Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d1c32edb508e0f86805441e084d4fb67bf7b6628fa88f3033b5399b881b1da36`\n- **Detail bundle digest:** `2274ab0e37daf65730b458dc9acf060d7ac0936826ae6b2591776c2b2eb02add`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 81667 bytes (+81667 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[candidate-relation-review-compatibility]` [confidence: limited]: Step 1 (`Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior`) requires `test_relation_only_change_reports_relations_without_row_diff`, but its Implementation also requires existing candidate behavior to remain unchanged. At HEAD, `roadmap_candidate._artifact_row_diffs` records a changed row when relation fields change, and `_candidate_diff_requires_review_requirement` uses that row to require review for the relation change. Removing that row from the shared diff can silently bypass the existing review requirement unless step 1 defines and tests a candidate compatibility path.\n  - Fix: Define how candidate review and impact identity preserve their current relation-only behavior while comparison exposes relation-only changes without a concept-row delta, and cover both contracts in step 1 tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]` [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae3effe6]` [confidence: limited]: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-2e7cebc0]` [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Concept Comparison\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d1c32edb508e0f86805441e084d4fb67bf7b6628fa88f3033b5399b881b1da36`\n- **Detail bundle digest:** `2274ab0e37daf65730b458dc9acf060d7ac0936826ae6b2591776c2b2eb02add`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[candidate-relation-review-compatibility]` [confidence: limited]: Step 1 (`Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior`) requires `test_relation_only_change_reports_relations_without_row_diff`, but its Implementation also requires existing candidate behavior to remain unchanged. At HEAD, `roadmap_candidate._artifact_row_diffs` records a changed row when relation fields change, and `_candidate_diff_requires_review_requirement` uses that row to require review for the relation change. Removing that row from the shared diff can silently bypass the existing review requirement unless step 1 defines and tests a candidate compatibility path.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-concept-comparison` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a44c5bfd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior`) requires `",
+      "body": "Step 1 (`Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior`) requires `test_relation_only_change_reports_relations_without_row_diff`, but its Implementation also requires existing candidate behavior to remain unchanged. At HEAD, `roadmap_candidate._artifact_row_diffs` records a changed row when relation fields change, and `_candidate_diff_requires_review_requirement` uses that row to require review for the relation change. Removing that row from the shared diff can silently bypass the existing review requirement unless step 1 defines and tests a candidate compatibility path.",
+      "suggested_action": "Define how candidate review and impact identity preserve their current relation-only behavior while comparison exposes relation-only changes without a concept-row delta, and cover both contracts in step 1 tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "candidate-relation-review-compatibility",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "d1c32edb508e0f86805441e084d4fb67bf7b6628fa88f3033b5399b881b1da36",
+      "detail_bundle_digest": "2274ab0e37daf65730b458dc9acf060d7ac0936826ae6b2591776c2b2eb02add",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md",
+          "state": "present",
+          "digest": "fc93a4479f0d652d7f2803312c28a9118ab9ac953791f09d60a81b23901e2457"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-evidence.md",
+          "state": "present",
+          "digest": "1b58aae1b208656ab36d5ee7d5e7ac8a0a8eef9d5dd4a7448905ceb9f4040db0"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md",
+          "state": "present",
+          "digest": "ff784a2e6dbe246539ee9b7574b8882b535baa6a326d75f94e714de3ecbaed08"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md",
+          "state": "present",
+          "digest": "dd85a563cce09ecdb65c2da7cd8f2f575d07aa6517c3b1c8efda18aa2fdcf31d"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md",
+          "state": "present",
+          "digest": "dac4caa50e2b75f4fe2b806377a1ce740c59ad46cb4ebc0cd17646f21a305791"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md",
+          "state": "present",
+          "digest": "712377f1f8fb86ff085e835ec729819a1470579ba8b5d0e6bc02bb4be445e96c"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md",
+          "state": "present",
+          "digest": "4769621dde4d8989c94b6de80a37bb4f82e7ea5c76f6570ef8a034e09d3478ed"
+        }
+      ],
+      "source_seed_digest": "b54017aabff13e71baba57739619addaf7c211394827ad1a18b85d4f8b842992",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 81667,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

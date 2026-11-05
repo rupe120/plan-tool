@@ -1,0 +1,169 @@
+{
+  "version": 4,
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "plan_path": "docs/implementation-plans/2-quality-bench-01-corpus-and-noise-floor.md",
+  "created_at": "2026-08-27T11:21:06Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f968bf86e3dfecc883c1901d09e818de694c6d3792cf3251b0fa0d9589e31df0",
+  "code_fingerprint": {
+    "BACKLOG.md": "73ec11e4c19fc6a4752f7fdc9f8e18a5b5f6c6e13493dd88a7f9025364d81dad",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "CLAUDE.md": "b8be9d2774d8ea8cb57a2513ce1fbbd0c194038630ea6552f3dbaf2c3e3f3ad9",
+    "README.md": "3e02fe1e80a559fe5865089f468af97690f0f5255f344ce83dbd63766368445f",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "docs/cli/README.md": "5a28d53e3340cf1ed48a7bc296d69b38405aa556b8df089c6d02a41613826299",
+    "integrations/claude/SKILL.md": "9fd26478045faf3272d5c95548b1d10872b7ae24296b27ed151e1161b770c869",
+    "integrations/codex/SKILL.md": "a52794337a79b68f16f0f9c964bdf97891b03e089b7f1d7582b5ccb70c680e97",
+    "plan_tool/cli/__init__.py": "edea8e16779f4c5cf1bbefb7b107b17373bd840651d2d420b2c501043becc602",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "tests/cli/package_surface_help.golden.txt": "64ac994b6554a59825248f6121173a5a46b2d4e76f12752506afeadb83f7b754"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-define-fixed-two-item-stage-corpus.md": "3de4667abc14a8270753cb36864e8c474cf8e15f0921c4307a46cde400e9aa4d",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-replay-stage-serially-fresh-staging.md": "cc91f66d1cc0b8acfce3b898916e4282c24fa1ff9e09ae9dfc48e755e7d1b995",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-separate-quality-bench-floor-command.md": "d89e28d424df2f9c21693d39e70a812a9259a6f60986b888d9062e2ee4f78e54"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Quality Bench 01 Corpus And Noise Floor\n\n`quality-bench-01-corpus-and-noise-floor` \u00b7 generated 2026-08-27T11:21:05Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f968bf86e3dfecc883c1901d09e818de694c6d3792cf3251b0fa0d9589e31df0`\n- **Detail bundle digest:** `7655c4db9c5173fd5b9362d7c323481170b2fd8aa56861f9e559e4c01729b93d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk quality-bench-01-corpus-and-noise-floor  # alternative interactive review/apply\n\n- HIGH `[captured-transport]` [confidence: limited]: Architecture, step 2 (`Replay stage 2 serially in fresh staging, retain its artifact and run log, then remove staging and create the selected output without replacement`), Risks, Testing, and the third acceptance criterion require one captured transport, but `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `plan_tool/shell.py:claude_invoke_outcome`, which rereads the active backend and can switch to a fallback during recovery. A successful replay can therefore use a different transport than the fingerprinted one.\n  - Fix: Define a floor-invocation policy that keeps every backend attempt on the captured transport or treats recovery/reselection as a failed replay, and test that rule.\n- HIGH `[stage2-boundary]` [confidence: limited]: Step 1\u2019s fixed stage-2 corpus, step 2\u2019s title, Architecture, Testing, and the acceptance criteria require a stage-2 proof, but none states that a rerun must stop after stage 2. At HEAD, `plan_tool/roadmap.py:run_roadmap` with its shipped stage table and `from_stage=2` invokes stages 2, 3, and 4, so later calls can spend tokens, fail a sample, and enter retained evidence.\n  - Fix: Define the replay boundary as stage 2 only while retaining the frozen stage-1 input, and require evidence that no later stage call enters a floor run.\n- HIGH `[publication-interrupt-boundary]` [confidence: limited]: Step 2, Architecture, Testing, and the third acceptance criterion say interruption leaves no completed output, while Out of scope forbids a recovery journal. An interrupt after atomic publication succeeds but before the command returns leaves a valid output from a command reported as interrupted, so the promised outcome has no defined commit point.\n  - Fix: Define atomic publication as the completion boundary and specify the result for interrupts before versus after that boundary.\n- HIGH `[retained-evidence-boundary]` [confidence: limited]: Architecture calls the output record the sole retained state, and step 2 requires the run log to be retained then staging removed, but its named `invoker=` seam does not control roadmap logging. At HEAD, `plan_tool/roadmap.py:_roadmap_command_lifecycle` creates a default `RunLogWriter`, and `plan_tool/run_log.py:run_log_path` stores it under `<repo_root>/.plan-tool/runs`; Testing and the acceptance criteria do not require that state to be absent.\n  - Fix: Define a private run-log capture boundary that embeds the needed facts in the output record and leaves no floor-run log state outside it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-a37063eb]` [confidence: limited]: The plan's `## Acceptance criteria` names `claude_call_start`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-904caaff]` [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]` [confidence: limited]: Step 1 \"Define the fixed two-item stage-2 corpus and the version-1 floor record from canonical artifacts and run logs\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 apply the 4 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Quality Bench 01 Corpus And Noise Floor\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f968bf86e3dfecc883c1901d09e818de694c6d3792cf3251b0fa0d9589e31df0`\n- **Detail bundle digest:** `7655c4db9c5173fd5b9362d7c323481170b2fd8aa56861f9e559e4c01729b93d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[captured-transport]` [confidence: limited]: Architecture, step 2 (`Replay stage 2 serially in fresh staging, retain its artifact and run log, then remove staging and create the selected output without replacement`), Risks, Testing, and the third acceptance criterion require one captured transport, but `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `plan_tool/shell.py:claude_invoke_outcome`, which rereads the active backend and can switch to a fallback during recovery. A successful replay can therefore use a different transport than the fingerprinted one.\n- HIGH `[stage2-boundary]` [confidence: limited]: Step 1\u2019s fixed stage-2 corpus, step 2\u2019s title, Architecture, Testing, and the acceptance criteria require a stage-2 proof, but none states that a rerun must stop after stage 2. At HEAD, `plan_tool/roadmap.py:run_roadmap` with its shipped stage table and `from_stage=2` invokes stages 2, 3, and 4, so later calls can spend tokens, fail a sample, and enter retained evidence.\n- HIGH `[publication-interrupt-boundary]` [confidence: limited]: Step 2, Architecture, Testing, and the third acceptance criterion say interruption leaves no completed output, while Out of scope forbids a recovery journal. An interrupt after atomic publication succeeds but before the command returns leaves a valid output from a command reported as interrupted, so the promised outcome has no defined commit point.\n- HIGH `[retained-evidence-boundary]` [confidence: limited]: Architecture calls the output record the sole retained state, and step 2 requires the run log to be retained then staging removed, but its named `invoker=` seam does not control roadmap logging. At HEAD, `plan_tool/roadmap.py:_roadmap_command_lifecycle` creates a default `RunLogWriter`, and `plan_tool/run_log.py:run_log_path` stores it under `<repo_root>/.plan-tool/runs`; Testing and the acceptance criteria do not require that state to be absent.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `claude_call_start`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Define the fixed two-item stage-2 corpus and the version-1 floor record from canonical artifacts and run logs\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b1650604",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture, step 2 (`Replay stage 2 serially in fresh staging, retain its artifact and run log, then remove staging an",
+      "body": "Architecture, step 2 (`Replay stage 2 serially in fresh staging, retain its artifact and run log, then remove staging and create the selected output without replacement`), Risks, Testing, and the third acceptance criterion require one captured transport, but `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `plan_tool/shell.py:claude_invoke_outcome`, which rereads the active backend and can switch to a fallback during recovery. A successful replay can therefore use a different transport than the fingerprinted one.",
+      "suggested_action": "Define a floor-invocation policy that keeps every backend attempt on the captured transport or treats recovery/reselection as a failed replay, and test that rule.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "captured-transport",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-f69322bf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s fixed stage-2 corpus, step 2\u2019s title, Architecture, Testing, and the acceptance criteria require a stage-2 proo",
+      "body": "Step 1\u2019s fixed stage-2 corpus, step 2\u2019s title, Architecture, Testing, and the acceptance criteria require a stage-2 proof, but none states that a rerun must stop after stage 2. At HEAD, `plan_tool/roadmap.py:run_roadmap` with its shipped stage table and `from_stage=2` invokes stages 2, 3, and 4, so later calls can spend tokens, fail a sample, and enter retained evidence.",
+      "suggested_action": "Define the replay boundary as stage 2 only while retaining the frozen stage-1 input, and require evidence that no later stage call enters a floor run.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stage2-boundary",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-42dbb2df",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2, Architecture, Testing, and the third acceptance criterion say interruption leaves no completed output, while Out",
+      "body": "Step 2, Architecture, Testing, and the third acceptance criterion say interruption leaves no completed output, while Out of scope forbids a recovery journal. An interrupt after atomic publication succeeds but before the command returns leaves a valid output from a command reported as interrupted, so the promised outcome has no defined commit point.",
+      "suggested_action": "Define atomic publication as the completion boundary and specify the result for interrupts before versus after that boundary.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "publication-interrupt-boundary",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-e5830318",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture calls the output record the sole retained state, and step 2 requires the run log to be retained then stagin",
+      "body": "Architecture calls the output record the sole retained state, and step 2 requires the run log to be retained then staging removed, but its named `invoker=` seam does not control roadmap logging. At HEAD, `plan_tool/roadmap.py:_roadmap_command_lifecycle` creates a default `RunLogWriter`, and `plan_tool/run_log.py:run_log_path` stores it under `<repo_root>/.plan-tool/runs`; Testing and the acceptance criteria do not require that state to be absent.",
+      "suggested_action": "Define a private run-log capture boundary that embeds the needed facts in the output record and leaves no floor-run log state outside it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "retained-evidence-boundary",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "f968bf86e3dfecc883c1901d09e818de694c6d3792cf3251b0fa0d9589e31df0",
+      "detail_bundle_digest": "7655c4db9c5173fd5b9362d7c323481170b2fd8aa56861f9e559e4c01729b93d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-define-fixed-two-item-stage-corpus.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-replay-stage-serially-fresh-staging.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-separate-quality-bench-floor-command.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "1fe83cb03a5228d46b1add8b7a274c01dce17bab6336dcfe3cafeb358e582fab",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

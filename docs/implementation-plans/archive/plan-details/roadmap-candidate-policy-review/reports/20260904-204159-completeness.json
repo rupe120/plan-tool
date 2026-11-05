@@ -1,0 +1,194 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T20:41:59Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b5478af6b9d346a9ce5c2a315745d115fd322eb942e523724944b7524fdf4c97",
+  "code_fingerprint": {
+    "BACKLOG.md": "959a19e0f666bcdcb4d638245dcbfac69ed51c1b68fe7804a9ff409f57333f17",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "7429196874201f70057dee425c5c3a073e88da40c458fa4d41aa377775f33959",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "51a186407997aa9227766da7ebdf03b00782ca2234e2dbabbd804f589ca614ce",
+    "plan_tool/cli/roadmap_cmd.py": "5a7888a74cd673741a2f5ec2640285fabfcb02df872ba17a152cf17af681d73d",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/cli/test_roadmap_cmd.py": "544e4c3ef9fee430ca5a615f7b147606570e14043faef98b4a9f390cc4c4c898",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md": "aade6fd6afefa26838ea4e865800c4c9472b4365b9a6e3b616197b3c9367c80e",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md": "a9178e0619be5499303f4b4fb8a5d96c71fd3d692be7c541f072c50961a33c8c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md": "ef790923edbd89edc2e384f2a3a10d09c2f8a7105884c4f696c4d0b4d93f12db",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md": "b64f1b4bbb0dbac67ecf4187fd614482cb95d2c9e0da63d7d3ec7d39d56ab727",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md": "d4c7f1f3af726ba0c8fc47f15bb1b8bf88cc5647e0974010b95b4c06c08ffd79"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Policy Review\n\n`roadmap-candidate-policy-review` \u00b7 generated 2026-09-04T20:41:58Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a448e108ac9c252f0fec227afa1ffa0769ff802f0efe89adc3f20b732406f4bd`\n- **Detail bundle digest:** `f14700a128dc18870d67b869ab7856716926bf70f800930448ff3a307fac3c2c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 69019 bytes (+69019 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-candidate-policy-review   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[replacement-disclosure-containment]` [confidence: limited]: Step 4 lets any `GateCleanCandidate` count as eliminated impact without comparing its other candidate changes to the initial disclosure, so restoring the reviewed relation while changing an unrelated authorized row can seal. This conflicts with Architecture\u2019s rejection of every non-disclosed change and with the Testing counterexample for a new non-relation row change.\n\n  ```\n  Architecture:\n  \"It rejects a new affected row, any non-relation row change, any relation atom outside the initial set, a new policy requirement, or any other non-disclosed candidate change.\"\n\n  Step 4 \u2014 Implementation:\n  \"A `GateCleanCandidate` replacement represents elimination of the initial requirement.\"\n  ```\n\n  At HEAD, `plan_tool/roadmap_candidate.py:materialize_candidate` returns gate-clean for a fully authorized relation-free replacement, so this is an allowed bypass unless the plan requires a comparison for that arm too.\n  - Fix: Define containment for every review-required-lineage replacement, including an eliminated requirement, so it cannot add or change facts outside the initial disclosure.\n- HIGH `[relation-diff-multiplicity]` [confidence: limited]: The complete-relation-diff commitment loses repeated declared relations: Architecture\u2019s atom set, step 1\u2019s Relation input and requirement construction, and step 4 containment all rely on `CandidateRelationDiff`, while `plan_tool/roadmap_candidate.py:_relation_key`, `_validate_relation_authority`, and `_build_predecessor_diff` collapse duplicate relations into a set or dictionary. `plan_tool/roadmap_relations.py:extract_declared_relations` deliberately preserves duplicates, as `tests/test_roadmap_relations.py:test_repeated_declared_endpoint_is_not_deduplicated` confirms; removing one duplicate can therefore become gate-clean with no relation atom, and a membership-style check can accept a wider duplicate impact.\n\n  ```\n  Architecture:\n  \"The atom set is complete: an added, removed, or non-relation-changed row produces its row atom, and every relation change produces its relation atom.\"\n\n  Step 1 \u2014 Input:\n  \"`plan_tool/roadmap_relations.py:extract_declared_relations` and `plan_tool/roadmap_candidate.py:_relation_key` define the complete ordered relation difference.\"\n  ```\n  - Fix: Define ordered, multiplicity-preserving relation differences and atom containment, then use that one representation for eligibility, disclosure identity, replay, and replacement validation.\n- MEDIUM `[review-required-eligibility-boundary]` [confidence: limited]: Step 1 does not say whether a currently valid `CandidateRemoveRow` that removes its owner\u2019s relations remains gate-clean or becomes review-required. At HEAD, `plan_tool/roadmap_candidate.py:_validate_relation_authority` allows that route; Architecture broadly classifies exact typed impacts, while step 1 targets existing-row replacements and the plan requires existing gate-clean behavior to remain compatible. Those readings produce different review workflows.\n\n  ```\n  Step 1 \u2014 Implementation:\n  \"Let `plan_tool/roadmap_candidate.py:_validate_operation_authority` continue to reject invalid bindings, invalid targets, missing full-row authority, and invalid plan ordering. It must no longer terminally reject an otherwise eligible existing-row replacement solely because `same_declared_row_relations` differs.\"\n\n  Acceptance criteria:\n  \"Only exact review-seal promotion changes the accepted head, and existing gate-clean candidate behavior remains compatible.\"\n  ```\n  - Fix: State that the first reason covers only the formerly refused surviving-row replacement route, and explicitly retain valid added-row and removed-row relation routes as gate-clean.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[review-required-replacement-state-boundary]` [confidence: limited]: Step 4 requires review-required lineages to refuse an existing `CandidateReviewReplacementState`, \u201cincluding a symlink,\u201d without reading, creating, or publishing it, but its Tests name only `test_review_required_replacement_rejects_expansion_without_replacement_state_write`. `plan_tool/roadmap_candidate_review.py:_replacement_capsule` currently loads a stored state, and no planned test proves that an existing regular or symlinked state blocks the new review-required path before model invocation or mutation.\n  - Fix: Add adversarial step-4 coverage proving that pre-existing normal and symlinked replacement-state paths refuse review-required replacement attempts without a model call or artifact write.\n  - Address: `plan-tool completeness-apply roadmap-candidate-policy-review --anchor review-required-replacement-state-boundary`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-candidate-policy-review` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Policy Review\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a448e108ac9c252f0fec227afa1ffa0769ff802f0efe89adc3f20b732406f4bd`\n- **Detail bundle digest:** `f14700a128dc18870d67b869ab7856716926bf70f800930448ff3a307fac3c2c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[replacement-disclosure-containment]` [confidence: limited]: Step 4 lets any `GateCleanCandidate` count as eliminated impact without comparing its other candidate changes to the initial disclosure, so restoring the reviewed relation while changing an unrelated authorized row can seal. This conflicts with Architecture\u2019s rejection of every non-disclosed change and with the Testing counterexample for a new non-relation row change.\n\n  ```\n  Architecture:\n  \"It rejects a new affected row, any non-relation row change, any relation atom outside the initial set, a new policy requirement, or any other non-disclosed candidate change.\"\n\n  Step 4 \u2014 Implementation:\n  \"A `GateCleanCandidate` replacement represents elimination of the initial requirement.\"\n  ```\n\n  At HEAD, `plan_tool/roadmap_candidate.py:materialize_candidate` returns gate-clean for a fully authorized relation-free replacement, so this is an allowed bypass unless the plan requires a comparison for that arm too.\n- HIGH `[relation-diff-multiplicity]` [confidence: limited]: The complete-relation-diff commitment loses repeated declared relations: Architecture\u2019s atom set, step 1\u2019s Relation input and requirement construction, and step 4 containment all rely on `CandidateRelationDiff`, while `plan_tool/roadmap_candidate.py:_relation_key`, `_validate_relation_authority`, and `_build_predecessor_diff` collapse duplicate relations into a set or dictionary. `plan_tool/roadmap_relations.py:extract_declared_relations` deliberately preserves duplicates, as `tests/test_roadmap_relations.py:test_repeated_declared_endpoint_is_not_deduplicated` confirms; removing one duplicate can therefore become gate-clean with no relation atom, and a membership-style check can accept a wider duplicate impact.\n\n  ```\n  Architecture:\n  \"The atom set is complete: an added, removed, or non-relation-changed row produces its row atom, and every relation change produces its relation atom.\"\n\n  Step 1 \u2014 Input:\n  \"`plan_tool/roadmap_relations.py:extract_declared_relations` and `plan_tool/roadmap_candidate.py:_relation_key` define the complete ordered relation difference.\"\n  ```\n- MEDIUM `[review-required-eligibility-boundary]` [confidence: limited]: Step 1 does not say whether a currently valid `CandidateRemoveRow` that removes its owner\u2019s relations remains gate-clean or becomes review-required. At HEAD, `plan_tool/roadmap_candidate.py:_validate_relation_authority` allows that route; Architecture broadly classifies exact typed impacts, while step 1 targets existing-row replacements and the plan requires existing gate-clean behavior to remain compatible. Those readings produce different review workflows.\n\n  ```\n  Step 1 \u2014 Implementation:\n  \"Let `plan_tool/roadmap_candidate.py:_validate_operation_authority` continue to reject invalid bindings, invalid targets, missing full-row authority, and invalid plan ordering. It must no longer terminally reject an otherwise eligible existing-row replacement solely because `same_declared_row_relations` differs.\"\n\n  Acceptance criteria:\n  \"Only exact review-seal promotion changes the accepted head, and existing gate-clean candidate behavior remains compatible.\"\n  ```\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[review-required-replacement-state-boundary]` [confidence: limited]: Step 4 requires review-required lineages to refuse an existing `CandidateReviewReplacementState`, \u201cincluding a symlink,\u201d without reading, creating, or publishing it, but its Tests name only `test_review_required_replacement_rejects_expansion_without_replacement_state_write`. `plan_tool/roadmap_candidate_review.py:_replacement_capsule` currently loads a stored state, and no planned test proves that an existing regular or symlinked state blocks the new review-required path before model invocation or mutation.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-candidate-policy-review` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply roadmap-candidate-policy-review` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-64426b58",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 lets any `GateCleanCandidate` count as eliminated impact without comparing its other candidate changes to the ini",
+      "body": "Step 4 lets any `GateCleanCandidate` count as eliminated impact without comparing its other candidate changes to the initial disclosure, so restoring the reviewed relation while changing an unrelated authorized row can seal. This conflicts with Architecture\u2019s rejection of every non-disclosed change and with the Testing counterexample for a new non-relation row change.\n\n  ```\n  Architecture:\n  \"It rejects a new affected row, any non-relation row change, any relation atom outside the initial set, a new policy requirement, or any other non-disclosed candidate change.\"\n\n  Step 4 \u2014 Implementation:\n  \"A `GateCleanCandidate` replacement represents elimination of the initial requirement.\"\n  ```\n\n  At HEAD, `plan_tool/roadmap_candidate.py:materialize_candidate` returns gate-clean for a fully authorized relation-free replacement, so this is an allowed bypass unless the plan requires a comparison for that arm too.",
+      "suggested_action": "Define containment for every review-required-lineage replacement, including an eliminated requirement, so it cannot add or change facts outside the initial disclosure.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "replacement-disclosure-containment",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-646aa158",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The complete-relation-diff commitment loses repeated declared relations: Architecture\u2019s atom set, step 1\u2019s Relation inpu",
+      "body": "The complete-relation-diff commitment loses repeated declared relations: Architecture\u2019s atom set, step 1\u2019s Relation input and requirement construction, and step 4 containment all rely on `CandidateRelationDiff`, while `plan_tool/roadmap_candidate.py:_relation_key`, `_validate_relation_authority`, and `_build_predecessor_diff` collapse duplicate relations into a set or dictionary. `plan_tool/roadmap_relations.py:extract_declared_relations` deliberately preserves duplicates, as `tests/test_roadmap_relations.py:test_repeated_declared_endpoint_is_not_deduplicated` confirms; removing one duplicate can therefore become gate-clean with no relation atom, and a membership-style check can accept a wider duplicate impact.\n\n  ```\n  Architecture:\n  \"The atom set is complete: an added, removed, or non-relation-changed row produces its row atom, and every relation change produces its relation atom.\"\n\n  Step 1 \u2014 Input:\n  \"`plan_tool/roadmap_relations.py:extract_declared_relations` and `plan_tool/roadmap_candidate.py:_relation_key` define the complete ordered relation difference.\"\n  ```",
+      "suggested_action": "Define ordered, multiplicity-preserving relation differences and atom containment, then use that one representation for eligibility, disclosure identity, replay, and replacement validation.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "relation-diff-multiplicity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a3d7f635",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 does not say whether a currently valid `CandidateRemoveRow` that removes its owner\u2019s relations remains gate-clean",
+      "body": "Step 1 does not say whether a currently valid `CandidateRemoveRow` that removes its owner\u2019s relations remains gate-clean or becomes review-required. At HEAD, `plan_tool/roadmap_candidate.py:_validate_relation_authority` allows that route; Architecture broadly classifies exact typed impacts, while step 1 targets existing-row replacements and the plan requires existing gate-clean behavior to remain compatible. Those readings produce different review workflows.\n\n  ```\n  Step 1 \u2014 Implementation:\n  \"Let `plan_tool/roadmap_candidate.py:_validate_operation_authority` continue to reject invalid bindings, invalid targets, missing full-row authority, and invalid plan ordering. It must no longer terminally reject an otherwise eligible existing-row replacement solely because `same_declared_row_relations` differs.\"\n\n  Acceptance criteria:\n  \"Only exact review-seal promotion changes the accepted head, and existing gate-clean candidate behavior remains compatible.\"\n  ```",
+      "suggested_action": "State that the first reason covers only the formerly refused surviving-row replacement route, and explicitly retain valid added-row and removed-row relation routes as gate-clean.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "review-required-eligibility-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-3d1243d3",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 requires review-required lineages to refuse an existing `CandidateReviewReplacementState`, \u201cincluding a symlink,\u201d",
+      "body": "Step 4 requires review-required lineages to refuse an existing `CandidateReviewReplacementState`, \u201cincluding a symlink,\u201d without reading, creating, or publishing it, but its Tests name only `test_review_required_replacement_rejects_expansion_without_replacement_state_write`. `plan_tool/roadmap_candidate_review.py:_replacement_capsule` currently loads a stored state, and no planned test proves that an existing regular or symlinked state blocks the new review-required path before model invocation or mutation.",
+      "suggested_action": "Add adversarial step-4 coverage proving that pre-existing normal and symlinked replacement-state paths refuse review-required replacement attempts without a model call or artifact write.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "review-required-replacement-state-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "a448e108ac9c252f0fec227afa1ffa0769ff802f0efe89adc3f20b732406f4bd",
+      "detail_bundle_digest": "f14700a128dc18870d67b869ab7856716926bf70f800930448ff3a307fac3c2c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-immutable.md",
+          "state": "present",
+          "digest": "aade6fd6afefa26838ea4e865800c4c9472b4365b9a6e3b616197b3c9367c80e"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md",
+          "state": "present",
+          "digest": "a9178e0619be5499303f4b4fb8a5d96c71fd3d692be7c541f072c50961a33c8c"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md",
+          "state": "present",
+          "digest": "ef790923edbd89edc2e384f2a3a10d09c2f8a7105884c4f696c4d0b4d93f12db"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-accept-answer-bound-replacements-only.md",
+          "state": "present",
+          "digest": "b64f1b4bbb0dbac67ecf4187fd614482cb95d2c9e0da63d7d3ec7d39d56ab727"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md",
+          "state": "present",
+          "digest": "d4c7f1f3af726ba0c8fc47f15bb1b8bf88cc5647e0974010b95b4c06c08ffd79"
+        }
+      ],
+      "source_seed_digest": "d1c71a9c01564ae431040abc26284ad3a4706cd9039a77760bee26c835fe1e08",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 69019,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

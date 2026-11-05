@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-01-domain-constraints",
+  "plan_path": "docs/implementation-plans/2-roadmap-01-domain-constraints.md",
+  "created_at": "2026-08-02T01:57:21Z",
+  "kind": "run-reconcile",
+  "step_id": 7,
+  "plan_fingerprint": "95d34fcd038e844bf1aedb46a5a743d645c0aae4edf77d94bcc68f9f31234351",
+  "code_fingerprint": {
+    "BACKLOG.md": "1f896bd0ef97c3856c3212c7cc2d2d0bf8577e18b92eaff02cc4049f0cf59235",
+    "CAPABILITIES.md": "d36e0717c613b069b255ff2d0bddcbd1da20fee108a866b6e456f268b0ba5634",
+    "CLAUDE.md": "7c984cc5194fe00853abdd034d7b92c7e8977e3307b8ac9df0b64ee2f9fa3df7",
+    "ROADMAP_FORMAT.md": "ed2f301efe823a08a3388d4358f70c70b486e7d4f255bdf6dd6f8b9fd2052c1b",
+    "RUNBOOK.md": "9b3b2cefbf7c69f5450d922bc2c8108e8efb09a9fcd92975b31e49d3bb8d84c5",
+    "TESTING.md": "f297d9dc5e93bc3b12a3d9600e5fc4fc1b0838836dd247a4855983855726e5d5",
+    "USE_CASES.md": "ed626f29a8fa082021d59321a593ec9cf05a7992564b3b9f45eac8ca1df0b103",
+    "docs/cli/README.md": "e75d93c499daaf1f16153d3fbe8989992e37be1279ca9d8972392475b385f8f9",
+    "docs/cli/roadmap.md": "c04ef0242e28e83542ee4a76c03c4326a925cf8cbe7dc70fd391b553133b9df6",
+    "integrations/claude/SKILL.md": "72d170fc3585dd8b37fae18b3904835d6e489d0763ae9751a0c4b4c05097139e",
+    "plan_tool/cli/__init__.py": "a33c9ac2269292d99ab6c83ce0f9a69d33b072bc60b4b0c4354746a30f9d413b",
+    "plan_tool/cli/app.py": "d9de5899d584bb7a61b96f13ee2822158766a5b055f78733bc1248286b5e457a",
+    "plan_tool/cli/parser.py": "8c16229b7ba0329cc350eb26679796762476b03faec5dd33f469d3667aa0cb4d",
+    "plan_tool/cli/roadmap_cmd.py": "95abf353746e848d2bcb5ab5a848c4d9fb43d668f28b56196642f5c61a23aeca",
+    "plan_tool/prompts/roadmap-constraints.md": "340d66467b73d9dc3aa53c18806e55e49ca74123d0ce888e7c2c3c88f498d5f7",
+    "plan_tool/prompts/roadmap-domain.md": "e956a1bc037e6bc42dbe412c2701c257ae5d2d7583c8f95a62edda31028211f8",
+    "plan_tool/roadmap.py": "ea29119e1f4885439759188597739b0880a01833f9728ccc11a679075255bf4f",
+    "plan_tool/roadmap_artifacts.py": "64305687acadec530679c7661e18cbf8deb9e60b006bd53d85998df4454f4eaf",
+    "plan_tool/roadmap_gates.py": "793d6f6264d7109695604dabc8b682b68ef88757f70603e79f8b5003eb792755",
+    "tests/cli/package_surface_help.golden.txt": "a3090cb53781bfc93c9b2f0724b2fa042d559c822b0d2c50ff6627fdd2b26bb6",
+    "tests/cli/test_roadmap_cmd.py": "0202b447264b9ff64ed31cfe87dbecc0cfd46dc64ebd3edbb021ae9ff24e4d16",
+    "tests/test_roadmap.py": "45cd4515db47ad9a3cef8e67f1bb02a3d328212275a4540d7af4aff6d1bffaae",
+    "tests/test_roadmap_artifacts.py": "d6cf5f69ba3dfbbd23d2d00ee7ea5c33a2c7b79329c6121eadea6014087aee7e",
+    "tests/test_roadmap_gates.py": "65d844da9a0e5779b3ca9357e1c09e81cbdcebef0d768c1145e7ab968dcf015a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 7 \u2014 0 critical / 0 high / 0 medium / 2 nits",
+  "recommendations": [
+    {
+      "id": "step7-run-reconcile-208c5595",
+      "source": "run-reconcile",
+      "severity": "nit",
+      "step_id": 7,
+      "title": "`_overwrite_summary_lines()` in `plan_tool/cli/roadmap_cmd.py` (step 7 \"Wire the roadmap command into the CLI, the help ",
+      "body": "`_overwrite_summary_lines()` in `plan_tool/cli/roadmap_cmd.py` (step 7 \"Wire the roadmap command into the CLI, the help catalog, and the generated docs/cli reference\") runs for the stage-exhausted outcome as well as the completed one \u2014 `cmd_roadmap` calls it after both branches, since a halted run can still have replaced artifacts before spending its attempts. The detail's `## Implementation` places the advice under the Completed branch only and its acceptance criterion names only \"a completed result carrying overwritten stages\", leaving the shipped behavior and its two tests (`test_an_exhausted_run_that_overwrote_still_warns`, `test_an_exhausted_run_without_overwrite_warns_about_nothing`) uncovered by the plan. The code is the correct side: a hand edit is no less lost because the run also failed\n\n## Redirect\n\n- **Reason**: the detail scopes overwrite advice to the completed outcome while the code deliberately covers both, so the plan's criterion needs widening rather than the behavior narrowing\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": {
+        "reason": "the detail scopes overwrite advice to the completed outcome while the code deliberately covers both, so the plan's criterion needs widening rather than the behavior narrowing",
+        "suggested_next": "detail --reconcile"
+      },
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    },
+    {
+      "id": "step7-run-reconcile-b854ce56",
+      "source": "run-reconcile",
+      "severity": "nit",
+      "step_id": 7,
+      "title": "`_print_exhausted()` in `plan_tool/cli/roadmap_cmd.py` (step 7 \"Wire the roadmap command into the CLI, the help catalog,",
+      "body": "`_print_exhausted()` in `plan_tool/cli/roadmap_cmd.py` (step 7 \"Wire the roadmap command into the CLI, the help catalog, and the generated docs/cli reference\") prints `result.failure_detail` for the invoke kind, which `plan_tool/roadmap.py:_run_stage` fills with `_reply_head(reply)` \u2014 the head of backend **stdout**, because `shell_roadmap_invoker` returns `(rc, stdout)`. The detail's `## Implementation` describes that field as \"rc and stderr tail\", sending an operator debugging an invoke failure to look for stderr content the result never carries. The handler prints the diagnostic the result actually holds\n\n## Redirect\n\n- **Reason**: the detail's parenthetical mischaracterizes step 4's `failure_detail` as a stderr tail when the shipped result carries a stdout reply head; the CLI renders the field correctly and the plan's gloss is the wrong piece\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": {
+        "reason": "the detail's parenthetical mischaracterizes step 4's `failure_detail` as a stderr tail when the shipped result carries a stdout reply head; the CLI renders the field correctly and the plan's gloss is the wrong piece",
+        "suggested_next": "detail --reconcile"
+      },
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

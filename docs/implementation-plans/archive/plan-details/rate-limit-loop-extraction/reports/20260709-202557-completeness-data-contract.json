@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-f49ad910": {
+      "code_anchor": "plan_tool/rate_limit_loop.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/rate-limit-loop-extraction/02-route-shell-claude-invoke-through.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/rate-limit-loop-extraction/02-route-shell-claude-invoke-through.md",
+      "reason": "code anchor path `plan_tool/rate_limit_loop.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-f4264ad9": {
+      "code_anchor": "plan_tool/rate_limit_loop.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/rate-limit-loop-extraction/03-route-launcher-shell-invoker-through.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/rate-limit-loop-extraction/03-route-launcher-shell-invoker-through.md",
+      "reason": "code anchor path `plan_tool/rate_limit_loop.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260709-202557-completeness"
+}

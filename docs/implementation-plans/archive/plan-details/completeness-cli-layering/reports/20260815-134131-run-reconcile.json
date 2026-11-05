@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "plan_slug": "completeness-cli-layering",
+  "plan_path": "docs/implementation-plans/2-completeness-cli-layering.md",
+  "created_at": "2026-08-15T13:41:31Z",
+  "kind": "run-reconcile",
+  "step_id": 5,
+  "plan_fingerprint": "05c9d38ee9b2a2c7c509a71d662f010d20860304e03898d09bedc0092d85f368",
+  "code_fingerprint": {
+    ".plan-tool/lessons/project.md": "a2dc8c4c8c59daf994ff2d3c128e5114ae8d2bfe8ac5e691549c8532639ce39c",
+    "BACKLOG.md": "feb2cb3bd3f323082acd5d2b1601fea73afd8649b6cee8498fbedbc0048a1ac5",
+    "BUG_BACKLOG.md": "0101aebbef7ac3f86414207eea5389be0fb817842bc33fb7f60d8a2fd8c2a90d",
+    "docs/AUDIT_FLOW.md": "67bc2485b12da8c9a5a84aae3965907c3a5b6b74fe317718c088acb8c1216e31",
+    "docs/implementation-plans/plan-details/per-call-timeout-budgets/02-give-purity-scans-conceptual-audits.md": "01b9bdf08887855276e40642789c71678120d2c1558d3176d304cf28c51e5c51",
+    "docs/implementation-plans/plan-details/security-check-command/08-iterate-apply-convergence-loop-security.md": "9e051ed6def34d12424674f83f98b320000da5506358174ce896e2d4d5709567",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/03-hoist-one-stage-derivation-before.md": "528776d887636432f74e76717bb847b0311bc63528bb54313f5f4725f6161d47",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md": "157c8c0a7279c970fdafeaf3ba903753ddd14c2ba0fa5dc718f1878830ddca2f",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md": "74becd3b9ba158649dfe58605d2b09016c0e2cb870b56242d5e1c3c697820616",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md": "d75d3b00ff6491e76bd79267a8b9f914da9d579465f451f9afe140a1478802d2",
+    "plan_tool/cli/app.py": "89f5913209278b43844b74f346d99bfeba45139d203789e4af7e5a350756c6a3",
+    "plan_tool/cli/completeness_cmd.py": "f009b18d84b9564f6e53210b04a78c9f3a41591542789b5970efc76dd8d19b92",
+    "plan_tool/cli/completeness_phases.py": "98f98325102284619b0303175226798adb8c6f51f9a38cfa36e05d1b8fe5ae85",
+    "tests/cli/test_completeness_cmd.py": "700bbc03ed3f5b2a8f8523de5d42de486e8cdf838230fea93c193cbc52cd5f02",
+    "tests/test_convergence.py": "ea5bb91397840ca41dfa2b35b3515c717576dd5efbe3a134b14c92abc4ea8424"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 5 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 2 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

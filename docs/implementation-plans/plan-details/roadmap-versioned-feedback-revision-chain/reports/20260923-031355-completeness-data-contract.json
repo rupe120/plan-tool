@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step10-data-contract-b66aa510": {
+      "code_anchor": "plan_tool/roadmap.py:require_unenrolled_roadmap_writer",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md",
+      "reason": "code anchor `plan_tool/roadmap.py:require_unenrolled_roadmap_writer` does not resolve in HEAD",
+      "step_id": 10,
+      "target": "plan-detail"
+    },
+    "step11-data-contract-eaa1ecaf": {
+      "code_anchor": "plan_tool/cli/roadmap_cmd.py:register_roadmap_subparser",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md",
+      "reason": "code anchor `plan_tool/cli/roadmap_cmd.py:register_roadmap_subparser` does not resolve in HEAD",
+      "step_id": 11,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260923-031355-completeness"
+}

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "plan_slug": "sibling-planned-input-paths",
+  "plan_path": "docs/implementation-plans/2-sibling-planned-input-paths.md",
+  "created_at": "2026-10-16T02:50:56Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "ec86c6b8fbb6136265e0f9cf0a5f599ab8731ec6ad915f1cebc6f6bc3bee33c1",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "dd6ce7ceead5b7a160873edfafa520c7092f07076c5fc4f679846d68149c5f74",
+    "DATA_CONTRACT.md": "3e4530e431d92919a4e1e2b697925a287dec54861f1389f0fec6729504ed655d",
+    "plan_tool/review.py": "52ce8ace971d3fd2c198803aca448a139ae8dfbd99e535b5213c14869f0c670f",
+    "tests/test_data_contract.py": "f4c4b17466cbc2f3eb46a48e4277a567e6ce226a5839945cdfde36cdb5684c3f",
+    "tests/test_review.py": "fca76c7cbac42bae414067ea245e3946129842ab0d992d23d9f2d7b3c5a91ee3"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 1 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-23e247f4",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "`plan_tool/review.py:_sibling_roadmap_identity` (step 1 \u201cSelect eligible sibling creates using existing roadmap identity",
+      "body": "`plan_tool/review.py:_sibling_roadmap_identity` (step 1 \u201cSelect eligible sibling creates using existing roadmap identity\u201d) accepts valid `roadmap`/`plan_id` frontmatter when an accompanying lifecycle marker is malformed and `_marker_payload()` returns `None`. The metadata branch bypasses the malformed-marker check, allowing unsupported sibling exemptions despite the required fail-closed boundary",
+      "suggested_action": "reject present but unrecognized lifecycle markers before the frontmatter fallback in `plan_tool/review.py:_sibling_roadmap_identity` and add audited-plan and candidate regression cases in `tests/test_review.py:TestEligibleSiblingCreates`",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

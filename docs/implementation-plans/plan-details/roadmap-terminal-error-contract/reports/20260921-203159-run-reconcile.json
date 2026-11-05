@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T20:31:59Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "10a27473c50fe7003238f5b34fa6fa8ee223510e2792294a864091c5826ddec8",
+  "code_fingerprint": {
+    "BACKLOG.md": "13009e2611cbf09d6b43f95182e968b2e6cbb012ce1336947a16245321ec21dd",
+    "BUG_BACKLOG.md": "bb3b8e1c6d6248542c7b251a3d5c38ab73da384246a033a17020635a969fd1d3",
+    "ROADMAP_FORMAT.md": "403c6fcf50fa33ad37d1fd8c7a7ef4bc9a1bc134f1db103fa9d53da2ac546c27",
+    "plan_tool/cli/roadmap_cmd.py": "2339c2ea48d88378964742715b5b0d6f303740966604cddacd0d11bc81e30cbc",
+    "plan_tool/roadmap.py": "4662d913d3d84d29c8a553a6f9052474c8bf16aaeaca2b8e84751ef87e6f779c",
+    "plan_tool/roadmap_revision_run.py": "656eaa3a0f970275250bce9851cf34f46151262b42fa440f811bd63a8f8e49fd",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "6ae1a02f8b3d05e20d525226544cc80831bd429e114eb44a9400e1a8f4b76ab0",
+    "tests/test_roadmap.py": "522c962a1e2bba342e5c621fb22508ce7cb502290177a884edb623e747d7de09",
+    "tests/test_roadmap_revision_run.py": "6ab1f6dabf7d0171e93240322c771588850be8086ccc33bfb523adca9cacb144"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 5 of 5 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

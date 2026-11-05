@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T23:17:15Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "3ea1d1156b3cee48bc16d9a5498edeaeef293496bf52bdaa4f27a90b573a5fa4",
+  "code_fingerprint": {
+    "BACKLOG.md": "89e151d93bd5c92960e852be69544bb1cf2f5341098ed41d37855b64cad555ea",
+    "ROADMAP_FORMAT.md": "eaf6de6bc867c6f874e3683730e97c2ad49d9dfc2ec64a63e67e62213b4eb972",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "6a9a5eb910a28ff6449b2cf11c2513f2cdc6ac84f767332731abf70ff0b63efa",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "0dd80388812363a5524ccde2a29b0afdd1c4a33f11c582e967b604e810015a67",
+    "plan_tool/cli/roadmap_cmd.py": "ead8fe581c4aae7c483feaa5fc0a2e48ebfd3f65648a446ff1e506fcb0440c88",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "7723615e66084d4809a4611da27f738042823856bca99118633a4e982e5b3431",
+    "plan_tool/roadmap_candidate.py": "655c315a19411c8bd48d36aaede14e1251b1e77808f55f30737c9b8633456d47",
+    "plan_tool/roadmap_candidate_review.py": "2d9226de7d965ad05ae45d9117822bf62301f090702da17962a293fbac9915b5",
+    "plan_tool/roadmap_candidate_run.py": "a9a3af50e68498173a5b1a1d4acd16529d4a38644d334bea5b423c5caf0b002c",
+    "tests/cli/test_roadmap_cmd.py": "b251e5d038cd53106d36059220f08fcff47a419dd18edd35078a2729683a4748",
+    "tests/test_roadmap_candidate.py": "f72aabf8c1fb5158a6d51ddf59888fb1e994de9d290783f29f49fe83031f8475",
+    "tests/test_roadmap_candidate_review.py": "1c4ef01f4a36b3a5f4a0403a684c99a97d8a570507a792698c74afccdb4be24d",
+    "tests/test_roadmap_candidate_run.py": "fa7e21702128006de387575a1c0b32c143a893e1ad6ef5bde13dfa6e9acedde0",
+    "tests/test_roadmap_format.py": "6f2b74355c6719bb3a1813deed5109bc708fe94db3d6ae2d137e99984d1e9cfa",
+    "tests/test_roadmap_version_promotion.py": "5e69979ddec359ac0ba457d052a0033a118b6d20accde1a7202f2d84b7472ba5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 4 of 4 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

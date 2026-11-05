@@ -1,0 +1,179 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-immutable-evidence-storage",
+  "plan_path": "docs/implementation-plans/2-roadmap-immutable-evidence-storage.md",
+  "created_at": "2026-08-14T23:00:17Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7ceccb28b8b10abedbff5eaa2d8e0ebcd75562c2ccc1132b0c551e5f5ee12151",
+  "code_fingerprint": {
+    "docs/ARCHITECTURE.md": "1c79af5cde890c510ee07b6003cdf3274c91a085ea5b8aa19a7e1db6ab78479f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/01-confined-immutable-evidence-publishing.md": "32bb6a21c81040c02f66c8fbff4a82fa5de4946862ac785eb79b6c320e0ba4d7",
+    "docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/02-deterministic-final-only-evidence.md": "e2391c50518aafd2ba06682c3cb675705619aae9dc0579f7058d7827d03ebeb5",
+    "docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/03-document-immutable-evidence-storage.md": "07678ea06bc3b7323c9e725ecf0b0d860a38a53b16375a3ca6b7563c05db723c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Immutable Evidence Storage\n\n`roadmap-immutable-evidence-storage` \u00b7 generated 2026-08-14T23:00:17Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 7\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-immutable-evidence-storage   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-immutable-evidence-storage  # alternative interactive review/apply\n\n- CRITICAL `[durability-boundary]`: Architecture permits only `created`, `existing`, `unsafe-storage`, `write-failed`, and `interrupted`, while Risks and the final acceptance criterion require an explicit `platform-boundary` result. Architecture also names only `fsync` even though References identifies macOS `F_FULLFSYNC` as a relevant boundary, so step 1 can acknowledge host-failure durability without a defined supported-platform rule or have no permitted refusal result.\n  - Fix: define the supported-platform durability capability and operation, add `platform-boundary` to the one closed result contract, and align Architecture, Risks, Testing, and acceptance criteria to it\n- HIGH `[storage-name-contract]`: Overview and step 2\u2019s dependency note call the namespace validated by the caller, while Architecture says the primitive rejects names outside a \u201cclosed caller-provided grammar,\u201d Input treats that grammar as consumed input, and Out of scope excludes user-configurable grammar. No sealed vocabulary, validation owner, or invalid-input outcome is defined, so callers can implement incompatible string checks or rule sets before filesystem access.\n  - Fix: define one code-owned closed namespace/final-name specification, its validation owner, and the invalid-input outcome outside the storage-result vocabulary across all named contract sites\n- HIGH `[staging-reclamation]`: Architecture says step 1 removes its own staging file and later cleans crash-left entries after ownership checks; Risks, Testing, and the final-enumeration acceptance criterion repeat that cleanup must touch only owned staging files. A no-follow type/path check cannot tell a crashed file from another live creator\u2019s staging file, so reclamation can delete active work or avoid all old files and leave crash debris forever, despite the required two-creator behavior.\n  - Fix: define per-call staging identity and a recovery policy that preserves live creators while reclaiming only definitely orphaned staging entries, then cover it in the interleaving and cleanup tests\n- MEDIUM `[unsafe-entry-scan-outcome]`: Architecture says \u201clinks, special entries, unexpected final filenames \u2026 produce `unsafe-storage`,\u201d then says \u201cFinal enumeration returns safe final records plus entry status \u2026 for unsafe entries.\u201d Testing and acceptance require both unsafe-shape rejection and final-only enumeration, but do not choose whether one bad sibling stops a scan or is returned as metadata beside safe results.\n  - Fix: define the namespace-level versus entry-level unsafe outcome and reconcile Architecture, Testing, and acceptance criteria to that single scan rule\n- MEDIUM `[final-scan-record-contract]`: Step 2 promises deterministic final-only scanning, but Architecture\u2019s \u201csafe final records plus entry status and escaped relative location metadata\u201d does not say whether safe records carry opaque bytes, which statuses exist, how locations are escaped, or what ordering is deterministic. Testing and the final-enumeration criterion therefore permit incompatible scan APIs and cannot prove the promised result shape.\n  - Fix: define one scan-entry contract covering safe payload availability, the closed status set, escaped-location format, and deterministic ordering across Architecture, Testing, and acceptance criteria\n- HIGH `[link-safety-boundary]`: Architecture says \u201clinks \u2026 produce `unsafe-storage`\u201d but also \u201clinks the staged file exclusively into the final directory\u201d; Testing and the second acceptance criterion require links to be rejected, while steps 1 and 2 must publish and scan the resulting regular files. `O_NOFOLLOW` handles symbolic links, not hard-link aliases, so the plan neither defines the allowed publication link nor says how scanning treats other hard-linked regular files.\n  - Fix: Define the symbolic-link and hard-link safety policy, including the expected private staging-to-final link and the checks that make a final record safe to reuse or enumerate.\n- MEDIUM `[storage-failure-classification]`: Architecture reserves `unsafe-storage` for unsafe shapes and names `write-failed` without defining it, while the existing-record path can fail during open, read, file fsync, directory fsync, or staging cleanup after publication. Testing covers write failure but not the returned result for those paths, so callers can receive exceptions or different result codes for the same storage failure.\n  - Fix: Define one result mapping for publication, existing-record reads, fsyncs, cleanup, and interruption, including failures after a final link exists.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-evidence-storage` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Immutable Evidence Storage\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- CRITICAL `[durability-boundary]`: Architecture permits only `created`, `existing`, `unsafe-storage`, `write-failed`, and `interrupted`, while Risks and the final acceptance criterion require an explicit `platform-boundary` result. Architecture also names only `fsync` even though References identifies macOS `F_FULLFSYNC` as a relevant boundary, so step 1 can acknowledge host-failure durability without a defined supported-platform rule or have no permitted refusal result.\n- HIGH `[storage-name-contract]`: Overview and step 2\u2019s dependency note call the namespace validated by the caller, while Architecture says the primitive rejects names outside a \u201cclosed caller-provided grammar,\u201d Input treats that grammar as consumed input, and Out of scope excludes user-configurable grammar. No sealed vocabulary, validation owner, or invalid-input outcome is defined, so callers can implement incompatible string checks or rule sets before filesystem access.\n- HIGH `[staging-reclamation]`: Architecture says step 1 removes its own staging file and later cleans crash-left entries after ownership checks; Risks, Testing, and the final-enumeration acceptance criterion repeat that cleanup must touch only owned staging files. A no-follow type/path check cannot tell a crashed file from another live creator\u2019s staging file, so reclamation can delete active work or avoid all old files and leave crash debris forever, despite the required two-creator behavior.\n- MEDIUM `[unsafe-entry-scan-outcome]`: Architecture says \u201clinks, special entries, unexpected final filenames \u2026 produce `unsafe-storage`,\u201d then says \u201cFinal enumeration returns safe final records plus entry status \u2026 for unsafe entries.\u201d Testing and acceptance require both unsafe-shape rejection and final-only enumeration, but do not choose whether one bad sibling stops a scan or is returned as metadata beside safe results.\n- MEDIUM `[final-scan-record-contract]`: Step 2 promises deterministic final-only scanning, but Architecture\u2019s \u201csafe final records plus entry status and escaped relative location metadata\u201d does not say whether safe records carry opaque bytes, which statuses exist, how locations are escaped, or what ordering is deterministic. Testing and the final-enumeration criterion therefore permit incompatible scan APIs and cannot prove the promised result shape.\n- HIGH `[link-safety-boundary]`: Architecture says \u201clinks \u2026 produce `unsafe-storage`\u201d but also \u201clinks the staged file exclusively into the final directory\u201d; Testing and the second acceptance criterion require links to be rejected, while steps 1 and 2 must publish and scan the resulting regular files. `O_NOFOLLOW` handles symbolic links, not hard-link aliases, so the plan neither defines the allowed publication link nor says how scanning treats other hard-linked regular files.\n- MEDIUM `[storage-failure-classification]`: Architecture reserves `unsafe-storage` for unsafe shapes and names `write-failed` without defining it, while the existing-record path can fail during open, read, file fsync, directory fsync, or staging cleanup after publication. Testing covers write failure but not the returned result for those paths, so callers can receive exceptions or different result codes for the same storage failure.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-immutable-evidence-storage` \u2014 walk the 7 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bab7cc14",
+      "source": "plan-correctness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "Architecture permits only `created`, `existing`, `unsafe-storage`, `write-failed`, and `interrupted`, while Risks and th",
+      "body": "Architecture permits only `created`, `existing`, `unsafe-storage`, `write-failed`, and `interrupted`, while Risks and the final acceptance criterion require an explicit `platform-boundary` result. Architecture also names only `fsync` even though References identifies macOS `F_FULLFSYNC` as a relevant boundary, so step 1 can acknowledge host-failure durability without a defined supported-platform rule or have no permitted refusal result.",
+      "suggested_action": "define the supported-platform durability capability and operation, add `platform-boundary` to the one closed result contract, and align Architecture, Risks, Testing, and acceptance criteria to it",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "durability-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ce834254",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Overview and step 2\u2019s dependency note call the namespace validated by the caller, while Architecture says the primitive ",
+      "body": "Overview and step 2\u2019s dependency note call the namespace validated by the caller, while Architecture says the primitive rejects names outside a \u201cclosed caller-provided grammar,\u201d Input treats that grammar as consumed input, and Out of scope excludes user-configurable grammar. No sealed vocabulary, validation owner, or invalid-input outcome is defined, so callers can implement incompatible string checks or rule sets before filesystem access.",
+      "suggested_action": "define one code-owned closed namespace/final-name specification, its validation owner, and the invalid-input outcome outside the storage-result vocabulary across all named contract sites",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "storage-name-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3871a376",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says step 1 removes its own staging file and later cleans crash-left entries after ownership checks; Risks,",
+      "body": "Architecture says step 1 removes its own staging file and later cleans crash-left entries after ownership checks; Risks, Testing, and the final-enumeration acceptance criterion repeat that cleanup must touch only owned staging files. A no-follow type/path check cannot tell a crashed file from another live creator\u2019s staging file, so reclamation can delete active work or avoid all old files and leave crash debris forever, despite the required two-creator behavior.",
+      "suggested_action": "define per-call staging identity and a recovery policy that preserves live creators while reclaiming only definitely orphaned staging entries, then cover it in the interleaving and cleanup tests",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "staging-reclamation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b373139c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says \u201clinks, special entries, unexpected final filenames \u2026 produce `unsafe-storage`,\u201d then says \u201cFinal enum",
+      "body": "Architecture says \u201clinks, special entries, unexpected final filenames \u2026 produce `unsafe-storage`,\u201d then says \u201cFinal enumeration returns safe final records plus entry status \u2026 for unsafe entries.\u201d Testing and acceptance require both unsafe-shape rejection and final-only enumeration, but do not choose whether one bad sibling stops a scan or is returned as metadata beside safe results.",
+      "suggested_action": "define the namespace-level versus entry-level unsafe outcome and reconcile Architecture, Testing, and acceptance criteria to that single scan rule",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unsafe-entry-scan-outcome",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-797b3e85",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 promises deterministic final-only scanning, but Architecture\u2019s \u201csafe final records plus entry status and escaped ",
+      "body": "Step 2 promises deterministic final-only scanning, but Architecture\u2019s \u201csafe final records plus entry status and escaped relative location metadata\u201d does not say whether safe records carry opaque bytes, which statuses exist, how locations are escaped, or what ordering is deterministic. Testing and the final-enumeration criterion therefore permit incompatible scan APIs and cannot prove the promised result shape.",
+      "suggested_action": "define one scan-entry contract covering safe payload availability, the closed status set, escaped-location format, and deterministic ordering across Architecture, Testing, and acceptance criteria",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "final-scan-record-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f5a5bc28",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says \u201clinks \u2026 produce `unsafe-storage`\u201d but also \u201clinks the staged file exclusively into the final director",
+      "body": "Architecture says \u201clinks \u2026 produce `unsafe-storage`\u201d but also \u201clinks the staged file exclusively into the final directory\u201d; Testing and the second acceptance criterion require links to be rejected, while steps 1 and 2 must publish and scan the resulting regular files. `O_NOFOLLOW` handles symbolic links, not hard-link aliases, so the plan neither defines the allowed publication link nor says how scanning treats other hard-linked regular files.",
+      "suggested_action": "Define the symbolic-link and hard-link safety policy, including the expected private staging-to-final link and the checks that make a final record safe to reuse or enumerate.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "link-safety-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3b44b0b7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture reserves `unsafe-storage` for unsafe shapes and names `write-failed` without defining it, while the existin",
+      "body": "Architecture reserves `unsafe-storage` for unsafe shapes and names `write-failed` without defining it, while the existing-record path can fail during open, read, file fsync, directory fsync, or staging cleanup after publication. Testing covers write failure but not the returned result for those paths, so callers can receive exceptions or different result codes for the same storage failure.",
+      "suggested_action": "Define one result mapping for publication, existing-record reads, fsyncs, cleanup, and interruption, including failures after a final link exists.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "storage-failure-classification",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "7ceccb28b8b10abedbff5eaa2d8e0ebcd75562c2ccc1132b0c551e5f5ee12151",
+    "detail_bundle_digest": "a537c018aff1a654db4e480dc5286e2c832c32b1ea00fdbf2bff96d105ece810",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/01-confined-immutable-evidence-publishing.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/02-deterministic-final-only-evidence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-immutable-evidence-storage/03-document-immutable-evidence-storage.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

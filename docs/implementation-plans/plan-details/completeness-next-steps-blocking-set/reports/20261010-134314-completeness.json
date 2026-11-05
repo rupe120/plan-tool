@@ -1,0 +1,169 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T13:43:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "375c070cd72b0553070ed0e5688f27f5460f3c7510ec983f6397e6f95a4cc66c",
+  "code_fingerprint": {
+    "BACKLOG.md": "4095a24da1efa313ce8270ffdba03a09f2085bf81126009dcae67f25885467a2",
+    "docs/how-to/pipeline/audit.md": "21012dde3125aec12dc575501533c9540d50cb68939d957314ea15f288d889e5",
+    "plan_tool/cli/authoring.py": "945eb4cd8377cfb0eeea343ab1699a0ea66dd2e24cd3c7990fd2211d81b59347",
+    "plan_tool/cli/completeness_cmd.py": "d3da4d5b5025da4010bd29e88ce0602670676f82c5e66048072033bc6c76dc00",
+    "plan_tool/cli/completeness_phases.py": "e6d616e9b5a6d442c35066fafe33285e90eede030dd8f9660e0e9463ff1baed6",
+    "plan_tool/completeness_report.py": "35e48c256fe0b2277a3d2743119b614e470d1393d449727022d6818cc6684e2a",
+    "tests/cli/test_completeness_cmd.py": "6a55ac4d4dcf3d65f6416be80a51fdf9109cfb8ed6abe9bf9713dacbe5e465eb",
+    "tests/test_completeness_report.py": "8321f9064241f3fdeada202a12c4d061dea577ba5a1b019e18f17ae697c8d211"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md": "c094f956b2b4f50154e882aee13fe7c3376162ccf7937ad6f22c1638767fc403",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md": "48cf5acace843533e38cf0a2d8e72be9a38fc2b178075e6ec4c7aac228428e16",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md": "684b232dc6ee11b23d3cbf47426c67b9d1d5c6fe9c6162db9d63650e63022703",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md": "81bff63809b4ec1f5aa079922e1250890b230ef90a6577436cc8af216715d04e",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Steps Blocking Set\n\n`completeness-next-steps-blocking-set` \u00b7 generated 2026-10-10T13:43:13Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `84d55b2d92dc1e42a412b901143e9435c8139ce8c3ce9e8e99fcfa7ca24b9ed0`\n- **Detail bundle digest:** `862091e88df3282ef61832779647ad3a831f88d2bc5f05f8439bb03709f881ce`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 62862 bytes (+62862 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.25\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[parent-stage-transitions]` [confidence: limited]: Step 3 (`Leave out run in the detail / split / merge merged next-steps block\u2026`) gates only the `plan-tool run` entry. Its own Why section says the `detail` merged block also appends `plan-tool jira` (after `reconcile-plan` and `run`), which is a stage transition too. The plan intent says \"A blocking gap is named everywhere and ends the command list with the re-audit to run after the session-directed edit, with no stage transition offered\", and the jira lane's own rule treats \"export\" as the transition to withhold. As written, a blocking tail leaves `plan-tool jira` in the `detail` block while `run` is removed, so the parent still offers a next stage. The acceptance criteria, step 4's parent cases, and the plan Testing section name only `run`, so none of them would catch it.\n  - Fix: State which entries in the `detail` / `split` / `merge` merged blocks are stage transitions (`run` and `jira`), withhold all of them unless the tail's verdict is an empty set, and reconcile step 3, the acceptance criteria, and step 4's parent cases to that set.\n- MEDIUM `[reader-roster]` [confidence: limited]: Plan step 1's title and intent name three readers in `completeness_report.py` (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`), but the step 1 detail also changes `next_stage_command`. The plan body and step 4 treat `next_stage_command` as the shared fallback of the four readers. The step 1 intent never says it owns that fallback, so a reader of the plan alone could leave it on today's bundle-state logic, which is where \"no plan-level gaps remain\" comes from.\n  - Fix: Name `next_stage_command` in step 1's title and intent as the fallback that consumes the verdict, using the same wording as the plan body and step 4.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[reader-roster]` [confidence: limited]: Plan step 1 (`Define the blocking verdict \u2026 consume it`) names three readers (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`). The step 1 detail also changes `next_stage_command`, which the plan body and step 4's test list treat as the shared fallback. The plan-level step intent and title do not say that `next_stage_command` is changed in step 1, so a reader of the plan alone could consider it unowned. This is phrase drift only, since the detail covers it.\n  - Fix: Add `next_stage_command` to step 1's title and intent as the shared fallback reader, so plan body, step list, and detail use one roster.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1eb03b12]` [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Steps Blocking Set\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `84d55b2d92dc1e42a412b901143e9435c8139ce8c3ce9e8e99fcfa7ca24b9ed0`\n- **Detail bundle digest:** `862091e88df3282ef61832779647ad3a831f88d2bc5f05f8439bb03709f881ce`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[parent-stage-transitions]` [confidence: limited]: Step 3 (`Leave out run in the detail / split / merge merged next-steps block\u2026`) gates only the `plan-tool run` entry. Its own Why section says the `detail` merged block also appends `plan-tool jira` (after `reconcile-plan` and `run`), which is a stage transition too. The plan intent says \"A blocking gap is named everywhere and ends the command list with the re-audit to run after the session-directed edit, with no stage transition offered\", and the jira lane's own rule treats \"export\" as the transition to withhold. As written, a blocking tail leaves `plan-tool jira` in the `detail` block while `run` is removed, so the parent still offers a next stage. The acceptance criteria, step 4's parent cases, and the plan Testing section name only `run`, so none of them would catch it.\n- MEDIUM `[reader-roster]` [confidence: limited]: Plan step 1's title and intent name three readers in `completeness_report.py` (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`), but the step 1 detail also changes `next_stage_command`. The plan body and step 4 treat `next_stage_command` as the shared fallback of the four readers. The step 1 intent never says it owns that fallback, so a reader of the plan alone could leave it on today's bundle-state logic, which is where \"no plan-level gaps remain\" comes from.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[reader-roster]` [confidence: limited]: Plan step 1 (`Define the blocking verdict \u2026 consume it`) names three readers (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`). The step 1 detail also changes `next_stage_command`, which the plan body and step 4's test list treat as the shared fallback. The plan-level step intent and title do not say that `next_stage_command` is changed in step 1, so a reader of the plan alone could consider it unowned. This is phrase drift only, since the detail covers it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk completeness-next-steps-blocking-set` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-25f0bf90",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Leave out run in the detail / split / merge merged next-steps block\u2026`) gates only the `plan-tool run` entry. It",
+      "body": "Step 3 (`Leave out run in the detail / split / merge merged next-steps block\u2026`) gates only the `plan-tool run` entry. Its own Why section says the `detail` merged block also appends `plan-tool jira` (after `reconcile-plan` and `run`), which is a stage transition too. The plan intent says \"A blocking gap is named everywhere and ends the command list with the re-audit to run after the session-directed edit, with no stage transition offered\", and the jira lane's own rule treats \"export\" as the transition to withhold. As written, a blocking tail leaves `plan-tool jira` in the `detail` block while `run` is removed, so the parent still offers a next stage. The acceptance criteria, step 4's parent cases, and the plan Testing section name only `run`, so none of them would catch it.",
+      "suggested_action": "State which entries in the `detail` / `split` / `merge` merged blocks are stage transitions (`run` and `jira`), withhold all of them unless the tail's verdict is an empty set, and reconcile step 3, the acceptance criteria, and step 4's parent cases to that set.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "parent-stage-transitions",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-9ad2fa96",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan step 1's title and intent name three readers in `completeness_report.py` (`suggested_next_steps`, `suggested_next_s",
+      "body": "Plan step 1's title and intent name three readers in `completeness_report.py` (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`), but the step 1 detail also changes `next_stage_command`. The plan body and step 4 treat `next_stage_command` as the shared fallback of the four readers. The step 1 intent never says it owns that fallback, so a reader of the plan alone could leave it on today's bundle-state logic, which is where \"no plan-level gaps remain\" comes from.",
+      "suggested_action": "Name `next_stage_command` in step 1's title and intent as the fallback that consumes the verdict, using the same wording as the plan body and step 4.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reader-roster",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-9ad2fa96",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan step 1 (`Define the blocking verdict \u2026 consume it`) names three readers (`suggested_next_steps`, `suggested_next_st",
+      "body": "Plan step 1 (`Define the blocking verdict \u2026 consume it`) names three readers (`suggested_next_steps`, `suggested_next_step_commands`, `console_summary`). The step 1 detail also changes `next_stage_command`, which the plan body and step 4's test list treat as the shared fallback. The plan-level step intent and title do not say that `next_stage_command` is changed in step 1, so a reader of the plan alone could consider it unowned. This is phrase drift only, since the detail covers it.",
+      "suggested_action": "Add `next_stage_command` to step 1's title and intent as the shared fallback reader, so plan body, step list, and detail use one roster.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reader-roster",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "84d55b2d92dc1e42a412b901143e9435c8139ce8c3ce9e8e99fcfa7ca24b9ed0",
+      "detail_bundle_digest": "862091e88df3282ef61832779647ad3a831f88d2bc5f05f8439bb03709f881ce",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md",
+          "state": "present",
+          "digest": "c094f956b2b4f50154e882aee13fe7c3376162ccf7937ad6f22c1638767fc403"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md",
+          "state": "present",
+          "digest": "48cf5acace843533e38cf0a2d8e72be9a38fc2b178075e6ec4c7aac228428e16"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md",
+          "state": "present",
+          "digest": "684b232dc6ee11b23d3cbf47426c67b9d1d5c6fe9c6162db9d63650e63022703"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md",
+          "state": "present",
+          "digest": "81bff63809b4ec1f5aa079922e1250890b230ef90a6577436cc8af216715d04e"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md",
+          "state": "present",
+          "digest": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+        }
+      ],
+      "source_seed_digest": "29c8756422c7eab3b8b05dcb8702d92898d6b2ac150d987cdf3752c1cc00fd0d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 62862,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.25,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

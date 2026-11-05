@@ -1,0 +1,223 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-same-artifact-structural-revision",
+  "plan_path": "docs/implementation-plans/2-roadmap-same-artifact-structural-revision.md",
+  "created_at": "2026-08-17T15:18:03Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8ed24d11f09246f3d207294ff3276b518034b688befbbc4fde7e53522bb9151c",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "b69bf3ec51f7a1dc67b0339fcab8b10de0bc04bde8fd2d4b058d60eb33cc623b",
+    "CLAUDE.md": "aebebbede273c40797dd6c7d169038d99e35ff23fcbff2a3a9f28dfae109da71",
+    "DATA_CONTRACT.md": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+    "README.md": "67fb222622436522d49b454a34d0ee89ee01655d36555abf3e7c9a1cfaab57ad",
+    "ROADMAP_FORMAT.md": "0bcb4d70c84c1deeabe6b46f49a9e06334b40186fe935502d89971d4dbac409e",
+    "RUNBOOK.md": "57186b0f35d93dd436cc97a809423b74d15b55c1c0e6789901dbed683ea74f98",
+    "TESTING.md": "02f05707d91bcf6897f91f0cb7e52d810ad1d6bb938f64b842174a83e4c0950e",
+    "docs/ARCHITECTURE.md": "30fdc9991808d9f5112562a356083fed4824f1be30603f110cd6b7a52fe082af",
+    "docs/ROADMAP_WALKTHROUGH.md": "12ae521b5635743354218b6b1b143ef8b1a53c440fc8f52c2e14cd216231b639",
+    "docs/cli/roadmap.md": "c7763825e52ea86c215700fa4fdde59ace5c3acdbe71a15f28233fda873cdedb",
+    "integrations/claude/SKILL.md": "1c9fd91690bfc37d51fdecd26d7d09f2bad4625cb0b4e27994b70b58bff7e78c",
+    "plan_tool/cli/__init__.py": "4ac19a89dc4100d8509e2e762eb5330a0f15dcb81188dedf6927d1edee0e87bc",
+    "plan_tool/cli/roadmap_cmd.py": "ebbd188c13104ac0dc3cf573f1ecf1295398c1a8ab3ee8c29f6e5c853f8a0d36",
+    "plan_tool/roadmap_impact_snapshot.py": "90f3d30f8e2fed898423700e185b1c949ab8d0a0ecdcc9d9471df2addabd0cf4",
+    "plan_tool/roadmap_revision_publish.py": "9878ae12c98c6e49f405e83215eb376cb716ffea46a7c38b1cbb2f3701387d21",
+    "plan_tool/run_log.py": "376d6fa809602f9aa4b285e5339775827dff3cb747196d3ebcfff8733424cdf2",
+    "tests/cli/package_surface_help.golden.txt": "58d58016f7e12cfd58d60ed897e5c94d6ecb2ea3e7306bb367177f2170937e2b",
+    "tests/cli/test_roadmap_cmd.py": "f562f3f6235fe812f7f275c6824900cab2b359ddea72e5e0b030222e230de9a8",
+    "tests/test_data_contract.py": "625606af410be5e44ad95cb9c328a0a8954bf5de6f2d8645d50cba9e36fa8112",
+    "tests/test_roadmap_format.py": "9d181b537f824526c51716b83b16628b44de8d074a5b6d2c1dc2ba42a659bd11",
+    "tests/test_roadmap_impact_snapshot.py": "565908db81b4df7a78ca0ff13686cff3a862b4831ed50b6c2ecdae5055248f99",
+    "tests/test_roadmap_revision_publish.py": "159a21f8851959917715f6721cf5627c02871afe50f2e99197f19b5c149d9e58",
+    "tests/test_run_log.py": "aa7f97d94e93c2ee70689a15cc9a7eaa27808ba9e5212a783a945cba4f9e514a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md": "4bcc18032cd283a4d7411a44e26c2e50c50ff5794ea4a44a90bafb61f00b81e7",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/02-bind-current-receipt-impact-evidence.md": "c5d25f1aa1cc363740b12c298a6557a1e8273fea2011a43cb8c17c0c1c7fa390",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/03-define-finite-row-field-existing-prose.md": "67ee19484c1a76d8cd78e1ba228fd274ec2af4dda4745e047df6f8e1acb14139",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md": "03579c841ad035f316e8e6f26225dbdc3dc6560e2f1b9d4066ed8eb7ecd775cc",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md": "570770e55de0531afb55ba6e4eaa489b09feec40357d0b6304c9003ca9e31dea",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/06-bind-publication-proof-complete-final.md": "020e7f178b276dae4ac27c88d9ddf2e3d8469a0eb71907d07819266d2c74e773",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/07-closed-redacted-rewrite-preflight.md": "f55ce24d6a547b76109f5b05320579b5e1b44aeda85e81efc13be20d77f88023",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/08-run-one-bounded-exact-envelope-rewrite.md": "fce07037c80ac22168be064154c2e6ffcce8da8c09d0eb8d6b4c10dd7fa25a71",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/09-wire-explicit-exact-pair-structural.md": "40ac89356c50ad83dd2eaecdc37d3aa09f2dae188cfb4e086240fe99665d7272",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/10-document-local-exact-pair-rewrite-only.md": "05d41ac5511d844cc31f21637a92b04f87b3926403d47e7271f608cf7c18eba1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Same Artifact Structural Revision\n\n`roadmap-same-artifact-structural-revision` \u00b7 generated 2026-08-17T15:18:03Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `8ed24d11f09246f3d207294ff3276b518034b688befbbc4fde7e53522bb9151c`\n- **Detail bundle digest:** `687d687162e512f786087012e5f0e7e31bb9eefcfdf79a04e23a4b86e8f5385b`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 10 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.44\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-same-artifact-structural-revision   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-same-artifact-structural-revision  # alternative interactive review/apply\n\n- HIGH `[backend-side-effect-boundary]`: Step 8 (`Run one bounded exact-envelope rewrite`) treats the strict reply and later splicer as the write boundary, but `plan_tool.backend:_claude_batch_argv` grants `acceptEdits` and `_codex_batch_argv` grants `workspace-write`; `plan_tool.roadmap_revision_run:shell_local_revision_invoker` shows the adjacent path uses that shared transport. A backend tool call can alter canonical files before steps 4 and 6 prove or publish them, and `plan_tool.backend:_summarize_tool_input` plus `RunLogWriter.bind_shell_sink` can persist tool commands containing reviewer or roadmap text. Architecture, Testing\u2019s backend-free coverage, and acceptance criteria 3, 5, and 6 do not close this boundary.\n  - Fix: define a no-tool/read-only structural backend boundary for every configured backend and test that backend-side writes and tool summaries cannot reach canonical files or lifecycle records before guarded publication.\n- MEDIUM `[rewrite-attempt-outcome-consistency]`: Step 7 (`Add closed redacted rewrite preflight and terminal events`) defines phase values and ordering but does not bind each terminal `outcome` to its required facts: `outcome=published` with `publication=not-reached`, or `outcome=proof-rejected` with `proof=accepted`, both satisfy the stated phase ordering. The Architecture lifecycle paragraph, step 8, Testing\u2019s monotonic-matrix requirement, and acceptance criterion 6 therefore leave no single verifiable terminal meaning; `plan_tool.run_log:RunLogWriter.roadmap_local_revision_attempt` shows the existing pattern validates values separately, not their combination.\n  - Fix: specify a closed outcome-to-phase truth table, including interruption, and require event validation and tests to reject every tuple outside it.\n- HIGH `[backend-output-redaction-boundary]`: Step 7\u2019s redacted-event commitment and step 8\u2019s backend call do not cover generic backend diagnostics: `plan_tool.shell:_on_nonsuccess_seam` prints raw stderr and sometimes a raw stdout tail, `plan_tool.backend_runner:run_streaming_once` can show tool-input summaries under `--verbose`, and `plan_tool.roadmap_revision_run:_attempt_result` shows the existing raw-detail CLI pattern. These bypass the Architecture, Testing, and acceptance promise that no lifecycle surface contains reviewer text, prompts, or replies.\n  - Fix: define a structural-runner diagnostic boundary that emits only closed redacted facts on every failure and verbosity path, then test console, stream, and result handling.\n- HIGH `[row-field-value-policy]`: `row-field.value` in Architecture and step 3 (`Define finite row-field and existing prose-region rewrite operations`) permits any one-line string, and step 4, Testing, and acceptance criterion 2 add no nonblank rule. Empty or whitespace-only values can erase any listed name or statement while preserving ids, relations, and current gates because `plan_tool.roadmap_artifacts:_row_text` and `plan_tool.roadmap_gates:check_inventory_has_prose` accept them; the existing local path\u2019s `plan_tool.roadmap_revision:_require_trimmed_text` rejects them.\n  - Fix: define one nonblank and whitespace policy for every row-field value and carry it through envelope validation, candidate proof tests, and acceptance criteria.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-same-artifact-structural-revision` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Same Artifact Structural Revision\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `8ed24d11f09246f3d207294ff3276b518034b688befbbc4fde7e53522bb9151c`\n- **Detail bundle digest:** `687d687162e512f786087012e5f0e7e31bb9eefcfdf79a04e23a4b86e8f5385b`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 10 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[backend-side-effect-boundary]`: Step 8 (`Run one bounded exact-envelope rewrite`) treats the strict reply and later splicer as the write boundary, but `plan_tool.backend:_claude_batch_argv` grants `acceptEdits` and `_codex_batch_argv` grants `workspace-write`; `plan_tool.roadmap_revision_run:shell_local_revision_invoker` shows the adjacent path uses that shared transport. A backend tool call can alter canonical files before steps 4 and 6 prove or publish them, and `plan_tool.backend:_summarize_tool_input` plus `RunLogWriter.bind_shell_sink` can persist tool commands containing reviewer or roadmap text. Architecture, Testing\u2019s backend-free coverage, and acceptance criteria 3, 5, and 6 do not close this boundary.\n- MEDIUM `[rewrite-attempt-outcome-consistency]`: Step 7 (`Add closed redacted rewrite preflight and terminal events`) defines phase values and ordering but does not bind each terminal `outcome` to its required facts: `outcome=published` with `publication=not-reached`, or `outcome=proof-rejected` with `proof=accepted`, both satisfy the stated phase ordering. The Architecture lifecycle paragraph, step 8, Testing\u2019s monotonic-matrix requirement, and acceptance criterion 6 therefore leave no single verifiable terminal meaning; `plan_tool.run_log:RunLogWriter.roadmap_local_revision_attempt` shows the existing pattern validates values separately, not their combination.\n- HIGH `[backend-output-redaction-boundary]`: Step 7\u2019s redacted-event commitment and step 8\u2019s backend call do not cover generic backend diagnostics: `plan_tool.shell:_on_nonsuccess_seam` prints raw stderr and sometimes a raw stdout tail, `plan_tool.backend_runner:run_streaming_once` can show tool-input summaries under `--verbose`, and `plan_tool.roadmap_revision_run:_attempt_result` shows the existing raw-detail CLI pattern. These bypass the Architecture, Testing, and acceptance promise that no lifecycle surface contains reviewer text, prompts, or replies.\n- HIGH `[row-field-value-policy]`: `row-field.value` in Architecture and step 3 (`Define finite row-field and existing prose-region rewrite operations`) permits any one-line string, and step 4, Testing, and acceptance criterion 2 add no nonblank rule. Empty or whitespace-only values can erase any listed name or statement while preserving ids, relations, and current gates because `plan_tool.roadmap_artifacts:_row_text` and `plan_tool.roadmap_gates:check_inventory_has_prose` accept them; the existing local path\u2019s `plan_tool.roadmap_revision:_require_trimmed_text` rejects them.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-same-artifact-structural-revision` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b6cdf6bf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 8 (`Run one bounded exact-envelope rewrite`) treats the strict reply and later splicer as the write boundary, but `",
+      "body": "Step 8 (`Run one bounded exact-envelope rewrite`) treats the strict reply and later splicer as the write boundary, but `plan_tool.backend:_claude_batch_argv` grants `acceptEdits` and `_codex_batch_argv` grants `workspace-write`; `plan_tool.roadmap_revision_run:shell_local_revision_invoker` shows the adjacent path uses that shared transport. A backend tool call can alter canonical files before steps 4 and 6 prove or publish them, and `plan_tool.backend:_summarize_tool_input` plus `RunLogWriter.bind_shell_sink` can persist tool commands containing reviewer or roadmap text. Architecture, Testing\u2019s backend-free coverage, and acceptance criteria 3, 5, and 6 do not close this boundary.",
+      "suggested_action": "define a no-tool/read-only structural backend boundary for every configured backend and test that backend-side writes and tool summaries cannot reach canonical files or lifecycle records before guarded publication.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "backend-side-effect-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-52629ab0",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7 (`Add closed redacted rewrite preflight and terminal events`) defines phase values and ordering but does not bind",
+      "body": "Step 7 (`Add closed redacted rewrite preflight and terminal events`) defines phase values and ordering but does not bind each terminal `outcome` to its required facts: `outcome=published` with `publication=not-reached`, or `outcome=proof-rejected` with `proof=accepted`, both satisfy the stated phase ordering. The Architecture lifecycle paragraph, step 8, Testing\u2019s monotonic-matrix requirement, and acceptance criterion 6 therefore leave no single verifiable terminal meaning; `plan_tool.run_log:RunLogWriter.roadmap_local_revision_attempt` shows the existing pattern validates values separately, not their combination.",
+      "suggested_action": "specify a closed outcome-to-phase truth table, including interruption, and require event validation and tests to reject every tuple outside it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rewrite-attempt-outcome-consistency",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-a51e1b9b",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 7\u2019s redacted-event commitment and step 8\u2019s backend call do not cover generic backend diagnostics: `plan_tool.shell:",
+      "body": "Step 7\u2019s redacted-event commitment and step 8\u2019s backend call do not cover generic backend diagnostics: `plan_tool.shell:_on_nonsuccess_seam` prints raw stderr and sometimes a raw stdout tail, `plan_tool.backend_runner:run_streaming_once` can show tool-input summaries under `--verbose`, and `plan_tool.roadmap_revision_run:_attempt_result` shows the existing raw-detail CLI pattern. These bypass the Architecture, Testing, and acceptance promise that no lifecycle surface contains reviewer text, prompts, or replies.",
+      "suggested_action": "define a structural-runner diagnostic boundary that emits only closed redacted facts on every failure and verbosity path, then test console, stream, and result handling.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "backend-output-redaction-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f8062e27",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`row-field.value` in Architecture and step 3 (`Define finite row-field and existing prose-region rewrite operations`) pe",
+      "body": "`row-field.value` in Architecture and step 3 (`Define finite row-field and existing prose-region rewrite operations`) permits any one-line string, and step 4, Testing, and acceptance criterion 2 add no nonblank rule. Empty or whitespace-only values can erase any listed name or statement while preserving ids, relations, and current gates because `plan_tool.roadmap_artifacts:_row_text` and `plan_tool.roadmap_gates:check_inventory_has_prose` accept them; the existing local path\u2019s `plan_tool.roadmap_revision:_require_trimmed_text` rejects them.",
+      "suggested_action": "define one nonblank and whitespace policy for every row-field value and carry it through envelope validation, candidate proof tests, and acceptance criteria.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "row-field-value-policy",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "8ed24d11f09246f3d207294ff3276b518034b688befbbc4fde7e53522bb9151c",
+      "detail_bundle_digest": "687d687162e512f786087012e5f0e7e31bb9eefcfdf79a04e23a4b86e8f5385b",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/02-bind-current-receipt-impact-evidence.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/03-define-finite-row-field-existing-prose.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/06-bind-publication-proof-complete-final.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/07-closed-redacted-rewrite-preflight.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 8,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/08-run-one-bounded-exact-envelope-rewrite.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 9,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/09-wire-explicit-exact-pair-structural.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 10,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/10-document-local-exact-pair-rewrite-only.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 10,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.4444444444444444,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

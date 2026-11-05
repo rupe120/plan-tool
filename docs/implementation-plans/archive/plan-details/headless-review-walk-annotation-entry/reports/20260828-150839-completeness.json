@@ -1,0 +1,134 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-walk-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-walk-annotation-entry.md",
+  "created_at": "2026-08-28T15:08:39Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "27f8f7344ab9665bda4a8356a8395a11e69ce8d8c07360e5770af8fc8e7be940",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "76f1cd662a25ccb44fa8a114c221ad37300493ef372b33fe75b42024ceac7507",
+    "plan_tool/cli/review_cmd.py": "6dc8ae12beae2b65ab6ffb54f7f14ba9f2a7b7a75c0d7065a586631034a6be1a",
+    "tests/test_review_walk.py": "e26d2fc98e3ca625c37027e4d2fa09704ea1b5c49ec114b3a1bc63c34478de2f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/01-let-standalone-saved-review-walks.md": "44b3eba1bed0ca4c7b7bb11833179fb4331667087009048de0329a22ae4ec70b",
+    "docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/02-document-both-caller-specific.md": "97fe9fe18d73b188ad842e8644cb606e4c14043472a526f19575d2593c98dca3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Walk Annotation Entry\n\n`headless-review-walk-annotation-entry` \u00b7 generated 2026-08-28T15:08:39Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `bab2aa02d4eb8116d2a3402d83a751d87e8209ff69d351161870f334704683d7`\n- **Detail bundle digest:** `1b6191880ec9f10c646e19585be8149b5c1db7f20c0df491481d8d9f63120d54`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 18085 bytes (+18085 vs. first audit)\n- **Keystone fan-out:** 0.00\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply headless-review-walk-annotation-entry   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[planned-contract-authority]` [confidence: limited]: Step 2 (`Document both caller-specific restricted remote review entries`) says in `Input` that \u201cthe command implementation is the source of truth if its final shape differs from this detail,\u201d while step 1 (`Let standalone saved-review walks accept remote skip or quit, limit authoritative review-state writes to the existing skip sidecar rewrite, and preserve full terminal actions`) defines the restricted skip-only, no-action boundary in `Implementation` and its acceptance criteria. That would let documentation preserve an implementation that violates the planned safety contract instead of routing the discrepancy back to step 1.\n  - Fix: Make step 1\u2019s observable acceptance contract authoritative for step-2 documentation, using code only for implementation details that preserve that contract.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[remote-skip-continuation]` [confidence: limited]: Step 1\u2019s `Implementation`, the plan `Architecture`, `Testing`, and second acceptance criterion require a remote skip to continue through later promptable findings, and `plan_tool/review_walk.py:walk_recommendations` supplies that loop. Step 1\u2019s `Tests` names only single-finding skip coverage, so the new `cmd_review_walk` route could stop after its first skip without a direct command test detecting it.\n  - Fix: Add direct remote-walk coverage proving skips continue across later normally promptable findings while quit and rejected input still stop at their request.\n  - Address: `plan-tool completeness-apply headless-review-walk-annotation-entry --anchor remote-skip-continuation`\n- MEDIUM `[remote-walk-selection]` [confidence: limited]: Step 1\u2019s `Implementation` requires preserving `--rewalk` and `--include-info`, and the plan\u2019s third acceptance criterion requires the direct command to keep both selections, but its `Tests` cover neither flag on the new remote route. `plan_tool/cli/review_cmd.py:_review_has_promptable_recommendation` describes only non-rewalk selection, while `plan_tool/review_walk.py:walk_recommendations` needs the route to pass both selection arguments.\n  - Fix: Add remote direct-command coverage for re-walking annotated findings and for default versus `--include-info` selection.\n  - Address: `plan-tool completeness-apply headless-review-walk-annotation-entry --anchor remote-walk-selection`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f4c0d27e]` [confidence: limited]: The plan's `## Acceptance criteria` names `non-tty`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c94ffe1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-416ce0b3]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io_dir`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bba06ee0]` [confidence: limited]: The plan's `## Acceptance criteria` names `walkresponsepolicy.skip_or_quit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply headless-review-walk-annotation-entry` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Walk Annotation Entry\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `bab2aa02d4eb8116d2a3402d83a751d87e8209ff69d351161870f334704683d7`\n- **Detail bundle digest:** `1b6191880ec9f10c646e19585be8149b5c1db7f20c0df491481d8d9f63120d54`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[planned-contract-authority]` [confidence: limited]: Step 2 (`Document both caller-specific restricted remote review entries`) says in `Input` that \u201cthe command implementation is the source of truth if its final shape differs from this detail,\u201d while step 1 (`Let standalone saved-review walks accept remote skip or quit, limit authoritative review-state writes to the existing skip sidecar rewrite, and preserve full terminal actions`) defines the restricted skip-only, no-action boundary in `Implementation` and its acceptance criteria. That would let documentation preserve an implementation that violates the planned safety contract instead of routing the discrepancy back to step 1.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[remote-skip-continuation]` [confidence: limited]: Step 1\u2019s `Implementation`, the plan `Architecture`, `Testing`, and second acceptance criterion require a remote skip to continue through later promptable findings, and `plan_tool/review_walk.py:walk_recommendations` supplies that loop. Step 1\u2019s `Tests` names only single-finding skip coverage, so the new `cmd_review_walk` route could stop after its first skip without a direct command test detecting it.\n- MEDIUM `[remote-walk-selection]` [confidence: limited]: Step 1\u2019s `Implementation` requires preserving `--rewalk` and `--include-info`, and the plan\u2019s third acceptance criterion requires the direct command to keep both selections, but its `Tests` cover neither flag on the new remote route. `plan_tool/cli/review_cmd.py:_review_has_promptable_recommendation` describes only non-rewalk selection, while `plan_tool/review_walk.py:walk_recommendations` needs the route to pass both selection arguments.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `non-tty`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io_dir`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walkresponsepolicy.skip_or_quit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit headless-review-walk-annotation-entry --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply headless-review-walk-annotation-entry` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9e47254e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Document both caller-specific restricted remote review entries`) says in `Input` that \u201cthe command implementati",
+      "body": "Step 2 (`Document both caller-specific restricted remote review entries`) says in `Input` that \u201cthe command implementation is the source of truth if its final shape differs from this detail,\u201d while step 1 (`Let standalone saved-review walks accept remote skip or quit, limit authoritative review-state writes to the existing skip sidecar rewrite, and preserve full terminal actions`) defines the restricted skip-only, no-action boundary in `Implementation` and its acceptance criteria. That would let documentation preserve an implementation that violates the planned safety contract instead of routing the discrepancy back to step 1.",
+      "suggested_action": "Make step 1\u2019s observable acceptance contract authoritative for step-2 documentation, using code only for implementation details that preserve that contract.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "planned-contract-authority",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-0da39cd8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s `Implementation`, the plan `Architecture`, `Testing`, and second acceptance criterion require a remote skip to ",
+      "body": "Step 1\u2019s `Implementation`, the plan `Architecture`, `Testing`, and second acceptance criterion require a remote skip to continue through later promptable findings, and `plan_tool/review_walk.py:walk_recommendations` supplies that loop. Step 1\u2019s `Tests` names only single-finding skip coverage, so the new `cmd_review_walk` route could stop after its first skip without a direct command test detecting it.",
+      "suggested_action": "Add direct remote-walk coverage proving skips continue across later normally promptable findings while quit and rejected input still stop at their request.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-skip-continuation",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-17ac8fc9",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s `Implementation` requires preserving `--rewalk` and `--include-info`, and the plan\u2019s third acceptance criterion",
+      "body": "Step 1\u2019s `Implementation` requires preserving `--rewalk` and `--include-info`, and the plan\u2019s third acceptance criterion requires the direct command to keep both selections, but its `Tests` cover neither flag on the new remote route. `plan_tool/cli/review_cmd.py:_review_has_promptable_recommendation` describes only non-rewalk selection, while `plan_tool/review_walk.py:walk_recommendations` needs the route to pass both selection arguments.",
+      "suggested_action": "Add remote direct-command coverage for re-walking annotated findings and for default versus `--include-info` selection.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-walk-selection",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "bab2aa02d4eb8116d2a3402d83a751d87e8209ff69d351161870f334704683d7",
+      "detail_bundle_digest": "1b6191880ec9f10c646e19585be8149b5c1db7f20c0df491481d8d9f63120d54",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/01-let-standalone-saved-review-walks.md",
+          "state": "present",
+          "digest": "44b3eba1bed0ca4c7b7bb11833179fb4331667087009048de0329a22ae4ec70b"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/02-document-both-caller-specific.md",
+          "state": "present",
+          "digest": "97fe9fe18d73b188ad842e8644cb606e4c14043472a526f19575d2593c98dca3"
+        }
+      ],
+      "source_seed_digest": "2559e9fcd9a0f91cf92a8024fe0da73af648246b12bf226cb38d002f0408616c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 18085,
+    "keystone_fan_out": 0.0,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

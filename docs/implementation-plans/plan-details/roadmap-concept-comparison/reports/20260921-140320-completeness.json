@@ -1,0 +1,177 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-concept-comparison",
+  "plan_path": "docs/implementation-plans/2-roadmap-concept-comparison.md",
+  "created_at": "2026-09-21T14:03:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2b7c4d09574b9384311ba6a30e526db819c09660e706aa21759b4b757d32f40f",
+  "code_fingerprint": {
+    "BACKLOG.md": "56b1752d72e096303538b1f38284db208f0f0c656eff7a610f2b80b6ac99635c",
+    "CAPABILITIES.md": "7ea4e0da3a2ce66917d755b564dee35e33edaeecda7a28219b7096d18f4a5206",
+    "CLAUDE.md": "3d350ea4550fd068aac06112c4eb8f803dd0648126f7ee6757d929522c95c7be",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/cli/roadmap.md": "30d505ee75bef5f4ac81df533a47905526e529046e4bb28ffc2346a32e391471",
+    "docs/how-to/roadmap.md": "8b9991202338b787b123445dd7df55bf885655609639c0384459edfb7b96f497",
+    "docs/reference/commands.md": "8147bd006d72c89409144957c30ff73652383a1164aa0cfc627aa3c12d98db80",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap_candidate.py": "1dbe9abb634bc8872c644f780670df691ffae90b40fc3c7ece87de18e8ded602",
+    "plan_tool/roadmap_versions.py": "35528bbea5b455b4b7f234bb4895f9f98bd334dc1e33d451d40fc3395d242c08",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap_candidate.py": "e5ca9a562ad194c501ebebed264120bbb2e5e97dada454b4047c8a4f6f88f969",
+    "tests/test_roadmap_format.py": "983c1b957113833eb0f9dc579dcbd6315360f9175e95b3c559758c0da7cd6b61",
+    "tests/test_roadmap_versions.py": "25af58c31ba449755c27c0c1aea62d4eda31fcd1e6fe20a71608417019a8a40a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md": "ca031097f5dea66a0d06c58837ff4ed41024266da83ac05b3622c609e9e7e024",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-attribution.md": "d3ca77257f66470a39bfc5515e17f7919c7a79a01222ca7c1cbfcd7631eb4896",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md": "59f40e73c50f3830296912430c26b9b43a873df6d1c225d8bcbfb249aa9ad85c",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md": "f9dd81d7c0b9741bf86890c8fd90b1e0c22bc10a70a9a1f23d201e4da7a82282",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md": "a135728f7035cb6718b492dcb0d1920453bd244fdd8be00a71f837bea8d08ea3",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md": "858f793cc517f2acd12d06ae3335bdc0648fb3fcf23575fba700e67792399600",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md": "8cce47fc98cfe4f187a6ab17df94cc4cbbde129b64a429b492cf041803347fa8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Concept Comparison\n\n`roadmap-concept-comparison` \u00b7 generated 2026-09-21T14:03:19Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `2b7c4d09574b9384311ba6a30e526db819c09660e706aa21759b4b757d32f40f`\n- **Detail bundle digest:** `7602e069a0551478689f55f5b4f430553b258c467b674e7d4fc08f611d812b23`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-concept-comparison  # optional interactive review of the saved findings\n\n- HIGH `[accepted-base-selector]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) calls the default base the \u201cactive accepted root\u201d in Overview, Architecture, and acceptance criterion 1, while step 6 (`Add the exclusive read-only roadmap comparison CLI while preserving the HTML view overwrite path`) exposes that default to operators. `roadmap_versions.load_accepted_version` resolves the accepted-head selector, and `roadmap_version_promotion.promote_review_seal` can move that selector to a candidate version; \u201croot\u201d can therefore mean either the initial root record or the current accepted head, yielding materially different comparisons after promotion.\n  - Fix: Define the default base as the current accepted-head version throughout the comparison contract, reserving \u201croot\u201d for immutable versions whose `version_kind` is `root`.\n- MEDIUM `[git-no-index-result-policy]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) must distinguish Git\u2019s normal `git diff --no-index` exit status for a nonempty patch from an invocation failure. Architecture and acceptance criterion 6 require both complete patches for changed pairs and explicit Git failures, but leave that result policy unstated, so one implementation can treat every changed comparison as a failure while another emits the required evidence.\n  - Fix: Define the controlled Git result policy so a nonempty patch is successful evidence while genuine invocation failures refuse the comparison.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-2e7cebc0]` [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Concept Comparison\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `2b7c4d09574b9384311ba6a30e526db819c09660e706aa21759b4b757d32f40f`\n- **Detail bundle digest:** `7602e069a0551478689f55f5b4f430553b258c467b674e7d4fc08f611d812b23`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[accepted-base-selector]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) calls the default base the \u201cactive accepted root\u201d in Overview, Architecture, and acceptance criterion 1, while step 6 (`Add the exclusive read-only roadmap comparison CLI while preserving the HTML view overwrite path`) exposes that default to operators. `roadmap_versions.load_accepted_version` resolves the accepted-head selector, and `roadmap_version_promotion.promote_review_seal` can move that selector to a candidate version; \u201croot\u201d can therefore mean either the initial root record or the current accepted head, yielding materially different comparisons after promotion.\n- MEDIUM `[git-no-index-result-policy]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) must distinguish Git\u2019s normal `git diff --no-index` exit status for a nonempty patch from an invocation failure. Architecture and acceptance criterion 6 require both complete patches for changed pairs and explicit Git failures, but leave that result policy unstated, so one implementation can treat every changed comparison as a failure while another emits the required evidence.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7ad29c72",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) calls ",
+      "body": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) calls the default base the \u201cactive accepted root\u201d in Overview, Architecture, and acceptance criterion 1, while step 6 (`Add the exclusive read-only roadmap comparison CLI while preserving the HTML view overwrite path`) exposes that default to operators. `roadmap_versions.load_accepted_version` resolves the accepted-head selector, and `roadmap_version_promotion.promote_review_seal` can move that selector to a candidate version; \u201croot\u201d can therefore mean either the initial root record or the current accepted head, yielding materially different comparisons after promotion.",
+      "suggested_action": "Define the default base as the current accepted-head version throughout the comparison contract, reserving \u201croot\u201d for immutable versions whose `version_kind` is `root`.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "accepted-base-selector",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-373388c4",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) must d",
+      "body": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) must distinguish Git\u2019s normal `git diff --no-index` exit status for a nonempty patch from an invocation failure. Architecture and acceptance criterion 6 require both complete patches for changed pairs and explicit Git failures, but leave that result policy unstated, so one implementation can treat every changed comparison as a failure while another emits the required evidence.",
+      "suggested_action": "Define the controlled Git result policy so a nonempty patch is successful evidence while genuine invocation failures refuse the comparison.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "git-no-index-result-policy",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "2b7c4d09574b9384311ba6a30e526db819c09660e706aa21759b4b757d32f40f",
+      "detail_bundle_digest": "7602e069a0551478689f55f5b4f430553b258c467b674e7d4fc08f611d812b23",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-attribution.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "b54017aabff13e71baba57739619addaf7c211394827ad1a18b85d4f8b842992",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

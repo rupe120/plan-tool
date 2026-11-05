@@ -1,0 +1,182 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T10:26:25Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "bc82560d551f810131277e2af1ef589b0e4dd239f95d4083268f958b4d04bde9",
+  "code_fingerprint": {
+    "BACKLOG.md": "601185df27d0e16cd7e63c327470c5802521f1dcb07637297b22254975fd6992",
+    "CLAUDE.md": "79efc1fa421734a52fa98d7370c9fe0dc5ef7081aa2d1566f76b49c69f348a11",
+    "README.md": "563c3db41825d122d8b2b6b5a4b8f9376ada5e1f3ff98856dbc87548160d2174",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "005ab8fa0e7dd000ac43581e88b554986ff07e3291b224a2108d1840d70fa6b0",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "99f4987a69c3e4844ee370667083f25483465814c6a8f83dab980df5f64ebf74",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "2e1ee2b3902744aee35b312d4498272eebc5a4bab2428be426a380092a61ba23",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "dfbb58500ed9e528509e25b2a97c2d6250be00503c8831bf11e3a4174109c185"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T10:26:24Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `bc82560d551f810131277e2af1ef589b0e4dd239f95d4083268f958b4d04bde9`\n- **Detail bundle digest:** `b62b6fbbf9eed32a0f972eeba5f49b2ca33dc016835bf7577ae7e06d1c7a5f32`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk completeness-coverage-replay  # alternative interactive review/apply\n\n- HIGH `[complete-audit-input-identity]`: Complete audit-input identity is not defined by step 1 (`Build a versioned replay corpus\u2026`): Overview and Problem require the same, complete inputs, but Architecture names only plan/detail/code/stage/grade/config. `plan_tool.fingerprint:compute_code_fingerprint` hashes only declared `step.files`/`creates` through `plan_tool.scope_guard:compute_drift_watched_paths`, while `plan_tool.review:render_plan_audit_prompt` permits Read/Grep across the repository; it cannot prove the whole audit-read source was the same. That prompt also renders source-seed and project-context input that `plan_tool.review_persistence:AuditInputSnapshot.revision` hashes but the corpus contract, step 3, and the first acceptance criterion do not name.\n  - Fix: define one admissibility identity covering every rendered prompt input and all code the audit can read, then apply it consistently to corpus eligibility, fresh capture, and acceptance.\n- HIGH `[replay-observation-relation]`: The replay relation is undefined across Problem\u2019s \u201cremains represented,\u201d Architecture\u2019s simulated schedules, step 1\u2019s predeclared schedules, step 2 (`Replay schedules\u2026`), step 3 (`Capture and label fresh cases\u2026`), Testing, and the second acceptance criterion. A case has an authoritative fresh label but no stated ordered relation showing what labels a reuse decision observes, so one compliant replay can carry labels forward and another can mark every reuse as a miss. `plan_tool.review:audit_plan_until_stable` unions findings and `plan_tool.completeness_report:write_completeness_report` persists that final union, so existing snapshots do not supply this relation.\n  - Fix: define the explicit full-versus-reuse observation relation for each predeclared schedule and require replay to compare those observed labels with the authoritative fresh labels.\n- HIGH `[evidence-gate]`: Step 2 can select a \u201csafe\u201d cadence from insufficient evidence: Problem makes missing identity ineligible, Architecture says reporting exclusions prevents uncertainty becoming safe, Risks says too few eligible cases defer #173, and Testing excludes incomplete cases, but no rule sets a minimum comparison set or says that exclusions and unresolved comparisons force `insufficient-evidence`. With zero or a trivial eligible set, every candidate has zero missed labels and can satisfy the third acceptance criterion\u2019s selected-cadence outcome before step 4 opens #173.\n  - Fix: define a fail-closed result table that sets the required evidence coverage, classifies exclusions and unresolved comparisons, and makes only complete loss-free evidence selectable.\n- HIGH `[final-confirmation-cadence]`: The selected cadence does not include the final-confirmation schedule required for #173. Architecture supplies an \u201calways-fresh control,\u201d while steps 1\u20132 and the third acceptance criterion only select a loss-free reuse cadence; `BACKLOG.md` #173 requires that the replay \u201cdefine the full-discovery and final-confirmation schedule.\u201d Step 4 cannot truthfully permit #173 without evaluating and publishing that terminal confirmation rule.\n  - Fix: make each predeclared candidate and the published result define and test both its full-discovery cadence and its required final confirmation.\n- MEDIUM `[safe-cadence-selection]`: Architecture says a loss-free reuse schedule is selectable, but step 1 merely predeclares candidates and the third acceptance criterion requires one selected safe cadence. When several candidates retain every label, no ranking, tie rule, or no-selection outcome tells step 2 or step 4 which cadence to publish, so the deterministic replay can produce different #173 scope decisions.\n  - Fix: predeclare a deterministic ranking and tie disposition for loss-free reuse candidates, and test that the report selects exactly one result.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply completeness-coverage-replay` \u2014 apply the 5 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `bc82560d551f810131277e2af1ef589b0e4dd239f95d4083268f958b4d04bde9`\n- **Detail bundle digest:** `b62b6fbbf9eed32a0f972eeba5f49b2ca33dc016835bf7577ae7e06d1c7a5f32`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[complete-audit-input-identity]`: Complete audit-input identity is not defined by step 1 (`Build a versioned replay corpus\u2026`): Overview and Problem require the same, complete inputs, but Architecture names only plan/detail/code/stage/grade/config. `plan_tool.fingerprint:compute_code_fingerprint` hashes only declared `step.files`/`creates` through `plan_tool.scope_guard:compute_drift_watched_paths`, while `plan_tool.review:render_plan_audit_prompt` permits Read/Grep across the repository; it cannot prove the whole audit-read source was the same. That prompt also renders source-seed and project-context input that `plan_tool.review_persistence:AuditInputSnapshot.revision` hashes but the corpus contract, step 3, and the first acceptance criterion do not name.\n- HIGH `[replay-observation-relation]`: The replay relation is undefined across Problem\u2019s \u201cremains represented,\u201d Architecture\u2019s simulated schedules, step 1\u2019s predeclared schedules, step 2 (`Replay schedules\u2026`), step 3 (`Capture and label fresh cases\u2026`), Testing, and the second acceptance criterion. A case has an authoritative fresh label but no stated ordered relation showing what labels a reuse decision observes, so one compliant replay can carry labels forward and another can mark every reuse as a miss. `plan_tool.review:audit_plan_until_stable` unions findings and `plan_tool.completeness_report:write_completeness_report` persists that final union, so existing snapshots do not supply this relation.\n- HIGH `[evidence-gate]`: Step 2 can select a \u201csafe\u201d cadence from insufficient evidence: Problem makes missing identity ineligible, Architecture says reporting exclusions prevents uncertainty becoming safe, Risks says too few eligible cases defer #173, and Testing excludes incomplete cases, but no rule sets a minimum comparison set or says that exclusions and unresolved comparisons force `insufficient-evidence`. With zero or a trivial eligible set, every candidate has zero missed labels and can satisfy the third acceptance criterion\u2019s selected-cadence outcome before step 4 opens #173.\n- HIGH `[final-confirmation-cadence]`: The selected cadence does not include the final-confirmation schedule required for #173. Architecture supplies an \u201calways-fresh control,\u201d while steps 1\u20132 and the third acceptance criterion only select a loss-free reuse cadence; `BACKLOG.md` #173 requires that the replay \u201cdefine the full-discovery and final-confirmation schedule.\u201d Step 4 cannot truthfully permit #173 without evaluating and publishing that terminal confirmation rule.\n- MEDIUM `[safe-cadence-selection]`: Architecture says a loss-free reuse schedule is selectable, but step 1 merely predeclares candidates and the third acceptance criterion requires one selected safe cadence. When several candidates retain every label, no ranking, tie rule, or no-selection outcome tells step 2 or step 4 which cadence to publish, so the deterministic replay can produce different #173 scope decisions.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply completeness-coverage-replay` \u2014 walk the 5 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a00eb3f8",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Complete audit-input identity is not defined by step 1 (`Build a versioned replay corpus\u2026`): Overview and Problem requir",
+      "body": "Complete audit-input identity is not defined by step 1 (`Build a versioned replay corpus\u2026`): Overview and Problem require the same, complete inputs, but Architecture names only plan/detail/code/stage/grade/config. `plan_tool.fingerprint:compute_code_fingerprint` hashes only declared `step.files`/`creates` through `plan_tool.scope_guard:compute_drift_watched_paths`, while `plan_tool.review:render_plan_audit_prompt` permits Read/Grep across the repository; it cannot prove the whole audit-read source was the same. That prompt also renders source-seed and project-context input that `plan_tool.review_persistence:AuditInputSnapshot.revision` hashes but the corpus contract, step 3, and the first acceptance criterion do not name.",
+      "suggested_action": "define one admissibility identity covering every rendered prompt input and all code the audit can read, then apply it consistently to corpus eligibility, fresh capture, and acceptance.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "complete-audit-input-identity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-0482bd2a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The replay relation is undefined across Problem\u2019s \u201cremains represented,\u201d Architecture\u2019s simulated schedules, step 1\u2019s pr",
+      "body": "The replay relation is undefined across Problem\u2019s \u201cremains represented,\u201d Architecture\u2019s simulated schedules, step 1\u2019s predeclared schedules, step 2 (`Replay schedules\u2026`), step 3 (`Capture and label fresh cases\u2026`), Testing, and the second acceptance criterion. A case has an authoritative fresh label but no stated ordered relation showing what labels a reuse decision observes, so one compliant replay can carry labels forward and another can mark every reuse as a miss. `plan_tool.review:audit_plan_until_stable` unions findings and `plan_tool.completeness_report:write_completeness_report` persists that final union, so existing snapshots do not supply this relation.",
+      "suggested_action": "define the explicit full-versus-reuse observation relation for each predeclared schedule and require replay to compare those observed labels with the authoritative fresh labels.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "replay-observation-relation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f4641354",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 can select a \u201csafe\u201d cadence from insufficient evidence: Problem makes missing identity ineligible, Architecture s",
+      "body": "Step 2 can select a \u201csafe\u201d cadence from insufficient evidence: Problem makes missing identity ineligible, Architecture says reporting exclusions prevents uncertainty becoming safe, Risks says too few eligible cases defer #173, and Testing excludes incomplete cases, but no rule sets a minimum comparison set or says that exclusions and unresolved comparisons force `insufficient-evidence`. With zero or a trivial eligible set, every candidate has zero missed labels and can satisfy the third acceptance criterion\u2019s selected-cadence outcome before step 4 opens #173.",
+      "suggested_action": "define a fail-closed result table that sets the required evidence coverage, classifies exclusions and unresolved comparisons, and makes only complete loss-free evidence selectable.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "evidence-gate",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b81b7a02",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The selected cadence does not include the final-confirmation schedule required for #173. Architecture supplies an \u201calway",
+      "body": "The selected cadence does not include the final-confirmation schedule required for #173. Architecture supplies an \u201calways-fresh control,\u201d while steps 1\u20132 and the third acceptance criterion only select a loss-free reuse cadence; `BACKLOG.md` #173 requires that the replay \u201cdefine the full-discovery and final-confirmation schedule.\u201d Step 4 cannot truthfully permit #173 without evaluating and publishing that terminal confirmation rule.",
+      "suggested_action": "make each predeclared candidate and the published result define and test both its full-discovery cadence and its required final confirmation.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "final-confirmation-cadence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ec62870d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says a loss-free reuse schedule is selectable, but step 1 merely predeclares candidates and the third accep",
+      "body": "Architecture says a loss-free reuse schedule is selectable, but step 1 merely predeclares candidates and the third acceptance criterion requires one selected safe cadence. When several candidates retain every label, no ranking, tie rule, or no-selection outcome tells step 2 or step 4 which cadence to publish, so the deterministic replay can produce different #173 scope decisions.",
+      "suggested_action": "predeclare a deterministic ranking and tie disposition for loss-free reuse candidates, and test that the report selects exactly one result.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "safe-cadence-selection",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "bc82560d551f810131277e2af1ef589b0e4dd239f95d4083268f958b4d04bde9",
+      "detail_bundle_digest": "b62b6fbbf9eed32a0f972eeba5f49b2ca33dc016835bf7577ae7e06d1c7a5f32",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

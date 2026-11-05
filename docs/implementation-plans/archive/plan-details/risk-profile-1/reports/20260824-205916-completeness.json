@@ -1,0 +1,156 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-1",
+  "plan_path": "docs/implementation-plans/2-risk-profile-1.md",
+  "created_at": "2026-08-24T20:59:16Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3004cd218cf6b33657e77c266d1bc6643f112769b3a7f8e8c4301801cc07537b",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "f9d63d19deb08c441a2aa998f7ed0be7cc152d6eadb583ba649dc75f2e694c3a",
+    "README.md": "6afd7dc70b9cebfc7a03b92f3a573c6ffb3dbc9c2ec3a787201a5c93b56e7294",
+    "TESTING.md": "f3e71a3b4043083bf3cef87b210f0346b8f7d563e80605c0221a88dad2e720f6",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "docs/CREATE_RESUME_FLOW.md": "2ec94959ffc5cc84ffa0810f622b293e3a212ce6dc1a3e6473c82c285e943e18",
+    "plan_tool/__init__.py": "1bb896aee2673a4eda90764d308096f65a366d9b1f2c1023e97a7d00140241e1",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/schema.py": "af9e469ce92591f79aafdfcac09105918fdcd061abea6f17f568548b9aa8946a",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_inspect_cmds.py": "fbcc4053d80a889af4fc6850d13af8179a466ad93d5f189b6ad3d7e5ecff1b0b",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_distill.py": "3d7a5fb04fb7764e8fba20297ba4f6aff6b9216c4e88f1c8b929387b13c6c105",
+    "tests/test_parser.py": "653c6ec41947aaa99928090f63de4dec06d0df6a97cd6c3310b41a1f7582d630"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md": "19734410b1fd0ab2eedd63c4f891cecb4db268e884ac3c7e4a877717f6872c9c",
+    "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md": "95ccaafa31946d4dfdc60de4c632a44d3a1fcdae876deb74f72e9d56463f7d12",
+    "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md": "4086835ba980f331d3de318dcad57762930647a1010601015d0eaee95fcd0010",
+    "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md": "5a5967190c8f8ac01b7bf5df951986e8ef2de55a4abd13e20f806f9f63053937",
+    "docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md": "24e44787caf3ef8be5bc5deb91a5ce5faaf4f977f9174b16b567810d37f1ff8d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 1\n\n`risk-profile-1` \u00b7 generated 2026-08-24T20:59:16Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply risk-profile-1   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[risk-declaration-null]`: Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires \u201cReject explicit null in either field or both fields,\u201d but its Tests specify only `test_risk_profile_rejects_explicit_null_pair` for \u201cA raw frontmatter pair set to YAML null.\u201d Neither one-null input is covered, so `risk_profile: null` or `risk_profile_rationale: null` can regress without detection.\n  - Fix: add parser coverage for each explicit-null shape alongside the paired-null case.\n- HIGH `[low-admission-counter-signals]`: Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) verifies only three affirmative excerpts and asks the classifier prompt for affirmative citations, so a response can omit a named consumer, contract, migration, auth/authz concern, or runtime surface elsewhere in the same seed and still propose `low`. That makes the standard floor promised by Architecture \u2192 \u201cPre-publication declaration\u201d and \u201cClassification signals,\u201d Risks \u2192 \u201cMisclassification in the dangerous direction,\u201d Testing \u2192 policy tests, the counter-signal acceptance criterion, step 2\u2019s Tests/Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) \u2192 \u201cProtect low-tier admission\u201d unenforceable.\n  - Fix: Make low admission independently reject source-grounded counter-signals even when the classifier omits them, and test that the resolver cannot persist low from such a response.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[risk-declaration-null]`: Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires explicit null rejection \u201cin either field or both,\u201d but `test_risk_profile_rejects_explicit_null_pair` covers only both fields null. The Architecture \u2192 Persistence, Testing, and acceptance criteria need the same distinction; a validator that rejects only the null pair would leave either single-null form untested.\n  - Fix: Cover every explicit-null field combination in the declaration parser tests while preserving omitted-pair legacy behavior.\n  - Address: `plan-tool completeness-apply risk-profile-1 --anchor risk-declaration-null`\n\n## Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-1` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 1\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[risk-declaration-null]`: Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires \u201cReject explicit null in either field or both fields,\u201d but its Tests specify only `test_risk_profile_rejects_explicit_null_pair` for \u201cA raw frontmatter pair set to YAML null.\u201d Neither one-null input is covered, so `risk_profile: null` or `risk_profile_rationale: null` can regress without detection.\n- HIGH `[low-admission-counter-signals]`: Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) verifies only three affirmative excerpts and asks the classifier prompt for affirmative citations, so a response can omit a named consumer, contract, migration, auth/authz concern, or runtime surface elsewhere in the same seed and still propose `low`. That makes the standard floor promised by Architecture \u2192 \u201cPre-publication declaration\u201d and \u201cClassification signals,\u201d Risks \u2192 \u201cMisclassification in the dangerous direction,\u201d Testing \u2192 policy tests, the counter-signal acceptance criterion, step 2\u2019s Tests/Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) \u2192 \u201cProtect low-tier admission\u201d unenforceable.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[risk-declaration-null]`: Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires explicit null rejection \u201cin either field or both,\u201d but `test_risk_profile_rejects_explicit_null_pair` covers only both fields null. The Architecture \u2192 Persistence, Testing, and acceptance criteria need the same distinction; a validator that rejects only the null pair would leave either single-null form untested.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk risk-profile-1` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply risk-profile-1` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-82cd4017",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires \u201cReject explicit null in eit",
+      "body": "Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires \u201cReject explicit null in either field or both fields,\u201d but its Tests specify only `test_risk_profile_rejects_explicit_null_pair` for \u201cA raw frontmatter pair set to YAML null.\u201d Neither one-null input is covered, so `risk_profile: null` or `risk_profile_rationale: null` can regress without detection.",
+      "suggested_action": "add parser coverage for each explicit-null shape alongside the paired-null case.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-declaration-null",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-11cdf6c5",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) verifies only three affirmative ",
+      "body": "Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) verifies only three affirmative excerpts and asks the classifier prompt for affirmative citations, so a response can omit a named consumer, contract, migration, auth/authz concern, or runtime surface elsewhere in the same seed and still propose `low`. That makes the standard floor promised by Architecture \u2192 \u201cPre-publication declaration\u201d and \u201cClassification signals,\u201d Risks \u2192 \u201cMisclassification in the dangerous direction,\u201d Testing \u2192 policy tests, the counter-signal acceptance criterion, step 2\u2019s Tests/Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) \u2192 \u201cProtect low-tier admission\u201d unenforceable.",
+      "suggested_action": "Make low admission independently reject source-grounded counter-signals even when the classifier omits them, and test that the resolver cannot persist low from such a response.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "low-admission-counter-signals",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-82cd4017",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires explicit null rejection \u201cin ",
+      "body": "Step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) requires explicit null rejection \u201cin either field or both,\u201d but `test_risk_profile_rejects_explicit_null_pair` covers only both fields null. The Architecture \u2192 Persistence, Testing, and acceptance criteria need the same distinction; a validator that rejects only the null pair would leave either single-null form untested.",
+      "suggested_action": "Cover every explicit-null field combination in the declaration parser tests while preserving omitted-pair legacy behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-declaration-null",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "f81f88f5d5844250b330b9b670eba3c5b58a06ec56e96464468573a4a0455dd2",
+    "detail_bundle_digest": "f7fd3ff6657e66ab4206b66ebfcd9887a997b12860e5787a67a358563d7616fd",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md",
+        "state": "present",
+        "digest": "19734410b1fd0ab2eedd63c4f891cecb4db268e884ac3c7e4a877717f6872c9c"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+        "state": "present",
+        "digest": "95ccaafa31946d4dfdc60de4c632a44d3a1fcdae876deb74f72e9d56463f7d12"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+        "state": "present",
+        "digest": "4086835ba980f331d3de318dcad57762930647a1010601015d0eaee95fcd0010"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+        "state": "present",
+        "digest": "5a5967190c8f8ac01b7bf5df951986e8ef2de55a4abd13e20f806f9f63053937"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md",
+        "state": "present",
+        "digest": "24e44787caf3ef8be5bc5deb91a5ce5faaf4f977f9174b16b567810d37f1ff8d"
+      }
+    ],
+    "source_seed_digest": "c2359e6517c23e2e14f32a9caa94b18f6119f4c1fe6a5a3faf31d7b7fb3e0b3d",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

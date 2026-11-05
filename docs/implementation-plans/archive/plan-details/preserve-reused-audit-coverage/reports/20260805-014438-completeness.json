@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "plan_slug": "preserve-reused-audit-coverage",
+  "plan_path": "docs/implementation-plans/2-preserve-reused-audit-coverage.md",
+  "created_at": "2026-08-05T01:44:38Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cd3bcd453b69807b7014a728f6207c89774dfe6bb7ff617d03650c7ce64f3046",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "DATA_CONTRACT.md": "2f863852fdff5789fd3aa8354bdcddc04711759a6480dc883eb448c85e38bb56",
+    "plan_tool/cli/completeness_cmd.py": "e7460e314a7ea75621d290fee36b5414620af38632993d95b02e11c23dc0270e",
+    "plan_tool/cli/completeness_phases.py": "b3027b82f9904f11335506e602558a59d90f43a986d96c1c5eac9a87a0cafd9f",
+    "plan_tool/completeness_report.py": "b600a92adc2ab40d7195c283422a4d998f698bc0ff49c311d5954e5df5e582e4",
+    "plan_tool/data_contract.py": "e347c33bd5d237d8ff9e0bb7167eafc8c4a19d73ad8176f8d853ebc7ee728dd8",
+    "plan_tool/review_persistence.py": "3da122913dd3190f1ebf2ea49a9fdf1664cacf5046e6b7e5952d65a6afb4c681",
+    "tests/cli/test_completeness_cmd.py": "8d835c1eedae0ae05432cca7e8dbcd593efb566c2c6d54e0891acda031a527ba",
+    "tests/test_completeness_report.py": "4f7020efbc14402209faf30a1311c1ecd3ae4b14b91fc28e8d7fd736910a33d8",
+    "tests/test_data_contract.py": "f3cafe2c021ca42adfb41a733fa7e4fda20602d4509a1f414d4b6778c7043f13",
+    "tests/test_review_persistence.py": "aa791ff7eff87939c2fcb163a44d4f3ace3d9bf430122e8f0efc89ac5bf93388"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/01-save-normalized-coverage-completeness.md": "a1af67d6d5e94af147dedf5086349d1c0177bf3cfd32ec17f2245de4f1cef111",
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/02-restore-saved-coverage-when-reusing.md": "ecb9496dca4dc1bbc6bea0d683b01c8cccd12661da073b5427bd24586bb62d11",
+    "docs/implementation-plans/plan-details/preserve-reused-audit-coverage/03-record-validation-close-source-risk.md": "87a583a77364b88ed9e6ed230ba0730c6ea0699f63ec1a9a26bffa1b1219d61a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Preserve Reused Audit Coverage\n\n`preserve-reused-audit-coverage` \u00b7 generated 2026-08-05T01:44:38Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply preserve-reused-audit-coverage   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[legacy-unknown-coverage]`: Step 1 (`Save normalized coverage in completeness audit sidecars`) keeps the existing public coverage fields as the whole shape, but `DATA_CONTRACT.md` defines `budget_limited` as a boolean, `_render_completeness_json` coerces missing values to `false`, and `_render_grouped_report` has no unknown branch. Step 2\u2019s \u201cknown-or-unknown\u201d value therefore cannot stay distinct from a clean/default verdict in both JSON and Markdown.\n  - Fix: Define and document one additive unknown coverage representation, including exact JSON and Markdown behavior, separate from every known coverage verdict.\n- HIGH `[fresh-coverage-persistence]`: Step 1 (`Save normalized coverage in completeness audit sidecars`) cannot persist a fresh audit-only result: at HEAD, `finalize_completeness_run` keeps it in `_noniter_budget`, while `_persist_and_present_report` only receives `outcome.budget`, which is empty on that path. Step 2 (`Restore saved coverage when reusing a completeness audit`) says it does not persist coverage, so no planned handoff supplies the fresh coverage value to the writer.\n  - Fix: Route one selected coverage value from every fresh and accepted-reuse path through sidecar persistence, including audit-only and `--iterate`, and prove it with an end-to-end save-then-reuse test.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply preserve-reused-audit-coverage` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Preserve Reused Audit Coverage\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[legacy-unknown-coverage]`: Step 1 (`Save normalized coverage in completeness audit sidecars`) keeps the existing public coverage fields as the whole shape, but `DATA_CONTRACT.md` defines `budget_limited` as a boolean, `_render_completeness_json` coerces missing values to `false`, and `_render_grouped_report` has no unknown branch. Step 2\u2019s \u201cknown-or-unknown\u201d value therefore cannot stay distinct from a clean/default verdict in both JSON and Markdown.\n- HIGH `[fresh-coverage-persistence]`: Step 1 (`Save normalized coverage in completeness audit sidecars`) cannot persist a fresh audit-only result: at HEAD, `finalize_completeness_run` keeps it in `_noniter_budget`, while `_persist_and_present_report` only receives `outcome.budget`, which is empty on that path. Step 2 (`Restore saved coverage when reusing a completeness audit`) says it does not persist coverage, so no planned handoff supplies the fresh coverage value to the writer.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk preserve-reused-audit-coverage` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a34a24a6",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Save normalized coverage in completeness audit sidecars`) keeps the existing public coverage fields as the whol",
+      "body": "Step 1 (`Save normalized coverage in completeness audit sidecars`) keeps the existing public coverage fields as the whole shape, but `DATA_CONTRACT.md` defines `budget_limited` as a boolean, `_render_completeness_json` coerces missing values to `false`, and `_render_grouped_report` has no unknown branch. Step 2\u2019s \u201cknown-or-unknown\u201d value therefore cannot stay distinct from a clean/default verdict in both JSON and Markdown.",
+      "suggested_action": "Define and document one additive unknown coverage representation, including exact JSON and Markdown behavior, separate from every known coverage verdict.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "legacy-unknown-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-fcdf235f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Save normalized coverage in completeness audit sidecars`) cannot persist a fresh audit-only result: at HEAD, `f",
+      "body": "Step 1 (`Save normalized coverage in completeness audit sidecars`) cannot persist a fresh audit-only result: at HEAD, `finalize_completeness_run` keeps it in `_noniter_budget`, while `_persist_and_present_report` only receives `outcome.budget`, which is empty on that path. Step 2 (`Restore saved coverage when reusing a completeness audit`) says it does not persist coverage, so no planned handoff supplies the fresh coverage value to the writer.",
+      "suggested_action": "Route one selected coverage value from every fresh and accepted-reuse path through sidecar persistence, including audit-only and `--iterate`, and prove it with an end-to-end save-then-reuse test.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-coverage-persistence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

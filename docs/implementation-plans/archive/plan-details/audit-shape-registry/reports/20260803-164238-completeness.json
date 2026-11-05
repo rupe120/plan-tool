@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "plan_slug": "audit-shape-registry",
+  "plan_path": "docs/implementation-plans/2-audit-shape-registry.md",
+  "created_at": "2026-08-03T16:42:38Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "af867a582e90241a640e65436bfca8fbd4809375d74be21698c01c09369d094f",
+  "code_fingerprint": {
+    "BACKLOG.md": "3423770d5b3ca94a9cd4e282dd7f3c83216783ca759c3adf0919bf1835ca57be",
+    "CLAUDE.md": "b5d07b73d8f83be715d0cc8b53129544c8b6d0b0433c8132b02b363ff06f85c2",
+    "DATA_CONTRACT.md": "188119b9d4628e81aa15162ad30fbb7dcf8fb87d030e97d1aad920e8cfcd98d7",
+    "docs/AUDIT_FLOW.md": "331cb90d7ebbe616aa2e335a82658a7a829bd3ce7bc09b4e1213189bd834ff32",
+    "docs/cli/completeness-apply.md": "5533aabcb14376eee833be82af75d6d78a7667459063f12f2c420ac85a4d530a",
+    "docs/cli/completeness-audit.md": "b8a8a947e1b956cd30643e3d1cd1d8a4e5ac7694efd7d7eb54718247a70208c5",
+    "plan_tool/cli/completeness_cmd.py": "f4faf635f4d4d25028ec2ea9e7c21054cbc388da0228779af7b2d33ec68f2739",
+    "plan_tool/cli/completeness_phases.py": "f8ad668f471d5f641418d6142b214ce38468b69e016b7e415e109d1d7a0a98ef",
+    "plan_tool/cli/inspect.py": "e83465791666083c8493587facf1ccd409a5b80fc52f138165ecca07da61de9c",
+    "plan_tool/completeness_report.py": "4913305b9b7381e7ca1703a555666b99ac3b01a3bd5896fc2daf8d57e49a6b80",
+    "plan_tool/prompts/plan-audit.md": "efeec070b779c35875b986f6174bcd12064912cce4017b559a0c567fb459b910",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "tests/cli/test_completeness_apply_parallel.py": "d8fa0c9ad201e67804f1f9481271e698ab66222b56094e35280483be83a00196",
+    "tests/cli/test_completeness_cmd.py": "58c820ac3b751b8d4e98808aa31766d38101f2b807f6a130c0b44342abf589e1",
+    "tests/cli/test_inspect_cmds.py": "5a22a6b954fc033fa4a84c721ec074cef394fdb645e1cc21f7f1cb09f256581b",
+    "tests/cli/test_review_actions.py": "474a87ff34b2d6518e18a1c81cfc8491d04cb34cbcc1debbcee1aae3f09a35dd",
+    "tests/test_cli.py": "7079ebc1ba97fca3688aba4b24a2ae3f2724cb688949077625e7df77fcd97682",
+    "tests/test_completeness_report.py": "e045dad32d0e570cceda7e1b6765e7ebfc2aadb76c4bedb62ef32c0e7dcc8a6e",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-shape-registry/01-audit-shape-registry-pure.md": "e00ecee7ec5e9c4ea9beb3f5208f62728dc3ed8c39944f8527f8b0673621c80e",
+    "docs/implementation-plans/plan-details/audit-shape-registry/02-replace-taper-route-arm-clustering.md": "a597f7d553867cac9cdd59236d8559a83ac339d093ae808777337ce356d10e04",
+    "docs/implementation-plans/plan-details/audit-shape-registry/03-pin-documented-classifications-record.md": "1eb81b5f2c308687a6b27c5c83d4e6f0f7564555db86e1f76567f28fe5891ca1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Shape Registry\n\n`audit-shape-registry` \u00b7 generated 2026-08-03T16:42:38Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Convergence \u2014 the completeness audit/apply loop is spinning\n\nThis loop is spinning \u2014 the same region keeps re-surfacing without shrinking. Consider the remedy below before continuing; the diagnosis prints the hand-run recipe, but the one-command remedy is `plan-tool convergence audit-shape-registry --apply-split` (in-place re-split) or `plan-tool convergence audit-shape-registry --apply-scope-out` (carve the step out), behind the same apply-or-recommend gate.\n\n```\nconvergence: spinning \u2014 audit-shape-registry (window 3)\n  completeness: spinning (6 audits)\n  \u2022 saved-apply-plan-staleness: recurs in 2 of 3 audits; severity medium \u2192 high (peak high)\nThe decomposition itself is wrong across steps; re-seed and re-decompose:\n  plan-tool create audit-shape-registry --from-existing <seed.md> --iterate\n  Hand-author <seed.md> from the plan's current state (annotate can forward-seed it), then re-run the line above.\n```\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply audit-shape-registry   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk audit-shape-registry  # alternative interactive review/apply\n\n- HIGH `[saved-apply-plan-staleness]`: Step 2 (`Replace the taper route with arm-clustering scope advice`) suppresses stale arm advice but leaves saved `Recommendation.step_id` values in `completeness-apply`. `plan_tool/launcher.py:apply_finding()` resolves that ID before building the edit prompt, so a reused ID after a plan edit can send a saved conceptual finding to a different step; `--jobs N -y` can apply it without a per-finding check.\n  - Fix: Preserve the non-gating stale saved-finding walk, but drop saved target IDs before serial or parallel dispatch when the plan fingerprint mismatches because the saved schema has no step identity to validate them\n\n## Suggested next steps\n\n- `plan-tool completeness-apply audit-shape-registry` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Shape Registry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[saved-apply-plan-staleness]`: Step 2 (`Replace the taper route with arm-clustering scope advice`) suppresses stale arm advice but leaves saved `Recommendation.step_id` values in `completeness-apply`. `plan_tool/launcher.py:apply_finding()` resolves that ID before building the edit prompt, so a reused ID after a plan edit can send a saved conceptual finding to a different step; `--jobs N -y` can apply it without a per-finding check.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk audit-shape-registry` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-e2ea811e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Replace the taper route with arm-clustering scope advice`) suppresses stale arm advice but leaves saved `Recomm",
+      "body": "Step 2 (`Replace the taper route with arm-clustering scope advice`) suppresses stale arm advice but leaves saved `Recommendation.step_id` values in `completeness-apply`. `plan_tool/launcher.py:apply_finding()` resolves that ID before building the edit prompt, so a reused ID after a plan edit can send a saved conceptual finding to a different step; `--jobs N -y` can apply it without a per-finding check.",
+      "suggested_action": "Preserve the non-gating stale saved-finding walk, but drop saved target IDs before serial or parallel dispatch when the plan fingerprint mismatches because the saved schema has no step identity to validate them",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-apply-plan-staleness",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

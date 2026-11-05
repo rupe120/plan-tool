@@ -1,0 +1,248 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-2151be2a": {
+      "code_anchor": "fingerprint.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md",
+      "reason": "code anchor path `fingerprint.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-832690b5": {
+      "code_anchor": "scope_out.py:_resolve_carved_detail_path",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md",
+      "reason": "code anchor path `scope_out.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-a603db7e": {
+      "code_anchor": "scope_out.py:_resolve_detail_source",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md",
+      "reason": "code anchor path `scope_out.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-f9be37da": {
+      "code_anchor": "review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/01-extract-detail-artifact-path-resolution.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-fd4c29dc": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/02-make-step-unset-step-detail-pointer-but.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/02-make-step-unset-step-detail-pointer-but.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-226bd344": {
+      "code_anchor": "tests/test_detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md",
+      "reason": "code anchor path `tests/test_detail_artifacts.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-bf2e682a": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-ca9e4d39": {
+      "code_anchor": "detail.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/03-jira-grade-schema-authority-module.md",
+      "reason": "code anchor path `detail.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-96c782e5": {
+      "code_anchor": "plan_tool/jira_grade.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/04-jira-grade-authoring-mode-plan-tool.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/04-jira-grade-authoring-mode-plan-tool.md",
+      "reason": "code anchor path `plan_tool/jira_grade.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-ed183dd8": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/04-jira-grade-authoring-mode-plan-tool.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/04-jira-grade-authoring-mode-plan-tool.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-290e5559": {
+      "code_anchor": "plan_tool/jira_grade.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/05-let-plan-tool-jira-consume-jira-grade.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/05-let-plan-tool-jira-consume-jira-grade.md",
+      "reason": "code anchor path `plan_tool/jira_grade.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-ce05f0f8": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/05-let-plan-tool-jira-consume-jira-grade.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/05-let-plan-tool-jira-consume-jira-grade.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-2db13528": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/06-opt-jira-grade-run-renderer-detail.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/06-opt-jira-grade-run-renderer-detail.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-4194ccef": {
+      "code_anchor": "plan_tool/jira_grade.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/06-opt-jira-grade-run-renderer-detail.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/06-opt-jira-grade-run-renderer-detail.md",
+      "reason": "code anchor path `plan_tool/jira_grade.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-1db6ac87": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-41687f25": {
+      "code_anchor": "review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-698ca1e7": {
+      "code_anchor": "fingerprint.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `fingerprint.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-82b3ffcd": {
+      "code_anchor": "plan_tool/jira_grade.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `plan_tool/jira_grade.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-abf47499": {
+      "code_anchor": "completeness_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `completeness_cmd.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-de8fdc67": {
+      "code_anchor": "completeness_phases.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/07-ground-completeness-audit-on-selected.md",
+      "reason": "code anchor path `completeness_phases.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-2327023f": {
+      "code_anchor": "plan_tool/detail_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/09-update-docs-close-out-backlog-jira.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/09-update-docs-close-out-backlog-jira.md",
+      "reason": "code anchor path `plan_tool/detail_artifacts.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-99042b49": {
+      "code_anchor": "plan_tool/jira_grade.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/09-update-docs-close-out-backlog-jira.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/jira-grade-01-detail-instrument/09-update-docs-close-out-backlog-jira.md",
+      "reason": "code anchor path `plan_tool/jira_grade.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260722-154518-completeness"
+}

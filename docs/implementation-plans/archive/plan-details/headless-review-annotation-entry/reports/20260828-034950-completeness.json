@@ -1,0 +1,162 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T03:49:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d0e068f74f1ceaa763712063a4c9bc748d2f3067e0ce924fccc982ccfc7c0459",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review.py": "7d0ee59cba958c291f5e933ca6557a7f9fba9b4c9b0d077c8273f274a1870d55",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md": "82b09cabdc48c4fb113a25efdc5dc7389992f65e936a3cfc2196735208038923",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Annotation Entry\n\n`headless-review-annotation-entry` \u00b7 generated 2026-08-28T03:49:50Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `30d03cbf30cf1cbb7e7ce1bc7564166d44ab37b6b96cd7c76e42a73b8bc0aff2`\n- **Detail bundle digest:** `8efd922f20e4877d4731ca751fc3a846af8b3903df2b893467a7e393fdae57b3`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (-1 vs. first audit)\n- **Detail-bundle size:** 31871 bytes (+31871 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply headless-review-annotation-entry   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[promptable-selection]` [confidence: limited]: `plan_tool.review_walk.walk_recommendations` keeps pairwise `granularity-merge` INFO findings visible under default `skip_info`, but step 2 `## Testing` covers only ordinary INFO findings. Plan `## Architecture`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Input` and `## Implementation`, require the remote preflight to match normal selection including that exception; a remote preflight that filters all INFO findings would wrongly create no request.\n  - Fix: Specify and test the pairwise-merge INFO exception through both fresh and eligible saved remote entry paths.\n- MEDIUM `[remote-non-tty-help]` [confidence: limited]: `plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d Step 2 updates and tests only `--reuse` help, so command help can still deny the new entry.\n  - Fix: Align every affected walk and reuse help string with the explicit-remote non-TTY exception and test each description.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[remote-non-tty-help]` [confidence: limited]: `plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d `## Testing` requires accurate command help, but step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) updates and tests only `--reuse`; the stale help tells an explicit remote caller it will not receive a restricted request.\n  - Fix: Update every `reconcile-plan` help string that makes a blanket TTY/non-TTY walk claim, together with `--reuse`, to describe the restricted remote exception and test the resulting help.\n  - Address: `plan-tool completeness-apply headless-review-annotation-entry --anchor remote-non-tty-help`\n- MEDIUM `[promptable-selection]` [confidence: limited]: `## Architecture` and `## Testing` require the remote preflight to match normal non-rewalk selection, and step 2\u2019s Input retains `skip_info`\u2019s pairwise merge exception. Step 2\u2019s Tests cover only ordinary INFO findings; no remote `cmd_review` test covers the INFO `granularity-merge` that `plan_tool.review_walk.walk_recommendations` keeps promptable when `skip_info=True`, so a separately written preflight can hide it and create no request while all listed tests pass.\n  - Fix: Add command-level coverage that the remote preflight preserves the normal default-visible pairwise merge exception alongside the stated INFO and annotation selection rules.\n  - Address: `plan-tool completeness-apply headless-review-annotation-entry --anchor promptable-selection`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-f3cb7034]` [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e831b2b0]` [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e4d4701a]` [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4b21ec2e]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-00da194d]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-24744143]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply headless-review-annotation-entry` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Annotation Entry\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `30d03cbf30cf1cbb7e7ce1bc7564166d44ab37b6b96cd7c76e42a73b8bc0aff2`\n- **Detail bundle digest:** `8efd922f20e4877d4731ca751fc3a846af8b3903df2b893467a7e393fdae57b3`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[promptable-selection]` [confidence: limited]: `plan_tool.review_walk.walk_recommendations` keeps pairwise `granularity-merge` INFO findings visible under default `skip_info`, but step 2 `## Testing` covers only ordinary INFO findings. Plan `## Architecture`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Input` and `## Implementation`, require the remote preflight to match normal selection including that exception; a remote preflight that filters all INFO findings would wrongly create no request.\n- MEDIUM `[remote-non-tty-help]` [confidence: limited]: `plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d Step 2 updates and tests only `--reuse` help, so command help can still deny the new entry.\n\n### Files coherence\n\n- INFO: step 2 detail cites `plan_tool/cli/review_actions.py` resembling declared `plan_tool/cli/review_cmd.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[remote-non-tty-help]` [confidence: limited]: `plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d `## Testing` requires accurate command help, but step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) updates and tests only `--reuse`; the stale help tells an explicit remote caller it will not receive a restricted request.\n- MEDIUM `[promptable-selection]` [confidence: limited]: `## Architecture` and `## Testing` require the remote preflight to match normal non-rewalk selection, and step 2\u2019s Input retains `skip_info`\u2019s pairwise merge exception. Step 2\u2019s Tests cover only ordinary INFO findings; no remote `cmd_review` test covers the INFO `granularity-merge` that `plan_tool.review_walk.walk_recommendations` keeps promptable when `skip_info=True`, so a separately written preflight can hide it and create no request while all listed tests pass.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit headless-review-annotation-entry --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply headless-review-annotation-entry` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-e4ae4523",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`plan_tool.review_walk.walk_recommendations` keeps pairwise `granularity-merge` INFO findings visible under default `ski",
+      "body": "`plan_tool.review_walk.walk_recommendations` keeps pairwise `granularity-merge` INFO findings visible under default `skip_info`, but step 2 `## Testing` covers only ordinary INFO findings. Plan `## Architecture`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Input` and `## Implementation`, require the remote preflight to match normal selection including that exception; a remote preflight that filters all INFO findings would wrongly create no request.",
+      "suggested_action": "Specify and test the pairwise-merge INFO exception through both fresh and eligible saved remote entry paths.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "promptable-selection",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-7ed3ea8f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while",
+      "body": "`plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d Step 2 updates and tests only `--reuse` help, so command help can still deny the new entry.",
+      "suggested_action": "Align every affected walk and reuse help string with the explicit-remote non-TTY exception and test each description.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-non-tty-help",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-7ed3ea8f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while",
+      "body": "`plan_tool.cli.review_cmd.register`\u2019s `--no-walk` help says \u201cCI and non-TTY contexts skip the walk automatically,\u201d while `## Architecture` says \u201cExplicit remote mode with non-TTY stdin uses the restricted response set.\u201d `## Testing` requires accurate command help, but step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) updates and tests only `--reuse`; the stale help tells an explicit remote caller it will not receive a restricted request.",
+      "suggested_action": "Update every `reconcile-plan` help string that makes a blanket TTY/non-TTY walk claim, together with `--reuse`, to describe the restricted remote exception and test the resulting help.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-non-tty-help",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-e4ae4523",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`## Architecture` and `## Testing` require the remote preflight to match normal non-rewalk selection, and step 2\u2019s Input",
+      "body": "`## Architecture` and `## Testing` require the remote preflight to match normal non-rewalk selection, and step 2\u2019s Input retains `skip_info`\u2019s pairwise merge exception. Step 2\u2019s Tests cover only ordinary INFO findings; no remote `cmd_review` test covers the INFO `granularity-merge` that `plan_tool.review_walk.walk_recommendations` keeps promptable when `skip_info=True`, so a separately written preflight can hide it and create no request while all listed tests pass.",
+      "suggested_action": "Add command-level coverage that the remote preflight preserves the normal default-visible pairwise merge exception alongside the stated INFO and annotation selection rules.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "promptable-selection",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "30d03cbf30cf1cbb7e7ce1bc7564166d44ab37b6b96cd7c76e42a73b8bc0aff2",
+      "detail_bundle_digest": "8efd922f20e4877d4731ca751fc3a846af8b3903df2b893467a7e393fdae57b3",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md",
+          "state": "present",
+          "digest": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md",
+          "state": "present",
+          "digest": "82b09cabdc48c4fb113a25efdc5dc7389992f65e936a3cfc2196735208038923"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md",
+          "state": "present",
+          "digest": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+        }
+      ],
+      "source_seed_digest": "748ca5238e5348c160dc2f7467b284e02d4fff19040bdc2016294b6e841ca41c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 31871,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,182 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-14b4faef": {
+      "code_anchor": "parser.py:_explain_extra_field",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/01-optional-intent-fields-plan-step.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/01-optional-intent-fields-plan-step.md",
+      "reason": "code anchor path `parser.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step10-data-contract-17cdb326": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/10-pass-plan-step-intent-conceptual-audit.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/10-pass-plan-step-intent-conceptual-audit.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 10,
+      "target": "plan-detail"
+    },
+    "step10-data-contract-f75ca83a": {
+      "code_anchor": "plan_tool/schema.py:Plan.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/10-pass-plan-step-intent-conceptual-audit.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/10-pass-plan-step-intent-conceptual-audit.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.intent` does not resolve in HEAD",
+      "step_id": 10,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-62451a1f": {
+      "code_anchor": "schema.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md",
+      "reason": "code anchor path `schema.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-dad5ec9c": {
+      "code_anchor": "reprocess.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/03-move-plan-scope-fence-rendering-shared.md",
+      "reason": "code anchor path `reprocess.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-db0c2513": {
+      "code_anchor": "plan_tool/schema.py:Plan.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/04-render-plan-step-intent-shared-fence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/04-render-plan-step-intent-shared-fence.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.intent` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-df8c9575": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/04-render-plan-step-intent-shared-fence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/04-render-plan-step-intent-shared-fence.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-914ead50": {
+      "code_anchor": "plan_tool/schema.py:Plan.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/05-pass-both-fence-halves-run-run-jira.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/05-pass-both-fence-halves-run-run-jira.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.intent` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-9526208e": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/05-pass-both-fence-halves-run-run-jira.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/05-pass-both-fence-halves-run-run-jira.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-65ef3493": {
+      "code_anchor": "plan_tool/schema.py:Plan.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/06-fill-plan-intent-seed-outcome-section.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/06-fill-plan-intent-seed-outcome-section.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.intent` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-b3aea9aa": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/07-ask-create-step-proposal-one-line.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/07-ask-create-step-proposal-one-line.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-50acabfa": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/08-decide-what-split-merge-step-intent.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/08-decide-what-split-merge-step-intent.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-6cf1ee3b": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-cbd277d9": {
+      "code_anchor": "plan_tool/schema.py:Plan.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.intent` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-d2ce8754": {
+      "code_anchor": "plan_tool/schema.py:Step.intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.intent` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-fcdf55a0": {
+      "code_anchor": "detail.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-scope-fence/09-carry-intent-scope-out-reground-forward.md",
+      "reason": "code anchor path `detail.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260801-005211-completeness"
+}

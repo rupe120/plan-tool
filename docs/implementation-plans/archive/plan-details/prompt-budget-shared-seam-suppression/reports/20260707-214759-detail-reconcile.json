@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "plan_slug": "prompt-budget-shared-seam-suppression",
+  "plan_path": "docs/implementation-plans/2-prompt-budget-shared-seam-suppression.md",
+  "created_at": "2026-07-07T21:47:59Z",
+  "kind": "detail-reconcile",
+  "step_id": 4,
+  "plan_fingerprint": "227e5d97324453cabb68348205b8e97ed7bcbce9ee6e39cda6a30a7e3a2652d0",
+  "code_fingerprint": {
+    "BACKLOG.md": "ea7e6c583a8ab1581d5913ac4f5595e11a2a960f442049cfb75362dbf0cb377d",
+    "plan_tool/create.py": "1256ef3c17fc8b1530e5e60324d93bfbf9febc5682100e4808210d279533a991",
+    "plan_tool/detail.py": "1f4eade7d9380f2994e9c1f99fe7c381267ec42a1d4a0b06411ce2cad4de8545",
+    "plan_tool/review.py": "cdb78c3eadc3e2237ed917f7ab443f318a49c4f93ab03212e4dd75843fd91418",
+    "plan_tool/shell.py": "b51d06a7edace3e7d6e045eb5080093a890785d43fc36fca04a290643fae43de",
+    "tests/test_create.py": "6539888cf6fbc26986e829a1aa72afbf63cf5b9be1e0ff50ca10412a2d7ba43b",
+    "tests/test_detail.py": "001d1e160b1c168fb026de3d006f266ba0d3a422e04086fae4fb79b45d64deba",
+    "tests/test_review.py": "e6aa46f64e24d0cf366dd020f4ee684a16b450ef28342e66f8aa7d1d881d1590",
+    "tests/test_shell.py": "123fd94176339218ce1e82a63d2ddb11dd5e5fe06cdeec513d4d58129ded1827",
+    "tests/test_telemetry.py": "c9c320e198298716e27a1b84746a4345031bc28f6a33655010da1ffc9711f870"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "I\u2019ll inspect the plan/backlog state and the actual `BACKLOG.md` content, then compare only documentation against the step\u2019s stated scope.\nThe working tree already has documentation changes, including the active implementation plan and its detail folder. I\u2019ll read the current plan metadata and search `BACKLOG.md` for the completed backlog identifier and prompt-budget entry anchors.\n`BACKLOG.md` still contains the `#99` entry and several cross-references to it. I\u2019m checking whether the active plan claims this step is complete or still pending, because that determines whether the right reconcile edit is a status note or no edit.\n**Matches intent**\n\n`BACKLOG.md` exists and is the only declared file for step 4.\n\n**Plan over-promises**\n\n`BACKLOG.md` still contains the `**#99 \u2014 Double-warn / double-telemetry suppression...**` entry and cross-references under the quality lens, priority tier, and backlog intro. The step\u2019s backlog-reconciliation acceptance criterion is not satisfied on disk.\n\n**Plan under-describes**\n\nNone.\n\n## Findings\n\n- MEDIUM: step 4 (\"Remove the completed #99 backlog entry and references\") has no `status_note` even though `BACKLOG.md:**#99 \u2014 Double-warn / double-telemetry suppression for the prompt-budget advisory shared seam**` and its cross-references remain on disk, so the plan does not surface that backlog reconciliation is still outstanding \u2192 fix: set step 4 `status_note` to \"#99 backlog entry and cross-references still present in BACKLOG.md\" (impact: medium, complexity: low)\n",
+  "recommendations": [
+    {
+      "id": "step4-detail-reconcile-36f88064",
+      "source": "detail-reconcile",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "step 4 (\"Remove the completed #99 backlog entry and references\") has no `status_note` even though `BACKLOG.md:**#99 \u2014 Do",
+      "body": "step 4 (\"Remove the completed #99 backlog entry and references\") has no `status_note` even though `BACKLOG.md:**#99 \u2014 Double-warn / double-telemetry suppression for the prompt-budget advisory shared seam**` and its cross-references remain on disk, so the plan does not surface that backlog reconciliation is still outstanding",
+      "suggested_action": "set step 4 `status_note` to \"#99 backlog entry and cross-references still present in BACKLOG.md\"",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {}
+}

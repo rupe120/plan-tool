@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-revision-rollback",
+  "plan_path": "docs/implementation-plans/2-roadmap-revision-rollback.md",
+  "created_at": "2026-09-18T19:26:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f87d0a0e9361f7a2e409ebeb74202824e8781d483a86c4224ffaac465e8b3d56",
+  "code_fingerprint": {
+    "BACKLOG.md": "c45daf5cf5b89b5575539e23a814a6b7207ee99c7e32fa6d1279577cdc87ae84",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap.py": "a58515b8bcbc81e2dc2f4cc2fc32778e8c20d5f22f311c447b40651b426cc085",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap.py": "bf46be48d327efc56d15ffb532759a1aa0f8425da0db85dbbe922c4039d969a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md": "61a81ba323fddd1fcb3128371e2b848d7dfceeb1cbe4b77aa1911503a54ddc26",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/02-move-run-roadmap-confirmed-brief-rebind.md": "741f81b72339c4490c078afee72d29e43c9403c31d6e4687906b630db341b163",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md": "54d69ed7d6ffa33187338db013aee58b487483da5d7af269924bad449ef09564",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md": "e278ab19708aa8d1435508163a8fc51f56f0b649b0ca34bc781d0950e991840a",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-when-checkpoint.md": "d440c936238f589890599b5fe1496e510e3b2f98f6810c59b0f2e7f2bc5ccf24",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md": "d15b2cb6a84d289ce9839438773542ddb8ce5b72d63a072a4c0eefc1e6f57f20"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Revision Rollback\n\n`roadmap-revision-rollback` \u00b7 generated 2026-09-18T19:26:49Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `88555dd69a1980f600ee60e0d29c241496f272a7eef7cc5c04a7fbc8bdaeaa33`\n- **Detail bundle digest:** `58bf6987d33ff662680023544e3305a34b7b844fd8dda82d03bc7773fbb0cb8d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 176261 bytes (+176261 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[reconciliation-eligibility-kind-scope]` [confidence: limited]: Steps 2 and 3's dangling-journal reconciliation excludes only `kind == \"revision-restore\"` instead of requiring `kind == \"stage-publication\"`, so a crashed-and-recovered journal from any of four other legitimate writers \u2014 `baseline-enrollment` (`--enroll-baselines`, `enroll_stage_baselines`, `roadmap_revision_publish.py:635`), `feedback-publication` (`--revise-feedback`, `publish_revision_candidate`, `roadmap_revision_publish.py:703`, called from `roadmap_revision_run.py`, never from `_run_roadmap`), `confirmed-feedback-reopen` (`--reopen-feedback`/`--confirm-feedback-reopen`, `publish_feedback_reopen_candidate`, `roadmap_revision_publish.py:745`, called from `roadmap_feedback_reopen.py`), and `structural-feedback-publication` (structural rewrite, `publish_structural_revision_proof`, `roadmap_revision_publish.py:809`, called from `roadmap_structural_revision_run.py`) \u2014 gets silently folded into the checkpoint as if it were this lineage's own write, because each of these kinds' members (stage artifacts, baselines, and/or `seed-state.json`) are entirely drawn from the checkpoint's ten tracked files, passing the membership-subset test the same way `stage-publication` does.\n\n  Concretely: within `_run_roadmap` itself, `publish_stage_artifact` (`kind=\"stage-publication\"`) is the *only* journal-producing call \u2014 confirmed by reading the full function body, which never calls `publish_revision_candidate`, `publish_structural_revision_proof`, `publish_feedback_reopen_candidate`, or `enroll_stage_baselines`. Step 2's own prose states the reconciliation is meant to close the case of \"an earlier failed run's *own* stage-publish journal\" (Implementation, \"Checkpoint capture-or-continue\"), but the rule it actually specifies \u2014 a non-empty journal whose kind is anything *but* `\"revision-restore\"`, plus the membership check \u2014 is strictly broader than that stated intent, and the implementation as written matches the broader (wrong) rule, not the narrower stated one. Step 3's restore reconciliation (`03-revision-restore-runner-under-writer.md`, Implementation sequence step 3, \"Reconcile the checkpoint against whatever the peeked journal covered\") specifies the identical two-condition test and has the identical gap.\n\n  Consequence: a checkpoint-owning lineage's write-time verification (step 2) or restore's own comparison (step 3) will treat a completed-but-crash-recovered write from one of these four other writers as \"this tool's own settled write,\" letting a continuing run silently overwrite it with no refusal, or letting restore discard it without the operator ever being told it happened \u2014 exactly the failure the plan's own Risk section calls out by name for `--refresh-seeds`/`--accept-seed`/`--apply` touching `seed-state.json` (\"the existing change check and 'anything else' refusal already catch this and refuse rather than silently overwriting the [other] action's work\"), except here the reconciliation step itself is what defeats that refusal, for a strictly larger set of writers than seed-state actions alone (stage artifacts and baselines are equally exposed, via three of the four kinds above). None of the existing test rosters for either step cover this: `test_continuing_run_excludes_its_own_restore_journal_kind_from_reconciliation` and `test_continuing_run_skips_reconciliation_for_a_journal_with_untracked_members` (step 2), and their step-3 analogs, only exercise restore's own kind and the two `.roadmap-versions/`-scoped kinds (`root-enrollment`, `review-seal-promotion`) \u2014 none exercises a dangling journal from `baseline-enrollment`, `feedback-publication`, `confirmed-feedback-reopen`, or `structural-feedback-publication`, so an implementation built exactly to the stated test roster would still ship this gap undetected.\n  - Fix: Narrow the reconciliation-eligibility rule in both step 2 (`_run_roadmap`'s checkpoint capture-or-continue) and step 3 (`restore_roadmap_revision`'s reconciliation) from \"kind is not `revision-restore`\" to \"kind is exactly `stage-publication`\" \u2014 the one kind `_run_roadmap`'s own lineage can ever produce \u2014 and add a test in each step's roster proving a dangling `baseline-enrollment`, `feedback-publication`, `confirmed-feedback-reopen`, and `structural-feedback-publication` journal (each with members drawn from the tracked inventory) is excluded from reconciliation the same way the untracked-member kinds already are, so a crash in any of those other writers still reaches the \"changed since the failed run\" refusal instead of being silently absorbed.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a696aa98]` [confidence: limited]: The plan's `## Acceptance criteria` names `recover_roadmap_publication`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-dae17653]` [confidence: limited]: The plan's `## Acceptance criteria` names `source.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Revision Rollback\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `88555dd69a1980f600ee60e0d29c241496f272a7eef7cc5c04a7fbc8bdaeaa33`\n- **Detail bundle digest:** `58bf6987d33ff662680023544e3305a34b7b844fd8dda82d03bc7773fbb0cb8d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[reconciliation-eligibility-kind-scope]` [confidence: limited]: Steps 2 and 3's dangling-journal reconciliation excludes only `kind == \"revision-restore\"` instead of requiring `kind == \"stage-publication\"`, so a crashed-and-recovered journal from any of four other legitimate writers \u2014 `baseline-enrollment` (`--enroll-baselines`, `enroll_stage_baselines`, `roadmap_revision_publish.py:635`), `feedback-publication` (`--revise-feedback`, `publish_revision_candidate`, `roadmap_revision_publish.py:703`, called from `roadmap_revision_run.py`, never from `_run_roadmap`), `confirmed-feedback-reopen` (`--reopen-feedback`/`--confirm-feedback-reopen`, `publish_feedback_reopen_candidate`, `roadmap_revision_publish.py:745`, called from `roadmap_feedback_reopen.py`), and `structural-feedback-publication` (structural rewrite, `publish_structural_revision_proof`, `roadmap_revision_publish.py:809`, called from `roadmap_structural_revision_run.py`) \u2014 gets silently folded into the checkpoint as if it were this lineage's own write, because each of these kinds' members (stage artifacts, baselines, and/or `seed-state.json`) are entirely drawn from the checkpoint's ten tracked files, passing the membership-subset test the same way `stage-publication` does.\n\n  Concretely: within `_run_roadmap` itself, `publish_stage_artifact` (`kind=\"stage-publication\"`) is the *only* journal-producing call \u2014 confirmed by reading the full function body, which never calls `publish_revision_candidate`, `publish_structural_revision_proof`, `publish_feedback_reopen_candidate`, or `enroll_stage_baselines`. Step 2's own prose states the reconciliation is meant to close the case of \"an earlier failed run's *own* stage-publish journal\" (Implementation, \"Checkpoint capture-or-continue\"), but the rule it actually specifies \u2014 a non-empty journal whose kind is anything *but* `\"revision-restore\"`, plus the membership check \u2014 is strictly broader than that stated intent, and the implementation as written matches the broader (wrong) rule, not the narrower stated one. Step 3's restore reconciliation (`03-revision-restore-runner-under-writer.md`, Implementation sequence step 3, \"Reconcile the checkpoint against whatever the peeked journal covered\") specifies the identical two-condition test and has the identical gap.\n\n  Consequence: a checkpoint-owning lineage's write-time verification (step 2) or restore's own comparison (step 3) will treat a completed-but-crash-recovered write from one of these four other writers as \"this tool's own settled write,\" letting a continuing run silently overwrite it with no refusal, or letting restore discard it without the operator ever being told it happened \u2014 exactly the failure the plan's own Risk section calls out by name for `--refresh-seeds`/`--accept-seed`/`--apply` touching `seed-state.json` (\"the existing change check and 'anything else' refusal already catch this and refuse rather than silently overwriting the [other] action's work\"), except here the reconciliation step itself is what defeats that refusal, for a strictly larger set of writers than seed-state actions alone (stage artifacts and baselines are equally exposed, via three of the four kinds above). None of the existing test rosters for either step cover this: `test_continuing_run_excludes_its_own_restore_journal_kind_from_reconciliation` and `test_continuing_run_skips_reconciliation_for_a_journal_with_untracked_members` (step 2), and their step-3 analogs, only exercise restore's own kind and the two `.roadmap-versions/`-scoped kinds (`root-enrollment`, `review-seal-promotion`) \u2014 none exercises a dangling journal from `baseline-enrollment`, `feedback-publication`, `confirmed-feedback-reopen`, or `structural-feedback-publication`, so an implementation built exactly to the stated test roster would still ship this gap undetected.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `recover_roadmap_publication`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `source.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-revision-rollback` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3166e598",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Steps 2 and 3's dangling-journal reconciliation excludes only `kind == \"revision-restore\"` instead of requiring `kind ==",
+      "body": "Steps 2 and 3's dangling-journal reconciliation excludes only `kind == \"revision-restore\"` instead of requiring `kind == \"stage-publication\"`, so a crashed-and-recovered journal from any of four other legitimate writers \u2014 `baseline-enrollment` (`--enroll-baselines`, `enroll_stage_baselines`, `roadmap_revision_publish.py:635`), `feedback-publication` (`--revise-feedback`, `publish_revision_candidate`, `roadmap_revision_publish.py:703`, called from `roadmap_revision_run.py`, never from `_run_roadmap`), `confirmed-feedback-reopen` (`--reopen-feedback`/`--confirm-feedback-reopen`, `publish_feedback_reopen_candidate`, `roadmap_revision_publish.py:745`, called from `roadmap_feedback_reopen.py`), and `structural-feedback-publication` (structural rewrite, `publish_structural_revision_proof`, `roadmap_revision_publish.py:809`, called from `roadmap_structural_revision_run.py`) \u2014 gets silently folded into the checkpoint as if it were this lineage's own write, because each of these kinds' members (stage artifacts, baselines, and/or `seed-state.json`) are entirely drawn from the checkpoint's ten tracked files, passing the membership-subset test the same way `stage-publication` does.\n\n  Concretely: within `_run_roadmap` itself, `publish_stage_artifact` (`kind=\"stage-publication\"`) is the *only* journal-producing call \u2014 confirmed by reading the full function body, which never calls `publish_revision_candidate`, `publish_structural_revision_proof`, `publish_feedback_reopen_candidate`, or `enroll_stage_baselines`. Step 2's own prose states the reconciliation is meant to close the case of \"an earlier failed run's *own* stage-publish journal\" (Implementation, \"Checkpoint capture-or-continue\"), but the rule it actually specifies \u2014 a non-empty journal whose kind is anything *but* `\"revision-restore\"`, plus the membership check \u2014 is strictly broader than that stated intent, and the implementation as written matches the broader (wrong) rule, not the narrower stated one. Step 3's restore reconciliation (`03-revision-restore-runner-under-writer.md`, Implementation sequence step 3, \"Reconcile the checkpoint against whatever the peeked journal covered\") specifies the identical two-condition test and has the identical gap.\n\n  Consequence: a checkpoint-owning lineage's write-time verification (step 2) or restore's own comparison (step 3) will treat a completed-but-crash-recovered write from one of these four other writers as \"this tool's own settled write,\" letting a continuing run silently overwrite it with no refusal, or letting restore discard it without the operator ever being told it happened \u2014 exactly the failure the plan's own Risk section calls out by name for `--refresh-seeds`/`--accept-seed`/`--apply` touching `seed-state.json` (\"the existing change check and 'anything else' refusal already catch this and refuse rather than silently overwriting the [other] action's work\"), except here the reconciliation step itself is what defeats that refusal, for a strictly larger set of writers than seed-state actions alone (stage artifacts and baselines are equally exposed, via three of the four kinds above). None of the existing test rosters for either step cover this: `test_continuing_run_excludes_its_own_restore_journal_kind_from_reconciliation` and `test_continuing_run_skips_reconciliation_for_a_journal_with_untracked_members` (step 2), and their step-3 analogs, only exercise restore's own kind and the two `.roadmap-versions/`-scoped kinds (`root-enrollment`, `review-seal-promotion`) \u2014 none exercises a dangling journal from `baseline-enrollment`, `feedback-publication`, `confirmed-feedback-reopen`, or `structural-feedback-publication`, so an implementation built exactly to the stated test roster would still ship this gap undetected.",
+      "suggested_action": "Narrow the reconciliation-eligibility rule in both step 2 (`_run_roadmap`'s checkpoint capture-or-continue) and step 3 (`restore_roadmap_revision`'s reconciliation) from \"kind is not `revision-restore`\" to \"kind is exactly `stage-publication`\" \u2014 the one kind `_run_roadmap`'s own lineage can ever produce \u2014 and add a test in each step's roster proving a dangling `baseline-enrollment`, `feedback-publication`, `confirmed-feedback-reopen`, and `structural-feedback-publication` journal (each with members drawn from the tracked inventory) is excluded from reconciliation the same way the untracked-member kinds already are, so a crash in any of those other writers still reaches the \"changed since the failed run\" refusal instead of being silently absorbed.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reconciliation-eligibility-kind-scope",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "88555dd69a1980f600ee60e0d29c241496f272a7eef7cc5c04a7fbc8bdaeaa33",
+      "detail_bundle_digest": "58bf6987d33ff662680023544e3305a34b7b844fd8dda82d03bc7773fbb0cb8d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+          "state": "present",
+          "digest": "61a81ba323fddd1fcb3128371e2b848d7dfceeb1cbe4b77aa1911503a54ddc26"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/02-move-run-roadmap-confirmed-brief-rebind.md",
+          "state": "present",
+          "digest": "741f81b72339c4490c078afee72d29e43c9403c31d6e4687906b630db341b163"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md",
+          "state": "present",
+          "digest": "54d69ed7d6ffa33187338db013aee58b487483da5d7af269924bad449ef09564"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md",
+          "state": "present",
+          "digest": "e278ab19708aa8d1435508163a8fc51f56f0b649b0ca34bc781d0950e991840a"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-when-checkpoint.md",
+          "state": "present",
+          "digest": "d440c936238f589890599b5fe1496e510e3b2f98f6810c59b0f2e7f2bc5ccf24"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md",
+          "state": "present",
+          "digest": "d15b2cb6a84d289ce9839438773542ddb8ce5b72d63a072a4c0eefc1e6f57f20"
+        }
+      ],
+      "source_seed_digest": "5c46f3d940d46f8b6487cb294d01176c6131d24276682e603cbabf2e131c38ce",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 176261,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

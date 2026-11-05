@@ -1,0 +1,35 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-43c2b7d0": {
+      "candidate": {
+        "field": "confidence",
+        "field_or_key": "confidence",
+        "json_key": "confidence",
+        "owner": "Recommendation",
+        "source_symbol": "plan_tool/review.py:Recommendation",
+        "target_section": "Recommendation"
+      },
+      "candidate_fields": {
+        "field": "confidence",
+        "field_or_key": "confidence",
+        "json_key": "confidence",
+        "owner": "Recommendation",
+        "source_symbol": "plan_tool/review.py:Recommendation",
+        "target_section": "Recommendation"
+      },
+      "contract_fingerprint": "70085086e2cf0e13a63dd0842200a01a1a1afea6d0e9fdf34f753f272d45d54a",
+      "field_or_key": "confidence",
+      "freshness": {
+        "contract_fingerprint": "70085086e2cf0e13a63dd0842200a01a1a1afea6d0e9fdf34f753f272d45d54a",
+        "registry_fingerprint": "afa3e09b0563cfe47cf7fb1a00753e33db0c8c801a1d9749fdd86348ad5ff6e4"
+      },
+      "operation": "add",
+      "owner": "Recommendation",
+      "registry_fingerprint": "afa3e09b0563cfe47cf7fb1a00753e33db0c8c801a1d9749fdd86348ad5ff6e4",
+      "source_type": "dataclass",
+      "target_section": "Recommendation"
+    }
+  },
+  "review_id": "20260827-160434-completeness"
+}

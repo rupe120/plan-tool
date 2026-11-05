@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-b0dde216": {
+      "code_anchor": "plan_tool/schema.py:Step.model_config",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-incremental-revision/01-define-same-artifact-live-feedback.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-incremental-revision/01-define-same-artifact-live-feedback.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.model_config` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-68022a75": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.start",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-incremental-revision/04-expose-one-exclusive-revise-feedback.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-incremental-revision/04-expose-one-exclusive-revise-feedback.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.start` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260814-125125-completeness"
+}

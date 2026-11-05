@@ -1,0 +1,140 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-1",
+  "plan_path": "docs/implementation-plans/2-risk-profile-1.md",
+  "created_at": "2026-08-24T16:17:08Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4eef74497648d1cb44278ed964508dbab2d90c65f31c549d734c5d733e7a8822",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "f9d63d19deb08c441a2aa998f7ed0be7cc152d6eadb583ba649dc75f2e694c3a",
+    "README.md": "6afd7dc70b9cebfc7a03b92f3a573c6ffb3dbc9c2ec3a787201a5c93b56e7294",
+    "TESTING.md": "f3e71a3b4043083bf3cef87b210f0346b8f7d563e80605c0221a88dad2e720f6",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "docs/CREATE_RESUME_FLOW.md": "2ec94959ffc5cc84ffa0810f622b293e3a212ce6dc1a3e6473c82c285e943e18",
+    "plan_tool/__init__.py": "1bb896aee2673a4eda90764d308096f65a366d9b1f2c1023e97a7d00140241e1",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/schema.py": "af9e469ce92591f79aafdfcac09105918fdcd061abea6f17f568548b9aa8946a",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_inspect_cmds.py": "fbcc4053d80a889af4fc6850d13af8179a466ad93d5f189b6ad3d7e5ecff1b0b",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_distill.py": "3d7a5fb04fb7764e8fba20297ba4f6aff6b9216c4e88f1c8b929387b13c6c105",
+    "tests/test_parser.py": "653c6ec41947aaa99928090f63de4dec06d0df6a97cd6c3310b41a1f7582d630"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md": "f9e6eb3898e4f89e4fa629730cb527882045935a819919459bf3e7bc140f8b6f",
+    "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md": "71c316c4729712ec3fb171bdce0cfc5bcab62c993f200f8ab9e355674dba726d",
+    "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md": "98b6f726ac33b8407887f6065e4caebeefb0addf3c19a31c46ad35a80aa7e1ec",
+    "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md": "c6d9c92e7da48562e68a932f109caeb312339b1f02e45dccacaa12bb2aa6f3ca",
+    "docs/implementation-plans/plan-details/risk-profile-1/05-verify-destructive-path-safeguards-risk.md": "8b00eee31ab80a4d32007183c7f87f6fb9bac12240158f9f245a821d53cbb7bb"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 1\n\n`risk-profile-1` \u00b7 generated 2026-08-24T16:17:08Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply risk-profile-1   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk risk-profile-1  # alternative interactive review/apply\n\n- HIGH `[low-tier-admission]`: Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) and step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) conflict: `Architecture \u2192 Pre-publication declaration` says \u201cOtherwise, use the parsed classifier proposal,\u201d while `Architecture \u2192 Classification signals` says \u201c`low` is permitted only when all three preceding conditions hold.\u201d The counter-signal floor alone permits a parsed `low` without affirmative deletion, no-consumer, and no-contract evidence; `Risks \u2192 Misclassification`, `Testing \u2192 Classification policy and precedence`, and the counter-signal acceptance criterion do not prove that refusal.\n  - Fix: Make `low` admission require all three stated affirmative seed conditions before final selection, and test a low proposal missing each condition.\n- HIGH `[prepublication-resume]`: Step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) promises a matching pre-publication resume, while step 5 (`Verify destructive-path safeguards and risk-decision checkpoint invalidation`) covers its failure paths, but `plan_tool/create.py:_publish_create_plan` writes the plan before post-write parsing and manifest publication. `tests/test_create.py:TestCreatePlanPostWriteReparse` leaves that plan on disk after a parse failure, and `test_create_plan_keeps_checkpoints_when_write_fails` must manually delete it; the next create stops in `find_collisions` before it can restore the saved risk declaration promised by `Architecture \u2192 Pre-publication declaration`, `Risks \u2192 A failure loses or misapplies an operator decision`, Testing, and the final acceptance criterion.\n  - Fix: Define safe recovery for every failed publication state so a matching retry can reach checkpoint resume without overwriting or orphaning create-owned artifacts, and test those failure boundaries.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-1` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 1\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[low-tier-admission]`: Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) and step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) conflict: `Architecture \u2192 Pre-publication declaration` says \u201cOtherwise, use the parsed classifier proposal,\u201d while `Architecture \u2192 Classification signals` says \u201c`low` is permitted only when all three preceding conditions hold.\u201d The counter-signal floor alone permits a parsed `low` without affirmative deletion, no-consumer, and no-contract evidence; `Risks \u2192 Misclassification`, `Testing \u2192 Classification policy and precedence`, and the counter-signal acceptance criterion do not prove that refusal.\n- HIGH `[prepublication-resume]`: Step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) promises a matching pre-publication resume, while step 5 (`Verify destructive-path safeguards and risk-decision checkpoint invalidation`) covers its failure paths, but `plan_tool/create.py:_publish_create_plan` writes the plan before post-write parsing and manifest publication. `tests/test_create.py:TestCreatePlanPostWriteReparse` leaves that plan on disk after a parse failure, and `test_create_plan_keeps_checkpoints_when_write_fails` must manually delete it; the next create stops in `find_collisions` before it can restore the saved risk declaration promised by `Architecture \u2192 Pre-publication declaration`, `Risks \u2192 A failure loses or misapplies an operator decision`, Testing, and the final acceptance criterion.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-1` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7d24d729",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) and step 3 (`Resolve a bounded o",
+      "body": "Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) and step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) conflict: `Architecture \u2192 Pre-publication declaration` says \u201cOtherwise, use the parsed classifier proposal,\u201d while `Architecture \u2192 Classification signals` says \u201c`low` is permitted only when all three preceding conditions hold.\u201d The counter-signal floor alone permits a parsed `low` without affirmative deletion, no-consumer, and no-contract evidence; `Risks \u2192 Misclassification`, `Testing \u2192 Classification policy and precedence`, and the counter-signal acceptance criterion do not prove that refusal.",
+      "suggested_action": "Make `low` admission require all three stated affirmative seed conditions before final selection, and test a low proposal missing each condition.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "low-tier-admission",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e33eaf47",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) promises a matching pre-publicati",
+      "body": "Step 3 (`Resolve a bounded operator declaration and checkpoint it before publication`) promises a matching pre-publication resume, while step 5 (`Verify destructive-path safeguards and risk-decision checkpoint invalidation`) covers its failure paths, but `plan_tool/create.py:_publish_create_plan` writes the plan before post-write parsing and manifest publication. `tests/test_create.py:TestCreatePlanPostWriteReparse` leaves that plan on disk after a parse failure, and `test_create_plan_keeps_checkpoints_when_write_fails` must manually delete it; the next create stops in `find_collisions` before it can restore the saved risk declaration promised by `Architecture \u2192 Pre-publication declaration`, `Risks \u2192 A failure loses or misapplies an operator decision`, Testing, and the final acceptance criterion.",
+      "suggested_action": "Define safe recovery for every failed publication state so a matching retry can reach checkpoint resume without overwriting or orphaning create-owned artifacts, and test those failure boundaries.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "prepublication-resume",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "4eef74497648d1cb44278ed964508dbab2d90c65f31c549d734c5d733e7a8822",
+    "detail_bundle_digest": "8236edede4c89c2d4bcf63e84ee68227edcff31b3396c9174bdb56d861ea788c",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/05-verify-destructive-path-safeguards-risk.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "c2359e6517c23e2e14f32a9caa94b18f6119f4c1fe6a5a3faf31d7b7fb3e0b3d",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

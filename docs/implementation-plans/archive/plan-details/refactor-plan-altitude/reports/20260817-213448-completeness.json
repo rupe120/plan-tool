@@ -1,0 +1,189 @@
+{
+  "version": 4,
+  "plan_slug": "refactor-plan-altitude",
+  "plan_path": "docs/implementation-plans/2-refactor-plan-altitude.md",
+  "created_at": "2026-08-17T21:34:48Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8c3a8deb8a27d223dd8511b950e1542485eedb77410c7efcef20c1f590fb5b57",
+  "code_fingerprint": {
+    "BACKLOG.md": "8e36795b6b8c975dd0764d4289027afa9f0dce75a00d0170d74a4cfc01f1f8cf",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "plan_tool/prompts/foundational-logic-sweep.md": "c3d90909d075d8f0460a0a590a6d6cb9b364140b9bd38b5f25bda178e9e8c993",
+    "plan_tool/prompts/synthesize-body.md": "be635d0b60f0229aa38b153e04f4504cf779849c21dca6c313f47185a1fae14a",
+    "tests/test_create.py": "7b77e167e8a8a2f847d1b8469d17d1baff4a5b2e11f89208f50e55cdc7f19d41"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-split-sweep-select-outer.md": "858c9432af3c6eca73da9d6c2a79fe059cdd76558a8d5e110d7008b005bbd5fa",
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/02-carry-finalized-eligible-graph.md": "c4d9ee6d2b9d1d44e8cf0c7c358da36223a742758b6419487a506ab5e5c6eeea"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Refactor Plan Altitude\n\n`refactor-plan-altitude` \u00b7 generated 2026-08-17T21:34:47Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `8c3a8deb8a27d223dd8511b950e1542485eedb77410c7efcef20c1f590fb5b57`\n- **Detail bundle digest:** `ebfc92613c5d0de18b4b3fe1b010a3023ac48e121bb842a6c47e3d5dea30f01e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply refactor-plan-altitude   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk refactor-plan-altitude  # alternative interactive review/apply\n\n- HIGH `[sweep-consumer-boundary]`: Step 1 (`Teach Stage 3 and the split sweep to select outer boundaries for eligible refactor plans`) changes `plan_tool/prompts/foundational-logic-sweep.md`, but `plan_tool/foundational_logic:render_foundational_logic_prompt`, `plan_tool/detail.py:_render_step_sweep_context`, and `docs/PROMPT_AB_TESTING.md` send that template to split-mode `detail` as well as `create`; detail has no plan eligibility context. This conflicts with `Out of scope`\u2019s detail-generation exclusion, while Architecture, Risks, Testing, and the split-consolidation acceptance criterion define no create-only boundary.\n  - Fix: define a create-only sweep context for the new rule and pin that split-mode detail prompting remains unchanged.\n- HIGH `[canonical-import-source-path]`: Complete canonical `--from-existing` inputs do not always remain source-authored: `plan_tool/create.py:_prepare_create_plan` distills before `extract_steps_from_canonical`, skips that call only below `DISTILL_SKIP_BELOW_BYTES`, and `_render_distilled_markdown` omits `Steps`; `_converge_create_plan` can also re-propose steps later. Overview, Architecture, Out of scope, Testing, and the canonical-input acceptance criterion promise no outer-boundary rewrite for every complete canonical input.\n  - Fix: recognize complete canonical inputs before distillation and preserve that source decision through convergence, with default-mode small and over-threshold fixtures.\n- HIGH `[final-eligible-graph]`: Step 2 (`Carry the finalized eligible graph into synthesized Architecture and close BACKLOG #291`) calls the graph final after the sweep, but `plan_tool/create.py:_review_step_change_types` can reclassify or split it afterward, and `_converge_create_plan` later replaces steps while `write_plan` preserves the original Architecture. Overview\u2019s eligibility rule; Architecture\u2019s final-graph and checkpoint claims; the finalization and checkpoint Risks; Testing; and acceptance criterion 2 can therefore describe an older graph as the final one.\n  - Fix: define one graph-finalization lifecycle that re-evaluates eligibility and refreshes the Architecture map after every later graph mutation.\n- MEDIUM `[refactor-eligibility-domain]`: Eligibility never defines how `change_type: null`, `scope: deferred`, or `scope: wont_do` affect \u201cevery final code step is `refactor`.\u201d `Step.change_type` is optional, `_parse_steps_json` retains missing or invalid values as `None`, `_review_step_change_types` permits them, and concept review can change scope before synthesis; Overview, Architecture, Testing, and acceptance criterion 1 leave different implementations free to apply or skip the new policy.\n  - Fix: define the complete eligibility predicate for unclassified and non-committed steps, with an observable result for each case.\n- MEDIUM `[proposal-checkpoint-policy]`: Step 1\u2019s new Stage 3 rule applies only when the proposal call runs: `plan_tool/create.py:propose_steps_from_claude` returns a cached `create-initial-steps` response without running the model or split sweep, and `plan_tool/create.py:_initial_steps_input_hash` excludes prompt-rule versioning. A checkpoint created before this change can therefore resume an inner-mechanic refactor proposal under the new plan with no stated policy for preserving or replacing it.\n  - Fix: Choose and test the checkpoint policy for proposals created before the outer-boundary rule so resumed creates have one defined decomposition behavior.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit refactor-plan-altitude` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Refactor Plan Altitude\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `8c3a8deb8a27d223dd8511b950e1542485eedb77410c7efcef20c1f590fb5b57`\n- **Detail bundle digest:** `ebfc92613c5d0de18b4b3fe1b010a3023ac48e121bb842a6c47e3d5dea30f01e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[sweep-consumer-boundary]`: Step 1 (`Teach Stage 3 and the split sweep to select outer boundaries for eligible refactor plans`) changes `plan_tool/prompts/foundational-logic-sweep.md`, but `plan_tool/foundational_logic:render_foundational_logic_prompt`, `plan_tool/detail.py:_render_step_sweep_context`, and `docs/PROMPT_AB_TESTING.md` send that template to split-mode `detail` as well as `create`; detail has no plan eligibility context. This conflicts with `Out of scope`\u2019s detail-generation exclusion, while Architecture, Risks, Testing, and the split-consolidation acceptance criterion define no create-only boundary.\n- HIGH `[canonical-import-source-path]`: Complete canonical `--from-existing` inputs do not always remain source-authored: `plan_tool/create.py:_prepare_create_plan` distills before `extract_steps_from_canonical`, skips that call only below `DISTILL_SKIP_BELOW_BYTES`, and `_render_distilled_markdown` omits `Steps`; `_converge_create_plan` can also re-propose steps later. Overview, Architecture, Out of scope, Testing, and the canonical-input acceptance criterion promise no outer-boundary rewrite for every complete canonical input.\n- HIGH `[final-eligible-graph]`: Step 2 (`Carry the finalized eligible graph into synthesized Architecture and close BACKLOG #291`) calls the graph final after the sweep, but `plan_tool/create.py:_review_step_change_types` can reclassify or split it afterward, and `_converge_create_plan` later replaces steps while `write_plan` preserves the original Architecture. Overview\u2019s eligibility rule; Architecture\u2019s final-graph and checkpoint claims; the finalization and checkpoint Risks; Testing; and acceptance criterion 2 can therefore describe an older graph as the final one.\n- MEDIUM `[refactor-eligibility-domain]`: Eligibility never defines how `change_type: null`, `scope: deferred`, or `scope: wont_do` affect \u201cevery final code step is `refactor`.\u201d `Step.change_type` is optional, `_parse_steps_json` retains missing or invalid values as `None`, `_review_step_change_types` permits them, and concept review can change scope before synthesis; Overview, Architecture, Testing, and acceptance criterion 1 leave different implementations free to apply or skip the new policy.\n- MEDIUM `[proposal-checkpoint-policy]`: Step 1\u2019s new Stage 3 rule applies only when the proposal call runs: `plan_tool/create.py:propose_steps_from_claude` returns a cached `create-initial-steps` response without running the model or split sweep, and `plan_tool/create.py:_initial_steps_input_hash` excludes prompt-rule versioning. A checkpoint created before this change can therefore resume an inner-mechanic refactor proposal under the new plan with no stated policy for preserving or replacing it.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight]`: DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.\n- MEDIUM `[data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt]`: DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit refactor-plan-altitude` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-aeae417e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Teach Stage 3 and the split sweep to select outer boundaries for eligible refactor plans`) changes `plan_tool/p",
+      "body": "Step 1 (`Teach Stage 3 and the split sweep to select outer boundaries for eligible refactor plans`) changes `plan_tool/prompts/foundational-logic-sweep.md`, but `plan_tool/foundational_logic:render_foundational_logic_prompt`, `plan_tool/detail.py:_render_step_sweep_context`, and `docs/PROMPT_AB_TESTING.md` send that template to split-mode `detail` as well as `create`; detail has no plan eligibility context. This conflicts with `Out of scope`\u2019s detail-generation exclusion, while Architecture, Risks, Testing, and the split-consolidation acceptance criterion define no create-only boundary.",
+      "suggested_action": "define a create-only sweep context for the new rule and pin that split-mode detail prompting remains unchanged.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "sweep-consumer-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9a8e158d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Complete canonical `--from-existing` inputs do not always remain source-authored: `plan_tool/create.py:_prepare_create_p",
+      "body": "Complete canonical `--from-existing` inputs do not always remain source-authored: `plan_tool/create.py:_prepare_create_plan` distills before `extract_steps_from_canonical`, skips that call only below `DISTILL_SKIP_BELOW_BYTES`, and `_render_distilled_markdown` omits `Steps`; `_converge_create_plan` can also re-propose steps later. Overview, Architecture, Out of scope, Testing, and the canonical-input acceptance criterion promise no outer-boundary rewrite for every complete canonical input.",
+      "suggested_action": "recognize complete canonical inputs before distillation and preserve that source decision through convergence, with default-mode small and over-threshold fixtures.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "canonical-import-source-path",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-5946df2f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Carry the finalized eligible graph into synthesized Architecture and close BACKLOG #291`) calls the graph final",
+      "body": "Step 2 (`Carry the finalized eligible graph into synthesized Architecture and close BACKLOG #291`) calls the graph final after the sweep, but `plan_tool/create.py:_review_step_change_types` can reclassify or split it afterward, and `_converge_create_plan` later replaces steps while `write_plan` preserves the original Architecture. Overview\u2019s eligibility rule; Architecture\u2019s final-graph and checkpoint claims; the finalization and checkpoint Risks; Testing; and acceptance criterion 2 can therefore describe an older graph as the final one.",
+      "suggested_action": "define one graph-finalization lifecycle that re-evaluates eligibility and refreshes the Architecture map after every later graph mutation.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "final-eligible-graph",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-bbd13f57",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Eligibility never defines how `change_type: null`, `scope: deferred`, or `scope: wont_do` affect \u201cevery final code step ",
+      "body": "Eligibility never defines how `change_type: null`, `scope: deferred`, or `scope: wont_do` affect \u201cevery final code step is `refactor`.\u201d `Step.change_type` is optional, `_parse_steps_json` retains missing or invalid values as `None`, `_review_step_change_types` permits them, and concept review can change scope before synthesis; Overview, Architecture, Testing, and acceptance criterion 1 leave different implementations free to apply or skip the new policy.",
+      "suggested_action": "define the complete eligibility predicate for unclassified and non-committed steps, with an observable result for each case.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refactor-eligibility-domain",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-7bc25901",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s new Stage 3 rule applies only when the proposal call runs: `plan_tool/create.py:propose_steps_from_claude` retu",
+      "body": "Step 1\u2019s new Stage 3 rule applies only when the proposal call runs: `plan_tool/create.py:propose_steps_from_claude` returns a cached `create-initial-steps` response without running the model or split sweep, and `plan_tool/create.py:_initial_steps_input_hash` excludes prompt-rule versioning. A checkpoint created before this change can therefore resume an inner-mechanic refactor proposal under the new plan with no stated policy for preserving or replacing it.",
+      "suggested_action": "Choose and test the checkpoint policy for proposals created before the outer-boundary rule so resumed creates have one defined decomposition behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "proposal-checkpoint-policy",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-a0c1406f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionPreflight' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-5a8d161e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionAttempt' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 1
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "8c3a8deb8a27d223dd8511b950e1542485eedb77410c7efcef20c1f590fb5b57",
+      "detail_bundle_digest": "ebfc92613c5d0de18b4b3fe1b010a3023ac48e121bb842a6c47e3d5dea30f01e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-split-sweep-select-outer.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/02-carry-finalized-eligible-graph.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

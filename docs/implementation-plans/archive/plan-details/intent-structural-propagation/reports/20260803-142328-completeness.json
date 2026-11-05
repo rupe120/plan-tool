@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "plan_slug": "intent-structural-propagation",
+  "plan_path": "docs/implementation-plans/2-intent-structural-propagation.md",
+  "created_at": "2026-08-03T14:23:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4f7877bcd95b3ecea70bfd20e54306d298f2f3af165d331f5229167a20632a2c",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "754d85b65b6ce058bceb57f417e391986d3649e81d51a810c9a56cc7efc70f02",
+    "docs/implementation-plans/archive/2-intent-scope-fence.md": "c94d7c0e895dc50cf3cf20eaaa30c3af66ce641b2b5483f0ded39a972e4a696a",
+    "plan_tool/detail.py": "3dcd422db665f871e2178ef5f8416819b34815e8d2f97bd95abe5de087447ed4",
+    "plan_tool/prompts/plan-audit.md": "efeec070b779c35875b986f6174bcd12064912cce4017b559a0c567fb459b910",
+    "plan_tool/reground.py": "9c387480fdc358a7076729cb8d2b76d2c842cc5d8d30e2322466ea161572b8b0",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "plan_tool/scope_out.py": "3caa72e59c5c326da52163e348a32876f1789c23ad32157ff0e71e58c1ba7a00",
+    "tests/test_create.py": "c8164bafbda59ce3a29017bab4a34b4edccb30a893ca372e91dee39207170131",
+    "tests/test_detail.py": "270663a9f46828528754173846632d3cd13f1f3374070533a95ae41b04fca778",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7",
+    "tests/test_scope_out.py": "4f8a22bdbf966fd33cf5b8dbc018e79866dfc78b2a3c67a91d7b4a220abb7998"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/intent-structural-propagation/01-make-split-drop-intent-merge-keep-only.md": "f47b3e34e2276a9a384e4e1bed747853fa70e78259312edbc746691b94500b1c",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/02-carry-plan-step-intent-three-forward.md": "3990ad5771ebe3063977abad25834e87ae7a7f4615687d4d52a2cd50d0d5e503",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/03-put-plan-step-intents-conceptual-audit.md": "e836f12ac59c94b39c946ff79388ab3e1fb7efa91d51855f156cae0119dd3baf",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/04-document-four-intent-rules-discharge.md": "c5418240d7275ba9c01a0242c3ae6dd47475225817445d397ae5a48bbbb354a0"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Intent Structural Propagation\n\n`intent-structural-propagation` \u00b7 generated 2026-08-03T14:23:28Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply intent-structural-propagation   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk intent-structural-propagation  # alternative interactive review/apply\n\n- HIGH `[seed-presence-nonvalues]`: Architecture's scope-out / reground row requires \"drop absent / blank / whitespace and collapse newlines before embed (same presence non-values the fence already drops)\", and at HEAD `plan_tool/scope_fence.py:_render_intent_section` omits placeholders via `_is_placeholder_section` after collapse \u2014 but step 2 (`Carry plan and step intent into the three forward-seed renderers`) Approach only drops \"Absent / `\"\"` / whitespace\", In scope item 2 stops at the same shorter list, and Tests never pin `TODO` / `_(TODO)_`. A placeholder would still render as a labeled Intent line, so placeholder-only plans are not unchanged vs today and Prefer absent over false is broken the same way the audit path already forbids.\n  - Fix: make step 2's seed omit path (and In scope / step 4's seed rule row / seed tests) drop the same fence presence non-values after collapse, including placeholders, so those seeds stay label-free\n- MEDIUM `[merge-placeholder-clear]`: Architecture's Prefer absent over false invariant says every survivor ends with an intent true of it or none, and Reuse / Out of scope treat `TODO` / `_(TODO)_` as presence non-values \u2014 but step 1 (`Make split drop intent and merge keep it only when every member agrees`) merge contract clears only `None` / empty / whitespace and keeps a unanimous non-blank string, so every member `TODO` survives as a kept intent. That stamps a non-value as an agreed why and writes an `intent:` key `write_plan` would omit for `None`.\n  - Fix: treat placeholders as absent in the merge unanimous check (same usable/presence set as `is_usable_intent` / the fence), so unanimous placeholders clear to `None`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply intent-structural-propagation` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Intent Structural Propagation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[seed-presence-nonvalues]`: Architecture's scope-out / reground row requires \"drop absent / blank / whitespace and collapse newlines before embed (same presence non-values the fence already drops)\", and at HEAD `plan_tool/scope_fence.py:_render_intent_section` omits placeholders via `_is_placeholder_section` after collapse \u2014 but step 2 (`Carry plan and step intent into the three forward-seed renderers`) Approach only drops \"Absent / `\"\"` / whitespace\", In scope item 2 stops at the same shorter list, and Tests never pin `TODO` / `_(TODO)_`. A placeholder would still render as a labeled Intent line, so placeholder-only plans are not unchanged vs today and Prefer absent over false is broken the same way the audit path already forbids.\n- MEDIUM `[merge-placeholder-clear]`: Architecture's Prefer absent over false invariant says every survivor ends with an intent true of it or none, and Reuse / Out of scope treat `TODO` / `_(TODO)_` as presence non-values \u2014 but step 1 (`Make split drop intent and merge keep it only when every member agrees`) merge contract clears only `None` / empty / whitespace and keeps a unanimous non-blank string, so every member `TODO` survives as a kept intent. That stamps a non-value as an agreed why and writes an `intent:` key `write_plan` would omit for `None`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk intent-structural-propagation` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0dc5211c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture's scope-out / reground row requires \"drop absent / blank / whitespace and collapse newlines before embed (s",
+      "body": "Architecture's scope-out / reground row requires \"drop absent / blank / whitespace and collapse newlines before embed (same presence non-values the fence already drops)\", and at HEAD `plan_tool/scope_fence.py:_render_intent_section` omits placeholders via `_is_placeholder_section` after collapse \u2014 but step 2 (`Carry plan and step intent into the three forward-seed renderers`) Approach only drops \"Absent / `\"\"` / whitespace\", In scope item 2 stops at the same shorter list, and Tests never pin `TODO` / `_(TODO)_`. A placeholder would still render as a labeled Intent line, so placeholder-only plans are not unchanged vs today and Prefer absent over false is broken the same way the audit path already forbids.",
+      "suggested_action": "make step 2's seed omit path (and In scope / step 4's seed rule row / seed tests) drop the same fence presence non-values after collapse, including placeholders, so those seeds stay label-free",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-presence-nonvalues",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b5c79d50",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture's Prefer absent over false invariant says every survivor ends with an intent true of it or none, and Reuse ",
+      "body": "Architecture's Prefer absent over false invariant says every survivor ends with an intent true of it or none, and Reuse / Out of scope treat `TODO` / `_(TODO)_` as presence non-values \u2014 but step 1 (`Make split drop intent and merge keep it only when every member agrees`) merge contract clears only `None` / empty / whitespace and keeps a unanimous non-blank string, so every member `TODO` survives as a kept intent. That stamps a non-value as an agreed why and writes an `intent:` key `write_plan` would omit for `None`.",
+      "suggested_action": "treat placeholders as absent in the merge unanimous check (same usable/presence set as `is_usable_intent` / the fence), so unanimous placeholders clear to `None`",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "merge-placeholder-clear",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

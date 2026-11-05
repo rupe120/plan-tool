@@ -1,0 +1,117 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-walk-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-walk-annotation-entry.md",
+  "created_at": "2026-08-28T14:53:59Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c25d184c56aee2e8e46363d9237ad73b28168a9c59dabd57b2756a1ec6a489da",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "76f1cd662a25ccb44fa8a114c221ad37300493ef372b33fe75b42024ceac7507",
+    "plan_tool/cli/review_cmd.py": "6dc8ae12beae2b65ab6ffb54f7f14ba9f2a7b7a75c0d7065a586631034a6be1a",
+    "tests/test_review_walk.py": "e26d2fc98e3ca625c37027e4d2fa09704ea1b5c49ec114b3a1bc63c34478de2f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/01-let-standalone-saved-review-walks.md": "e3c46d6444ba77dd511fe35a6ade7a30b3ce76d172329fe2f0d8142f85a993c8",
+    "docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/02-document-both-caller-specific.md": "89a491412d5ab270772a286bc7853acf8db4ef7027845cf591a783e611d3f196"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Walk Annotation Entry\n\n`headless-review-walk-annotation-entry` \u00b7 generated 2026-08-28T14:53:58Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c25d184c56aee2e8e46363d9237ad73b28168a9c59dabd57b2756a1ec6a489da`\n- **Detail bundle digest:** `940a02e4bccda102475be44b01995ae56d21f8568ad1758199a0f7e6d6317206`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.00\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply headless-review-walk-annotation-entry   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk headless-review-walk-annotation-entry  # alternative interactive review/apply\n\n- MEDIUM `[remote-provider-readiness]` [confidence: limited]: Step 1 (`Let standalone saved-review walks accept remote skip or quit...`) defines the remote entry in Overview, Architecture, Risks, Testing, and the first Acceptance criterion as exact `PLAN_TOOL_HUMAN_IO=remote` plus non-TTY stdin, but omits the required existing remote-provider directory. `plan_tool.human_io.make_human_input_provider` and `HUMAN_IO_FORMAT.md: Configure a provider` require a usable `PLAN_TOOL_HUMAN_IO_DIR`; without it, the command errors instead of starting the promised restricted walk.\n  - Fix: State the valid existing provider configuration as a prerequisite and preserve its existing configuration-error behavior.\n- MEDIUM `[remote-write-boundary]` [confidence: limited]: Step 1 promises to \u201climit remote writes to the existing skip sidecar rewrite,\u201d while Architecture requires reuse of the \u201cestablished filesystem provider\u201d; `plan_tool.human_io._make_remote_provider` creates a `<request_id>.request.json` record before it can receive `review-walk.annotation`. The plan never separates those required protocol records from authoritative plan/report mutations, so its write boundary is contradictory.\n  - Fix: Define request and resolution records as permitted provider traffic while limiting authoritative review-state mutation to the existing skip annotation.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f4c0d27e]` [confidence: limited]: The plan's `## Acceptance criteria` names `non-tty`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c94ffe1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bba06ee0]` [confidence: limited]: The plan's `## Acceptance criteria` names `walkresponsepolicy.skip_or_quit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply headless-review-walk-annotation-entry` \u2014 apply the 2 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Walk Annotation Entry\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c25d184c56aee2e8e46363d9237ad73b28168a9c59dabd57b2756a1ec6a489da`\n- **Detail bundle digest:** `940a02e4bccda102475be44b01995ae56d21f8568ad1758199a0f7e6d6317206`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[remote-provider-readiness]` [confidence: limited]: Step 1 (`Let standalone saved-review walks accept remote skip or quit...`) defines the remote entry in Overview, Architecture, Risks, Testing, and the first Acceptance criterion as exact `PLAN_TOOL_HUMAN_IO=remote` plus non-TTY stdin, but omits the required existing remote-provider directory. `plan_tool.human_io.make_human_input_provider` and `HUMAN_IO_FORMAT.md: Configure a provider` require a usable `PLAN_TOOL_HUMAN_IO_DIR`; without it, the command errors instead of starting the promised restricted walk.\n- MEDIUM `[remote-write-boundary]` [confidence: limited]: Step 1 promises to \u201climit remote writes to the existing skip sidecar rewrite,\u201d while Architecture requires reuse of the \u201cestablished filesystem provider\u201d; `plan_tool.human_io._make_remote_provider` creates a `<request_id>.request.json` record before it can receive `review-walk.annotation`. The plan never separates those required protocol records from authoritative plan/report mutations, so its write boundary is contradictory.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `non-tty`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walkresponsepolicy.skip_or_quit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply headless-review-walk-annotation-entry` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4b5c4680",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Let standalone saved-review walks accept remote skip or quit...`) defines the remote entry in Overview, Archite",
+      "body": "Step 1 (`Let standalone saved-review walks accept remote skip or quit...`) defines the remote entry in Overview, Architecture, Risks, Testing, and the first Acceptance criterion as exact `PLAN_TOOL_HUMAN_IO=remote` plus non-TTY stdin, but omits the required existing remote-provider directory. `plan_tool.human_io.make_human_input_provider` and `HUMAN_IO_FORMAT.md: Configure a provider` require a usable `PLAN_TOOL_HUMAN_IO_DIR`; without it, the command errors instead of starting the promised restricted walk.",
+      "suggested_action": "State the valid existing provider configuration as a prerequisite and preserve its existing configuration-error behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-provider-readiness",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-d9064c35",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 promises to \u201climit remote writes to the existing skip sidecar rewrite,\u201d while Architecture requires reuse of the ",
+      "body": "Step 1 promises to \u201climit remote writes to the existing skip sidecar rewrite,\u201d while Architecture requires reuse of the \u201cestablished filesystem provider\u201d; `plan_tool.human_io._make_remote_provider` creates a `<request_id>.request.json` record before it can receive `review-walk.annotation`. The plan never separates those required protocol records from authoritative plan/report mutations, so its write boundary is contradictory.",
+      "suggested_action": "Define request and resolution records as permitted provider traffic while limiting authoritative review-state mutation to the existing skip annotation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-write-boundary",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c25d184c56aee2e8e46363d9237ad73b28168a9c59dabd57b2756a1ec6a489da",
+      "detail_bundle_digest": "940a02e4bccda102475be44b01995ae56d21f8568ad1758199a0f7e6d6317206",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/01-let-standalone-saved-review-walks.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-walk-annotation-entry/02-document-both-caller-specific.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "2559e9fcd9a0f91cf92a8024fe0da73af648246b12bf226cb38d002f0408616c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.0,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T20:39:07Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fa98c7da2033d99da73603772a37010eeeb7bf72e58db5050f1a44e3694ac199",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "4c63f2e8a7190e6b357b65ae2dbee1b42998d61b34d978d69ff066643d7c92d0",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "9d242b54ccf5e899ad9212e5e03ad5765aa4144d4de097d634b5bdad492dbaaa",
+    "plan_tool/roadmap_gates.py": "65ee870bd27cc6b15e7e5322f46109e54be74e5acc3bdc4736678943c92a8f44",
+    "tests/cli/test_roadmap_cmd.py": "60c2161907f2ae9a8675b326eb42084bc39d882164a1877fbc92abdc857a2a1a",
+    "tests/test_roadmap.py": "712613c6992c4f6f9d73d42da4830de0c14f31ce293560efc2d0597a457b4c07",
+    "tests/test_roadmap_artifacts.py": "1654dc0ac0956d3c1cc864b63bbb40331a657a6269b2f39b6048906d0d83c110",
+    "tests/test_roadmap_format.py": "176be1b1032a9c923b3b14ff36e576b93ca941155922f0012f9620c41476cce8",
+    "tests/test_roadmap_gates.py": "7caf2dbf0110551f07d8f6d5e213d2d26eebd9620afa733c1b2af487e63a572b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md": "419fe5aca0486963e0fe1d5248c51a60c911f140eac00810010812168b447abe",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md": "7901a618c619d22d29a3d5b3f3cd043911911e3120d880b5a8fa64715574661e",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md": "85563d123cec0831bf8f96f8235afadb96a34ee257710cb4f16d1bcff4613b1f",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md": "37baa156f6b29d1d0d9510c183c6521728129459950685d9ff9af62783602ff8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Hosting And Stores\n\n`roadmap-hosting-and-stores` \u00b7 generated 2026-08-18T20:39:06Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ecf0f3540b1208d6c090f562168ac55fd5daae61400f2ddb8d4ea616a86668cb`\n- **Detail bundle digest:** `b2a3dfd4cc4627804a21d90b6ec47633ec3bdf1938fe478c6f8013570ad66d6c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (-2 vs. first audit)\n- **Detail-bundle size:** 0 bytes (-187198 vs. first audit)\n- **Keystone fan-out:** 0.67\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-hosting-and-stores   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[in-process-store-ownership]`: Overview, Architecture\u2019s \u201cStores are definitions\u201d and \u201cParsing preserves recoverable defects,\u201d acceptance criterion 5, and steps 2 and 4 all make `in-process` the no-durable-store answer and call it component-local. Yet one global `StoreRow` can be referenced by several `ComponentRow.store_ids`, while step 4 explicitly avoids comparing components\u2019 store ids and tests only different-store references; a shared `in-process` id can therefore mean either one shared resource or separate local state.\n  - Fix: Specify whether an `in-process` definition may be shared across components, then align its wording, reference rules, prompt/example, and tests to that one meaning.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[gate-valid-cli-fixtures]`: Plan Testing requires CLI fixtures to retain valid blocks, but step 1\u2019s Tests keeps `tests/cli/test_roadmap_cmd.py` valid without `hosting` until step 3 and step 2 does the same for `stores` until step 4. Neither gate-owning step names that file, whose `_e2e_constraints_text` and `_e2e_components_text` supply the real-orchestrator `TestOverwriteAdviceIsPrintedExactlyOnce` and `TestFeedbackSummaryOverTheRealOrchestrator` runs; the new required gates will reject those replies.\n  - Fix: Assign conversion of the real CLI fixture artifacts to steps 3 and 4 and prove the orchestrator path still clears both new gate sets.\n  - Address: `plan-tool completeness-apply roadmap-hosting-and-stores --anchor gate-valid-cli-fixtures`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-c79c7d79]`: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-760a3674]`: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5c8e4247]`: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1ee6638e]`: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ce143fe6]`: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-hosting-and-stores` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Hosting And Stores\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ecf0f3540b1208d6c090f562168ac55fd5daae61400f2ddb8d4ea616a86668cb`\n- **Detail bundle digest:** `b2a3dfd4cc4627804a21d90b6ec47633ec3bdf1938fe478c6f8013570ad66d6c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[in-process-store-ownership]`: Overview, Architecture\u2019s \u201cStores are definitions\u201d and \u201cParsing preserves recoverable defects,\u201d acceptance criterion 5, and steps 2 and 4 all make `in-process` the no-durable-store answer and call it component-local. Yet one global `StoreRow` can be referenced by several `ComponentRow.store_ids`, while step 4 explicitly avoids comparing components\u2019 store ids and tests only different-store references; a shared `in-process` id can therefore mean either one shared resource or separate local state.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[gate-valid-cli-fixtures]`: Plan Testing requires CLI fixtures to retain valid blocks, but step 1\u2019s Tests keeps `tests/cli/test_roadmap_cmd.py` valid without `hosting` until step 3 and step 2 does the same for `stores` until step 4. Neither gate-owning step names that file, whose `_e2e_constraints_text` and `_e2e_components_text` supply the real-orchestrator `TestOverwriteAdviceIsPrintedExactlyOnce` and `TestFeedbackSummaryOverTheRealOrchestrator` runs; the new required gates will reject those replies.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-hosting-and-stores` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply roadmap-hosting-and-stores` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9acc0a85",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Overview, Architecture\u2019s \u201cStores are definitions\u201d and \u201cParsing preserves recoverable defects,\u201d acceptance criterion 5, a",
+      "body": "Overview, Architecture\u2019s \u201cStores are definitions\u201d and \u201cParsing preserves recoverable defects,\u201d acceptance criterion 5, and steps 2 and 4 all make `in-process` the no-durable-store answer and call it component-local. Yet one global `StoreRow` can be referenced by several `ComponentRow.store_ids`, while step 4 explicitly avoids comparing components\u2019 store ids and tests only different-store references; a shared `in-process` id can therefore mean either one shared resource or separate local state.",
+      "suggested_action": "Specify whether an `in-process` definition may be shared across components, then align its wording, reference rules, prompt/example, and tests to that one meaning.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "in-process-store-ownership",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-11a4cafe",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Plan Testing requires CLI fixtures to retain valid blocks, but step 1\u2019s Tests keeps `tests/cli/test_roadmap_cmd.py` vali",
+      "body": "Plan Testing requires CLI fixtures to retain valid blocks, but step 1\u2019s Tests keeps `tests/cli/test_roadmap_cmd.py` valid without `hosting` until step 3 and step 2 does the same for `stores` until step 4. Neither gate-owning step names that file, whose `_e2e_constraints_text` and `_e2e_components_text` supply the real-orchestrator `TestOverwriteAdviceIsPrintedExactlyOnce` and `TestFeedbackSummaryOverTheRealOrchestrator` runs; the new required gates will reject those replies.",
+      "suggested_action": "Assign conversion of the real CLI fixture artifacts to steps 3 and 4 and prove the orchestrator path still clears both new gate sets.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "gate-valid-cli-fixtures",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "ecf0f3540b1208d6c090f562168ac55fd5daae61400f2ddb8d4ea616a86668cb",
+      "detail_bundle_digest": "b2a3dfd4cc4627804a21d90b6ec47633ec3bdf1938fe478c6f8013570ad66d6c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+          "state": "present",
+          "digest": "419fe5aca0486963e0fe1d5248c51a60c911f140eac00810010812168b447abe"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+          "state": "present",
+          "digest": "7901a618c619d22d29a3d5b3f3cd043911911e3120d880b5a8fa64715574661e"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+          "state": "present",
+          "digest": "85563d123cec0831bf8f96f8235afadb96a34ee257710cb4f16d1bcff4613b1f"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+          "state": "present",
+          "digest": "37baa156f6b29d1d0d9510c183c6521728129459950685d9ff9af62783602ff8"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.6666666666666666,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

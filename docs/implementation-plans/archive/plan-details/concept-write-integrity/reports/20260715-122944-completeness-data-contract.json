@@ -1,0 +1,61 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-251130d0": {
+      "code_anchor": null,
+      "field_or_key": "review_state",
+      "location": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md",
+      "reason": "`ConceptNode.review_state` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-78493da0": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-8bc66a7e": {
+      "code_anchor": "concept_sync.py:_fingerprint",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-write-integrity/01-teach-synchronize-concepts-handle.md",
+      "reason": "code anchor path `concept_sync.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-85f5f65e": {
+      "code_anchor": null,
+      "field_or_key": "source_metadata",
+      "location": "docs/implementation-plans/plan-details/concept-write-integrity/04-route-detail-deferral-persistence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-write-integrity/04-route-detail-deferral-persistence.md",
+      "reason": "`ConceptNode.source_metadata` lacks a matching HEAD code-location anchor",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-2f8fcc18": {
+      "code_anchor": "tests/test_concept_sync.py:test_no_concept_sidecar_writer_outside_concept_sync",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-write-integrity/08-document-single-writer-invariant-data.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-write-integrity/08-document-single-writer-invariant-data.md",
+      "reason": "code anchor `tests/test_concept_sync.py:test_no_concept_sidecar_writer_outside_concept_sync` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260715-122944-completeness"
+}

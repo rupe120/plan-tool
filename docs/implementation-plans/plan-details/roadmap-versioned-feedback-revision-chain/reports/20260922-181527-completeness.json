@@ -1,0 +1,210 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-versioned-feedback-revision-chain",
+  "plan_path": "docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md",
+  "created_at": "2026-09-22T18:15:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "68dc9e05455b5d4491062aa45b4646fbe23a34aa55f45d2193b1e825998d7477",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "356f0b82c62fd7ba4f09619193be1bdef8354b8bec2ccf1cb5474bb60f46265d",
+    "CLAUDE.md": "ebc8114f410cfd54bac40a3dc35bb43bc30e709c9b1a7144be83bbff3f14dc58",
+    "DATA_CONTRACT.md": "dd7ba201b043426021810e826d3d5ef8632f48b7e265e35c7e9e8929242ed69c",
+    "README.md": "076cbc041dd67a9e25411bbf817e1f2a41601ea894f30194bebb7df005df44d5",
+    "ROADMAP_FORMAT.md": "b712fe4e44528a283d1d3956c215646bcf9af65fe040058fecd67b8d82f60a6c",
+    "docs/ARCHITECTURE.md": "114f3eb320dff4e3bd97c6f8e146fe216f4912952ba2a27b713d9b352554dcba",
+    "docs/cli/roadmap.md": "4bb0f10dafb0d94e6710731818dfbc1701ae19f0d57f517f87c6defa642f98dd",
+    "docs/how-to/roadmap.md": "1c0e8f56d433cf566711c1e0f1e26f2b0701cb75f58a790f7cfef62f5719d814",
+    "plan_tool/cli/roadmap_cmd.py": "6e5f4f9636728c5cc810b917611d384c46069d09d62bfc737ab9820bf466cf83",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "36d13261879444c0320309f239119a2e4be617284de6918be37f7fefa6e72fb9",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "7723615e66084d4809a4611da27f738042823856bca99118633a4e982e5b3431",
+    "plan_tool/roadmap.py": "81fd59c840a4da31bc82a6c5a115e13a823ceaaddda1e691ce339f0b88026adc",
+    "plan_tool/roadmap_candidate.py": "6c2dba1936658c1d319ad8108cda1ddd8b587c48c7f2acfae719de3751825ab2",
+    "plan_tool/roadmap_candidate_context.py": "38449c043aff59e7e08f2fd752ec6d6a02f23be8ae39e2f28f3f2e05629d0f25",
+    "plan_tool/roadmap_candidate_review.py": "cbf867758e9b253efa6c751e4edc82875475f7f97b3ecf7626eecec7340a3167",
+    "plan_tool/roadmap_candidate_run.py": "873b73dc4da77a9ad6453d82233afafb6f67470233038a201fb6f6935375fdeb",
+    "plan_tool/roadmap_decision_settlement_enrolled.py": "f3b2bf7173eae5f25aa5c9cc9f1ff4896931a1a4bebef486320545ba7ce78a98",
+    "plan_tool/roadmap_version_promotion.py": "8863c8286d5180685316088ac738b74c2e0e5669cbec16e4e785afced00be6ac",
+    "tests/cli/test_roadmap_cmd.py": "ae7a39073016477f8a92b4e77de6b1e48ccbeaa18bd29811e592412a4cf931e8",
+    "tests/test_roadmap.py": "1865726d5e650276f81a32461bffd0b9257251826a3fe0e2b710c62031937072",
+    "tests/test_roadmap_candidate.py": "a2c73d62354e816d4071367618b21ec54462c45fbad18bd42d8d162889bc51d1",
+    "tests/test_roadmap_candidate_context.py": "245ebe9cca7479886bb9305284fdb4c69b197c91c80e0a814a41a9ed5f91be7c",
+    "tests/test_roadmap_candidate_review.py": "729bf2579f890682f186a8de9a45c38aa07569de3bcfc4398be38b4e8a2e1efa",
+    "tests/test_roadmap_candidate_run.py": "972d58645deef98a0b9bf3a0f25fe124634bf656d5ca2798dbc26e06f53a83b8",
+    "tests/test_roadmap_decision_settlement_enrolled.py": "bca029328c0fcbe0bb9bd52f43a7577fafa47db918f7c7eb1af8f78119d87563",
+    "tests/test_roadmap_format.py": "460bff6ecd455bb0911a7a035ea249c8cfab4e6327dc9908c985657249b8ea37",
+    "tests/test_roadmap_version_promotion.py": "5e69979ddec359ac0ba457d052a0033a118b6d20accde1a7202f2d84b7472ba5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-define-canonical-feedback-ledger-target.md": "e69f71217858ee1adabe6f9a22da42d81bd68ca991f4ca642ace208243b9a3e3",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-make-root-enrollment-store-feedback.md": "1f41fe001e78a4b693a599f988fa057eb06475e3a5ccd2ed44cab420b3ed2653",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-build-one-ordered-accepted-head-batch.md": "c7161668cec34b10dc3acf629250f1f59086b0d153a63cd315123dff79d708e7",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-build-feedback-free-successor-artifacts.md": "680d42d61ca68c7deaf532af679f2cadfcff8fd8c5d1a53ff4c47df1648f49ae",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-store-candidate-batch-responses.md": "0598022617672987b58d6e6c50be9a58cd6b1847dca0b940e14d42e8e3e284e5",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-idempotent-legacy-import-guarded.md": "8feb1b93faaa843f586cfd79f7fe5d2e4f9549b4fbc1b877535669ecc33f5d8b",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-read-enrolled-decision-settlement.md": "d506c39f695237744afce61360be4db43246619a37e390dffb3f34b6788bf914",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-bind-candidate-questions-answers.md": "4ddc2fee2a7260cb7328742424c437efa723cbc5629635255361dcf0e92ce5cd",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/09-preserve-exact-seal-accepted-head.md": "c33508cafdb254354acd8ba398c8ecc531f6ecdfe7f6ed9177815736426a2f89",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md": "5850fbe6d195f946e1f29d95442e37f8040758477bf7abf6ae988f239575adcf",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md": "d3f294b63d21d080c21d89ce123f4056d399ad2ee0ed29efe9ec126d67907264"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Versioned Feedback Revision Chain\n\n`roadmap-versioned-feedback-revision-chain` \u00b7 generated 2026-09-22T18:15:27Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-versioned-feedback-revision-chain  # optional interactive review of the saved findings\n\n- HIGH `[proposal-staleness]` [confidence: limited]: The stale rule in Architecture and Acceptance criteria marks every newly stored, unpromoted candidate proposal stale immediately: its candidate revision cannot be the accepted head until step 9 (`Preserve exact-seal accepted-head replacement...`) promotes it. `plan_tool/roadmap_version_promotion.py:promote_review_seal` also requires the accepted head to remain the candidate\u2019s predecessor before it can promote. This makes step 5\u2019s awaiting-review state unable to distinguish a current reviewable proposal from one invalidated by a later head change.\n\n```text\nArchitecture: \u201can awaiting-review item is stale when its bound candidate revision is no longer the current accepted head\u201d\n\nAcceptance criteria: \u201cAn unpromoted or rejected proposal remains reviewable in the ledger and is deterministically stale when its bound revision is not the accepted head.\u201d\n```\n  - Fix: Define stale proposal status against whether the candidate remains promotable from its bound predecessor, and reconcile the ledger lifecycle, review, and promotion rules to that definition.\n- HIGH `[candidate-generation-release]` [confidence: limited]: The one-candidate-per-head rule promises that later ledger edits \u201cform a later batch only after the current generation is promoted or explicitly resolved,\u201d but steps 5\u201310 never define who resolves an unpromoted or review-rejected generation, whether rejection performs that resolution, or how it releases the admission without changing its recorded proposals. Current `plan_tool/roadmap_candidate_run.py:run_initial_candidate_proposal` keeps returning the stored candidate while its admission records a candidate id, so the existing lifecycle supplies no release behavior. The plan therefore leaves reviewers unable to determine when a rejected candidate permits a later batch.\n\n```text\nArchitecture: \u201cOne unpromoted candidate generation may exist per accepted head, but reviewer ledger edits remain allowed; they form a later batch only after the current generation is promoted or explicitly resolved.\u201d\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Define how a non-promoted candidate finishes so later eligible feedback can form a new batch.\n  - Fix: Specify the owner, result, and evidence of resolving a non-promoted candidate, including how a review rejection releases the next batch while preserving the prior candidate\u2019s review record and ledger proposals.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-versioned-feedback-revision-chain` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Versioned Feedback Revision Chain\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 11 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[proposal-staleness]` [confidence: limited]: The stale rule in Architecture and Acceptance criteria marks every newly stored, unpromoted candidate proposal stale immediately: its candidate revision cannot be the accepted head until step 9 (`Preserve exact-seal accepted-head replacement...`) promotes it. `plan_tool/roadmap_version_promotion.py:promote_review_seal` also requires the accepted head to remain the candidate\u2019s predecessor before it can promote. This makes step 5\u2019s awaiting-review state unable to distinguish a current reviewable proposal from one invalidated by a later head change.\n\n```text\nArchitecture: \u201can awaiting-review item is stale when its bound candidate revision is no longer the current accepted head\u201d\n\nAcceptance criteria: \u201cAn unpromoted or rejected proposal remains reviewable in the ledger and is deterministically stale when its bound revision is not the accepted head.\u201d\n```\n- HIGH `[candidate-generation-release]` [confidence: limited]: The one-candidate-per-head rule promises that later ledger edits \u201cform a later batch only after the current generation is promoted or explicitly resolved,\u201d but steps 5\u201310 never define who resolves an unpromoted or review-rejected generation, whether rejection performs that resolution, or how it releases the admission without changing its recorded proposals. Current `plan_tool/roadmap_candidate_run.py:run_initial_candidate_proposal` keeps returning the stored candidate while its admission records a candidate id, so the existing lifecycle supplies no release behavior. The plan therefore leaves reviewers unable to determine when a rejected candidate permits a later batch.\n\n```text\nArchitecture: \u201cOne unpromoted candidate generation may exist per accepted head, but reviewer ledger edits remain allowed; they form a later batch only after the current generation is promoted or explicitly resolved.\u201d\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Define how a non-promoted candidate finishes so later eligible feedback can form a new batch.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-55f6fecb",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The stale rule in Architecture and Acceptance criteria marks every newly stored, unpromoted candidate proposal stale imm",
+      "body": "The stale rule in Architecture and Acceptance criteria marks every newly stored, unpromoted candidate proposal stale immediately: its candidate revision cannot be the accepted head until step 9 (`Preserve exact-seal accepted-head replacement...`) promotes it. `plan_tool/roadmap_version_promotion.py:promote_review_seal` also requires the accepted head to remain the candidate\u2019s predecessor before it can promote. This makes step 5\u2019s awaiting-review state unable to distinguish a current reviewable proposal from one invalidated by a later head change.\n\n```text\nArchitecture: \u201can awaiting-review item is stale when its bound candidate revision is no longer the current accepted head\u201d\n\nAcceptance criteria: \u201cAn unpromoted or rejected proposal remains reviewable in the ledger and is deterministically stale when its bound revision is not the accepted head.\u201d\n```",
+      "suggested_action": "Define stale proposal status against whether the candidate remains promotable from its bound predecessor, and reconcile the ledger lifecycle, review, and promotion rules to that definition.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "proposal-staleness",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0bef9c8a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The one-candidate-per-head rule promises that later ledger edits \u201cform a later batch only after the current generation i",
+      "body": "The one-candidate-per-head rule promises that later ledger edits \u201cform a later batch only after the current generation is promoted or explicitly resolved,\u201d but steps 5\u201310 never define who resolves an unpromoted or review-rejected generation, whether rejection performs that resolution, or how it releases the admission without changing its recorded proposals. Current `plan_tool/roadmap_candidate_run.py:run_initial_candidate_proposal` keeps returning the stored candidate while its admission records a candidate id, so the existing lifecycle supplies no release behavior. The plan therefore leaves reviewers unable to determine when a rejected candidate permits a later batch.\n\n```text\nArchitecture: \u201cOne unpromoted candidate generation may exist per accepted head, but reviewer ledger edits remain allowed; they form a later batch only after the current generation is promoted or explicitly resolved.\u201d\n```",
+      "suggested_action": "Specify the owner, result, and evidence of resolving a non-promoted candidate, including how a review rejection releases the next batch while preserving the prior candidate\u2019s review record and ledger proposals.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "candidate-generation-release",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "Define how a non-promoted candidate finishes so later eligible feedback can form a new batch."
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "68dc9e05455b5d4491062aa45b4646fbe23a34aa55f45d2193b1e825998d7477",
+    "detail_bundle_digest": "69fd5cce653c7dc9203ab2257284de40a26640e0c36ebbfaeaa787ae5b09649c",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-define-canonical-feedback-ledger-target.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-make-root-enrollment-store-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-build-one-ordered-accepted-head-batch.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-build-feedback-free-successor-artifacts.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-store-candidate-batch-responses.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-idempotent-legacy-import-guarded.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-read-enrolled-decision-settlement.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-bind-candidate-questions-answers.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 9,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/09-preserve-exact-seal-accepted-head.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 10,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 11,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "815950f7539d3f36296039dacd1780a7933c14559b190d835ba0284ecbeb7168",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

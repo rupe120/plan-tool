@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step3-data-contract-c693d576": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/03-tighten-detail-envelope-deferral.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/03-tighten-detail-envelope-deferral.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-eed42648": {
+      "code_anchor": "plan_tool/checkpoint.py:Checkpoint.payload",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/04-remove-sidecar-dependent-markdown.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/04-remove-sidecar-dependent-markdown.md",
+      "reason": "code anchor `plan_tool/checkpoint.py:Checkpoint.payload` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-0da40e03": {
+      "code_anchor": "plan_tool/detail.py:DetailResult.written",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/05-make-detail-replacement-restore.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/05-make-detail-replacement-restore.md",
+      "reason": "code anchor `plan_tool/detail.py:DetailResult.written` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-295890ac": {
+      "code_anchor": null,
+      "field_or_key": "source_metadata",
+      "location": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/06-bound-deduplicate-include-triggered.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/concept-remediation-2-authoring-boundary-hardening/06-bound-deduplicate-include-triggered.md",
+      "reason": "`ConceptNode.source_metadata` lacks a matching HEAD code-location anchor",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260713-154637-completeness"
+}

@@ -1,0 +1,97 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T04:00:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "171324a03dfbd010cfcfb00b2304a901d4f54837c746f26162633058243a2caf",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review.py": "7d0ee59cba958c291f5e933ca6557a7f9fba9b4c9b0d077c8273f274a1870d55",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md": "c531ec678d159b940194054065e5ce9ba92bf24f22cb8cfcf60a0f531a686432",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Annotation Entry\n\n`headless-review-annotation-entry` \u00b7 generated 2026-08-28T04:00:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[excluded-finding-visibility]` [confidence: limited]: Step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) lists separate fresh-promptable and INFO-only tests, while its only mixed-findings test covers reuse. Plan `## Architecture`, `## Risks`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Implementation`, require a fresh mixed result to retain excluded finding detail and suggested actions; `plan_tool.review:assemble_report` currently hides that detail whenever `walk_will_run=True`, so an implementation can pass the listed fresh tests yet hide default-hidden INFO as soon as another finding starts the walk.\n  - Fix: add focused fresh hidden-only and mixed-result coverage that proves excluded finding detail and suggested actions remain visible while a promptable finding opens the restricted walk.\n  - Address: `plan-tool completeness-apply headless-review-annotation-entry --anchor excluded-finding-visibility`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-f3cb7034]` [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e831b2b0]` [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e4d4701a]` [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4b21ec2e]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-00da194d]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-24744143]` [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit headless-review-annotation-entry` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Annotation Entry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[excluded-finding-visibility]` [confidence: limited]: Step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) lists separate fresh-promptable and INFO-only tests, while its only mixed-findings test covers reuse. Plan `## Architecture`, `## Risks`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Implementation`, require a fresh mixed result to retain excluded finding detail and suggested actions; `plan_tool.review:assemble_report` currently hides that detail whenever `walk_will_run=True`, so an implementation can pass the listed fresh tests yet hide default-hidden INFO as soon as another finding starts the walk.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_render_refresh`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_review_walk_environment_allows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `assemble_report`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.annotation`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `review-walk.feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply headless-review-annotation-entry` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-0069d03f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable fin",
+      "body": "Step 2 (`Let explicit remote non-TTY cmd_review walk only ordinary fresh or eligible saved reviews with a promptable finding while keeping excluded findings visible`) lists separate fresh-promptable and INFO-only tests, while its only mixed-findings test covers reuse. Plan `## Architecture`, `## Risks`, `## Testing`, and `## Acceptance criteria`, plus step 2 `## Implementation`, require a fresh mixed result to retain excluded finding detail and suggested actions; `plan_tool.review:assemble_report` currently hides that detail whenever `walk_will_run=True`, so an implementation can pass the listed fresh tests yet hide default-hidden INFO as soon as another finding starts the walk.",
+      "suggested_action": "add focused fresh hidden-only and mixed-result coverage that proves excluded finding detail and suggested actions remain visible while a promptable finding opens the restricted walk.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "excluded-finding-visibility",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "410d5821fa5c9c3b73c2c506a75942ca04b4f113cded3c5aa0195e726ab05693",
+    "detail_bundle_digest": "928a33af77c9ec19502e5ac546ae15378fe8fe6b4e8ff9beb996235d301688fc",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/01-remote-only-closed-skip-quit-response.md",
+        "state": "present",
+        "digest": "6959c323c83aff281e48c1213e2485530545b89b9bc0219de29939f0a42f0e10"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md",
+        "state": "present",
+        "digest": "c531ec678d159b940194054065e5ce9ba92bf24f22cb8cfcf60a0f531a686432"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/03-document-restricted-remote-review.md",
+        "state": "present",
+        "digest": "2ed7b8a0d7d306461185890e987eaff83d6b6adf49e632a6d3e8bf6343943302"
+      }
+    ],
+    "source_seed_digest": "748ca5238e5348c160dc2f7467b284e02d4fff19040bdc2016294b6e841ca41c",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

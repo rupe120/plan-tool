@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-6fa1e395": {
+      "code_anchor": "plan_tool/roadmap.py:RoadmapStage.artifact_key",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md",
+      "reason": "code anchor `plan_tool/roadmap.py:RoadmapStage.artifact_key` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-8d952725": {
+      "code_anchor": "plan_tool/roadmap.py:RoadmapStage.parse",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md",
+      "reason": "code anchor `plan_tool/roadmap.py:RoadmapStage.parse` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-5476d0d7": {
+      "code_anchor": "plan_tool/roadmap.py:RoadmapStage.artifact_key",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md",
+      "reason": "code anchor `plan_tool/roadmap.py:RoadmapStage.artifact_key` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260817-163937-completeness"
+}

@@ -1,0 +1,152 @@
+{
+  "version": 4,
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "plan_path": "docs/implementation-plans/2-quality-bench-01-corpus-and-noise-floor.md",
+  "created_at": "2026-08-27T00:04:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "e1ad68763e1839656eaf237f9044c10821583f634dd6fa1972a71ae809b24d20",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "4cfeee2b10a3812e10cf8e0f10e786314fe4c091bbdda1a304f7f4b0978e2d8c",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md": "c1e1818b9898042b357207998bf933a8b4f4247e3340aeaeaa7f364e84cde38b",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md": "13282db5fbf95dba5a283b3dbe13ec1a0d509dc693c3ec62ab22d4ac6f60a5d0",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md": "cf090980e61718a5ae4726dcf635fc10fc598549630fcc54f158dbe0535e8c75",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md": "20ea187573d4493ed111091fac01c0a2529469c5d99341e9c575c58e066cf5dc",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md": "5d469c9759baa0535cc13544fd4e9630dc1a8b02e2ef70d4a6a323bb4886fd8e",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md": "95bb7b07765ae45ba78b4c26e214c68d6b2bc3e9502d258e51ac1bb619af720a",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md": "f0c6426e83b84cbaddc45ca98dadcb86e15d92cfb6315e65d44a1ea65e3d7865"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Quality Bench 01 Corpus And Noise Floor\n\n`quality-bench-01-corpus-and-noise-floor` \u00b7 generated 2026-08-27T00:04:04Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[quality-bench-record-kinds]` [confidence: limited]: Step 7 defines six version-1 envelope kinds in its Implementation \u2014 `label`, `raw-sample`, `floor-record`, `current-floor-pointer`, `current-label-pointer`, and `label-replacement-journal` \u2014 matching the Plan Architecture, but its Acceptance criteria requires documentation of \u201call four closed record kinds.\u201d This leaves two required evidence contracts unspecified in the completion test.\n  - Fix: Make step 7\u2019s acceptance require documentation of all six named version-1 record kinds and align its verification with that closed vocabulary.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-bec26cca]` [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4ccbb348]` [confidence: limited]: The plan's `## Acceptance criteria` names `.replaced.n`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d429a1e0]` [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f1f55676]` [confidence: limited]: The plan's `## Acceptance criteria` names `quality-bench-corpus-v1\\0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a3d7a1aa]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_slug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]` [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO `[step3-granularity-split-e25c9d8a]` [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force publishes a recoverable replacement archive)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit quality-bench-01-corpus-and-noise-floor` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Quality Bench 01 Corpus And Noise Floor\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[quality-bench-record-kinds]` [confidence: limited]: Step 7 defines six version-1 envelope kinds in its Implementation \u2014 `label`, `raw-sample`, `floor-record`, `current-floor-pointer`, `current-label-pointer`, and `label-replacement-journal` \u2014 matching the Plan Architecture, but its Acceptance criteria requires documentation of \u201call four closed record kinds.\u201d This leaves two required evidence contracts unspecified in the completion test.\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/quality_bench.py` resembling declared `plan_tool/quality_bench_corpus.py` (typo/stale path?)\n- NIT: step 3 declared `.gitignore` not mentioned in detail\n- INFO: step 4 detail cites `plan_tool/cli/bench_cmd.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/quality_bench.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/cli/bench_cmd.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/quality_bench_metrics.py` resembling declared `plan_tool/quality_bench.py` (typo/stale path?)\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-quality-bench-py]` [confidence: limited]: docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md:## Input cites `quality_bench.py`, but code anchor path `quality_bench.py` does not exist.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `.replaced.n`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `quality-bench-corpus-v1\\0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_slug`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force publishes a recoverable replacement archive)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk quality-bench-01-corpus-and-noise-floor` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b636fa51",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7 defines six version-1 envelope kinds in its Implementation \u2014 `label`, `raw-sample`, `floor-record`, `current-floo",
+      "body": "Step 7 defines six version-1 envelope kinds in its Implementation \u2014 `label`, `raw-sample`, `floor-record`, `current-floor-pointer`, `current-label-pointer`, and `label-replacement-journal` \u2014 matching the Plan Architecture, but its Acceptance criteria requires documentation of \u201call four closed record kinds.\u201d This leaves two required evidence contracts unspecified in the completion test.",
+      "suggested_action": "Make step 7\u2019s acceptance require documentation of all six named version-1 record kinds and align its verification with that closed vocabulary.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "quality-bench-record-kinds",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "step4-data-contract-8eb42e56",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "Stale Input contract reference `quality_bench.py`",
+      "body": "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md:## Input cites `quality_bench.py`, but code anchor path `quality_bench.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-quality-bench-py",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "98542133c197a57c9161d9377a03032b7020edf113f90d86aeb159bdd686d95b",
+    "detail_bundle_digest": "6bdf2840071e34c7fccb550ba05714908893885726300c4d83f2ea86a5f13d76",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md",
+        "state": "present",
+        "digest": "c1e1818b9898042b357207998bf933a8b4f4247e3340aeaeaa7f364e84cde38b"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md",
+        "state": "present",
+        "digest": "13282db5fbf95dba5a283b3dbe13ec1a0d509dc693c3ec62ab22d4ac6f60a5d0"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md",
+        "state": "present",
+        "digest": "cf090980e61718a5ae4726dcf635fc10fc598549630fcc54f158dbe0535e8c75"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md",
+        "state": "present",
+        "digest": "20ea187573d4493ed111091fac01c0a2529469c5d99341e9c575c58e066cf5dc"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md",
+        "state": "present",
+        "digest": "5d469c9759baa0535cc13544fd4e9630dc1a8b02e2ef70d4a6a323bb4886fd8e"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md",
+        "state": "present",
+        "digest": "95bb7b07765ae45ba78b4c26e214c68d6b2bc3e9502d258e51ac1bb619af720a"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md",
+        "state": "present",
+        "digest": "f0c6426e83b84cbaddc45ca98dadcb86e15d92cfb6315e65d44a1ea65e3d7865"
+      }
+    ],
+    "source_seed_digest": "5fa7acdfa1da7ed67a6a9d4d572c3c2303bc7878006de5005e782eee74b01ce5",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

@@ -1,0 +1,282 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-acd5c307": {
+      "candidate": {
+        "field_or_key": "BackendSpawn",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "transport",
+          "child_pid",
+          "effective_timeout_ms",
+          "prompt_bytes"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "transport",
+          "child_pid",
+          "effective_timeout_ms",
+          "prompt_bytes"
+        ],
+        "owner": "BackendSpawn",
+        "source_symbol": "plan_tool/run_log.py:BackendSpawn",
+        "target_section": "BackendSpawn"
+      },
+      "candidate_fields": {
+        "field_or_key": "BackendSpawn",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "transport",
+          "child_pid",
+          "effective_timeout_ms",
+          "prompt_bytes"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "transport",
+          "child_pid",
+          "effective_timeout_ms",
+          "prompt_bytes"
+        ],
+        "owner": "BackendSpawn",
+        "source_symbol": "plan_tool/run_log.py:BackendSpawn",
+        "target_section": "BackendSpawn"
+      },
+      "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+      "field_or_key": "BackendSpawn",
+      "freshness": {
+        "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+        "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672"
+      },
+      "operation": "add",
+      "owner": "BackendSpawn",
+      "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672",
+      "source_type": "dataclass",
+      "target_section": "BackendSpawn"
+    },
+    "plan-data-contract-d217c8c5": {
+      "candidate": {
+        "field_or_key": "BackendTermination",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "reason",
+          "duration_ms",
+          "signal_or_timeout",
+          "silent_ms"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "reason",
+          "duration_ms",
+          "signal_or_timeout",
+          "silent_ms"
+        ],
+        "owner": "BackendTermination",
+        "source_symbol": "plan_tool/run_log.py:BackendTermination",
+        "target_section": "BackendTermination"
+      },
+      "candidate_fields": {
+        "field_or_key": "BackendTermination",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "reason",
+          "duration_ms",
+          "signal_or_timeout",
+          "silent_ms"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "backend",
+          "reason",
+          "duration_ms",
+          "signal_or_timeout",
+          "silent_ms"
+        ],
+        "owner": "BackendTermination",
+        "source_symbol": "plan_tool/run_log.py:BackendTermination",
+        "target_section": "BackendTermination"
+      },
+      "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+      "field_or_key": "BackendTermination",
+      "freshness": {
+        "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+        "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672"
+      },
+      "operation": "add",
+      "owner": "BackendTermination",
+      "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672",
+      "source_type": "dataclass",
+      "target_section": "BackendTermination"
+    },
+    "plan-data-contract-d6bdbdbd": {
+      "candidate": {
+        "field_or_key": "RunInterrupted",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "source",
+          "signal"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "source",
+          "signal"
+        ],
+        "owner": "RunInterrupted",
+        "source_symbol": "plan_tool/run_log.py:RunInterrupted",
+        "target_section": "RunInterrupted"
+      },
+      "candidate_fields": {
+        "field_or_key": "RunInterrupted",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "source",
+          "signal"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "source",
+          "signal"
+        ],
+        "owner": "RunInterrupted",
+        "source_symbol": "plan_tool/run_log.py:RunInterrupted",
+        "target_section": "RunInterrupted"
+      },
+      "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+      "field_or_key": "RunInterrupted",
+      "freshness": {
+        "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+        "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672"
+      },
+      "operation": "add",
+      "owner": "RunInterrupted",
+      "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672",
+      "source_type": "dataclass",
+      "target_section": "RunInterrupted"
+    },
+    "plan-data-contract-d9ef2a0d": {
+      "candidate": {
+        "field_or_key": "BackendRecoveryWait",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "reason",
+          "delay_ms",
+          "next_attempt",
+          "backend"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "reason",
+          "delay_ms",
+          "next_attempt",
+          "backend"
+        ],
+        "owner": "BackendRecoveryWait",
+        "source_symbol": "plan_tool/run_log.py:BackendRecoveryWait",
+        "target_section": "BackendRecoveryWait"
+      },
+      "candidate_fields": {
+        "field_or_key": "BackendRecoveryWait",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "reason",
+          "delay_ms",
+          "next_attempt",
+          "backend"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "phase",
+          "attempt",
+          "reason",
+          "delay_ms",
+          "next_attempt",
+          "backend"
+        ],
+        "owner": "BackendRecoveryWait",
+        "source_symbol": "plan_tool/run_log.py:BackendRecoveryWait",
+        "target_section": "BackendRecoveryWait"
+      },
+      "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+      "field_or_key": "BackendRecoveryWait",
+      "freshness": {
+        "contract_fingerprint": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+        "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672"
+      },
+      "operation": "add",
+      "owner": "BackendRecoveryWait",
+      "registry_fingerprint": "42a2388fd7b8222b0d3d121e5b0ec96176b0ee7e7c86bf0a76dcae3053ca4672",
+      "source_type": "dataclass",
+      "target_section": "BackendRecoveryWait"
+    }
+  },
+  "review_id": "20260813-153214-completeness"
+}

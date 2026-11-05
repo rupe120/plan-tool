@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "plan_slug": "intent-required",
+  "plan_path": "docs/implementation-plans/2-intent-required.md",
+  "created_at": "2026-08-03T03:14:52Z",
+  "kind": "run-reconcile",
+  "step_id": 4,
+  "plan_fingerprint": "5ac559b6f96b9953c907534f9a057ff9777c99a72ad7b80a775170b61a397e58",
+  "code_fingerprint": {
+    "BACKLOG.md": "a8e7c9b6ee346896b9da7feeccba6015b6c6b077dbce142749efbc04d768ab45",
+    "BUG_BACKLOG.md": "b906d53868b241b4dec9c84edd1e6be135c2e40ac4cf41cc6ba5d279e79b16d7",
+    "CLAUDE.md": "3a172dd9fc222b088757d6da5695eacf20e8bfd1a9f0730235152f53dbaabbe8",
+    "PLAN_FORMAT.md": "754d85b65b6ce058bceb57f417e391986d3649e81d51a810c9a56cc7efc70f02",
+    "SEED_FORMAT.md": "9ad2cebc8294d6909c3bcd4286efb4304054dd1f76a10570ef16c62cf2820462",
+    "docs/AUDIT_FLOW.md": "331cb90d7ebbe616aa2e335a82658a7a829bd3ce7bc09b4e1213189bd834ff32",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "9177cda9cd8e567e363a65f903722f40db77bedcf94b6eaa532d20dcb89424b2",
+    "plan_tool/cli/completeness_phases.py": "f8ad668f471d5f641418d6142b214ce38468b69e016b7e415e109d1d7a0a98ef",
+    "plan_tool/create.py": "57000358ed323c0bde2720a8268df9b55a2872afc78cbe69cdaf29bd6e9c5d70",
+    "plan_tool/intent_proposal.py": "67ef51cceeec0c3b381ca57d54711336dd0c7a5a38a25fbd0d3adcbcd4a12c3b",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "tests/cli/test_completeness_cmd.py": "58c820ac3b751b8d4e98808aa31766d38101f2b807f6a130c0b44342abf589e1",
+    "tests/test_create.py": "ebc296dc974af2d8259c245e44acc58a3bfef6ad31b9b0dbd626dde2ae4a3617",
+    "tests/test_intent_proposal.py": "7857dadb898732da20bb43553660ac05defa07f69143678ba9c995a28b15cb55",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 4 \u2014 0 critical / 0 high / 1 medium / 0 nits",
+  "recommendations": [
+    {
+      "id": "step4-run-reconcile-136bae71",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "`propose_intent_bridge()` in `plan_tool/intent_proposal.py` (step 4 \"Add an intent-proposal helper module that drafts a ",
+      "body": "`propose_intent_bridge()` in `plan_tool/intent_proposal.py` (step 4 \"Add an intent-proposal helper module that drafts a one-liner and takes accept, edit, or decline\") ships with no caller anywhere in `plan_tool/` \u2014 `create.py` imports only the in-memory halves \u2014 because the step's `## Deferred` bullet routing its consumer to \"step 7 owns it, including the opt-in token and the staleness guard its sibling dispatchers carry\" points at an arm the plan carved out; the plan's step 7 is the `non-code` docs step over `PLAN_FORMAT.md` / `SEED_FORMAT.md`, which the same list separately and contradictorily assigns to step 7 four bullets later. A reviewer reading this detail concludes the bridge has an inbound consumer landing later in the plan, and the identical stale bullet sits at `05-offer-proposed-intent-create-wizard.md` `## Deferred`; the code is correct as the detail's `## Implementation` specifies it, so the sweep the carve owed is the missing piece\n\n## Redirect\n\n- **Reason**: the carve that removed the review/reconcile dispatch arm left its identifier in two detail files' `## Deferred` lists, so the plan \u2014 not the code \u2014 names a consumer that no longer exists\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": {
+        "reason": "the carve that removed the review/reconcile dispatch arm left its identifier in two detail files' `## Deferred` lists, so the plan \u2014 not the code \u2014 names a consumer that no longer exists",
+        "suggested_next": "detail --reconcile"
+      },
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

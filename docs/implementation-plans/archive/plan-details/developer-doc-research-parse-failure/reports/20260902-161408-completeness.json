@@ -1,0 +1,177 @@
+{
+  "version": 4,
+  "plan_slug": "developer-doc-research-parse-failure",
+  "plan_path": "docs/implementation-plans/2-developer-doc-research-parse-failure.md",
+  "created_at": "2026-09-02T16:14:08Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ff3b8a9b432ae35e7082aa316e72609c275dd5c081b0f8400c310b5edafb4db5",
+  "code_fingerprint": {
+    "plan_tool/create.py": "7c180bf27c66bc371cf080977dea09e23aca9010151a8fe70b94c9479e16bc68",
+    "tests/cli/test_authoring_cmds.py": "a97066b0daf75360882528497a435ef2c9521f6fb62caf8f1c9a55caa88810ac",
+    "tests/test_create.py": "a5327f166f0ce0ebe9351b3b24a704a6b03de8558faadbc0335342ecf8a22491"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/01-use-typed-generic-reference-research.md": "875048228acc012a457a95482f6575e6d0cb946c7ef92201ea57311f6fd31b5b",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md": "d8a206f793fe960842c7752856a96fd2dbda6b8da65c213564178ee09f48d4be",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/03-fail-initial-malformed-research-before.md": "3612213ff79dfda9655db43c7dc4ee21c1e50b5216edfa8fe46ffcca3b345a03",
+    "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-fail-malformed-iteration-research.md": "3370bf46e8ea3c68825de9f564db731fcd7526da3be3d83238f237eb6b932455"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Developer Doc Research Parse Failure\n\n`developer-doc-research-parse-failure` \u00b7 generated 2026-09-02T16:14:08Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply developer-doc-research-parse-failure   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk developer-doc-research-parse-failure  # alternative interactive review/apply\n\n- MEDIUM `[initial-no-write-boundary]` [confidence: limited]: Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure Acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` returns before `create_plan` calls `_publish_create_plan`, so that helper-level test cannot prove the complete create path leaves publication and manifest writes untouched.\n\n```text\nAn initial research phase that remains unparseable exits through `CreateError`, logs `propose_references` as `error`, does not run dependent reference fetching or body synthesis, and writes neither the plan nor the manifest.\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): An initial unparseable research result must stop the complete create operation with no plan or manifest write.\n  - Fix: Test the malformed initial-research boundary through the complete create operation and prove the plan and manifest write paths remain untouched.\n- HIGH `[iteration-publication-preservation]` [confidence: limited]: Step 4, the Architecture `_converge_create_plan` paragraph, Testing, and the iteration-failure Acceptance criterion require malformed iteration research to preserve both steps and References, but they only route the result into the existing iteration-stage failure path. At HEAD, `plan_tool/create.py:_converge_create_plan` writes a successful `steps_proposal` before calling `propose_references_from_claude`, so reference failure can arrive after new steps are durable; `tests/test_create.py::TestCreatePlanReferencesIteration.test_iteration_references_patched_despite_step_failure` also requires valid references to remain publishable when step re-proposal fails.\n\n```text\nAn iteration research phase that remains unparseable surfaces the existing failure through `CreateResult.iteration_stage_failure`, keeps the CLI exit at `0` for the published resumable plan, and leaves the published plan's steps and References section unchanged.\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): An iteration with malformed reference research must leave the last published plan fully unchanged.\n  - Fix: Define an iteration failure boundary that prevents all current-round step and References writes after malformed research while retaining valid-reference updates when step re-proposal fails.\n- HIGH `[iteration-reference-run-log-outcome]` [confidence: limited]: Step 4\u2019s iteration run-log contract has no delivery route for the promised `error` versus valid-empty outcome. Its Architecture paragraph requires:\n\n  ```\n  The round leaves the published plan's steps and References body unchanged, records `error` rather than `skipped`, and propagates the failed-stage detail through `CreateResult.iteration_stage_failure`.\n  ```\n\n  Yet at HEAD `_converge_create_plan` calls `propose_references_from_claude` without a `propose_references` phase start/end; the only iteration `error` phase end belongs to failed step re-proposal. Step 4, Architecture, Risks, Testing, and the run-log acceptance coverage can therefore leave malformed and valid-empty iteration research without the required observable outcome.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Iteration reference research must visibly distinguish terminal malformed output from valid empty output in the run log.\n  - Fix: Give step 4 ownership of the iteration reference-research outcome and require its `error` and valid-empty normal outcomes across Architecture, Risks, Testing, and acceptance criteria.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[initial-no-write-boundary]` [confidence: limited]: Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` never reaches `_publish_create_plan` or `append_to_manifest`; `create_plan` owns that boundary, so a `_prepare_create_plan`-only test cannot catch a caller that continues to publication after the error.\n  - Fix: Add an end-to-end `create_plan` no-write test for final malformed research, while keeping the focused `_prepare_create_plan` test for skipped downstream fetching and synthesis.\n- MEDIUM `[reference-repair-attempt-provenance]` [confidence: limited]: Step 2 and the Architecture repair paragraph promise that progress and run logs record the repair as attempt two, but Testing only requires two model calls and an `error` outcome; the repair Acceptance criterion and run-log Risk also omit the attempt value. A repair can therefore be logged as another first attempt while every stated test still passes.\n  - Fix: Add run-log acceptance and test coverage proving the rejected response is attempt one and the repair request is attempt two, alongside the `error` versus `skipped` checks.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]` [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-db606b65]` [confidence: limited]: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-002b2efe]` [confidence: limited]: The plan's `## Acceptance criteria` names `createresult.iteration_stage_failure`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3b23433b]` [confidence: limited]: The plan's `## Acceptance criteria` names `propose_references`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]` [confidence: limited]: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n- INFO `[step2-granularity-merge-03c4c638]` [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit developer-doc-research-parse-failure` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Developer Doc Research Parse Failure\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[initial-no-write-boundary]` [confidence: limited]: Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure Acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` returns before `create_plan` calls `_publish_create_plan`, so that helper-level test cannot prove the complete create path leaves publication and manifest writes untouched.\n\n```text\nAn initial research phase that remains unparseable exits through `CreateError`, logs `propose_references` as `error`, does not run dependent reference fetching or body synthesis, and writes neither the plan nor the manifest.\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): An initial unparseable research result must stop the complete create operation with no plan or manifest write.\n- HIGH `[iteration-publication-preservation]` [confidence: limited]: Step 4, the Architecture `_converge_create_plan` paragraph, Testing, and the iteration-failure Acceptance criterion require malformed iteration research to preserve both steps and References, but they only route the result into the existing iteration-stage failure path. At HEAD, `plan_tool/create.py:_converge_create_plan` writes a successful `steps_proposal` before calling `propose_references_from_claude`, so reference failure can arrive after new steps are durable; `tests/test_create.py::TestCreatePlanReferencesIteration.test_iteration_references_patched_despite_step_failure` also requires valid references to remain publishable when step re-proposal fails.\n\n```text\nAn iteration research phase that remains unparseable surfaces the existing failure through `CreateResult.iteration_stage_failure`, keeps the CLI exit at `0` for the published resumable plan, and leaves the published plan's steps and References section unchanged.\n```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): An iteration with malformed reference research must leave the last published plan fully unchanged.\n- HIGH `[iteration-reference-run-log-outcome]` [confidence: limited]: Step 4\u2019s iteration run-log contract has no delivery route for the promised `error` versus valid-empty outcome. Its Architecture paragraph requires:\n\n  ```\n  The round leaves the published plan's steps and References body unchanged, records `error` rather than `skipped`, and propagates the failed-stage detail through `CreateResult.iteration_stage_failure`.\n  ```\n\n  Yet at HEAD `_converge_create_plan` calls `propose_references_from_claude` without a `propose_references` phase start/end; the only iteration `error` phase end belongs to failed step re-proposal. Step 4, Architecture, Risks, Testing, and the run-log acceptance coverage can therefore leave malformed and valid-empty iteration research without the required observable outcome.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Iteration reference research must visibly distinguish terminal malformed output from valid empty output in the run log.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[initial-no-write-boundary]` [confidence: limited]: Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` never reaches `_publish_create_plan` or `append_to_manifest`; `create_plan` owns that boundary, so a `_prepare_create_plan`-only test cannot catch a caller that continues to publication after the error.\n- MEDIUM `[reference-repair-attempt-provenance]` [confidence: limited]: Step 2 and the Architecture repair paragraph promise that progress and run logs record the repair as attempt two, but Testing only requires two model calls and an `error` outcome; the repair Acceptance criterion and run-log Risk also omit the attempt value. A repair can therefore be logged as another first attempt while every stated test still passes.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `createresult.iteration_stage_failure`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `propose_references`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n- INFO [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply developer-doc-research-parse-failure` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-11b41007",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure Acceptance criterion require",
+      "body": "Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure Acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` returns before `create_plan` calls `_publish_create_plan`, so that helper-level test cannot prove the complete create path leaves publication and manifest writes untouched.\n\n```text\nAn initial research phase that remains unparseable exits through `CreateError`, logs `propose_references` as `error`, does not run dependent reference fetching or body synthesis, and writes neither the plan nor the manifest.\n```",
+      "suggested_action": "Test the malformed initial-research boundary through the complete create operation and prove the plan and manifest write paths remain untouched.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "initial-no-write-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "An initial unparseable research result must stop the complete create operation with no plan or manifest write."
+    },
+    {
+      "id": "plan-plan-correctness-577576ce",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4, the Architecture `_converge_create_plan` paragraph, Testing, and the iteration-failure Acceptance criterion requ",
+      "body": "Step 4, the Architecture `_converge_create_plan` paragraph, Testing, and the iteration-failure Acceptance criterion require malformed iteration research to preserve both steps and References, but they only route the result into the existing iteration-stage failure path. At HEAD, `plan_tool/create.py:_converge_create_plan` writes a successful `steps_proposal` before calling `propose_references_from_claude`, so reference failure can arrive after new steps are durable; `tests/test_create.py::TestCreatePlanReferencesIteration.test_iteration_references_patched_despite_step_failure` also requires valid references to remain publishable when step re-proposal fails.\n\n```text\nAn iteration research phase that remains unparseable surfaces the existing failure through `CreateResult.iteration_stage_failure`, keeps the CLI exit at `0` for the published resumable plan, and leaves the published plan's steps and References section unchanged.\n```",
+      "suggested_action": "Define an iteration failure boundary that prevents all current-round step and References writes after malformed research while retaining valid-reference updates when step re-proposal fails.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iteration-publication-preservation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "An iteration with malformed reference research must leave the last published plan fully unchanged."
+    },
+    {
+      "id": "plan-plan-correctness-424ee523",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4\u2019s iteration run-log contract has no delivery route for the promised `error` versus valid-empty outcome. Its Archi",
+      "body": "Step 4\u2019s iteration run-log contract has no delivery route for the promised `error` versus valid-empty outcome. Its Architecture paragraph requires:\n\n  ```\n  The round leaves the published plan's steps and References body unchanged, records `error` rather than `skipped`, and propagates the failed-stage detail through `CreateResult.iteration_stage_failure`.\n  ```\n\n  Yet at HEAD `_converge_create_plan` calls `propose_references_from_claude` without a `propose_references` phase start/end; the only iteration `error` phase end belongs to failed step re-proposal. Step 4, Architecture, Risks, Testing, and the run-log acceptance coverage can therefore leave malformed and valid-empty iteration research without the required observable outcome.",
+      "suggested_action": "Give step 4 ownership of the iteration reference-research outcome and require its `error` and valid-empty normal outcomes across Architecture, Risks, Testing, and acceptance criteria.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "iteration-reference-run-log-outcome",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "Iteration reference research must visibly distinguish terminal malformed output from valid empty output in the run log."
+    },
+    {
+      "id": "plan-plan-completeness-11b41007",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure acceptance criterion require",
+      "body": "Step 3, the Architecture `_prepare_create_plan` paragraph, Testing, and the initial-failure acceptance criterion require no plan or manifest write, but Testing assigns that proof to `_prepare_create_plan`. At HEAD, `_prepare_create_plan` never reaches `_publish_create_plan` or `append_to_manifest`; `create_plan` owns that boundary, so a `_prepare_create_plan`-only test cannot catch a caller that continues to publication after the error.",
+      "suggested_action": "Add an end-to-end `create_plan` no-write test for final malformed research, while keeping the focused `_prepare_create_plan` test for skipped downstream fetching and synthesis.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "initial-no-write-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-8f746b96",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 and the Architecture repair paragraph promise that progress and run logs record the repair as attempt two, but Te",
+      "body": "Step 2 and the Architecture repair paragraph promise that progress and run logs record the repair as attempt two, but Testing only requires two model calls and an `error` outcome; the repair Acceptance criterion and run-log Risk also omit the attempt value. A repair can therefore be logged as another first attempt while every stated test still passes.",
+      "suggested_action": "Add run-log acceptance and test coverage proving the rejected response is attempt one and the repair request is attempt two, alongside the `error` versus `skipped` checks.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reference-repair-attempt-provenance",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "ff3b8a9b432ae35e7082aa316e72609c275dd5c081b0f8400c310b5edafb4db5",
+    "detail_bundle_digest": "101b24d76a6df0ba358d71203a8a9a77fbccca09f2b94407c94a592f0997adc8",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/01-use-typed-generic-reference-research.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/03-fail-initial-malformed-research-before.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-fail-malformed-iteration-research.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "6535f44bacd6fc4ba567eef3014e11466724f1972baeac671c9ca782874fa2d9",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

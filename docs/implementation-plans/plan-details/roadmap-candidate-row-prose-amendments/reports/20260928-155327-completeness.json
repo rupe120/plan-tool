@@ -1,0 +1,120 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-row-prose-amendments",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-row-prose-amendments.md",
+  "created_at": "2026-09-28T15:53:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ab1d664abf18149d94213139a39218c1d788ce00b091631b7f9d25233c31f6fd",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "dd7891c42053c953f4ad82a0c815769ba5f4dc8795fd5c27ef08652826da1535",
+    "ROADMAP_FEEDBACK_FORMAT.md": "0d1f8421522358bc0f2c72d255999b29fa2ae80dfffdc481901cc99572771263",
+    "ROADMAP_FORMAT.md": "7df616219549c1df3bab26c8e3752fec2797c96bd82b2dc12947deb450f69668",
+    "plan_tool/cli/roadmap_cmd.py": "fe70c65a0f89db39645e55bb580a73c27af747cf54c7fbf6e521120135fc73ee",
+    "plan_tool/prompts/roadmap-candidate-delta-selector.md": "a3a8f0380f4676d638b88012ded71180ff60379051d4ccbb0e569c3eada28fd4",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "df830d620920beb7ccabdeb24ad7f5fb3982ea3c632d33890bb86950ff3d06e6",
+    "plan_tool/roadmap_candidate.py": "9b51568c7911d93c21505073be3e564273839a2f1a0d891d51b634cc126ce968",
+    "plan_tool/roadmap_candidate_run.py": "f1ce28097d045117a021fe6cb29df7322f21487c1b1b3a3db979e47c93d78451",
+    "plan_tool/roadmap_revision_patch.py": "98b7447ecbdc499b8cd77b23909ef27e57df50d04a2aea4a451374472dd3db7d",
+    "tests/cli/test_roadmap_cmd.py": "2ee150f2f6609aabade77f5caa1fd35132030a8c8297a935671d30ae9f87ff15",
+    "tests/test_roadmap_candidate.py": "dd19a9397e720da9cc5f34f09a25b32063c54ae6613d13f6f4612c161812fb9c",
+    "tests/test_roadmap_candidate_review.py": "4825b4ed66b3bf1b4ef65d5e099aa4b24de90c3ba65b108a409d9db330274788",
+    "tests/test_roadmap_candidate_run.py": "72da3ea1ba24f3c74d3d34be5d2fc773afa6d0ecd9f5d012c714b453c0280d6d",
+    "tests/test_roadmap_revision_patch.py": "7f07c0ce27e7f2f9b13d7f2018bfbea853109146c09081269ff1d197d6b174b5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/01-share-existing-prose-append-rule-while.md": "56810455b01b0e045ca00658c4003c03270271f1904ea3c1dc10dbbc882c41f7",
+    "docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/02-require-bounded-prose-new-candidate.md": "90fab0cfdaf3c9e1e46fd127e0f92419bd8f6ba35eb0049f88540afb014f3c6c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/03-show-row-linked-prose-amendments.md": "2ca4daf5f90d8a37ca99dbe444e4da8938c8e9cb9bfebefd5c0118c499384b37",
+    "docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/04-ask-row-owned-prose-candidate-proposals.md": "49bb90ff18b684142a2043275473d1a2484ff77aa1de8eb6516dc22e13cf6fa9",
+    "docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/05-document-candidate-contract-remove.md": "b7bdcdb38ea7cd1b3ecd5064fbf7b0400d7ad851b5de33ff3d1772ec0ddc1d96"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Row Prose Amendments\n\n`roadmap-candidate-row-prose-amendments` \u00b7 generated 2026-09-28T15:53:27Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `82ec788248bdc490f874a8fb2ebeb1c2f865acae51f8e978c5fa4e591f14e38d`\n- **Detail bundle digest:** `de0f2ae6b44a7dab06d03b212708a5ac42c81199b0ab6fa441fc2089164fdc94`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 51165 bytes (+51165 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-candidate-row-prose-amendments` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Row Prose Amendments\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `82ec788248bdc490f874a8fb2ebeb1c2f865acae51f8e978c5fa4e591f14e38d`\n- **Detail bundle digest:** `de0f2ae6b44a7dab06d03b212708a5ac42c81199b0ab6fa441fc2089164fdc94`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run roadmap-candidate-row-prose-amendments` \u2014 no gaps left \u2014 execute the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "82ec788248bdc490f874a8fb2ebeb1c2f865acae51f8e978c5fa4e591f14e38d",
+      "detail_bundle_digest": "de0f2ae6b44a7dab06d03b212708a5ac42c81199b0ab6fa441fc2089164fdc94",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/01-share-existing-prose-append-rule-while.md",
+          "state": "present",
+          "digest": "56810455b01b0e045ca00658c4003c03270271f1904ea3c1dc10dbbc882c41f7"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/02-require-bounded-prose-new-candidate.md",
+          "state": "present",
+          "digest": "90fab0cfdaf3c9e1e46fd127e0f92419bd8f6ba35eb0049f88540afb014f3c6c"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/03-show-row-linked-prose-amendments.md",
+          "state": "present",
+          "digest": "2ca4daf5f90d8a37ca99dbe444e4da8938c8e9cb9bfebefd5c0118c499384b37"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/04-ask-row-owned-prose-candidate-proposals.md",
+          "state": "present",
+          "digest": "49bb90ff18b684142a2043275473d1a2484ff77aa1de8eb6516dc22e13cf6fa9"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-row-prose-amendments/05-document-candidate-contract-remove.md",
+          "state": "present",
+          "digest": "b7bdcdb38ea7cd1b3ecd5064fbf7b0400d7ad851b5de33ff3d1772ec0ddc1d96"
+        }
+      ],
+      "source_seed_digest": "716ce2a6bcee424a47292848c27f775dfa87b0c1f0de96ec89646c8896cc85a2",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 51165,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

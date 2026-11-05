@@ -1,0 +1,69 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-same-batch-relations",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-same-batch-relations.md",
+  "created_at": "2026-09-28T12:18:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5736999d6a2f1da0ed14dc6c2994d8cc2172e2b09c0bf278a67ee10dab474c79",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "e24b6eb1eec1be9fc871943a5548dcd70e34b37cc3437be3ee833df55991eee5",
+    "plan_tool/roadmap_candidate.py": "2a71c75a98552cfb7fc50694b09915cd25a21fd9a5f41aa4b9436f5fc30b2abe",
+    "tests/test_roadmap_candidate.py": "9c2fa6ea7cc9316e696cd42d4ac70995c0e979c032649c82c806232b1b341436",
+    "tests/test_roadmap_candidate_run.py": "6ae8e6c4bdc9163993709fe8ec7444f301c2e31b3440703b4249f6245a0ae040"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/01-allow-exact-same-batch-relation.md": "3906ef2fc04498fa80bb92c5d369afa52bd146a51fb91b4794cf6f8e0c6dcc1f",
+    "docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/02-remove-resolved-candidate-relation-bug.md": "f5b8ad5e027711ca7d074ce749eb6825f7c30da625e7ec7bffa7709526abd851"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Same Batch Relations\n\n`roadmap-candidate-same-batch-relations` \u00b7 generated 2026-09-28T12:18:36Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-candidate-same-batch-relations` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Same Batch Relations\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail roadmap-candidate-same-batch-relations` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "5736999d6a2f1da0ed14dc6c2994d8cc2172e2b09c0bf278a67ee10dab474c79",
+    "detail_bundle_digest": "a123cd465517441e79eba409dbb59ccfa25d98dcfdf52379c5ce3733549a3252",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/01-allow-exact-same-batch-relation.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-same-batch-relations/02-remove-resolved-candidate-relation-bug.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "f1ee40e87d17025117818a7cb9a86c6aec0f4768e416920b59bb97621a830569",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

@@ -1,0 +1,136 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-stage-lifecycle-output",
+  "plan_path": "docs/implementation-plans/2-roadmap-stage-lifecycle-output.md",
+  "created_at": "2026-09-02T01:42:17Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ec964beeb065bdcb03319a79be3266a6cc83be07a274709b6ef7e806ca509e5a",
+  "code_fingerprint": {
+    "BACKLOG.md": "51fe0af45f14a00efc3251a518552e045c1c7be7869187b441f8b07771497e61",
+    "README.md": "22c30086ead0aa168e624a6f32d9aeb3b8965770e5bb15d73f9f7f187593b247",
+    "RUNBOOK.md": "2ce9b013faef10020d3594008da88985d480b8820e78a7940c38a091e9ac8af6",
+    "docs/ARCHITECTURE.md": "f61d35c4463db0efeda91c665ab24fb3c1534326417ccb85aa17adb4f736df94",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "ef7b542a4d52ed0015d261187a4c682b2631e32ebf333706c4a650c351477d5f",
+    "docs/ROADMAP_WALKTHROUGH.md": "215235bb1845e4e684157a39908407098a1fc41bb6bcacfd2b33caf6cc1d034a",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "f840287e952ece51b7592da564a094aebc537335cd536ae05af59b33fb749c1c",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "27a0f31f40e759143d125fb07a7bf5a659de71c1e3f74eb44dcce423a4afaafa",
+    "plan_tool/cli/roadmap_cmd.py": "dc460cf1af1c88d43145260f27474a5d9c27449bcaaacb37c3b5440b03f077c6",
+    "plan_tool/roadmap.py": "5801c3b91a4209a64f39081d944659b2fd9ca09d7d8922e9e565b27988ab1023",
+    "tests/cli/test_roadmap_cmd.py": "5cc973e539611eb990c8d443cc2e734bf3c4af28bd871934e2a5f9474186359e",
+    "tests/test_roadmap.py": "94be312078d266600e5bdf77fbf5f2bf72c3cffe41af4464b2fd6309c7b7f214"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/01-give-roadmap-progress-backlog-entry.md": "d53ebad2b476639e74a71e45cf2c3274e21147091664720091a02408d767a8c1",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/02-emit-bounded-stage-start-retry-stop.md": "e947b28b8d2240db5d2e868e0cbb41bf0fcfac4d613a55721b146764ceaa6898",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/03-connect-roadmap-direct-status-sink.md": "8378570f9d82bbd99a45b75769f2a874d8572944602804586d2e9aafabf47847",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/04-document-roadmap-transition-only-stderr.md": "c91a9e4f1a050cccc0625f400656c983cdd23314ba4d5cacbb5bd429b7b0c3e7",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/05-update-roadmap-demo-walkthrough-then.md": "c87a3d777883964a7e29484519ff51fd07424596718f9b4f8dd22d98d5b6acd9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Stage Lifecycle Output\n\n`roadmap-stage-lifecycle-output` \u00b7 generated 2026-09-02T01:42:17Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8244789300185b3edfd7b7cbd3b83eab020ca93628817f9c09861d9037641ef4`\n- **Detail bundle digest:** `fab6d8f00d7b29db462f9f398f6caf12d18fb7a752ff1ee6b5708e97d6aaa1ee`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 57511 bytes (+57511 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[roadmap-progress-backlog-closure]` [confidence: limited]: Step 5 (`Update the roadmap demo and walkthrough, then close the narrowed backlog entry`) closes the lifecycle entry in `BACKLOG.md` and `backlog-arc-roadmap.md`, but the plan\u2019s `Acceptance criteria` also requires the seed-ingestion arc to describe the delivered limitation. Step 1 makes `backlog-arc-seed-ingestion.md:## Ordered route` keep #337 as the active prerequisite before #333, while Step 5\u2019s Files, Implementation, and acceptance criteria omit that arc, leaving a stale active-queue instruction after #337 ships.\n  - Fix: Include the seed-ingestion arc in Step 5\u2019s closure sweep and transition it from the active lifecycle prerequisite to the completed prerequisite and next selected route.\n  - Address: `plan-tool completeness-apply roadmap-stage-lifecycle-output --anchor roadmap-progress-backlog-closure`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-eac84441]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7d1c40b0]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmaperror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-stage-lifecycle-output` \u2014 walk the 1 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Stage Lifecycle Output\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8244789300185b3edfd7b7cbd3b83eab020ca93628817f9c09861d9037641ef4`\n- **Detail bundle digest:** `fab6d8f00d7b29db462f9f398f6caf12d18fb7a752ff1ee6b5708e97d6aaa1ee`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Converged (low-yield):** this audit stopped at 2 pass(es) once only advisory (nit/info) findings remained \u2014 no material (medium+) finding resurfaced. Some listed advisory findings may be residual precision noise the sampler never fully explored.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[roadmap-progress-backlog-closure]` [confidence: limited]: Step 5 (`Update the roadmap demo and walkthrough, then close the narrowed backlog entry`) closes the lifecycle entry in `BACKLOG.md` and `backlog-arc-roadmap.md`, but the plan\u2019s `Acceptance criteria` also requires the seed-ingestion arc to describe the delivered limitation. Step 1 makes `backlog-arc-seed-ingestion.md:## Ordered route` keep #337 as the active prerequisite before #333, while Step 5\u2019s Files, Implementation, and acceptance criteria omit that arc, leaving a stale active-queue instruction after #337 ships.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmaperror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-stage-lifecycle-output` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-54274754",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Update the roadmap demo and walkthrough, then close the narrowed backlog entry`) closes the lifecycle entry in ",
+      "body": "Step 5 (`Update the roadmap demo and walkthrough, then close the narrowed backlog entry`) closes the lifecycle entry in `BACKLOG.md` and `backlog-arc-roadmap.md`, but the plan\u2019s `Acceptance criteria` also requires the seed-ingestion arc to describe the delivered limitation. Step 1 makes `backlog-arc-seed-ingestion.md:## Ordered route` keep #337 as the active prerequisite before #333, while Step 5\u2019s Files, Implementation, and acceptance criteria omit that arc, leaving a stale active-queue instruction after #337 ships.",
+      "suggested_action": "Include the seed-ingestion arc in Step 5\u2019s closure sweep and transition it from the active lifecycle prerequisite to the completed prerequisite and next selected route.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-progress-backlog-closure",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-low-yield",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "8244789300185b3edfd7b7cbd3b83eab020ca93628817f9c09861d9037641ef4",
+      "detail_bundle_digest": "fab6d8f00d7b29db462f9f398f6caf12d18fb7a752ff1ee6b5708e97d6aaa1ee",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/01-give-roadmap-progress-backlog-entry.md",
+          "state": "present",
+          "digest": "d53ebad2b476639e74a71e45cf2c3274e21147091664720091a02408d767a8c1"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/02-emit-bounded-stage-start-retry-stop.md",
+          "state": "present",
+          "digest": "e947b28b8d2240db5d2e868e0cbb41bf0fcfac4d613a55721b146764ceaa6898"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/03-connect-roadmap-direct-status-sink.md",
+          "state": "present",
+          "digest": "8378570f9d82bbd99a45b75769f2a874d8572944602804586d2e9aafabf47847"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/04-document-roadmap-transition-only-stderr.md",
+          "state": "present",
+          "digest": "c91a9e4f1a050cccc0625f400656c983cdd23314ba4d5cacbb5bd429b7b0c3e7"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/05-update-roadmap-demo-walkthrough-then.md",
+          "state": "present",
+          "digest": "c87a3d777883964a7e29484519ff51fd07424596718f9b4f8dd22d98d5b6acd9"
+        }
+      ],
+      "source_seed_digest": "e8a339a95820763050baab8e1639ced6da1dc89be19f072481a05382d567ff3c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 57511,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

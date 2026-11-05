@@ -1,0 +1,167 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T19:15:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b19e1bc2dac042bce43c2190c4c69151d977816b2ab28584afc2838b9561739d",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "f98015394bb97275e03e84eeeb5c0f848d6a992ec4000d16ba24c5cfa83dc5b7",
+    "plan_tool/launcher.py": "4a1649b9da1c99f796424f5ff8b649276d70b212f7e53c696dcb154a2f77b10e",
+    "plan_tool/prompts/apply-finding.md": "027f0a20d5d91452326c5544e20f664965656b8cdc6ff6361a28b84d30943191",
+    "plan_tool/prompts/detail-quality.md": "4ce575f9edd6e6e14f9b44eb22a63cd10b5502b6025266c5969ec4524d3c6967",
+    "plan_tool/prompts/detail.md": "8f6daa15a752d5c6c9616a95ee52bd1ab97612c3e33337b77eb328bf56683114",
+    "tests/test_detail.py": "4ed94d2369219de42439165462d7af1aaaabe0ef906ec26098403f06cd4dbfe2",
+    "tests/test_launcher.py": "76bd05834befcef51d8ff1b9dd26108a0f0d772d4a6a2c77e0db86d6816ac960"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md": "491b7b501501959350dcd456ed748a3678fd960cdd9e37cd1c34ff8e00a0620e",
+    "docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md": "d50fbe858a3753c1fc80bd80130d269ad48367151aad28cd20251cd76b65636f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 2\n\n`risk-profile-2` \u00b7 generated 2026-08-25T19:15:48Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `b19e1bc2dac042bce43c2190c4c69151d977816b2ab28584afc2838b9561739d`\n- **Detail bundle digest:** `dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 2 (0 missing-concept-link, 2 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (-2 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply risk-profile-2   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk risk-profile-2  # alternative interactive review/apply\n\n- MEDIUM `[risk-declaration-pair]`: References calls `risk_profile_rationale` \u201coptional,\u201d but `PLAN_FORMAT.md` and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` require the tier and rationale together or omit both; Architecture, Test strategy, and Acceptance criteria already use the paired contract.\n  - Fix: describe the fields as one optional legacy pair that is complete whenever explicitly declared.\n- MEDIUM `[risk-context-freshness]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`) and Architecture\u2019s \u201cOne advisory context\u201d promise current declarations for each authoring and review call, while one apply keeps its captured context. `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps `prepared.plan` for later steps after `plan_tool/detail.py:_converge_run_grade_step_detail` calls `plan_tool/launcher.py:apply_finding`; only `plan_tool/detail.py:collect_detail_quality_findings` reparses the plan, so a declaration changed by an apply can leave the next step\u2019s authoring prompt on the old declaration. Scope contract Verification, Test strategy, and Testing prove static delivery but not this update sequence.\n  - Fix: Define refresh-versus-capture behavior across applies and test a declaration-changing apply followed by later authoring and review prompts.\n- MEDIUM `[non-detail-prompt-isolation]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`), Prompt boundary, Scope contract Outcome/Verification, and Acceptance criteria require non-detail callers to keep their current prompt bytes, while Testing only says they \u201cstay on the empty default.\u201d `plan_tool/launcher.py:apply_finding` is also called by `plan_tool/create.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py`; an empty value does not prove a new template slot leaves no byte change.\n  - Fix: Define and test byte-identical no-context rendering across every non-detail `apply_finding` caller family.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[risk-context-freshness]`: Step 2 commits that each initial-authoring and quality-review invocation reads the current plan, while an apply may change the declaration and must keep its own captured context; Scope contract Verification, Test strategy, and Testing only prove static prompt delivery. `plan_tool/detail.py:_prepare_run_grade_detail` currently retains one parsed plan for authoring while `collect_detail_quality_findings` reloads it, so unchanged-plan prompt tests cannot prove this lifecycle.\n  - Fix: add an acceptance criterion and focused prompt test showing a declaration changed during an apply is used by the next authoring or review invocation, while both prompts in that original apply retain its captured context.\n- MEDIUM `[non-detail-prompt-isolation]`: Step 2\u2019s Prompt boundary, Scope contract Outcome and Verification, and Acceptance criteria require every non-detail `apply_finding` caller to keep current prompt bytes, but Test strategy and Testing only require an empty context. `plan_tool/create.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py` can all pass an empty default while a template whitespace change still alters their prompts.\n  - Fix: Add exact prompt-byte checks for the empty default across every current non-detail apply-finding route.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[step1-detail-coverage-98e7dc95]`: Step 1 declares `detail: docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md` but the file isn't present under the repo root.\n- MEDIUM `[step2-detail-coverage-89695580]`: Step 2 declares `detail: docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md` but the file isn't present under the repo root.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-2` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 2\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `b19e1bc2dac042bce43c2190c4c69151d977816b2ab28584afc2838b9561739d`\n- **Detail bundle digest:** `dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[risk-declaration-pair]`: References calls `risk_profile_rationale` \u201coptional,\u201d but `PLAN_FORMAT.md` and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` require the tier and rationale together or omit both; Architecture, Test strategy, and Acceptance criteria already use the paired contract.\n- MEDIUM `[risk-context-freshness]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`) and Architecture\u2019s \u201cOne advisory context\u201d promise current declarations for each authoring and review call, while one apply keeps its captured context. `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps `prepared.plan` for later steps after `plan_tool/detail.py:_converge_run_grade_step_detail` calls `plan_tool/launcher.py:apply_finding`; only `plan_tool/detail.py:collect_detail_quality_findings` reparses the plan, so a declaration changed by an apply can leave the next step\u2019s authoring prompt on the old declaration. Scope contract Verification, Test strategy, and Testing prove static delivery but not this update sequence.\n- MEDIUM `[non-detail-prompt-isolation]`: Step 2 (`Supply advisory risk context to every run-grade detail prompt`), Prompt boundary, Scope contract Outcome/Verification, and Acceptance criteria require non-detail callers to keep their current prompt bytes, while Testing only says they \u201cstay on the empty default.\u201d `plan_tool/launcher.py:apply_finding` is also called by `plan_tool/create.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py`; an empty value does not prove a new template slot leaves no byte change.\n\n### Detail coverage\n\n- WARN: step 1 detail `docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md` declared but missing on disk\n- WARN: step 2 detail `docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md` declared but missing on disk\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[risk-context-freshness]`: Step 2 commits that each initial-authoring and quality-review invocation reads the current plan, while an apply may change the declaration and must keep its own captured context; Scope contract Verification, Test strategy, and Testing only prove static prompt delivery. `plan_tool/detail.py:_prepare_run_grade_detail` currently retains one parsed plan for authoring while `collect_detail_quality_findings` reloads it, so unchanged-plan prompt tests cannot prove this lifecycle.\n- MEDIUM `[non-detail-prompt-isolation]`: Step 2\u2019s Prompt boundary, Scope contract Outcome and Verification, and Acceptance criteria require every non-detail `apply_finding` caller to keep current prompt bytes, but Test strategy and Testing only require an empty context. `plan_tool/create.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py` can all pass an empty default while a template whitespace change still alters their prompts.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-2` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ec80f46d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "References calls `risk_profile_rationale` \u201coptional,\u201d but `PLAN_FORMAT.md` and `plan_tool/schema.py:Plan._risk_profile_d",
+      "body": "References calls `risk_profile_rationale` \u201coptional,\u201d but `PLAN_FORMAT.md` and `plan_tool/schema.py:Plan._risk_profile_declaration_is_complete` require the tier and rationale together or omit both; Architecture, Test strategy, and Acceptance criteria already use the paired contract.",
+      "suggested_action": "describe the fields as one optional legacy pair that is complete whenever explicitly declared.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-declaration-pair",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-02a12141",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`) and Architecture\u2019s \u201cOne advisory context\u201d promi",
+      "body": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`) and Architecture\u2019s \u201cOne advisory context\u201d promise current declarations for each authoring and review call, while one apply keeps its captured context. `plan_tool/detail.py:_run_grade_detail_lifecycle` keeps `prepared.plan` for later steps after `plan_tool/detail.py:_converge_run_grade_step_detail` calls `plan_tool/launcher.py:apply_finding`; only `plan_tool/detail.py:collect_detail_quality_findings` reparses the plan, so a declaration changed by an apply can leave the next step\u2019s authoring prompt on the old declaration. Scope contract Verification, Test strategy, and Testing prove static delivery but not this update sequence.",
+      "suggested_action": "Define refresh-versus-capture behavior across applies and test a declaration-changing apply followed by later authoring and review prompts.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-context-freshness",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ec2bdca8",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`), Prompt boundary, Scope contract Outcome/Verifi",
+      "body": "Step 2 (`Supply advisory risk context to every run-grade detail prompt`), Prompt boundary, Scope contract Outcome/Verification, and Acceptance criteria require non-detail callers to keep their current prompt bytes, while Testing only says they \u201cstay on the empty default.\u201d `plan_tool/launcher.py:apply_finding` is also called by `plan_tool/create.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py`; an empty value does not prove a new template slot leaves no byte change.",
+      "suggested_action": "Define and test byte-identical no-context rendering across every non-detail `apply_finding` caller family.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "non-detail-prompt-isolation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-02a12141",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 commits that each initial-authoring and quality-review invocation reads the current plan, while an apply may chan",
+      "body": "Step 2 commits that each initial-authoring and quality-review invocation reads the current plan, while an apply may change the declaration and must keep its own captured context; Scope contract Verification, Test strategy, and Testing only prove static prompt delivery. `plan_tool/detail.py:_prepare_run_grade_detail` currently retains one parsed plan for authoring while `collect_detail_quality_findings` reloads it, so unchanged-plan prompt tests cannot prove this lifecycle.",
+      "suggested_action": "add an acceptance criterion and focused prompt test showing a declaration changed during an apply is used by the next authoring or review invocation, while both prompts in that original apply retain its captured context.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-context-freshness",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-ec2bdca8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2\u2019s Prompt boundary, Scope contract Outcome and Verification, and Acceptance criteria require every non-detail `app",
+      "body": "Step 2\u2019s Prompt boundary, Scope contract Outcome and Verification, and Acceptance criteria require every non-detail `apply_finding` caller to keep current prompt bytes, but Test strategy and Testing only require an empty context. `plan_tool/create.py`, `plan_tool/cli/completeness_apply_parallel.py`, `plan_tool/cli/completeness_phases.py`, `plan_tool/cli/review_actions.py`, and `plan_tool/bench.py` can all pass an empty default while a template whitespace change still alters their prompts.",
+      "suggested_action": "Add exact prompt-byte checks for the empty default across every current non-detail apply-finding route.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "non-detail-prompt-isolation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "b19e1bc2dac042bce43c2190c4c69151d977816b2ab28584afc2838b9561739d",
+      "detail_bundle_digest": "dcffcd4c10cc163340b66be709de2eb717cc694a4c75987242821b3b1a9671f9",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/01-render-advisory-risk-context.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-2/02-supply-advisory-risk-context.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "3699ea6b15a6ce49895ac26c445da0f1eba41ef14d6794f534c61aaad371002f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-04T21:04:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "38432a7d8378930eefec53440a77dc0778c6e2e13c1769b82acf15a1c626df19",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "0431ad02dacbb06bcc4d8bc43e91e09c19a2a24e6155243efa3d1f18ffb2ccbb",
+    "plan_tool/convergence_diagnosis.py": "11bf1684a4f861a275a34189800139c3a20c1aee8af69ed034fb354b69142399",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "tests/cli/test_convergence_cmd.py": "891d959266daf8b3ae21e9ccaeb57f313b90ef833a81f6dd3c0e376d9ecd0d07",
+    "tests/test_convergence_diagnosis.py": "e7c13d20a2a5e33953bb0cdcb7d1bbc25a1597a51da3cc42925f05f3044b73db",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "9d78ad302e3ba2b13621e9b53b88f70deea1077de7870686ed44e3a1e806507d",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "778b923df6608745c4b953bdb2bcf81bf918c4eb69b57956c1a6aada06663d9a",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "4d486be2d6c8d90eabfd10ea7a392c511a3e705c24399ec5a270cc3017a409e5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-04T21:04:44Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[series-local-latest-run]`: Step 1 (`Make a missing latest finding end recurrence`) specifies series-local latestness, but its named regressions never combine an older still-spinning `detail-reconcile` series with a newer completeness report. A global newest-report check could pass the listed empty-latest tests yet erase genuine structural recurrence in the older series.\n  - Fix: Add a regression proving a newer report of another kind does not end recurrence in its own still-current series.\n  - Address: `plan-tool completeness-apply convergence-resolved-recurrence --anchor series-local-latest-run`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-plan-tool-convergence-diagnosis-py:runfinding-source]`: docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md:## Input cites `plan_tool/convergence_diagnosis.py:RunFinding.source`, but code anchor `plan_tool/convergence_diagnosis.py:RunFinding.source` does not resolve in HEAD.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 walk the 1 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-convergence-diagnosis-py:runfinding-source]`: docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md:## Input cites `plan_tool/convergence_diagnosis.py:RunFinding.source`, but code anchor `plan_tool/convergence_diagnosis.py:RunFinding.source` does not resolve in HEAD.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[series-local-latest-run]`: Step 1 (`Make a missing latest finding end recurrence`) specifies series-local latestness, but its named regressions never combine an older still-spinning `detail-reconcile` series with a newer completeness report. A global newest-report check could pass the listed empty-latest tests yet erase genuine structural recurrence in the older series.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-resolved-recurrence` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-c5440363",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Make a missing latest finding end recurrence`) specifies series-local latestness, but its named regressions nev",
+      "body": "Step 1 (`Make a missing latest finding end recurrence`) specifies series-local latestness, but its named regressions never combine an older still-spinning `detail-reconcile` series with a newer completeness report. A global newest-report check could pass the listed empty-latest tests yet erase genuine structural recurrence in the older series.",
+      "suggested_action": "Add a regression proving a newer report of another kind does not end recurrence in its own still-current series.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "series-local-latest-run",
+      "target_signature": null
+    },
+    {
+      "id": "step2-data-contract-f9139628",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `plan_tool/convergence_diagnosis.py:RunFinding.source`",
+      "body": "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md:## Input cites `plan_tool/convergence_diagnosis.py:RunFinding.source`, but code anchor `plan_tool/convergence_diagnosis.py:RunFinding.source` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-convergence-diagnosis-py:runfinding-source",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

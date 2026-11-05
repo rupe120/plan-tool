@@ -1,0 +1,187 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T13:39:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "bc7a4ac6a2c93576d11f789848ce10b343b8053b289c25ab59e25b3177c48416",
+  "code_fingerprint": {
+    "BACKLOG.md": "4095a24da1efa313ce8270ffdba03a09f2085bf81126009dcae67f25885467a2",
+    "docs/how-to/pipeline/audit.md": "21012dde3125aec12dc575501533c9540d50cb68939d957314ea15f288d889e5",
+    "plan_tool/cli/authoring.py": "945eb4cd8377cfb0eeea343ab1699a0ea66dd2e24cd3c7990fd2211d81b59347",
+    "plan_tool/cli/completeness_cmd.py": "d3da4d5b5025da4010bd29e88ce0602670676f82c5e66048072033bc6c76dc00",
+    "plan_tool/cli/completeness_phases.py": "e6d616e9b5a6d442c35066fafe33285e90eede030dd8f9660e0e9463ff1baed6",
+    "plan_tool/completeness_report.py": "35e48c256fe0b2277a3d2743119b614e470d1393d449727022d6818cc6684e2a",
+    "tests/cli/test_completeness_cmd.py": "6a55ac4d4dcf3d65f6416be80a51fdf9109cfb8ed6abe9bf9713dacbe5e465eb",
+    "tests/test_completeness_report.py": "8321f9064241f3fdeada202a12c4d061dea577ba5a1b019e18f17ae697c8d211"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md": "838b78d673f2600012ef26d9d7a80cf5038752d896f86c3baef65a6ae3c7b292",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md": "76cfd4f9c900441770766480d32d32bd70e659d79ea512f6d3e7ea94eb89bf23",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md": "acd605a32a4814dbe0f345a96a32a0ddad8fb170a2f3660dc49d566654ac7f1b",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md": "8ae10f206ae0a2e213ae7371b58fbc371652b9f9a2a88f447613c0b27bb229b1",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Steps Blocking Set\n\n`completeness-next-steps-blocking-set` \u00b7 generated 2026-10-10T13:39:49Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `00e5bae8ace41032f05fdf5132d99567edf7a02d6a86f9a278c6b2c61f7b24ab`\n- **Detail bundle digest:** `8d2cac436d4f98ebeda9a54ef5e4cc5e666dc0b6edd144d891cc7709615d81bc`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 61665 bytes (+61665 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.25\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[four-reader-table-axes]` [confidence: limited]: Step 4 (`04-one-table-driven-test-showing-all-four`) still states fewer table axes in its Summary than the plan requires, so an implementer following the Summary builds a table that skips the demoted-gap cases. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory), and verdict state\"`. Plan `## Testing` and the seed Verification require four stages (step-less, bare, partially detailed, detailed) and the kinds blocking and advisory correctness, completeness, and deterministic. The Summary has two stages instead of four. It has no deterministic kind and no blocking/advisory split per kind. The plan body and seed are authoritative, so fix step 4. Step 4's Input also says the table \"varies `bundle_status` across the four stages\", which contradicts its own Summary.\n  - Fix: Make step 4's Summary, Implementation, and Tests roster list the same axes as the plan's `## Testing`: four stages, blocking and advisory for correctness, completeness, and deterministic kinds, both grades, and all three verdict states.\n- MEDIUM `[four-reader-set-definition]` [confidence: limited]: The plan and step 4 name different \"four readers\". The plan's Problem statement and step 2 list `suggested_next_steps`, `suggested_next_step_commands`, `console_summary`, and `_render_grouped_report`, and treat `next_stage_command` as a caller of the reader. Step 4's Summary lists `next_stage_command`, `suggested_next_steps`, `suggested_next_step_commands`, and `console_summary`, and leaves out `_render_grouped_report`. Step 1's title covers three readers and Summary covers four, including `next_stage_command`. Step 4's agreement table can therefore pass while the grouped-report next-steps block, which the plan names as the fourth reader, goes untested.\n  - Fix: Define the reader set once, covering the four plan readers plus `next_stage_command` as their shared fallback, and make steps 1, 2, and 4 and the plan's `## Testing` all use that set, so the table includes `_render_grouped_report`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[four-reader-table-axes]` [confidence: limited]: Step 4 (`04-one-table-driven-test-showing-all-four`) describes its table axes inconsistently, so a reader of its Summary could build fewer rows than the plan's Testing section and seed Verification require. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory)\"`. The same file's Implementation says `\"Stage \u00d7 grade: step-less, bare, partially detailed, and detailed\"` and lists a deterministic finding with no conceptual id (a missing `intent:`) as its own kind. The plan Testing section also requires four stages and the deterministic kind. The Summary is the narrower statement, and its two-stage list omits exactly the step-less and partially detailed rows where the parked fix failed.\n  - Fix: Reword the Summary of step 4 so its stage and finding-kind lists match the four stages and the four kinds (blocking correctness, blocking completeness, blocking deterministic, advisory-only) that its Implementation section and the plan's Testing section already require.\n- MEDIUM `[blocking-verdict-sink-ownership]` [confidence: limited]: The `args._blocking_verdict_sink` hand-off from the finalize path to the `detail` / `split` / `merge` parents is split across two steps. Step 3's Input says `\"Step 2 owns writing it; this step owns installing and reading it\"`. Step 2's plan-level intent covers building the verdict and passing it to readers, and does not name the sink. Step 2's file list was truncated in the bundle shown, so a reader of step 2 alone cannot confirm that it appends to a sink that step 3 installs. If step 2 omits the write, step 3's parents always see `absent` and drop `run` even after an advisory-only tail. Step 3's acceptance criteria require `run` to be kept in that case.\n  - Fix: State in step 2's Implementation and Acceptance criteria that `finalize_completeness_run` appends the built verdict to the parent-installed sink when one is present, and name step 3 as the installer, so both steps describe the same contract.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1eb03b12]` [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-steps-blocking-set` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Steps Blocking Set\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `00e5bae8ace41032f05fdf5132d99567edf7a02d6a86f9a278c6b2c61f7b24ab`\n- **Detail bundle digest:** `8d2cac436d4f98ebeda9a54ef5e4cc5e666dc0b6edd144d891cc7709615d81bc`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[four-reader-table-axes]` [confidence: limited]: Step 4 (`04-one-table-driven-test-showing-all-four`) still states fewer table axes in its Summary than the plan requires, so an implementer following the Summary builds a table that skips the demoted-gap cases. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory), and verdict state\"`. Plan `## Testing` and the seed Verification require four stages (step-less, bare, partially detailed, detailed) and the kinds blocking and advisory correctness, completeness, and deterministic. The Summary has two stages instead of four. It has no deterministic kind and no blocking/advisory split per kind. The plan body and seed are authoritative, so fix step 4. Step 4's Input also says the table \"varies `bundle_status` across the four stages\", which contradicts its own Summary.\n- MEDIUM `[four-reader-set-definition]` [confidence: limited]: The plan and step 4 name different \"four readers\". The plan's Problem statement and step 2 list `suggested_next_steps`, `suggested_next_step_commands`, `console_summary`, and `_render_grouped_report`, and treat `next_stage_command` as a caller of the reader. Step 4's Summary lists `next_stage_command`, `suggested_next_steps`, `suggested_next_step_commands`, and `console_summary`, and leaves out `_render_grouped_report`. Step 1's title covers three readers and Summary covers four, including `next_stage_command`. Step 4's agreement table can therefore pass while the grouped-report next-steps block, which the plan names as the fourth reader, goes untested.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[four-reader-table-axes]` [confidence: limited]: Step 4 (`04-one-table-driven-test-showing-all-four`) describes its table axes inconsistently, so a reader of its Summary could build fewer rows than the plan's Testing section and seed Verification require. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory)\"`. The same file's Implementation says `\"Stage \u00d7 grade: step-less, bare, partially detailed, and detailed\"` and lists a deterministic finding with no conceptual id (a missing `intent:`) as its own kind. The plan Testing section also requires four stages and the deterministic kind. The Summary is the narrower statement, and its two-stage list omits exactly the step-less and partially detailed rows where the parked fix failed.\n- MEDIUM `[blocking-verdict-sink-ownership]` [confidence: limited]: The `args._blocking_verdict_sink` hand-off from the finalize path to the `detail` / `split` / `merge` parents is split across two steps. Step 3's Input says `\"Step 2 owns writing it; this step owns installing and reading it\"`. Step 2's plan-level intent covers building the verdict and passing it to readers, and does not name the sink. Step 2's file list was truncated in the bundle shown, so a reader of step 2 alone cannot confirm that it appends to a sink that step 3 installs. If step 2 omits the write, step 3's parents always see `absent` and drop `run` even after an advisory-only tail. Step 3's acceptance criteria require `run` to be kept in that case.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-steps-blocking-set` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0e38950d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`04-one-table-driven-test-showing-all-four`) still states fewer table axes in its Summary than the plan requires",
+      "body": "Step 4 (`04-one-table-driven-test-showing-all-four`) still states fewer table axes in its Summary than the plan requires, so an implementer following the Summary builds a table that skips the demoted-gap cases. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory), and verdict state\"`. Plan `## Testing` and the seed Verification require four stages (step-less, bare, partially detailed, detailed) and the kinds blocking and advisory correctness, completeness, and deterministic. The Summary has two stages instead of four. It has no deterministic kind and no blocking/advisory split per kind. The plan body and seed are authoritative, so fix step 4. Step 4's Input also says the table \"varies `bundle_status` across the four stages\", which contradicts its own Summary.",
+      "suggested_action": "Make step 4's Summary, Implementation, and Tests roster list the same axes as the plan's `## Testing`: four stages, blocking and advisory for correctness, completeness, and deterministic kinds, both grades, and all three verdict states.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "four-reader-table-axes",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0e8362e9",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan and step 4 name different \"four readers\". The plan's Problem statement and step 2 list `suggested_next_steps`, ",
+      "body": "The plan and step 4 name different \"four readers\". The plan's Problem statement and step 2 list `suggested_next_steps`, `suggested_next_step_commands`, `console_summary`, and `_render_grouped_report`, and treat `next_stage_command` as a caller of the reader. Step 4's Summary lists `next_stage_command`, `suggested_next_steps`, `suggested_next_step_commands`, and `console_summary`, and leaves out `_render_grouped_report`. Step 1's title covers three readers and Summary covers four, including `next_stage_command`. Step 4's agreement table can therefore pass while the grouped-report next-steps block, which the plan names as the fourth reader, goes untested.",
+      "suggested_action": "Define the reader set once, covering the four plan readers plus `next_stage_command` as their shared fallback, and make steps 1, 2, and 4 and the plan's `## Testing` all use that set, so the table includes `_render_grouped_report`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "four-reader-set-definition",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-0e38950d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`04-one-table-driven-test-showing-all-four`) describes its table axes inconsistently, so a reader of its Summary",
+      "body": "Step 4 (`04-one-table-driven-test-showing-all-four`) describes its table axes inconsistently, so a reader of its Summary could build fewer rows than the plan's Testing section and seed Verification require. Summary: `\"The table spans stage (bare, detailed), grade (run, jira), finding kind (correctness, completeness, advisory)\"`. The same file's Implementation says `\"Stage \u00d7 grade: step-less, bare, partially detailed, and detailed\"` and lists a deterministic finding with no conceptual id (a missing `intent:`) as its own kind. The plan Testing section also requires four stages and the deterministic kind. The Summary is the narrower statement, and its two-stage list omits exactly the step-less and partially detailed rows where the parked fix failed.",
+      "suggested_action": "Reword the Summary of step 4 so its stage and finding-kind lists match the four stages and the four kinds (blocking correctness, blocking completeness, blocking deterministic, advisory-only) that its Implementation section and the plan's Testing section already require.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "four-reader-table-axes",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-a02e98e4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `args._blocking_verdict_sink` hand-off from the finalize path to the `detail` / `split` / `merge` parents is split a",
+      "body": "The `args._blocking_verdict_sink` hand-off from the finalize path to the `detail` / `split` / `merge` parents is split across two steps. Step 3's Input says `\"Step 2 owns writing it; this step owns installing and reading it\"`. Step 2's plan-level intent covers building the verdict and passing it to readers, and does not name the sink. Step 2's file list was truncated in the bundle shown, so a reader of step 2 alone cannot confirm that it appends to a sink that step 3 installs. If step 2 omits the write, step 3's parents always see `absent` and drop `run` even after an advisory-only tail. Step 3's acceptance criteria require `run` to be kept in that case.",
+      "suggested_action": "State in step 2's Implementation and Acceptance criteria that `finalize_completeness_run` appends the built verdict to the parent-installed sink when one is present, and name step 3 as the installer, so both steps describe the same contract.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "blocking-verdict-sink-ownership",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "00e5bae8ace41032f05fdf5132d99567edf7a02d6a86f9a278c6b2c61f7b24ab",
+      "detail_bundle_digest": "8d2cac436d4f98ebeda9a54ef5e4cc5e666dc0b6edd144d891cc7709615d81bc",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-define-blocking-verdict-set-incomplete.md",
+          "state": "present",
+          "digest": "838b78d673f2600012ef26d9d7a80cf5038752d896f86c3baef65a6ae3c7b292"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-build-step-verdict-finalize-gate-own.md",
+          "state": "present",
+          "digest": "76cfd4f9c900441770766480d32d32bd70e659d79ea512f6d3e7ea94eb89bf23"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md",
+          "state": "present",
+          "digest": "acd605a32a4814dbe0f345a96a32a0ddad8fb170a2f3660dc49d566654ac7f1b"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md",
+          "state": "present",
+          "digest": "8ae10f206ae0a2e213ae7371b58fbc371652b9f9a2a88f447613c0b27bb229b1"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md",
+          "state": "present",
+          "digest": "9d4fd05b8f0a542502174cad92d7882c5977e0dd45b31bc44b1a7d0b250d1c1a"
+        }
+      ],
+      "source_seed_digest": "29c8756422c7eab3b8b05dcb8702d92898d6b2ac150d987cdf3752c1cc00fd0d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 61665,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.25,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "plan_slug": "depends-on-consumes-note",
+  "plan_path": "docs/implementation-plans/2-depends-on-consumes-note.md",
+  "created_at": "2026-08-08T19:52:08Z",
+  "kind": "run-reconcile",
+  "step_id": 6,
+  "plan_fingerprint": "cccbc08ae62855367a8af73b94d5878bddf40ecdea59245cf88ea69860c6bca8",
+  "code_fingerprint": {
+    "BACKLOG.md": "e80eb269776836c2e726470c4e26319e260720c77ed9ebfd9e35185fe0711455",
+    "PLAN_FORMAT.md": "0aa84a324517908a5d3181135f80a60ce5124520f919aec9a5407f6b00884439",
+    "plan_tool/create.py": "0561cfca102fe58d4d673d698e5716e2547778f284d5653a96771d487b22fdf3",
+    "plan_tool/schema.py": "9d7d46bd21cac1a378888503d5bf62deb2de1b817a4094805604ad60b08597ff",
+    "plan_tool/scope_out.py": "832d060c3f81308db0b98b677f6b0d79d45dd13518eda18c4095896857a2810c",
+    "tests/fixtures/withdrawn_audit_trajectory_depends_on_notes.md": "9f9c72b0335d7cf6f737868d7c0768ef17a1f80e90a3e87feda35e45eac2c36c",
+    "tests/test_create.py": "ac0048bc1fedf74281cd9482674356bfa74d4e3d8f5915f60b3b35b8d9b9bf75",
+    "tests/test_detail.py": "eebcdae17f9d7cae51e6eb5c9774ee2ff8c419c1dd627969ee35c5162fc7bbe2",
+    "tests/test_fingerprint.py": "294b71aa21b2a8fb266f7e9f93175a7a47280ed911def85aa84f171061e7c88f",
+    "tests/test_launcher.py": "4d554155805818f54de4717ffe824d7b8b7315ff006238a703f3945f20420e34",
+    "tests/test_parser.py": "5de9cd0441aed0bec556db07c237f21f80fa147bf87cabec9312a67379586d7f",
+    "tests/test_scope_out.py": "30b1cf6bb87de2ac993a1f8d15a5b2114b33d50171d7880c276e615bd83d015a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 6 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 5 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

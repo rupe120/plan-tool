@@ -1,0 +1,175 @@
+{
+  "version": 4,
+  "plan_slug": "bare-plan-audit-altitude",
+  "plan_path": "docs/implementation-plans/2-bare-plan-audit-altitude.md",
+  "created_at": "2026-08-18T02:37:11Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "17b08ffd52bbc6402df28e6dd74f983b82b4b238bd4ae76273ca150340b420e9",
+  "code_fingerprint": {
+    "BACKLOG.md": "09807363e6eba9ddc5107ba2dfcf35758a214758074dc9cfee8d4684eba37e83",
+    "CLAUDE.md": "aa5d28fa5415fb6ee134f3f18364ad53da40d56ef260cda6a30bcc1e2d202a3c",
+    "docs/AUDIT_FLOW.md": "4175c286e7f35f2ce68e1c8aa1145fdabb8c0b65c8ebac2790f2b413a1168fc3",
+    "docs/HISTORICAL_BACKLOG_DECISIONS.md": "5e79f1d4a3b916d8bed6a25e2e761d6d2a692dc675dd041d832343393783e9a8",
+    "integrations/shared/DIRECTIVES.md": "9f701fd53adff7d8d35c12225f623ef805e10c0c9bee3dacb5aaa27152d9cc85",
+    "plan_tool/cli/completeness_cmd.py": "2a2a79eecc20edc65f629f13133fb1b04d22cf5ef32a5670743581ff080d7b9d",
+    "plan_tool/convergence_diagnosis.py": "951b517a0a513c3c0731972c8c5e7aba79fe13ec2db926089376ce44fa75aecf",
+    "plan_tool/prompts/plan-audit.md": "eee26a89addb9fa8aeb4c6bdf2bf05c43c4fa5a23335dbbfc80201e537abda4b",
+    "plan_tool/review.py": "a694160e97f95eff79150372bcc5dcbc1f234d7abe14163d4534f31fc7d4e2b0",
+    "tests/cli/test_completeness_cmd.py": "700bbc03ed3f5b2a8f8523de5d42de486e8cdf838230fea93c193cbc52cd5f02",
+    "tests/cli/test_convergence_cmd.py": "5d84c78d1025b9ef99e05ca20dca460ac30f33a74343ff9709dbf3057dc5fcf5",
+    "tests/test_convergence_diagnosis.py": "c5322e25c1e1a800e4a1e4d27c4985018fddffd6703924fc1835de15920b48d2",
+    "tests/test_review.py": "a321456be6734bc6ddb6d8ffe6807bee21914e2f87cd9cbbaff9d898e67502db"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md": "9f44d3a6cc2a9d892df1d53680588e15afe13304bc917e0158bb9e5eb0ea2d80",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md": "aacce91cd009e6afc8ad642bb533e78bab18469c99511a8c73d35a2aefc86c05",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md": "c77027fde3c2e1f7e9358ce3144b0a9838a7e0f4182bc75169f102a92c5ee408",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md": "446882015d5ce2c23405db40d75a6c2877312f00b07a88813228665195a04358",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md": "74b181853db03ab727020a6cfce22af6df7ed2c2fd2a3441d913947272a8aaa9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Bare Plan Audit Altitude\n\n`bare-plan-audit-altitude` \u00b7 generated 2026-08-18T02:37:11Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply bare-plan-audit-altitude   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk bare-plan-audit-altitude  # alternative interactive review/apply\n\n- MEDIUM `[mechanism-advisory-boundary]`: Architecture, Input, step 3 (`Show the mechanism advisory in convergence and combine matching edit drift`), step 4, Testing, and Acceptance require an advisory plus a combined `edit_drift` message, but never define whether the advisory is standalone, limited to bare `plan-correctness`, or combined only when the same finding matches both signals. `convergence_diagnosis.classify_edit_drift` needs a compatible multi-pass window, so these choices change what operators see on a first pass, at detail stage, and for unrelated matches.\n  - Fix: define the advisory\u2019s eligible finding set, standalone behavior, and same-finding rule for combined edit-drift rendering across both output surfaces\n- MEDIUM `[cross-route-replay-contract]`: Step 1\u2019s #291 fixture, Testing, and the fourth Acceptance criterion require every \u201ccombined and split proposal route\u201d to preserve \u201ca named outer-boundary property,\u201d but name neither the property nor the routes and expected result for each stage. `plan_tool/create.py` distinguishes a normal plan-producing path from a split-proposal short-circuit, while create-path mechanics are out of scope, so the fixture cannot derive the intended cross-route contract from this plan.\n  - Fix: name the fixture\u2019s outer-boundary property, enumerate its combined and split route cases, and state each bare- and detail-stage expected finding outcome\n- MEDIUM `[mechanism-classifier-coverage]`: Step 2 (`Classify likely bare-plan mechanism findings from persisted recommendation text`), Architecture, Input, Testing, and acceptance criterion 3 promise a warning for mechanism-shaped findings, but only require identical text to yield the same label and leave outcomes unchanged. A classifier that always returns no mechanism label is stable and advisory-only yet never delivers the promised warning.\n  - Fix: Define positive mechanism-shaped and property-shaped control cases, and require tests that prove the classifier warns for the former, avoids misclassifying the latter, and remains outside enforcement.\n- MEDIUM `[mechanism-property-exception]`: Step 1 (`Teach the bare audit to require property coverage and leave delivery mechanisms to detail`) leaves the Overview and Architecture exception\u2014\u201cunless a settled property makes one indispensable\u201d\u2014undefined. Testing and acceptance criteria 2 and 4 require mechanics to stay deferred but give no case that separates an explicitly selected necessary mechanism from an optional delivery choice, so reasonable prompt rules can either keep blocking mechanism preferences or defer a mechanism the plan has already made necessary.\n  - Fix: define the narrow exception for a mechanism that remains a bare correctness obligation and prove it with a paired replay beside the deferred-mechanism case\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[mechanism-classifier-coverage]`: Step 2, Architecture, and Input promise a warning for persisted mechanism-shaped findings, but Testing and Acceptance only require identical text to return the same label and leave gates unchanged. A classifier that never identifies a mechanism is stable and harmless yet fails the promised warning; steps 3 and 4 would then have no meaningful advisory to render.\n  - Fix: add plan-level positive mechanism and negative property examples with required advisory results, then require those results at both convergence and completeness stderr surfaces\n\n## Suggested next steps\n\n- `plan-tool completeness-audit bare-plan-audit-altitude` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Bare Plan Audit Altitude\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[mechanism-advisory-boundary]`: Architecture, Input, step 3 (`Show the mechanism advisory in convergence and combine matching edit drift`), step 4, Testing, and Acceptance require an advisory plus a combined `edit_drift` message, but never define whether the advisory is standalone, limited to bare `plan-correctness`, or combined only when the same finding matches both signals. `convergence_diagnosis.classify_edit_drift` needs a compatible multi-pass window, so these choices change what operators see on a first pass, at detail stage, and for unrelated matches.\n- MEDIUM `[cross-route-replay-contract]`: Step 1\u2019s #291 fixture, Testing, and the fourth Acceptance criterion require every \u201ccombined and split proposal route\u201d to preserve \u201ca named outer-boundary property,\u201d but name neither the property nor the routes and expected result for each stage. `plan_tool/create.py` distinguishes a normal plan-producing path from a split-proposal short-circuit, while create-path mechanics are out of scope, so the fixture cannot derive the intended cross-route contract from this plan.\n- MEDIUM `[mechanism-classifier-coverage]`: Step 2 (`Classify likely bare-plan mechanism findings from persisted recommendation text`), Architecture, Input, Testing, and acceptance criterion 3 promise a warning for mechanism-shaped findings, but only require identical text to yield the same label and leave outcomes unchanged. A classifier that always returns no mechanism label is stable and advisory-only yet never delivers the promised warning.\n- MEDIUM `[mechanism-property-exception]`: Step 1 (`Teach the bare audit to require property coverage and leave delivery mechanisms to detail`) leaves the Overview and Architecture exception\u2014\u201cunless a settled property makes one indispensable\u201d\u2014undefined. Testing and acceptance criteria 2 and 4 require mechanics to stay deferred but give no case that separates an explicitly selected necessary mechanism from an optional delivery choice, so reasonable prompt rules can either keep blocking mechanism preferences or defer a mechanism the plan has already made necessary.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[mechanism-classifier-coverage]`: Step 2, Architecture, and Input promise a warning for persisted mechanism-shaped findings, but Testing and Acceptance only require identical text to return the same label and leave gates unchanged. A classifier that never identifies a mechanism is stable and harmless yet fails the promised warning; steps 3 and 4 would then have no meaningful advisory to render.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply bare-plan-audit-altitude` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-959d85c1",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture, Input, step 3 (`Show the mechanism advisory in convergence and combine matching edit drift`), step 4, Test",
+      "body": "Architecture, Input, step 3 (`Show the mechanism advisory in convergence and combine matching edit drift`), step 4, Testing, and Acceptance require an advisory plus a combined `edit_drift` message, but never define whether the advisory is standalone, limited to bare `plan-correctness`, or combined only when the same finding matches both signals. `convergence_diagnosis.classify_edit_drift` needs a compatible multi-pass window, so these choices change what operators see on a first pass, at detail stage, and for unrelated matches.",
+      "suggested_action": "define the advisory\u2019s eligible finding set, standalone behavior, and same-finding rule for combined edit-drift rendering across both output surfaces",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "mechanism-advisory-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-33c0b5ce",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s #291 fixture, Testing, and the fourth Acceptance criterion require every \u201ccombined and split proposal route\u201d to",
+      "body": "Step 1\u2019s #291 fixture, Testing, and the fourth Acceptance criterion require every \u201ccombined and split proposal route\u201d to preserve \u201ca named outer-boundary property,\u201d but name neither the property nor the routes and expected result for each stage. `plan_tool/create.py` distinguishes a normal plan-producing path from a split-proposal short-circuit, while create-path mechanics are out of scope, so the fixture cannot derive the intended cross-route contract from this plan.",
+      "suggested_action": "name the fixture\u2019s outer-boundary property, enumerate its combined and split route cases, and state each bare- and detail-stage expected finding outcome",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "cross-route-replay-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-1ec3d1d7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Classify likely bare-plan mechanism findings from persisted recommendation text`), Architecture, Input, Testing",
+      "body": "Step 2 (`Classify likely bare-plan mechanism findings from persisted recommendation text`), Architecture, Input, Testing, and acceptance criterion 3 promise a warning for mechanism-shaped findings, but only require identical text to yield the same label and leave outcomes unchanged. A classifier that always returns no mechanism label is stable and advisory-only yet never delivers the promised warning.",
+      "suggested_action": "Define positive mechanism-shaped and property-shaped control cases, and require tests that prove the classifier warns for the former, avoids misclassifying the latter, and remains outside enforcement.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "mechanism-classifier-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-574a31cb",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Teach the bare audit to require property coverage and leave delivery mechanisms to detail`) leaves the Overview",
+      "body": "Step 1 (`Teach the bare audit to require property coverage and leave delivery mechanisms to detail`) leaves the Overview and Architecture exception\u2014\u201cunless a settled property makes one indispensable\u201d\u2014undefined. Testing and acceptance criteria 2 and 4 require mechanics to stay deferred but give no case that separates an explicitly selected necessary mechanism from an optional delivery choice, so reasonable prompt rules can either keep blocking mechanism preferences or defer a mechanism the plan has already made necessary.",
+      "suggested_action": "define the narrow exception for a mechanism that remains a bare correctness obligation and prove it with a paired replay beside the deferred-mechanism case",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "mechanism-property-exception",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-1ec3d1d7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2, Architecture, and Input promise a warning for persisted mechanism-shaped findings, but Testing and Acceptance on",
+      "body": "Step 2, Architecture, and Input promise a warning for persisted mechanism-shaped findings, but Testing and Acceptance only require identical text to return the same label and leave gates unchanged. A classifier that never identifies a mechanism is stable and harmless yet fails the promised warning; steps 3 and 4 would then have no meaningful advisory to render.",
+      "suggested_action": "add plan-level positive mechanism and negative property examples with required advisory results, then require those results at both convergence and completeness stderr surfaces",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "mechanism-classifier-coverage",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "17b08ffd52bbc6402df28e6dd74f983b82b4b238bd4ae76273ca150340b420e9",
+    "detail_bundle_digest": "aa6f54fe5c667e12bee7406eb559bd96655d832686bfdda7601da5964654d01f",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

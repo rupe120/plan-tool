@@ -1,0 +1,83 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T20:47:03Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "618640293aadd109b43aa61fba263d6e0e3faa5ba360cef0d8947c0a917a4911",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "4c63f2e8a7190e6b357b65ae2dbee1b42998d61b34d978d69ff066643d7c92d0",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "9d242b54ccf5e899ad9212e5e03ad5765aa4144d4de097d634b5bdad492dbaaa",
+    "plan_tool/roadmap_gates.py": "65ee870bd27cc6b15e7e5322f46109e54be74e5acc3bdc4736678943c92a8f44",
+    "tests/cli/test_roadmap_cmd.py": "60c2161907f2ae9a8675b326eb42084bc39d882164a1877fbc92abdc857a2a1a",
+    "tests/test_roadmap.py": "712613c6992c4f6f9d73d42da4830de0c14f31ce293560efc2d0597a457b4c07",
+    "tests/test_roadmap_artifacts.py": "1654dc0ac0956d3c1cc864b63bbb40331a657a6269b2f39b6048906d0d83c110",
+    "tests/test_roadmap_format.py": "176be1b1032a9c923b3b14ff36e576b93ca941155922f0012f9620c41476cce8",
+    "tests/test_roadmap_gates.py": "7caf2dbf0110551f07d8f6d5e213d2d26eebd9620afa733c1b2af487e63a572b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md": "419fe5aca0486963e0fe1d5248c51a60c911f140eac00810010812168b447abe",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md": "fda9087a65477d44706b05d907843912511b0ec5507e0c3f1b60e57cfd43d86c",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md": "adaa17888cadbec3962774f3be00626bc2a98a11c28bf03fc6414ea32c25b9b7",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md": "c97f6d9756847a39003b7f714fcc6ac76d591dfceb93066e14e7ddb7b5227e24"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Hosting And Stores\n\n`roadmap-hosting-and-stores` \u00b7 generated 2026-08-18T20:47:03Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-c79c7d79]`: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-760a3674]`: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5c8e4247]`: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1ee6638e]`: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ce143fe6]`: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-hosting-and-stores` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Hosting And Stores\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "c69df070a656aa3375717b2721494d2459b6e107a32bda1b28f27dee7616d0df",
+    "detail_bundle_digest": "748f791efb05176f31dac2bdfeaf48487db2959d0cb9f5c5eebe6326185f55cd",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+        "state": "present",
+        "digest": "419fe5aca0486963e0fe1d5248c51a60c911f140eac00810010812168b447abe"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+        "state": "present",
+        "digest": "fda9087a65477d44706b05d907843912511b0ec5507e0c3f1b60e57cfd43d86c"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+        "state": "present",
+        "digest": "adaa17888cadbec3962774f3be00626bc2a98a11c28bf03fc6414ea32c25b9b7"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+        "state": "present",
+        "digest": "c97f6d9756847a39003b7f714fcc6ac76d591dfceb93066e14e7ddb7b5227e24"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

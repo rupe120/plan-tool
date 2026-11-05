@@ -1,0 +1,153 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-decision-settlement",
+  "plan_path": "docs/implementation-plans/2-roadmap-decision-settlement.md",
+  "created_at": "2026-09-18T15:18:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "693e252ddd53939217b1f37a170027224d6496bd89d2cc1b514aa12beb56fca3",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "d1683d9553230442d02d2b79c3cb349b3dbb6aa4d0db1e8b2361276e1af6f9b2",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "CLAUDE.md": "1141af3b4ab1974c5b3afdbda1e9b4b0fd1a9957a08f3ad920b9c1abf0a3ff49",
+    "README.md": "b797ae131dc11ccbef01789e9b30c629a0f86e1a49f54a7a25aa3eac24ff7afa",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/common-workflows.md": "f35736593273c970c4f2d3a88d4f01b8af5e60adcb43633cf65dd57a07dbe256",
+    "docs/how-to/roadmap-demo.md": "e8ef400cc63a8b337f4bdbeb4144b9cb4e5db0fa8a29570540f282dbc1ceed9a",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "docs/how-to/use-cases.md": "3688d519916f9a90bae2f9d2ca419c299d39cacd57018f2db050e50e6a3cb5c2",
+    "integrations/shared/DIRECTIVES.md": "7192d800437e52964ac265bb02046284bbd3a9db29721c6d5e362b06c8411fb8",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_artifacts.py": "1928d1f1fbba7733d39a0fc57c2383d9a5f0b0fb1a83467ac129ddefa69d3e5a",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "plan_tool/roadmap_revision_publish.py": "1503a6839e5c7abc3543cc3373c1a43c90f6a031c7608eae00d837233d0a8afa",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_artifacts.py": "999e009cec8d866fa7dce50ec1a0bb277bc8a1e7c2299b62c7d3cce7da4ba171",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072",
+    "tests/test_roadmap_format.py": "08f145e6de37da6e2fa1a1a08ac0d80d11cd10bb3b8cec95b2e07e7ea1853417",
+    "tests/test_roadmap_gates.py": "4b52ed512a58f8c04b12b681ebcd586b4a2904e485b3c32d9e3df0f63488a856",
+    "tests/test_roadmap_revision_publish.py": "04732b48fd13bf91a093750462e986df30f80e37bd9a730568c9cbb56734cff8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md": "dd3dd42ae5e36ca26aecced624534b15b3dedbf51b6fa587f1ad1032efbdf00d",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md": "b8e587bb3712a2f62850d26599596dbd7b843ba5ea3a6236dcf8100da5edbbd0",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md": "a684cd8bfb7aa45fed55357efb7aff70de1ba034bf464d695dfe7a0f35d437bd",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md": "17b243a19a26eaefcd34c1c3495199dd04d1203f4588952e341a7d420e8f27e6",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md": "236cfee708c65aa01a61183bc0fdb1f5d26bdf8d89aeae48eee35e61b3d44d88",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md": "d5c79a47aff0d50da0cae19721114e064b62cbed206f5ac1251536f5b9cfae15",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/07-document-settlement-route-retire-every.md": "325e236dedf00eb72ae36ac6d34dc0a01ae76d394ca78165e7015c2b01e3588f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Decision Settlement\n\n`roadmap-decision-settlement` \u00b7 generated 2026-09-18T15:18:13Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `e274b3457c3fca945c02a2f717153f7031170048da89cf043aaf15ec1e0b37e7`\n- **Detail bundle digest:** `04b852613d7b241270df248141dd8c75b999f38559b6bd2a825f0cf62ab0b1c0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 3 (0 missing-concept-link, 3 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (-1 vs. first audit)\n- **Detail-bundle size:** 244082 bytes (+244082 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.17\n- **Audit-induced growth:** 0.00\n\n**Prose-declared soft edges** \u2014 `depends_on` edges the detail prose marks as ordering-only or test-only:\n  - step 6 \u2192 step 4: \"- Build this fixture locally in the test file; do not import a fixture helper from `tests/test_roadmap_decision_settlement_run.py` or `tests/test_roadmap_decision_settlement_enrolled.py` (those are step 4/5's own test-only helpers in different modules, not a shared fixture library this step should couple to).\"\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-72ac8004]` [confidence: limited]: The plan's `## Acceptance criteria` names `check_settled_decisions`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7ae1ec68]` [confidence: limited]: The plan's `## Acceptance criteria` names `evidencenamespace`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ab43d5d7]` [confidence: limited]: The plan's `## Acceptance criteria` names `feedbackstate`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-904caaff]` [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-76de76f9]` [confidence: limited]: The plan's `## Acceptance criteria` names `promote_review_seal()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-246bdb45]` [confidence: limited]: The plan's `## Acceptance criteria` names `publish_stage_artifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-83ac8780]` [confidence: limited]: The plan's `## Acceptance criteria` names `readme.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d3903d29]` [confidence: limited]: The plan's `## Acceptance criteria` names `runbook.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step4-files-coherence-b5835956]` [confidence: limited]: The detail body for step 4 cites `plan_tool/roadmap_decision_settlement.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/roadmap_decision_settlement_run.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step6-files-coherence-3d4124ff]` [confidence: limited]: The detail body for step 6 cites `docs/how-to/roadmap.md`, which isn't in the step's `files:` array but closely resembles the declared `docs/cli/roadmap.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step7-files-coherence-b2134365]` [confidence: limited]: The detail body for step 7 cites `docs/cli/roadmap.md`, which isn't in the step's `files:` array but closely resembles the declared `docs/how-to/roadmap.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-decision-settlement` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (3 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Decision Settlement\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `e274b3457c3fca945c02a2f717153f7031170048da89cf043aaf15ec1e0b37e7`\n- **Detail bundle digest:** `04b852613d7b241270df248141dd8c75b999f38559b6bd2a825f0cf62ab0b1c0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 4 detail cites `plan_tool/roadmap_decision_settlement.py` resembling declared `plan_tool/roadmap_decision_settlement_run.py` (typo/stale path?)\n- INFO: step 6 detail cites `docs/how-to/roadmap.md` resembling declared `docs/cli/roadmap.md` (typo/stale path?)\n- INFO: step 7 detail cites `docs/cli/roadmap.md` resembling declared `docs/how-to/roadmap.md` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `check_settled_decisions`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `evidencenamespace`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `feedbackstate`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `promote_review_seal()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `publish_stage_artifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `readme.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `runbook.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-decision-settlement` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "e274b3457c3fca945c02a2f717153f7031170048da89cf043aaf15ec1e0b37e7",
+      "detail_bundle_digest": "04b852613d7b241270df248141dd8c75b999f38559b6bd2a825f0cf62ab0b1c0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md",
+          "state": "present",
+          "digest": "dd3dd42ae5e36ca26aecced624534b15b3dedbf51b6fa587f1ad1032efbdf00d"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md",
+          "state": "present",
+          "digest": "b8e587bb3712a2f62850d26599596dbd7b843ba5ea3a6236dcf8100da5edbbd0"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md",
+          "state": "present",
+          "digest": "a684cd8bfb7aa45fed55357efb7aff70de1ba034bf464d695dfe7a0f35d437bd"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md",
+          "state": "present",
+          "digest": "17b243a19a26eaefcd34c1c3495199dd04d1203f4588952e341a7d420e8f27e6"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md",
+          "state": "present",
+          "digest": "236cfee708c65aa01a61183bc0fdb1f5d26bdf8d89aeae48eee35e61b3d44d88"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md",
+          "state": "present",
+          "digest": "d5c79a47aff0d50da0cae19721114e064b62cbed206f5ac1251536f5b9cfae15"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/07-document-settlement-route-retire-every.md",
+          "state": "present",
+          "digest": "325e236dedf00eb72ae36ac6d34dc0a01ae76d394ca78165e7015c2b01e3588f"
+        }
+      ],
+      "source_seed_digest": "057f1e27940bef911e911cb4337e640fc4a26e2f9a9d6f245413704db5eb159f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 244082,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.16666666666666666,
+    "audit_induced_growth": 0.0,
+    "soft_edges": [
+      {
+        "step_id": 6,
+        "depends_on_id": 4,
+        "note": "- Build this fixture locally in the test file; do not import a fixture helper from `tests/test_roadmap_decision_settlement_run.py` or `tests/test_roadmap_decision_settlement_enrolled.py` (those are step 4/5's own test-only helpers in different modules, not a shared fixture library this step should couple to)."
+      }
+    ]
+  },
+  "audit_stage": "detail"
+}

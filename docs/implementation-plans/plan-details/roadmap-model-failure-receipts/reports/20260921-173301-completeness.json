@@ -1,0 +1,203 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-model-failure-receipts",
+  "plan_path": "docs/implementation-plans/2-roadmap-model-failure-receipts.md",
+  "created_at": "2026-09-21T17:33:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7a44fce491e44fb72b31d3b8faab679b57a748395ed411f41bec3c395697c582",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "DATA_CONTRACT.md": "f0ffffbc0844eea047a98db2a61c76bc5edd04143a48b834d75e0440480be4e1",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/OPERATIONS.md": "9cc429edb60dcdef171329a098bfc8e1f1264c5759b858bc1d0785caca0113f7",
+    "plan_tool/data_contract.py": "d5d22b11b4937a2b6f52e1ea3a86371ed66287518e9ce7d2e765777fd919a5f4",
+    "plan_tool/detail.py": "fb424e1957aaa1c1e2bc6d1805499c5f01dbbae9c651535b1c73a3f1ab6a1a7b",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "plan_tool/run_log.py": "b1ded25bc0648537817c28f2525ac41af199ab832cb76007b3258b899e5b830a",
+    "tests/test_detail.py": "7b85aed971b798b33398234a157cf1162f63f99b74972bcd2a82e1c514582edc",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786",
+    "tests/test_run_log.py": "52a7714304152758ce143b14f70f4aa1341541f9e4e1867c3b1c1a3d83d442c6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/01-move-detail-raw-response-sidecar-writes.md": "79683ba28b58baf64be99d4b9817f6397b26024f7bc92c10db963a25b40653ab",
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/02-shared-redacted-model-failure-receipt.md": "b720b67ac52ed17c5983bade51dcb4dbc467a5a918d0b7463a9aca586741d146",
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/03-record-fresh-roadmap-stage-failures.md": "5b1fa28f08f3d049ce81a88e7b6ec70b1a3dbee7260760ca44b9839bff8c1f09",
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/04-record-bounded-roadmap-feedback.md": "9f58a473f20e7fd6d4d657eb134f63afc9441872ab7d037ace88c0dc674d7fb0",
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/05-record-local-feedback-revision-failures.md": "e7f1df414373cd8205e1d7b679882ed67bd126e9a751a0f30d90a9a2c9e31bbe",
+    "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/06-document-roadmap-failure-receipts.md": "aba4fc503bdc7a313cf853153f48ca571ab047e15b85943a56c42402186f715d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Model Failure Receipts\n\n`roadmap-model-failure-receipts` \u00b7 generated 2026-09-21T17:33:01Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c1748b5da0be7a1ffa5282a4f81f24557cb77017bb5c45983aad5467ebef5778`\n- **Detail bundle digest:** `bbf7933f71b7e4d3894fc9f82b428b7c87fac1a3536155ab6a3585ac270a9a39`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 65135 bytes (+65135 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[sidecar-receipt-identity]` [confidence: limited]: The shared sidecar contract does not require a path identity unique across fresh authoring, bounded feedback, and local revision. Architecture\u2019s `written` entry promises:\n\n  ```\n  The receipt carries the safe path, byte count, and digest; the operator reads the sidecar.\n  ```\n\n  But step 1 only accepts a producer-owned slug and per-attempt identifier, its replacement test permits an existing target to be replaced, and steps 3\u20135 do not define a collision-free identity. Two rejected replies can therefore overwrite one path, leaving an earlier receipt marked `written` but pointing at different bytes.\n  - Fix: Define one collision-free sidecar identity contract for every selected producer attempt, and require producer wiring and tests to prove each written receipt resolves to its own digest-matching bytes.\n- MEDIUM `[fresh-gate-receipt]` [confidence: limited]: Step 3 gives opposite instructions for fresh `FAILURE_GATES`: its Implementation says, \u201cEmit one redacted `not-retained` receipt for a fresh `FAILURE_GATES` attempt,\u201d and its Acceptance criteria require a receipt correlating to `gate_violations`, but `test_fresh_gate_rejection_keeps_gate_violations_without_a_model_failure_receipt` requires no receipt. The test would certify behavior that contradicts the Architecture disposition table and leaves fresh gate rejections outside the shared receipt contract.\n  - Fix: Make step 3\u2019s gate-rejection test require exactly one redacted `not-retained` receipt alongside `gate_violations`, with no raw sidecar or copied gate messages.\n- MEDIUM `[no-response-byte-identity]` [confidence: limited]: Step 4 (`Record bounded roadmap feedback failures before retry while preserving accepted revision writes`) classifies whitespace-only replies as `no-response` with no byte identity, but Architecture defines `no-response` as \u201cNo response bytes exist\u201d and `_run_bounded_stage_feedback` rejects whitespace replies through `not reply.strip()`. That loses the digest and sidecar disposition for returned bytes despite the receipt contract requiring reply-derived identity.  \n```text\nArchitecture \u2014 \u201cNo response bytes exist; this takes precedence over every write state.\u201d\n```\n```text\nStep 4 Implementation \u2014 \u201cAn empty or whitespace-only reply must use the step 1 no-response result without inventing bytes, a digest, or a sidecar path.\u201d\n```\n  - Fix: Choose and state one policy for whitespace-only returned replies, then align the disposition definition, producer behavior, and tests so byte-bearing rejections cannot be recorded as byte-free.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-plan-tool-run-log-py:runlogwriter-write-in-flight]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-model-failure-receipts/02-shared-redacted-model-failure-receipt.md:## Input cites `plan_tool/run_log.py:RunLogWriter.write_in_flight`, but code anchor `plan_tool/run_log.py:RunLogWriter.write_in_flight` does not resolve in HEAD.\n\n## Suggested next steps\n\n- Close 3 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n- Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Model Failure Receipts\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c1748b5da0be7a1ffa5282a4f81f24557cb77017bb5c45983aad5467ebef5778`\n- **Detail bundle digest:** `bbf7933f71b7e4d3894fc9f82b428b7c87fac1a3536155ab6a3585ac270a9a39`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[sidecar-receipt-identity]` [confidence: limited]: The shared sidecar contract does not require a path identity unique across fresh authoring, bounded feedback, and local revision. Architecture\u2019s `written` entry promises:\n\n  ```\n  The receipt carries the safe path, byte count, and digest; the operator reads the sidecar.\n  ```\n\n  But step 1 only accepts a producer-owned slug and per-attempt identifier, its replacement test permits an existing target to be replaced, and steps 3\u20135 do not define a collision-free identity. Two rejected replies can therefore overwrite one path, leaving an earlier receipt marked `written` but pointing at different bytes.\n- MEDIUM `[fresh-gate-receipt]` [confidence: limited]: Step 3 gives opposite instructions for fresh `FAILURE_GATES`: its Implementation says, \u201cEmit one redacted `not-retained` receipt for a fresh `FAILURE_GATES` attempt,\u201d and its Acceptance criteria require a receipt correlating to `gate_violations`, but `test_fresh_gate_rejection_keeps_gate_violations_without_a_model_failure_receipt` requires no receipt. The test would certify behavior that contradicts the Architecture disposition table and leaves fresh gate rejections outside the shared receipt contract.\n- MEDIUM `[no-response-byte-identity]` [confidence: limited]: Step 4 (`Record bounded roadmap feedback failures before retry while preserving accepted revision writes`) classifies whitespace-only replies as `no-response` with no byte identity, but Architecture defines `no-response` as \u201cNo response bytes exist\u201d and `_run_bounded_stage_feedback` rejects whitespace replies through `not reply.strip()`. That loses the digest and sidecar disposition for returned bytes despite the receipt contract requiring reply-derived identity.  \n```text\nArchitecture \u2014 \u201cNo response bytes exist; this takes precedence over every write state.\u201d\n```\n```text\nStep 4 Implementation \u2014 \u201cAn empty or whitespace-only reply must use the step 1 no-response result without inventing bytes, a digest, or a sidecar path.\u201d\n```\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-run-log-py:runlogwriter-write-in-flight]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-model-failure-receipts/02-shared-redacted-model-failure-receipt.md:## Input cites `plan_tool/run_log.py:RunLogWriter.write_in_flight`, but code anchor `plan_tool/run_log.py:RunLogWriter.write_in_flight` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-model-failure-receipts` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-08125777",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The shared sidecar contract does not require a path identity unique across fresh authoring, bounded feedback, and local ",
+      "body": "The shared sidecar contract does not require a path identity unique across fresh authoring, bounded feedback, and local revision. Architecture\u2019s `written` entry promises:\n\n  ```\n  The receipt carries the safe path, byte count, and digest; the operator reads the sidecar.\n  ```\n\n  But step 1 only accepts a producer-owned slug and per-attempt identifier, its replacement test permits an existing target to be replaced, and steps 3\u20135 do not define a collision-free identity. Two rejected replies can therefore overwrite one path, leaving an earlier receipt marked `written` but pointing at different bytes.",
+      "suggested_action": "Define one collision-free sidecar identity contract for every selected producer attempt, and require producer wiring and tests to prove each written receipt resolves to its own digest-matching bytes.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "sidecar-receipt-identity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a6f737bf",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 gives opposite instructions for fresh `FAILURE_GATES`: its Implementation says, \u201cEmit one redacted `not-retained`",
+      "body": "Step 3 gives opposite instructions for fresh `FAILURE_GATES`: its Implementation says, \u201cEmit one redacted `not-retained` receipt for a fresh `FAILURE_GATES` attempt,\u201d and its Acceptance criteria require a receipt correlating to `gate_violations`, but `test_fresh_gate_rejection_keeps_gate_violations_without_a_model_failure_receipt` requires no receipt. The test would certify behavior that contradicts the Architecture disposition table and leaves fresh gate rejections outside the shared receipt contract.",
+      "suggested_action": "Make step 3\u2019s gate-rejection test require exactly one redacted `not-retained` receipt alongside `gate_violations`, with no raw sidecar or copied gate messages.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-gate-receipt",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0b78cd09",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Record bounded roadmap feedback failures before retry while preserving accepted revision writes`) classifies wh",
+      "body": "Step 4 (`Record bounded roadmap feedback failures before retry while preserving accepted revision writes`) classifies whitespace-only replies as `no-response` with no byte identity, but Architecture defines `no-response` as \u201cNo response bytes exist\u201d and `_run_bounded_stage_feedback` rejects whitespace replies through `not reply.strip()`. That loses the digest and sidecar disposition for returned bytes despite the receipt contract requiring reply-derived identity.  \n```text\nArchitecture \u2014 \u201cNo response bytes exist; this takes precedence over every write state.\u201d\n```\n```text\nStep 4 Implementation \u2014 \u201cAn empty or whitespace-only reply must use the step 1 no-response result without inventing bytes, a digest, or a sidecar path.\u201d\n```",
+      "suggested_action": "Choose and state one policy for whitespace-only returned replies, then align the disposition definition, producer behavior, and tests so byte-bearing rejections cannot be recorded as byte-free.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "no-response-byte-identity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step2-data-contract-92c4aa0c",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `plan_tool/run_log.py:RunLogWriter.write_in_flight`",
+      "body": "docs/implementation-plans/plan-details/roadmap-model-failure-receipts/02-shared-redacted-model-failure-receipt.md:## Input cites `plan_tool/run_log.py:RunLogWriter.write_in_flight`, but code anchor `plan_tool/run_log.py:RunLogWriter.write_in_flight` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-run-log-py:runlogwriter-write-in-flight",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c1748b5da0be7a1ffa5282a4f81f24557cb77017bb5c45983aad5467ebef5778",
+      "detail_bundle_digest": "bbf7933f71b7e4d3894fc9f82b428b7c87fac1a3536155ab6a3585ac270a9a39",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/01-move-detail-raw-response-sidecar-writes.md",
+          "state": "present",
+          "digest": "79683ba28b58baf64be99d4b9817f6397b26024f7bc92c10db963a25b40653ab"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/02-shared-redacted-model-failure-receipt.md",
+          "state": "present",
+          "digest": "b720b67ac52ed17c5983bade51dcb4dbc467a5a918d0b7463a9aca586741d146"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/03-record-fresh-roadmap-stage-failures.md",
+          "state": "present",
+          "digest": "5b1fa28f08f3d049ce81a88e7b6ec70b1a3dbee7260760ca44b9839bff8c1f09"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/04-record-bounded-roadmap-feedback.md",
+          "state": "present",
+          "digest": "9f58a473f20e7fd6d4d657eb134f63afc9441872ab7d037ace88c0dc674d7fb0"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/05-record-local-feedback-revision-failures.md",
+          "state": "present",
+          "digest": "e7f1df414373cd8205e1d7b679882ed67bd126e9a751a0f30d90a9a2c9e31bbe"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-model-failure-receipts/06-document-roadmap-failure-receipts.md",
+          "state": "present",
+          "digest": "aba4fc503bdc7a313cf853153f48ca571ab047e15b85943a56c42402186f715d"
+        }
+      ],
+      "source_seed_digest": "c5cd96f33226e9494f0371ada2663d36daa11570a85c7daca6bf6ffbbb2a4acd",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 65135,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

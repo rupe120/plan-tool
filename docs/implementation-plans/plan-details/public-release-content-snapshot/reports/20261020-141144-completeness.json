@@ -1,0 +1,112 @@
+{
+  "version": 4,
+  "plan_slug": "public-release-content-snapshot",
+  "plan_path": "docs/implementation-plans/2-public-release-content-snapshot.md",
+  "created_at": "2026-10-20T14:11:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2c189b61cf7ab66f04340a70cc740513c239bf18b6ac6b193002082f6e454e9c",
+  "code_fingerprint": {
+    ".plan-tool/plans.json": "d4b6e0bb4a3298bb3054388743ad66c71d4e1ee44ddc51dec7b2c97d00dad8f7",
+    "AI_SDLC_POLICY.pdf": "f56bbe4b8967da21a26ab9b81db865a12663b968ce14628e91cc2e5b41d36e1b",
+    "BACKLOG.md": "4e15afb0fe0a7aee2914c8dabadc1636af349dde3ab62ac152b073b1e4287b3a",
+    "CLAUDE.md": "927bd68424821dfd2cb46699871e3aa914f86de0d6e5968b77e23e2452c8672f",
+    "docs/evidence/claude-md-measured-incidents.md": "20633a5342dd45d753bc4f31d194e30f70a5edc8f0caaf0df8f56215f8b31ba4",
+    "docs/evidence/integration-context-budget-2026-10-09/provenance.json": "b7102c0dfd04afa0cb964da64e7e738bdc7e8f827d4c9ee6bcbdb6a30cc17262",
+    "docs/evidence/integration-context-budget-2026-10-09/sizing.md": "a1fa034ae87b3057f1cc3dd046e5ddf011762baf083d6d95149d74ce9ba0c86b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md": "6bf6f6d56e19162767e59c4246d2e5c9f46137b01434ce0e3d6a2f7b037acbee",
+    "docs/reference/ai-assisted-development-policy.md": "38c0b6a4f4a918a8df8ff6446a2862cc8bf1774af483bb214c07ec656e03f776",
+    "handoffs/2026-10-19-public-onboarding-and-release.md": "6f8e6bcea25f50b171aeef669b3a11b5f93f32c7e1ecd80c8cbd3302fd963c45",
+    "handoffs/README.md": "8464e5870302310d2fd2885a43dfa25b54b7ac733f20ef10518630e00198af51"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/01-record-selected-snapshot-content.md": "2782b18c9162d8d683b18b2e096c6dbaebf2d9b8e4409d7e17d6ed2fded4458e",
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/02-prepare-selected-content-report.md": "a6d705968941f2e7f2b6defea26dac4f1ac01cd62f3598a46cfc1617d5fc1f6f",
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/03-make-retained-commit-citations-self.md": "cbb44d5bbfbb952b989bc6773df9f98f03ddca883d4b8065a65caafb73ab0934",
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/04-apply-owner-rights-decisions-policy.md": "491d2a10e0b841e037a6fdf0bd41bd2f2cf2ca160bf022c84a040ef1c6aacc69",
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/05-verify-selected-content-existing-tests.md": "c76712f9ae33acfc92f80bdc99a86fae885885468726678869845475170ea7f2",
+    "docs/implementation-plans/plan-details/public-release-content-snapshot/06-reconcile-backlog-513-publish-local.md": "1f0da8e56f1b89a514f51e32ac6ee41407575fdae618e64c62cbcb3ac8974e71"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Public Release Content Snapshot\n\n`public-release-content-snapshot` \u00b7 generated 2026-10-20T14:11:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit public-release-content-snapshot --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Public Release Content Snapshot\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- `plan-tool completeness-audit public-release-content-snapshot --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "2c189b61cf7ab66f04340a70cc740513c239bf18b6ac6b193002082f6e454e9c",
+    "detail_bundle_digest": "d04f143c3fbcd0db46a0473ec6a0e5298cc0222c4548ad3cf667fb06b11fcf7e",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/01-record-selected-snapshot-content.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/02-prepare-selected-content-report.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/03-make-retained-commit-citations-self.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/04-apply-owner-rights-decisions-policy.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/05-verify-selected-content-existing-tests.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/public-release-content-snapshot/06-reconcile-backlog-513-publish-local.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "a2ce5122363a6acdf387d246c09d8d8da61d5908b902cefd09dc18151837913c",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

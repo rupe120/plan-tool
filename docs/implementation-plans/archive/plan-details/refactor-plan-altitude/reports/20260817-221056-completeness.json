@@ -1,0 +1,124 @@
+{
+  "version": 4,
+  "plan_slug": "refactor-plan-altitude",
+  "plan_path": "docs/implementation-plans/2-refactor-plan-altitude.md",
+  "created_at": "2026-08-17T22:10:56Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "71a297b6d7f18553a7bae7524b6cc5537f2f1d498f18273282919086526f184f",
+  "code_fingerprint": {
+    "BACKLOG.md": "8e36795b6b8c975dd0764d4289027afa9f0dce75a00d0170d74a4cfc01f1f8cf",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "plan_tool/prompts/synthesize-body.md": "be635d0b60f0229aa38b153e04f4504cf779849c21dca6c313f47185a1fae14a",
+    "tests/test_create.py": "7b77e167e8a8a2f847d1b8469d17d1baff4a5b2e11f89208f50e55cdc7f19d41"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-select-outer-boundaries.md": "583c6eb29ff7bf246fbcbad551310bb4eecc86a0454f6c46cbd44d28dc5d4989",
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/02-keep-synthesized-refactor-architecture.md": "63934392a254f3379f5979679937dbf880eade8b468b2f4ce65ce299078071f6"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Refactor Plan Altitude\n\n`refactor-plan-altitude` \u00b7 generated 2026-08-17T22:10:55Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `71a297b6d7f18553a7bae7524b6cc5537f2f1d498f18273282919086526f184f`\n- **Detail bundle digest:** `8201519b7420a9477e9c401bb6947462e39e32f1b8a3364f53d27f034d2f9a1a`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply refactor-plan-altitude   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk refactor-plan-altitude  # alternative interactive review/apply\n\n- MEDIUM `[inner-mechanic-exception]`: Step 1\u2019s `Overview` and `Architecture` say an inner guard, selector, rebuild, callback, or fixture leaves detail \u201cunless it crosses an outer boundary or independently owns an observable contract,\u201d but `Testing` and `Acceptance criteria` allow such a mechanism to become a phase only when it independently owns an observable contract. `plan_tool/create.py:_render_from_prompt` Stage 3 also treats a guard repeated across loops or modules as a separate concern, so a cross-boundary mechanism can reasonably be emitted as a step or kept in detail.\n  - Fix: choose whether crossing an outer boundary alone elevates an inner mechanism, then make Stage 3, the selection rule, risk, tests, and acceptance criterion use that one rule.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply refactor-plan-altitude` \u2014 apply the 1 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Refactor Plan Altitude\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `71a297b6d7f18553a7bae7524b6cc5537f2f1d498f18273282919086526f184f`\n- **Detail bundle digest:** `8201519b7420a9477e9c401bb6947462e39e32f1b8a3364f53d27f034d2f9a1a`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[inner-mechanic-exception]`: Step 1\u2019s `Overview` and `Architecture` say an inner guard, selector, rebuild, callback, or fixture leaves detail \u201cunless it crosses an outer boundary or independently owns an observable contract,\u201d but `Testing` and `Acceptance criteria` allow such a mechanism to become a phase only when it independently owns an observable contract. `plan_tool/create.py:_render_from_prompt` Stage 3 also treats a guard repeated across loops or modules as a separate concern, so a cross-boundary mechanism can reasonably be emitted as a step or kept in detail.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight]`: DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.\n- MEDIUM `[data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt]`: DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk refactor-plan-altitude` \u2014 interactively review the remaining finding(s) the iterate loop left open.\n- `plan-tool completeness-apply refactor-plan-altitude` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-1a244b77",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s `Overview` and `Architecture` say an inner guard, selector, rebuild, callback, or fixture leaves detail \u201cunless",
+      "body": "Step 1\u2019s `Overview` and `Architecture` say an inner guard, selector, rebuild, callback, or fixture leaves detail \u201cunless it crosses an outer boundary or independently owns an observable contract,\u201d but `Testing` and `Acceptance criteria` allow such a mechanism to become a phase only when it independently owns an observable contract. `plan_tool/create.py:_render_from_prompt` Stage 3 also treats a guard repeated across loops or modules as a separate concern, so a cross-boundary mechanism can reasonably be emitted as a step or kept in detail.",
+      "suggested_action": "choose whether crossing an outer boundary alone elevates an inner mechanism, then make Stage 3, the selection rule, risk, tests, and acceptance criterion use that one rule.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "inner-mechanic-exception",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-a0c1406f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionPreflight' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-5a8d161e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionAttempt' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "71a297b6d7f18553a7bae7524b6cc5537f2f1d498f18273282919086526f184f",
+      "detail_bundle_digest": "8201519b7420a9477e9c401bb6947462e39e32f1b8a3364f53d27f034d2f9a1a",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-select-outer-boundaries.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/02-keep-synthesized-refactor-architecture.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

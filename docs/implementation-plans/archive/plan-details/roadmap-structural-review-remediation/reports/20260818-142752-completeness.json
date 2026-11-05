@@ -1,0 +1,127 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-review-remediation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-review-remediation.md",
+  "created_at": "2026-08-18T14:27:52Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "78ea9cf2393580ff80ba0361cf5a737e3341221512d1225272c93b1f4e86d101",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "70086e23afe68540cfef5476fdc5a7f5a3078846e30596c5cca86c83d2ca4063",
+    "CLAUDE.md": "aa5d28fa5415fb6ee134f3f18364ad53da40d56ef260cda6a30bcc1e2d202a3c",
+    "README.md": "151a22851b94f9db120c7830796d1c358576c4008e5c4db66cc6e4e7777cf64b",
+    "ROADMAP_FORMAT.md": "a11b4b00c4c4fa930003857bf9b93c55688095f3a909ebf06725f8fb7daef205",
+    "RUNBOOK.md": "0d2d0c65d6a928173616a12e5de72d0036b657b2125b08ec25f01e72843d87ea",
+    "docs/ARCHITECTURE.md": "5e97c39fe271e108095c1baca5aeeb55bc2603f645e56e7e38f2b86f35ff28d9",
+    "docs/ROADMAP_WALKTHROUGH.md": "5589fd1ec828fe914d87a9f105bc12e6afd473ed4d46d1125863a99f3cbb5e88",
+    "integrations/claude/SKILL.md": "4791bea0eda7051d6494fcfeb0f3c4f63f35a42406ca6ef0bdda5fd3a8d38d7b",
+    "plan_tool/roadmap_structural_revision_patch.py": "8f8ea7c33685f4a058f431b0e5f67e96dd81719e7dfc7ae2cdafd008ab19e6fb",
+    "plan_tool/roadmap_structural_revision_run.py": "87a4262d82ef876d034429e19678923a670e6efabea9f1f258d3194484d8f9d4",
+    "tests/test_roadmap_format.py": "f2af9b585469bb3d8810fefed5b7ece0669d9ca8bf84b6a12e6a5490da26dee2",
+    "tests/test_roadmap_structural_revision_patch.py": "1be65ba19c463ab75f79258483e5d1d6d3db855d64123f002acc19371051059b",
+    "tests/test_roadmap_structural_revision_run.py": "c77fdb62105c9c7537631a0264f4911b8c46cc5244094a82932a40bb11605852"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md": "3bd1910daeff83c452d08f8594385b043b55a0c7dca0800a30b7d7368313237d",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-use-generic-protected-file-evaluator.md": "b756d4b9af373bdec5ca278a7a5a0af825b4f4810a498b9c0a8a99094e3527be",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md": "8013572d72c92f74cd91ce676c0ef270041eb2aad69081838de68fedfba673f5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Review Remediation\n\n`roadmap-structural-review-remediation` \u00b7 generated 2026-08-18T14:27:52Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-review-remediation   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-structural-review-remediation  # alternative interactive review/apply\n\n- MEDIUM `[scope-review-refusal-boundary]`: Step 3 (`Document both admitted route classes, keep requires-scope-review refused`), the Overview, Architecture, Input, Route-guidance drift risk, and acceptance criteria say that `requires-scope-review` is \u201crefused\u201d without naming the structural writer as the actor. `ROADMAP_FORMAT.md`\u2019s Impact-routing analyses says a completed `requires-scope-review` analysis \u201csucceeds with status `0`\u201d and is \u201cneither a refusal,\u201d while its Exact-pair structural rewrite section and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` reject that route only for the writer; `docs/cli/roadmap.md` also does not state the route rule despite the acceptance claim.\n  - Fix: define the route result as successful no-workflow and scope refusal explicitly to `--rewrite-structural` preflight across every step 3 documentation site.\n- MEDIUM `[protected-evaluator-probe]`: Step 2 (`Use a generic protected-file evaluator probe...`), Architecture\u2019s \u201cprotected regular-file sentinel,\u201d Risks\u2019 `Unavailable evaluator-isolation probe`, Testing, and the evaluator acceptance criteria do not define the symlink boundary or require the sentinel\u2019s resolved target to stay under a named Seatbelt-denied root. `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` currently uses `Path.is_file()`, so an implementation can accept an in-tree link to an outside file and no longer prove the promised protected-root data and metadata denial.\n  - Fix: Define the sentinel as a non-symlink regular file under a named denied root, and require focused tests to refuse links and absent direct candidates.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[protected-evaluator-probe]`: Step 2 (`Use a generic protected-file evaluator probe...`), Architecture, the Unavailable evaluator-isolation probe risk, Testing, and the evaluator acceptance criteria require a generic protected regular-file sentinel but never define its symlink boundary. `pathlib.Path.is_file()` follows symlinks, as the current `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` pattern does, so a generic selector can test a path whose target is outside the denied repository rather than an in-root protected file.\n  - Fix: require the sentinel to be a non-symlink regular file resolving inside the protected repository, fail closed otherwise, and add a focused acceptance test for that case.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-8471e700]`: The plan's `## Acceptance criteria` names `pyproject.toml`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-review-remediation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Review Remediation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[scope-review-refusal-boundary]`: Step 3 (`Document both admitted route classes, keep requires-scope-review refused`), the Overview, Architecture, Input, Route-guidance drift risk, and acceptance criteria say that `requires-scope-review` is \u201crefused\u201d without naming the structural writer as the actor. `ROADMAP_FORMAT.md`\u2019s Impact-routing analyses says a completed `requires-scope-review` analysis \u201csucceeds with status `0`\u201d and is \u201cneither a refusal,\u201d while its Exact-pair structural rewrite section and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` reject that route only for the writer; `docs/cli/roadmap.md` also does not state the route rule despite the acceptance claim.\n- MEDIUM `[protected-evaluator-probe]`: Step 2 (`Use a generic protected-file evaluator probe...`), Architecture\u2019s \u201cprotected regular-file sentinel,\u201d Risks\u2019 `Unavailable evaluator-isolation probe`, Testing, and the evaluator acceptance criteria do not define the symlink boundary or require the sentinel\u2019s resolved target to stay under a named Seatbelt-denied root. `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` currently uses `Path.is_file()`, so an implementation can accept an in-tree link to an outside file and no longer prove the promised protected-root data and metadata denial.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[protected-evaluator-probe]`: Step 2 (`Use a generic protected-file evaluator probe...`), Architecture, the Unavailable evaluator-isolation probe risk, Testing, and the evaluator acceptance criteria require a generic protected regular-file sentinel but never define its symlink boundary. `pathlib.Path.is_file()` follows symlinks, as the current `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` pattern does, so a generic selector can test a path whose target is outside the denied repository rather than an in-root protected file.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `pyproject.toml`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-structural-review-remediation` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a3ca9088",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Document both admitted route classes, keep requires-scope-review refused`), the Overview, Architecture, Input, ",
+      "body": "Step 3 (`Document both admitted route classes, keep requires-scope-review refused`), the Overview, Architecture, Input, Route-guidance drift risk, and acceptance criteria say that `requires-scope-review` is \u201crefused\u201d without naming the structural writer as the actor. `ROADMAP_FORMAT.md`\u2019s Impact-routing analyses says a completed `requires-scope-review` analysis \u201csucceeds with status `0`\u201d and is \u201cneither a refusal,\u201d while its Exact-pair structural rewrite section and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` reject that route only for the writer; `docs/cli/roadmap.md` also does not state the route rule despite the acceptance claim.",
+      "suggested_action": "define the route result as successful no-workflow and scope refusal explicitly to `--rewrite-structural` preflight across every step 3 documentation site.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "scope-review-refusal-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d7769a7f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Use a generic protected-file evaluator probe...`), Architecture\u2019s \u201cprotected regular-file sentinel,\u201d Risks\u2019 `Un",
+      "body": "Step 2 (`Use a generic protected-file evaluator probe...`), Architecture\u2019s \u201cprotected regular-file sentinel,\u201d Risks\u2019 `Unavailable evaluator-isolation probe`, Testing, and the evaluator acceptance criteria do not define the symlink boundary or require the sentinel\u2019s resolved target to stay under a named Seatbelt-denied root. `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` currently uses `Path.is_file()`, so an implementation can accept an in-tree link to an outside file and no longer prove the promised protected-root data and metadata denial.",
+      "suggested_action": "Define the sentinel as a non-symlink regular file under a named denied root, and require focused tests to refuse links and absent direct candidates.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "protected-evaluator-probe",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-d7769a7f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Use a generic protected-file evaluator probe...`), Architecture, the Unavailable evaluator-isolation probe risk",
+      "body": "Step 2 (`Use a generic protected-file evaluator probe...`), Architecture, the Unavailable evaluator-isolation probe risk, Testing, and the evaluator acceptance criteria require a generic protected regular-file sentinel but never define its symlink boundary. `pathlib.Path.is_file()` follows symlinks, as the current `plan_tool/roadmap_structural_revision_run.py:_isolation_probes_pass` pattern does, so a generic selector can test a path whose target is outside the denied repository rather than an in-root protected file.",
+      "suggested_action": "require the sentinel to be a non-symlink regular file resolving inside the protected repository, fail closed otherwise, and add a focused acceptance test for that case.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "protected-evaluator-probe",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "78ea9cf2393580ff80ba0361cf5a737e3341221512d1225272c93b1f4e86d101",
+    "detail_bundle_digest": "711c70b856d2e3bc4ffbd24eaae97058b94db9be467a5ff9ad8b62797baac9a0",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-use-generic-protected-file-evaluator.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

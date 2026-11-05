@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-1e751495": {
+      "code_anchor": "detail.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-recommendation-confidence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-recommendation-confidence.md",
+      "reason": "code anchor path `detail.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "plan-data-contract-54d2013d": {
+      "code_anchor": "launcher.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-recommendation-confidence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-recommendation-confidence.md",
+      "reason": "code anchor path `launcher.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "plan-data-contract-80ef5922": {
+      "code_anchor": "granularity.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-recommendation-confidence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-recommendation-confidence.md",
+      "reason": "code anchor path `granularity.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "plan-data-contract-ac3c844f": {
+      "code_anchor": "review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-recommendation-confidence.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-recommendation-confidence.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260826-015115-completeness"
+}

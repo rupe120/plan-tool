@@ -1,0 +1,162 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-source-baseline-recovery",
+  "plan_path": "docs/implementation-plans/2-roadmap-source-baseline-recovery.md",
+  "created_at": "2026-08-28T02:23:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4875196f7afc16486893610981c7a3740671dd9e2feba9f5ef08eb7e57741b2b",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "f71fff214c8ec3263e6da6ba3f48b266513d2afe5edf066ea99a198b4a1fa5c5",
+    "RUNBOOK.md": "81eb10715fd22b163d165a344ae560735bb704a400ded142ce75bc2213d19274",
+    "docs/cli/roadmap.md": "eed7749f6cc52614c779c95a5aefea0d189209154fd65fd440951345a1451fb7",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "e4a01db63bc333275298ad6e2ad78e638c599d0329707a77bff9026df8a19f81",
+    "handoffs/2026-08-27-integration-roadmap-evidence-preflight.md": "915d1dff693dc0d4cfd29028d64d913f78e7bc32241f2063ca990e095d8a8fcd",
+    "plan_tool/cli/__init__.py": "4861fc8a30561c62df7e1197d803099552c8f9994ef221010e5dbb76d440d11a",
+    "plan_tool/cli/roadmap_cmd.py": "1997d5d952ce937fcea29aa03ab6a6d9c727d4864e18a5a91ab62b7a142977a7",
+    "plan_tool/roadmap.py": "5c233f422b7326663616be1fd76d68016ba3b75dd66efb4cb72ce0cd01c2ec1a",
+    "plan_tool/roadmap_revision_publish.py": "f46f41ed1852392dd83402ff16f22e0a578be4a3bfaca6f05c88939d93cc46b1",
+    "plan_tool/roadmap_seed_state.py": "1b39bc9ef7b54d37e17163fc901052ccc595a007be777d828028c5f005f1b3a8",
+    "plan_tool/roadmap_source_identity.py": "2b8055b4fbdc240717407b093c6bb3cf1cb274f460fe9c8c1adf91b41027ad9f",
+    "tests/cli/test_roadmap_cmd.py": "9333d9992488a7adecead28985584544c80a1901842853f98a77db360901f990",
+    "tests/test_roadmap.py": "2ca5da4cfedc0b3d79ff664d44ab1afa08d759d0c5a9dc9d03d870bb741b34d4",
+    "tests/test_roadmap_escalation_run.py": "62b15c0a62cee58fba798e9596698ff895d3ef3bd74c4dec3676af0ac0be3331",
+    "tests/test_roadmap_impact_run.py": "4a6f71136616582d8919394700e4750393889967c00518dfcb181fd0fbac4f10",
+    "tests/test_roadmap_revision_publish.py": "14ab7793c00c62fd9cf96a63092fbbca25542c3c25bab0d9d1c7de4a6d762b97",
+    "tests/test_roadmap_seed_state.py": "a0aee51e890a0b7334c968851cf9986969220810442f8b1037e6edd2a079dffe",
+    "tests/test_roadmap_source_identity.py": "998e1341e4b80fb339b1a49e7c0e80a63a043e7c58f07b273424d7976293705e",
+    "tests/test_roadmap_structural_revision.py": "62aac56501341107719f0e6ee5ae0301882cb72132c34cb54c563cac906f4144"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/01-confirmed-selected-range-source.md": "db7f1c55c6a54e6f5eb2703dd67e46d47102c401aad6c3ed1e53250a87f790d2",
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/02-expose-document-explicit-recovery.md": "722eedf5651a5d53ed5bf3c96c46b04488eacbbceeb08cbf888fc5b073502ef3",
+    "docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/03-verify-evidence-currentness-close.md": "b9c722027083fcbebd40cc50bc0ce7b12b38c780e832940a3fd360ff713d4a8c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Source Baseline Recovery\n\n`roadmap-source-baseline-recovery` \u00b7 generated 2026-08-28T02:23:40Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-source-baseline-recovery   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-source-baseline-recovery  # alternative interactive review/apply\n\n- HIGH `[recovery-confirmation-binding]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), the Architecture, the direct-source-change risk, Testing, and the final-boundary acceptance criterion require a final recheck but never require it to match the source the operator confirmed. A raw edit can replace a selected canonical source after confirmation and before that recheck, and recovery can then trust the new valid source without a new operator decision.\n  - Fix: bind confirmation to the selected canonical source identities and refuse a final source mismatch until the operator confirms the newly read range.\n- HIGH `[recovery-interruption-ownership]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`) says only its matching interrupted recovery may continue, but never defines what makes a recovery match. At HEAD, `plan_tool.roadmap_revision_publish:recover_roadmap_publication` has no recovery identity and is called by `plan_tool.roadmap:enroll_roadmap_baselines` and `run_roadmap`, `plan_tool.roadmap_revision_run:run_local_feedback_revision`, `plan_tool.roadmap_impact_run:run_roadmap_impact_analysis`, and `plan_tool.roadmap_structural_revision_run:run_structural_revision`, so another action can clear or roll back a recovery journal.\n  - Fix: define a durable recovery match rule for the selected range and baseline transition, and require every nonmatching writer to refuse that pending recovery state unchanged.\n- MEDIUM `[derived-seed-source-binding]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), Architecture, Risks, Testing, and acceptance criterion three promise that every tracked derived-seed entry stays bound to current recovered-source inputs. `plan_tool.roadmap_seed_state:invalidated_seed_state` only replaces `draft_seed_path` for plan IDs still present in `plan_tool.roadmap_revision_publish:_plan_draft_seed_paths`; a valid recovered `04-roadmap.md` can remove a tracked ID and leave its invalidated entry pointing to an old input because full roadmap gates do not check that relationship.\n  - Fix: make current plan-to-seed bindings an admission requirement and refuse recovery when any tracked entry has no current source binding, while updating matching renamed paths in the same generation.\n- MEDIUM `[integration-follow-up-order]` [confidence: limited]: Step 3 (`Verify evidence currentness and close the blocked Integration follow-up`) gives two different order signals: Architecture says \u201cThe exact blocked Integration receipt is re-evaluated only after recovery ships through the canonical delivery gate,\u201d while acceptance criterion seven says \u201cOnce the capability is delivered through the canonical checkout, the arc and handoff record the exact Codex-backed Integration re-evaluation as the next action.\u201d The referenced Integration handoff records that constraints and components still differ from their active baselines, so delivery alone leaves the re-evaluation blocked.\n  - Fix: record one ordered Integration sequence: canonical delivery, successful confirmed recovery of the recorded range, then the exact Codex-backed re-evaluation.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-source-baseline-recovery` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Source Baseline Recovery\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[recovery-confirmation-binding]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), the Architecture, the direct-source-change risk, Testing, and the final-boundary acceptance criterion require a final recheck but never require it to match the source the operator confirmed. A raw edit can replace a selected canonical source after confirmation and before that recheck, and recovery can then trust the new valid source without a new operator decision.\n- HIGH `[recovery-interruption-ownership]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`) says only its matching interrupted recovery may continue, but never defines what makes a recovery match. At HEAD, `plan_tool.roadmap_revision_publish:recover_roadmap_publication` has no recovery identity and is called by `plan_tool.roadmap:enroll_roadmap_baselines` and `run_roadmap`, `plan_tool.roadmap_revision_run:run_local_feedback_revision`, `plan_tool.roadmap_impact_run:run_roadmap_impact_analysis`, and `plan_tool.roadmap_structural_revision_run:run_structural_revision`, so another action can clear or roll back a recovery journal.\n- MEDIUM `[derived-seed-source-binding]` [confidence: limited]: Step 1 (`Add a confirmed selected-range source-baseline recovery action`), Architecture, Risks, Testing, and acceptance criterion three promise that every tracked derived-seed entry stays bound to current recovered-source inputs. `plan_tool.roadmap_seed_state:invalidated_seed_state` only replaces `draft_seed_path` for plan IDs still present in `plan_tool.roadmap_revision_publish:_plan_draft_seed_paths`; a valid recovered `04-roadmap.md` can remove a tracked ID and leave its invalidated entry pointing to an old input because full roadmap gates do not check that relationship.\n- MEDIUM `[integration-follow-up-order]` [confidence: limited]: Step 3 (`Verify evidence currentness and close the blocked Integration follow-up`) gives two different order signals: Architecture says \u201cThe exact blocked Integration receipt is re-evaluated only after recovery ships through the canonical delivery gate,\u201d while acceptance criterion seven says \u201cOnce the capability is delivered through the canonical checkout, the arc and handoff record the exact Codex-backed Integration re-evaluation as the next action.\u201d The referenced Integration handoff records that constraints and components still differ from their active baselines, so delivery alone leaves the re-evaluation blocked.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-source-baseline-recovery` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7de132db",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), the Architecture, the direct-source-change ri",
+      "body": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), the Architecture, the direct-source-change risk, Testing, and the final-boundary acceptance criterion require a final recheck but never require it to match the source the operator confirmed. A raw edit can replace a selected canonical source after confirmation and before that recheck, and recovery can then trust the new valid source without a new operator decision.",
+      "suggested_action": "bind confirmation to the selected canonical source identities and refuse a final source mismatch until the operator confirms the newly read range.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recovery-confirmation-binding",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-4000c43f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`) says only its matching interrupted recovery ma",
+      "body": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`) says only its matching interrupted recovery may continue, but never defines what makes a recovery match. At HEAD, `plan_tool.roadmap_revision_publish:recover_roadmap_publication` has no recovery identity and is called by `plan_tool.roadmap:enroll_roadmap_baselines` and `run_roadmap`, `plan_tool.roadmap_revision_run:run_local_feedback_revision`, `plan_tool.roadmap_impact_run:run_roadmap_impact_analysis`, and `plan_tool.roadmap_structural_revision_run:run_structural_revision`, so another action can clear or roll back a recovery journal.",
+      "suggested_action": "define a durable recovery match rule for the selected range and baseline transition, and require every nonmatching writer to refuse that pending recovery state unchanged.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recovery-interruption-ownership",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-5b645f65",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), Architecture, Risks, Testing, and acceptance ",
+      "body": "Step 1 (`Add a confirmed selected-range source-baseline recovery action`), Architecture, Risks, Testing, and acceptance criterion three promise that every tracked derived-seed entry stays bound to current recovered-source inputs. `plan_tool.roadmap_seed_state:invalidated_seed_state` only replaces `draft_seed_path` for plan IDs still present in `plan_tool.roadmap_revision_publish:_plan_draft_seed_paths`; a valid recovered `04-roadmap.md` can remove a tracked ID and leave its invalidated entry pointing to an old input because full roadmap gates do not check that relationship.",
+      "suggested_action": "make current plan-to-seed bindings an admission requirement and refuse recovery when any tracked entry has no current source binding, while updating matching renamed paths in the same generation.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "derived-seed-source-binding",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-3f99019c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Verify evidence currentness and close the blocked Integration follow-up`) gives two different order signals: Architect",
+      "body": "Step 3 (`Verify evidence currentness and close the blocked Integration follow-up`) gives two different order signals: Architecture says \u201cThe exact blocked Integration receipt is re-evaluated only after recovery ships through the canonical delivery gate,\u201d while acceptance criterion seven says \u201cOnce the capability is delivered through the canonical checkout, the arc and handoff record the exact Codex-backed Integration re-evaluation as the next action.\u201d The referenced Integration handoff records that constraints and components still differ from their active baselines, so delivery alone leaves the re-evaluation blocked.",
+      "suggested_action": "record one ordered Integration sequence: canonical delivery, successful confirmed recovery of the recorded range, then the exact Codex-backed re-evaluation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "integration-follow-up-order",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "4875196f7afc16486893610981c7a3740671dd9e2feba9f5ef08eb7e57741b2b",
+    "detail_bundle_digest": "ce2c4344c83cde8787219c9444c17823e9d3fa869a005b50b897d6a49913a5a6",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/01-confirmed-selected-range-source.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/02-expose-document-explicit-recovery.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-source-baseline-recovery/03-verify-evidence-currentness-close.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "cb50ad0a2103b40ccc1e6c99dea023e912a9d1f5b253580b7e6bd11ae985e5af",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

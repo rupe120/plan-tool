@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-f9139628": {
+      "code_anchor": "plan_tool/convergence_diagnosis.py:RunFinding.source",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md",
+      "reason": "code anchor `plan_tool/convergence_diagnosis.py:RunFinding.source` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260804-210444-completeness"
+}

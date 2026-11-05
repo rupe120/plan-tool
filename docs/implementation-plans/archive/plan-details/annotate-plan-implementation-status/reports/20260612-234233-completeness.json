@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "plan_slug": "annotate-plan-implementation-status",
+  "plan_path": "docs/implementation-plans/2-annotate-plan-implementation-status.md",
+  "created_at": "2026-06-12T23:42:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5f5235b06d8580d1946ad55525c6181b0974187f8232610dcdec532cace107e0",
+  "code_fingerprint": {
+    "BACKLOG.md": "f6e74b823c8569680d1b516d81b6bad691cb7350b74a538a441b2c25ddfbfbb4",
+    "CLAUDE.md": "aa30b44340af55b735f8c6a2e10c51e4ab5e912b454b079422c1a53f141a19c2",
+    "README.md": "cc37783db1520704a97f8928d819139c1992a083d0579da8c387c726acffb3bd",
+    "RUNBOOK.md": "56592feb4562ce9c957ebc08c7ed5ce87e1a33c5f457ead7ab049cbcae46212f",
+    "integrations/claude/SKILL.md": "7c6f2748fbf76fe2ac0c7ac32b73195a8c2eeb9073c2cceab170f94ebefc98c9",
+    "plan_tool/cli/app.py": "613b300d8061db77c35c50e95e00fb22d4233e8d40a776b4ba6e073ecb82ec3f",
+    "plan_tool/cli/parser.py": "076e8bd1932c0cabf4c5554682c7557e093d5eae897fa7f044f18a6b52686916",
+    "tests/cli/package_surface_help.golden.txt": "447ad9105bb1c26b2bf6415c7fa009c00f22c8e78418b8fbfe21a865a14c5c74",
+    "tests/test_cli.py": "515527bf46e367b9f9037cc5ae472f36867ae64e6b1ff1dd989bde7d80876247"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Annotate Plan Implementation Status\n\n`annotate-plan-implementation-status` \u00b7 generated 2026-06-12T23:42:33Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 8 (8 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The plan's central round-trip-drift mitigation rests on a false assumption about `create`'s distill gate (`## Architecture`, `## Risks`, `## Acceptance criteria`, step 3 `test_seed_feeds_create_from_existing`). `create.py` skips distill only when the seed covers **all** canonical body sections (`Overview`/`Problem statement`/`Architecture`/\u2026) *and* is <16 KB; step 2's seed emits only `Carryover scope`/`Already implemented`/`Provenance`, so `_canonical_seed_covers_all` returns False and the lossy `propose_distilled_seed_from_claude` runs regardless of size \u2014 making the asserted \"distill no-op\" (call-count 0) unachievable and re-introducing the very drift the plan claims to design out.\n- [APPLIED] `## Out of scope` (\"No new comparison engine \u2026 reuses the `verify_plan` style\") and `## Architecture` (\"annotate reuses that judgement style; it adds no second comparison engine\") contradict step 1, which authors a brand-new Claude seam (`annotate.md` prompt + `_parse_annotation_response` parser + `shell_annotate_invoker`) and explicitly does *not* call `verify_plan`.\n- [APPLIED] Step 3 adds `--iterate`/`--no-iterate` accepted-and-inert, colliding with CLAUDE.md's mandate that every authoring phase run a real convergence loop; an operator following that mandate gets a silent single pass.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[compared-commit-state]`: `## Architecture` promises the report \"records the original's path (and, if resolvable, the compared commit/state),\" but no step operationalizes the commit/state capture \u2014 step 2 defers it to \"step 3 or a follow-up\" and step 3 also defers it, recording only `repo_root` + grounded-file count as a proxy.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor compared-commit-state`\n- MEDIUM `[sectionless-notes-input]`: `## Overview` accepts a \"rough-notes\" file as input, but the classification and both renderers assume heading-delimited sections (status blocks anchor under headings; carryover/done-context partition by section); a heading-less notes file yields undefined coverage \u2014 no sections to classify, an empty seed.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor sectionless-notes-input`\n- MEDIUM `[iterate-inert]`: Step 3 adds `--iterate`/`--no-iterate` but leaves it accepted-and-inert, which collides with the project mandate to always run with `--iterate`; a flag that silently does nothing is a footgun for operators trained to expect a convergence loop.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor iterate-inert`\n- MEDIUM `[low-confidence-marking]`: The `## Risks` mitigation \"mark low-confidence classifications explicitly rather than asserting them\" is unoperationalized \u2014 step 1's `SectionAnnotation` carries only a three-value status with no confidence/uncertain field.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor low-confidence-marking`\n- MEDIUM `[done-context-not-replanned]`: The acceptance criterion \"IMPLEMENTED items are carried as done-context, not re-planned\" has no enforcing mechanism \u2014 `create` has no done-context concept, so the guarantee rests entirely on seed prose labels Claude may ignore.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor done-context-not-replanned`\n- MEDIUM `[partial-carryover-granularity]`: PARTIAL sections enter the seed as whole-section carryover scope, risking re-planning of their already-implemented half.\n  - Address: `plan-tool completeness-apply annotate-plan-implementation-status --anchor partial-carryover-granularity`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step1-files-coherence-6cce9935]`: The detail body for step 1 cites `plan_tool/annotate_render.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/annotate.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-541e7765]`: The detail body for step 2 cites `plan_tool/annotate.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/annotate_render.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step3-files-coherence-b2e335cc]`: The detail body for step 3 cites `plan_tool/cli/gates_cmd.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/cli/annotate_cmd.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step3-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 3's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-32732139]`: `BACKLOG.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-1776785d]`: `CLAUDE.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-b404ada7]`: `README.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply annotate-plan-implementation-status` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 8 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail annotate-plan-implementation-status` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Annotate Plan Implementation Status\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/annotate_render.py` resembling declared `plan_tool/annotate.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/annotate.py` resembling declared `plan_tool/annotate_render.py` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/cli/gates_cmd.py` resembling declared `plan_tool/cli/annotate_cmd.py` (typo/stale path?)\n- NIT: step 3 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 4 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 4 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 4 declared `README.md` not mentioned in detail\n- NIT: step 4 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[compared-commit-state]`: `## Architecture` promises the report \"records the original's path (and, if resolvable, the compared commit/state),\" but no step operationalizes the commit/state capture \u2014 step 2 defers it to \"step 3 or a follow-up\" and step 3 also defers it, recording only `repo_root` + grounded-file count as a proxy.\n- MEDIUM `[sectionless-notes-input]`: `## Overview` accepts a \"rough-notes\" file as input, but the classification and both renderers assume heading-delimited sections (status blocks anchor under headings; carryover/done-context partition by section); a heading-less notes file yields undefined coverage \u2014 no sections to classify, an empty seed.\n- MEDIUM `[iterate-inert]`: Step 3 adds `--iterate`/`--no-iterate` but leaves it accepted-and-inert, which collides with the project mandate to always run with `--iterate`; a flag that silently does nothing is a footgun for operators trained to expect a convergence loop.\n- MEDIUM `[low-confidence-marking]`: The `## Risks` mitigation \"mark low-confidence classifications explicitly rather than asserting them\" is unoperationalized \u2014 step 1's `SectionAnnotation` carries only a three-value status with no confidence/uncertain field.\n- MEDIUM `[done-context-not-replanned]`: The acceptance criterion \"IMPLEMENTED items are carried as done-context, not re-planned\" has no enforcing mechanism \u2014 `create` has no done-context concept, so the guarantee rests entirely on seed prose labels Claude may ignore.\n- MEDIUM `[partial-carryover-granularity]`: PARTIAL sections enter the seed as whole-section carryover scope, risking re-planning of their already-implemented half.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk annotate-plan-implementation-status` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply annotate-plan-implementation-status` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-ca8ebdbe",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`## Architecture` promises the report \"records the original's path (and, if resolvable, the compared commit/state),\" but",
+      "body": "`## Architecture` promises the report \"records the original's path (and, if resolvable, the compared commit/state),\" but no step operationalizes the commit/state capture \u2014 step 2 defers it to \"step 3 or a follow-up\" and step 3 also defers it, recording only `repo_root` + grounded-file count as a proxy.",
+      "suggested_action": "either drop the compared-commit/state claim from Architecture or add a step/criterion that captures repo `HEAD`/dirty-state into the report header.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "compared-commit-state"
+    },
+    {
+      "id": "plan-plan-completeness-fb304f1c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`## Overview` accepts a \"rough-notes\" file as input, but the classification and both renderers assume heading-delimited ",
+      "body": "`## Overview` accepts a \"rough-notes\" file as input, but the classification and both renderers assume heading-delimited sections (status blocks anchor under headings; carryover/done-context partition by section); a heading-less notes file yields undefined coverage \u2014 no sections to classify, an empty seed.",
+      "suggested_action": "specify how classification handles an input with no markdown headings (e.g. treat the whole file as one section), so the named rough-notes case has defined behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "sectionless-notes-input"
+    },
+    {
+      "id": "plan-plan-completeness-cb4053b9",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 adds `--iterate`/`--no-iterate` but leaves it accepted-and-inert, which collides with the project mandate to alwa",
+      "body": "Step 3 adds `--iterate`/`--no-iterate` but leaves it accepted-and-inert, which collides with the project mandate to always run with `--iterate`; a flag that silently does nothing is a footgun for operators trained to expect a convergence loop.",
+      "suggested_action": "have the subparser help state plainly that annotate is single-pass and the flag is reserved/no-op (or omit it until the loop lands) so it does not falsely advertise convergence.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "iterate-inert"
+    },
+    {
+      "id": "plan-plan-completeness-54f486e1",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `## Risks` mitigation \"mark low-confidence classifications explicitly rather than asserting them\" is unoperationaliz",
+      "body": "The `## Risks` mitigation \"mark low-confidence classifications explicitly rather than asserting them\" is unoperationalized \u2014 step 1's `SectionAnnotation` carries only a three-value status with no confidence/uncertain field.",
+      "suggested_action": "add an explicit low-confidence marker to the classification contract, or remove that mitigation from Risks.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "low-confidence-marking"
+    },
+    {
+      "id": "plan-plan-completeness-7bc6c8c7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance criterion \"IMPLEMENTED items are carried as done-context, not re-planned\" has no enforcing mechanism \u2014 `c",
+      "body": "The acceptance criterion \"IMPLEMENTED items are carried as done-context, not re-planned\" has no enforcing mechanism \u2014 `create` has no done-context concept, so the guarantee rests entirely on seed prose labels Claude may ignore.",
+      "suggested_action": "specify how the seed structurally signals done-context to `create`, or weaken the criterion to best-effort.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "done-context-not-replanned"
+    },
+    {
+      "id": "plan-plan-completeness-da7cdfc7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "PARTIAL sections enter the seed as whole-section carryover scope, risking re-planning of their already-implemented half.",
+      "body": "PARTIAL sections enter the seed as whole-section carryover scope, risking re-planning of their already-implemented half.",
+      "suggested_action": "have the seed carry the implemented portion of PARTIAL items as done-context so only the remainder is scoped for the next plan.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "partial-carryover-granularity"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-ca8ebdbe": {
+      "status": "applied",
+      "note": "drop",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-fb304f1c": {
+      "status": "applied",
+      "note": "for the seed ask claude to extract the concepts and details for the appropriate headings. for the annotation remove the expectation of heading sections. it should be the original file plus annotations on the concepts regarding their level of implementation and if there is an implementation where it is and how it compares and overlaps and not overlaps with the exiting implementation.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-cb4053b9": {
+      "status": "applied",
+      "note": "remove iterate",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-54f486e1": {
+      "status": "applied",
+      "note": "add",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-7bc6c8c7": {
+      "status": "applied",
+      "note": "specify the done-context",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-da7cdfc7": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-annotate-plan-implementation-status.md`: rewrote the Architecture \"Two renderers\" seed bullet so PARTIAL sections split \u2014 implemented portion to done-context, only the remainder into carryover scope.",
+      "halt_reason": ""
+    }
+  }
+}

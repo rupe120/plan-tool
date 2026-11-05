@@ -1,0 +1,101 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "plan_path": "docs/implementation-plans/2-completeness-next-step-verdict-finish.md",
+  "created_at": "2026-10-10T18:44:38Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4dff0d9fef2935f0ecdbbe3c4f468f3a668e2c522473a57524da88849964e936",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md": "4dff303e20f4095046cc5a8f3a334c41f51ecaae287d0131909a6005cf5c5edb",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md": "7768207b09285829ad1c0921da7fcb59c1fb5f91e295f450c70b6068be8346a7",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md": "6a26aa368ca86bc617fcaf3669e3df932712237bb42143f2bb89bb85abf6567a",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md": "bbfb6a89df754fea3e7f27ef66d42e91de2c1c2761a9eed4d5c739967b84e6ed",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md": "3c2f96235e42c1fbfad47858ff125c85e957ecb60aace773350f8bcab315faf6"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Step Verdict Finish\n\n`completeness-next-step-verdict-finish` \u00b7 generated 2026-10-10T18:44:38Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-044e6131]` [confidence: limited]: The plan's `## Acceptance criteria` names `handoffs/2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6b161ed7]` [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Step Verdict Finish\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `handoffs/2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "999cfce055afc93a509559f58ad0fac820fa6f6d71efa0a12f77d7cbf21d0b15",
+    "detail_bundle_digest": "bcd81be0007398c3d9aa8bb16bff8182d5bb42fc946a27cc41c141f3511c80d5",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md",
+        "state": "present",
+        "digest": "4dff303e20f4095046cc5a8f3a334c41f51ecaae287d0131909a6005cf5c5edb"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md",
+        "state": "present",
+        "digest": "7768207b09285829ad1c0921da7fcb59c1fb5f91e295f450c70b6068be8346a7"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md",
+        "state": "present",
+        "digest": "6a26aa368ca86bc617fcaf3669e3df932712237bb42143f2bb89bb85abf6567a"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md",
+        "state": "present",
+        "digest": "bbfb6a89df754fea3e7f27ef66d42e91de2c1c2761a9eed4d5c739967b84e6ed"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md",
+        "state": "present",
+        "digest": "3c2f96235e42c1fbfad47858ff125c85e957ecb60aace773350f8bcab315faf6"
+      }
+    ],
+    "source_seed_digest": "d3ad2373cec38bb40436faa604b3e13653eedc1a7374e5e87a3528fb813796a7",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

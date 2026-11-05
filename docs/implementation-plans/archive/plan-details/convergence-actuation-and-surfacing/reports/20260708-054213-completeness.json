@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-actuation-and-surfacing",
+  "plan_path": "docs/implementation-plans/2-convergence-actuation-and-surfacing.md",
+  "created_at": "2026-07-08T05:42:13Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d32ddcfd15aec53ed730721e16f6bc12f562818eef1c04dd7aae70ec6060df43",
+  "code_fingerprint": {
+    "BACKLOG.md": "cddd707dfb32d4f68c44bdca3a9804bd487e93e3e599e822ef3039f4f955187f",
+    "CLAUDE.md": "6ecfbe7f188ef6302a60f0a0212d4c00e2cbfa7a312a03b3761d37ab61546d9b",
+    "RUNBOOK.md": "005f07456adad75eda09641134fbfdcd34b51d9ad1f9658b274698b985442740",
+    "docs/AUDIT_FLOW.md": "686aefb4a3126a945342be5acd2eb904be6406a024bb587e442854d827bd08c6",
+    "docs/cli/convergence.md": "5331acb02e9d7c6cb666ad422e1551c1e8f04f3e98ec58dbbd2974e99802b28f",
+    "plan_tool/cli/completeness_phases.py": "eba29500d461cdfc764b426f62c6b4e1bbefbbaf85010df1e65f29e974bc3573",
+    "plan_tool/cli/convergence_cmd.py": "e58bd28e48f2d8424d62b3c3276fcb71ad8e4895bd711d9f8b4ccf2fcf249305",
+    "plan_tool/completeness_report.py": "3c12ba14d94b2aedd2bd673b4f833419a41285dc41e6a479b42fa3e84712bc55",
+    "tests/cli/test_completeness_cmd.py": "fe6a48bbbc1ee9a42f356dc51c2a025853644bae1623ac351370806939bd9aec",
+    "tests/cli/test_convergence_cmd.py": "a2920c5bf1526c00e824febe4e3369394433442f26e0707728b6f10c0fb85c0c",
+    "tests/test_completeness_report.py": "4d14a1ba6ceca5f73a5d3d93ee123ce2ed9beb37e249f2cd4f1b81b94025ba60"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md": "13dfdef0b73abc2681c4d718df1ba82f2133da11f705a7e4eaac0fe6a169e042",
+    "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/02-apply-split-flag-actuate-split.md": "388f48fbaf6a27ad7493c465a2257d9e97a10da00d1ac297ea67fe90fd8ac56c",
+    "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md": "16f9a456d02b4d39fb41e14eced0c1863549730955c248a187a30d8e152954af",
+    "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/04-wire-convergence-section-persist.md": "bb239d64df5ada1598ad3eadc08dcfd2da375938084f434a1e4f176f1680c8d5",
+    "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/05-document-apply-split-report-section.md": "1ceba0c4a0a2c1201c3f11da657b45665205deb0883578f5c9d03b6bef1d1c34"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Convergence Actuation And Surfacing\n\n`convergence-actuation-and-surfacing` \u00b7 generated 2026-07-08T05:42:13Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 5 (5 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply convergence-actuation-and-surfacing   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk convergence-actuation-and-surfacing  # alternative interactive review/apply\n\n- MEDIUM `[apply-split-confirm-before-validate]`: Step 2 (`_actuate_split`) orders the apply-or-recommend TTY confirm (its gate step 4) *before* the `split_step(..., dry_run=True)` feasibility check (gate step 5), so on an unsafe / step-missing / non-canonical target the operator is prompted to confirm a split that the dry-run then refuses as recommend-only \u2014 confirming an action that cannot happen. The sibling `_actuate_scope_out` avoids this because `scope_out_step` validates safety internally before its own confirm.\n- MEDIUM `[split-call-count-mechanism]`: The plan-body acceptance criterion \"asserts the mutating split call (`author_details=False`) fires exactly once \u2014 distinct from the `dry_run=True` validation call of the same symbol\" hard-codes the two-call (dry-run-then-real) mechanism, yet step 2 (`add --apply-split`) grants the implementer \"latitude on the mechanism.\" An implementer who validates without a separate `dry_run=True` `split_step` call cannot satisfy the \"distinct from the `dry_run=True` validation call\" wording, so the criterion and the step contradict.\n- MEDIUM `[count-once-render-ordering]`: Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) mandates computing the diagnosis \"right before the existing `build_report_md(...)` call,\" yet its count-once mechanism **(b)** says to \"reload history *after* the final write\" and treat \"the just-written final sidecar as the sole current-run point.\" These contradict: `build_report_md` consumes the diagnosis and runs before `write_completeness_report`, so a diagnosis computed *after* the write cannot be embedded in that single-write report without either a stale/missing section or a second build+write. The plan-body count-once acceptance criterion carries the same hazard (\"whether the section reads the just-persisted sidecar or the in-memory report\"). An implementer choosing (b) either double-writes the report or emits a completeness report whose spinning section lags the run by one.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[in-report-actuation-bridge]`: The in-report convergence section that steps 3\u20134 add reuses `render_diagnosis`, whose spinning body prints only the hand-run recipe (`plan-tool split \u2026 --into \"<first sub-step>\" --into \"<second sub-step>\"` for `FORK_LOCALIZED`, `plan-tool scope-out \u2026` for `FORK_SCOPE_OUT`) and never mentions the `--apply-split` / `--apply-scope-out` one-command actuation Lever 1 exists to provide. An operator who first sees the loop is spinning *in the completeness report* \u2014 a surface where the diagnosis newly appears, and where they never ran `plan-tool convergence` \u2014 is routed to the manual path, so the report half-serves the Overview's stated goal (\"an operator being able to *act* on it\"). Because `render_diagnosis`/`_split_command` are reused unchanged (out of scope to modify), the bridge belongs in step 3's authored wrapper prose (the intro above the fenced block), which can name the actuation without touching the diagnostic leaf.\n  - Address: `plan-tool completeness-apply convergence-actuation-and-surfacing --anchor in-report-actuation-bridge`\n- MEDIUM `[iterate-checkpoint-double-count]`: Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) drops only *this* invocation's pre-apply checkpoint so the current run counts once, but `load_report_history` returns both the checkpoint **and** the final sidecar for every *prior* iterate invocation too (both are `kind=\"completeness\"`, per step 4's own Input), with no dedup \u2014 so the recurrence/no-shrinkage history the spinning verdict is computed over counts each past iterate run twice and each audit-only run once, and the standalone `plan-tool convergence` command reads the same skewed history. Because a checkpoint holds pre-apply findings and its final holds post-apply (fewer) findings, a region can appear-then-vanish inside one past invocation \u2014 an artificial recurrence-then-shrink that distorts the very spin signal both surfaces render. The plan out-of-scopes `convergence_diagnosis.py`, foreclosing a `load_report_history` dedup.\n  - Address: `plan-tool completeness-apply convergence-actuation-and-surfacing --anchor iterate-checkpoint-double-count`\n- MEDIUM `[completeness-section-series-scope]`: Step 4 computes `diagnose_convergence(history)` over the full history (all `HISTORY_KINDS`: `completeness`, `detail-reconcile`, `run-reconcile`) and step 3's `render_convergence_section` gates on the plan-wide worst-of `VERDICT_SPINNING`, but the Problem statement scopes Lever 2 to \"a completeness audit that is silently spinning.\" Because `diagnose_convergence` returns the worst-of headline across every series (`convergence_diagnosis.py:diagnose_convergence`), a completeness report can render step 3's `## Convergence \u2014 the audit/apply loop is spinning` section when only a `detail-reconcile:N` or `run-reconcile:N` series is spinning and the completeness loop itself is converging \u2014 an in-report signal that overstates the completeness loop's state. Neither step 3 nor step 4 decides whether the in-report gate is plan-wide or scoped to the completeness series.\n  - Address: `plan-tool completeness-apply convergence-actuation-and-surfacing --anchor completeness-section-series-scope`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-convergence-cmd-py]`: docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.\n- MEDIUM `[data-contract-input-cli-completeness-phases-py:-persist-and-present-report]`: docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md:## Input cites `cli/completeness_phases.py:_persist_and_present_report`, but code anchor path `cli/completeness_phases.py` does not exist.\n- NIT `[step5-files-coherence-32732139]`: `BACKLOG.md` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step5-files-coherence-1776785d]`: `CLAUDE.md` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step5-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-actuation-and-surfacing` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- Resolve 5 structural diagnostic(s) directly:\n    \u2022 `plan-tool completeness-apply convergence-actuation-and-surfacing` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (3 files-coherence drift(s)).\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Actuation And Surfacing\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated \u2014 new findings are tapering (3\u21921\u21922) \u2014 rerun with --audit-passes 4 for headroom to converge.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[apply-split-confirm-before-validate]`: Step 2 (`_actuate_split`) orders the apply-or-recommend TTY confirm (its gate step 4) *before* the `split_step(..., dry_run=True)` feasibility check (gate step 5), so on an unsafe / step-missing / non-canonical target the operator is prompted to confirm a split that the dry-run then refuses as recommend-only \u2014 confirming an action that cannot happen. The sibling `_actuate_scope_out` avoids this because `scope_out_step` validates safety internally before its own confirm.\n- MEDIUM `[split-call-count-mechanism]`: The plan-body acceptance criterion \"asserts the mutating split call (`author_details=False`) fires exactly once \u2014 distinct from the `dry_run=True` validation call of the same symbol\" hard-codes the two-call (dry-run-then-real) mechanism, yet step 2 (`add --apply-split`) grants the implementer \"latitude on the mechanism.\" An implementer who validates without a separate `dry_run=True` `split_step` call cannot satisfy the \"distinct from the `dry_run=True` validation call\" wording, so the criterion and the step contradict.\n- MEDIUM `[count-once-render-ordering]`: Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) mandates computing the diagnosis \"right before the existing `build_report_md(...)` call,\" yet its count-once mechanism **(b)** says to \"reload history *after* the final write\" and treat \"the just-written final sidecar as the sole current-run point.\" These contradict: `build_report_md` consumes the diagnosis and runs before `write_completeness_report`, so a diagnosis computed *after* the write cannot be embedded in that single-write report without either a stale/missing section or a second build+write. The plan-body count-once acceptance criterion carries the same hazard (\"whether the section reads the just-persisted sidecar or the in-memory report\"). An implementer choosing (b) either double-writes the report or emits a completeness report whose spinning section lags the run by one.\n\n### Files coherence\n\n- NIT: step 5 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 5 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 5 declared `RUNBOOK.md` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-convergence-cmd-py]`: docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.\n- MEDIUM `[data-contract-input-cli-completeness-phases-py:-persist-and-present-report]`: docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md:## Input cites `cli/completeness_phases.py:_persist_and_present_report`, but code anchor path `cli/completeness_phases.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[in-report-actuation-bridge]`: The in-report convergence section that steps 3\u20134 add reuses `render_diagnosis`, whose spinning body prints only the hand-run recipe (`plan-tool split \u2026 --into \"<first sub-step>\" --into \"<second sub-step>\"` for `FORK_LOCALIZED`, `plan-tool scope-out \u2026` for `FORK_SCOPE_OUT`) and never mentions the `--apply-split` / `--apply-scope-out` one-command actuation Lever 1 exists to provide. An operator who first sees the loop is spinning *in the completeness report* \u2014 a surface where the diagnosis newly appears, and where they never ran `plan-tool convergence` \u2014 is routed to the manual path, so the report half-serves the Overview's stated goal (\"an operator being able to *act* on it\"). Because `render_diagnosis`/`_split_command` are reused unchanged (out of scope to modify), the bridge belongs in step 3's authored wrapper prose (the intro above the fenced block), which can name the actuation without touching the diagnostic leaf.\n- MEDIUM `[iterate-checkpoint-double-count]`: Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) drops only *this* invocation's pre-apply checkpoint so the current run counts once, but `load_report_history` returns both the checkpoint **and** the final sidecar for every *prior* iterate invocation too (both are `kind=\"completeness\"`, per step 4's own Input), with no dedup \u2014 so the recurrence/no-shrinkage history the spinning verdict is computed over counts each past iterate run twice and each audit-only run once, and the standalone `plan-tool convergence` command reads the same skewed history. Because a checkpoint holds pre-apply findings and its final holds post-apply (fewer) findings, a region can appear-then-vanish inside one past invocation \u2014 an artificial recurrence-then-shrink that distorts the very spin signal both surfaces render. The plan out-of-scopes `convergence_diagnosis.py`, foreclosing a `load_report_history` dedup.\n- MEDIUM `[completeness-section-series-scope]`: Step 4 computes `diagnose_convergence(history)` over the full history (all `HISTORY_KINDS`: `completeness`, `detail-reconcile`, `run-reconcile`) and step 3's `render_convergence_section` gates on the plan-wide worst-of `VERDICT_SPINNING`, but the Problem statement scopes Lever 2 to \"a completeness audit that is silently spinning.\" Because `diagnose_convergence` returns the worst-of headline across every series (`convergence_diagnosis.py:diagnose_convergence`), a completeness report can render step 3's `## Convergence \u2014 the audit/apply loop is spinning` section when only a `detail-reconcile:N` or `run-reconcile:N` series is spinning and the completeness loop itself is converging \u2014 an in-report signal that overstates the completeness loop's state. Neither step 3 nor step 4 decides whether the in-report gate is plan-wide or scoped to the completeness series.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-actuation-and-surfacing` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply convergence-actuation-and-surfacing` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2a8e0bfe",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`_actuate_split`) orders the apply-or-recommend TTY confirm (its gate step 4) *before* the `split_step(..., dry_",
+      "body": "Step 2 (`_actuate_split`) orders the apply-or-recommend TTY confirm (its gate step 4) *before* the `split_step(..., dry_run=True)` feasibility check (gate step 5), so on an unsafe / step-missing / non-canonical target the operator is prompted to confirm a split that the dry-run then refuses as recommend-only \u2014 confirming an action that cannot happen. The sibling `_actuate_scope_out` avoids this because `scope_out_step` validates safety internally before its own confirm.",
+      "suggested_action": "specify in step 2 that `_actuate_split` runs the `dry_run=True` feasibility validation and short-circuits refusals to recommend-only *before* prompting the TTY confirm, so no confirm is asked for a split the executor will refuse.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "apply-split-confirm-before-validate"
+    },
+    {
+      "id": "plan-plan-correctness-f58cf7da",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan-body acceptance criterion \"asserts the mutating split call (`author_details=False`) fires exactly once \u2014 distin",
+      "body": "The plan-body acceptance criterion \"asserts the mutating split call (`author_details=False`) fires exactly once \u2014 distinct from the `dry_run=True` validation call of the same symbol\" hard-codes the two-call (dry-run-then-real) mechanism, yet step 2 (`add --apply-split`) grants the implementer \"latitude on the mechanism.\" An implementer who validates without a separate `dry_run=True` `split_step` call cannot satisfy the \"distinct from the `dry_run=True` validation call\" wording, so the criterion and the step contradict.",
+      "suggested_action": "restate the criterion around the observable invariant \u2014 exactly one mutating `split_step` call, refusals mutate nothing \u2014 rather than the specific dry-run-first two-call mechanism.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "split-call-count-mechanism"
+    },
+    {
+      "id": "plan-plan-correctness-0e609b2e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) mandates computing the diagnosis \"right before th",
+      "body": "Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) mandates computing the diagnosis \"right before the existing `build_report_md(...)` call,\" yet its count-once mechanism **(b)** says to \"reload history *after* the final write\" and treat \"the just-written final sidecar as the sole current-run point.\" These contradict: `build_report_md` consumes the diagnosis and runs before `write_completeness_report`, so a diagnosis computed *after* the write cannot be embedded in that single-write report without either a stale/missing section or a second build+write. The plan-body count-once acceptance criterion carries the same hazard (\"whether the section reads the just-persisted sidecar or the in-memory report\"). An implementer choosing (b) either double-writes the report or emits a completeness report whose spinning section lags the run by one.",
+      "suggested_action": "state that the diagnosis is computed before `build_report_md` from loaded history plus the in-memory current run with this invocation's checkpoint dropped, and retire the \"reload after the final write / reads the just-persisted sidecar\" alternative in both step 4 and the plan-body criterion as incompatible with a single-write report.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "count-once-render-ordering"
+    },
+    {
+      "id": "plan-plan-completeness-e977e858",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The in-report convergence section that steps 3\u20134 add reuses `render_diagnosis`, whose spinning body prints only the hand",
+      "body": "The in-report convergence section that steps 3\u20134 add reuses `render_diagnosis`, whose spinning body prints only the hand-run recipe (`plan-tool split \u2026 --into \"<first sub-step>\" --into \"<second sub-step>\"` for `FORK_LOCALIZED`, `plan-tool scope-out \u2026` for `FORK_SCOPE_OUT`) and never mentions the `--apply-split` / `--apply-scope-out` one-command actuation Lever 1 exists to provide. An operator who first sees the loop is spinning *in the completeness report* \u2014 a surface where the diagnosis newly appears, and where they never ran `plan-tool convergence` \u2014 is routed to the manual path, so the report half-serves the Overview's stated goal (\"an operator being able to *act* on it\"). Because `render_diagnosis`/`_split_command` are reused unchanged (out of scope to modify), the bridge belongs in step 3's authored wrapper prose (the intro above the fenced block), which can name the actuation without touching the diagnostic leaf.",
+      "suggested_action": "have step 3's section-wrapper intro point the reader at `plan-tool convergence <name> --apply-split`/`--apply-scope-out` as the one-command remedy, and add an acceptance criterion locking that reference into the rendered section.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "in-report-actuation-bridge"
+    },
+    {
+      "id": "plan-plan-completeness-435367a6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) drops only *this* invocation's pre-apply checkpoi",
+      "body": "Step 4 (`_persist_and_present_report` in `cli/completeness_phases.py`) drops only *this* invocation's pre-apply checkpoint so the current run counts once, but `load_report_history` returns both the checkpoint **and** the final sidecar for every *prior* iterate invocation too (both are `kind=\"completeness\"`, per step 4's own Input), with no dedup \u2014 so the recurrence/no-shrinkage history the spinning verdict is computed over counts each past iterate run twice and each audit-only run once, and the standalone `plan-tool convergence` command reads the same skewed history. Because a checkpoint holds pre-apply findings and its final holds post-apply (fewer) findings, a region can appear-then-vanish inside one past invocation \u2014 an artificial recurrence-then-shrink that distorts the very spin signal both surfaces render. The plan out-of-scopes `convergence_diagnosis.py`, foreclosing a `load_report_history` dedup.",
+      "suggested_action": "add a step-4 risk/known-limit stating the count-once invariant covers only the current run while historical iterate checkpoints stay counted as separate runs in the shared history, so the trend baseline is uneven (or widen scope to dedup checkpoint+final per invocation in the diagnostic).",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "iterate-checkpoint-double-count"
+    },
+    {
+      "id": "plan-plan-completeness-5ad1c173",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 computes `diagnose_convergence(history)` over the full history (all `HISTORY_KINDS`: `completeness`, `detail-reco",
+      "body": "Step 4 computes `diagnose_convergence(history)` over the full history (all `HISTORY_KINDS`: `completeness`, `detail-reconcile`, `run-reconcile`) and step 3's `render_convergence_section` gates on the plan-wide worst-of `VERDICT_SPINNING`, but the Problem statement scopes Lever 2 to \"a completeness audit that is silently spinning.\" Because `diagnose_convergence` returns the worst-of headline across every series (`convergence_diagnosis.py:diagnose_convergence`), a completeness report can render step 3's `## Convergence \u2014 the audit/apply loop is spinning` section when only a `detail-reconcile:N` or `run-reconcile:N` series is spinning and the completeness loop itself is converging \u2014 an in-report signal that overstates the completeness loop's state. Neither step 3 nor step 4 decides whether the in-report gate is plan-wide or scoped to the completeness series.",
+      "suggested_action": "have steps 3\u20134 state whether the in-report section reflects the plan-wide verdict or only the completeness series, and reconcile the section heading with that choice so a reconcile-series spin does not read as the completeness loop spinning.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "completeness-section-series-scope"
+    },
+    {
+      "id": "step1-data-contract-491d9fb9",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `convergence_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/01-extract-fingerprint-staleness-verdict.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-convergence-cmd-py"
+    },
+    {
+      "id": "step3-data-contract-2817144b",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `cli/completeness_phases.py:_persist_and_present_report`",
+      "body": "docs/implementation-plans/plan-details/convergence-actuation-and-surfacing/03-pure-convergence-diagnosis-section.md:## Input cites `cli/completeness_phases.py:_persist_and_present_report`, but code anchor path `cli/completeness_phases.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-cli-completeness-phases-py:-persist-and-present-report"
+    }
+  ],
+  "annotations": {
+    "plan-plan-correctness-0e609b2e": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-2a8e0bfe": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-f58cf7da": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-435367a6": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-5ad1c173": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-e977e858": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    }
+  }
+}

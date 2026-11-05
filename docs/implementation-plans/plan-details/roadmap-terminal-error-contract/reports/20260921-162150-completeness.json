@@ -1,0 +1,144 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T16:21:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "550e19d6c3f52b9e9f1d238437f2baa27569ae8c856a33a4098689f3048c2005",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md": "541b2fb48d43972c152243176f7f696a0bf149ad732daed27875d7fc81bd76fb",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md": "63ca16b4872c0c566a7f82a129f6877e93ac3275770733ea0fb50f6d959c7e05",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-preflight-mid-run-writer-guard.md": "4b030170c5cf32620cc1bc6248c29281e728efb7e18a5cb454abc91cc84f68cf",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md": "f662edcc7ffd631690bbe54bf0be8bc9f0090f11fccb2ba53fce0a4cc6a8a9b2",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md": "fc09c8186b77505f7621b2d99688bd487add6f6965cd90882eba74129ed5894c",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md": "9cba7ad9cb767c0843ed8d2be34b76d1abced62c295a34f4080464d1e5120109"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Terminal Error Contract\n\n`roadmap-terminal-error-contract` \u00b7 generated 2026-09-21T16:21:49Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `550e19d6c3f52b9e9f1d238437f2baa27569ae8c856a33a4098689f3048c2005`\n- **Detail bundle digest:** `6ec443da4b8215ac700edfd60c1827b4210353ec8f35f11ed5df5136b52e0189`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.60\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-terminal-error-contract  # optional interactive review of the saved findings\n\n- HIGH `[preflight-terminal-record]` [confidence: limited]: Step 3 (`Preserve preflight and mid-run writer-guard origins...`) distinguishes writer-guard origins, but steps 3 and 5 never give a writer-guard refusal during guard acquisition a run-log route. At HEAD, `roadmap.py:run_roadmap` acquires and validates the writer before `_run_roadmap` opens `_roadmap_command_lifecycle`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize` does the same before `_cmd_roadmap_materialize_owned` opens its lifecycle. The acceptance criterion therefore cannot hold for those required preflight exits:\n\n  ```\n  Acceptance criteria: Every ordinary exception exit in the primary `run_roadmap` and materialization lifecycle emits exactly one roadmap-level terminal status fact and a run-log ending consistent with its human message, selected return code, and crash behavior.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Preflight refusals must receive the same complete terminal record as other ordinary roadmap exits.\n  - Fix: Make the disposition matrix and steps 3 and 5 explicitly assign pre-lifecycle writer-guard refusals to a terminal-record boundary that produces their status fact, run-log ending, exit code, and crash behavior.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-ecc2b717]` [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-ffe748e5]` [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Terminal Error Contract\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `550e19d6c3f52b9e9f1d238437f2baa27569ae8c856a33a4098689f3048c2005`\n- **Detail bundle digest:** `6ec443da4b8215ac700edfd60c1827b4210353ec8f35f11ed5df5136b52e0189`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[preflight-terminal-record]` [confidence: limited]: Step 3 (`Preserve preflight and mid-run writer-guard origins...`) distinguishes writer-guard origins, but steps 3 and 5 never give a writer-guard refusal during guard acquisition a run-log route. At HEAD, `roadmap.py:run_roadmap` acquires and validates the writer before `_run_roadmap` opens `_roadmap_command_lifecycle`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize` does the same before `_cmd_roadmap_materialize_owned` opens its lifecycle. The acceptance criterion therefore cannot hold for those required preflight exits:\n\n  ```\n  Acceptance criteria: Every ordinary exception exit in the primary `run_roadmap` and materialization lifecycle emits exactly one roadmap-level terminal status fact and a run-log ending consistent with its human message, selected return code, and crash behavior.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Preflight refusals must receive the same complete terminal record as other ordinary roadmap exits.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n### Suggested next steps\n\n- Close the 1 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b7f4ed57",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 (`Preserve preflight and mid-run writer-guard origins...`) distinguishes writer-guard origins, but steps 3 and 5 ",
+      "body": "Step 3 (`Preserve preflight and mid-run writer-guard origins...`) distinguishes writer-guard origins, but steps 3 and 5 never give a writer-guard refusal during guard acquisition a run-log route. At HEAD, `roadmap.py:run_roadmap` acquires and validates the writer before `_run_roadmap` opens `_roadmap_command_lifecycle`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize` does the same before `_cmd_roadmap_materialize_owned` opens its lifecycle. The acceptance criterion therefore cannot hold for those required preflight exits:\n\n  ```\n  Acceptance criteria: Every ordinary exception exit in the primary `run_roadmap` and materialization lifecycle emits exactly one roadmap-level terminal status fact and a run-log ending consistent with its human message, selected return code, and crash behavior.\n  ```",
+      "suggested_action": "Make the disposition matrix and steps 3 and 5 explicitly assign pre-lifecycle writer-guard refusals to a terminal-record boundary that produces their status fact, run-log ending, exit code, and crash behavior.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "preflight-terminal-record",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "Preflight refusals must receive the same complete terminal record as other ordinary roadmap exits."
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "550e19d6c3f52b9e9f1d238437f2baa27569ae8c856a33a4098689f3048c2005",
+      "detail_bundle_digest": "6ec443da4b8215ac700edfd60c1827b4210353ec8f35f11ed5df5136b52e0189",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-preflight-mid-run-writer-guard.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "4705cb7e35edf4a94efd48ef6d174b9829a158e9b00683afdd09d7cbc3a0fc4a",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.6,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

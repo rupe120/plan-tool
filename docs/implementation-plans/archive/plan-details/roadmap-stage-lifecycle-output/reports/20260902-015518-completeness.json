@@ -1,0 +1,170 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-stage-lifecycle-output",
+  "plan_path": "docs/implementation-plans/2-roadmap-stage-lifecycle-output.md",
+  "created_at": "2026-09-02T01:55:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8647cbc13e1119a36594a59b1d48032f7a6174208d6e280136b2a72f1292ea04",
+  "code_fingerprint": {
+    "BACKLOG.md": "51fe0af45f14a00efc3251a518552e045c1c7be7869187b441f8b07771497e61",
+    "README.md": "22c30086ead0aa168e624a6f32d9aeb3b8965770e5bb15d73f9f7f187593b247",
+    "RUNBOOK.md": "2ce9b013faef10020d3594008da88985d480b8820e78a7940c38a091e9ac8af6",
+    "docs/ARCHITECTURE.md": "f61d35c4463db0efeda91c665ab24fb3c1534326417ccb85aa17adb4f736df94",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "ef7b542a4d52ed0015d261187a4c682b2631e32ebf333706c4a650c351477d5f",
+    "docs/ROADMAP_WALKTHROUGH.md": "215235bb1845e4e684157a39908407098a1fc41bb6bcacfd2b33caf6cc1d034a",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "f840287e952ece51b7592da564a094aebc537335cd536ae05af59b33fb749c1c",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "27a0f31f40e759143d125fb07a7bf5a659de71c1e3f74eb44dcce423a4afaafa",
+    "plan_tool/cli/roadmap_cmd.py": "dc460cf1af1c88d43145260f27474a5d9c27449bcaaacb37c3b5440b03f077c6",
+    "plan_tool/roadmap.py": "5801c3b91a4209a64f39081d944659b2fd9ca09d7d8922e9e565b27988ab1023",
+    "tests/cli/test_roadmap_cmd.py": "5cc973e539611eb990c8d443cc2e734bf3c4af28bd871934e2a5f9474186359e",
+    "tests/test_roadmap.py": "94be312078d266600e5bdf77fbf5f2bf72c3cffe41af4464b2fd6309c7b7f214"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/01-give-roadmap-progress-backlog-entry.md": "d53ebad2b476639e74a71e45cf2c3274e21147091664720091a02408d767a8c1",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/02-emit-bounded-stage-start-retry-stop.md": "e947b28b8d2240db5d2e868e0cbb41bf0fcfac4d613a55721b146764ceaa6898",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/03-connect-roadmap-direct-status-sink.md": "8378570f9d82bbd99a45b75769f2a874d8572944602804586d2e9aafabf47847",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/04-document-roadmap-transition-only-stderr.md": "c91a9e4f1a050cccc0625f400656c983cdd23314ba4d5cacbb5bd429b7b0c3e7",
+    "docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/05-update-roadmap-demo-walkthrough-then.md": "778449402a6f2b34fdf7ca5b4012fdfc19a59e49e557caf4fed525470fe16492"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Stage Lifecycle Output\n\n`roadmap-stage-lifecycle-output` \u00b7 generated 2026-09-02T01:55:17Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ffc213dbcf3d00eff62048867a1fab38f6128e00dd89d5c19a5109b019575325`\n- **Detail bundle digest:** `8c35571456a2783b332ea7edd14a2a0bd48d1e1e3df5af645d0a1d4d1dab27c2`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 46338 bytes (+46338 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-stage-lifecycle-output   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[roadmap-progress-identifier]` [confidence: limited]: Step 1 `Implementation` allows \u201cIf `#337` is no longer free \u2026 select an unused replacement,\u201d but its `Tests`/`Acceptance criteria`, plan `Documentation and backlog work`/`Acceptance criteria`, and Step 5 `Summary`, `Input`, `Implementation`, `Verification`, and `Acceptance criteria` all require `#337`\u2014including \u201crecords #337 as complete and selects #333.\u201d A valid fallback makes Step 5\u2019s closeout impossible to satisfy truthfully.\n  - Fix: make `#337` a required reservation that stops for replanning if occupied, or carry the chosen identifier consistently through every later contract and verification.\n- MEDIUM `[lifecycle-line-bounds]` [confidence: limited]: `Design \u2192 One local status sink` says stage numbers and the selected-stage range are already bounded, while Step 2 caps only slug and stage-name labels and Step 3 requires the accepted fact to list every actual selected `RoadmapStage.number`. At HEAD, `plan_tool/roadmap.py:RoadmapStage` accepts any integer, `run_roadmap(stages=...)` accepts any stage sequence, and `_stage_numbers` returns those values unchanged; a direct caller can therefore produce an arbitrarily long number list or line.\n  - Fix: define a bounded representation for every variable status field, including selected-stage selection, or explicitly limit the callback guarantee to the fixed shipped stage table.\n- MEDIUM `[roadmap-status-route-boundary]` [confidence: limited]: Step 4 `Implementation` says \u201cviews, seed operations, feedback revision, structural operations, and other non-stage routes do not gain this status surface,\u201d but `Status contract` says `started` \u201ccovers fresh authoring, feedback revision, and feedback-free re-gating,\u201d and Step 2 names `_run_bounded_stage_feedback` as an included active-feedback route. At HEAD, `plan_tool/cli/roadmap_cmd.py:--revise-feedback` instead dispatches the separate `run_local_feedback_revision` route. The documentation can therefore exclude the normal active-feedback stage run or include the local command by mistake.\n  - Fix: name `--revise-feedback` explicitly as the excluded local route and state that ordinary `run_roadmap` includes active-feedback re-entry.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-eac84441]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7d1c40b0]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmaperror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-stage-lifecycle-output` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Stage Lifecycle Output\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ffc213dbcf3d00eff62048867a1fab38f6128e00dd89d5c19a5109b019575325`\n- **Detail bundle digest:** `8c35571456a2783b332ea7edd14a2a0bd48d1e1e3df5af645d0a1d4d1dab27c2`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[roadmap-progress-identifier]` [confidence: limited]: Step 1 `Implementation` allows \u201cIf `#337` is no longer free \u2026 select an unused replacement,\u201d but its `Tests`/`Acceptance criteria`, plan `Documentation and backlog work`/`Acceptance criteria`, and Step 5 `Summary`, `Input`, `Implementation`, `Verification`, and `Acceptance criteria` all require `#337`\u2014including \u201crecords #337 as complete and selects #333.\u201d A valid fallback makes Step 5\u2019s closeout impossible to satisfy truthfully.\n- MEDIUM `[lifecycle-line-bounds]` [confidence: limited]: `Design \u2192 One local status sink` says stage numbers and the selected-stage range are already bounded, while Step 2 caps only slug and stage-name labels and Step 3 requires the accepted fact to list every actual selected `RoadmapStage.number`. At HEAD, `plan_tool/roadmap.py:RoadmapStage` accepts any integer, `run_roadmap(stages=...)` accepts any stage sequence, and `_stage_numbers` returns those values unchanged; a direct caller can therefore produce an arbitrarily long number list or line.\n- MEDIUM `[roadmap-status-route-boundary]` [confidence: limited]: Step 4 `Implementation` says \u201cviews, seed operations, feedback revision, structural operations, and other non-stage routes do not gain this status surface,\u201d but `Status contract` says `started` \u201ccovers fresh authoring, feedback revision, and feedback-free re-gating,\u201d and Step 2 names `_run_bounded_stage_feedback` as an included active-feedback route. At HEAD, `plan_tool/cli/roadmap_cmd.py:--revise-feedback` instead dispatches the separate `run_local_feedback_revision` route. The documentation can therefore exclude the normal active-feedback stage run or include the local command by mistake.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmaperror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-stage-lifecycle-output` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-03c4d85f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 `Implementation` allows \u201cIf `#337` is no longer free \u2026 select an unused replacement,\u201d but its `Tests`/`Acceptance",
+      "body": "Step 1 `Implementation` allows \u201cIf `#337` is no longer free \u2026 select an unused replacement,\u201d but its `Tests`/`Acceptance criteria`, plan `Documentation and backlog work`/`Acceptance criteria`, and Step 5 `Summary`, `Input`, `Implementation`, `Verification`, and `Acceptance criteria` all require `#337`\u2014including \u201crecords #337 as complete and selects #333.\u201d A valid fallback makes Step 5\u2019s closeout impossible to satisfy truthfully.",
+      "suggested_action": "make `#337` a required reservation that stops for replanning if occupied, or carry the chosen identifier consistently through every later contract and verification.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-progress-identifier",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-cca80426",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`Design \u2192 One local status sink` says stage numbers and the selected-stage range are already bounded, while Step 2 caps ",
+      "body": "`Design \u2192 One local status sink` says stage numbers and the selected-stage range are already bounded, while Step 2 caps only slug and stage-name labels and Step 3 requires the accepted fact to list every actual selected `RoadmapStage.number`. At HEAD, `plan_tool/roadmap.py:RoadmapStage` accepts any integer, `run_roadmap(stages=...)` accepts any stage sequence, and `_stage_numbers` returns those values unchanged; a direct caller can therefore produce an arbitrarily long number list or line.",
+      "suggested_action": "define a bounded representation for every variable status field, including selected-stage selection, or explicitly limit the callback guarantee to the fixed shipped stage table.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "lifecycle-line-bounds",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-2edab303",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 `Implementation` says \u201cviews, seed operations, feedback revision, structural operations, and other non-stage rout",
+      "body": "Step 4 `Implementation` says \u201cviews, seed operations, feedback revision, structural operations, and other non-stage routes do not gain this status surface,\u201d but `Status contract` says `started` \u201ccovers fresh authoring, feedback revision, and feedback-free re-gating,\u201d and Step 2 names `_run_bounded_stage_feedback` as an included active-feedback route. At HEAD, `plan_tool/cli/roadmap_cmd.py:--revise-feedback` instead dispatches the separate `run_local_feedback_revision` route. The documentation can therefore exclude the normal active-feedback stage run or include the local command by mistake.",
+      "suggested_action": "name `--revise-feedback` explicitly as the excluded local route and state that ordinary `run_roadmap` includes active-feedback re-entry.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-status-route-boundary",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ffc213dbcf3d00eff62048867a1fab38f6128e00dd89d5c19a5109b019575325",
+      "detail_bundle_digest": "8c35571456a2783b332ea7edd14a2a0bd48d1e1e3df5af645d0a1d4d1dab27c2",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/01-give-roadmap-progress-backlog-entry.md",
+          "state": "present",
+          "digest": "d53ebad2b476639e74a71e45cf2c3274e21147091664720091a02408d767a8c1"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/02-emit-bounded-stage-start-retry-stop.md",
+          "state": "present",
+          "digest": "e947b28b8d2240db5d2e868e0cbb41bf0fcfac4d613a55721b146764ceaa6898"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/03-connect-roadmap-direct-status-sink.md",
+          "state": "present",
+          "digest": "8378570f9d82bbd99a45b75769f2a874d8572944602804586d2e9aafabf47847"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/04-document-roadmap-transition-only-stderr.md",
+          "state": "present",
+          "digest": "c91a9e4f1a050cccc0625f400656c983cdd23314ba4d5cacbb5bd429b7b0c3e7"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stage-lifecycle-output/05-update-roadmap-demo-walkthrough-then.md",
+          "state": "present",
+          "digest": "778449402a6f2b34fdf7ca5b4012fdfc19a59e49e557caf4fed525470fe16492"
+        }
+      ],
+      "source_seed_digest": "e8a339a95820763050baab8e1639ced6da1dc89be19f072481a05382d567ff3c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 46338,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

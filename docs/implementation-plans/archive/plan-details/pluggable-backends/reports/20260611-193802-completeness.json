@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "plan_slug": "pluggable-backends",
+  "plan_path": "docs/implementation-plans/2-pluggable-backends.md",
+  "created_at": "2026-06-11T19:38:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Pluggable Backends\n\n`pluggable-backends` \u00b7 generated 2026-06-11T19:38:02Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 2 dispatched (2 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 7 (7 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] Step 5's discovery loop implements a silent `except (BackendManifestError, re.error, TypeError, ValueError): continue`, directly contradicting the plan's Architecture (\"discovery never swallows a defect silently... emits a warning naming the offending directory and the load error\") and the acceptance criterion that a malformed `backend.json` \"emits a warning naming the offending directory and the load error... rather than being silently skipped.\" The only discovery step does the opposite of the promised behavior.\n- [APPLIED] The acceptance criterion \"Dropping in `integrations/<new>/backend.json` registers a usable backend with no edit to `backend.py`\" is true only when the new backend reuses the `claude`/`codex` parser; a backend whose stream shape differs must add a function to `_PARSER_REGISTRY` in `backend.py` \u2014 which the Architecture section itself states (\"a future custom-shaped backend adds a function here\"). The criterion is overbroad as written; qualify it to \"reusing a registered parser.\" \u2014 - `docs/implementation-plans/2-pluggable-backends.md`: qualified the acceptance criterion to require the dropped-in `backend.json` reuse a registered parser.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[discovery-defect-warning]`: No step operationalizes the acceptance criterion \"A malformed/unloadable backend.json encountered during startup discovery emits a warning naming the offending directory and the load error\" \u2014 step 5 (the sole discovery step) silently `continue`s and its own acceptance list omits the warning, leaving this criterion dangling while the parallel unknown-key warning lands in step 6.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor discovery-defect-warning`\n- MEDIUM `[codex-shared-pattern-drift]`: In code, `CODEX_BACKEND` reuses claude's compiled `rate_limit`/`provider_limit`/`context_overflow`/`transient` pattern objects by reference; externalizing to self-contained manifests (step 2) duplicates those regex strings into `integrations/codex/backend.json`, and no step preserves or documents that codex's limit patterns must track claude's, so a later edit to claude's manifest silently diverges codex.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor codex-shared-pattern-drift`\n- MEDIUM `[dropin-parser-registration]`: The acceptance criterion \"Dropping in `integrations/<new>/backend.json` registers a usable backend with no edit to `backend.py`\" holds only when the new backend reuses a registered `parser` (`claude`/`codex`); a backend with a genuinely new stream-event shape needs a `register_parser` call with no external registration path (parser-stays-in-code is Out-of-scope), so it *does* require a source edit. Qualify the criterion to \"reusing a registered parser.\"\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor dropin-parser-registration`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step1-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- INFO `[step2-files-coherence-0c445320]`: The detail body for step 2 cites `integrations/*/backend.json`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/backend.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-40919b70]`: The detail body for step 2 cites `integrations/<backend>/backend.json`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/backend.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-693e6ba1]`: The detail body for step 2 cites `integrations/claude/SKILL.md`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/SKILL.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step3-files-coherence-07bebfce]`: The detail body for step 3 cites `plan_tool/backend_config.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step4-files-coherence-ef9524e4]`: The detail body for step 4 cites `plan_tool/backend.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend_config.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step6-files-coherence-07bebfce]`: The detail body for step 6 cites `plan_tool/backend_config.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 7 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail pluggable-backends` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Pluggable Backends\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 1 declared `(no declared files cited in detail body)` not mentioned in detail\n- INFO: step 2 detail cites `integrations/*/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/<backend>/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/claude/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/backend.py` resembling declared `plan_tool/backend_config.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[discovery-defect-warning]`: No step operationalizes the acceptance criterion \"A malformed/unloadable backend.json encountered during startup discovery emits a warning naming the offending directory and the load error\" \u2014 step 5 (the sole discovery step) silently `continue`s and its own acceptance list omits the warning, leaving this criterion dangling while the parallel unknown-key warning lands in step 6.\n- MEDIUM `[codex-shared-pattern-drift]`: In code, `CODEX_BACKEND` reuses claude's compiled `rate_limit`/`provider_limit`/`context_overflow`/`transient` pattern objects by reference; externalizing to self-contained manifests (step 2) duplicates those regex strings into `integrations/codex/backend.json`, and no step preserves or documents that codex's limit patterns must track claude's, so a later edit to claude's manifest silently diverges codex.\n- MEDIUM `[dropin-parser-registration]`: The acceptance criterion \"Dropping in `integrations/<new>/backend.json` registers a usable backend with no edit to `backend.py`\" holds only when the new backend reuses a registered `parser` (`claude`/`codex`); a backend with a genuinely new stream-event shape needs a `register_parser` call with no external registration path (parser-stays-in-code is Out-of-scope), so it *does* require a source edit. Qualify the criterion to \"reusing a registered parser.\"\n\n### Suggested next steps\n\n- `plan-tool review-walk pluggable-backends` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-822d64a2",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "No step operationalizes the acceptance criterion \"A malformed/unloadable backend.json encountered during startup discove",
+      "body": "No step operationalizes the acceptance criterion \"A malformed/unloadable backend.json encountered during startup discovery emits a warning naming the offending directory and the load error\" \u2014 step 5 (the sole discovery step) silently `continue`s and its own acceptance list omits the warning, leaving this criterion dangling while the parallel unknown-key warning lands in step 6.",
+      "suggested_action": null,
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "discovery-defect-warning"
+    },
+    {
+      "id": "plan-plan-completeness-4beb6bbe",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "In code, `CODEX_BACKEND` reuses claude's compiled `rate_limit`/`provider_limit`/`context_overflow`/`transient` pattern o",
+      "body": "In code, `CODEX_BACKEND` reuses claude's compiled `rate_limit`/`provider_limit`/`context_overflow`/`transient` pattern objects by reference; externalizing to self-contained manifests (step 2) duplicates those regex strings into `integrations/codex/backend.json`, and no step preserves or documents that codex's limit patterns must track claude's, so a later edit to claude's manifest silently diverges codex.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "codex-shared-pattern-drift"
+    },
+    {
+      "id": "plan-plan-completeness-e79619cc",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance criterion \"Dropping in `integrations/<new>/backend.json` registers a usable backend with no edit to `back",
+      "body": "The acceptance criterion \"Dropping in `integrations/<new>/backend.json` registers a usable backend with no edit to `backend.py`\" holds only when the new backend reuses a registered `parser` (`claude`/`codex`); a backend with a genuinely new stream-event shape needs a `register_parser` call with no external registration path (parser-stays-in-code is Out-of-scope), so it *does* require a source edit. Qualify the criterion to \"reusing a registered parser.\"",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "dropin-parser-registration"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-822d64a2": {
+      "status": "applied",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied in step 5's detail file and the plan's acceptance criteria)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-4beb6bbe": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-pluggable-backends.md`: added a Risks bullet documenting that codex aliases claude's four limit patterns by reference and must track them in lockstep, with a mitigating equality test and shared-pattern note.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-e79619cc": {
+      "status": "applied",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    }
+  }
+}

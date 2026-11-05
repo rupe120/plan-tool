@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "plan_slug": "jira-layer-and-test-recs",
+  "plan_path": "docs/implementation-plans/2-jira-layer-and-test-recs.md",
+  "created_at": "2026-07-09T02:24:16Z",
+  "kind": "run-reconcile",
+  "step_id": 5,
+  "plan_fingerprint": "7c57758d7e93527dd11f9cd205886e2c4662cce5127a4cec822935387d907708",
+  "code_fingerprint": {
+    "BACKLOG.md": "82fc23eefc419f40214e12cddc040a7268eeba895d8baa031acaa21df558dbca",
+    "JIRA_FORMAT.md": "50296ebb600328e6fb917a8d887de26d2924902c45de1e79667bca539b1f45c3",
+    "plan_tool/cli/jira_cmd.py": "fc6212cbd760fbc90c1fcb4e97c810f809b7fa4503bc0990b2490b8703b1fdc4",
+    "plan_tool/jira.py": "4273b51c2b8da0b606065663d5ff31996ba69746c1b016898478808ec9b9d11f",
+    "plan_tool/prompts/jira.md": "0ed976e927ba66e6cb3480bdd8749ef98904ece4a3a799f1dbda700c6cfc9033",
+    "tests/cli/test_jira_cmds.py": "b3e1ce748c771b481d385ee79477d896a7b04e0307fbe75e72337927cdf5cfd0",
+    "tests/test_jira.py": "941a7b26108db81ab8e46109d91a5ac79434d07317380dc8ecacc45da649815c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 5 \u2014 0 critical / 0 high / 1 medium / 0 nits",
+  "recommendations": [
+    {
+      "id": "step5-run-reconcile-4befb31e",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 5,
+      "title": "`cmd_jira_lint()` in `plan_tool/cli/jira_cmd.py` (step 5 \"Add the two new soft-lint checks to `jira --lint`\") returns ex",
+      "body": "`cmd_jira_lint()` in `plan_tool/cli/jira_cmd.py` (step 5 \"Add the two new soft-lint checks to `jira --lint`\") returns exit 0 when only the new layer-metadata checks trip, but this step's `## Acceptance criteria` and its `test_lint_flags_missing_*_from_json` CLI-test spec both state `jira --lint` must **exit 1** on those findings. The code, its committed tests (`rc == 0`, `\"advisory layer-metadata\"`), and `JIRA_FORMAT.md` all deliberately make layer-metadata advisory (exit 0) \u2014 a design decision taken after this step (BUG_BACKLOG #104 round-4 review, \"making the *layer*-metadata lint advisory under `jira --lint`\"). The code is internally consistent and the step-5 acceptance criterion is the stale piece, so amend the plan rather than reverting the code to exit 1.\n\n## Redirect\n\n- **Reason**: step 5's acceptance criterion / CLI-test spec (\"jira --lint exits 1 when the new checks trip\") was superseded by a deliberate later decision to make layer-metadata advisory (exit 0), now encoded in the code, its tests, and JIRA_FORMAT.md; the code is correct and the detail's exit-code claim needs the amendment.\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": null,
+      "complexity": null,
+      "redirect": {
+        "reason": "step 5's acceptance criterion / CLI-test spec (\"jira --lint exits 1 when the new checks trip\") was superseded by a deliberate later decision to make layer-metadata advisory (exit 0), now encoded in the code, its tests, and JIRA_FORMAT.md; the code is correct and the detail's exit-code claim needs the amendment.",
+        "suggested_next": "detail --reconcile"
+      },
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

@@ -1,0 +1,198 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-narrative-review-evidence",
+  "plan_path": "docs/implementation-plans/2-candidate-narrative-review-evidence.md",
+  "created_at": "2026-10-02T17:11:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f3cfee070246798e6b32bf61e455a58e6221521c2cbe02a53714d7c555712199",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "docs/ARCHITECTURE.md": "9c2368e32d7a6a5abf3405d7122c7578af94e1fa0193706034573f26c6102797",
+    "docs/cli/roadmap.md": "b9af83d76a9fe7b26691d69f33e3bb00d9fb6939262627375f68d5402ca1ef09",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_gates.py": "63eb68b96193e6f097f947b9e72db50fd9ef6cff232c40c524e26905716f357c",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_gates.py": "5c8ae5d3a11935575025ade8d6b906ec230354337a6b0e08e5f16bfd0466e25a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md": "49c6ec8acdbe1f9121548394d626fb6d76919fb3f88481eb2c6c58a911ec5e7b",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md": "78a84beb5e5ae80976e717f12df8e7ecb9c28b141c715b54871a75c0fbba8599",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-pure-function-that-computes-candidate.md": "1fa24836826695737bf65d5a04afedc4ea3b6644ee86c925516b8693c67c79d8",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-make-approval-paths-seal-review-decide.md": "e03d9e64304b31f0d8bbb61a798d3065b33ac7d3e325ffb3769a91e2362947ed",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md": "0d6d50b0faba0a8ff4067ce00098cb756bccd624ae4f0030a4beeea678b8a943",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-update-roadmap-format-md-docs.md": "b74d8b32e697420594080455bfe82582be2b29110165440a9a862f43a84d0f7b"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Narrative Review Evidence\n\n`candidate-narrative-review-evidence` \u00b7 generated 2026-10-02T17:11:33Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `f2c0e51b703af6ffcf58fffc289b19125237dd71879598ae25f59937f001fe45`\n- **Detail bundle digest:** `48119ccffb6093ce0a851566a6bc930f2bffc87c8a08cb10f3993f387e1d9cf5`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (-2 vs. first audit)\n- **Detail-bundle size:** 74850 bytes (+74850 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.25\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[removed-id-source-and-pruning]` [confidence: limited]: Step 2 (`removed-id check`) and the Architecture section say removed ids come from \"the `removed_id` records carried by the predecessor artifact's `artifact.removals` plus any the candidate adds\", and that \"a record the reviewer pruned is deliberately no longer checked\". These two rules conflict. If the source is the predecessor's records, a prune made in the candidate has no effect, because the predecessor still carries the record. If the source is the candidate's own carried records, the predecessor is not the source. The plan never says which artifact's pruning counts, or at which version the prune takes effect. Step 1 owns the rule, and steps 2 and 3 (Input) and the Testing case \"a pruned removal record is no longer checked\" all depend on it. Two implementers could build opposite behavior: a prune that bypasses the check, or one that does not.\n  - Fix: State once in step 1's section, and mirror it in the Architecture section and the step 2 and 3 inputs, exactly which artifact's removal records form the checked set. Say how a prune in the candidate relative to its predecessor is detected, and which Testing case pins each outcome.\n- MEDIUM `[pure-function-predecessor-input]` [confidence: limited]: Step 3's title says the evidence is computed \"from the candidate alone, with no model call and no storage\", and its summary says \"no filesystem access\". Step 3's Input also says the check's removed-id source \"depends on the predecessor\". It tells the implementer to \"read at HEAD how the candidate paths already load the predecessor\", which means a filesystem read. Step 4's helper then takes `plans_dir`/`slug` \"if step 3's adapter needs them to load the predecessor\". The plan does not say whether the predecessor is part of the candidate input (so the function stays pure) or is loaded inside the adapter (so it does not). This affects whether a stored candidate and its in-memory form give identical evidence, and where a missing or unreadable predecessor surfaces: as a refusal, or as an empty evidence list that approves silently.\n  - Fix: Decide in step 3 whether the predecessor is an explicit input to the pure function or is resolved by the adapter. Define the behavior when the predecessor cannot be loaded, then align steps 4 and 5 to that decision.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[reconciliation-basis-carve-out-drift]` [confidence: limited]: The References bullet for pytest parametrize still lists \"valid no-change reconciliation\" and \"unsupported claims of completion\" as Testing cases. The plan's Testing, Out of scope and Deferred sections carve those out to BACKLOG #437. The leftover vocabulary describes a feature this plan no longer builds.\n  - Fix: Rewrite the bullet to list only the cases in the Testing section: the Integration fixture, historical and rejected-alternative references, ambiguous references, pruned removals, and the approval refusal.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Narrative Review Evidence\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `f2c0e51b703af6ffcf58fffc289b19125237dd71879598ae25f59937f001fe45`\n- **Detail bundle digest:** `48119ccffb6093ce0a851566a6bc930f2bffc87c8a08cb10f3993f387e1d9cf5`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[removed-id-source-and-pruning]` [confidence: limited]: Step 2 (`removed-id check`) and the Architecture section say removed ids come from \"the `removed_id` records carried by the predecessor artifact's `artifact.removals` plus any the candidate adds\", and that \"a record the reviewer pruned is deliberately no longer checked\". These two rules conflict. If the source is the predecessor's records, a prune made in the candidate has no effect, because the predecessor still carries the record. If the source is the candidate's own carried records, the predecessor is not the source. The plan never says which artifact's pruning counts, or at which version the prune takes effect. Step 1 owns the rule, and steps 2 and 3 (Input) and the Testing case \"a pruned removal record is no longer checked\" all depend on it. Two implementers could build opposite behavior: a prune that bypasses the check, or one that does not.\n- MEDIUM `[pure-function-predecessor-input]` [confidence: limited]: Step 3's title says the evidence is computed \"from the candidate alone, with no model call and no storage\", and its summary says \"no filesystem access\". Step 3's Input also says the check's removed-id source \"depends on the predecessor\". It tells the implementer to \"read at HEAD how the candidate paths already load the predecessor\", which means a filesystem read. Step 4's helper then takes `plans_dir`/`slug` \"if step 3's adapter needs them to load the predecessor\". The plan does not say whether the predecessor is part of the candidate input (so the function stays pure) or is loaded inside the adapter (so it does not). This affects whether a stored candidate and its in-memory form give identical evidence, and where a missing or unreadable predecessor surfaces: as a refusal, or as an empty evidence list that approves silently.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-roadmap-candidate-review-py:load-stored-candidate-review-replacement]` [confidence: limited]: docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md:## Input cites `roadmap_candidate_review.py:load_stored_candidate_review_replacement`, but code anchor path `roadmap_candidate_review.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[reconciliation-basis-carve-out-drift]` [confidence: limited]: The References bullet for pytest parametrize still lists \"valid no-change reconciliation\" and \"unsupported claims of completion\" as Testing cases. The plan's Testing, Out of scope and Deferred sections carve those out to BACKLOG #437. The leftover vocabulary describes a feature this plan no longer builds.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit candidate-narrative-review-evidence --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-75a045cc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`removed-id check`) and the Architecture section say removed ids come from \"the `removed_id` records carried by ",
+      "body": "Step 2 (`removed-id check`) and the Architecture section say removed ids come from \"the `removed_id` records carried by the predecessor artifact's `artifact.removals` plus any the candidate adds\", and that \"a record the reviewer pruned is deliberately no longer checked\". These two rules conflict. If the source is the predecessor's records, a prune made in the candidate has no effect, because the predecessor still carries the record. If the source is the candidate's own carried records, the predecessor is not the source. The plan never says which artifact's pruning counts, or at which version the prune takes effect. Step 1 owns the rule, and steps 2 and 3 (Input) and the Testing case \"a pruned removal record is no longer checked\" all depend on it. Two implementers could build opposite behavior: a prune that bypasses the check, or one that does not.",
+      "suggested_action": "State once in step 1's section, and mirror it in the Architecture section and the step 2 and 3 inputs, exactly which artifact's removal records form the checked set. Say how a prune in the candidate relative to its predecessor is detected, and which Testing case pins each outcome.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "removed-id-source-and-pruning",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-191b54a8",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's title says the evidence is computed \"from the candidate alone, with no model call and no storage\", and its summ",
+      "body": "Step 3's title says the evidence is computed \"from the candidate alone, with no model call and no storage\", and its summary says \"no filesystem access\". Step 3's Input also says the check's removed-id source \"depends on the predecessor\". It tells the implementer to \"read at HEAD how the candidate paths already load the predecessor\", which means a filesystem read. Step 4's helper then takes `plans_dir`/`slug` \"if step 3's adapter needs them to load the predecessor\". The plan does not say whether the predecessor is part of the candidate input (so the function stays pure) or is loaded inside the adapter (so it does not). This affects whether a stored candidate and its in-memory form give identical evidence, and where a missing or unreadable predecessor surfaces: as a refusal, or as an empty evidence list that approves silently.",
+      "suggested_action": "Decide in step 3 whether the predecessor is an explicit input to the pure function or is resolved by the adapter. Define the behavior when the predecessor cannot be loaded, then align steps 4 and 5 to that decision.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pure-function-predecessor-input",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-1283906e",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The References bullet for pytest parametrize still lists \"valid no-change reconciliation\" and \"unsupported claims of com",
+      "body": "The References bullet for pytest parametrize still lists \"valid no-change reconciliation\" and \"unsupported claims of completion\" as Testing cases. The plan's Testing, Out of scope and Deferred sections carve those out to BACKLOG #437. The leftover vocabulary describes a feature this plan no longer builds.",
+      "suggested_action": "Rewrite the bullet to list only the cases in the Testing section: the Integration fixture, historical and rejected-alternative references, ambiguous references, pruned removals, and the approval refusal.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reconciliation-basis-carve-out-drift",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step5-data-contract-15365c65",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 5,
+      "title": "Stale Input contract reference `roadmap_candidate_review.py:load_stored_candidate_review_replacement`",
+      "body": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md:## Input cites `roadmap_candidate_review.py:load_stored_candidate_review_replacement`, but code anchor path `roadmap_candidate_review.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-roadmap-candidate-review-py:load-stored-candidate-review-replacement",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "f2c0e51b703af6ffcf58fffc289b19125237dd71879598ae25f59937f001fe45",
+      "detail_bundle_digest": "48119ccffb6093ce0a851566a6bc930f2bffc87c8a08cb10f3993f387e1d9cf5",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md",
+          "state": "present",
+          "digest": "49c6ec8acdbe1f9121548394d626fb6d76919fb3f88481eb2c6c58a911ec5e7b"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md",
+          "state": "present",
+          "digest": "78a84beb5e5ae80976e717f12df8e7ecb9c28b141c715b54871a75c0fbba8599"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-pure-function-that-computes-candidate.md",
+          "state": "present",
+          "digest": "1fa24836826695737bf65d5a04afedc4ea3b6644ee86c925516b8693c67c79d8"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-make-approval-paths-seal-review-decide.md",
+          "state": "present",
+          "digest": "e03d9e64304b31f0d8bbb61a798d3065b33ac7d3e325ffb3769a91e2362947ed"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md",
+          "state": "present",
+          "digest": "0d6d50b0faba0a8ff4067ce00098cb756bccd624ae4f0030a4beeea678b8a943"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-update-roadmap-format-md-docs.md",
+          "state": "present",
+          "digest": "b74d8b32e697420594080455bfe82582be2b29110165440a9a862f43a84d0f7b"
+        }
+      ],
+      "source_seed_digest": "c47bdb4eaa1fbdb4c32d2892e109ba79ff7f38799e8f6e2fb40ee3e599412348",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 74850,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.25,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

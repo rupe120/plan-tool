@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "plan_slug": "reconcile-plan-walk-checkpoint-role",
+  "plan_path": "docs/implementation-plans/2-reconcile-plan-walk-checkpoint-role.md",
+  "created_at": "2026-08-06T00:35:33Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "c82796cd2d4a5d772efd46632c79bc698fdee3571dbc345fd5f91d360f2bf06a",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "efca622fd97997a6ee7d5a42186feac91666402869c30498e75181b9fad4f26f",
+    "docs/AUDIT_FLOW.md": "fc6bf3c44a5fa4402e86ee4a9fe8c5f80337726b6dba6d055d4a22d60cc1dc7b",
+    "docs/cli/README.md": "ea5f9c4a45706d29bec8cf010d8b3fde8f5b7cd296e6045ff9942da1d46f9007",
+    "docs/cli/reconcile-plan-walk.md": "421b0299b043d0b7472c3d1b795b8461859143e66e3b7c86c95cd7d5e6382c98",
+    "plan_tool/cli/review_cmd.py": "b780c5a8ee4cea30924ff1c2da62b94adbd6961d3bfaceab011df700ee9b3a2b",
+    "tests/cli/test_review_cmds.py": "28892e9324fc1ff26867606e2cb77a961d062463931b0085cc3c40e24d2a2472",
+    "tests/test_review_persistence.py": "58ed917835be926d07a0a48f12f9d397237ede26c3f593d7b285fdca11a41f40",
+    "tests/test_review_walk.py": "2b65b6fcbf20ffafbc1df8f241c790d34fb4b79eaaad415a56058fda82814dec"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 1 completed sibling step(s); 1 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

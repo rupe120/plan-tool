@@ -1,0 +1,270 @@
+{
+  "version": 1,
+  "plan_slug": "structural-remedy-convenience-arms",
+  "plan_path": "docs/implementation-plans/2-structural-remedy-convenience-arms.md",
+  "created_at": "2026-07-09T17:22:32Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "30eb6f1d4ad5e42403ac1d5d8c3207d82dc461cc29487ecd630f0bff445c3ad4",
+  "code_fingerprint": {
+    "BACKLOG.md": "611cffd3646bf7a58b291b8eec245799c73ca1edad0af4f06198c9cbd6419d11",
+    "CLAUDE.md": "be4288b83311d91117ae39b67e5f77c419a29d4536c12c6102d4d8446f25d20c",
+    "RUNBOOK.md": "752e2c710887913c234a0571c71cbeacbd02d5d18ae989534e58a2fe0224dd6d",
+    "docs/cli/reconcile-plan-walk.md": "bf647467c7f3cfe1c473983669d666de6d18f5faa579e8e40f143e130e5f443b",
+    "docs/cli/reconcile-plan.md": "97af13462aa38e7c45783d3d20fcdd571b186f11191022be51f2fc58ba2df833",
+    "docs/cli/scope-out.md": "01373516ed4a8d5886268634cf8e2020cf9d72a8ca856eb6ac6b0102aee19fb1",
+    "plan_tool/cli/convergence_cmd.py": "7cdba124a1dc92a41011b8fa63c399a8e35685c6b2b4cedaf1c4e54f7a1376e9",
+    "plan_tool/cli/review_actions.py": "4d7c2523591ed3b9398a5d1d122f6de2b04441b7c8ccf58441fdbe8061c5fcf0",
+    "plan_tool/cli/review_cmd.py": "9625b60d3f472cc580fefcd4cbc23121ab599b9124662b30220692d5ad7db073",
+    "plan_tool/cli/scope_out_cmd.py": "198c220aca77c899d22040bb1291e6a274ae572f058324f16f6cd513226fc966",
+    "plan_tool/convergence_diagnosis.py": "857a0f956771f647e842edeb021fe005fae67968d86ee20b1cb7eec5f85cf878",
+    "plan_tool/reground.py": "65fddf7ca35e28321def7696394e9d4b120d76e684d49d85103ab089e6ffd635",
+    "plan_tool/scope_out.py": "6583fd045f54b583676684548481e09071085a85f5400c32ba7d074ccd5736db",
+    "tests/cli/test_convergence_cmd.py": "af42ee69bb9b6834abc57564284102e267919c6390fa00f7d9561240f21f4337",
+    "tests/cli/test_review_actions.py": "5096548765e0d34de1737dcdbfae4d717aef338daf9e98176d603b38ed593ca8",
+    "tests/test_convergence_diagnosis.py": "6173d1e7084bc6a03c45afcf31ed76a094d47d406fe27e43057a6f84ad074228",
+    "tests/test_reground.py": "99088d0d9b0e3436ae5c9d1d237576dac3e14e7367e523795ecb4aa9d3fb22e7",
+    "tests/test_scope_out.py": "dceff9e87225874f05b423465917bf574b71983c9842a9a0f92884fea5b6003a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/01-generalize-scope-out-narrow-carve.md": "838a6e9883ca10581c890a17b2d3e2ea5e2e36cd896a94a23c1ddef71beec264",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md": "42ee89dec37e5f1d1f5df0c1f41d22e51b5eb6c24c32657b7cf030c0bcfff5af",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md": "ccd4219218b3735a12e3eaf8a017685f059b7eb2a4c3c6e1c61eb06c27e8ad4b",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/04-per-remedy-merge-reground-opt-flags.md": "e0eaa6d54bdc93d8fa81884841b9200bebdda9149eba8e4bdab1997cc1f16ede",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/05-create-existing-re-baseline-disposition.md": "ee0e84cb0c5ef69c481e8aeb93ac0b5f62e047ba5d1a523969255f45c4662c20",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/06-wire-re-ground-re-baseline-disposition.md": "c73d65325547df566196c98b6be5ac03ecb9db12880d069f7fd4a680723b2feb",
+    "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/07-reconcile-backlog-70-refresh-structural.md": "3a6d298cd345188b1c7b846a38f9077f5cd8597c72d0f42657ec7bec56216c35"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Structural Remedy Convenience Arms\n\n`structural-remedy-convenience-arms` \u00b7 generated 2026-07-09T17:22:32Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 3 (3 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply structural-remedy-convenience-arms   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk structural-remedy-convenience-arms  # alternative interactive review/apply\n\n- MEDIUM `[reground-rebaseline-recursion-propagation]`: Steps 4 and 6 give opposite instructions for the *same* recursive `_build_review_action_fn` sub-builder sites (`plan_tool/cli/review_actions.py:233` and `:329`) using mutually contradictory reasoning about the same fact. Step 4 (`04-per-remedy-merge-reground-opt-flags`, Implementation) says forward `allow_merge_remedy` / `allow_reground_remedy` into both recursive calls \"even where the sub-walk can't currently surface a merge/reground directive \u2014 an un-threaded site is a latent parity break.\" Step 6 (`06-wire-re-ground-re-baseline-disposition`, Implementation) says do **not** propagate `reground_rebaseline` into those same calls because \"the re-ground finding is emitted only by `cmd_review`'s own walk, never by the detail-reconcile sub-walk \u2026 forwarding the disposition there would select a disposition for a remedy that can never fire.\" Both re-ground kwargs concern the same remedy at the same sites, so an implementer following both details wires them inconsistently and cannot tell which rule governs.\n- MEDIUM `[rebaseline-seed-renderer-sharing]`: The Architecture (Arm 3) and the \"Re-ground re-baseline seed diverges\" risk both name the divergence mitigation as *reusing/sharing* the done-context renderer \u2014 \"reusing the same done-context renderer scope-out/annotate share\" \u2014 but step 5 (`05-create-existing-re-baseline-disposition`, Implementation) establishes that `reground_bridge` **cannot** share it: `reground.py` is a leaf pinned to import only `locator`/`parser`/`schema`, and `scope_out.py:render_carved_seed` transitively imports `plan_tool.detail`, so step 5 writes a *mirrored* `render_rebaseline_seed` instead. The risk's stated safeguard (a shared renderer) is foreclosed by the import boundary; the actual guard is mirroring the seed vocabulary plus `create --from-existing` round-trip consumability tests. Step 5's decision is the more-detailed and correct one; the plan body oversells shared reuse.\n- MEDIUM `[single-step-step-ids-population]`: Step 3 (`03-make-convergence-actuate-multi-region`) rewires `convergence_cmd.py:_actuate_scope_out` from `scope_out_step(..., carved_id=rec.step_focus)` to `carved_ids=list(rec.step_ids)` and guards on `not rec.step_ids`, but its \"Core behavior change\" says the existing single-step arm (`classify_fork`'s `len(resolved) == 1` branch, `convergence_diagnosis.py:963`) is \"unchanged, so their existing tests pass without edits.\" That branch constructs `FORK_SCOPE_OUT` without `step_ids`, so it defaults to `()` \u2014 with the rewired actuator that carves `[]` (or trips the empty-set guard), silently breaking the shipped single-step `--apply-scope-out`. The step's own acceptance criterion (\"still returns \u2026 `step_ids == (N,)`\") and `test_classify_single_step_scope_out_unchanged` (asserts `step_ids == (5,)`) require the opposite: the single-step arm must be edited to populate `step_ids=(step,)`.\n- INFO `[plan-plan-correctness-19d0a4cc]`: INFO: [step4-step6-shared-file-ordering] Steps 4 (`04-per-remedy-merge-reground-opt-flags`) and 6 (`06-wire-re-ground-re-baseline-disposition`) edit the identical five-file set (`review_actions.py`, `review_cmd.py`, both generated `docs/cli/reconcile-plan*.md`, `tests/cli/test_review_actions.py`) and both regenerate the same two docs, yet step 6 declares only `depends_on: 5` \u2014 no edge to step 4. Step 6's prose is written to degrade gracefully (\"if step 4 has landed\") and sequential id-order execution runs 4 before 6, so this is not a live corruption hazard, only an undeclared coupling.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[rebaseline-seed-only-disposition]`: Acceptance criterion 4 promises the re-ground actuator can \"emit a `create --from-existing` re-baseline seed \u2026 **instead of (or in addition to)** marking them done,\" but step 5 (`05-create-existing-re-baseline-disposition`) ships only the \"in addition to\" reading and explicitly defers the seed-only (\"instead of\") variant in its Deferred section \u2014 and the plan's own Deferred list omits it. AC4's \"instead of\" alternative is therefore satisfied by no step, so the criterion overstates delivered capability and reads as dangling.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor rebaseline-seed-only-disposition`\n- MEDIUM `[region-seed-renderer]`: The Overview and Architecture (Arm 1) say the region carve works \"reusing `render_carved_seed`'s done-context prose over the set,\" but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) deliberately keeps `render_carved_seed` unchanged for the single-step path and adds a *new* `render_carved_region_seed` that reuses the lower-level block helpers (`_scope_block` / `_done_context_block` / `_upstream_block`). The body's phrasing implies the region path folds into `render_carved_seed` itself, which step 2 rejects to protect the single-step round-trip.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor region-seed-renderer`\n- MEDIUM `[rebaseline-seed-scope-completeness]`: Step 5 (`05-create-existing-re-baseline-disposition`, Implementation) renders the flagged already-built steps as done-context but only *recommends* also rendering \"the plan's remaining non-flagged, not-done committed steps as the scope to re-plan,\" leaving it \"to the implementer\" with no acceptance criterion or test. When a strict subset of steps is re-baselined, a seed that omits the remaining unbuilt steps produces a `create --from-existing` re-decompose that silently drops that unbuilt scope \u2014 the flagged steps become done-context and nothing carries the work still to do.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor rebaseline-seed-scope-completeness`\n- MEDIUM `[noncontiguous-refusal-path]`: The plan body repeatedly names a \"non-contiguous `--through`\" refusal path \u2014 Risks (\"Non-contiguous / out-of-order `--through` ranges carve the wrong steps\"), Testing (\"deterministic refusal paths (non-contiguous / out-of-order ranges)\"), acceptance criterion 5, and Deferred (\"deterministically reject non-contiguous ranges\") \u2014 but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) establishes that `range(N, M+1)` is always contiguous, so the only `--through` refusal is out-of-order (`M < N`); there is no non-contiguous case to reject. The body oversells a refusal path the more-detailed step 2 shows cannot be triggered, and a developer may try to write an untriggerable non-contiguous-`--through` test.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor noncontiguous-refusal-path`\n- MEDIUM `[disjoint-carve-untested]`: Step 1 (`01-generalize-scope-out-narrow-carve`, Acceptance/Implementation) states \"The narrow accepts any subset of ids (contiguous or not)\" and generalizes the shift map to \"the count of carved ids strictly less than `s.id`,\" but every new test carves a contiguous set (`{2,3}`), so the disjoint carve \u2014 the very generalization the arm exists for, and the only case that exercises a survivor shifting by a fractional count between carved ids (e.g. carve `{2,4}`, survivor 3 shifts by 1 and survivor 5 by 2) \u2014 has no locking test. A future disjoint caller would trust an untested contract.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor disjoint-carve-untested`\n- MEDIUM `[per-remedy-flag-cli-integration-test]`: The plan's Testing section promises \"one CLI-integration test per new flag\" and acceptance criterion 5 promises \"unit + CLI-integration tests cover each,\" but steps 4 (`--merge` / `--reground`) and 6 (`--reground-rebaseline`) ship only builder-seam tests that call `_build_review_action_fn` directly, plus the `test_cli_reference.py` doc-drift guard. That guard proves only that each flag reached argparse \u2014 it does not exercise the argparse-dest \u2192 `getattr(args, ...)` \u2192 builder-kwarg threading across the three `cmd_review` / `cmd_review_walk` call sites, exactly the \"un-threaded site is a latent parity break\" step 4 warns about; a wrong `dest` or a missed call site ships silently. Steps 2 and 3 honor the promise with `main([...])` integration tests, and the existing `TestRegroundApplyStructuralFlag` already demonstrates the spy-on-`_build_review_action_fn` harness that would cover it.\n  - Address: `plan-tool completeness-apply structural-remedy-convenience-arms --anchor per-remedy-flag-cli-integration-test`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5cdbc99b]`: The plan's `## Acceptance criteria` names `fork_scope_out`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f255d253]`: The plan's `## Acceptance criteria` names `n..m`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-scope-out-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input cites `scope_out_cmd.py`, but code anchor path `scope_out_cmd.py` does not exist.\n- MEDIUM `[data-contract-input-convergence-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.\n- NIT `[step7-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 7's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply structural-remedy-convenience-arms` \u2014 apply the 4 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- Resolve 3 structural diagnostic(s) directly:\n    \u2022 `plan-tool completeness-apply structural-remedy-convenience-arms` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Structural Remedy Convenience Arms\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated \u2014 new findings aren't tapering (4\u21924\u21922) \u2014 the plan is likely under-decomposed; run `plan-tool convergence structural-remedy-convenience-arms` rather than raising --audit-passes.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[reground-rebaseline-recursion-propagation]`: Steps 4 and 6 give opposite instructions for the *same* recursive `_build_review_action_fn` sub-builder sites (`plan_tool/cli/review_actions.py:233` and `:329`) using mutually contradictory reasoning about the same fact. Step 4 (`04-per-remedy-merge-reground-opt-flags`, Implementation) says forward `allow_merge_remedy` / `allow_reground_remedy` into both recursive calls \"even where the sub-walk can't currently surface a merge/reground directive \u2014 an un-threaded site is a latent parity break.\" Step 6 (`06-wire-re-ground-re-baseline-disposition`, Implementation) says do **not** propagate `reground_rebaseline` into those same calls because \"the re-ground finding is emitted only by `cmd_review`'s own walk, never by the detail-reconcile sub-walk \u2026 forwarding the disposition there would select a disposition for a remedy that can never fire.\" Both re-ground kwargs concern the same remedy at the same sites, so an implementer following both details wires them inconsistently and cannot tell which rule governs.\n- MEDIUM `[rebaseline-seed-renderer-sharing]`: The Architecture (Arm 3) and the \"Re-ground re-baseline seed diverges\" risk both name the divergence mitigation as *reusing/sharing* the done-context renderer \u2014 \"reusing the same done-context renderer scope-out/annotate share\" \u2014 but step 5 (`05-create-existing-re-baseline-disposition`, Implementation) establishes that `reground_bridge` **cannot** share it: `reground.py` is a leaf pinned to import only `locator`/`parser`/`schema`, and `scope_out.py:render_carved_seed` transitively imports `plan_tool.detail`, so step 5 writes a *mirrored* `render_rebaseline_seed` instead. The risk's stated safeguard (a shared renderer) is foreclosed by the import boundary; the actual guard is mirroring the seed vocabulary plus `create --from-existing` round-trip consumability tests. Step 5's decision is the more-detailed and correct one; the plan body oversells shared reuse.\n- MEDIUM `[single-step-step-ids-population]`: Step 3 (`03-make-convergence-actuate-multi-region`) rewires `convergence_cmd.py:_actuate_scope_out` from `scope_out_step(..., carved_id=rec.step_focus)` to `carved_ids=list(rec.step_ids)` and guards on `not rec.step_ids`, but its \"Core behavior change\" says the existing single-step arm (`classify_fork`'s `len(resolved) == 1` branch, `convergence_diagnosis.py:963`) is \"unchanged, so their existing tests pass without edits.\" That branch constructs `FORK_SCOPE_OUT` without `step_ids`, so it defaults to `()` \u2014 with the rewired actuator that carves `[]` (or trips the empty-set guard), silently breaking the shipped single-step `--apply-scope-out`. The step's own acceptance criterion (\"still returns \u2026 `step_ids == (N,)`\") and `test_classify_single_step_scope_out_unchanged` (asserts `step_ids == (5,)`) require the opposite: the single-step arm must be edited to populate `step_ids=(step,)`.\n- INFO: INFO: [step4-step6-shared-file-ordering] Steps 4 (`04-per-remedy-merge-reground-opt-flags`) and 6 (`06-wire-re-ground-re-baseline-disposition`) edit the identical five-file set (`review_actions.py`, `review_cmd.py`, both generated `docs/cli/reconcile-plan*.md`, `tests/cli/test_review_actions.py`) and both regenerate the same two docs, yet step 6 declares only `depends_on: 5` \u2014 no edge to step 4. Step 6's prose is written to degrade gracefully (\"if step 4 has landed\") and sequential id-order execution runs 4 before 6, so this is not a live corruption hazard, only an undeclared coupling.\n\n### Files coherence\n\n- NIT: step 7 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-scope-out-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input cites `scope_out_cmd.py`, but code anchor path `scope_out_cmd.py` does not exist.\n- MEDIUM `[data-contract-input-convergence-cmd-py]`: docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[rebaseline-seed-only-disposition]`: Acceptance criterion 4 promises the re-ground actuator can \"emit a `create --from-existing` re-baseline seed \u2026 **instead of (or in addition to)** marking them done,\" but step 5 (`05-create-existing-re-baseline-disposition`) ships only the \"in addition to\" reading and explicitly defers the seed-only (\"instead of\") variant in its Deferred section \u2014 and the plan's own Deferred list omits it. AC4's \"instead of\" alternative is therefore satisfied by no step, so the criterion overstates delivered capability and reads as dangling.\n- MEDIUM `[region-seed-renderer]`: The Overview and Architecture (Arm 1) say the region carve works \"reusing `render_carved_seed`'s done-context prose over the set,\" but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) deliberately keeps `render_carved_seed` unchanged for the single-step path and adds a *new* `render_carved_region_seed` that reuses the lower-level block helpers (`_scope_block` / `_done_context_block` / `_upstream_block`). The body's phrasing implies the region path folds into `render_carved_seed` itself, which step 2 rejects to protect the single-step round-trip.\n- MEDIUM `[rebaseline-seed-scope-completeness]`: Step 5 (`05-create-existing-re-baseline-disposition`, Implementation) renders the flagged already-built steps as done-context but only *recommends* also rendering \"the plan's remaining non-flagged, not-done committed steps as the scope to re-plan,\" leaving it \"to the implementer\" with no acceptance criterion or test. When a strict subset of steps is re-baselined, a seed that omits the remaining unbuilt steps produces a `create --from-existing` re-decompose that silently drops that unbuilt scope \u2014 the flagged steps become done-context and nothing carries the work still to do.\n- MEDIUM `[noncontiguous-refusal-path]`: The plan body repeatedly names a \"non-contiguous `--through`\" refusal path \u2014 Risks (\"Non-contiguous / out-of-order `--through` ranges carve the wrong steps\"), Testing (\"deterministic refusal paths (non-contiguous / out-of-order ranges)\"), acceptance criterion 5, and Deferred (\"deterministically reject non-contiguous ranges\") \u2014 but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) establishes that `range(N, M+1)` is always contiguous, so the only `--through` refusal is out-of-order (`M < N`); there is no non-contiguous case to reject. The body oversells a refusal path the more-detailed step 2 shows cannot be triggered, and a developer may try to write an untriggerable non-contiguous-`--through` test.\n- MEDIUM `[disjoint-carve-untested]`: Step 1 (`01-generalize-scope-out-narrow-carve`, Acceptance/Implementation) states \"The narrow accepts any subset of ids (contiguous or not)\" and generalizes the shift map to \"the count of carved ids strictly less than `s.id`,\" but every new test carves a contiguous set (`{2,3}`), so the disjoint carve \u2014 the very generalization the arm exists for, and the only case that exercises a survivor shifting by a fractional count between carved ids (e.g. carve `{2,4}`, survivor 3 shifts by 1 and survivor 5 by 2) \u2014 has no locking test. A future disjoint caller would trust an untested contract.\n- MEDIUM `[per-remedy-flag-cli-integration-test]`: The plan's Testing section promises \"one CLI-integration test per new flag\" and acceptance criterion 5 promises \"unit + CLI-integration tests cover each,\" but steps 4 (`--merge` / `--reground`) and 6 (`--reground-rebaseline`) ship only builder-seam tests that call `_build_review_action_fn` directly, plus the `test_cli_reference.py` doc-drift guard. That guard proves only that each flag reached argparse \u2014 it does not exercise the argparse-dest \u2192 `getattr(args, ...)` \u2192 builder-kwarg threading across the three `cmd_review` / `cmd_review_walk` call sites, exactly the \"un-threaded site is a latent parity break\" step 4 warns about; a wrong `dest` or a missed call site ships silently. Steps 2 and 3 honor the promise with `main([...])` integration tests, and the existing `TestRegroundApplyStructuralFlag` already demonstrates the spy-on-`_build_review_action_fn` harness that would cover it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `fork_scope_out`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `n..m`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk structural-remedy-convenience-arms` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply structural-remedy-convenience-arms` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f21623ed",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Steps 4 and 6 give opposite instructions for the *same* recursive `_build_review_action_fn` sub-builder sites (`plan_too",
+      "body": "Steps 4 and 6 give opposite instructions for the *same* recursive `_build_review_action_fn` sub-builder sites (`plan_tool/cli/review_actions.py:233` and `:329`) using mutually contradictory reasoning about the same fact. Step 4 (`04-per-remedy-merge-reground-opt-flags`, Implementation) says forward `allow_merge_remedy` / `allow_reground_remedy` into both recursive calls \"even where the sub-walk can't currently surface a merge/reground directive \u2014 an un-threaded site is a latent parity break.\" Step 6 (`06-wire-re-ground-re-baseline-disposition`, Implementation) says do **not** propagate `reground_rebaseline` into those same calls because \"the re-ground finding is emitted only by `cmd_review`'s own walk, never by the detail-reconcile sub-walk \u2026 forwarding the disposition there would select a disposition for a remedy that can never fire.\" Both re-ground kwargs concern the same remedy at the same sites, so an implementer following both details wires them inconsistently and cannot tell which rule governs.",
+      "suggested_action": "reconcile the two steps on one propagation rule for re-ground-related sub-builder kwargs and state the bridging rationale (why an enable opt-in threads but a disposition does not, or thread both).",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reground-rebaseline-recursion-propagation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-659e4963",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture (Arm 3) and the \"Re-ground re-baseline seed diverges\" risk both name the divergence mitigation as *reus",
+      "body": "The Architecture (Arm 3) and the \"Re-ground re-baseline seed diverges\" risk both name the divergence mitigation as *reusing/sharing* the done-context renderer \u2014 \"reusing the same done-context renderer scope-out/annotate share\" \u2014 but step 5 (`05-create-existing-re-baseline-disposition`, Implementation) establishes that `reground_bridge` **cannot** share it: `reground.py` is a leaf pinned to import only `locator`/`parser`/`schema`, and `scope_out.py:render_carved_seed` transitively imports `plan_tool.detail`, so step 5 writes a *mirrored* `render_rebaseline_seed` instead. The risk's stated safeguard (a shared renderer) is foreclosed by the import boundary; the actual guard is mirroring the seed vocabulary plus `create --from-existing` round-trip consumability tests. Step 5's decision is the more-detailed and correct one; the plan body oversells shared reuse.",
+      "suggested_action": "correct the Architecture and the divergence risk to say the re-baseline renderer *mirrors* (not shares) the scope-out/annotate seed shape and that consumability round-trip tests are the anti-divergence guard.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "rebaseline-seed-renderer-sharing",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-50f75d48",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`03-make-convergence-actuate-multi-region`) rewires `convergence_cmd.py:_actuate_scope_out` from `scope_out_step",
+      "body": "Step 3 (`03-make-convergence-actuate-multi-region`) rewires `convergence_cmd.py:_actuate_scope_out` from `scope_out_step(..., carved_id=rec.step_focus)` to `carved_ids=list(rec.step_ids)` and guards on `not rec.step_ids`, but its \"Core behavior change\" says the existing single-step arm (`classify_fork`'s `len(resolved) == 1` branch, `convergence_diagnosis.py:963`) is \"unchanged, so their existing tests pass without edits.\" That branch constructs `FORK_SCOPE_OUT` without `step_ids`, so it defaults to `()` \u2014 with the rewired actuator that carves `[]` (or trips the empty-set guard), silently breaking the shipped single-step `--apply-scope-out`. The step's own acceptance criterion (\"still returns \u2026 `step_ids == (N,)`\") and `test_classify_single_step_scope_out_unchanged` (asserts `step_ids == (5,)`) require the opposite: the single-step arm must be edited to populate `step_ids=(step,)`.",
+      "suggested_action": "state in step 3 that the existing single-step `FORK_SCOPE_OUT` construction now sets `step_ids=(step,)` (behavior-preserving for the command/`step_focus`, additive for `step_ids`), and drop the \"single-step arm literally unchanged\" wording that contradicts it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "single-step-step-ids-population",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-19d0a4cc",
+      "source": "plan-correctness",
+      "severity": "info",
+      "step_id": null,
+      "title": "INFO: [step4-step6-shared-file-ordering] Steps 4 (`04-per-remedy-merge-reground-opt-flags`) and 6 (`06-wire-re-ground-re",
+      "body": "INFO: [step4-step6-shared-file-ordering] Steps 4 (`04-per-remedy-merge-reground-opt-flags`) and 6 (`06-wire-re-ground-re-baseline-disposition`) edit the identical five-file set (`review_actions.py`, `review_cmd.py`, both generated `docs/cli/reconcile-plan*.md`, `tests/cli/test_review_actions.py`) and both regenerate the same two docs, yet step 6 declares only `depends_on: 5` \u2014 no edge to step 4. Step 6's prose is written to degrade gracefully (\"if step 4 has landed\") and sequential id-order execution runs 4 before 6, so this is not a live corruption hazard, only an undeclared coupling.",
+      "suggested_action": "note in step 6 that it shares step 4's builder/parser/doc surfaces and is authored to compose whether or not step 4 has landed, so the missing `depends_on: 4` is deliberate.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-cb32a47f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Acceptance criterion 4 promises the re-ground actuator can \"emit a `create --from-existing` re-baseline seed \u2026 **instead",
+      "body": "Acceptance criterion 4 promises the re-ground actuator can \"emit a `create --from-existing` re-baseline seed \u2026 **instead of (or in addition to)** marking them done,\" but step 5 (`05-create-existing-re-baseline-disposition`) ships only the \"in addition to\" reading and explicitly defers the seed-only (\"instead of\") variant in its Deferred section \u2014 and the plan's own Deferred list omits it. AC4's \"instead of\" alternative is therefore satisfied by no step, so the criterion overstates delivered capability and reads as dangling.",
+      "suggested_action": "reword AC4 to \"in addition to marking them done\" (mark-done always runs) and add the seed-only re-baseline variant to the plan's Deferred section.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "rebaseline-seed-only-disposition",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-6aeb7dd4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Overview and Architecture (Arm 1) say the region carve works \"reusing `render_carved_seed`'s done-context prose over",
+      "body": "The Overview and Architecture (Arm 1) say the region carve works \"reusing `render_carved_seed`'s done-context prose over the set,\" but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) deliberately keeps `render_carved_seed` unchanged for the single-step path and adds a *new* `render_carved_region_seed` that reuses the lower-level block helpers (`_scope_block` / `_done_context_block` / `_upstream_block`). The body's phrasing implies the region path folds into `render_carved_seed` itself, which step 2 rejects to protect the single-step round-trip.",
+      "suggested_action": "adjust the Arm 1 body wording to say the region seed reuses the shared block helpers via a sibling region renderer, not `render_carved_seed` itself.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "region-seed-renderer",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-1d25fa72",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`05-create-existing-re-baseline-disposition`, Implementation) renders the flagged already-built steps as done-co",
+      "body": "Step 5 (`05-create-existing-re-baseline-disposition`, Implementation) renders the flagged already-built steps as done-context but only *recommends* also rendering \"the plan's remaining non-flagged, not-done committed steps as the scope to re-plan,\" leaving it \"to the implementer\" with no acceptance criterion or test. When a strict subset of steps is re-baselined, a seed that omits the remaining unbuilt steps produces a `create --from-existing` re-decompose that silently drops that unbuilt scope \u2014 the flagged steps become done-context and nothing carries the work still to do.",
+      "suggested_action": "make \"the re-baseline seed carries the remaining non-flagged committed steps as scope-to-re-plan\" a firm requirement in step 5 with a locking acceptance criterion/test, so a subset re-baseline never loses unbuilt scope.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "rebaseline-seed-scope-completeness",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-57830e1c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan body repeatedly names a \"non-contiguous `--through`\" refusal path \u2014 Risks (\"Non-contiguous / out-of-order `--th",
+      "body": "The plan body repeatedly names a \"non-contiguous `--through`\" refusal path \u2014 Risks (\"Non-contiguous / out-of-order `--through` ranges carve the wrong steps\"), Testing (\"deterministic refusal paths (non-contiguous / out-of-order ranges)\"), acceptance criterion 5, and Deferred (\"deterministically reject non-contiguous ranges\") \u2014 but step 2 (`02-contiguous-range-carve-scope-out`, Implementation) establishes that `range(N, M+1)` is always contiguous, so the only `--through` refusal is out-of-order (`M < N`); there is no non-contiguous case to reject. The body oversells a refusal path the more-detailed step 2 shows cannot be triggered, and a developer may try to write an untriggerable non-contiguous-`--through` test.",
+      "suggested_action": "reword the body so the `--through` refusal path is out-of-order only, and confine \"non-contiguous\" language to the deferred disjoint-carve item where it belongs.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "noncontiguous-refusal-path",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-161d2b17",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`01-generalize-scope-out-narrow-carve`, Acceptance/Implementation) states \"The narrow accepts any subset of ids ",
+      "body": "Step 1 (`01-generalize-scope-out-narrow-carve`, Acceptance/Implementation) states \"The narrow accepts any subset of ids (contiguous or not)\" and generalizes the shift map to \"the count of carved ids strictly less than `s.id`,\" but every new test carves a contiguous set (`{2,3}`), so the disjoint carve \u2014 the very generalization the arm exists for, and the only case that exercises a survivor shifting by a fractional count between carved ids (e.g. carve `{2,4}`, survivor 3 shifts by 1 and survivor 5 by 2) \u2014 has no locking test. A future disjoint caller would trust an untested contract.",
+      "suggested_action": "add a step-1 characterization test that carves a disjoint id set and asserts the per-survivor shift and `depends_on` repair, locking the \"any subset\" contract the design claims.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "disjoint-carve-untested",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-2f9d782a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan's Testing section promises \"one CLI-integration test per new flag\" and acceptance criterion 5 promises \"unit + ",
+      "body": "The plan's Testing section promises \"one CLI-integration test per new flag\" and acceptance criterion 5 promises \"unit + CLI-integration tests cover each,\" but steps 4 (`--merge` / `--reground`) and 6 (`--reground-rebaseline`) ship only builder-seam tests that call `_build_review_action_fn` directly, plus the `test_cli_reference.py` doc-drift guard. That guard proves only that each flag reached argparse \u2014 it does not exercise the argparse-dest \u2192 `getattr(args, ...)` \u2192 builder-kwarg threading across the three `cmd_review` / `cmd_review_walk` call sites, exactly the \"un-threaded site is a latent parity break\" step 4 warns about; a wrong `dest` or a missed call site ships silently. Steps 2 and 3 honor the promise with `main([...])` integration tests, and the existing `TestRegroundApplyStructuralFlag` already demonstrates the spy-on-`_build_review_action_fn` harness that would cover it.",
+      "suggested_action": "require steps 4 and 6 to add a `main([...])`-driven integration assertion (extending the existing `--apply-structural` spy harness) that each new flag reaches its builder kwarg through the real CLI path. Beyond this, the plan is substantially converged: the eight established findings already cover the multi-id carve testing (`[disjoint-carve-untested]`), the refusal path (`[noncontiguous-refusal-path]`), the region seed renderer sharing (`[region-seed-renderer]`), the single-step `step_ids` population (`[single-step-step-ids-population]`), the re-baseline disposition/seed gaps (`[rebaseline-*]`), and the 4/6 recursion contradiction (`[reground-rebaseline-recursion-propagation]`). I found no new correctness gap in the design itself.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "per-remedy-flag-cli-integration-test",
+      "target_signature": null
+    },
+    {
+      "id": "step2-data-contract-29c241f6",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `scope_out_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/02-contiguous-range-carve-scope-out.md:## Input cites `scope_out_cmd.py`, but code anchor path `scope_out_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-scope-out-cmd-py",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-d1e6865d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `convergence_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/structural-remedy-convenience-arms/03-make-convergence-actuate-multi-region.md:## Input cites `convergence_cmd.py`, but code anchor path `convergence_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-convergence-cmd-py",
+      "target_signature": null
+    }
+  ],
+  "annotations": {
+    "plan-plan-correctness-50f75d48": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-659e4963": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-f21623ed": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-161d2b17": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-1d25fa72": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-2f9d782a": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-57830e1c": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-6aeb7dd4": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-cb32a47f": {
+      "status": "applied",
+      "note": "APPLIED",
+      "halt_reason": ""
+    }
+  }
+}

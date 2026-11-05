@@ -1,0 +1,61 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-18e083ba": {
+      "code_anchor": "granularity.py:parse_mixed_step_findings",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md",
+      "reason": "code anchor path `granularity.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-19d26797": {
+      "code_anchor": "granularity.py:_merge_rec",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md",
+      "reason": "code anchor path `granularity.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-34058ef0": {
+      "code_anchor": "review_persistence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md",
+      "reason": "code anchor path `review_persistence.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-8f01fc07": {
+      "code_anchor": "review.py:_reground_already_built_recommendation",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/precise-directive-staleness/02-stamp-target-signature-directive.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-06c127fe": {
+      "code_anchor": "plan_tool/review_walk.py:stamp_target_signatures",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/precise-directive-staleness/05-reconcile-backlog-93-shipped.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/precise-directive-staleness/05-reconcile-backlog-93-shipped.md",
+      "reason": "code anchor `plan_tool/review_walk.py:stamp_target_signatures` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260708-214406-completeness"
+}

@@ -1,0 +1,223 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T13:27:10Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a110dfc68c1d80c41c299db38c624ae515fc7d1fc5f58608d36ac5cdc501defb",
+  "code_fingerprint": {
+    "BACKLOG.md": "4095a24da1efa313ce8270ffdba03a09f2085bf81126009dcae67f25885467a2",
+    "docs/how-to/pipeline/audit.md": "21012dde3125aec12dc575501533c9540d50cb68939d957314ea15f288d889e5",
+    "plan_tool/cli/authoring.py": "945eb4cd8377cfb0eeea343ab1699a0ea66dd2e24cd3c7990fd2211d81b59347",
+    "plan_tool/cli/completeness_cmd.py": "d3da4d5b5025da4010bd29e88ce0602670676f82c5e66048072033bc6c76dc00",
+    "plan_tool/cli/completeness_phases.py": "e6d616e9b5a6d442c35066fafe33285e90eede030dd8f9660e0e9463ff1baed6",
+    "plan_tool/completeness_report.py": "35e48c256fe0b2277a3d2743119b614e470d1393d449727022d6818cc6684e2a",
+    "tests/cli/test_completeness_cmd.py": "6a55ac4d4dcf3d65f6416be80a51fdf9109cfb8ed6abe9bf9713dacbe5e465eb",
+    "tests/test_completeness_report.py": "8321f9064241f3fdeada202a12c4d061dea577ba5a1b019e18f17ae697c8d211"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-pass-audit-blocking-set-incomplete-flag.md": "598afc3b63e4c08567a4b337ae9dcbe555b858e63d51c4fd18a97c1a25674f73",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-hand-outcome-conceptual-bar-blocking.md": "438078c4835178d165da9e1c947f366f55dfb2d8d1aafdecbe49d658b68d7950",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md": "e01395a95eb6c22e49e97bca6bc02df11e2f4b645a117ea76ff8ded7aa3e10f3",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md": "48160a8a1a7aa03222d22cdd4adf7830cdc11836f87d4263e492e3a9c502b629",
+    "docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md": "5995e7de05f1bc96e1e70e9221f1b5554ed463b5d51965b461147bfb7e45c4a4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Steps Blocking Set\n\n`completeness-next-steps-blocking-set` \u00b7 generated 2026-10-10T13:27:09Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `a110dfc68c1d80c41c299db38c624ae515fc7d1fc5f58608d36ac5cdc501defb`\n- **Detail bundle digest:** `6efb64fba2ad24249698f3ac20f35fd0ad85d376f6b70717ab5133614003b058`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk completeness-next-steps-blocking-set  # optional interactive review of the saved findings\n\n- MEDIUM `[incomplete-audit-blocking-set]` [confidence: limited]: `compute_conceptual_bar_blocking_ids` is called from a wrapper in `cli/completeness_phases.py` that returns an empty set whenever `audit_incomplete` is true (budget-limited or unqualified coverage). Every reader that tests \"set is empty\" therefore reads an incomplete audit as \"nothing blocks\". The Architecture bullet \"A non-empty set names each blocking gap \u2026 an empty set with advisory gaps lists them and offers the next stage\" and the \"Incomplete audits\" bullet only agree if every reader checks `audit_incomplete` before the emptiness test. The plan states that order for step 1's readers only in prose. Step 4's table (stage \u00d7 grade \u00d7 finding kind) has no incomplete-audit axis, while `## Testing` lists that case separately. Without an explicit precedence rule, a reader that checks emptiness first brings back the \"no gaps remain\" message on exactly the audits where the set is unavailable.\n  - Fix: State once in the Architecture section that `audit_incomplete` takes precedence over the blocking-set emptiness test in all four readers and the three parents. Add incomplete audits as an axis of step 4's table-driven test.\n- MEDIUM `[reader-input-availability]` [confidence: limited]: The four readers also run outside the finalize path. These include saved-report rendering from a cached or reused audit (`completeness_report.py` call at the `suggested_next_steps(` site, `--reuse`, `list --status`) and any caller that has no `outcome`. Step 2 lists \"every caller \u2026 receives the set or is named as intentionally exempt\". The plan never says what a reader prints when it has no set. Two reasonable implementers could default to an empty set (which says \"no gaps remain\") or to the fresh re-audit. The risk entry on `audit_incomplete` covers only the unavailable-set case inside the finalize path.\n  - Fix: Make \"set not supplied\" a stated third state with the same behavior as `audit_incomplete` (offer only the fresh re-audit, no stage transition). Require step 2's caller list to name each caller that has no outcome and say which state it maps to.\n- MEDIUM `[parents-tail-signal]` [confidence: limited]: Step 3 (`Leave out run in the detail / split / merge merged next-steps block while the completeness tail names a re-audit`) and the Architecture bullet \"Parents respect the tail\" both gate `run` on whether \"the tail names a re-audit\", but neither says how `cli/authoring.py` learns that. The parent could read the same `outcome.conceptual_bar_blocking_ids`, or it could inspect the tail's command text. The second option is a re-derived verdict, which the plan's \"no second blocking predicate\" rule and its stated risk of divergent verdicts forbid. Both readings pass the Step 3 test (\"a blocking tail leaves `run` out\") but behave differently when the tail is the incomplete-audit re-audit.\n  - Fix: State that the `detail` / `split` / `merge` parents consume the same blocking set and `audit_incomplete` flag, and omit `run` when the set is non-empty or the audit is incomplete. Do not parse the tail's command text.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[parents-tail-signal]` [confidence: limited]: Step 3 and the \"Parents respect the tail\" bullet in Architecture say the `detail` / `split` / `merge` parents in `cli/authoring.py` omit `run` \"while the tail names a re-audit\". The plan does not say how a parent learns that the tail named one. It could read the same blocking set and `audit_incomplete` flag, or it could inspect the tail's returned command text. Step 2's \"every reader receives the set\" does not cover the parents. Inspecting text would be a second, positional blocking verdict, which the Out of scope section forbids.\n  - Fix: State that the parents take the tail's structured verdict (blocking set / `audit_incomplete`) from the completeness result, and add them to step 2's caller list as receivers. They must not parse the printed command list.\n- MEDIUM `[console-summary-coverage]` [confidence: limited]: `console_summary` is named as one of the four readers in the Problem statement and Architecture. No step title or acceptance bullet owns it: step 1 names the saved-report and console next-step readers, and step 2 names `_render_grouped_report` explicitly. A step that never names a reader is the shape of omission the Risks entry warns about.\n  - Fix: Name `console_summary` in step 1's or step 2's intent and in the \"every caller\" acceptance bullet, so the four-reader list in the plan body maps one-to-one onto step ownership.\n- MEDIUM `[reader-input-availability]` [confidence: limited]: The four readers also run where no finalize `outcome` exists: saved-report rendering from a cached or reused audit (`--reuse`), `list --status`, and any caller of `suggested_next_steps` or `suggested_next_step_commands` that has no `outcome`. The \"Incomplete audits\" bullet defines \"unavailable\" only as \"budget-limited or unqualified\". The plan does not say whether a reader with no set at all is treated as incomplete (re-audit only) or as empty (stage transition offered). The second would bring back \"no gaps remain\" on exactly those paths. Step 2's \"named as intentionally exempt\" clause allows an exempt caller without saying what it prints.\n  - Fix: Define \"set unavailable\" as including a missing set, treat it the same as `audit_incomplete` in every reader, and require each exempt caller named in step 2 to state what it prints instead.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1eb03b12]` [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 3 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Steps Blocking Set\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `a110dfc68c1d80c41c299db38c624ae515fc7d1fc5f58608d36ac5cdc501defb`\n- **Detail bundle digest:** `6efb64fba2ad24249698f3ac20f35fd0ad85d376f6b70717ab5133614003b058`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[incomplete-audit-blocking-set]` [confidence: limited]: `compute_conceptual_bar_blocking_ids` is called from a wrapper in `cli/completeness_phases.py` that returns an empty set whenever `audit_incomplete` is true (budget-limited or unqualified coverage). Every reader that tests \"set is empty\" therefore reads an incomplete audit as \"nothing blocks\". The Architecture bullet \"A non-empty set names each blocking gap \u2026 an empty set with advisory gaps lists them and offers the next stage\" and the \"Incomplete audits\" bullet only agree if every reader checks `audit_incomplete` before the emptiness test. The plan states that order for step 1's readers only in prose. Step 4's table (stage \u00d7 grade \u00d7 finding kind) has no incomplete-audit axis, while `## Testing` lists that case separately. Without an explicit precedence rule, a reader that checks emptiness first brings back the \"no gaps remain\" message on exactly the audits where the set is unavailable.\n- MEDIUM `[reader-input-availability]` [confidence: limited]: The four readers also run outside the finalize path. These include saved-report rendering from a cached or reused audit (`completeness_report.py` call at the `suggested_next_steps(` site, `--reuse`, `list --status`) and any caller that has no `outcome`. Step 2 lists \"every caller \u2026 receives the set or is named as intentionally exempt\". The plan never says what a reader prints when it has no set. Two reasonable implementers could default to an empty set (which says \"no gaps remain\") or to the fresh re-audit. The risk entry on `audit_incomplete` covers only the unavailable-set case inside the finalize path.\n- MEDIUM `[parents-tail-signal]` [confidence: limited]: Step 3 (`Leave out run in the detail / split / merge merged next-steps block while the completeness tail names a re-audit`) and the Architecture bullet \"Parents respect the tail\" both gate `run` on whether \"the tail names a re-audit\", but neither says how `cli/authoring.py` learns that. The parent could read the same `outcome.conceptual_bar_blocking_ids`, or it could inspect the tail's command text. The second option is a re-derived verdict, which the plan's \"no second blocking predicate\" rule and its stated risk of divergent verdicts forbid. Both readings pass the Step 3 test (\"a blocking tail leaves `run` out\") but behave differently when the tail is the incomplete-audit re-audit.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[parents-tail-signal]` [confidence: limited]: Step 3 and the \"Parents respect the tail\" bullet in Architecture say the `detail` / `split` / `merge` parents in `cli/authoring.py` omit `run` \"while the tail names a re-audit\". The plan does not say how a parent learns that the tail named one. It could read the same blocking set and `audit_incomplete` flag, or it could inspect the tail's returned command text. Step 2's \"every reader receives the set\" does not cover the parents. Inspecting text would be a second, positional blocking verdict, which the Out of scope section forbids.\n- MEDIUM `[console-summary-coverage]` [confidence: limited]: `console_summary` is named as one of the four readers in the Problem statement and Architecture. No step title or acceptance bullet owns it: step 1 names the saved-report and console next-step readers, and step 2 names `_render_grouped_report` explicitly. A step that never names a reader is the shape of omission the Risks entry warns about.\n- MEDIUM `[reader-input-availability]` [confidence: limited]: The four readers also run where no finalize `outcome` exists: saved-report rendering from a cached or reused audit (`--reuse`), `list --status`, and any caller of `suggested_next_steps` or `suggested_next_step_commands` that has no `outcome`. The \"Incomplete audits\" bullet defines \"unavailable\" only as \"budget-limited or unqualified\". The plan does not say whether a reader with no set at all is treated as incomplete (re-audit only) or as empty (stage transition offered). The second would bring back \"no gaps remain\" on exactly those paths. Step 2's \"named as intentionally exempt\" clause allows an exempt caller without saying what it prints.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `has_blocking_findings`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a2c56125",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`compute_conceptual_bar_blocking_ids` is called from a wrapper in `cli/completeness_phases.py` that returns an empty set",
+      "body": "`compute_conceptual_bar_blocking_ids` is called from a wrapper in `cli/completeness_phases.py` that returns an empty set whenever `audit_incomplete` is true (budget-limited or unqualified coverage). Every reader that tests \"set is empty\" therefore reads an incomplete audit as \"nothing blocks\". The Architecture bullet \"A non-empty set names each blocking gap \u2026 an empty set with advisory gaps lists them and offers the next stage\" and the \"Incomplete audits\" bullet only agree if every reader checks `audit_incomplete` before the emptiness test. The plan states that order for step 1's readers only in prose. Step 4's table (stage \u00d7 grade \u00d7 finding kind) has no incomplete-audit axis, while `## Testing` lists that case separately. Without an explicit precedence rule, a reader that checks emptiness first brings back the \"no gaps remain\" message on exactly the audits where the set is unavailable.",
+      "suggested_action": "State once in the Architecture section that `audit_incomplete` takes precedence over the blocking-set emptiness test in all four readers and the three parents. Add incomplete audits as an axis of step 4's table-driven test.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "incomplete-audit-blocking-set",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-73ed9627",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The four readers also run outside the finalize path. These include saved-report rendering from a cached or reused audit ",
+      "body": "The four readers also run outside the finalize path. These include saved-report rendering from a cached or reused audit (`completeness_report.py` call at the `suggested_next_steps(` site, `--reuse`, `list --status`) and any caller that has no `outcome`. Step 2 lists \"every caller \u2026 receives the set or is named as intentionally exempt\". The plan never says what a reader prints when it has no set. Two reasonable implementers could default to an empty set (which says \"no gaps remain\") or to the fresh re-audit. The risk entry on `audit_incomplete` covers only the unavailable-set case inside the finalize path.",
+      "suggested_action": "Make \"set not supplied\" a stated third state with the same behavior as `audit_incomplete` (offer only the fresh re-audit, no stage transition). Require step 2's caller list to name each caller that has no outcome and say which state it maps to.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reader-input-availability",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-acb38747",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Leave out run in the detail / split / merge merged next-steps block while the completeness tail names a re-audi",
+      "body": "Step 3 (`Leave out run in the detail / split / merge merged next-steps block while the completeness tail names a re-audit`) and the Architecture bullet \"Parents respect the tail\" both gate `run` on whether \"the tail names a re-audit\", but neither says how `cli/authoring.py` learns that. The parent could read the same `outcome.conceptual_bar_blocking_ids`, or it could inspect the tail's command text. The second option is a re-derived verdict, which the plan's \"no second blocking predicate\" rule and its stated risk of divergent verdicts forbid. Both readings pass the Step 3 test (\"a blocking tail leaves `run` out\") but behave differently when the tail is the incomplete-audit re-audit.",
+      "suggested_action": "State that the `detail` / `split` / `merge` parents consume the same blocking set and `audit_incomplete` flag, and omit `run` when the set is non-empty or the audit is incomplete. Do not parse the tail's command text.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "parents-tail-signal",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-acb38747",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 and the \"Parents respect the tail\" bullet in Architecture say the `detail` / `split` / `merge` parents in `cli/au",
+      "body": "Step 3 and the \"Parents respect the tail\" bullet in Architecture say the `detail` / `split` / `merge` parents in `cli/authoring.py` omit `run` \"while the tail names a re-audit\". The plan does not say how a parent learns that the tail named one. It could read the same blocking set and `audit_incomplete` flag, or it could inspect the tail's returned command text. Step 2's \"every reader receives the set\" does not cover the parents. Inspecting text would be a second, positional blocking verdict, which the Out of scope section forbids.",
+      "suggested_action": "State that the parents take the tail's structured verdict (blocking set / `audit_incomplete`) from the completeness result, and add them to step 2's caller list as receivers. They must not parse the printed command list.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "parents-tail-signal",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-5f0b7268",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`console_summary` is named as one of the four readers in the Problem statement and Architecture. No step title or accept",
+      "body": "`console_summary` is named as one of the four readers in the Problem statement and Architecture. No step title or acceptance bullet owns it: step 1 names the saved-report and console next-step readers, and step 2 names `_render_grouped_report` explicitly. A step that never names a reader is the shape of omission the Risks entry warns about.",
+      "suggested_action": "Name `console_summary` in step 1's or step 2's intent and in the \"every caller\" acceptance bullet, so the four-reader list in the plan body maps one-to-one onto step ownership.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "console-summary-coverage",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-73ed9627",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The four readers also run where no finalize `outcome` exists: saved-report rendering from a cached or reused audit (`--r",
+      "body": "The four readers also run where no finalize `outcome` exists: saved-report rendering from a cached or reused audit (`--reuse`), `list --status`, and any caller of `suggested_next_steps` or `suggested_next_step_commands` that has no `outcome`. The \"Incomplete audits\" bullet defines \"unavailable\" only as \"budget-limited or unqualified\". The plan does not say whether a reader with no set at all is treated as incomplete (re-audit only) or as empty (stage transition offered). The second would bring back \"no gaps remain\" on exactly those paths. Step 2's \"named as intentionally exempt\" clause allows an exempt caller without saying what it prints.",
+      "suggested_action": "Define \"set unavailable\" as including a missing set, treat it the same as `audit_incomplete` in every reader, and require each exempt caller named in step 2 to state what it prints instead.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reader-input-availability",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "a110dfc68c1d80c41c299db38c624ae515fc7d1fc5f58608d36ac5cdc501defb",
+      "detail_bundle_digest": "6efb64fba2ad24249698f3ac20f35fd0ad85d376f6b70717ab5133614003b058",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/01-pass-audit-blocking-set-incomplete-flag.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/02-hand-outcome-conceptual-bar-blocking.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/03-leave-out-run-detail-split-merge-merged.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/04-one-table-driven-test-showing-all-four.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-steps-blocking-set/05-document-one-blocking-set-next-step.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "29c8756422c7eab3b8b05dcb8702d92898d6b2ac150d987cdf3752c1cc00fd0d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

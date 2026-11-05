@@ -1,0 +1,150 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-feedback-approval",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-feedback-approval.md",
+  "created_at": "2026-09-23T22:04:08Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "567566a08d85056eee7b9440b43205a963a71d0026860cba57ce86ad81a1d3af",
+  "code_fingerprint": {
+    "BACKLOG.md": "a36cac3709ff637209e746db8f1d4cdb80da959478dc0be07e143c568f1c4390",
+    "CAPABILITIES.md": "864e4ff99140adf7776657bc5c9279cf23fdf082c7233ccaae52ccf3d6a8b3c2",
+    "DATA_CONTRACT.md": "80ad5ab6ae748662a35d5214e5fa671503c80fea6c5236da0b02f38fbc589034",
+    "README.md": "3c17ff635d8fac32204859ad2b748dd0c4546825f12494bc92e1159afbbd77fc",
+    "ROADMAP_FEEDBACK_FORMAT.md": "d311d061d796e6760b04a3a1191882851be04c3c6a47471e8b2c73ff4a887953",
+    "ROADMAP_FORMAT.md": "da4f118c443651266bde52ffedfea97f17875a43c7fc49bbb7aa4b3d5e802f2a",
+    "docs/ARCHITECTURE.md": "b42ec61a22168a90c16305375134c00be49a6470d32f29b04ac99f65c32023da",
+    "docs/cli/roadmap.md": "80e3227ef5f76811790e68e60649d5f82a84645179f70cc6a0b9be5e112576cf",
+    "docs/how-to/roadmap.md": "d697aa6b89006f6645219fc9b2908c969d89f3e734efc7a722c536634f44ded0",
+    "handoffs/2026-09-22-roadmap-feedback-revision-approval.md": "ffbfcb30d651256d6930ac4b45f56e8cf7ae33af5dfca86f97bc570b84397d9a",
+    "plan_tool/cli/roadmap_cmd.py": "e375f6c2a5429052495a9940cc9df651050114088cf5fa916bdfb316b06b965d",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "c4af675e41c0eda486604b3ef139887fd785320ee5a32efdc0a1ec6a95389470",
+    "plan_tool/roadmap_candidate.py": "2a7ebf9807ed08f0b41d30aa490694086b461518eebb79fd0feb06568dbd6b7d",
+    "plan_tool/roadmap_candidate_review.py": "c6d40a47d0778e0717523a8715c49e287fc05697acba3f179fbe712191d599e3",
+    "plan_tool/roadmap_candidate_run.py": "b44398543f1444bc6d9e6453f214fff3207cb42e9cce6367b0ce71b071b6e4d3",
+    "plan_tool/roadmap_revision_publish.py": "0377161a87023a34a86013f621a98c65cacb4b96e4b176da57b8fc0799c8866f",
+    "plan_tool/roadmap_version_promotion.py": "23f1799742444d2f11acb38d3efa873513befd047eb7021e2327ba33659ccfe4",
+    "tests/cli/test_cli_reference.py": "527e30f605409ba8e803452ecce91d2395fce0915df987766032f79c1266f401",
+    "tests/cli/test_roadmap_cmd.py": "5a4912d508e64f242a876d57a4b8dd41d69ffc402f06c4685fba79265c58b21b",
+    "tests/test_roadmap_candidate.py": "f58d70293b146f22006f471bc0e4192042def0fef9351204bb66d6cb8148b726",
+    "tests/test_roadmap_candidate_review.py": "212eae55d191f83eec4407fd189776bf313dee77468ddec4286ab453857e8daf",
+    "tests/test_roadmap_candidate_run.py": "87e10413358712d330217524f6121fcdafec35ee9c1817880671b3a31cce9d88",
+    "tests/test_roadmap_feedback_format.py": "30efa9135e9e7fec2c197b9619e15c6c3c5940d4c9c84194eaca2f3537965a50",
+    "tests/test_roadmap_format.py": "32e98c1d31192f7dcaccec5ba86d95b35d2f4794470e93220ddb23cdec0a4d14",
+    "tests/test_roadmap_revision_publish.py": "4628cdd60eb3e22c9a9a7b1a0926b5b3ce4b82854134db6472092180a6c65af7",
+    "tests/test_roadmap_version_promotion.py": "c45e9fc658a4c03b2cfad1d7281127459b969a4b6c277dd80b80737fa94d2e1b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/01-classify-validated-candidate-operations.md": "6147267767411dce4489b31d16b4a107541ca5bf54421942508c985f7d64b488",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/02-persist-typed-operation-set-structural.md": "ac3680e78ea2fd57199c24c6fa95be708ce8dce4b9adf69367cf0a893ed0e8cf",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/03-one-structural-approve-edit-reject.md": "b564e71c7f5a6530972c987472b865b4da5953a8a21f046d8dff22548e36ef68",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/04-enrolled-seed-invalidation-recover.md": "5b9152771a69f88cc28c7a49b02f0c7a5d0ba6bbc8512bcef01a8f318ec325d0",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/05-promote-only-exact-approved-candidate.md": "a3bf215ed9ff0d61679dac2b20d5eeb68381c485ff3c47ff3a4ceaa8bc05cc90",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/06-expose-structural-proposal-approve-edit.md": "aa2ca6f6c17e30a135a50baeb2bfac92da58e00f16274db035271df8ff36bd2c",
+    "docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/07-document-unified-feedback-approval.md": "0c1915e9b2901f22a94acb6b472ff044eec36f623ddeb85bf2ef5ae30fc0b18e"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Feedback Approval\n\n`roadmap-structural-feedback-approval` \u00b7 generated 2026-09-23T22:04:07Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `3de87a4bba08848dae2d6c20d2e103cdf03f785afb1b6db1400c7a018cf52b5d`\n- **Detail bundle digest:** `a30c6c8406608ec1f7d8273cae6a9aa4c44ad0249b5a2a50cc01ec3fa7ecceb1`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 87072 bytes (+87072 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-structural-feedback-approval` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Feedback Approval\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `3de87a4bba08848dae2d6c20d2e103cdf03f785afb1b6db1400c7a018cf52b5d`\n- **Detail bundle digest:** `a30c6c8406608ec1f7d8273cae6a9aa4c44ad0249b5a2a50cc01ec3fa7ecceb1`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run roadmap-structural-feedback-approval` \u2014 no gaps left \u2014 execute the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "3de87a4bba08848dae2d6c20d2e103cdf03f785afb1b6db1400c7a018cf52b5d",
+      "detail_bundle_digest": "a30c6c8406608ec1f7d8273cae6a9aa4c44ad0249b5a2a50cc01ec3fa7ecceb1",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/01-classify-validated-candidate-operations.md",
+          "state": "present",
+          "digest": "6147267767411dce4489b31d16b4a107541ca5bf54421942508c985f7d64b488"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/02-persist-typed-operation-set-structural.md",
+          "state": "present",
+          "digest": "ac3680e78ea2fd57199c24c6fa95be708ce8dce4b9adf69367cf0a893ed0e8cf"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/03-one-structural-approve-edit-reject.md",
+          "state": "present",
+          "digest": "b564e71c7f5a6530972c987472b865b4da5953a8a21f046d8dff22548e36ef68"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/04-enrolled-seed-invalidation-recover.md",
+          "state": "present",
+          "digest": "5b9152771a69f88cc28c7a49b02f0c7a5d0ba6bbc8512bcef01a8f318ec325d0"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/05-promote-only-exact-approved-candidate.md",
+          "state": "present",
+          "digest": "a3bf215ed9ff0d61679dac2b20d5eeb68381c485ff3c47ff3a4ceaa8bc05cc90"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/06-expose-structural-proposal-approve-edit.md",
+          "state": "present",
+          "digest": "aa2ca6f6c17e30a135a50baeb2bfac92da58e00f16274db035271df8ff36bd2c"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-structural-feedback-approval/07-document-unified-feedback-approval.md",
+          "state": "present",
+          "digest": "0c1915e9b2901f22a94acb6b472ff044eec36f623ddeb85bf2ef5ae30fc0b18e"
+        }
+      ],
+      "source_seed_digest": "10723a43919d023fb3add21a44cd2efa7cdc138faacb96748011109ec5c86cc1",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 87072,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

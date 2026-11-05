@@ -1,0 +1,164 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-5a8d161e": {
+      "candidate": {
+        "field_or_key": "RoadmapStructuralRevisionAttempt",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "binding_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "proof_verdict",
+          "final_snapshot_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "binding_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "proof_verdict",
+          "final_snapshot_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "owner": "RoadmapStructuralRevisionAttempt",
+        "source_symbol": "plan_tool/run_log.py:RoadmapStructuralRevisionAttempt",
+        "target_section": "RoadmapStructuralRevisionAttempt"
+      },
+      "candidate_fields": {
+        "field_or_key": "RoadmapStructuralRevisionAttempt",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "binding_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "proof_verdict",
+          "final_snapshot_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "binding_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "proof_verdict",
+          "final_snapshot_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "owner": "RoadmapStructuralRevisionAttempt",
+        "source_symbol": "plan_tool/run_log.py:RoadmapStructuralRevisionAttempt",
+        "target_section": "RoadmapStructuralRevisionAttempt"
+      },
+      "contract_fingerprint": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+      "field_or_key": "RoadmapStructuralRevisionAttempt",
+      "freshness": {
+        "contract_fingerprint": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+        "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf"
+      },
+      "operation": "add",
+      "owner": "RoadmapStructuralRevisionAttempt",
+      "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf",
+      "source_type": "dataclass",
+      "target_section": "RoadmapStructuralRevisionAttempt"
+    },
+    "plan-data-contract-a0c1406f": {
+      "candidate": {
+        "field_or_key": "RoadmapStructuralRevisionPreflight",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "receipt_final",
+          "analysis_final",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "binding_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "receipt_final",
+          "analysis_final",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "binding_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "owner": "RoadmapStructuralRevisionPreflight",
+        "source_symbol": "plan_tool/run_log.py:RoadmapStructuralRevisionPreflight",
+        "target_section": "RoadmapStructuralRevisionPreflight"
+      },
+      "candidate_fields": {
+        "field_or_key": "RoadmapStructuralRevisionPreflight",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "receipt_final",
+          "analysis_final",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "binding_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "receipt_final",
+          "analysis_final",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "binding_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "owner": "RoadmapStructuralRevisionPreflight",
+        "source_symbol": "plan_tool/run_log.py:RoadmapStructuralRevisionPreflight",
+        "target_section": "RoadmapStructuralRevisionPreflight"
+      },
+      "contract_fingerprint": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+      "field_or_key": "RoadmapStructuralRevisionPreflight",
+      "freshness": {
+        "contract_fingerprint": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+        "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf"
+      },
+      "operation": "add",
+      "owner": "RoadmapStructuralRevisionPreflight",
+      "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf",
+      "source_type": "dataclass",
+      "target_section": "RoadmapStructuralRevisionPreflight"
+    }
+  },
+  "review_id": "20260817-215324-completeness"
+}
