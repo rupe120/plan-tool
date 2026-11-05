@@ -452,6 +452,31 @@ Use the [roadmap walkthrough](docs/how-to/roadmap.md) for the complete lifecycle
 accepted versions. Ordinary feedback uses `--propose-candidate` to snapshot
 eligible ledger items into an inert candidate; review and promotion are separate.
 
+## Related work and alternatives
+
+AI-assisted development is a new space, and no single approach has settled it.
+plan-tool is one take; it is not the only reasonable one.
+
+- **AI-DLC (AWS Labs).** The AI-Driven Development Life Cycle is an open-source
+  methodology published at
+  [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) under the
+  MIT-0 license. It supplies workflow rules that steer your coding assistant
+  (Claude Code, Kiro, Codex CLI, Cursor, GitHub Copilot, and others) through
+  structured phases with human approval gates. plan-tool is a CLI that authors,
+  audits, and executes plans held as machine-readable frontmatter; AI-DLC works
+  as steering rules inside the assistant itself. If that shape suits a team
+  better, it is a good alternative, and the two projects can learn from each
+  other. No feature-by-feature comparison has been done.
+- **An example governance policy.** The
+  [AI-assisted development policy](docs/reference/ai-assisted-development-policy.md)
+  (also available as [`AI_SDLC_POLICY.pdf`](AI_SDLC_POLICY.pdf)) shows what a team
+  policy around AI-assisted work might look like. It is an example to adapt, not
+  a standard.
+
+If you are building something in this space, issues and pull requests on the
+GitHub repository are welcome, including corrections to how another project is
+described here.
+
 ## License
 
 plan-tool is licensed under the [Apache License 2.0](LICENSE).

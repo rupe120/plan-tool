@@ -18,7 +18,7 @@ needed.
 
 ## Contracts
 
-- [AI-assisted development policy](ai-assisted-development-policy.md)
+- [AI-assisted development policy (an example)](ai-assisted-development-policy.md)
 - [Process contracts](contracts/process.md)
 - [Seed ingestion](contracts/seed-ingestion.md)
 - [Human-input protocol](contracts/human-io.md)
