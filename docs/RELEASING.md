@@ -167,11 +167,59 @@ For each synchronization:
 2. Fast-forward when one tip contains the other. If the tips diverge, review and
    merge locally, then test the resulting commit. Different roots require the
    deliberate snapshot procedure below, rather than an unrelated-history merge.
-3. Run the required checks on the exact local commit to publish. Push that commit
-   explicitly to each host's `main` using ordinary fast-forward pushes.
-4. Read both remote heads back and confirm they equal the tested commit. Two
-   pushes are separate operations: if one fails, fetch and compare again before
-   retrying. Preserve concurrent remote work; never force a routine sync.
+3. Run the required checks on the exact local commit to publish. Bitbucket
+   `main` is protected, so that commit reaches it through a pull request from
+   the integration branch, never a direct push. Bitbucket may record the merge
+   as a new commit; fetch the merged `main`, confirm its tree equals the tested
+   tree (retest if it does not), then push that commit to GitHub `main` with an
+   ordinary fast-forward push.
+4. Read both remote heads back and confirm they equal the commit that passed the
+   checks. Two publications are separate operations: if one fails, fetch and
+   compare again before retrying. Preserve concurrent remote work; never force
+   a routine sync.
+
+### First synchronization after a gap
+
+A push to a host's `main` publishes every commit between its old tip and the new
+one. After a long gap, list that range before pushing:
+`git log --oneline <github-main>..<bitbucket-main>`. Confirm each commit is
+cleared for GitHub. While GitHub is private the push is reversible only by the
+deliberate non-fast-forward replacement described under
+[Prepare the shared sanitized root](#prepare-the-shared-sanitized-root); once
+GitHub is public it is not.
+
+### Accounts and the GitHub repository
+
+The GitHub repository belongs to the `rupe120` account. Run
+`gh auth status` before any `gh pr` or `gh repo` command and
+`gh auth switch -u rupe120` when another account is active: a command from a
+different account fails with "Could not resolve to a Repository" while the
+repository is private.
+
+### Integrate a GitHub pull request
+
+A contribution that arrives as a GitHub pull request is merged here, tested, and
+published to both hosts. GitHub is never merged into directly.
+
+1. Fetch the pull request head into the integration clone:
+   `git fetch <github-url> refs/pull/<N>/head:refs/remotes/github-pr/<N>`.
+2. Branch from current Bitbucket `main` and merge the head with `--no-ff`. A
+   conflict is resolved here, with the contributor's change reviewed in the
+   same step.
+3. Run the required checks on the merge commit.
+4. Open a Bitbucket pull request for the integration branch and publish as in
+   step 3 above. A GitHub `main` that is behind Bitbucket `main` falls under
+   [First synchronization after a gap](#first-synchronization-after-a-gap).
+5. Close the GitHub pull request with a comment naming the commit that shipped
+   it. GitHub does not mark it merged unless the pushed commit contains the
+   head, which it does here because the merge commit has the head as a parent.
+
+Rehearsed 2026-11-05 with a throwaway pull request against a GitHub `main` that
+was 231 commits behind: the fetch and `--no-ff` merge onto Bitbucket `main` were
+clean and the full suite passed on the merge commit (14,726 passed, 67 skipped).
+Steps 4 and 5 were not run, because publishing would have pushed the 231
+commits; the protected-branch and account rules above were written from that
+run, not exercised by a publication.
 
 A developer may keep an ignored local helper for comparison, testing and pushing.
 Its location and commands belong in that machine's local reminder, rather than a
