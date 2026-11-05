@@ -4,7 +4,7 @@ version = "1.2.0"
 description = "Typed driver for implementation plans with YAML frontmatter"
 readme = "README.md"
 license = "Apache-2.0"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.13"
 dependencies = [
     "pydantic>=2.9.0",
