@@ -457,16 +457,17 @@ eligible ledger items into an inert candidate; review and promotion are separate
 AI-assisted development is a new space, and no single approach has settled it.
 plan-tool is one take; it is not the only reasonable one.
 
-- **AI-DLC (AWS Labs).** The AI-Driven Development Life Cycle is an open-source
-  methodology published at
-  [awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows) under the
-  MIT-0 license. It supplies workflow rules that steer your coding assistant
-  (Claude Code, Kiro, Codex CLI, Cursor, GitHub Copilot, and others) through
-  structured phases with human approval gates. plan-tool is a CLI that authors,
-  audits, and executes plans held as machine-readable frontmatter; AI-DLC works
-  as steering rules inside the assistant itself. If that shape suits a team
-  better, it is a good alternative, and the two projects can learn from each
-  other. No feature-by-feature comparison has been done.
+- **AI-DLC (AWS Labs).** An open-source methodology
+  ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows), MIT-0)
+  that steers your coding assistant through structured phases with human approval
+  gates. It is a good alternative, and the two projects can learn from each other.
+  - **How it compares:** both work through your coding assistant. plan-tool adds
+    a CLI underneath its skill that keeps plans as machine-readable frontmatter
+    and runs audits on them; AI-DLC delivers its workflow as steering rules.
+  - **They compose:** an orchestrator can drive both. Integration, a sibling web
+    app under development, does
+    ([details](docs/integrations/aidlc-integration.md)).
+  - No feature-by-feature comparison has been done.
 - **An example governance policy.** The
   [AI-assisted development policy](docs/reference/ai-assisted-development-policy.md)
   (also available as [`AI_SDLC_POLICY.pdf`](AI_SDLC_POLICY.pdf)) shows what a team
