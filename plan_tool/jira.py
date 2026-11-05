@@ -2333,12 +2333,14 @@ def _capture_target_content_proof(path: Path, repo_root: Path) -> _TargetContent
 def _all_detail_artifact_paths(
     plan_path: Path, plan: Plan, repo_root: Path
 ) -> frozenset[str]:
-    """Every step's run-grade detail path, including absent artifacts."""
+    """Canonical and declared detail paths for every step, including absent files."""
     paths: set[str] = set()
     for step in plan.steps:
         paths.add(
             _repo_relative_posix(derive_detail_path(plan_path, plan, step), repo_root)
         )
+        if step.detail is not None:
+            paths.add(_repo_relative_posix(repo_root / step.detail, repo_root))
     return frozenset(paths)
 
 

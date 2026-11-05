@@ -5368,6 +5368,44 @@ class TestPairedJiraExport:
                 invoker=never_invoke,
             )
 
+    @pytest.mark.parametrize("destination", ["story", "handoff"])
+    @pytest.mark.parametrize("output_format", ["markdown", "json"])
+    def test_missing_declared_detail_is_reserved_before_model_or_either_renderer(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+        destination: str, output_format: str,
+    ) -> None:
+        from plan_tool import jira
+
+        plan_path = _write_companion_plan(
+            tmp_path,
+            _COMPANION_MINIMAL_PLAN.replace(
+                "    status: done", "    status: done\n    detail: notes/declared.md",
+            ),
+        )
+        declared = tmp_path / "notes" / "declared.md"
+        story_target = derive_jira_output_path(plan_path, None, format=output_format)
+        handoff_target = _companion_handoff_target(tmp_path)
+        if destination == "story":
+            story_target = declared
+        else:
+            handoff_target = declared
+
+        def never_call(*args, **kwargs):
+            raise AssertionError("unsafe target must fail before model or rendering")
+
+        monkeypatch.setattr(jira, "render_handoff_body", never_call)
+        monkeypatch.setattr(jira, "_render_story_markdown", never_call)
+        monkeypatch.setattr(jira, "_render_story_json", never_call)
+        with pytest.raises(JiraError, match=f"companion {destination} target.*collides"):
+            export_jira(
+                plan_path, repo_root=tmp_path, epic=_DEFAULT_EPIC,
+                story_output_path=story_target, handoff_output_path=handoff_target,
+                format=output_format, invoker=never_call,
+            )
+        assert not declared.exists()
+        assert not story_target.exists()
+        assert not handoff_target.exists()
+
     def test_companion_target_preflight_rejects_run_grade_detail_collision_before_model_or_renderer(
         self, tmp_path: Path
     ) -> None:
