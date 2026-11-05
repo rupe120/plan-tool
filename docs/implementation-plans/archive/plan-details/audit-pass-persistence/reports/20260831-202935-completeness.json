@@ -1,0 +1,137 @@
+{
+  "version": 4,
+  "plan_slug": "audit-pass-persistence",
+  "plan_path": "docs/implementation-plans/2-audit-pass-persistence.md",
+  "created_at": "2026-08-31T20:29:35Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c9b7cf5893e39da131540700f209021d309db01e8460b46dec763d9a6a57b193",
+  "code_fingerprint": {
+    "BACKLOG.md": "9656ae57a92eb2b01fc49a0d02133429467f222443cf2f2e124ea063e1eb6b35",
+    "DATA_CONTRACT.md": "f61cb2ec0154bfdde6ecd2148e344de111ca8f09984ca17fee8a2c59261216ee",
+    "docs/AUDIT_FLOW.md": "3226b66ac93154285746c62186b078bc8a546212796ac21c9e52064b4f49575c",
+    "docs/AUDIT_RESUME_FLOW.md": "3ba62e6fc769d711c89366ecba762a9c285f506de34742f72b56d764f1662f37",
+    "plan_tool/backend.py": "8a4db670e2a40222fdd68926dfd90abaebe6691d13d0734536a4f3d1fc1fd912",
+    "plan_tool/cli/completeness_cmd.py": "fdbf0c46ddbb7bd93ab4d14a711904457ec24bf94dbcf934b76610fd7ec87542",
+    "plan_tool/cli/completeness_phases.py": "af6300a3344149d6d2429bbd2c2a2b2e3b402565aaaf675b93e5148f9bc7e550",
+    "plan_tool/cli/data_contract_cmd.py": "6d0d056c9e42feacf68fd8a8709fb5416334b897932c766533e77b1c00b9628f",
+    "plan_tool/cli/review_cmd.py": "8abbab65a0d9cec35e4399e7e61b05cd3cc26a8f6720c39ca49b1d2c676d4973",
+    "plan_tool/completeness_report.py": "67d407b72c875c1bf2388c47db26055ac9c48ab28ef644f61b79d8785dce2620",
+    "plan_tool/convergence_diagnosis.py": "bb72d106c27083c02b1801d962340985fadd9f567317c95e20bd0cbfea06856c",
+    "plan_tool/data_contract.py": "dc9944892c89e0d4afe723c24306b08b6cffafa392db428b18ce6c36c87efe00",
+    "plan_tool/prompts/plan-audit.md": "5f323241f17cfaac314ff81e47fcae9b799a46c25c02b230098a0ce6389aee99",
+    "plan_tool/review.py": "3aabbd042574e4076e436656ad940e50bfe82df0d3f615fc7978157b6a34332e",
+    "plan_tool/review_persistence.py": "211ab2cac376869e1937ce07faf49b51abbf959963c515125c8e794d2b57e5f7",
+    "tests/cli/test_completeness_cmd.py": "e59e11ae9299e006343d2d65b7650b1e7d84fce983c76055a35cd9fe773702a3",
+    "tests/test_backend.py": "b76fe5c4679c59853297a112614b893baf8b0a952fa79e812b76448f82db0d2d",
+    "tests/test_completeness_report.py": "e40cd2092072ff8f8aebfb36abbfeb0ceeafdbfa6a340a8b31076b5114f56667",
+    "tests/test_convergence_diagnosis.py": "b04b6ed4803b981ae29f88761fb1b17bf23ced1e2b89bd2e07949ef45efdae52",
+    "tests/test_data_contract.py": "9101fdd460e823315fb1ea6dfe3795e52a869512a3eb96b517528b3fcacda897",
+    "tests/test_review.py": "12a73e4316005597f3bcac6508972921976f5cdb029c0ea12929433e084d4978",
+    "tests/test_review_persistence.py": "c84058998b6b7c8c84069f7915c3c5cc44162ea5fbb8648a90a8cf92f91a1ae2"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md": "3eb8fca712beebe9f583deaa8c4cb0b68dd6331adf3d102bb8e4b5e718471a2c",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md": "f08d62395c6b8056ff1d028e94b7b7e174081caf27bb36c0d30309af7da61944",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md": "42a9ca658b0d5f03b830bfd4f735d038ed9aaf6b51fd1160af4cbb59ddec3f4e",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/04-give-load-audit-evidence-ledger.md": "949117ddeb3cbec8effdc57f0843a5df7d5f764f5ad9ecc6c9f9a0381ae26fe0",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/05-report-resumed-audit-provenance-only.md": "ce5596e6c508d07ad47a6a5368324f03c242034b874dfac1f120116bd45e5b8f",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/06-document-resume-decline-discard-audit.md": "8a377d831f33f7351f773421fc0d335ef35c95b1d120af0ea4dcb59e762afe99"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Pass Persistence\n\n`audit-pass-persistence` \u00b7 generated 2026-08-31T20:29:34Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c9b7cf5893e39da131540700f209021d309db01e8460b46dec763d9a6a57b193`\n- **Detail bundle digest:** `22693aa7e533fd4edb410d632056142109f5fff8a72a7612818672ebbd6f0f05`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-e8b6c10d]` [confidence: limited]: The plan's `## Acceptance criteria` names `_normalize_checkpoint_role`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-572084d9]` [confidence: limited]: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-fab61539]` [confidence: limited]: The plan's `## Acceptance criteria` names `dry_rounds`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-cd50a855]` [confidence: limited]: The plan's `## Acceptance criteria` names `max_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8aa2212b]` [confidence: limited]: The plan's `## Acceptance criteria` names `new_threshold`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-af3d017c]` [confidence: limited]: The plan's `## Acceptance criteria` names `qualified_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1e2ee778]` [confidence: limited]: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool detail audit-pass-persistence` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Pass Persistence\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c9b7cf5893e39da131540700f209021d309db01e8460b46dec763d9a6a57b193`\n- **Detail bundle digest:** `22693aa7e533fd4edb410d632056142109f5fff8a72a7612818672ebbd6f0f05`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_normalize_checkpoint_role`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `dry_rounds`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `max_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `new_threshold`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `qualified_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c9b7cf5893e39da131540700f209021d309db01e8460b46dec763d9a6a57b193",
+      "detail_bundle_digest": "22693aa7e533fd4edb410d632056142109f5fff8a72a7612818672ebbd6f0f05",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-after.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/04-give-load-audit-evidence-ledger.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/05-report-resumed-audit-provenance-only.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/06-document-resume-decline-discard-audit.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "ab009008832e621fb804d31aa172b7e1422df9fec7115250e3ac0cc219dc3047",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

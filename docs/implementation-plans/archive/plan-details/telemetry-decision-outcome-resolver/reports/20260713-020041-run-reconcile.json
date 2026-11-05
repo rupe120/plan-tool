@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "plan_slug": "telemetry-decision-outcome-resolver",
+  "plan_path": "docs/implementation-plans/2-telemetry-decision-outcome-resolver.md",
+  "created_at": "2026-07-13T02:00:41Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "3ea785e3e07864e9913602277d7b05487e3ff5d4f7320fd30d2b7761809962ab",
+  "code_fingerprint": {
+    "BACKLOG.md": "1cb110f1e7b844982591bae5666a525f8a12f22aebcf10a2390b40b05ae85de2",
+    "CAPABILITIES.md": "748ece619f25ced62007d06e2f7bdf45e8ed5262f714e9f6a91f061ac0880042",
+    "CLAUDE.md": "ddaf2165b8b27ac564f14a49db8313b109bf8b784d8601c8ffdd1a4df8f00ee5",
+    "USE_CASES.md": "c086628d13779af4ea8bc0fa5db892301521ea553cd9d32cfbd56d357084a1e0",
+    "docs/cli/telemetry.md": "079d4ad37f27a6eeb7ccdb5ff86aaec7ab9539f63a4c1535da09fb12c901b854",
+    "plan_tool/cli/app.py": "6c9b40fb685bf0e466ca348b9c32d1886f1c2b475a33a7d39043201c8e247ee1",
+    "plan_tool/cli/parser.py": "e22afc4ba54e7d658dc0831b299ef9c1521cbf971549c638404796b61e50a4f6",
+    "plan_tool/cli/telemetry_cmd.py": "f2ccc73fa0f6d50115eff22c434a5aa12f9ea429d7ee97941b66192f94a64c28",
+    "plan_tool/run_log.py": "6f7945432137377777323986070901b4d1120cddce3eb6a9e36d413ab1a8d64d",
+    "plan_tool/telemetry_analysis.py": "b94ecdf67a86cad57a7c9f4f73769734d79e4de65a5894768052b158a379113b",
+    "tests/cli/test_telemetry_cmd.py": "8f60288b59d5c9036bdc41085ceef7af8b1a6ed9a75f5d90e7fbdce540e54405",
+    "tests/test_run_log.py": "02dadf9ea370653ad7a6a89f2a2e310524f12980738df6bb2fd084c0827e2f6b",
+    "tests/test_telemetry_analysis.py": "3ede5af9186a8fc2cd874976f7cf6fbd11095e70ddf608fab0efff8a2a46b342"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

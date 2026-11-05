@@ -1,0 +1,172 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-generate-detail-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-generate-detail-phases.md",
+  "created_at": "2026-08-17T17:16:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1948d6831fba04e721a05aa516813093aedd7d71493a2cd68e21d474ff13bd28",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "2fc5b90a678602adf36677c9b022f14b734d2a11115bcb108dfc2a74e202d2af",
+    "tests/test_detail.py": "603c905fa827a06c5c7954e3e81e1111cdb20ff3efc8278eb006c9645f7761a0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md": "c0edf4ac3b683964e3e0f582777c9c18ede50100ef909f82d8826dbcfb4f7002",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-generate-detail-setup-phases.md": "8bf65c1487e03d21ea365e96423143868428cd7420eb01da674d858cae2cefa9",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-per-step-authoring-lifecycle.md": "6c5f1f3dc728e0ea81f28d666c9d47e2914c2af5d788af42ee5100f367098829",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-split-handling-preserving.md": "4ed3a1768ba443f937059f3bccde4919aabb92091ac10117be98a6afbb18d686",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-re-entry-preserving-its.md": "de773b218806683b6a3990a9d3f06921f3857e6084f2db6a1a4c96a5f415a00d",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-concept-persistence-shorten.md": "c67f7ba4cc5eecd3b6bf4d12d23afa9959ec7bbd984a6275a8f6e91cb24d2610"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Generate Detail Phases\n\n`decompose-generate-detail-phases` \u00b7 generated 2026-08-17T17:16:21Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply decompose-generate-detail-phases   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk decompose-generate-detail-phases  # alternative interactive review/apply\n\n- MEDIUM `[post-loop-split-order]`: Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve two post-loop handlers, but Architecture, Risks, Acceptance criteria, and Testing do not state and lock down the existing `plan_tool/detail.py:generate_detail` Phase B \u2192 Trigger 2 order when both handlers must act. The planned exclusion test can run Trigger 2 with no remaining Phase B split, so a reordered shared result-rebuild helper could still pass while changing recursive writes or result summaries.\n  - Fix: state the Phase B-before-Trigger-2 order and require one characterization test that activates an in-loop split plus an independent Phase B split and verifies both re-entry paths and rebuilt results\n- MEDIUM `[jira-fork-boundary]`: Step 2 (`Extract generate_detail setup phases`) names grade routing, while Architecture lists concept loading among pre-loop phases and says `_generate_jira_detail` remains an existing fork, but it does not require the current boundary in `plan_tool/detail.py:generate_detail`: parse the plan, then enter the Jira fork before run-grade concept loading, orphan adoption, checkpoint scanning, and pointer writes. `tests/test_detail.py:TestJiraGradeAuthoring` proves artifact isolation but not that a stale run-grade concept record cannot block Jira authoring.\n  - Fix: Define the Jira fork as immediately after plan parsing and characterize that it bypasses all run-grade-only setup, including stale concept-record handling.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[post-loop-split-order]`: Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve distinct post-loop paths, but Architecture, Risks, and Acceptance criteria require their order without a test that activates both together. `plan_tool/detail.py:generate_detail` runs Phase B before Trigger 2; `tests/test_detail.py:TestInteractiveSplit` and `TestInLoopStructuralEscalation` cover the paths separately, so a refactor can swap their interaction without detection.\n  - Fix: add an acceptance criterion and characterization that activates both paths and pins Phase B-before-Trigger-2 ordering plus the final rebuilt result rows.\n- MEDIUM `[split-result-rebuild]`: Overview, Architecture, step 4 (`Extract Phase B split handling`), step 5 (`Extract Trigger 2 re-entry`), and Acceptance criteria require one `written_keys`/`min_split` rebuild contract, but Testing only names recursive re-entry. `tests/test_detail.py:TestInteractiveSplit.test_carried_downstream_reported_as_skip_not_write` covers Phase B, while `TestInLoopStructuralEscalation.test_applied_split_reauthors_detail_less_halves` uses a one-step Trigger 2 plan; neither catches Trigger 2 losing a written prefix or reporting a carried detail as newly written.\n  - Fix: Add a Trigger 2 characterization with a written prefix and carried downstream detail, asserting the shared rebuild preserves both result classifications.\n- MEDIUM `[commit-step-boundary]`: Step 2 (`Extract generate_detail setup phases`), step 3 (`Extract the per-step authoring lifecycle`), step 4 (`Extract Phase B split handling`), and step 5 (`Extract Trigger 2 re-entry`) preserve observable side effects but do not define the `commit_step` boundary. `plan_tool/detail.py:generate_detail` calls it only after top-level serial success; `_generate_detail_concurrent` receives no callback, and both Phase B and Trigger 2 recursive calls omit it. `tests/test_detail.py:TestGenerateDetailHappyPath.test_commit_step_callback_fires_once_per_written_step` covers only ordinary serial authoring, so extraction can commit uncommitted split rewrites during half authoring.\n  - Fix: Define and test that only the top-level serial lifecycle invokes `commit_step`; concurrent and both split re-entry paths leave their changes for the outer commit.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-2a3294c2]`: The plan's `## Acceptance criteria` names `allow_split=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7e73bab7]`: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9109e159]`: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2c0f5581]`: The plan's `## Acceptance criteria` names `invoke_idx`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3c90fb56]`: The plan's `## Acceptance criteria` names `invoke_total`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-20b44f63]`: The plan's `## Acceptance criteria` names `min_split`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b16f44b3]`: The plan's `## Acceptance criteria` names `resume=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8965370d]`: The plan's `## Acceptance criteria` names `structural_seen`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c0b45809]`: The plan's `## Acceptance criteria` names `structural_split_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5d7e165f]`: The plan's `## Acceptance criteria` names `written_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step5-granularity-merge-3dfeca58]`: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit decompose-generate-detail-phases` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Generate Detail Phases\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[post-loop-split-order]`: Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve two post-loop handlers, but Architecture, Risks, Acceptance criteria, and Testing do not state and lock down the existing `plan_tool/detail.py:generate_detail` Phase B \u2192 Trigger 2 order when both handlers must act. The planned exclusion test can run Trigger 2 with no remaining Phase B split, so a reordered shared result-rebuild helper could still pass while changing recursive writes or result summaries.\n- MEDIUM `[jira-fork-boundary]`: Step 2 (`Extract generate_detail setup phases`) names grade routing, while Architecture lists concept loading among pre-loop phases and says `_generate_jira_detail` remains an existing fork, but it does not require the current boundary in `plan_tool/detail.py:generate_detail`: parse the plan, then enter the Jira fork before run-grade concept loading, orphan adoption, checkpoint scanning, and pointer writes. `tests/test_detail.py:TestJiraGradeAuthoring` proves artifact isolation but not that a stale run-grade concept record cannot block Jira authoring.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[post-loop-split-order]`: Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve distinct post-loop paths, but Architecture, Risks, and Acceptance criteria require their order without a test that activates both together. `plan_tool/detail.py:generate_detail` runs Phase B before Trigger 2; `tests/test_detail.py:TestInteractiveSplit` and `TestInLoopStructuralEscalation` cover the paths separately, so a refactor can swap their interaction without detection.\n- MEDIUM `[split-result-rebuild]`: Overview, Architecture, step 4 (`Extract Phase B split handling`), step 5 (`Extract Trigger 2 re-entry`), and Acceptance criteria require one `written_keys`/`min_split` rebuild contract, but Testing only names recursive re-entry. `tests/test_detail.py:TestInteractiveSplit.test_carried_downstream_reported_as_skip_not_write` covers Phase B, while `TestInLoopStructuralEscalation.test_applied_split_reauthors_detail_less_halves` uses a one-step Trigger 2 plan; neither catches Trigger 2 losing a written prefix or reporting a carried detail as newly written.\n- MEDIUM `[commit-step-boundary]`: Step 2 (`Extract generate_detail setup phases`), step 3 (`Extract the per-step authoring lifecycle`), step 4 (`Extract Phase B split handling`), and step 5 (`Extract Trigger 2 re-entry`) preserve observable side effects but do not define the `commit_step` boundary. `plan_tool/detail.py:generate_detail` calls it only after top-level serial success; `_generate_detail_concurrent` receives no callback, and both Phase B and Trigger 2 recursive calls omit it. `tests/test_detail.py:TestGenerateDetailHappyPath.test_commit_step_callback_fires_once_per_written_step` covers only ordinary serial authoring, so extraction can commit uncommitted split rewrites during half authoring.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `allow_split=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `inspect.signature`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `invoke_idx`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `invoke_total`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `min_split`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `resume=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `structural_seen`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `structural_split_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `written_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply decompose-generate-detail-phases` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-e697d679",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve two post-loop handlers, but",
+      "body": "Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve two post-loop handlers, but Architecture, Risks, Acceptance criteria, and Testing do not state and lock down the existing `plan_tool/detail.py:generate_detail` Phase B \u2192 Trigger 2 order when both handlers must act. The planned exclusion test can run Trigger 2 with no remaining Phase B split, so a reordered shared result-rebuild helper could still pass while changing recursive writes or result summaries.",
+      "suggested_action": "state the Phase B-before-Trigger-2 order and require one characterization test that activates an in-loop split plus an independent Phase B split and verifies both re-entry paths and rebuilt results",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "post-loop-split-order",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b0defefc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Extract generate_detail setup phases`) names grade routing, while Architecture lists concept loading among pre-",
+      "body": "Step 2 (`Extract generate_detail setup phases`) names grade routing, while Architecture lists concept loading among pre-loop phases and says `_generate_jira_detail` remains an existing fork, but it does not require the current boundary in `plan_tool/detail.py:generate_detail`: parse the plan, then enter the Jira fork before run-grade concept loading, orphan adoption, checkpoint scanning, and pointer writes. `tests/test_detail.py:TestJiraGradeAuthoring` proves artifact isolation but not that a stale run-grade concept record cannot block Jira authoring.",
+      "suggested_action": "Define the Jira fork as immediately after plan parsing and characterize that it bypasses all run-grade-only setup, including stale concept-record handling.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "jira-fork-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-e697d679",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve distinct post-loop paths, b",
+      "body": "Step 4 (`Extract Phase B split handling`) and step 5 (`Extract Trigger 2 re-entry`) preserve distinct post-loop paths, but Architecture, Risks, and Acceptance criteria require their order without a test that activates both together. `plan_tool/detail.py:generate_detail` runs Phase B before Trigger 2; `tests/test_detail.py:TestInteractiveSplit` and `TestInLoopStructuralEscalation` cover the paths separately, so a refactor can swap their interaction without detection.",
+      "suggested_action": "add an acceptance criterion and characterization that activates both paths and pins Phase B-before-Trigger-2 ordering plus the final rebuilt result rows.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "post-loop-split-order",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-186db688",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Overview, Architecture, step 4 (`Extract Phase B split handling`), step 5 (`Extract Trigger 2 re-entry`), and Acceptance",
+      "body": "Overview, Architecture, step 4 (`Extract Phase B split handling`), step 5 (`Extract Trigger 2 re-entry`), and Acceptance criteria require one `written_keys`/`min_split` rebuild contract, but Testing only names recursive re-entry. `tests/test_detail.py:TestInteractiveSplit.test_carried_downstream_reported_as_skip_not_write` covers Phase B, while `TestInLoopStructuralEscalation.test_applied_split_reauthors_detail_less_halves` uses a one-step Trigger 2 plan; neither catches Trigger 2 losing a written prefix or reporting a carried detail as newly written.",
+      "suggested_action": "Add a Trigger 2 characterization with a written prefix and carried downstream detail, asserting the shared rebuild preserves both result classifications.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-result-rebuild",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-97962cf6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Extract generate_detail setup phases`), step 3 (`Extract the per-step authoring lifecycle`), step 4 (`Extract P",
+      "body": "Step 2 (`Extract generate_detail setup phases`), step 3 (`Extract the per-step authoring lifecycle`), step 4 (`Extract Phase B split handling`), and step 5 (`Extract Trigger 2 re-entry`) preserve observable side effects but do not define the `commit_step` boundary. `plan_tool/detail.py:generate_detail` calls it only after top-level serial success; `_generate_detail_concurrent` receives no callback, and both Phase B and Trigger 2 recursive calls omit it. `tests/test_detail.py:TestGenerateDetailHappyPath.test_commit_step_callback_fires_once_per_written_step` covers only ordinary serial authoring, so extraction can commit uncommitted split rewrites during half authoring.",
+      "suggested_action": "Define and test that only the top-level serial lifecycle invokes `commit_step`; concurrent and both split re-entry paths leave their changes for the outer commit.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "commit-step-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "1948d6831fba04e721a05aa516813093aedd7d71493a2cd68e21d474ff13bd28",
+    "detail_bundle_digest": "976ff82ab8b7e279d35a8182c7f2c7ad84eb1058fff7f8e1c809969b478701e2",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-generate-detail-setup-phases.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-per-step-authoring-lifecycle.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-split-handling-preserving.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-re-entry-preserving-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-concept-persistence-shorten.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

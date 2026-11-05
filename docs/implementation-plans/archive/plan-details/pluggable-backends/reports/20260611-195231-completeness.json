@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "plan_slug": "pluggable-backends",
+  "plan_path": "docs/implementation-plans/2-pluggable-backends.md",
+  "created_at": "2026-06-11T19:52:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Pluggable Backends\n\n`pluggable-backends` \u00b7 generated 2026-06-11T19:52:31Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 5\n- **Deferred:** 7 (7 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] Step 1's editable-install caveat prescribes resolving the editable fallback via `locator.find_repo_root_from_cwd`, but Step 5 deliberately rejects that (the *driven* project's root has no `integrations/`) and uses `Path(__file__).parent.parent`. Step 5 resolves it soundly, but the bundle ships a contradictory prescription an implementer reading Step 1 first would follow.\n- [APPLIED] Step 6's Implementation prose (\"Short-circuit the no-op case\") claims the default path yields `get_active_backend() is CLAUDE_BACKEND`, contradicting step 5's register-over (the registry \"claude\" object is the manifest-built one, not the literal) and step 6's own cross-step caveat that mandates value-equality. An implementer following that line would write an `is`-identity assertion that flakes under the full suite. \u2014 - `docs/implementation-plans/plan-details/pluggable-backends/06-model-flag-model-precedence-argv.md`: changed the \"Short-circuit the no-op case\" bullet's `get_active_backend() is CLAUDE_BACKEND` claim to `== CLAUDE_BACKEND` value-equality, noting step 5 registers a manifest-built seed.\n- [APPLIED] Step 5's discovery defect emits via `warnings.warn(UserWarning)`, while step 6's unknown-override-key path only says \"emit a non-fatal warning\" without pinning the channel (stderr `error()` vs `warnings.warn`); pin one channel so the two warnings are consistent and testable.\n- [APPLIED] Step 6's `build_effective_backend` raises `ValueError` when `--model` is set against a backend with `model_flag=None`, but the `app.py:main` wiring (which wraps only `resolve_backend`/`load_backend_overrides` errors) never catches it \u2014 a `--model` against a third backend whose manifest omits `model_flag` surfaces an uncaught traceback instead of the convention's graceful `return 2`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[model-flag-none-error-handling]`: Step 3/6 add a `build_effective_backend` `ValueError` when `--model` is requested against a backend with `model_flag=None`, but Step 6's `app.py` wiring wraps only `load_backend_overrides`/`resolve_backend` in `try/except`. A `--model` passed against a dropped-in manifest lacking `model_flag` crashes `main` with a traceback instead of a clean `error(...); return 2`.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor model-flag-none-error-handling`\n- MEDIUM `[codex-lockstep-note]`: The \"Codex limit patterns diverging\" risk calls for a \"backend.json comment-equivalent note\" that the four shared limit patterns must be edited in lockstep, but no step places such a note anywhere a manifest-editor sees it (JSON has no comments; no `_comment` key or sidecar specified). The Step 2 cross-check test is the real mitigation; the human-facing note is unoperationalized.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor codex-lockstep-note`\n- MEDIUM `[unknown-key-warning-channel]`: Step 5's discovery warning and Step 6's unknown-override-key warning both say \"emit a warning\" without pinning the channel; `warnings.warn` is frequently filtered in normal CLI runs while the CLI elsewhere prints to stderr via `error()`. Specify the channel so the user-facing typo warning is actually visible (and the `test_unknown_override_key_warns` assertion is unambiguous).\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor unknown-key-warning-channel`\n- MEDIUM `[registered-names-accessor]`: Step 6's unknown-key warning must name \"the registered backend names,\" but `registered_binaries()` returns binaries and no public names accessor exists; the step hand-waves `set(_REGISTRY)`, which makes `app.py` reach into `backend.py`'s private registry. Add a `registered_names()` accessor parallel to `registered_binaries()`.\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor registered-names-accessor`\n- MEDIUM `[classification-subfield-validation]`: Step 3 validates the six top-level required keys but never the required `classification` sub-keys (`rate_limit`/`provider_limit`/`context_overflow`/`transient`), which map to non-optional `CliBackend` fields. A manifest missing one yields a raw `TypeError`/`KeyError` from `re.compile(None)`, not the typed `BackendManifestError` the acceptance criterion promises for a \"missing required field.\"\n  - Address: `plan-tool completeness-apply pluggable-backends --anchor classification-subfield-validation`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step1-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- INFO `[step2-files-coherence-0c445320]`: The detail body for step 2 cites `integrations/*/backend.json`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/backend.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-40919b70]`: The detail body for step 2 cites `integrations/<backend>/backend.json`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/backend.json`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step2-files-coherence-693e6ba1]`: The detail body for step 2 cites `integrations/claude/SKILL.md`, which isn't in the step's `files:` array but closely resembles the declared `integrations/codex/SKILL.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step3-files-coherence-07bebfce]`: The detail body for step 3 cites `plan_tool/backend_config.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step4-files-coherence-ef9524e4]`: The detail body for step 4 cites `plan_tool/backend.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend_config.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- INFO `[step6-files-coherence-07bebfce]`: The detail body for step 6 cites `plan_tool/backend_config.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/backend.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 5 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 7 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail pluggable-backends` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Pluggable Backends\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 1 declared `(no declared files cited in detail body)` not mentioned in detail\n- INFO: step 2 detail cites `integrations/*/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/<backend>/backend.json` resembling declared `integrations/codex/backend.json` (typo/stale path?)\n- INFO: step 2 detail cites `integrations/claude/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/backend.py` resembling declared `plan_tool/backend_config.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/backend_config.py` resembling declared `plan_tool/backend.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[model-flag-none-error-handling]`: Step 3/6 add a `build_effective_backend` `ValueError` when `--model` is requested against a backend with `model_flag=None`, but Step 6's `app.py` wiring wraps only `load_backend_overrides`/`resolve_backend` in `try/except`. A `--model` passed against a dropped-in manifest lacking `model_flag` crashes `main` with a traceback instead of a clean `error(...); return 2`.\n- MEDIUM `[codex-lockstep-note]`: The \"Codex limit patterns diverging\" risk calls for a \"backend.json comment-equivalent note\" that the four shared limit patterns must be edited in lockstep, but no step places such a note anywhere a manifest-editor sees it (JSON has no comments; no `_comment` key or sidecar specified). The Step 2 cross-check test is the real mitigation; the human-facing note is unoperationalized.\n- MEDIUM `[unknown-key-warning-channel]`: Step 5's discovery warning and Step 6's unknown-override-key warning both say \"emit a warning\" without pinning the channel; `warnings.warn` is frequently filtered in normal CLI runs while the CLI elsewhere prints to stderr via `error()`. Specify the channel so the user-facing typo warning is actually visible (and the `test_unknown_override_key_warns` assertion is unambiguous).\n- MEDIUM `[registered-names-accessor]`: Step 6's unknown-key warning must name \"the registered backend names,\" but `registered_binaries()` returns binaries and no public names accessor exists; the step hand-waves `set(_REGISTRY)`, which makes `app.py` reach into `backend.py`'s private registry. Add a `registered_names()` accessor parallel to `registered_binaries()`.\n- MEDIUM `[classification-subfield-validation]`: Step 3 validates the six top-level required keys but never the required `classification` sub-keys (`rate_limit`/`provider_limit`/`context_overflow`/`transient`), which map to non-optional `CliBackend` fields. A manifest missing one yields a raw `TypeError`/`KeyError` from `re.compile(None)`, not the typed `BackendManifestError` the acceptance criterion promises for a \"missing required field.\"\n\n### Suggested next steps\n\n- `plan-tool review-walk pluggable-backends` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply pluggable-backends` \u2014 walk the 5 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-b6f3c5bf",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3/6 add a `build_effective_backend` `ValueError` when `--model` is requested against a backend with `model_flag=Non",
+      "body": "Step 3/6 add a `build_effective_backend` `ValueError` when `--model` is requested against a backend with `model_flag=None`, but Step 6's `app.py` wiring wraps only `load_backend_overrides`/`resolve_backend` in `try/except`. A `--model` passed against a dropped-in manifest lacking `model_flag` crashes `main` with a traceback instead of a clean `error(...); return 2`.",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "model-flag-none-error-handling"
+    },
+    {
+      "id": "plan-plan-completeness-d3cdfa0c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The \"Codex limit patterns diverging\" risk calls for a \"backend.json comment-equivalent note\" that the four shared limit ",
+      "body": "The \"Codex limit patterns diverging\" risk calls for a \"backend.json comment-equivalent note\" that the four shared limit patterns must be edited in lockstep, but no step places such a note anywhere a manifest-editor sees it (JSON has no comments; no `_comment` key or sidecar specified). The Step 2 cross-check test is the real mitigation; the human-facing note is unoperationalized.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "codex-lockstep-note"
+    },
+    {
+      "id": "plan-plan-completeness-20c4a582",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5's discovery warning and Step 6's unknown-override-key warning both say \"emit a warning\" without pinning the chann",
+      "body": "Step 5's discovery warning and Step 6's unknown-override-key warning both say \"emit a warning\" without pinning the channel; `warnings.warn` is frequently filtered in normal CLI runs while the CLI elsewhere prints to stderr via `error()`. Specify the channel so the user-facing typo warning is actually visible (and the `test_unknown_override_key_warns` assertion is unambiguous).",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "unknown-key-warning-channel"
+    },
+    {
+      "id": "plan-plan-completeness-e26724f8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6's unknown-key warning must name \"the registered backend names,\" but `registered_binaries()` returns binaries and ",
+      "body": "Step 6's unknown-key warning must name \"the registered backend names,\" but `registered_binaries()` returns binaries and no public names accessor exists; the step hand-waves `set(_REGISTRY)`, which makes `app.py` reach into `backend.py`'s private registry. Add a `registered_names()` accessor parallel to `registered_binaries()`.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "registered-names-accessor"
+    },
+    {
+      "id": "plan-plan-completeness-dccf78f0",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 validates the six top-level required keys but never the required `classification` sub-keys (`rate_limit`/`provide",
+      "body": "Step 3 validates the six top-level required keys but never the required `classification` sub-keys (`rate_limit`/`provider_limit`/`context_overflow`/`transient`), which map to non-optional `CliBackend` fields. A manifest missing one yields a raw `TypeError`/`KeyError` from `re.compile(None)`, not the typed `BackendManifestError` the acceptance criterion promises for a \"missing required field.\"",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "classification-subfield-validation"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-b6f3c5bf": {
+      "status": "applied",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-d3cdfa0c": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-20c4a582": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-pluggable-backends.md`: in the Architecture per-project override paragraph, replaced the unknown-override-key `warnings.warn(UserWarning)` with a write to stderr via the CLI's `error()` channel and noted `test_unknown_override_key_warns` captures stderr.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-e26724f8": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-dccf78f0": {
+      "status": "applied",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    }
+  }
+}

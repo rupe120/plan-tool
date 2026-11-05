@@ -1,0 +1,217 @@
+{
+  "version": 4,
+  "plan_slug": "quality-bench-01-corpus-and-noise-floor",
+  "plan_path": "docs/implementation-plans/2-quality-bench-01-corpus-and-noise-floor.md",
+  "created_at": "2026-08-26T22:00:11Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a633e69775cc2fd99d09574d08366c95dfd306398252458838e3c1ed7a94bf1b",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "4cfeee2b10a3812e10cf8e0f10e786314fe4c091bbdda1a304f7f4b0978e2d8c",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "plan_tool/cli/app.py": "6460aae75bf8b860b7e7244704a7a95b21942de82c2680f3fc7594f85ae3e453",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md": "6c1eb5008eed8466d9aad8ee2dcee917294ec399927b1d9784bd36ff6ce7d43b",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md": "13282db5fbf95dba5a283b3dbe13ec1a0d509dc693c3ec62ab22d4ac6f60a5d0",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md": "f195891ea1181ce2ccb9030ba19c412b3e948d1a58da5c9f3d6c6c42a3d9c71e",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md": "712f249903e07bd514124041d09b71ebe14ea8996a0e10d5d9fc515d51122d74",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md": "89d31f1a15b16f8121dfa1fcb606f0d3ec2de114b0d2836da864982c38458a36",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md": "df9db693530e8ef7f2190ee951845c94962b92b74e676ab70bfbbbd11782e8ff",
+    "docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md": "f10a9f5818602dc44e0a35e24c1bc3716a43a671ae2586a9e82751b824df3473"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Quality Bench 01 Corpus And Noise Floor\n\n`quality-bench-01-corpus-and-noise-floor` \u00b7 generated 2026-08-26T22:00:11Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `034f9d43b24ae748a44c06bcac292644bc758db68ff36b794f95de69fdbee29f`\n- **Detail bundle digest:** `efcef9de979d5dc8a6b0328196bc7d5295a5055532610e10aa27f153b25164d5`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 96893 bytes (+96893 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[raw-sample-granularity]` [confidence: limited]: Step 3 `Implementation` says \u201craw-sample envelope keyed by the validated manifest item id,\u201d while step 5 `Implementation` requires \u201cexactly one complete \u2026 raw-sample envelope for each successful rerun under the generated floor id\u201d; its test requires exactly `R` envelopes. For an N-item corpus, those are different record shapes, and step 6 `Input`/`Recompute from retained evidence` plus step 7\u2019s persisted-record documentation consume that unchosen shape.\n  - Fix: Define one raw-sample granularity and key scheme, then reconcile the step 3 label evidence, step 5 floor records, and step 6/7 readers and tests to it.\n- HIGH `[label-pointer-schema]` [confidence: limited]: Step 3\u2019s logical-label lifecycle has no valid record contract for the marker that `--force` and compare read. `Architecture` defines a `label` as an immutable capture envelope and closes `record_kind` at `label`, `raw-sample`, `floor-record`, and `current-floor-pointer`, but also says a \u201clogical label resolves one atomically replaced current pointer\u201d; step 3 Implementation/Tests/Acceptance writes that pointer, step 6 Input/Implementation rereads its label markers, and step 7 documents only the four listed kinds. A malformed or unknown label marker therefore has no defined version, fields, integrity check, refusal, or recovery behavior.\n  - Fix: add and trace one versioned logical-label-pointer contract with its capture reference, integrity data, reader refusal, publication order, and recovery rules across Architecture and steps 3, 6, and 7.\n- HIGH `[quality-bench-lock-ownership]` [confidence: limited]: Step 3 requires `quality_bench.py` to \u201cHold `repo_mutation_lock`,\u201d while step 4 (`Wire plan-tool quality-bench run`) makes `cli/app.py:main` take that lock and step 5 says floor runs inside it. At HEAD, `cli/app.py:main` wraps dispatch in `repo_mutation_lock`, and `repo_lock.py:acquire_repo_mutation_lock` uses non-reentrant `O_EXCL`, so a literal engine-plus-CLI implementation makes `run` and `floor` reject their own second lock acquisition.\n  - Fix: choose one lock owner for CLI and direct engine calls, define how the other layer proves the lock is held, and test the complete command path.\n- HIGH `[pinned-backend-recovery]` [confidence: limited]: Step 3\u2019s pinned-profile rule and recovery test require a fallback or interactive switch to stop before another backend executes, but `roadmap.py:shell_roadmap_invoker` delegates to `shell.py:claude_invoke`, whose rate-limit loop selects and retries a backend internally; `shell.py:_select_rate_limit_backend` also resolves that selection from `get_active_spawn_cwd()`, which is the scratch root during replay. A post-replay profile check can discard evidence only after the switched backend has run, so it cannot deliver the stated recovery guarantee.\n  - Fix: define a quality-bench recovery hook that permits only pinned-profile waits and rejects every switch selection before reinvocation, while recording the actual profile for each allowed attempt.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[roadmap-slug-containment]` [confidence: limited]: The v1 manifest accepts `roadmap_slug` in step 1 (`Parse and version the self-contained quality-bench corpus format`), but neither its validation/tests nor step 3\u2019s scratch materialization defines a safe single-component rule before that value forms the scratch roadmap path. At HEAD, `roadmap_artifacts.py:roadmap_dir` rejects unsafe slugs only when `run_roadmap` begins, after step 3 must already place the brief, artifact, and baseline; an empty or traversal-bearing manifest slug therefore has no promised preflight outcome.\n  - Fix: define and test `roadmap_slug` validation before any scratch path is created, using the runner\u2019s contained single-component rule.\n  - Address: `plan-tool completeness-apply quality-bench-01-corpus-and-noise-floor --anchor roadmap-slug-containment`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-bec26cca]` [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4ccbb348]` [confidence: limited]: The plan's `## Acceptance criteria` names `.replaced.n`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d429a1e0]` [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f1f55676]` [confidence: limited]: The plan's `## Acceptance criteria` names `quality-bench-corpus-v1\\0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]` [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO `[step3-granularity-split-e25c9d8a]` [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force publishes a recoverable replacement archive)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit quality-bench-01-corpus-and-noise-floor` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Quality Bench 01 Corpus And Noise Floor\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `034f9d43b24ae748a44c06bcac292644bc758db68ff36b794f95de69fdbee29f`\n- **Detail bundle digest:** `efcef9de979d5dc8a6b0328196bc7d5295a5055532610e10aa27f153b25164d5`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[raw-sample-granularity]` [confidence: limited]: Step 3 `Implementation` says \u201craw-sample envelope keyed by the validated manifest item id,\u201d while step 5 `Implementation` requires \u201cexactly one complete \u2026 raw-sample envelope for each successful rerun under the generated floor id\u201d; its test requires exactly `R` envelopes. For an N-item corpus, those are different record shapes, and step 6 `Input`/`Recompute from retained evidence` plus step 7\u2019s persisted-record documentation consume that unchosen shape.\n- HIGH `[label-pointer-schema]` [confidence: limited]: Step 3\u2019s logical-label lifecycle has no valid record contract for the marker that `--force` and compare read. `Architecture` defines a `label` as an immutable capture envelope and closes `record_kind` at `label`, `raw-sample`, `floor-record`, and `current-floor-pointer`, but also says a \u201clogical label resolves one atomically replaced current pointer\u201d; step 3 Implementation/Tests/Acceptance writes that pointer, step 6 Input/Implementation rereads its label markers, and step 7 documents only the four listed kinds. A malformed or unknown label marker therefore has no defined version, fields, integrity check, refusal, or recovery behavior.\n- HIGH `[quality-bench-lock-ownership]` [confidence: limited]: Step 3 requires `quality_bench.py` to \u201cHold `repo_mutation_lock`,\u201d while step 4 (`Wire plan-tool quality-bench run`) makes `cli/app.py:main` take that lock and step 5 says floor runs inside it. At HEAD, `cli/app.py:main` wraps dispatch in `repo_mutation_lock`, and `repo_lock.py:acquire_repo_mutation_lock` uses non-reentrant `O_EXCL`, so a literal engine-plus-CLI implementation makes `run` and `floor` reject their own second lock acquisition.\n- HIGH `[pinned-backend-recovery]` [confidence: limited]: Step 3\u2019s pinned-profile rule and recovery test require a fallback or interactive switch to stop before another backend executes, but `roadmap.py:shell_roadmap_invoker` delegates to `shell.py:claude_invoke`, whose rate-limit loop selects and retries a backend internally; `shell.py:_select_rate_limit_backend` also resolves that selection from `get_active_spawn_cwd()`, which is the scratch root during replay. A post-replay profile check can discard evidence only after the switched backend has run, so it cannot deliver the stated recovery guarantee.\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/quality_bench.py` resembling declared `plan_tool/quality_bench_corpus.py` (typo/stale path?)\n- NIT: step 3 declared `.gitignore` not mentioned in detail\n- INFO: step 4 detail cites `plan_tool/cli/bench_cmd.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/quality_bench.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/cli/bench_cmd.py` resembling declared `plan_tool/cli/quality_bench_cmd.py` (typo/stale path?)\n- INFO: step 6 detail cites `plan_tool/quality_bench_metrics.py` resembling declared `plan_tool/quality_bench.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[roadmap-slug-containment]` [confidence: limited]: The v1 manifest accepts `roadmap_slug` in step 1 (`Parse and version the self-contained quality-bench corpus format`), but neither its validation/tests nor step 3\u2019s scratch materialization defines a safe single-component rule before that value forms the scratch roadmap path. At HEAD, `roadmap_artifacts.py:roadmap_dir` rejects unsafe slugs only when `run_roadmap` begins, after step 3 must already place the brief, artifact, and baseline; an empty or traversal-bearing manifest slug therefore has no promised preflight outcome.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `..`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `.replaced.n`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backend.spawn_cwd(scratch)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `quality-bench-corpus-v1\\0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Parse and version the self-contained quality-bench corpus format, and add roadmap-stage-2 fixtures\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n- INFO [confidence: limited]: Step 3 \"Build the corpus replay engine and label-keyed artifact/run-log store under .plan-tool/quality-bench/ (refuses a label collision; --force publishes a recoverable replacement archive)\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit quality-bench-01-corpus-and-noise-floor` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3e1a1adf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 `Implementation` says \u201craw-sample envelope keyed by the validated manifest item id,\u201d while step 5 `Implementation",
+      "body": "Step 3 `Implementation` says \u201craw-sample envelope keyed by the validated manifest item id,\u201d while step 5 `Implementation` requires \u201cexactly one complete \u2026 raw-sample envelope for each successful rerun under the generated floor id\u201d; its test requires exactly `R` envelopes. For an N-item corpus, those are different record shapes, and step 6 `Input`/`Recompute from retained evidence` plus step 7\u2019s persisted-record documentation consume that unchosen shape.",
+      "suggested_action": "Define one raw-sample granularity and key scheme, then reconcile the step 3 label evidence, step 5 floor records, and step 6/7 readers and tests to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "raw-sample-granularity",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-44f7f3ec",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3\u2019s logical-label lifecycle has no valid record contract for the marker that `--force` and compare read. `Architect",
+      "body": "Step 3\u2019s logical-label lifecycle has no valid record contract for the marker that `--force` and compare read. `Architecture` defines a `label` as an immutable capture envelope and closes `record_kind` at `label`, `raw-sample`, `floor-record`, and `current-floor-pointer`, but also says a \u201clogical label resolves one atomically replaced current pointer\u201d; step 3 Implementation/Tests/Acceptance writes that pointer, step 6 Input/Implementation rereads its label markers, and step 7 documents only the four listed kinds. A malformed or unknown label marker therefore has no defined version, fields, integrity check, refusal, or recovery behavior.",
+      "suggested_action": "add and trace one versioned logical-label-pointer contract with its capture reference, integrity data, reader refusal, publication order, and recovery rules across Architecture and steps 3, 6, and 7.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "label-pointer-schema",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-c3099ba9",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 requires `quality_bench.py` to \u201cHold `repo_mutation_lock`,\u201d while step 4 (`Wire plan-tool quality-bench run`) mak",
+      "body": "Step 3 requires `quality_bench.py` to \u201cHold `repo_mutation_lock`,\u201d while step 4 (`Wire plan-tool quality-bench run`) makes `cli/app.py:main` take that lock and step 5 says floor runs inside it. At HEAD, `cli/app.py:main` wraps dispatch in `repo_mutation_lock`, and `repo_lock.py:acquire_repo_mutation_lock` uses non-reentrant `O_EXCL`, so a literal engine-plus-CLI implementation makes `run` and `floor` reject their own second lock acquisition.",
+      "suggested_action": "choose one lock owner for CLI and direct engine calls, define how the other layer proves the lock is held, and test the complete command path.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "quality-bench-lock-ownership",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-6b6c5d04",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3\u2019s pinned-profile rule and recovery test require a fallback or interactive switch to stop before another backend e",
+      "body": "Step 3\u2019s pinned-profile rule and recovery test require a fallback or interactive switch to stop before another backend executes, but `roadmap.py:shell_roadmap_invoker` delegates to `shell.py:claude_invoke`, whose rate-limit loop selects and retries a backend internally; `shell.py:_select_rate_limit_backend` also resolves that selection from `get_active_spawn_cwd()`, which is the scratch root during replay. A post-replay profile check can discard evidence only after the switched backend has run, so it cannot deliver the stated recovery guarantee.",
+      "suggested_action": "define a quality-bench recovery hook that permits only pinned-profile waits and rejects every switch selection before reinvocation, while recording the actual profile for each allowed attempt.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pinned-backend-recovery",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-add45a58",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The v1 manifest accepts `roadmap_slug` in step 1 (`Parse and version the self-contained quality-bench corpus format`), b",
+      "body": "The v1 manifest accepts `roadmap_slug` in step 1 (`Parse and version the self-contained quality-bench corpus format`), but neither its validation/tests nor step 3\u2019s scratch materialization defines a safe single-component rule before that value forms the scratch roadmap path. At HEAD, `roadmap_artifacts.py:roadmap_dir` rejects unsafe slugs only when `run_roadmap` begins, after step 3 must already place the brief, artifact, and baseline; an empty or traversal-bearing manifest slug therefore has no promised preflight outcome.",
+      "suggested_action": "define and test `roadmap_slug` validation before any scratch path is created, using the runner\u2019s contained single-component rule.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-slug-containment",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "034f9d43b24ae748a44c06bcac292644bc758db68ff36b794f95de69fdbee29f",
+      "detail_bundle_digest": "efcef9de979d5dc8a6b0328196bc7d5295a5055532610e10aa27f153b25164d5",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/01-parse-version-self-contained-quality.md",
+          "state": "present",
+          "digest": "6c1eb5008eed8466d9aad8ee2dcee917294ec399927b1d9784bd36ff6ce7d43b"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/02-build-deterministic-quality-bench.md",
+          "state": "present",
+          "digest": "13282db5fbf95dba5a283b3dbe13ec1a0d509dc693c3ec62ab22d4ac6f60a5d0"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/03-build-corpus-replay-engine-label-keyed.md",
+          "state": "present",
+          "digest": "f195891ea1181ce2ccb9030ba19c412b3e948d1a58da5c9f3d6c6c42a3d9c71e"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/04-wire-plan-tool-quality-bench-run-new.md",
+          "state": "present",
+          "digest": "712f249903e07bd514124041d09b71ebe14ea8996a0e10d5d9fc515d51122d74"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/05-plan-tool-quality-bench-floor-rerun.md",
+          "state": "present",
+          "digest": "89d31f1a15b16f8121dfa1fcb606f0d3ec2de114b0d2836da864982c38458a36"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/06-plan-tool-quality-bench-compare-print.md",
+          "state": "present",
+          "digest": "df9db693530e8ef7f2190ee951845c94962b92b74e676ab70bfbbbd11782e8ff"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/quality-bench-01-corpus-and-noise-floor/07-document-quality-bench-corpus-store.md",
+          "state": "present",
+          "digest": "f10a9f5818602dc44e0a35e24c1bc3716a43a671ae2586a9e82751b824df3473"
+        }
+      ],
+      "source_seed_digest": "5fa7acdfa1da7ed67a6a9d4d572c3c2303bc7878006de5005e782eee74b01ce5",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 96893,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

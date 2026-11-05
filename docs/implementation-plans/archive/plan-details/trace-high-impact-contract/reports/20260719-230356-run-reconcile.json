@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "plan_slug": "trace-high-impact-contract",
+  "plan_path": "docs/implementation-plans/2-trace-high-impact-contract.md",
+  "created_at": "2026-07-19T23:03:56Z",
+  "kind": "run-reconcile",
+  "step_id": 4,
+  "plan_fingerprint": "445fe50da69d9ce54be2a234d52a4a896d8e531807c318fa439415b0d4ab7f21",
+  "code_fingerprint": {
+    "BACKLOG.md": "8e8dad106f9edb9d90e85d4eb26a6915a1a2fc5fb644f356f0caa81c6c0141c4",
+    "docs/implementation-plans/2-gate-convergence-by-impact.md": "2088e4298c0ad1551993ba83969ed2929ab3c1bdd74cb0e5c11c389d3f53ea6f",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/01-impact-aware-blocking-rule.md": "6f4daf1c881017881b8d5b90b3339f7550a72ae89627f396f0e9d077031ef21e",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/02-use-impact-aware-rule-convergence-loops.md": "372dfddfc096ce35ecd2821bccf6c47f0bca08c43d78bcd5f3a7dc4f8ba76fe6",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/03-document-shipped-impact-aware-augment.md": "91f245ac55c853df3c7e6a16e8368228c80d17721f8f71d1820d776538875b7c",
+    "tests/cli/test_completeness_cmd.py": "3eee024878ff59b6fa1901ad94f8691b39cc01f9031e5d35592ffd109a4d45cf",
+    "tests/test_cli.py": "4e1dab6e9a7ac6856d9800c60251fdb2683128d8ba91472c5447381777f70182",
+    "tests/test_convergence.py": "7638ea9a5ea97a812630b10e36216193d0aab8a96e0c7583de831cf1fc94686b",
+    "tests/test_review.py": "7613cdcc2dad3cb4932cd111638654e173f543581cb8be7f0637584d5e24266f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 4 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

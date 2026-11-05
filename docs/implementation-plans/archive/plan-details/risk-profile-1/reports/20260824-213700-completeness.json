@@ -1,0 +1,124 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-1",
+  "plan_path": "docs/implementation-plans/2-risk-profile-1.md",
+  "created_at": "2026-08-24T21:37:00Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c69215d2899f5a465377d0e5f62a996d43f808501b5f63f4a7b5e75bbfd4e0cc",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "f9d63d19deb08c441a2aa998f7ed0be7cc152d6eadb583ba649dc75f2e694c3a",
+    "README.md": "6afd7dc70b9cebfc7a03b92f3a573c6ffb3dbc9c2ec3a787201a5c93b56e7294",
+    "TESTING.md": "f3e71a3b4043083bf3cef87b210f0346b8f7d563e80605c0221a88dad2e720f6",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "docs/CREATE_RESUME_FLOW.md": "2ec94959ffc5cc84ffa0810f622b293e3a212ce6dc1a3e6473c82c285e943e18",
+    "plan_tool/__init__.py": "1bb896aee2673a4eda90764d308096f65a366d9b1f2c1023e97a7d00140241e1",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/schema.py": "af9e469ce92591f79aafdfcac09105918fdcd061abea6f17f568548b9aa8946a",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_inspect_cmds.py": "fbcc4053d80a889af4fc6850d13af8179a466ad93d5f189b6ad3d7e5ecff1b0b",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_distill.py": "3d7a5fb04fb7764e8fba20297ba4f6aff6b9216c4e88f1c8b929387b13c6c105",
+    "tests/test_parser.py": "653c6ec41947aaa99928090f63de4dec06d0df6a97cd6c3310b41a1f7582d630"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md": "73523bad3c37df37a902c9bc09d7e359b8a71bfdca9aa040e647a8b9fe257e52",
+    "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md": "97cf975260e61f28bee2bae33a8100e6e10e2cbafb23e58fe58f0ac63755360b",
+    "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md": "31249b472c3955ba71ee338e57fd703abda9282f6566a7fe25d7a5ebdb81a71a",
+    "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md": "22c123dc816bc2d6d429241ccf16c3b5d2d3d40aeda4bd1253839a1ac6ab44a9",
+    "docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md": "422d881233c2ff314f23f5766917a03b1b29d2cdea9a2483731c267161fbbb7c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 1\n\n`risk-profile-1` \u00b7 generated 2026-08-24T21:37:00Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply risk-profile-1   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[retained-artifact-interruption]`: Step 5 (`Verify safe create boundaries and partial-publication recovery`) contradicts the retained-artifact branch rule: its Acceptance criteria say \u201conly a no-artifact error or interruption restores the invoking branch,\u201d but its `Implementation \u2192 Cover interruption`, named postwrite-interrupt test, Architecture \u2192 \u201cPre-publication declaration,\u201d plan Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) preserve the binding after an interruption once a target exists. This can make the recovery test roll back the branch that owns a retained postwrite artifact.\n  - Fix: limit rollback to no-artifact errors and interruptions before a target exists across step 5\u2019s branch-ownership criterion, matching the plan and step 3.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit risk-profile-1` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 1\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[retained-artifact-interruption]`: Step 5 (`Verify safe create boundaries and partial-publication recovery`) contradicts the retained-artifact branch rule: its Acceptance criteria say \u201conly a no-artifact error or interruption restores the invoking branch,\u201d but its `Implementation \u2192 Cover interruption`, named postwrite-interrupt test, Architecture \u2192 \u201cPre-publication declaration,\u201d plan Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) preserve the binding after an interruption once a target exists. This can make the recovery test roll back the branch that owns a retained postwrite artifact.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk risk-profile-1` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4d6afb76",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Verify safe create boundaries and partial-publication recovery`) contradicts the retained-artifact branch rule:",
+      "body": "Step 5 (`Verify safe create boundaries and partial-publication recovery`) contradicts the retained-artifact branch rule: its Acceptance criteria say \u201conly a no-artifact error or interruption restores the invoking branch,\u201d but its `Implementation \u2192 Cover interruption`, named postwrite-interrupt test, Architecture \u2192 \u201cPre-publication declaration,\u201d plan Acceptance criteria, and step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) preserve the binding after an interruption once a target exists. This can make the recovery test roll back the branch that owns a retained postwrite artifact.",
+      "suggested_action": "limit rollback to no-artifact errors and interruptions before a target exists across step 5\u2019s branch-ownership criterion, matching the plan and step 3.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "retained-artifact-interruption",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "45d8678f2f205d83013a60fbca7b16b960073b1df0b38d3ae8a3340f8eec538c",
+    "detail_bundle_digest": "019b61d625865285f10b7782bd52108cf8acbff5e9dbef71e2c0e6d0862fea51",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md",
+        "state": "present",
+        "digest": "73523bad3c37df37a902c9bc09d7e359b8a71bfdca9aa040e647a8b9fe257e52"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+        "state": "present",
+        "digest": "97cf975260e61f28bee2bae33a8100e6e10e2cbafb23e58fe58f0ac63755360b"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+        "state": "present",
+        "digest": "31249b472c3955ba71ee338e57fd703abda9282f6566a7fe25d7a5ebdb81a71a"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+        "state": "present",
+        "digest": "22c123dc816bc2d6d429241ccf16c3b5d2d3d40aeda4bd1253839a1ac6ab44a9"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md",
+        "state": "present",
+        "digest": "422d881233c2ff314f23f5766917a03b1b29d2cdea9a2483731c267161fbbb7c"
+      }
+    ],
+    "source_seed_digest": "c2359e6517c23e2e14f32a9caa94b18f6119f4c1fe6a5a3faf31d7b7fb3e0b3d",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

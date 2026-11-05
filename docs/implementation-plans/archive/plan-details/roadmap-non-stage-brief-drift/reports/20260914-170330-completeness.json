@@ -1,0 +1,132 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-non-stage-brief-drift",
+  "plan_path": "docs/implementation-plans/2-roadmap-non-stage-brief-drift.md",
+  "created_at": "2026-09-14T17:03:30Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5333606c75d6934d7cc735a70779627705ea82a488a3a93c09f2e9f058dbe2ba",
+  "code_fingerprint": {
+    "BACKLOG.md": "6d00c2124b501f8cf5586c4424d6fa1c66d2de6aff8f14bcf0043caf49fb1289",
+    "CAPABILITIES.md": "550b6dfd94c4d55b282a9b0f9b2237ef1140ea303934797ecce5c5715b13e2b2",
+    "CLAUDE.md": "a713d4344425c25788a24df060366a8e1af1341ed92521a5e0aea5cba62d2028",
+    "DATA_CONTRACT.md": "9eacfe6abb906d78447dd6659e0d6b46293091f83e20ebde29960653049d64d7",
+    "README.md": "dd0f4ddf399def2c3ac78e7ab4d49eaaaa301acff32c97afc79a9b6890e6aabc",
+    "ROADMAP_FORMAT.md": "7ab38b14af91613d81cd28ddd9b979c79bd241512f1727a119672034e03b424e",
+    "RUNBOOK.md": "93da8b86aa361ab6e92c278d2e20d8d8d320e959c7f90f8ccbe0b2d6bde73c27",
+    "docs/ARCHITECTURE.md": "41cfe00cc5639acf2df6943665867782593a0843b307a2578008d35dc7d3e8e8",
+    "docs/CODEX_CLI_CONTRACT.md": "129c6c42a06ca0afaf8b1dfb724f9b70840b6b332275396e20494bdd70547558",
+    "docs/ROADMAP_WALKTHROUGH.md": "770ab28b3124ae8dc6a0dda6986266462fa39eb2d86bcbc7e0693b2b5772dea9",
+    "docs/cli/roadmap.md": "8531fb75bd8f950d3fb29d9210e55a4d2f3a00cc9b7319aa70cf9ad1c4921298",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "81c60b2d38d57bad3d4af66adba489815623317e05acb4ee5c269b9661bf8394",
+    "handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md": "7ebf2999efc64cb38bc672a01c2287ec0f47aa57d498e951cb19473f1548f264",
+    "integrations/claude/SKILL.md": "a42a6791275f1b1e687978f3af8087bb6524121e7c859ad3ba9d8d373d7799b1",
+    "plan_tool/cli/roadmap_cmd.py": "8d74056d4ab9e827416d9963e0202b214d1dc140cfc2fee3b0dea659e29cbf24",
+    "plan_tool/roadmap.py": "65f662fd1a1d9248e8dca2cc6383271f7d5648b2174351a4e2066ff580ddd991",
+    "plan_tool/roadmap_impact_run.py": "48235b9b63ab3993b82011ab3019f2e109b2d9f31589fe66f0eaa461422f655f",
+    "plan_tool/roadmap_impact_snapshot.py": "133ddba3964cb2e84b3e69df1a9f8750b016d8cad7ce48e67936c355d0a6428e",
+    "plan_tool/roadmap_structural_revision.py": "d7ae923155f8ef15ea85ab6b1e2cf10b7011b812f010d13c4982ee3c9f74da45",
+    "plan_tool/roadmap_structural_revision_run.py": "c9de93df95b56d98bf380107870fd09661049290386c517d700e5d0b33c45326",
+    "plan_tool/run_log.py": "d64b0f79878d1cf737af3ceb32b79506ff82d118c7bb010fa6cf7d4ff568f0a3",
+    "tests/cli/test_cli_reference.py": "53717ce17fccfebb8aa65d9d98ac1b2c4a4d8c07989fc20fb0f9e52a3f09d4d3",
+    "tests/cli/test_roadmap_cmd.py": "c1cd278af4d7c5e8ee352be5729725d8b32c5207868526572b17adb0fc2d7847",
+    "tests/test_data_contract.py": "eb8f79c7cc20031475a651e6163eac17d7876823f0cdd9685af6c89c07207b89",
+    "tests/test_roadmap.py": "3cc2d4aa7adb9297be9d2a46b65a4d12b632ebc8a6a9fe4a36aff51be6f007f1",
+    "tests/test_roadmap_format.py": "a580e142a8c65be08eb4a118a46dbc20c97c473c7b9e97cd214bc8e28db3dae2",
+    "tests/test_roadmap_impact_run.py": "30b8e4c7814aac180a5152a1b741180ae87ab450c24d10a9ac7dd684294285bd",
+    "tests/test_roadmap_impact_snapshot.py": "baa1c7253bd0e3fa3f1eba4430516ac7ed78652e8674ab1cc5f655348403a1c6",
+    "tests/test_roadmap_structural_revision.py": "13ad45035c2f30f0efac7a87e992101a1f93deeb3af51494bcd5a923f5bf5a86",
+    "tests/test_roadmap_structural_revision_run.py": "182e1d9e699ec67dcd9a9c42827ada7d2eebb029576795afae83a673ad1909f0",
+    "tests/test_run_log.py": "8548959ecd8c8c71672f0965612c3c9ffd821bf0591b2567747c79ec4fa73d71"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/01-compare-snapshot-brief-text-source-json.md": "359904b30465a5c971fb1859db4bc5c36ce8160c21175f0fd119926d83db5d4a",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md": "33f196ed9ebbe0967eb43023850ddd5078afd3242a1163441447169d547205e1",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/03-show-changed-brief-legacy-brief-status.md": "eb5da16eaa4b8d36ee5d7019f591d1f4a0be82fad3adfb9234ecaa5df518c9cb",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/04-return-distinct-brief-drift-structural.md": "62712fa2869e0fee77d4533a6f6639fbd0590d4c4d31c201148c2b9c93105ad9",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/05-return-changed-brief-legacy-brief.md": "c443ab9250a909f3b37ed2e57c050f601d9ca32ddac85711862e98b84b34c4e0",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/06-align-roadmap-operator-guides-close.md": "f4a61c8df041b3348ac3683809f668b33b9ef46c997c0ecd7cc1bfdbfd5a30cf"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Non Stage Brief Drift\n\n`roadmap-non-stage-brief-drift` \u00b7 generated 2026-09-14T17:03:30Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-27923d1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-non-stage-brief-drift` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Non Stage Brief Drift\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "3f518cfff19f02e00b193db5fc7550d89d8ea3702721708a137a07a2bd800638",
+    "detail_bundle_digest": "c33fdfb1e80df5471aa3ee49710e328dca64b6863341ecde7c8d7c47c6b76f15",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/01-compare-snapshot-brief-text-source-json.md",
+        "state": "present",
+        "digest": "359904b30465a5c971fb1859db4bc5c36ce8160c21175f0fd119926d83db5d4a"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md",
+        "state": "present",
+        "digest": "33f196ed9ebbe0967eb43023850ddd5078afd3242a1163441447169d547205e1"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/03-show-changed-brief-legacy-brief-status.md",
+        "state": "present",
+        "digest": "eb5da16eaa4b8d36ee5d7019f591d1f4a0be82fad3adfb9234ecaa5df518c9cb"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/04-return-distinct-brief-drift-structural.md",
+        "state": "present",
+        "digest": "62712fa2869e0fee77d4533a6f6639fbd0590d4c4d31c201148c2b9c93105ad9"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/05-return-changed-brief-legacy-brief.md",
+        "state": "present",
+        "digest": "c443ab9250a909f3b37ed2e57c050f601d9ca32ddac85711862e98b84b34c4e0"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/06-align-roadmap-operator-guides-close.md",
+        "state": "present",
+        "digest": "f4a61c8df041b3348ac3683809f668b33b9ef46c997c0ecd7cc1bfdbfd5a30cf"
+      }
+    ],
+    "source_seed_digest": "738b60c228997d5b57a4821c69c923361597378b173bb459b185144c3ac615c6",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

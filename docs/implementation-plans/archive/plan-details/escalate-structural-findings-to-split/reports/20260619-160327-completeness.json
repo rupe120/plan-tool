@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "plan_slug": "escalate-structural-findings-to-split",
+  "plan_path": "docs/implementation-plans/2-escalate-structural-findings-to-split.md",
+  "created_at": "2026-06-19T16:03:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0440fe6278239112795ea8a49636a40a2ab61f9f084538c1f6c55a260e0348ca",
+  "code_fingerprint": {
+    "plan_tool/cli/review_actions.py": "2cf36304f0508e5a1a15d547cfcfbe67c99a4340232806f46c1b100cbf78c7d9",
+    "plan_tool/create.py": "79dda5c9b3bdb0ae37f6007657275aa67991946786f1b7713f2a0ad729b2ef21",
+    "plan_tool/detail.py": "594cdc2144e74ad0defe18e309189a8025e90ff52e867898274b4c6124226f8a",
+    "plan_tool/launcher.py": "643167658df522dc04b626b13aad37aeec6f94100e28719ee0465a7e31a070e8",
+    "plan_tool/prompts/apply-finding.md": "485b47294819146fbf33b1106f58f7c929de4d85133826a9f1776601c2176696",
+    "plan_tool/review.py": "6f172ef0f0126c80a9a553edc992b9fdd3758bb8bec78d08dbbc6fd40f69d554",
+    "tests/cli/test_review_actions.py": "720996ec35d035d1216731dae1c1fff4d42ae5f2f1f99e8a19560fbd2d826bab",
+    "tests/test_create.py": "2ec96a3d5985c8b2127726cae3c2b5e6b140247ba00beef1a4fc6a55cd7d2e58",
+    "tests/test_detail.py": "db41044099060e7a0649e471b5d7bd171d2018b0086cea16b6f144477581ec5b",
+    "tests/test_launcher.py": "147511d8de4cd81ad7306874f382b0a09b6ffc55352697c728026d0afa31872b",
+    "tests/test_review.py": "04d2b358f0bc92e8fbc52771bad394abd37584234a4352ad8a1fcebffd251d79"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Escalate Structural Findings To Split\n\n`escalate-structural-findings-to-split` \u00b7 generated 2026-06-19T16:03:27Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 1 dispatched (1 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 1 (1 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Architecture and Risks sections list `--yes` as an unattended path that must \"never mutate structure\" (\"Unattended (CI / `--yes` / non-TTY): never mutate structure\"; Risk mitigation \"callers gate on TTY + the split opt-in flag; unattended paths emit a recommendation only\"), but the design's only real unattended guard is `sys.stdin.isatty()`. Step 3's gate is `interactive = sys.stdin.isatty()` AND `allow_split` AND confirm, and step 5 (`_dispatch_structural_escalation`) sets `auto_confirm = (lambda _p: \"y\") if state.yes_to_all else None` \u2014 so a TTY run with `--yes` + `allow_split=True` auto-satisfies the confirm and **applies** the split, directly violating the stated invariant. `--yes` is conflated with \"interactive auto-confirm,\" not \"unattended recommend-only.\" \u2014 - `docs/implementation-plans/2-escalate-structural-findings-to-split.md`: revised the Architecture interactive/unattended bullets to exclude `--yes`/`yes_to_all` from the interactive auto-confirm branch and classify them as unattended recommend-only paths.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[recommendation-report-surfacing]`: The acceptance criterion \"In unattended mode \u2026 emits a structured split recommendation \u2026 into the findings report\" is asymmetrically operationalized across the three callers. Step 4 (detail) folds the bridge's returned `structural-split` `Recommendation` into `emit_detail_findings_summary`, and step 5 (review walk) returns it as an operator message, but step 4's create-loop wiring only says \"fold the bridge's `Recommendation` if surfaced\" into `emit_triage_summary` \u2014 which consumes the `open_deferred` finding list, not an arbitrary newly-constructed rec, so the path by which the new advisory rec actually reaches the create findings report is unspecified.\n  - Address: `plan-tool completeness-apply escalate-structural-findings-to-split --anchor recommendation-report-surfacing`\n- MEDIUM `[create-loop-outcome-coverage]`: Step 4's `plan_tool/create.py` routing block enumerates only `\"applied\"` (re-collect + continue), `\"recommended\"`, and `\"unsafe\"` (leave deferred), but step 4's own `detail.py` section mandates handling all five `EscalateResult.outcome` values \u2014 the `\"proposal-unusable\"` and `\"step-missing\"` outcomes are unaddressed for the create loop. The safe default (leave the finding deferred) happens to hold, but the plan is silent, so a reviewer can't confirm those outcomes don't fall through to the applied/re-collect arm.\n  - Address: `plan-tool completeness-apply escalate-structural-findings-to-split --anchor create-loop-outcome-coverage`\n- HIGH `[midapply-verdict-convergence-routing]`: The Architecture lists trigger 2 \"Discovered mid-apply \u2014 `BLOCKED-STRUCTURAL` \u2026 a new verdict bucket on `apply_finding`\" as in scope, and step 2's edit to the shared `plan_tool/prompts/apply-finding.md` lets `apply_finding` emit it in **every** apply context \u2014 but only step 5 (`cli/review_actions.py`) consumes the verdict. The create/detail convergence loops (`plan_tool/create.py:create_plan`, `plan_tool/detail.py:generate_detail`) inspect `apply_result.verdict` only for `== \"APPLIED\"` and route structural work by *source* (`is_structural`/`detail-purity`) **before** apply; a `BLOCKED-STRUCTURAL` returned *during* a convergence apply is silently dropped (treated as a non-`APPLIED` no-op), so the finding dead-ends exactly as the Problem statement says it must not (\"`apply_finding`/convergence cannot finish what they start\"). Step 4 owns the convergence loops but covers only trigger 1; nothing wires trigger 2 into them.\n  - Address: `plan-tool completeness-apply escalate-structural-findings-to-split --anchor midapply-verdict-convergence-routing`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step5-files-coherence-cffe1bde]`: The detail body for step 5 cites `plan_tool/cli/review_cmd.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/cli/review_actions.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply escalate-structural-findings-to-split` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply escalate-structural-findings-to-split --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Escalate Structural Findings To Split\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 5 detail cites `plan_tool/cli/review_cmd.py` resembling declared `plan_tool/cli/review_actions.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[recommendation-report-surfacing]`: The acceptance criterion \"In unattended mode \u2026 emits a structured split recommendation \u2026 into the findings report\" is asymmetrically operationalized across the three callers. Step 4 (detail) folds the bridge's returned `structural-split` `Recommendation` into `emit_detail_findings_summary`, and step 5 (review walk) returns it as an operator message, but step 4's create-loop wiring only says \"fold the bridge's `Recommendation` if surfaced\" into `emit_triage_summary` \u2014 which consumes the `open_deferred` finding list, not an arbitrary newly-constructed rec, so the path by which the new advisory rec actually reaches the create findings report is unspecified.\n- MEDIUM `[create-loop-outcome-coverage]`: Step 4's `plan_tool/create.py` routing block enumerates only `\"applied\"` (re-collect + continue), `\"recommended\"`, and `\"unsafe\"` (leave deferred), but step 4's own `detail.py` section mandates handling all five `EscalateResult.outcome` values \u2014 the `\"proposal-unusable\"` and `\"step-missing\"` outcomes are unaddressed for the create loop. The safe default (leave the finding deferred) happens to hold, but the plan is silent, so a reviewer can't confirm those outcomes don't fall through to the applied/re-collect arm.\n- HIGH `[midapply-verdict-convergence-routing]`: The Architecture lists trigger 2 \"Discovered mid-apply \u2014 `BLOCKED-STRUCTURAL` \u2026 a new verdict bucket on `apply_finding`\" as in scope, and step 2's edit to the shared `plan_tool/prompts/apply-finding.md` lets `apply_finding` emit it in **every** apply context \u2014 but only step 5 (`cli/review_actions.py`) consumes the verdict. The create/detail convergence loops (`plan_tool/create.py:create_plan`, `plan_tool/detail.py:generate_detail`) inspect `apply_result.verdict` only for `== \"APPLIED\"` and route structural work by *source* (`is_structural`/`detail-purity`) **before** apply; a `BLOCKED-STRUCTURAL` returned *during* a convergence apply is silently dropped (treated as a non-`APPLIED` no-op), so the finding dead-ends exactly as the Problem statement says it must not (\"`apply_finding`/convergence cannot finish what they start\"). Step 4 owns the convergence loops but covers only trigger 1; nothing wires trigger 2 into them.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk escalate-structural-findings-to-split` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply escalate-structural-findings-to-split` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-9ed0d74d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance criterion \"In unattended mode \u2026 emits a structured split recommendation \u2026 into the findings report\" is as",
+      "body": "The acceptance criterion \"In unattended mode \u2026 emits a structured split recommendation \u2026 into the findings report\" is asymmetrically operationalized across the three callers. Step 4 (detail) folds the bridge's returned `structural-split` `Recommendation` into `emit_detail_findings_summary`, and step 5 (review walk) returns it as an operator message, but step 4's create-loop wiring only says \"fold the bridge's `Recommendation` if surfaced\" into `emit_triage_summary` \u2014 which consumes the `open_deferred` finding list, not an arbitrary newly-constructed rec, so the path by which the new advisory rec actually reaches the create findings report is unspecified.",
+      "suggested_action": "specify in step 4 how the bridge's returned recommendation is appended to the create convergence loop's reported findings so the criterion is satisfied on the create surface, not only on detail/review.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "recommendation-report-surfacing"
+    },
+    {
+      "id": "plan-plan-completeness-c781872a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4's `plan_tool/create.py` routing block enumerates only `\"applied\"` (re-collect + continue), `\"recommended\"`, and `",
+      "body": "Step 4's `plan_tool/create.py` routing block enumerates only `\"applied\"` (re-collect + continue), `\"recommended\"`, and `\"unsafe\"` (leave deferred), but step 4's own `detail.py` section mandates handling all five `EscalateResult.outcome` values \u2014 the `\"proposal-unusable\"` and `\"step-missing\"` outcomes are unaddressed for the create loop. The safe default (leave the finding deferred) happens to hold, but the plan is silent, so a reviewer can't confirm those outcomes don't fall through to the applied/re-collect arm.",
+      "suggested_action": "state that the create loop treats `\"proposal-unusable\"` and `\"step-missing\"` the same as `\"recommended\"`/`\"unsafe\"` (leave the finding deferred, no re-collect), mirroring the detail-side five-outcome contract.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "create-loop-outcome-coverage"
+    },
+    {
+      "id": "plan-plan-completeness-07a02e30",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture lists trigger 2 \"Discovered mid-apply \u2014 `BLOCKED-STRUCTURAL` \u2026 a new verdict bucket on `apply_finding`\"",
+      "body": "The Architecture lists trigger 2 \"Discovered mid-apply \u2014 `BLOCKED-STRUCTURAL` \u2026 a new verdict bucket on `apply_finding`\" as in scope, and step 2's edit to the shared `plan_tool/prompts/apply-finding.md` lets `apply_finding` emit it in **every** apply context \u2014 but only step 5 (`cli/review_actions.py`) consumes the verdict. The create/detail convergence loops (`plan_tool/create.py:create_plan`, `plan_tool/detail.py:generate_detail`) inspect `apply_result.verdict` only for `== \"APPLIED\"` and route structural work by *source* (`is_structural`/`detail-purity`) **before** apply; a `BLOCKED-STRUCTURAL` returned *during* a convergence apply is silently dropped (treated as a non-`APPLIED` no-op), so the finding dead-ends exactly as the Problem statement says it must not (\"`apply_finding`/convergence cannot finish what they start\"). Step 4 owns the convergence loops but covers only trigger 1; nothing wires trigger 2 into them.",
+      "suggested_action": "extend step 4 so both convergence loops branch on an `apply_finding` `BLOCKED-STRUCTURAL` verdict and route the rec's target step through `escalate_to_split`, mirroring step 5's review-walk branch.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "midapply-verdict-convergence-routing"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-9ed0d74d": {
+      "status": "applied",
+      "note": "add an apply findings option to the create process to address items that require input in an interactive session. save the findings in a similar way that completeness audit saves conceptual findings for an apply.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-c781872a": {
+      "status": "applied",
+      "note": "applied finding: - `docs/.../escalate-structural-findings-to-split/04-route-structural-detail-purity-findings.md`: expanded the create-loop non-`applied` outcome bullet to enumerate all four deferred outcomes (`recommended`, `unsafe`, `proposal-unusable`, `step-missing`) and state they are treated identically (deferred, no re-collect), mirroring the detail-side five-outcome contract.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-07a02e30": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/escalate-structural-findings-to-split/04-route-structural-detail-purity-findings.md`: added a Summary bullet stating both loops route an `apply_finding` `BLOCKED-STRUCTURAL` verdict (trigger 2) through `escalate_to_split`, mirroring step 5's review-walk branch.",
+      "halt_reason": ""
+    }
+  }
+}

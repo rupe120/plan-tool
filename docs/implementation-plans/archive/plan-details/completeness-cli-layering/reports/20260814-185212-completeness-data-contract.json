@@ -1,0 +1,152 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-911062ca": {
+      "candidate": {
+        "field_or_key": "RoadmapLocalRevisionAttempt",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "context_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "validation_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "context_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "validation_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "owner": "RoadmapLocalRevisionAttempt",
+        "source_symbol": "plan_tool/run_log.py:RoadmapLocalRevisionAttempt",
+        "target_section": "RoadmapLocalRevisionAttempt"
+      },
+      "candidate_fields": {
+        "field_or_key": "RoadmapLocalRevisionAttempt",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "context_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "validation_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "attempt",
+          "context_digest",
+          "invalidated_seed_count",
+          "operation_verdict",
+          "merge_verdict",
+          "validation_verdict",
+          "publication_outcome",
+          "outcome"
+        ],
+        "owner": "RoadmapLocalRevisionAttempt",
+        "source_symbol": "plan_tool/run_log.py:RoadmapLocalRevisionAttempt",
+        "target_section": "RoadmapLocalRevisionAttempt"
+      },
+      "contract_fingerprint": "050b8265456be87d3e60413a1f98432cce23b85bf57a4d56ccda6fc8defaa752",
+      "field_or_key": "RoadmapLocalRevisionAttempt",
+      "freshness": {
+        "contract_fingerprint": "050b8265456be87d3e60413a1f98432cce23b85bf57a4d56ccda6fc8defaa752",
+        "registry_fingerprint": "d3db5a251329915b8bf8578f5a0224d1fabdac1047ea9e3b877180b358aae1d0"
+      },
+      "operation": "add",
+      "owner": "RoadmapLocalRevisionAttempt",
+      "registry_fingerprint": "d3db5a251329915b8bf8578f5a0224d1fabdac1047ea9e3b877180b358aae1d0",
+      "source_type": "dataclass",
+      "target_section": "RoadmapLocalRevisionAttempt"
+    },
+    "plan-data-contract-d55ca69f": {
+      "candidate": {
+        "field_or_key": "RoadmapLocalRevisionPreflight",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "artifact_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "artifact_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "owner": "RoadmapLocalRevisionPreflight",
+        "source_symbol": "plan_tool/run_log.py:RoadmapLocalRevisionPreflight",
+        "target_section": "RoadmapLocalRevisionPreflight"
+      },
+      "candidate_fields": {
+        "field_or_key": "RoadmapLocalRevisionPreflight",
+        "fields": [
+          "ts",
+          "run_id",
+          "event",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "artifact_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "json_keys": [
+          "ts",
+          "run_id",
+          "event",
+          "artifact_key",
+          "feedback_id",
+          "target_row_id",
+          "artifact_digest",
+          "render_canonical",
+          "verdict"
+        ],
+        "owner": "RoadmapLocalRevisionPreflight",
+        "source_symbol": "plan_tool/run_log.py:RoadmapLocalRevisionPreflight",
+        "target_section": "RoadmapLocalRevisionPreflight"
+      },
+      "contract_fingerprint": "050b8265456be87d3e60413a1f98432cce23b85bf57a4d56ccda6fc8defaa752",
+      "field_or_key": "RoadmapLocalRevisionPreflight",
+      "freshness": {
+        "contract_fingerprint": "050b8265456be87d3e60413a1f98432cce23b85bf57a4d56ccda6fc8defaa752",
+        "registry_fingerprint": "d3db5a251329915b8bf8578f5a0224d1fabdac1047ea9e3b877180b358aae1d0"
+      },
+      "operation": "add",
+      "owner": "RoadmapLocalRevisionPreflight",
+      "registry_fingerprint": "d3db5a251329915b8bf8578f5a0224d1fabdac1047ea9e3b877180b358aae1d0",
+      "source_type": "dataclass",
+      "target_section": "RoadmapLocalRevisionPreflight"
+    }
+  },
+  "review_id": "20260814-185212-completeness"
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-fbb2fdc9": {
+      "code_anchor": "plan_tool/detail_artifacts.py:locate_detail_format_carrier",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/authored-artifact-format-version/04-make-detail-py-sole-authority-current.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/authored-artifact-format-version/04-make-detail-py-sole-authority-current.md",
+      "reason": "code anchor `plan_tool/detail_artifacts.py:locate_detail_format_carrier` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260908-235502-completeness"
+}

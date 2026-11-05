@@ -1,0 +1,208 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-narrative-review-evidence",
+  "plan_path": "docs/implementation-plans/2-candidate-narrative-review-evidence.md",
+  "created_at": "2026-10-02T13:21:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c2905af843aa8d352217f651d88c991763ba04f8c56b8270acc19326f76d5cc5",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "TESTING.md": "f9a4f28e299937b63f81e4c0dd1653ca3ec936373f49bd1f9b90574c421048dd",
+    "docs/ARCHITECTURE.md": "9c2368e32d7a6a5abf3405d7122c7578af94e1fa0193706034573f26c6102797",
+    "docs/cli/roadmap.md": "b9af83d76a9fe7b26691d69f33e3bb00d9fb6939262627375f68d5402ca1ef09",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "11a36ca8344dd704e30e2f57616523321489df1f5f8ba600b30151608b691fbb",
+    "plan_tool/roadmap_candidate.py": "935bb51d5e61f75a830a538462d03df5a96e011dd76f27a3cf0ef02983b2b8d6",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_candidate_run.py": "3919a5da38a5d5087d1e0b97d75f24291d43ebac27573ddf384e09f284905b71",
+    "plan_tool/roadmap_gates.py": "63eb68b96193e6f097f947b9e72db50fd9ef6cff232c40c524e26905716f357c",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate.py": "1632254c78f96f7c2ffc410523cd04d6a4681fbd32d3f11590ddcac2bf1e9124",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_candidate_run.py": "a63f0f704e02f84664e5714b6dc729c1873e604c1dd85e9358073c27f06b222f",
+    "tests/test_roadmap_gates.py": "5c8ae5d3a11935575025ade8d6b906ec230354337a6b0e08e5f16bfd0466e25a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md": "a745a5ecf9b3772a198762ce956ac1f22c425aa0441e6b845de620490459686f",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md": "7f52896638462abf1b5cbeed9bf852181b469268a321a690190149b953d0e5af",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-require-each-candidate-reconciliation.md": "2ce3c2edeb0548a33eed749082c183f1539ef9d000fc435600dd887c4b1b45d7",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-candidate-bound-narrative-evidence.md": "afac2d2d53fd91f681654b0238c3233684ad6417d16007f84c4466aa9a6f5b13",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-bounded-semantic-narrative-review-one.md": "35ff61af35075985e420a4b4861419224675a52393f739c70441532cc9306244",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-make-approval-paths-seal-review-decide.md": "d697fe4b138845b55b8032f03b214505473d2306dd4db0cc1b624b30754d63a1",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/07-show-narrative-evidence-on-roadmap.md": "70944f0d3ec323b8966ec8a0d7ff643bc260303ecb778347a68e86a27210f67d",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md": "cdfedd7ebd4ee5561b22e02160ef7c6a85f90985f9ed9be2a37f86aa91e803e3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Narrative Review Evidence\n\n`candidate-narrative-review-evidence` \u00b7 generated 2026-10-02T13:21:26Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk candidate-narrative-review-evidence  # optional interactive review of the saved findings\n\n- MEDIUM `[approval-regenerated-evidence]` [confidence: limited]: Step 6 (approval paths) says \"missing or stale evidence is regenerated at review time and labeled, never a refusal\", and step 5 makes the semantic findings come from a model call. The Overview and the stated intent promise that a reviewer sees the findings \"before approval\". The plan does not say whether a missing or stale record found inside `seal_review` or `decide_structural_candidate` approve is regenerated and then approved in the same invocation. In that case the reviewer's dispositions would refer to findings they never saw. It also does not say how a disposition is tied to a specific semantic finding when a regenerated call returns different findings. The plan only says that \"Dispositions are recorded with the approval, apart from the stamp-bound evidence record.\" The legacy-candidate path (no evidence record) hits this first.\n  - Fix: State that approval records dispositions only against findings in a stamp-matching evidence record the reviewer was shown. Say what approval does when that record is missing or stale: regenerate and display, then require a second approve call. Also say how a disposition identifies its finding. Reconcile steps 1, 4, 6, and 7 to this rule.\n- MEDIUM `[ippt18-precondition-scope]` [confidence: limited]: The Risks section limits the IPPT-18 precondition to \"before steps 2 and 3 run\". Three other steps also depend on it. Step 1 defines reconciliation-response outcomes that \"admit IPPT-18's correction operation\" and edits `ROADMAP_FORMAT.md`, which IPPT-18 also edits. Step 8 edits that same file again. Step 5 adds a prompt and a call that touch the same candidate modules. If step 1 runs first, it fixes the outcome vocabulary before the correction operation exists.\n  - Fix: Apply the IPPT-18-landed precondition and its stop-and-surface rule to step 1, which defines the outcome vocabulary, as well as steps 2 and 3. Make step 1's vocabulary refer to the correction operation as IPPT-18 defines it.\n- MEDIUM `[blocking-defect-exit-path]` [confidence: limited]: Step 1 selects which deterministic defects block approval. The plan names an exit path for each closed-vocabulary state, but it gives no way for a reviewer to clear a blocking removed-id finding that they judge a false positive, for example a reference that is neither historical nor an actual reuse. The only remedy is correcting the prose, which is IPPT-18 and is deferred. Without a defined exit, a heuristic defect can become a permanent refusal. That conflicts with the Testing case \"ambiguous references\" and with the fence that no refusal is keyed on meaning.\n  - Fix: Have step 1 define, for each blocking defect class, the operator's exit: a correction operation or a structural historical marker. State that an ambiguous reference is a non-blocking evidence item and not a blocking defect.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[evidence-record-semantic-state]` [confidence: limited]: Step 4 says the record collects \"the removed-id findings and the reconciliation-response checks\". Step 5 says semantic findings and the `semantic-review-unavailable` state go \"for the evidence record\". Step 4 never lists semantic findings or the review state among the record's contents. The acceptance criterion that an incomplete review is distinguishable \"on every surface\" depends on that state being stored. This is a phrase gap, not a missing step.\n  - Fix: Add semantic findings and the evidence state (`reviewed` or `semantic-review-unavailable`) to step 4's list of record contents.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit candidate-narrative-review-evidence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Narrative Review Evidence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[approval-regenerated-evidence]` [confidence: limited]: Step 6 (approval paths) says \"missing or stale evidence is regenerated at review time and labeled, never a refusal\", and step 5 makes the semantic findings come from a model call. The Overview and the stated intent promise that a reviewer sees the findings \"before approval\". The plan does not say whether a missing or stale record found inside `seal_review` or `decide_structural_candidate` approve is regenerated and then approved in the same invocation. In that case the reviewer's dispositions would refer to findings they never saw. It also does not say how a disposition is tied to a specific semantic finding when a regenerated call returns different findings. The plan only says that \"Dispositions are recorded with the approval, apart from the stamp-bound evidence record.\" The legacy-candidate path (no evidence record) hits this first.\n- MEDIUM `[ippt18-precondition-scope]` [confidence: limited]: The Risks section limits the IPPT-18 precondition to \"before steps 2 and 3 run\". Three other steps also depend on it. Step 1 defines reconciliation-response outcomes that \"admit IPPT-18's correction operation\" and edits `ROADMAP_FORMAT.md`, which IPPT-18 also edits. Step 8 edits that same file again. Step 5 adds a prompt and a call that touch the same candidate modules. If step 1 runs first, it fixes the outcome vocabulary before the correction operation exists.\n- MEDIUM `[blocking-defect-exit-path]` [confidence: limited]: Step 1 selects which deterministic defects block approval. The plan names an exit path for each closed-vocabulary state, but it gives no way for a reviewer to clear a blocking removed-id finding that they judge a false positive, for example a reference that is neither historical nor an actual reuse. The only remedy is correcting the prose, which is IPPT-18 and is deferred. Without a defined exit, a heuristic defect can become a permanent refusal. That conflicts with the Testing case \"ambiguous references\" and with the fence that no refusal is keyed on meaning.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[evidence-record-semantic-state]` [confidence: limited]: Step 4 says the record collects \"the removed-id findings and the reconciliation-response checks\". Step 5 says semantic findings and the `semantic-review-unavailable` state go \"for the evidence record\". Step 4 never lists semantic findings or the review state among the record's contents. The acceptance criterion that an incomplete review is distinguishable \"on every surface\" depends on that state being stored. This is a phrase gap, not a missing step.\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-6dce68ff",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6 (approval paths) says \"missing or stale evidence is regenerated at review time and labeled, never a refusal\", and",
+      "body": "Step 6 (approval paths) says \"missing or stale evidence is regenerated at review time and labeled, never a refusal\", and step 5 makes the semantic findings come from a model call. The Overview and the stated intent promise that a reviewer sees the findings \"before approval\". The plan does not say whether a missing or stale record found inside `seal_review` or `decide_structural_candidate` approve is regenerated and then approved in the same invocation. In that case the reviewer's dispositions would refer to findings they never saw. It also does not say how a disposition is tied to a specific semantic finding when a regenerated call returns different findings. The plan only says that \"Dispositions are recorded with the approval, apart from the stamp-bound evidence record.\" The legacy-candidate path (no evidence record) hits this first.",
+      "suggested_action": "State that approval records dispositions only against findings in a stamp-matching evidence record the reviewer was shown. Say what approval does when that record is missing or stale: regenerate and display, then require a second approve call. Also say how a disposition identifies its finding. Reconcile steps 1, 4, 6, and 7 to this rule.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "approval-regenerated-evidence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-88110b64",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section limits the IPPT-18 precondition to \"before steps 2 and 3 run\". Three other steps also depend on it. St",
+      "body": "The Risks section limits the IPPT-18 precondition to \"before steps 2 and 3 run\". Three other steps also depend on it. Step 1 defines reconciliation-response outcomes that \"admit IPPT-18's correction operation\" and edits `ROADMAP_FORMAT.md`, which IPPT-18 also edits. Step 8 edits that same file again. Step 5 adds a prompt and a call that touch the same candidate modules. If step 1 runs first, it fixes the outcome vocabulary before the correction operation exists.",
+      "suggested_action": "Apply the IPPT-18-landed precondition and its stop-and-surface rule to step 1, which defines the outcome vocabulary, as well as steps 2 and 3. Make step 1's vocabulary refer to the correction operation as IPPT-18 defines it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "ippt18-precondition-scope",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a46592c9",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 selects which deterministic defects block approval. The plan names an exit path for each closed-vocabulary state,",
+      "body": "Step 1 selects which deterministic defects block approval. The plan names an exit path for each closed-vocabulary state, but it gives no way for a reviewer to clear a blocking removed-id finding that they judge a false positive, for example a reference that is neither historical nor an actual reuse. The only remedy is correcting the prose, which is IPPT-18 and is deferred. Without a defined exit, a heuristic defect can become a permanent refusal. That conflicts with the Testing case \"ambiguous references\" and with the fence that no refusal is keyed on meaning.",
+      "suggested_action": "Have step 1 define, for each blocking defect class, the operator's exit: a correction operation or a structural historical marker. State that an ambiguous reference is a non-blocking evidence item and not a blocking defect.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "blocking-defect-exit-path",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-e94cb7b7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 says the record collects \"the removed-id findings and the reconciliation-response checks\". Step 5 says semantic f",
+      "body": "Step 4 says the record collects \"the removed-id findings and the reconciliation-response checks\". Step 5 says semantic findings and the `semantic-review-unavailable` state go \"for the evidence record\". Step 4 never lists semantic findings or the review state among the record's contents. The acceptance criterion that an incomplete review is distinguishable \"on every surface\" depends on that state being stored. This is a phrase gap, not a missing step.",
+      "suggested_action": "Add semantic findings and the evidence state (`reviewed` or `semantic-review-unavailable`) to step 4's list of record contents.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "evidence-record-semantic-state",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "c2905af843aa8d352217f651d88c991763ba04f8c56b8270acc19326f76d5cc5",
+    "detail_bundle_digest": "46c0a7d4c0cfafd70c8b5e66b4263e6683afffebc0f13c6b57462004af5f71d7",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-require-each-candidate-reconciliation.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-candidate-bound-narrative-evidence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-bounded-semantic-narrative-review-one.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-make-approval-paths-seal-review-decide.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/07-show-narrative-evidence-on-roadmap.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "c47bdb4eaa1fbdb4c32d2892e109ba79ff7f38799e8f6e2fb40ee3e599412348",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

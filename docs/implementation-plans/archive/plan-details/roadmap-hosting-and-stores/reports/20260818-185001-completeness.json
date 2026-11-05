@@ -1,0 +1,199 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T18:50:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1b155041985e86f0cb5780753126bb66b886c8f9c3620263a3a838ccb050679c",
+  "code_fingerprint": {
+    "BACKLOG.md": "b7ce7a0b815fd5c9f2bfeb74b89a2f6c17d3fa9e30547fd8eaaef149765926c0",
+    "CLAUDE.md": "de88ed259e01d3c620d9dca4e3c49431ac94b66a9f50c3bc38226176925baab0",
+    "ROADMAP_FORMAT.md": "4c63f2e8a7190e6b357b65ae2dbee1b42998d61b34d978d69ff066643d7c92d0",
+    "docs/ARCHITECTURE.md": "112dfcb84247c5ba11dfc6e113e0f8560a8d0e6d755d74148b0409c28b08d7fb",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "9d242b54ccf5e899ad9212e5e03ad5765aa4144d4de097d634b5bdad492dbaaa",
+    "plan_tool/roadmap_gates.py": "65ee870bd27cc6b15e7e5322f46109e54be74e5acc3bdc4736678943c92a8f44",
+    "tests/cli/test_roadmap_cmd.py": "60c2161907f2ae9a8675b326eb42084bc39d882164a1877fbc92abdc857a2a1a",
+    "tests/test_roadmap.py": "712613c6992c4f6f9d73d42da4830de0c14f31ce293560efc2d0597a457b4c07",
+    "tests/test_roadmap_artifacts.py": "1654dc0ac0956d3c1cc864b63bbb40331a657a6269b2f39b6048906d0d83c110",
+    "tests/test_roadmap_format.py": "176be1b1032a9c923b3b14ff36e576b93ca941155922f0012f9620c41476cce8",
+    "tests/test_roadmap_gates.py": "7caf2dbf0110551f07d8f6d5e213d2d26eebd9620afa733c1b2af487e63a572b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md": "6ac8301868294feed3bff5be58fc3fa3fe8eae56a5986ce475837242c264edc2",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md": "ad25645801312f7cf205b2aff7cdee8365553e20e82cadadc7ef29922bcfc340",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md": "192ff35d53409ba74e247dc923e18b2e6e5b375c8d947fbf73db84a81cb034b1",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md": "0c3f1ae3f2d421a5c339c964a28f9c218561d01b03ae46bb554f866c0c2da4c3",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/05-pair-rule-cross-stage-components-gate.md": "e57bbe956a92e600a7ef4666061f0d64363bb6814f50410244f69efe88bd3528",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/06-document-stage-escape-hatch-churn.md": "3087637e9701a626f9ea00ff23aa487603d401f481bb545b92a87f98b11a1935"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Hosting And Stores\n\n`roadmap-hosting-and-stores` \u00b7 generated 2026-08-18T18:50:01Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 6\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-hosting-and-stores   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[compute-store-scope]`: Step 5 (`Add the compute/store pair rule`) rejects every in-process store whenever the single `compute` value is per-request, but `## Architecture` says that value describes the \u201cprimary unit\u201d when `topology` has several units, and `## Risks` names a long-lived unit with an in-process store as legitimate. The gate therefore rejects a valid mixed-compute roadmap; changing only the violation wording does not change that result.\n  - Fix: apply the sole pair rule only where the recorded compute value covers the store\u2019s unit, using the existing single-unit topology boundary until per-unit compute modeling is introduced\n- MEDIUM `[store-feedback-targetability]`: Step 2 (`Add stores rows and store_ids`) promises store rows receive \u201cfeedback-targeting treatment,\u201d but `plan_tool/roadmap_artifacts.py:design_row_collections` omits `stores`. `plan_tool/roadmap_gates.py:design_row_ids` will accept a feedback target for a store, while `plan_tool/roadmap_revision.py:preflight_feedback_revision` and `plan_tool/roadmap_structural_revision.py:_current_selected_slice` cannot find that live row, so neither revision route can act on it.\n  - Fix: make store rows targetable consistently across feedback preflight, local revision, and structural revision, including an explicit local-edit policy and route-level tests\n- MEDIUM `[store-ids-absence]`: Step 4 (`Enforce stores`) tells `ROADMAP_FORMAT.md` to describe `store_ids` as \u201crequired and present-and-empty-parses like `entity_ids`/`pattern_ids`, not absent-tolerant like `constraint_ids`,\u201d while `## Architecture` says \u201ca missing or empty component `store_ids`, parse to empty collections\u201d and step 2 selects `_optional_id_list`. Readers would reasonably expect a missing key to fail at parse time even though the intended gate must reject it after parsing.\n  - Fix: state one absence rule throughout the schema, step 2, and step 4: missing or empty `store_ids` parses empty, then the store-definition gate rejects it\n- MEDIUM `[hosting-product-scope]`: Step 1\u2019s generic `HostingRow.product` parser and renderer accept `product` on every hosting facet, but `## Architecture` says \u201cthe hosting `compute` row alone carries the same slot\u201d and that `model` and `topology` do not. Because no gate may read `product`, a product on those rows persists without any contract enforcing or documenting which rule wins.\n  - Fix: define one product-ownership rule across the hosting schema, parser, prompt, format documentation, and tests without adding a product gate\n- MEDIUM `[from-stage-repair-direction]`: Step 6\u2019s Implementation says to \u201cre-enter at (or above) the stage that owns the missing block,\u201d while `## Architecture` says \u201crun `--from-stage 2` first\u201d for missing hosting and `plan_tool/roadmap.py:_load_and_regate_below` runs only stages whose number is at least `from_stage`. `--from-stage 3` therefore pre-flights stage 2 but never runs it; `## Out of scope` also repeats the misleading \u201c`--from-stage 2` (or later)\u201d wording.\n  - Fix: State one direction everywhere: rerun from the owning stage or an earlier stage, or hand-edit before a higher-stage re-entry.\n- MEDIUM `[hosting-sharing-boundary]`: Step 2\u2019s `StoreRow.sharing` description says its relationship to `hosting.model` becomes active in step 5, but `## Architecture` defines `sharing` as an independent per-store override, step 4\u2019s guardrails forbid that comparison, and step 5 reads only `compute` and `category`. This falsely suggests a compatibility relation that the plan explicitly refuses.\n  - Fix: State that `sharing` remains independent of `hosting.model` throughout this plan and remove the step-5 implication.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-5d7aa3c1]`: The plan's `## Acceptance criteria` names `_constraints_rows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-30378e64]`: The plan's `## Acceptance criteria` names `check_design_row_continuity`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1e196fe2]`: The plan's `## Acceptance criteria` names `check_duplicate_row_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-97db02be]`: The plan's `## Acceptance criteria` names `check_hosting_totality`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-d3343292]`: The plan's `## Acceptance criteria` names `check_inventory_has_prose`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-0a9cac63]`: The plan's `## Acceptance criteria` names `check_store_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1cbbb5ec]`: The plan's `## Acceptance criteria` names `claude.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-0d91f46c]`: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-40710fe1]`: The plan's `## Acceptance criteria` names `components_design_rows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-780aa4e4]`: The plan's `## Acceptance criteria` names `components_gates`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9a27ce33]`: The plan's `## Acceptance criteria` names `components_row_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-284cb1f4]`: The plan's `## Acceptance criteria` names `constraints_row_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5c8e4247]`: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f5d4d1e8]`: The plan's `## Acceptance criteria` names `quality_attributes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-eac84441]`: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1ee6638e]`: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a2f800f3]`: The plan's `## Acceptance criteria` names `strenum`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['ROADMAP_FORMAT.md', 'plan_tool/prompts/roadmap-components.md', 'plan_tool/roadmap_gates.py', 'tests/test_roadmap.py', 'tests/test_roadmap_format.py', 'tests/test_roadmap_gates.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-hosting-and-stores` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Hosting And Stores\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[compute-store-scope]`: Step 5 (`Add the compute/store pair rule`) rejects every in-process store whenever the single `compute` value is per-request, but `## Architecture` says that value describes the \u201cprimary unit\u201d when `topology` has several units, and `## Risks` names a long-lived unit with an in-process store as legitimate. The gate therefore rejects a valid mixed-compute roadmap; changing only the violation wording does not change that result.\n- MEDIUM `[store-feedback-targetability]`: Step 2 (`Add stores rows and store_ids`) promises store rows receive \u201cfeedback-targeting treatment,\u201d but `plan_tool/roadmap_artifacts.py:design_row_collections` omits `stores`. `plan_tool/roadmap_gates.py:design_row_ids` will accept a feedback target for a store, while `plan_tool/roadmap_revision.py:preflight_feedback_revision` and `plan_tool/roadmap_structural_revision.py:_current_selected_slice` cannot find that live row, so neither revision route can act on it.\n- MEDIUM `[store-ids-absence]`: Step 4 (`Enforce stores`) tells `ROADMAP_FORMAT.md` to describe `store_ids` as \u201crequired and present-and-empty-parses like `entity_ids`/`pattern_ids`, not absent-tolerant like `constraint_ids`,\u201d while `## Architecture` says \u201ca missing or empty component `store_ids`, parse to empty collections\u201d and step 2 selects `_optional_id_list`. Readers would reasonably expect a missing key to fail at parse time even though the intended gate must reject it after parsing.\n- MEDIUM `[hosting-product-scope]`: Step 1\u2019s generic `HostingRow.product` parser and renderer accept `product` on every hosting facet, but `## Architecture` says \u201cthe hosting `compute` row alone carries the same slot\u201d and that `model` and `topology` do not. Because no gate may read `product`, a product on those rows persists without any contract enforcing or documenting which rule wins.\n- MEDIUM `[from-stage-repair-direction]`: Step 6\u2019s Implementation says to \u201cre-enter at (or above) the stage that owns the missing block,\u201d while `## Architecture` says \u201crun `--from-stage 2` first\u201d for missing hosting and `plan_tool/roadmap.py:_load_and_regate_below` runs only stages whose number is at least `from_stage`. `--from-stage 3` therefore pre-flights stage 2 but never runs it; `## Out of scope` also repeats the misleading \u201c`--from-stage 2` (or later)\u201d wording.\n- MEDIUM `[hosting-sharing-boundary]`: Step 2\u2019s `StoreRow.sharing` description says its relationship to `hosting.model` becomes active in step 5, but `## Architecture` defines `sharing` as an independent per-store override, step 4\u2019s guardrails forbid that comparison, and step 5 reads only `compute` and `category`. This falsely suggests a compatibility relation that the plan explicitly refuses.\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/roadmap_gates.py` resembling declared `plan_tool/roadmap_artifacts.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/roadmap_gates.py` resembling declared `plan_tool/roadmap_artifacts.py` (typo/stale path?)\n- INFO: step 2 detail cites `tests/test_roadmap_gates.py` resembling declared `tests/test_roadmap.py` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/roadmap.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/roadmap_artifacts.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/roadmap_artifacts.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n- INFO: step 5 detail cites `plan_tool/roadmap.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n- INFO: step 5 detail cites `plan_tool/roadmap_artifacts.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_constraints_rows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_design_row_continuity`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_duplicate_row_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_hosting_totality`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_inventory_has_prose`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_store_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `claude.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `components_design_rows`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `components_gates`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `components_row_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `constraints_row_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `quality_attributes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `roadmapartifacterror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `strenum`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['ROADMAP_FORMAT.md', 'plan_tool/prompts/roadmap-components.md', 'plan_tool/roadmap_gates.py', 'tests/test_roadmap.py', 'tests/test_roadmap_format.py', 'tests/test_roadmap_gates.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-hosting-and-stores` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ed1238a3",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Add the compute/store pair rule`) rejects every in-process store whenever the single `compute` value is per-req",
+      "body": "Step 5 (`Add the compute/store pair rule`) rejects every in-process store whenever the single `compute` value is per-request, but `## Architecture` says that value describes the \u201cprimary unit\u201d when `topology` has several units, and `## Risks` names a long-lived unit with an in-process store as legitimate. The gate therefore rejects a valid mixed-compute roadmap; changing only the violation wording does not change that result.",
+      "suggested_action": "apply the sole pair rule only where the recorded compute value covers the store\u2019s unit, using the existing single-unit topology boundary until per-unit compute modeling is introduced",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "compute-store-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e16e8b50",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Add stores rows and store_ids`) promises store rows receive \u201cfeedback-targeting treatment,\u201d but `plan_tool/road",
+      "body": "Step 2 (`Add stores rows and store_ids`) promises store rows receive \u201cfeedback-targeting treatment,\u201d but `plan_tool/roadmap_artifacts.py:design_row_collections` omits `stores`. `plan_tool/roadmap_gates.py:design_row_ids` will accept a feedback target for a store, while `plan_tool/roadmap_revision.py:preflight_feedback_revision` and `plan_tool/roadmap_structural_revision.py:_current_selected_slice` cannot find that live row, so neither revision route can act on it.",
+      "suggested_action": "make store rows targetable consistently across feedback preflight, local revision, and structural revision, including an explicit local-edit policy and route-level tests",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "store-feedback-targetability",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-66b6cb0c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Enforce stores`) tells `ROADMAP_FORMAT.md` to describe `store_ids` as \u201crequired and present-and-empty-parses li",
+      "body": "Step 4 (`Enforce stores`) tells `ROADMAP_FORMAT.md` to describe `store_ids` as \u201crequired and present-and-empty-parses like `entity_ids`/`pattern_ids`, not absent-tolerant like `constraint_ids`,\u201d while `## Architecture` says \u201ca missing or empty component `store_ids`, parse to empty collections\u201d and step 2 selects `_optional_id_list`. Readers would reasonably expect a missing key to fail at parse time even though the intended gate must reject it after parsing.",
+      "suggested_action": "state one absence rule throughout the schema, step 2, and step 4: missing or empty `store_ids` parses empty, then the store-definition gate rejects it",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "store-ids-absence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-8366fb6c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1\u2019s generic `HostingRow.product` parser and renderer accept `product` on every hosting facet, but `## Architecture`",
+      "body": "Step 1\u2019s generic `HostingRow.product` parser and renderer accept `product` on every hosting facet, but `## Architecture` says \u201cthe hosting `compute` row alone carries the same slot\u201d and that `model` and `topology` do not. Because no gate may read `product`, a product on those rows persists without any contract enforcing or documenting which rule wins.",
+      "suggested_action": "define one product-ownership rule across the hosting schema, parser, prompt, format documentation, and tests without adding a product gate",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hosting-product-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-03efae0c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6\u2019s Implementation says to \u201cre-enter at (or above) the stage that owns the missing block,\u201d while `## Architecture` ",
+      "body": "Step 6\u2019s Implementation says to \u201cre-enter at (or above) the stage that owns the missing block,\u201d while `## Architecture` says \u201crun `--from-stage 2` first\u201d for missing hosting and `plan_tool/roadmap.py:_load_and_regate_below` runs only stages whose number is at least `from_stage`. `--from-stage 3` therefore pre-flights stage 2 but never runs it; `## Out of scope` also repeats the misleading \u201c`--from-stage 2` (or later)\u201d wording.",
+      "suggested_action": "State one direction everywhere: rerun from the owning stage or an earlier stage, or hand-edit before a higher-stage re-entry.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "from-stage-repair-direction",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9ee53b44",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2\u2019s `StoreRow.sharing` description says its relationship to `hosting.model` becomes active in step 5, but `## Archi",
+      "body": "Step 2\u2019s `StoreRow.sharing` description says its relationship to `hosting.model` becomes active in step 5, but `## Architecture` defines `sharing` as an independent per-store override, step 4\u2019s guardrails forbid that comparison, and step 5 reads only `compute` and `category`. This falsely suggests a compatibility relation that the plan explicitly refuses.",
+      "suggested_action": "State that `sharing` remains independent of `hosting.model` throughout this plan and remove the step-5 implication.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hosting-sharing-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "66dd75a567722894926e206e7ffda2124b14a1edc82e66ae9fbabdf1881ff0b9",
+    "detail_bundle_digest": "3cdb2c4d09add7ae200f35624fc3dbf778e533f615a41396d8e2e4c5b4e5ca39",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+        "state": "present",
+        "digest": "6ac8301868294feed3bff5be58fc3fa3fe8eae56a5986ce475837242c264edc2"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+        "state": "present",
+        "digest": "ad25645801312f7cf205b2aff7cdee8365553e20e82cadadc7ef29922bcfc340"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+        "state": "present",
+        "digest": "192ff35d53409ba74e247dc923e18b2e6e5b375c8d947fbf73db84a81cb034b1"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+        "state": "present",
+        "digest": "0c3f1ae3f2d421a5c339c964a28f9c218561d01b03ae46bb554f866c0c2da4c3"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/05-pair-rule-cross-stage-components-gate.md",
+        "state": "present",
+        "digest": "e57bbe956a92e600a7ef4666061f0d64363bb6814f50410244f69efe88bd3528"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/06-document-stage-escape-hatch-churn.md",
+        "state": "present",
+        "digest": "3087637e9701a626f9ea00ff23aa487603d401f481bb545b92a87f98b11a1935"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

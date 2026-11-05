@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "plan_slug": "reuse-saved-completeness-audit",
+  "plan_path": "docs/implementation-plans/2-reuse-saved-completeness-audit.md",
+  "created_at": "2026-06-12T14:05:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Reuse Saved Completeness Audit\n\n`reuse-saved-completeness-audit` \u00b7 generated 2026-06-12T14:05:26Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (3 APPLIED, 1 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Architecture frames reuse-accept as \"idempotent \u2014 the newest sidecar pointer stays stable,\" but the `--iterate` consumer applies correctness findings that **edit the plan**, so a reuse-accepted iterate run leaves the saved sidecar describing a plan that no longer exists on disk (the post-apply state is never re-captured). The design never states whether the iterate path re-writes a fresh sidecar after mutation or deliberately leaves a stale one. \u2014 - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: in the Architecture section, scoped the idempotent-skip to the no-mutation audit-only path and specified that a reuse-accepted `--iterate` run rewrites a fresh fingerprinted sidecar after correctness-apply edits the plan.\n- [NOT-APPLICABLE] Step 1 adds `code_fingerprint_present: bool` to distinguish a never-computed fingerprint from a computed-but-empty one, but no freshness decision in `resolve_reusable_audit` actually needs it: a legacy sidecar already carries `plan_fingerprint == \"\"`, which forces stale before the code axis is even consulted, and every new sidecar writes both fingerprints together \u2014 so the \"valid plan_fingerprint + absent code_fingerprint\" case the marker exists to catch cannot arise within this plan's write model. \u2014 - (no change required \u2014 finding already satisfied)\n- [APPLIED] The code-drift warning looks `drifted_code` paths up in `scope_guard.build_file_to_step_map`, but that map keys by **resolved absolute** Paths while `compute_code_fingerprint` keys by **repo-relative posix** strings; the plan never pins which coordinate space `ReusableAudit.drifted_code` uses, so a relative-vs-absolute mismatch makes every attribution lookup miss and the warning renders without `(step N: title)`. \u2014 - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: amended step 5 title to specify `drifted_code` paths are repo-root-resolved to absolute Paths so they align with the absolute-keyed `build_file_to_step_map` for attribution\n- [APPLIED] Detail-file internal headers diverge from frontmatter step ids \u2014 steps 03 and 04 are both titled \"Step 3,\" and details 05\u201308 number themselves 4\u20137 against frontmatter 5\u20138 \u2014 so the cross-references inside detail bodies (\"step 5's CLI\", \"step 3 added\u2026\") don't map cleanly onto the `depends_on` graph. \u2014 - `docs/.../reuse-saved-completeness-audit/04-widen-write-completeness-report-accept.md`: renumbered header from `# Step 3` to `# Step 4` (body cross-refs already matched frontmatter).\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[audit-samples-precedence]`: The Architecture and the step-5 title commit to an explicit `--audit-samples N` suppressing the `--yes`/non-TTY auto-accept (while the default count does not), but step 5's detail file never mentions `audit_samples`, and the arg carries a concrete int default (`AUDIT_DEFAULT_MAX_SAMPLES`) that argparse cannot distinguish from an explicit pass \u2014 so the stated policy is unimplementable as written and no step operationalizes it.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor audit-samples-precedence`\n- MEDIUM `[reuse-idempotent-skip]`: The \"on reuse-accept, skip the `_persist_and_present_report` fresh-sidecar re-write so reuse is idempotent (newest pointer stable, reports dir does not grow)\" concept is named only in the plan body and step title; step 5's `cmd_completeness`/iterate wiring detail substitutes the reused recs but never specifies suppressing the unconditional end-of-run `_persist_and_present_report` call \u2014 so as detailed, every reuse run still rewrites a new timestamped sidecar and the un-GC'd reports dir grows.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-idempotent-skip`\n- MEDIUM `[reuse-id-explicit-override]`: An unresolvable `--reuse-audit-id` returns `None` and silently falls back to a fresh audit even when paired with an explicit `--reuse-audit` (force-reuse) \u2014 the operator pinned a specific save and asked to reuse, yet gets a fresh audit with only a one-line note. The design documents the fallback but never weighs whether an explicit pin + explicit reuse should instead surface a harder error.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-id-explicit-override`\n- MEDIUM `[plan-fingerprint-bundle-sync]`: The Architecture commits `compute_plan_fingerprint` (in the `review_persistence` leaf) to re-derive the `plan-details/<slug>/` bundle convention itself \u2014 \"a deliberate duplication... the two derivations must be kept in sync\" \u2014 but no step, test, or acceptance criterion guards that sync against `detail.py`'s `derive_detail_path`. If the duplicated derivation drifts, the fingerprint silently enumerates the wrong/empty directory, omits detail files, and an edited detail file no longer invalidates the cache \u2192 a stale audit is reused.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor plan-fingerprint-bundle-sync`\n- MEDIUM `[reuse-json-mode]`: The reuse flow defines auto-accept under `--yes`/non-TTY and an interactive `[Y/n]` prompt otherwise, but never addresses `completeness-audit --json`: a `--json` run in a TTY would emit the prompt string (and the multi-line code-drift warning) onto stdout, corrupting the machine-readable report.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-json-mode`\n- MEDIUM `[reuse-no-sidecar-explicit]`: The reuse-decision policy defines fresh/stale/prompt behavior, but an explicit `--reuse-audit` when **no** sidecar exists at all (distinct from a bad `--reuse-audit-id` pin) has no defined outcome.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-no-sidecar-explicit`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply reuse-saved-completeness-audit` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reuse Saved Completeness Audit\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[audit-samples-precedence]`: The Architecture and the step-5 title commit to an explicit `--audit-samples N` suppressing the `--yes`/non-TTY auto-accept (while the default count does not), but step 5's detail file never mentions `audit_samples`, and the arg carries a concrete int default (`AUDIT_DEFAULT_MAX_SAMPLES`) that argparse cannot distinguish from an explicit pass \u2014 so the stated policy is unimplementable as written and no step operationalizes it.\n- MEDIUM `[reuse-idempotent-skip]`: The \"on reuse-accept, skip the `_persist_and_present_report` fresh-sidecar re-write so reuse is idempotent (newest pointer stable, reports dir does not grow)\" concept is named only in the plan body and step title; step 5's `cmd_completeness`/iterate wiring detail substitutes the reused recs but never specifies suppressing the unconditional end-of-run `_persist_and_present_report` call \u2014 so as detailed, every reuse run still rewrites a new timestamped sidecar and the un-GC'd reports dir grows.\n- MEDIUM `[reuse-id-explicit-override]`: An unresolvable `--reuse-audit-id` returns `None` and silently falls back to a fresh audit even when paired with an explicit `--reuse-audit` (force-reuse) \u2014 the operator pinned a specific save and asked to reuse, yet gets a fresh audit with only a one-line note. The design documents the fallback but never weighs whether an explicit pin + explicit reuse should instead surface a harder error.\n- MEDIUM `[plan-fingerprint-bundle-sync]`: The Architecture commits `compute_plan_fingerprint` (in the `review_persistence` leaf) to re-derive the `plan-details/<slug>/` bundle convention itself \u2014 \"a deliberate duplication... the two derivations must be kept in sync\" \u2014 but no step, test, or acceptance criterion guards that sync against `detail.py`'s `derive_detail_path`. If the duplicated derivation drifts, the fingerprint silently enumerates the wrong/empty directory, omits detail files, and an edited detail file no longer invalidates the cache \u2192 a stale audit is reused.\n- MEDIUM `[reuse-json-mode]`: The reuse flow defines auto-accept under `--yes`/non-TTY and an interactive `[Y/n]` prompt otherwise, but never addresses `completeness-audit --json`: a `--json` run in a TTY would emit the prompt string (and the multi-line code-drift warning) onto stdout, corrupting the machine-readable report.\n- MEDIUM `[reuse-no-sidecar-explicit]`: The reuse-decision policy defines fresh/stale/prompt behavior, but an explicit `--reuse-audit` when **no** sidecar exists at all (distinct from a bad `--reuse-audit-id` pin) has no defined outcome.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply reuse-saved-completeness-audit` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-5956f40b",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture and the step-5 title commit to an explicit `--audit-samples N` suppressing the `--yes`/non-TTY auto-acc",
+      "body": "The Architecture and the step-5 title commit to an explicit `--audit-samples N` suppressing the `--yes`/non-TTY auto-accept (while the default count does not), but step 5's detail file never mentions `audit_samples`, and the arg carries a concrete int default (`AUDIT_DEFAULT_MAX_SAMPLES`) that argparse cannot distinguish from an explicit pass \u2014 so the stated policy is unimplementable as written and no step operationalizes it.",
+      "suggested_action": "specify in step 5 how `_resolve_audit_reuse` detects an *explicitly passed* `--audit-samples` (e.g. a sentinel default the helper reads) and add an acceptance criterion locking the suppression-vs-default behavior.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "audit-samples-precedence"
+    },
+    {
+      "id": "plan-plan-completeness-a2f7175b",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The \"on reuse-accept, skip the `_persist_and_present_report` fresh-sidecar re-write so reuse is idempotent (newest point",
+      "body": "The \"on reuse-accept, skip the `_persist_and_present_report` fresh-sidecar re-write so reuse is idempotent (newest pointer stable, reports dir does not grow)\" concept is named only in the plan body and step title; step 5's `cmd_completeness`/iterate wiring detail substitutes the reused recs but never specifies suppressing the unconditional end-of-run `_persist_and_present_report` call \u2014 so as detailed, every reuse run still rewrites a new timestamped sidecar and the un-GC'd reports dir grows.",
+      "suggested_action": "add the skip to step 5's detail, specifying it suppresses only the sidecar JSON write (not the report presentation) on a reuse-accepted run.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-idempotent-skip"
+    },
+    {
+      "id": "plan-plan-completeness-9714d616",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "An unresolvable `--reuse-audit-id` returns `None` and silently falls back to a fresh audit even when paired with an expl",
+      "body": "An unresolvable `--reuse-audit-id` returns `None` and silently falls back to a fresh audit even when paired with an explicit `--reuse-audit` (force-reuse) \u2014 the operator pinned a specific save and asked to reuse, yet gets a fresh audit with only a one-line note. The design documents the fallback but never weighs whether an explicit pin + explicit reuse should instead surface a harder error.",
+      "suggested_action": "state in step 5 whether a bad pin under explicit `--reuse-audit` warns-and-proceeds (current) or errors, so the precedence is deliberate rather than incidental.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-id-explicit-override"
+    },
+    {
+      "id": "plan-plan-completeness-2bca5de0",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture commits `compute_plan_fingerprint` (in the `review_persistence` leaf) to re-derive the `plan-details/<s",
+      "body": "The Architecture commits `compute_plan_fingerprint` (in the `review_persistence` leaf) to re-derive the `plan-details/<slug>/` bundle convention itself \u2014 \"a deliberate duplication... the two derivations must be kept in sync\" \u2014 but no step, test, or acceptance criterion guards that sync against `detail.py`'s `derive_detail_path`. If the duplicated derivation drifts, the fingerprint silently enumerates the wrong/empty directory, omits detail files, and an edited detail file no longer invalidates the cache \u2192 a stale audit is reused.",
+      "suggested_action": "add an acceptance criterion (and Testing case) asserting `compute_plan_fingerprint`'s enumerated bundle equals the set `derive_detail_path` produces for the plan's steps, so the duplication is pinned.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "plan-fingerprint-bundle-sync"
+    },
+    {
+      "id": "plan-plan-completeness-11f735fd",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The reuse flow defines auto-accept under `--yes`/non-TTY and an interactive `[Y/n]` prompt otherwise, but never addresse",
+      "body": "The reuse flow defines auto-accept under `--yes`/non-TTY and an interactive `[Y/n]` prompt otherwise, but never addresses `completeness-audit --json`: a `--json` run in a TTY would emit the prompt string (and the multi-line code-drift warning) onto stdout, corrupting the machine-readable report.",
+      "suggested_action": "specify that `--json` (and any machine-output mode) forces a non-interactive reuse decision and routes the prompt/staleness warning to stderr, with a criterion locking it in.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-json-mode"
+    },
+    {
+      "id": "plan-plan-completeness-47a6e6f8",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The reuse-decision policy defines fresh/stale/prompt behavior, but an explicit `--reuse-audit` when **no** sidecar exist",
+      "body": "The reuse-decision policy defines fresh/stale/prompt behavior, but an explicit `--reuse-audit` when **no** sidecar exists at all (distinct from a bad `--reuse-audit-id` pin) has no defined outcome.",
+      "suggested_action": "specify that explicit `--reuse-audit` with no saved sidecar falls back to a fresh audit with a one-line note",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-no-sidecar-explicit"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-5956f40b": {
+      "status": "applied",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-a2f7175b": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/reuse-saved-completeness-audit/06-reuse-audit-no-reuse-audit-reuse-audit.md`: added Implementation spec that a reuse-accepted audit-only run passes `skip_sidecar_write=True` to `_persist_and_present_report`, suppressing only the `write_completeness_report`/`save_review` sidecar write while still rendering/presenting the report.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-9714d616": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-2bca5de0": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: added a Testing unit case asserting `compute_plan_fingerprint`'s enumerated detail-file set equals `detail.py`'s `derive_detail_path` output for the plan's steps.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-11f735fd": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-47a6e6f8": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: in the Architecture section's reuse-decision helper description, added that an explicit `--reuse-audit` with no saved sidecar (distinct from a bad `--reuse-audit-id` pin) falls back to a fresh audit with a one-line note rather than erroring.",
+      "halt_reason": ""
+    }
+  }
+}

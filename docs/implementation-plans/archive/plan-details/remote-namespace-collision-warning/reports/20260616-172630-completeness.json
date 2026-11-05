@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "plan_slug": "remote-namespace-collision-warning",
+  "plan_path": "docs/implementation-plans/2-remote-namespace-collision-warning.md",
+  "created_at": "2026-06-16T17:26:30Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ff7899fcd9c9b406e48965d24ce2a5618fca79209b1aa2e035c62154e7b85dc9",
+  "code_fingerprint": {
+    "plan_tool/cli/authoring.py": "8faad132a7a0070233afdb97a0ba00134af392597fd18ac71fb371a2aa2c1234",
+    "plan_tool/cli/gitcommit.py": "f8c390470bdb654670ef308bfc5829c47b75715b94b8bc30f3539e8bdff30646",
+    "plan_tool/cli/manifest.py": "013dc8a254814d0bef3926b5195169262896d97d17d40b82d51c155997cef7a5",
+    "tests/cli/test_authoring_cmds.py": "22e9b17faf7e17992e720cfcf339bd8f05def61438eb2f16148863140d33ae3b",
+    "tests/cli/test_gitcommit.py": "fdbb5b6fb3817e05734cbcdacea5694862d6571c2fe9378353549dab30b26bc0",
+    "tests/cli/test_manifest_cmds.py": "82f959b136094cc959bf6da67b24f56fce661e5a1e8f5dd167aa0796e4460a0f"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Remote Namespace Collision Warning\n\n`remote-namespace-collision-warning` \u00b7 generated 2026-06-16T17:26:30Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 2 dispatched (2 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Architecture normalization rule (\"the same `plan/<slug>` under `origin` and a fork is one collision, **reported once**\") and the Deferred bullet (\"the warning names the colliding ref but **does not report multi-remote spread**; postponed\") both say the advisory surfaces a single collision, but step 1 (`pure-remote-collision-detector`) returns *every* colliding remote ref and steps 2/3 emit `\", \".join(collisions)` \u2014 so the message names `origin/plan/x` **and** `fork/plan/x`, which *is* multi-remote spread. The detail bundle contradicts the plan body's own Deferred posture; a reader can't tell whether spread is shipped or postponed. \u2014 - `docs/implementation-plans/2-remote-namespace-collision-warning.md`: rewrote the Architecture multi-remote bullet so \"reported once\" means a single advisory naming every colliding remote ref (one warning, not one ref).\n- [APPLIED] The Architecture's `create` bullet instructs inserting the remote check \"after the local `branch_exists`/owner checks, before the local disambiguation,\" but the owner check and disambiguation execute only when the local branch *exists* \u2014 so that placement sits on the local-exists path, contradicting the same bullet's \"does not exist locally\" trigger. Step 2's detail resolves this correctly by replacing the `return None` inside the `if not branch_exists(...)` no-local-branch block, so the body misleads an implementer who reads the canonical plan rather than the detail.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[attach-local-orphan-remote]`: The plan body's acceptance criterion and Architecture state that step 3 (`wire-remote-collision-detector-attach`, `cmd_attach_branch`) \"keys on `owner is None`, so an unowned local orphan that also exists remotely warns too\" \u2014 a deliberate divergence from `create`. But every step 3 test (`test_attach_remote_only_collision_warns_and_binds`, etc.) stubs `list_branches` to a *remote-only* ref list with no local orphan present, so the distinguishing local-orphan-plus-remote behavior is asserted nowhere. The stated divergence ships untested.\n  - Address: `plan-tool completeness-apply remote-namespace-collision-warning --anchor attach-local-orphan-remote`\n- MEDIUM `[multi-remote-report-once]`: The Architecture and acceptance criterion promise \"the same name under two remotes warns once, not twice,\" but step 1 (`pure-remote-collision-detector`) deliberately returns *both* colliding refs and defers collapse to the gate's single `warn(\", \".join(collisions))`. Step 2 and step 3 tests feed only single-remote inputs, so no wiring-level test confirms the gate emits exactly one warning for a two-remote collision \u2014 the load-bearing \"reported once\" claim rests entirely on untested gate code.\n  - Address: `plan-tool completeness-apply remote-namespace-collision-warning --anchor multi-remote-report-once`\n- NIT `[advisory-message-parity]`: Step 2's create advisory message includes an actionable hint (suggest `git fetch` to refresh / use a distinct slug), but step 3's attach message (`\"{branch} already exists as remote ref(s) {refs} (as of your last fetch \u2014 no network performed); binding anyway.\"`) carries the staleness caveat without the `git fetch` remediation, a mild divergence against the plan's own Surface-drift risk that wants the two paths' wording aligned.\n  - Address: `plan-tool completeness-apply remote-namespace-collision-warning --anchor advisory-message-parity`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply remote-namespace-collision-warning` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Remote Namespace Collision Warning\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[attach-local-orphan-remote]`: The plan body's acceptance criterion and Architecture state that step 3 (`wire-remote-collision-detector-attach`, `cmd_attach_branch`) \"keys on `owner is None`, so an unowned local orphan that also exists remotely warns too\" \u2014 a deliberate divergence from `create`. But every step 3 test (`test_attach_remote_only_collision_warns_and_binds`, etc.) stubs `list_branches` to a *remote-only* ref list with no local orphan present, so the distinguishing local-orphan-plus-remote behavior is asserted nowhere. The stated divergence ships untested.\n- MEDIUM `[multi-remote-report-once]`: The Architecture and acceptance criterion promise \"the same name under two remotes warns once, not twice,\" but step 1 (`pure-remote-collision-detector`) deliberately returns *both* colliding refs and defers collapse to the gate's single `warn(\", \".join(collisions))`. Step 2 and step 3 tests feed only single-remote inputs, so no wiring-level test confirms the gate emits exactly one warning for a two-remote collision \u2014 the load-bearing \"reported once\" claim rests entirely on untested gate code.\n- NIT `[advisory-message-parity]`: Step 2's create advisory message includes an actionable hint (suggest `git fetch` to refresh / use a distinct slug), but step 3's attach message (`\"{branch} already exists as remote ref(s) {refs} (as of your last fetch \u2014 no network performed); binding anyway.\"`) carries the staleness caveat without the `git fetch` remediation, a mild divergence against the plan's own Surface-drift risk that wants the two paths' wording aligned.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply remote-namespace-collision-warning` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-e2c4039f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan body's acceptance criterion and Architecture state that step 3 (`wire-remote-collision-detector-attach`, `cmd_a",
+      "body": "The plan body's acceptance criterion and Architecture state that step 3 (`wire-remote-collision-detector-attach`, `cmd_attach_branch`) \"keys on `owner is None`, so an unowned local orphan that also exists remotely warns too\" \u2014 a deliberate divergence from `create`. But every step 3 test (`test_attach_remote_only_collision_warns_and_binds`, etc.) stubs `list_branches` to a *remote-only* ref list with no local orphan present, so the distinguishing local-orphan-plus-remote behavior is asserted nowhere. The stated divergence ships untested.",
+      "suggested_action": "add a step 3 test-case concept where the stubbed ref list contains both a local orphan branch and a colliding remote ref, pinning that the advisory still fires and the bind proceeds.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "attach-local-orphan-remote"
+    },
+    {
+      "id": "plan-plan-completeness-2ecb341e",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture and acceptance criterion promise \"the same name under two remotes warns once, not twice,\" but step 1 (`",
+      "body": "The Architecture and acceptance criterion promise \"the same name under two remotes warns once, not twice,\" but step 1 (`pure-remote-collision-detector`) deliberately returns *both* colliding refs and defers collapse to the gate's single `warn(\", \".join(collisions))`. Step 2 and step 3 tests feed only single-remote inputs, so no wiring-level test confirms the gate emits exactly one warning for a two-remote collision \u2014 the load-bearing \"reported once\" claim rests entirely on untested gate code.",
+      "suggested_action": "add a wiring-step test concept (step 2 or 3) with two colliding remotes asserting a single warn naming both refs. - INFO: [primary-prefix-remote-scope] Both the create gate (step 2) and the helper compute the collision name via `derive_branch`, which uses only the *primary* prefix, so a remote ref under a configured *secondary* prefix (`origin/feature/<slug>` when prefixes are `[\"plan/\",\"feature/\"]`) \u2014 itself a convention name for the slug \u2014 never warns, even though `branch_owner` treats all prefixes as ownership-bearing. This matches local create's primary-only `branch_exists` check, so it is internally consistent, but the plan's \"remote-aware\" framing and the `prefixes`-parameterized helper imply broader coverage and never state the primary-only scope. \u2192 fix: state in the Architecture (normalization rule) that remote collision detection is scoped to the primary derived name, mirroring the local path, so secondary-prefix remote convention names are out of scope by design.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "multi-remote-report-once"
+    },
+    {
+      "id": "plan-plan-completeness-fd8f05f9",
+      "source": "plan-completeness",
+      "severity": "nit",
+      "step_id": null,
+      "title": "Step 2's create advisory message includes an actionable hint (suggest `git fetch` to refresh / use a distinct slug), but",
+      "body": "Step 2's create advisory message includes an actionable hint (suggest `git fetch` to refresh / use a distinct slug), but step 3's attach message (`\"{branch} already exists as remote ref(s) {refs} (as of your last fetch \u2014 no network performed); binding anyway.\"`) carries the staleness caveat without the `git fetch` remediation, a mild divergence against the plan's own Surface-drift risk that wants the two paths' wording aligned.",
+      "suggested_action": "align step 3's advisory message concept with step 2's, including the \"run `git fetch` to refresh\" actionable hint alongside the no-network caveat.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "advisory-message-parity"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-e2c4039f": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-2ecb341e": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-fd8f05f9": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    }
+  }
+}

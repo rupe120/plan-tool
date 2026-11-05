@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "plan_slug": "merge-steps-executor",
+  "plan_path": "docs/implementation-plans/2-merge-steps-executor.md",
+  "created_at": "2026-06-19T03:51:39Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "bf15651f4dba3be6059c8acc86ed80c09284c169d89561301353bf93243927cf",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "55d7d58e5fa948c8afb0b97a1fbbaf51cec0de6118257f931c0e34f9be57c6fc",
+    "RUNBOOK.md": "c2f9bac4d5fa456fceaa228d1a8654671d1d388e5051901a2e66de4c204ef06d",
+    "docs/cli/README.md": "612b1df0eb2839d4f06f0e7603472496cfc0a5cb0f5b5dddf9ccd5544ec05637",
+    "integrations/claude/SKILL.md": "d6b655f7b9bf6f3d2749abf2473e1857d5169ded1a465638c3e46e30eaa4a62b",
+    "integrations/codex/SKILL.md": "3837ec61a9dd2dabbd3bdd5baf313a3f74953eddf3def74c8884f73425261051",
+    "plan_tool/cli/__init__.py": "6df12bf2fda35595eb3ed1f3368faffd1821a36f2478fab71982f03b60a45de6",
+    "plan_tool/cli/app.py": "46c30cab17e4c52d19038638e7f96e2777808dc7c61b59f7d1b2212e8e18d9b1",
+    "plan_tool/cli/authoring.py": "7d972d396074e4406c4b8e9e10870fb497f13557b016a5e4133eab6c3042abc2",
+    "plan_tool/create.py": "d0f830c9e39bbc44085ed0eb1f5159f17d797350d70612b387782280dc9b3f8d",
+    "plan_tool/detail.py": "b4acef5b8ae0783ab27cd9b135e2518f91ee176f860762e9edf5bb4d0391cdc6",
+    "plan_tool/prompts/detail.md": "53550bee6b1798864f6545d6261bfedcb1f6aff9a188f069713cc3f536d3f6e8",
+    "tests/cli/test_authoring_cmds.py": "cac4950830cd42f71eef19431679feb11b9921d19dfdf8fc57d01cb14431f978",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "1ab9eda370b3ea39b8caad3580cc8d3786e7e7a83fb62ffd152a72baff74898a"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Merge Steps Executor\n\n`merge-steps-executor` \u00b7 generated 2026-06-19T03:51:39Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 1 (1 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The CLI section's \"`--steps` repeated (\u22652 ids), validate contiguity + chain before any I/O\" and the matching acceptance criterion (\"contiguity + chain are validated before any I/O\") overstate what is achievable. Connectivity (\"chain\") is decided inside `_apply_step_merge` (step 1), which runs only after `merge_steps` (step 2) parses the plan from disk \u2014 itself a read I/O \u2014 and step 3's `cmd_merge` also reads the plan (to collect member `Step`s for `_confirm_merge`) before any validation. Step 2 states the accurate posture: validation happens \"before any **mutation**/disk mutation.\" The body/criterion are the lagging side. \u2014 - `docs/implementation-plans/2-merge-steps-executor.md`: reworded the CLI section's validation phrase from \"before any I/O\" to \"before any mutation\"\n- [APPLIED] The merge's only guard against the completeness tail re-flagging the just-merged step is prose integration. Step 3's `cmd_merge` runs `_run_completeness_tail(args, what=\"merge\")` under `--iterate` (default ON), which re-audits the **whole plan**; if the step-2 re-author's \"weave the absorbed refactor into the dominant `feature` narrative\" integration is imperfect (LLM variance), this very conceptual audit re-emits a mixed-step / `granularity-split` finding on the freshly-merged step. `allow_split=False` on the re-author (step 2) only suppresses `generate_detail`'s in-author self-check \u2014 it does **not** touch the separate `completeness_report` split path, which surfaces a `plan-tool split` BLOCKED recommendation (`completeness_report.py:_blocked_split_targets`) the apply pass can't resolve. The plan forbids any suppression backstop, so an imperfectly-integrated body churns the operator with a \"split it back apart\" recommendation on the same fold it just made. \u2014 - `docs/implementation-plans/2-merge-steps-executor.md`: appended to the \"prose must match the type\" architecture note that a re-tripped mixed-step / `granularity-split` finding is recommend-only and re-splitting is operator-only, so an imperfect integration degrades to a manual recommendation rather than an unresolved convergence failure.\n- [APPLIED] Step 2 (`merge-steps-orchestrator`) instructs the implementer to \"treat the plan's *Detail-file handling* paragraph phrase 'shift **up** by `len-1`' as a typo,\" but the plan body's Architecture \u2192 *Detail-file handling* paragraph already reads \"shift **down** by `len-1`\" (matching the comparison table and step 1's arithmetic). The cross-reference no longer resolves, so an implementer grepping the plan body for \"up\" to confirm the typo finds nothing and may distrust the instruction. The conclusion (DOWN) is correct; only the stale citation misleads. \u2014 - `docs/implementation-plans/plan-details/merge-steps-executor/02-merge-steps-orchestrator-merge-safe.md`: removed the \"treat as a typo\" sentence citing a nonexistent \"shift up by `len-1`\" phrase from the *Downstream ids shift DOWN* bullet.\n- [APPLIED] `_merge_is_safe` (step 2) explicitly classifies a parked (`scope: deferred`/`wont_do`) member as **safe** to merge (PENDING, no run state), yet step 2's \"Assemble the `merged` Step\" never sets `scope`, so the merged `Step` defaults to `COMMITTED`. Folding a `wont_do` member into a committed merged step silently resurrects abandoned work and pulls it back into runnable-selection and the completion tally \u2014 a behavior change the plan implies is reachable (it admits parked members) but never resolves. \u2014 - `docs/implementation-plans/plan-details/merge-steps-executor/02-merge-steps-orchestrator-merge-safe.md`: added a `scope` rule to the \"Assemble the `merged` Step\" section requiring a uniform member `scope` and rejecting a mixed-scope set with `DetailError`, so a parked member can't be silently resurrected into a `committed` merged step.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[merged-step-features]`: The `merged` Step assembly in step 2 (`merge_steps`, \"Assemble the `merged` Step\") enumerates exactly which fields the fold carries \u2014 `title`, `files`, `creates`, `change_type`, `complexity`, plus `id`/`depends_on`/`detail` \u2014 and silently omits `features` (and `gate`, `enforce_test_authoring`). `Step.features` is the live plan\u2194feature-registry linkage the recently-landed feature-health/smell checks key on; folding a member that declared `features: [X]` into a merged step that defaults `features=[]` drops that linkage, so feature X can read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-chews.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor merged-step-features`\n- MEDIUM `[prior-body-integration]`: The convergence argument in \"A merged step takes the dominant `change_type`\" / \"The prose must match the type\" rests on the re-author producing **integrated, type-pure** prose (the mixed-step audit keys on prose, not the `change_type` field), yet the only deterministic lever \u2014 the `${prior_body_block}` prompt text specified in step 2 (\"### Prior detail bodies being merged (combine these into one coherent file)\") \u2014 carries no instruction to absorb lower-ranked members' work as incidental detail under the dominant type rather than as a labeled \"Refactor\" section. With the steer absent, a stapled re-author leaves a standing mixed-step finding on every re-audit (and churns the loop once `granularity-split` becomes apply-eligible) \u2014 the exact failure the rule exists to prevent.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor prior-body-integration`\n- MEDIUM `[partial-failure-posture]`: The Architecture's \"Partial-failure posture\" paragraph commits to a substantive leave-and-resume behavior \u2014 on a re-author failure after the pre-author mutations, `merge_steps` leaves the merged step renumbered-but-undetailed, siblings renamed, and the folded-away files as orphan `NN-` files for ids that no longer exist, recoverable only by manual orphan deletion \u2014 but no acceptance criterion locks it and step 2's `TestMergeSteps` exercises only `test_unsafe_set_raises_before_mutation` (pre-mutation abort), never a mid-re-author failure leaving orphans. The operator-facing manual-cleanup hazard is unverified.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor partial-failure-posture`\n- MEDIUM `[undetailed-member-case]`: Step 2's combine collects `folded_paths`/prior bodies only for members where `s.detail` is set (`s.id in set(merge_ids) and s.detail`), but a merge requires only an all-PENDING set \u2014 which may include PENDING-but-**undetailed** members. The all-undetailed case (empty `$prior_body` \u2192 the re-author authors the merged step fresh from its assembled fields) and the partially-detailed case (combine only the available bodies) are implied by the `s.detail` filter but never named, so a reviewer cannot tell intended-behavior from oversight.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor undetailed-member-case`\n- MEDIUM `[combined-prompt-size]`: The combine deliberately feeds **every** folded member's full body through `$prior_body` with no `_MAX_PROMPT_FILE_BYTES` truncation (step 2 + Risks \"Naively stapling\u2026\") \u2014 a merge-only path split never exercises (split creates, never combines). The design names no upper bound or degradation behavior when the concatenated member bodies are large enough to strain the model's prompt/context budget, even though the executor accepts arbitrary contiguous sets.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor combined-prompt-size`\n- MEDIUM `[validate-before-io]`: The CLI section's \"`--steps` repeated (\u22652 ids), validate contiguity + chain before any I/O\" overstates the CLI layer: step 3's `cmd_merge` guards only `len(set(ids)) < 2`, and contiguity/connectivity are validated inside `_apply_step_merge` within `merge_steps`. Consequently the TTY `_confirm_merge` gate fires *before* contiguity is ever checked \u2014 an operator can confirm a gapped/disjoint merge and only then receive a `DetailError`. The \"before any I/O\" guarantee holds at the transform layer but not at the CLI confirm.\n  - Address: `plan-tool completeness-apply merge-steps-executor --anchor validate-before-io`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply merge-steps-executor --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Merge Steps Executor\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[merged-step-features]`: The `merged` Step assembly in step 2 (`merge_steps`, \"Assemble the `merged` Step\") enumerates exactly which fields the fold carries \u2014 `title`, `files`, `creates`, `change_type`, `complexity`, plus `id`/`depends_on`/`detail` \u2014 and silently omits `features` (and `gate`, `enforce_test_authoring`). `Step.features` is the live plan\u2194feature-registry linkage the recently-landed feature-health/smell checks key on; folding a member that declared `features: [X]` into a merged step that defaults `features=[]` drops that linkage, so feature X can read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-chews.\n- MEDIUM `[prior-body-integration]`: The convergence argument in \"A merged step takes the dominant `change_type`\" / \"The prose must match the type\" rests on the re-author producing **integrated, type-pure** prose (the mixed-step audit keys on prose, not the `change_type` field), yet the only deterministic lever \u2014 the `${prior_body_block}` prompt text specified in step 2 (\"### Prior detail bodies being merged (combine these into one coherent file)\") \u2014 carries no instruction to absorb lower-ranked members' work as incidental detail under the dominant type rather than as a labeled \"Refactor\" section. With the steer absent, a stapled re-author leaves a standing mixed-step finding on every re-audit (and churns the loop once `granularity-split` becomes apply-eligible) \u2014 the exact failure the rule exists to prevent.\n- MEDIUM `[partial-failure-posture]`: The Architecture's \"Partial-failure posture\" paragraph commits to a substantive leave-and-resume behavior \u2014 on a re-author failure after the pre-author mutations, `merge_steps` leaves the merged step renumbered-but-undetailed, siblings renamed, and the folded-away files as orphan `NN-` files for ids that no longer exist, recoverable only by manual orphan deletion \u2014 but no acceptance criterion locks it and step 2's `TestMergeSteps` exercises only `test_unsafe_set_raises_before_mutation` (pre-mutation abort), never a mid-re-author failure leaving orphans. The operator-facing manual-cleanup hazard is unverified.\n- MEDIUM `[undetailed-member-case]`: Step 2's combine collects `folded_paths`/prior bodies only for members where `s.detail` is set (`s.id in set(merge_ids) and s.detail`), but a merge requires only an all-PENDING set \u2014 which may include PENDING-but-**undetailed** members. The all-undetailed case (empty `$prior_body` \u2192 the re-author authors the merged step fresh from its assembled fields) and the partially-detailed case (combine only the available bodies) are implied by the `s.detail` filter but never named, so a reviewer cannot tell intended-behavior from oversight.\n- MEDIUM `[combined-prompt-size]`: The combine deliberately feeds **every** folded member's full body through `$prior_body` with no `_MAX_PROMPT_FILE_BYTES` truncation (step 2 + Risks \"Naively stapling\u2026\") \u2014 a merge-only path split never exercises (split creates, never combines). The design names no upper bound or degradation behavior when the concatenated member bodies are large enough to strain the model's prompt/context budget, even though the executor accepts arbitrary contiguous sets.\n- MEDIUM `[validate-before-io]`: The CLI section's \"`--steps` repeated (\u22652 ids), validate contiguity + chain before any I/O\" overstates the CLI layer: step 3's `cmd_merge` guards only `len(set(ids)) < 2`, and contiguity/connectivity are validated inside `_apply_step_merge` within `merge_steps`. Consequently the TTY `_confirm_merge` gate fires *before* contiguity is ever checked \u2014 an operator can confirm a gapped/disjoint merge and only then receive a `DetailError`. The \"before any I/O\" guarantee holds at the transform layer but not at the CLI confirm.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk merge-steps-executor` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply merge-steps-executor` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-f0a3c45f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `merged` Step assembly in step 2 (`merge_steps`, \"Assemble the `merged` Step\") enumerates exactly which fields the f",
+      "body": "The `merged` Step assembly in step 2 (`merge_steps`, \"Assemble the `merged` Step\") enumerates exactly which fields the fold carries \u2014 `title`, `files`, `creates`, `change_type`, `complexity`, plus `id`/`depends_on`/`detail` \u2014 and silently omits `features` (and `gate`, `enforce_test_authoring`). `Step.features` is the live plan\u2194feature-registry linkage the recently-landed feature-health/smell checks key on; folding a member that declared `features: [X]` into a merged step that defaults `features=[]` drops that linkage, so feature X can read as unimplemented to the feature-ref/smell checks the merge's own completeness tail then re-chews.",
+      "suggested_action": "specify that the merged step unions the members' `features` (and carries forward `gate`/`enforce_test_authoring`) so no feature linkage is lost in the fold.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "merged-step-features"
+    },
+    {
+      "id": "plan-plan-completeness-550a38f7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The convergence argument in \"A merged step takes the dominant `change_type`\" / \"The prose must match the type\" rests on ",
+      "body": "The convergence argument in \"A merged step takes the dominant `change_type`\" / \"The prose must match the type\" rests on the re-author producing **integrated, type-pure** prose (the mixed-step audit keys on prose, not the `change_type` field), yet the only deterministic lever \u2014 the `${prior_body_block}` prompt text specified in step 2 (\"### Prior detail bodies being merged (combine these into one coherent file)\") \u2014 carries no instruction to absorb lower-ranked members' work as incidental detail under the dominant type rather than as a labeled \"Refactor\" section. With the steer absent, a stapled re-author leaves a standing mixed-step finding on every re-audit (and churns the loop once `granularity-split` becomes apply-eligible) \u2014 the exact failure the rule exists to prevent.",
+      "suggested_action": "specify that the `${prior_body_block}` prompt section instructs the re-author to weave folded members' work into the dominant type's narrative (no labeled standalone refactor section), so the combine output is type-pure.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "prior-body-integration"
+    },
+    {
+      "id": "plan-plan-completeness-186bae3a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture's \"Partial-failure posture\" paragraph commits to a substantive leave-and-resume behavior \u2014 on a re-auth",
+      "body": "The Architecture's \"Partial-failure posture\" paragraph commits to a substantive leave-and-resume behavior \u2014 on a re-author failure after the pre-author mutations, `merge_steps` leaves the merged step renumbered-but-undetailed, siblings renamed, and the folded-away files as orphan `NN-` files for ids that no longer exist, recoverable only by manual orphan deletion \u2014 but no acceptance criterion locks it and step 2's `TestMergeSteps` exercises only `test_unsafe_set_raises_before_mutation` (pre-mutation abort), never a mid-re-author failure leaving orphans. The operator-facing manual-cleanup hazard is unverified.",
+      "suggested_action": "add an acceptance criterion (and a step-2 test concept driving a failing invoker) pinning the leave-and-resume orphan posture and its recovery path.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "partial-failure-posture"
+    },
+    {
+      "id": "plan-plan-completeness-c96a45b2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2's combine collects `folded_paths`/prior bodies only for members where `s.detail` is set (`s.id in set(merge_ids) ",
+      "body": "Step 2's combine collects `folded_paths`/prior bodies only for members where `s.detail` is set (`s.id in set(merge_ids) and s.detail`), but a merge requires only an all-PENDING set \u2014 which may include PENDING-but-**undetailed** members. The all-undetailed case (empty `$prior_body` \u2192 the re-author authors the merged step fresh from its assembled fields) and the partially-detailed case (combine only the available bodies) are implied by the `s.detail` filter but never named, so a reviewer cannot tell intended-behavior from oversight.",
+      "suggested_action": "name the partially-/un-detailed-member case in step 2 and confirm the re-author authors fresh from the merged fields when some/all members lack a detail body.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "undetailed-member-case"
+    },
+    {
+      "id": "plan-plan-completeness-c8e85f62",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The combine deliberately feeds **every** folded member's full body through `$prior_body` with no `_MAX_PROMPT_FILE_BYTES",
+      "body": "The combine deliberately feeds **every** folded member's full body through `$prior_body` with no `_MAX_PROMPT_FILE_BYTES` truncation (step 2 + Risks \"Naively stapling\u2026\") \u2014 a merge-only path split never exercises (split creates, never combines). The design names no upper bound or degradation behavior when the concatenated member bodies are large enough to strain the model's prompt/context budget, even though the executor accepts arbitrary contiguous sets.",
+      "suggested_action": "acknowledge the practical member-count/size ceiling for the untruncated `$prior_body` combine (or state graceful handling), so the no-truncation guarantee is bounded rather than unstated.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "combined-prompt-size"
+    },
+    {
+      "id": "plan-plan-completeness-4d57b7d1",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The CLI section's \"`--steps` repeated (\u22652 ids), validate contiguity + chain before any I/O\" overstates the CLI layer: st",
+      "body": "The CLI section's \"`--steps` repeated (\u22652 ids), validate contiguity + chain before any I/O\" overstates the CLI layer: step 3's `cmd_merge` guards only `len(set(ids)) < 2`, and contiguity/connectivity are validated inside `_apply_step_merge` within `merge_steps`. Consequently the TTY `_confirm_merge` gate fires *before* contiguity is ever checked \u2014 an operator can confirm a gapped/disjoint merge and only then receive a `DetailError`. The \"before any I/O\" guarantee holds at the transform layer but not at the CLI confirm.",
+      "suggested_action": "either move a contiguity/connectivity pre-check into `cmd_merge` ahead of `_confirm_merge`, or soften the body/acceptance wording to credit the orchestrator transform (not the CLI) with contiguity validation.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "validate-before-io"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-f0a3c45f": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: added to the dominant-`change_type` Architecture paragraph that the merged step unions its members' `features` and carries forward `gate`/`enforce_test_authoring` so no per-step linkage is dropped in the fold.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-550a38f7": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: in \"The prose must match the type\" added that the `${prior_body_block}` prompt section (step 2) must instruct the re-author in-prompt to weave folded members' work into the dominant type's narrative with no labeled standalone refactor section, making the combine output type-pure.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-186bae3a": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: added an `## Acceptance criteria` bullet pinning the leave-and-resume orphan posture (renumbered-but-undetailed merged step, renamed siblings, orphan folded-away files) and its manual-cleanup recovery path, verified by a step-2 test.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-c96a45b2": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-c8e85f62": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: bounded the `$prior_body` no-truncation guarantee in the Architecture \"Detail-file handling\" paragraph with a practical member-count/size ceiling \u2014 small advisor-driven folds stay within budget, no per-member cap or summarization fallback is added, and a pathological oversized set fails loudly under the existing leave-and-resume posture rather than degrading silently.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-4d57b7d1": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-merge-steps-executor.md`: reworded the CLI section to credit `_apply_step_merge`/`merge_steps` (not the CLI) with contiguity + connectivity validation, noting `cmd_merge` guards only `len(set(ids)) < 2` and that the check runs after `_confirm_merge`.",
+      "halt_reason": ""
+    }
+  }
+}

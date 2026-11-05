@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-118d9304": {
+      "code_anchor": "review.py:_code_reveals_split_recommendations",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/code-reveals-a-split-detector/02-document-code-grounded-split-producer.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/code-reveals-a-split-detector/02-document-code-grounded-split-producer.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-3583b5cb": {
+      "code_anchor": "plan_tool/review.py:_code_reveals_split_recommendations",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/code-reveals-a-split-detector/03-close-backlog-70-last-arm-its-t2-roll-up.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/code-reveals-a-split-detector/03-close-backlog-70-last-arm-its-t2-roll-up.md",
+      "reason": "code anchor `plan_tool/review.py:_code_reveals_split_recommendations` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260710-051223-completeness"
+}

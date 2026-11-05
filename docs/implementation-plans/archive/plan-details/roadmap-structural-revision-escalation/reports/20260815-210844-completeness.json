@@ -1,0 +1,165 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-revision-escalation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-revision-escalation.md",
+  "created_at": "2026-08-15T21:08:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0fcaea4aa0776b1a067a71b9dce078b58475abf96a65ad2ef54c1c8917147bcd",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "afb753dd86d26eb2bc1506485247fffc072a60ec99c386bacda969df7e325a64",
+    "CLAUDE.md": "8fb431c12858a1d577ed60bde3d7a0e58711446a761d9638380f8cc6cd1395f1",
+    "DATA_CONTRACT.md": "2e76c419aa8d6695fbd02934738ec3e5b0b1dbfd1d6ec3591e3d7e859a8ea8f8",
+    "README.md": "1dbf5858642e538412558320782222faea1bc8032c6ffa40a4e8f25c9f420c50",
+    "ROADMAP_FORMAT.md": "94698942b45ed66579623b3f087a3815a38201bbb3990f6e9667a3ede9000191",
+    "RUNBOOK.md": "7bac353501c2061704daf71186b17d41833a882f4c8b88b84a9d9937a2aacd66",
+    "TESTING.md": "d97def2a36eb1b704077041dc2d2cecb8482cdfa29d061991a8014c3108ec3bc",
+    "docs/ARCHITECTURE.md": "1146090e259902042581ba8cda2d09c28858b37049b5ea6fa5a85a27e054dbb7",
+    "docs/ROADMAP_WALKTHROUGH.md": "67be7883e9d0344cc713ebd2b7992f2eb4815e51e282c00724d5e3ad41ad184e",
+    "docs/cli/roadmap.md": "2c16183a136b6c8991e9067de5b9644ae76506dfa5dd388fff36bc7f321ba2b6",
+    "plan_tool/cli/__init__.py": "af8f869d1ce82b395e0d32ed15ade91d351d28b9f2316404698e528de4b20036",
+    "plan_tool/cli/roadmap_cmd.py": "53f84fd678c24e4ab76dea1dc1837e74b86932e149d0d8861d47fa0db4db06df",
+    "plan_tool/roadmap_artifacts.py": "078e89f9b700ef972ef698b0ddad9758b65835534307ccabf9f9bb93e9a0bbea",
+    "plan_tool/roadmap_revision.py": "e08406219dad9721726d64f41b657d97371ae52d5f834b22a92b777d64d03e42",
+    "plan_tool/run_log.py": "bb9a2b8c5c0808dd36fca449e947a8c144dcf5452d18098b28abf0972ae00da0",
+    "tests/cli/package_surface_help.golden.txt": "e1e971be8e9e962a3cec8764bd3b0aa5b790d40b648a091d439add7af2f21ebb",
+    "tests/cli/test_roadmap_cmd.py": "bf9b79187aebb88fdbe5f8c0a5d04de523ebabe179c0c79db9dd6996b08bd921",
+    "tests/test_roadmap_artifacts.py": "2e82e3e1d31649f0b632d8b9cc63f7029ee716f1e96c1f884b070d1a9b748d9e",
+    "tests/test_roadmap_format.py": "a527a6a855129580d7b50a28aa86b782b1b90a7b1071324ce2c698f6336abece",
+    "tests/test_roadmap_revision.py": "e8b13fe2173908ee0740ce156ce75063863fed038a9898d2b4b8fb2d3ded4507",
+    "tests/test_run_log.py": "edc0c54b94f4bbaa957345bd24233b9d89c2bd4c21b87aa59f8d88a569718b97"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md": "acff9a5dcfcd2e55371f7f371745af52bc87879fa96c9c5efd8ec4616f2c611d",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md": "511677b45e1fb4885f95fb9069adf3c57d5010ac2af748b572f6f79874b4003c",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md": "aef9031e2737ba832ac4f2367d1facee7e27082c1be507e12d111f948dca8249",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md": "17617f41317dae7acb99fa1816e765391eeae2c449e39a3fd7579cb28b70874b",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-extract-behavior-preserving-roadmap.md": "250b1cd21a6a2964d6403a8762390f6c5f3585f45a5f3bdad1f7e44c75982333",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-wire-exclusive-escalation-creation-log.md": "b0727c33d482a29002873ff40359dfe5bf942b7c7cba37b7530f107ee341754a",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/07-document-escalation-receipts-scope.md": "9f0bf0e2177081d95234fe098d419223cd6f571f7201863375f47525e0e9bea3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Escalation Receipt\n\n`roadmap-structural-revision-escalation` \u00b7 generated 2026-08-15T21:08:43Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `f3b039b5cf1ed58619e6aab52a54ff9ee03b38a5e817fab98d1adfad79da09cb`\n- **Detail bundle digest:** `73a52f41012539cf80b7e0c3add80b1ed7afd2f5f9ade367626ed3f64992f0fc`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 99957 bytes (+99957 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.29\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-revision-escalation   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[receipt-interruption-append-boundary]`: Receipt telemetry in the Architecture lifecycle paragraphs, `## Testing`, the receipt-runner acceptance criterion, and step 4\u2019s `## Implementation`, `## Tests`, and `## Acceptance criteria` requires exactly one preflight/result/`run_end` sequence after startup. `plan_tool/run_log.py:_append_jsonl_line` can receive `KeyboardInterrupt` after `os.write` persists an event but before its caller returns, so step 4 cannot know whether to preserve the current event or append it again; the stated interrupted sequence can duplicate or lack its matching terminal record.\n  - Fix: Define the signal-during-event-append outcome and distinguish it from an interruption between lifecycle phases, so the runner never claims an exact redacted pair it cannot establish\n- MEDIUM `[selector-preflight-discriminator]`: Architecture\u2019s selector contract and preflight-table row 2 require distinct `malformed-selector` and `unknown-artifact` outcomes, while step 1 (`Extract behavior-preserving shared feedback selector primitives`) preserves one shared parser and step 4 consumes it for redacted lifecycle routing; step 6 (`Wire exclusive escalation creation and log-free receipt views`) delegates that routing to the runner. At HEAD, `plan_tool/roadmap_revision.py:parse_feedback_selector` exposes only free-form `RevisionContractError`, so the runner must either duplicate selector grammar or inspect error text to choose the required verdict.\n  - Fix: Define a typed shared selector outcome that distinguishes malformed syntax from an unknown stage without retaining raw input, preserve the local-revision exception surface through an adapter, and make runner and CLI tests consume that outcome.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]`: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae3effe6]`: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c44534ae]`: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7eaf41f7]`: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5b894c9a]`: The plan's `## Acceptance criteria` names `run_end`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4e369a22]`: The plan's `## Acceptance criteria` names `runlogwriter.start()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step3-files-coherence-c681c80f]`: The detail body for step 3 cites `plan_tool/roadmap_escalation_selection.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/roadmap_escalation.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Escalation Receipt\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `f3b039b5cf1ed58619e6aab52a54ff9ee03b38a5e817fab98d1adfad79da09cb`\n- **Detail bundle digest:** `73a52f41012539cf80b7e0c3add80b1ed7afd2f5f9ade367626ed3f64992f0fc`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[receipt-interruption-append-boundary]`: Receipt telemetry in the Architecture lifecycle paragraphs, `## Testing`, the receipt-runner acceptance criterion, and step 4\u2019s `## Implementation`, `## Tests`, and `## Acceptance criteria` requires exactly one preflight/result/`run_end` sequence after startup. `plan_tool/run_log.py:_append_jsonl_line` can receive `KeyboardInterrupt` after `os.write` persists an event but before its caller returns, so step 4 cannot know whether to preserve the current event or append it again; the stated interrupted sequence can duplicate or lack its matching terminal record.\n- MEDIUM `[selector-preflight-discriminator]`: Architecture\u2019s selector contract and preflight-table row 2 require distinct `malformed-selector` and `unknown-artifact` outcomes, while step 1 (`Extract behavior-preserving shared feedback selector primitives`) preserves one shared parser and step 4 consumes it for redacted lifecycle routing; step 6 (`Wire exclusive escalation creation and log-free receipt views`) delegates that routing to the runner. At HEAD, `plan_tool/roadmap_revision.py:parse_feedback_selector` exposes only free-form `RevisionContractError`, so the runner must either duplicate selector grammar or inspect error text to choose the required verdict.\n\n### Files coherence\n\n- INFO: step 3 detail cites `plan_tool/roadmap_escalation_selection.py` resembling declared `plan_tool/roadmap_escalation.py` (typo/stale path?)\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `130`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `2`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `run_end`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `runlogwriter.start()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-cac7632c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Receipt telemetry in the Architecture lifecycle paragraphs, `## Testing`, the receipt-runner acceptance criterion, and s",
+      "body": "Receipt telemetry in the Architecture lifecycle paragraphs, `## Testing`, the receipt-runner acceptance criterion, and step 4\u2019s `## Implementation`, `## Tests`, and `## Acceptance criteria` requires exactly one preflight/result/`run_end` sequence after startup. `plan_tool/run_log.py:_append_jsonl_line` can receive `KeyboardInterrupt` after `os.write` persists an event but before its caller returns, so step 4 cannot know whether to preserve the current event or append it again; the stated interrupted sequence can duplicate or lack its matching terminal record.",
+      "suggested_action": "Define the signal-during-event-append outcome and distinguish it from an interruption between lifecycle phases, so the runner never claims an exact redacted pair it cannot establish",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-interruption-append-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-bf44de10",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture\u2019s selector contract and preflight-table row 2 require distinct `malformed-selector` and `unknown-artifact` ",
+      "body": "Architecture\u2019s selector contract and preflight-table row 2 require distinct `malformed-selector` and `unknown-artifact` outcomes, while step 1 (`Extract behavior-preserving shared feedback selector primitives`) preserves one shared parser and step 4 consumes it for redacted lifecycle routing; step 6 (`Wire exclusive escalation creation and log-free receipt views`) delegates that routing to the runner. At HEAD, `plan_tool/roadmap_revision.py:parse_feedback_selector` exposes only free-form `RevisionContractError`, so the runner must either duplicate selector grammar or inspect error text to choose the required verdict.",
+      "suggested_action": "Define a typed shared selector outcome that distinguishes malformed syntax from an unknown stage without retaining raw input, preserve the local-revision exception surface through an adapter, and make runner and CLI tests consume that outcome.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "selector-preflight-discriminator",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "f3b039b5cf1ed58619e6aab52a54ff9ee03b38a5e817fab98d1adfad79da09cb",
+      "detail_bundle_digest": "73a52f41012539cf80b7e0c3add80b1ed7afd2f5f9ade367626ed3f64992f0fc",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md",
+          "state": "present",
+          "digest": "acff9a5dcfcd2e55371f7f371745af52bc87879fa96c9c5efd8ec4616f2c611d"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md",
+          "state": "present",
+          "digest": "511677b45e1fb4885f95fb9069adf3c57d5010ac2af748b572f6f79874b4003c"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md",
+          "state": "present",
+          "digest": "aef9031e2737ba832ac4f2367d1facee7e27082c1be507e12d111f948dca8249"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md",
+          "state": "present",
+          "digest": "17617f41317dae7acb99fa1816e765391eeae2c449e39a3fd7579cb28b70874b"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-extract-behavior-preserving-roadmap.md",
+          "state": "present",
+          "digest": "250b1cd21a6a2964d6403a8762390f6c5f3585f45a5f3bdad1f7e44c75982333"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-wire-exclusive-escalation-creation-log.md",
+          "state": "present",
+          "digest": "b0727c33d482a29002873ff40359dfe5bf942b7c7cba37b7530f107ee341754a"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/07-document-escalation-receipts-scope.md",
+          "state": "present",
+          "digest": "9f0bf0e2177081d95234fe098d419223cd6f571f7201863375f47525e0e9bea3"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 99957,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.2857142857142857,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

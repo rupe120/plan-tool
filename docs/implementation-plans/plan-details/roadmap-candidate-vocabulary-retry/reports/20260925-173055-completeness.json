@@ -1,0 +1,79 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-vocabulary-retry",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-vocabulary-retry.md",
+  "created_at": "2026-09-25T17:30:55Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2d5e2dd2ffafe93cc5b111fbdf1c539073578f4f360699dbb0d768d8b4d6ed61",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "c3740d565b03ab0cf84a0e70bda125195045357e9094c63b497175df7334109b",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "16318b8b7603c6910d1d607fe69647fff27688ccdd8f57de47344482534734de",
+    "plan_tool/roadmap_candidate_context.py": "f1dfc225b217b5a50cd2b6a7b96bb3ac681007cd68a2d7a2bb0d0962fdf2f164",
+    "plan_tool/roadmap_candidate_run.py": "581c7bf1b585939688839f47169ddf03eafa4151c224ebeb6b5af6018ddab71f",
+    "tests/test_roadmap_candidate_run.py": "bcc39ec078d2710326c882c1bc869cbf1c17ef2e9b6e3c2b3933374e763676de"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md": "9dfb4c5cbc73bc0edfda18d7feae9a8864e42bb13a83b82074805935187cc50c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md": "d09f349156e4bfdec55b735c8cfec4118ee26a013e900b5fe754cfdb1957aeaa",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md": "01a397d69a7c7e948e2e7d399aa71dd55ed9de6eb9f4e2e4ad6db808b31d29cc"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Vocabulary Retry\n\n`roadmap-candidate-vocabulary-retry` \u00b7 generated 2026-09-25T17:30:55Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-0d91f46c]` [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-398bb909]` [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d1d835d]` [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-84586581]` [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-candidate-vocabulary-retry` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Vocabulary Retry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "2d5e2dd2ffafe93cc5b111fbdf1c539073578f4f360699dbb0d768d8b4d6ed61",
+    "detail_bundle_digest": "54bf6fa2ef52105510f3e9c4055083b1a8f8704d5fb76d23fa8b4c1c1d5c82c9",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "51eb3ef89135657369e9b153c1f5efc06373814a60c81ed86c53bfff5ff08ef7",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

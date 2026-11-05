@@ -1,0 +1,247 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-immutable-candidate-versions",
+  "plan_path": "docs/implementation-plans/2-roadmap-immutable-candidate-versions.md",
+  "created_at": "2026-09-01T03:01:23Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "356e00fb398f1ed66d41fefd944b3b6c54ac69172e25734e5158b673418ecd96",
+  "code_fingerprint": {
+    "BACKLOG.md": "bc10798b3fd3d15deb2a9aeee5b393d42dec8f07fafbe8906f30be1745e1c10d",
+    "CAPABILITIES.md": "e9a842fb50858d4dcb315779dc2934975b711fe086dbac60248ba5335c30ebc0",
+    "CLAUDE.md": "b788c7ca9b3aa5415ffe7c0b069e40e9e5fb561af4f7e77f0af8efd9f7a6575b",
+    "ROADMAP_FORMAT.md": "33ad5d860d12609dcb1667738dafe31ee8ef11463e154d5346eeb0740bbd0800",
+    "TESTING.md": "3bec00214c517c6badfcf3c73cefe4956aa7706f3a57344da351cb679cf5f41f",
+    "plan_tool/cli/roadmap_cmd.py": "86772212d4cbad2b1905064ae220ea1d432d14ce20006348326f28065e088a3f",
+    "plan_tool/roadmap.py": "4c1f21aa88b5b518579f0b45bbb177e26260d284e80beb883b81524fee8c0b1f",
+    "plan_tool/roadmap_feedback_reopen.py": "bf57464daccb221b0ebf76423773ba78db963244bfced0ec5616b24f0ef1d30c",
+    "plan_tool/roadmap_impact_snapshot.py": "cbb751d933a307d246120003686f6d9b4325739ae3f3b9511e512d9e9c0ac9da",
+    "plan_tool/roadmap_revision_publish.py": "f46f41ed1852392dd83402ff16f22e0a578be4a3bfaca6f05c88939d93cc46b1",
+    "plan_tool/roadmap_revision_run.py": "dda8a8added6a241baa07e04c89fcd9951af55d451040dab9a13ad9780c01be9",
+    "plan_tool/roadmap_structural_revision_run.py": "df0283b5a7c6de1d4d1c0af43ee580b68874f022754d1ffbf06f16492e5573b4",
+    "plan_tool/roadmap_view.py": "64311d5eb38b9f064c7c2908dafdc45e13c992e0dd011bbabd1566ebb085d7cf",
+    "tests/cli/test_roadmap_cmd.py": "ec9d60c19678d080cce92979e8ea5babfeeb0e9077a86f13afffed80b0f418f3",
+    "tests/test_roadmap.py": "ccea2b20b3ca4f2e203e807eae4c4de8b7adad8b603920153998e448c787d589",
+    "tests/test_roadmap_feedback_reopen.py": "6ce45a444965621c356dc368658274bf5a5f6322e2696fa10c5e6bf2985544b5",
+    "tests/test_roadmap_format.py": "5bdb71dcc4ad12cc3f1bc48aec3551df325977f8f68593ad2982be4a93427e77",
+    "tests/test_roadmap_impact_run.py": "b90b329327f3bfdb0bfcddbe6db995ed1c409d62d5a3a4afdaff2388588e6bc9",
+    "tests/test_roadmap_impact_snapshot.py": "06341c489709ca3ef428869cb8499bc31eecc0b50b950e3022343458f5d47aa8",
+    "tests/test_roadmap_revision_publish.py": "7b6f082bf3dddace8c0e7787945d79a057bc2a408a5dd32d837b83221ae765c8",
+    "tests/test_roadmap_revision_run.py": "f86f4afb6bc63a23f890e9e7df69d5c9ac322b5a02e46f693783253acdad1936",
+    "tests/test_roadmap_structural_revision_run.py": "f07286d45200cfcac80ecc6a38ccce48e16008239369407a3ab790684adc63b7",
+    "tests/test_roadmap_view.py": "38b33d60f3eafb026c615c237b2fa4e50688f33d44dc173b1c31de2627d8873e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md": "f2ffc306ab9aefd94f129aebf8fa68122b6591545ba208ff6d16a93d53dfd75f",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md": "810f61e9e5535d3601fcd5f3c04c55b5f971432185502baf0960b9593f4b0da9",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-define-exact-immutable-root-candidate.md": "fd523707bab4780db8af4e88ab23ae6823bdbc8887e3723d5f3ec2615f8a67fd",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-enroll-exact-immutable-root-atomically.md": "7c0b6fbfb4f3bdbd2aeed83ad7c78c0dc0feaaf4c00f94aafcfbdd80cea6c8e4",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-build-one-lineage-bounded-candidate.md": "40434770648f35a47cca7dd9359b7ff19f4a417be491800228ee22ef799218dd",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-apply-capsule-authorized-deltas.md": "ea9e106387dd421cbc47f9613b1dcf14adb13da70182fdbe10f478a60f183500",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-run-initial-bounded-candidate-proposal.md": "75d105301e4f0f9460dcd2bb25bbabac6093d579d33007af3f71ecd1bdfddc32",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-generate-diff-anchored-questions-record.md": "342e5f0237d21a47dba511a92ff60e9050030e91ce163176e4b49e567ab8fc9e",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-promote-only-review-seal-exact.md": "1fc6e4234eed3503af463ae946c2ec246898038cb0b3640672ee65173fe6c707",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-route-roadmap-views-through-accepted.md": "5f2cc4af0f9959f50955dd258c9650c0c87c2e88332ad37e14aa237b5a502b01",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md": "77c94c18ce6e4540cf49e5ecfc0d4ad951bba121a21f9843ec63b598db74ab17",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md": "2449bff36fb84baffd444c689dd937304871cbfc3d97cad4f94108f2ab50dc58"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Immutable Candidate Versions\n\n`roadmap-immutable-candidate-versions` \u00b7 generated 2026-09-01T03:01:23Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-immutable-candidate-versions   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[complete-gate-boundary-type-purity]` [confidence: limited]: Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) combines the behavior-preserving shared-evaluator extraction in `Implementation \u2014 Use the existing gate behavior once` with the new `CompleteRoadmapGateInput` and `check_complete_roadmap_gates()` feature in `Add one complete candidate evidence value` and `Expose a direct complete-bundle checker`. The separate route tests characterize compatibility, but do not make this mixed code delivery type-pure.\n  - Fix: split the shared evaluator extraction into a behavior-preserving step, then add the direct complete-bundle API in a dependent feature step.\n- MEDIUM `[local-context-source-text]` [confidence: limited]: The Overview says `roadmap_revision.py:build_stage_revision_context` \u201comits source text from its typed context,\u201d but `roadmap_revision.py:StageProseSpan` defines a \u201crow-owned source block\u201d with `text`, and `StageRevisionContext.prose_spans` carries those blocks from the builder. This is a false grounding claim about the local boundary.\n  - Fix: state that the local route retains selected row-owned source blocks, or narrow the claim to the full artifact content it actually omits.\n- HIGH `[promotion-writer-lease]` [confidence: limited]: Step 9 (`Promote only a review seal\u2019s exact candidate by replacing the accepted-head selector while preserving every version file`) says `promote_review_seal()` \u201cmust take an explicit seal reference, roadmap identity, and active `RoadmapWriterToken`,\u201d while step 11 (`Expose enrollment, candidate review, answers, and promotion in roadmap CLI without changing the HTML overwrite or other modes`) says its handlers forward \u201cthe slug, selected identity, resolved paths, and optional invoker\u201d and that promotion forwards \u201cone seal identity.\u201d No step assigns acquisition and lifetime of the required matching token, so the CLI happy path can either fail before promotion or use an unstated second guard.\n  - Fix: assign one owner for acquiring the existing roadmap writer guard and require it to hold and pass the matching token through promotion\u2019s final journal recheck; align the command contract and dispatch test to that boundary.\n- MEDIUM `[capsule-full-row-body]` [confidence: limited]: **Architecture \u2014 Deterministic bounded context** promises \u201cthe full bodies of rows reached through declared relation closure,\u201d including each expanded row\u2019s \u201cfull body,\u201d but step 5 (`Build one lineage-bounded candidate context with a single recorded expansion`) says full members carry only the \u201ccomplete typed row value.\u201d `plan_tool/roadmap_artifacts.py` keeps prose separately in `RoadmapArtifact.body`, and `plan_tool/roadmap_revision.py:StageProseSpan` shows that row-owned source prose can carry material context; the proposed capsule therefore cannot prove it supplied the promised full bodies.\n  - Fix: define and deliver how reachable row-owned source prose participates in initial and expanded capsule membership, receipts, byte accounting, and tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-candidate-versions` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Immutable Candidate Versions\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[complete-gate-boundary-type-purity]` [confidence: limited]: Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) combines the behavior-preserving shared-evaluator extraction in `Implementation \u2014 Use the existing gate behavior once` with the new `CompleteRoadmapGateInput` and `check_complete_roadmap_gates()` feature in `Add one complete candidate evidence value` and `Expose a direct complete-bundle checker`. The separate route tests characterize compatibility, but do not make this mixed code delivery type-pure.\n- MEDIUM `[local-context-source-text]` [confidence: limited]: The Overview says `roadmap_revision.py:build_stage_revision_context` \u201comits source text from its typed context,\u201d but `roadmap_revision.py:StageProseSpan` defines a \u201crow-owned source block\u201d with `text`, and `StageRevisionContext.prose_spans` carries those blocks from the builder. This is a false grounding claim about the local boundary.\n- HIGH `[promotion-writer-lease]` [confidence: limited]: Step 9 (`Promote only a review seal\u2019s exact candidate by replacing the accepted-head selector while preserving every version file`) says `promote_review_seal()` \u201cmust take an explicit seal reference, roadmap identity, and active `RoadmapWriterToken`,\u201d while step 11 (`Expose enrollment, candidate review, answers, and promotion in roadmap CLI without changing the HTML overwrite or other modes`) says its handlers forward \u201cthe slug, selected identity, resolved paths, and optional invoker\u201d and that promotion forwards \u201cone seal identity.\u201d No step assigns acquisition and lifetime of the required matching token, so the CLI happy path can either fail before promotion or use an unstated second guard.\n- MEDIUM `[capsule-full-row-body]` [confidence: limited]: **Architecture \u2014 Deterministic bounded context** promises \u201cthe full bodies of rows reached through declared relation closure,\u201d including each expanded row\u2019s \u201cfull body,\u201d but step 5 (`Build one lineage-bounded candidate context with a single recorded expansion`) says full members carry only the \u201ccomplete typed row value.\u201d `plan_tool/roadmap_artifacts.py` keeps prose separately in `RoadmapArtifact.body`, and `plan_tool/roadmap_revision.py:StageProseSpan` shows that row-owned source prose can carry material context; the proposed capsule therefore cannot prove it supplied the promised full bodies.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-immutable-candidate-versions` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-1df19182",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) combines th",
+      "body": "Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) combines the behavior-preserving shared-evaluator extraction in `Implementation \u2014 Use the existing gate behavior once` with the new `CompleteRoadmapGateInput` and `check_complete_roadmap_gates()` feature in `Add one complete candidate evidence value` and `Expose a direct complete-bundle checker`. The separate route tests characterize compatibility, but do not make this mixed code delivery type-pure.",
+      "suggested_action": "split the shared evaluator extraction into a behavior-preserving step, then add the direct complete-bundle API in a dependent feature step.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "complete-gate-boundary-type-purity",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-d492a31e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Overview says `roadmap_revision.py:build_stage_revision_context` \u201comits source text from its typed context,\u201d but `ro",
+      "body": "The Overview says `roadmap_revision.py:build_stage_revision_context` \u201comits source text from its typed context,\u201d but `roadmap_revision.py:StageProseSpan` defines a \u201crow-owned source block\u201d with `text`, and `StageRevisionContext.prose_spans` carries those blocks from the builder. This is a false grounding claim about the local boundary.",
+      "suggested_action": "state that the local route retains selected row-owned source blocks, or narrow the claim to the full artifact content it actually omits.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "local-context-source-text",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-3bfbce8f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 9 (`Promote only a review seal\u2019s exact candidate by replacing the accepted-head selector while preserving every ver",
+      "body": "Step 9 (`Promote only a review seal\u2019s exact candidate by replacing the accepted-head selector while preserving every version file`) says `promote_review_seal()` \u201cmust take an explicit seal reference, roadmap identity, and active `RoadmapWriterToken`,\u201d while step 11 (`Expose enrollment, candidate review, answers, and promotion in roadmap CLI without changing the HTML overwrite or other modes`) says its handlers forward \u201cthe slug, selected identity, resolved paths, and optional invoker\u201d and that promotion forwards \u201cone seal identity.\u201d No step assigns acquisition and lifetime of the required matching token, so the CLI happy path can either fail before promotion or use an unstated second guard.",
+      "suggested_action": "assign one owner for acquiring the existing roadmap writer guard and require it to hold and pass the matching token through promotion\u2019s final journal recheck; align the command contract and dispatch test to that boundary.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "promotion-writer-lease",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-cc7401d2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "**Architecture \u2014 Deterministic bounded context** promises \u201cthe full bodies of rows reached through declared relation clo",
+      "body": "**Architecture \u2014 Deterministic bounded context** promises \u201cthe full bodies of rows reached through declared relation closure,\u201d including each expanded row\u2019s \u201cfull body,\u201d but step 5 (`Build one lineage-bounded candidate context with a single recorded expansion`) says full members carry only the \u201ccomplete typed row value.\u201d `plan_tool/roadmap_artifacts.py` keeps prose separately in `RoadmapArtifact.body`, and `plan_tool/roadmap_revision.py:StageProseSpan` shows that row-owned source prose can carry material context; the proposed capsule therefore cannot prove it supplied the promised full bodies.",
+      "suggested_action": "define and deliver how reachable row-owned source prose participates in initial and expanded capsule membership, receipts, byte accounting, and tests.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "capsule-full-row-body",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "c1ce1543187dc56cc4d88f9d2765adc48cf4b0d6d1c8606e949341218943016b",
+    "detail_bundle_digest": "b9273d64179797174e28ade16cb05484fc9850cfd7162abad98754fc41d4c160",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md",
+        "state": "present",
+        "digest": "f2ffc306ab9aefd94f129aebf8fa68122b6591545ba208ff6d16a93d53dfd75f"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md",
+        "state": "present",
+        "digest": "810f61e9e5535d3601fcd5f3c04c55b5f971432185502baf0960b9593f4b0da9"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-define-exact-immutable-root-candidate.md",
+        "state": "present",
+        "digest": "fd523707bab4780db8af4e88ab23ae6823bdbc8887e3723d5f3ec2615f8a67fd"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-enroll-exact-immutable-root-atomically.md",
+        "state": "present",
+        "digest": "7c0b6fbfb4f3bdbd2aeed83ad7c78c0dc0feaaf4c00f94aafcfbdd80cea6c8e4"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-build-one-lineage-bounded-candidate.md",
+        "state": "present",
+        "digest": "40434770648f35a47cca7dd9359b7ff19f4a417be491800228ee22ef799218dd"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-apply-capsule-authorized-deltas.md",
+        "state": "present",
+        "digest": "ea9e106387dd421cbc47f9613b1dcf14adb13da70182fdbe10f478a60f183500"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-run-initial-bounded-candidate-proposal.md",
+        "state": "present",
+        "digest": "75d105301e4f0f9460dcd2bb25bbabac6093d579d33007af3f71ecd1bdfddc32"
+      },
+      {
+        "step_id": 8,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-generate-diff-anchored-questions-record.md",
+        "state": "present",
+        "digest": "342e5f0237d21a47dba511a92ff60e9050030e91ce163176e4b49e567ab8fc9e"
+      },
+      {
+        "step_id": 9,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-promote-only-review-seal-exact.md",
+        "state": "present",
+        "digest": "1fc6e4234eed3503af463ae946c2ec246898038cb0b3640672ee65173fe6c707"
+      },
+      {
+        "step_id": 10,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-route-roadmap-views-through-accepted.md",
+        "state": "present",
+        "digest": "5f2cc4af0f9959f50955dd258c9650c0c87c2e88332ad37e14aa237b5a502b01"
+      },
+      {
+        "step_id": 11,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md",
+        "state": "present",
+        "digest": "77c94c18ce6e4540cf49e5ecfc0d4ad951bba121a21f9843ec63b598db74ab17"
+      },
+      {
+        "step_id": 12,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md",
+        "state": "present",
+        "digest": "2449bff36fb84baffd444c689dd937304871cbfc3d97cad4f94108f2ab50dc58"
+      }
+    ],
+    "source_seed_digest": "6e60306f6c8183a9c60eb6c96cae1350825c2b25a47f2323a59d55c1d0e62058",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

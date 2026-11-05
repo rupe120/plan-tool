@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "plan_slug": "intent-structural-propagation",
+  "plan_path": "docs/implementation-plans/2-intent-structural-propagation.md",
+  "created_at": "2026-08-03T15:07:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "88774982ec16da2618001566bd5ab67eb3b112a579fe6e98b84c3f53c2f4fb68",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "754d85b65b6ce058bceb57f417e391986d3649e81d51a810c9a56cc7efc70f02",
+    "docs/implementation-plans/archive/2-intent-scope-fence.md": "c94d7c0e895dc50cf3cf20eaaa30c3af66ce641b2b5483f0ded39a972e4a696a",
+    "plan_tool/detail.py": "3dcd422db665f871e2178ef5f8416819b34815e8d2f97bd95abe5de087447ed4",
+    "plan_tool/prompts/plan-audit.md": "efeec070b779c35875b986f6174bcd12064912cce4017b559a0c567fb459b910",
+    "plan_tool/reground.py": "9c387480fdc358a7076729cb8d2b76d2c842cc5d8d30e2322466ea161572b8b0",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "plan_tool/scope_out.py": "3caa72e59c5c326da52163e348a32876f1789c23ad32157ff0e71e58c1ba7a00",
+    "tests/test_create.py": "c8164bafbda59ce3a29017bab4a34b4edccb30a893ca372e91dee39207170131",
+    "tests/test_detail.py": "270663a9f46828528754173846632d3cd13f1f3374070533a95ae41b04fca778",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7",
+    "tests/test_scope_out.py": "4f8a22bdbf966fd33cf5b8dbc018e79866dfc78b2a3c67a91d7b4a220abb7998"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/intent-structural-propagation/01-make-split-drop-intent-merge-keep-only.md": "786191ba1d7467455f106558304449c3f66037183679f98de36fd97cce572c39",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/02-carry-plan-step-intent-three-forward.md": "b181a59ce3b6c65217a2a975482808a804c2697ef4710c7e6bca062a805a5c0e",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/03-put-plan-step-intents-conceptual-audit.md": "3d48b2cedb9104f39826405bce48bc282544da7e2777f4ee7a70254598fd27bf",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/04-document-four-intent-rules-discharge.md": "414a5cd9df08507990a45294f425dba8e518362a0d4dc89eed496c13b4566a3c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Intent Structural Propagation\n\n`intent-structural-propagation` \u00b7 generated 2026-08-03T15:07:28Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Convergence \u2014 the completeness audit/apply loop is spinning\n\nThis loop is spinning \u2014 the same region keeps re-surfacing without shrinking. Consider the remedy below before continuing; the diagnosis prints the hand-run recipe, but the one-command remedy is `plan-tool convergence intent-structural-propagation --apply-split` (in-place re-split) or `plan-tool convergence intent-structural-propagation --apply-scope-out` (carve the step out), behind the same apply-or-recommend gate.\n\n```\nconvergence: spinning \u2014 intent-structural-propagation (window 3)\n  completeness: spinning (7 audits)\n  \u2022 presence-nonvalue-set: recurs in 2 of 3 audits; severity medium \u2192 medium (peak medium)\nThe decomposition itself is wrong across steps; re-seed and re-decompose:\n  plan-tool create intent-structural-propagation --from-existing <seed.md> --iterate\n  Hand-author <seed.md> from the plan's current state (annotate can forward-seed it), then re-run the line above.\n```\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run intent-structural-propagation` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Intent Structural Propagation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run intent-structural-propagation` executes the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {}
+}

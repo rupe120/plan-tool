@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "plan_slug": "detail-authoring-quality",
+  "plan_path": "docs/implementation-plans/2-detail-authoring-quality.md",
+  "created_at": "2026-06-27T17:25:21Z",
+  "kind": "detail-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "93e7cacfb9e699cb02e72123e6063c360df6981249bb96660f51d30d297bcdc8",
+  "code_fingerprint": {
+    "DETAIL_FORMAT.md": "56d63e2c70075ebea5e06605477cd82d2cded28775a89ed66c3326047610cd24",
+    "plan_tool/detail.py": "142ad3460139a8034cc50d8c32c58fbd6296e0e6f11611fd6973c09c1d0ef7b8",
+    "plan_tool/prompts/detail-quality.md": "7ba50093dc138ebc374472b070fe4134a34f721d1ecd2757234519439492d40c",
+    "plan_tool/prompts/plan-audit.md": "61abfa2926681eb09ccc3920dbbdfa8ffb181ecc82665ddbe6c926c738c1bbd1",
+    "plan_tool/review.py": "c3b5bd2d764e192ac05498427dc0350ffe09d38c40890d6b957ef2141d81c882",
+    "tests/test_detail.py": "ff1a436c6a8459f52effa06c37ba29ee72683954c51e9634ff65a97a7253278e",
+    "tests/test_review.py": "9a3c8d56f1ac9b247df669e3b6a030d81c8ae7819828d385601dcbabf34c16e1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "I\u2019ll inspect the declared in-scope doc plus the plan/detail files that encode this step, then compare against checked-in code/docs only. I won\u2019t change anything.\nI found the detail-authoring plan files and `DETAIL_FORMAT.md` in the workspace, with `DETAIL_FORMAT.md` already modified. I\u2019m reading the actual plan/detail frontmatter and the relevant doc/code anchors now so the report stays grounded in what\u2019s on disk.\nThe implemented `DETAIL_FORMAT.md` has the new `### Authoring quality` section with the keep/cut table, demotion wording, specificity caveat, and concept-thread phrase boundary. One mismatch I\u2019m checking carefully is whether the plan\u2019s current status/frontmatter reflects that delivered state, and whether any implementation-only guidance was stricter than the actual checked-in doc.\n**Matches intent**\n\n`DETAIL_FORMAT.md` implements step 1\u2019s docs-only intent under `### Authoring quality`: it adds conceptual-altitude guidance, a keep/cut table, demotion language for mechanical detail, specificity preservation, and the recurring concept-thread distinctive phrase rule. It also keeps parser/runtime authority with `plan_tool/detail.py:_REQUIRED_H2_TOKENS`, `plan_tool/detail.py:parse_detail_response`, and `plan_tool/prompts/detail.md`.\n\nThe step\u2019s declared file scope matches the delivered step artifact: only `DETAIL_FORMAT.md` is needed for step 1. Prompt/code changes visible elsewhere are represented by later plan steps, not step 1.\n\n**Plan over-promises**\n\nNone found. The acceptance criteria for step 1 are satisfied by `DETAIL_FORMAT.md:### Authoring quality`, and the doc does not claim new required H2s, parser behavior, auto-rewrite behavior, or blocking lint.\n\n**Plan under-describes**\n\nThe plan frontmatter still marks step 1 as `status: current` even though the checked-in doc now satisfies the step detail and acceptance criteria. That leaves dependent steps appearing blocked by an already-delivered docs step.\n\n## Findings\n\n- HIGH: step 1 (\"Document conceptual altitude and concept phrase rules\") has `status: current`, but `DETAIL_FORMAT.md:### Authoring quality` satisfies the step\u2019s acceptance criteria, so later steps that depend on step 1 remain blocked by stale plan state \u2192 fix: flip step 1 `status` from `current` to `done` (impact: high, complexity: low)\n",
+  "recommendations": [
+    {
+      "id": "step1-detail-reconcile-c77c9b25",
+      "source": "detail-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "step 1 (\"Document conceptual altitude and concept phrase rules\") has `status: current`, but `DETAIL_FORMAT.md:### Author",
+      "body": "step 1 (\"Document conceptual altitude and concept phrase rules\") has `status: current`, but `DETAIL_FORMAT.md:### Authoring quality` satisfies the step\u2019s acceptance criteria, so later steps that depend on step 1 remain blocked by stale plan state",
+      "suggested_action": "flip step 1 `status` from `current` to `done`",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {}
+}

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T13:01:55Z",
+  "kind": "run-reconcile",
+  "step_id": 4,
+  "plan_fingerprint": "77f425d8bacbced45d859e1ce1944e66cc9780270776693673bdba8579a2bb2f",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "e2fae57163a8efe948dd30a121b0635166d7aa131ac492ced24734947ed2c579",
+    "DATA_CONTRACT.md": "c7e90ff770da370e104c27a165334b3e3914c6098ba7546be432cc3f3f1d55ff",
+    "README.md": "afd7e1dd563b4f45d83a062e24a533ec24de6b32f9ebd01f0e4bccb2243c3e17",
+    "TESTING.md": "e50e2805856e5a2f550345be9ba164160b8306349430c50e3571b2163e3b4c4c",
+    "plan_tool/cli/roadmap_cmd.py": "7491a9d50499454eaa7874558573849fe9953e8f7ecea46faba298875705fa75",
+    "plan_tool/roadmap.py": "13ae6ae5c380989ece5aeb236af698a792ae70ce68322c08181a25a94bf2fd86",
+    "plan_tool/run_log.py": "a1dc4492940d7471d25cdca57b8cf0c15334543ff2c928892eb8696334cdd19f",
+    "tests/cli/test_roadmap_cmd.py": "55dd2dfff199482854bcf88543a74c07d31f7ba6053623b18b15b2d12de8b0c1",
+    "tests/test_roadmap.py": "8aa7cf3d7083725f494e5d0d59fdca98e8965af1d4deabb304e12da86162a92e",
+    "tests/test_run_log.py": "1cec984beeb81cec135c614ef0ff0956b6a166d07fd168a8c63babd6e0251564"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 4 \u2014 0 critical / 1 high / 1 medium / 0 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 5 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 2 finding(s).",
+  "recommendations": [
+    {
+      "id": "step4-run-reconcile-54142301",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 4,
+      "title": "`_cmd_roadmap_materialize()` in `plan_tool/cli/roadmap_cmd.py` (step 4 \u201cGive selected and all-eligible --materialize com",
+      "body": "`_cmd_roadmap_materialize()` in `plan_tool/cli/roadmap_cmd.py` (step 4 \u201cGive selected and all-eligible --materialize commands one lifecycle\u201d) records an active-row interrupt as terminal `error` rather than `interrupted`, making durable lifecycle consumers classify Ctrl-C as an unexpected failure",
+      "suggested_action": "complete the lifecycle with `outcome=\"interrupted\", rc=130` in the enclosing `KeyboardInterrupt` path and update `TestMaterializeMode::test_materialize_interrupt_ends_the_owned_lifecycle_before_exit_130` accordingly",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    },
+    {
+      "id": "step4-run-reconcile-bc39cded",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "`TestMaterializeMode::test_selected_materialize_preflight_refusal_records_requested_id_without_phase` in `tests/cli/test",
+      "body": "`TestMaterializeMode::test_selected_materialize_preflight_refusal_records_requested_id_without_phase` in `tests/cli/test_roadmap_cmd.py` (step 4 \u201cGive selected and all-eligible --materialize commands one lifecycle\u201d) omits the nonrecoverable explicit-ID selection path, so the required `preflight-refused` lifecycle and snapshot cleanup are unprotected for current/duplicate rows",
+      "suggested_action": "extend the selected-refusal lifecycle test to assert the same record shape and cleanup for a nonrecoverable explicit plan ID",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

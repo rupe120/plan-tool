@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "plan_slug": "scope-out-executor",
+  "plan_path": "docs/implementation-plans/2-scope-out-executor.md",
+  "created_at": "2026-06-23T04:27:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d7af2cc4370f4bf38e7002cd02f36d9e8ad10b4e0f24bf4fb1c649611bdfa3cb",
+  "code_fingerprint": {
+    "BACKLOG.md": "9af831d179dc7ba60bd14cb8cd6c1ca6553532e6eb3300fb096c74e35c561c85",
+    "CLAUDE.md": "a8725333e1528edb9403717f03bc4064a7f4054db3fdb4f5b3f6beff6910ee0a",
+    "README.md": "7c424d25a855a86a76cb401cfb5d29f51ef7a1be3d6310eea4415805736ece9a",
+    "RUNBOOK.md": "34b31f899da37f1f0624dddf429985aebab4b170d45e5366915b43f049fb8ed1",
+    "integrations/claude/SKILL.md": "b69c9ecdc1840bd1c62412ac8f5958ef94253f5363f055f6a83e1df9b865e0d3",
+    "integrations/codex/SKILL.md": "c4a6c125cefd2044e3a2509b73b6950a2e969cfdd5447b282ff895c1d1810720",
+    "plan_tool/cli/__init__.py": "b8d82640c16132ffcbeaab8e5f5294987d06a9c02ce4163a477768d5b61ae289",
+    "plan_tool/cli/app.py": "20606e04f70d8cfb7491e46399a12dcd3203338f3bb65207998ccf3597891674",
+    "plan_tool/cli/parser.py": "3c4a5db330f00276b4680e81e1d1505e11f17eb0248a9e148bcc6a2e0c26f906",
+    "plan_tool/convergence_diagnosis.py": "0291aadecb5422e7b4f9bd7e78b1aa9cecad2b3f2252faa6013e4f21fb1118b1",
+    "tests/cli/package_surface_help.golden.txt": "dc7d85c8ca2cb00c437be5e77d4b1dacb1e9c2bdd19fde150ab1cf9e8f8a8965",
+    "tests/test_convergence_diagnosis.py": "830d4e878f62d1c9f60cd7c911cc3d53c8a12a0fbbeb704cb61a4344bf71a26a"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Scope Out Executor\n\n`scope-out-executor` \u00b7 generated 2026-06-23T04:27:02Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 5 (5 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] Step 5 (`flip-convergence-scope-out-fork-arm`) makes `plan-tool convergence` print a runnable `plan-tool scope-out <slug> --step N` for any single severe-and-not-improving step, but steps 2\u20133's safe-carve envelope returns `unsafe` whenever a surviving step `depends_on` the carved step (`inbound-dependent`) or any downstream survivor is non-PENDING (`downstream-orphan`, confirmed against `detail._merge_is_safe`). A mid-plan spinning CURRENT step \u2014 the exact case scope-out exists for \u2014 normally has *both*, so the recommended line routinely dead-ends at `unsafe`; the diagnostic never tells the operator the resolved step is structurally uncarvable. \u2014 - `docs/implementation-plans/2-scope-out-executor.md`: amended the Architecture \"Dependency on the advisory plan\" decision to state a resolved single step is not a carvability guarantee and that `render_diagnosis` frames the printed `--step N` line as a preview the executor may refuse.\n- [APPLIED] The CURRENT re-establishment decision (Architecture \"Re-establish a run cursor\", step 2 `narrow-primitive-own-drop-renumber`) states the imperative \"promote the appropriate survivor (the first PENDING after the last DONE) to CURRENT\" without restating the \"and no CURRENT\" guard in its premise. Scope-out's CLI accepts an arbitrary `--step N`, so the carved step is not always the run cursor: carving a PENDING/DONE step while a different survivor is CURRENT yields **two** CURRENT steps (an invalid plan, since the seed/run model assumes a single cursor), and carving the last CURRENT step leaves survivors all-DONE with no PENDING to promote. The confirmed `_seed_initial_step_status` idempotence (it no-ops once any step is non-PENDING) means nothing downstream repairs a double-CURRENT either. \u2014 - `docs/implementation-plans/2-scope-out-executor.md`: scoped the \"Re-establish a run cursor\" Architecture decision to promote a survivor to CURRENT only when the drop removes the plan's sole CURRENT, and to leave an all-DONE survivor set with no CURRENT as a complete plan rather than force-promoting.\n- [APPLIED] The Risks entry \"Partial on-disk state\" and step 2's atomicity section claim \"a crash mid-narrow\" is mitigated by \"dry-run-preview-then-apply + rollback\", but the LIFO journal step 2 describes only unwinds on a **caught Python exception** \u2014 a real process crash (SIGKILL, power loss) between the detail renames and the final `write_plan` runs no rollback and leaves partial on-disk state. The mitigation covers in-process IO errors, not crashes. \u2014 - `docs/implementation-plans/2-scope-out-executor.md`: narrowed the \"Partial on-disk state\" Risks entry to in-process apply failure and named seed-first re-runnability as the crash-recovery path.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[narrow-crash-atomicity]`: The Risks entry \"Partial on-disk state\" claims \"a crash mid-narrow\" is mitigated by \"dry-run-preview-then-apply + rollback\", but step 2 (`narrow-primitive-own-drop-renumber`) builds rollback as an **in-memory** LIFO journal unwound only on a Python exception (its test patches `write_plan` to *raise*). A hard crash (kill/power-loss) between the `detail_renames` moves and the final non-atomic `write_plan` leaves renamed detail files pointing under a stale plan with no recovery \u2014 the journal evaporates. The mitigation covers exceptions, not crashes.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor narrow-crash-atomicity`\n- MEDIUM `[seed-orphan-accumulation]`: Step 3's (`scope-out-orchestrator-seed-first`) seed-first ordering plus `_carved_seed_path`'s collision-suffix writes a fresh `-2`/`-3` seed on every retry after a failed `apply_narrow`; the Architecture calls a single post-crash orphan \"harmless\" but no step de-dupes or cleans the stale base seed a prior failed attempt left behind, so retries accumulate near-duplicate seeds under `plan-seeds/`.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor seed-orphan-accumulation`\n- MEDIUM `[doc-double-write-drift-guard]`: The Risks entry \"Doc double-write\" names the mitigation \"sequence so a watched-file drift guard does not halt mid-run\", but step 6 (`document-shipped-scope-out-actuator`) only adds handoff-presence defensiveness for the co-owned RUNBOOK/CLAUDE paragraphs and never operationalizes any drift-guard ordering for a `plan-tool run` of this plan.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor doc-double-write-drift-guard`\n- MEDIUM `[carved-seed-done-context-framing]`: Step 1 (`deterministic-carved-region-forward`) builds a fresh deterministic emitter that \"mirrors `render_create_seed`'s design\" but serializes only the carved step's body + done-context prose. `render_create_seed` wraps its done-context in an explicit *\"Already implemented (done-context \u2014 do not re-plan)\"* / *\"not to be re-planned\"* framing that tells the `create --from-existing` Claude pass not to re-implement completed work. No step or acceptance criterion requires the carved-region seed to carry that same don't-re-plan framing, so a carved seed that lists what was implemented as ordinary prose risks `create` re-planning the already-done half \u2014 the exact overclaim the run-state-carry decision exists to prevent.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor carved-seed-done-context-framing`\n- MEDIUM `[carved-seed-create-roundtrip]`: The seed is the durable, re-plannable artifact the whole executor exists to produce, yet the integration test in step 4 (`wire-plan-tool-scope-out-cli-command`) stops at \"writes the seed and narrows the plan\" \u2014 no step exercises feeding the emitted `plan-seeds/<plan>-carved-<slug>.md` back through `create --from-existing`. A seed whose shape `create` silently mishandles would pass every test while making the artifact unusable.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor carved-seed-create-roundtrip`\n- MEDIUM `[detail-rename-ordering]`: Step 2 (`narrow-primitive-own-drop-renumber`) chooses to drive the downstream renames \"directly from the preview pairs\" in `apply_narrow` rather than calling `_migrate_downstream_details_after_merge`, but the helper's correctness depends on its **low\u2192high id ordering** plus its overwrite-time `_archive_existing_detail` guard (`detail.py:_migrate_downstream_details_after_merge`); the direct-drive path inherits neither unless `detail_renames` is pinned to ascending old-id order, since each new path is the prior step's still-occupied slot (descending application clobbers). The detail discusses the helper's ordering but never states the constraint for the direct drive.\n  - Address: `plan-tool completeness-apply scope-out-executor --anchor detail-rename-ordering`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n- INFO `[step1-granularity-merge-a5f5459e]`: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-32732139]`: `BACKLOG.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-1776785d]`: `CLAUDE.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-b404ada7]`: `README.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply scope-out-executor` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply scope-out-executor` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (5 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Scope Out Executor\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is under-sampled, not fully validated. Re-run with a higher `--audit-passes`.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 6 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 6 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 6 declared `README.md` not mentioned in detail\n- NIT: step 6 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[narrow-crash-atomicity]`: The Risks entry \"Partial on-disk state\" claims \"a crash mid-narrow\" is mitigated by \"dry-run-preview-then-apply + rollback\", but step 2 (`narrow-primitive-own-drop-renumber`) builds rollback as an **in-memory** LIFO journal unwound only on a Python exception (its test patches `write_plan` to *raise*). A hard crash (kill/power-loss) between the `detail_renames` moves and the final non-atomic `write_plan` leaves renamed detail files pointing under a stale plan with no recovery \u2014 the journal evaporates. The mitigation covers exceptions, not crashes.\n- MEDIUM `[seed-orphan-accumulation]`: Step 3's (`scope-out-orchestrator-seed-first`) seed-first ordering plus `_carved_seed_path`'s collision-suffix writes a fresh `-2`/`-3` seed on every retry after a failed `apply_narrow`; the Architecture calls a single post-crash orphan \"harmless\" but no step de-dupes or cleans the stale base seed a prior failed attempt left behind, so retries accumulate near-duplicate seeds under `plan-seeds/`.\n- MEDIUM `[doc-double-write-drift-guard]`: The Risks entry \"Doc double-write\" names the mitigation \"sequence so a watched-file drift guard does not halt mid-run\", but step 6 (`document-shipped-scope-out-actuator`) only adds handoff-presence defensiveness for the co-owned RUNBOOK/CLAUDE paragraphs and never operationalizes any drift-guard ordering for a `plan-tool run` of this plan.\n- MEDIUM `[carved-seed-done-context-framing]`: Step 1 (`deterministic-carved-region-forward`) builds a fresh deterministic emitter that \"mirrors `render_create_seed`'s design\" but serializes only the carved step's body + done-context prose. `render_create_seed` wraps its done-context in an explicit *\"Already implemented (done-context \u2014 do not re-plan)\"* / *\"not to be re-planned\"* framing that tells the `create --from-existing` Claude pass not to re-implement completed work. No step or acceptance criterion requires the carved-region seed to carry that same don't-re-plan framing, so a carved seed that lists what was implemented as ordinary prose risks `create` re-planning the already-done half \u2014 the exact overclaim the run-state-carry decision exists to prevent.\n- MEDIUM `[carved-seed-create-roundtrip]`: The seed is the durable, re-plannable artifact the whole executor exists to produce, yet the integration test in step 4 (`wire-plan-tool-scope-out-cli-command`) stops at \"writes the seed and narrows the plan\" \u2014 no step exercises feeding the emitted `plan-seeds/<plan>-carved-<slug>.md` back through `create --from-existing`. A seed whose shape `create` silently mishandles would pass every test while making the artifact unusable.\n- MEDIUM `[detail-rename-ordering]`: Step 2 (`narrow-primitive-own-drop-renumber`) chooses to drive the downstream renames \"directly from the preview pairs\" in `apply_narrow` rather than calling `_migrate_downstream_details_after_merge`, but the helper's correctness depends on its **low\u2192high id ordering** plus its overwrite-time `_archive_existing_detail` guard (`detail.py:_migrate_downstream_details_after_merge`); the direct-drive path inherits neither unless `detail_renames` is pinned to ascending old-id order, since each new path is the prior step's still-occupied slot (descending application clobbers). The detail discusses the helper's ordering but never states the constraint for the direct drive.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, suppression-shaped or self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n- INFO: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/scope_out.py', 'tests/test_scope_out.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk scope-out-executor` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply scope-out-executor` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-6aac9d17",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks entry \"Partial on-disk state\" claims \"a crash mid-narrow\" is mitigated by \"dry-run-preview-then-apply + rollba",
+      "body": "The Risks entry \"Partial on-disk state\" claims \"a crash mid-narrow\" is mitigated by \"dry-run-preview-then-apply + rollback\", but step 2 (`narrow-primitive-own-drop-renumber`) builds rollback as an **in-memory** LIFO journal unwound only on a Python exception (its test patches `write_plan` to *raise*). A hard crash (kill/power-loss) between the `detail_renames` moves and the final non-atomic `write_plan` leaves renamed detail files pointing under a stale plan with no recovery \u2014 the journal evaporates. The mitigation covers exceptions, not crashes.",
+      "suggested_action": "scope the risk/AC wording to exception-rollback and name the crash window as hand-recoverable (the seed is already on disk), or add an on-disk recovery mechanism.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "narrow-crash-atomicity"
+    },
+    {
+      "id": "plan-plan-completeness-1b47c023",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's (`scope-out-orchestrator-seed-first`) seed-first ordering plus `_carved_seed_path`'s collision-suffix writes a ",
+      "body": "Step 3's (`scope-out-orchestrator-seed-first`) seed-first ordering plus `_carved_seed_path`'s collision-suffix writes a fresh `-2`/`-3` seed on every retry after a failed `apply_narrow`; the Architecture calls a single post-crash orphan \"harmless\" but no step de-dupes or cleans the stale base seed a prior failed attempt left behind, so retries accumulate near-duplicate seeds under `plan-seeds/`.",
+      "suggested_action": "note in step 3 that a retry reuses/cleans the prior orphan seed, or explicitly accept and document the accumulation.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "seed-orphan-accumulation"
+    },
+    {
+      "id": "plan-plan-completeness-7dbf85a1",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks entry \"Doc double-write\" names the mitigation \"sequence so a watched-file drift guard does not halt mid-run\", ",
+      "body": "The Risks entry \"Doc double-write\" names the mitigation \"sequence so a watched-file drift guard does not halt mid-run\", but step 6 (`document-shipped-scope-out-actuator`) only adds handoff-presence defensiveness for the co-owned RUNBOOK/CLAUDE paragraphs and never operationalizes any drift-guard ordering for a `plan-tool run` of this plan.",
+      "suggested_action": "add the stated sequencing note to step 6, or drop the mitigation claim if no run-time drift guard actually watches these docs.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "doc-double-write-drift-guard"
+    },
+    {
+      "id": "plan-plan-completeness-ee1fd862",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`deterministic-carved-region-forward`) builds a fresh deterministic emitter that \"mirrors `render_create_seed`'s",
+      "body": "Step 1 (`deterministic-carved-region-forward`) builds a fresh deterministic emitter that \"mirrors `render_create_seed`'s design\" but serializes only the carved step's body + done-context prose. `render_create_seed` wraps its done-context in an explicit *\"Already implemented (done-context \u2014 do not re-plan)\"* / *\"not to be re-planned\"* framing that tells the `create --from-existing` Claude pass not to re-implement completed work. No step or acceptance criterion requires the carved-region seed to carry that same don't-re-plan framing, so a carved seed that lists what was implemented as ordinary prose risks `create` re-planning the already-done half \u2014 the exact overclaim the run-state-carry decision exists to prevent.",
+      "suggested_action": "require the carved-region emitter to reproduce the \"done-context \u2014 do not re-plan\" framing `render_create_seed` uses, and add an AC asserting the seed marks the carried work as done-context, not work-to-do.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "carved-seed-done-context-framing"
+    },
+    {
+      "id": "plan-plan-completeness-7baaf495",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The seed is the durable, re-plannable artifact the whole executor exists to produce, yet the integration test in step 4 ",
+      "body": "The seed is the durable, re-plannable artifact the whole executor exists to produce, yet the integration test in step 4 (`wire-plan-tool-scope-out-cli-command`) stops at \"writes the seed and narrows the plan\" \u2014 no step exercises feeding the emitted `plan-seeds/<plan>-carved-<slug>.md` back through `create --from-existing`. A seed whose shape `create` silently mishandles would pass every test while making the artifact unusable.",
+      "suggested_action": "add a criterion (or extend the integration test concept) that the emitted carved seed is consumable by `create --from-existing` as a round-trip, not merely written to disk.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "carved-seed-create-roundtrip"
+    },
+    {
+      "id": "plan-plan-completeness-44b515d4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`narrow-primitive-own-drop-renumber`) chooses to drive the downstream renames \"directly from the preview pairs\" ",
+      "body": "Step 2 (`narrow-primitive-own-drop-renumber`) chooses to drive the downstream renames \"directly from the preview pairs\" in `apply_narrow` rather than calling `_migrate_downstream_details_after_merge`, but the helper's correctness depends on its **low\u2192high id ordering** plus its overwrite-time `_archive_existing_detail` guard (`detail.py:_migrate_downstream_details_after_merge`); the direct-drive path inherits neither unless `detail_renames` is pinned to ascending old-id order, since each new path is the prior step's still-occupied slot (descending application clobbers). The detail discusses the helper's ordering but never states the constraint for the direct drive.",
+      "suggested_action": "state that `detail_renames` must be applied in ascending old-id order (the helper's non-clobber invariant) and carry an equivalent destination-collision guard on the direct-drive path.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "detail-rename-ordering"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-6aac9d17": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-scope-out-executor.md`: rewrote the \"Partial on-disk state\" risk to scope rollback to in-process exceptions (in-memory journal), name the rename\u2192write_plan crash window, and mark it hand-recoverable from the on-disk seed, not auto-recovered.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-1b47c023": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-scope-out-executor.md`: extended the Architecture \"Seed-first atomicity contract\" paragraph to document that step 3 retries after a failed `apply_narrow` accumulate near-duplicate orphan seeds under `plan-seeds/`, accepted and left for manual pruning rather than de-duped.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-7dbf85a1": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/scope-out-executor/06-document-shipped-scope-out-actuator.md`: added a \"Drift-guard ordering\" note to `## Implementation` operationalizing the Risks \"Doc double-write\" mitigation \u2014 run step 6 only after the advisory plan lands and apply all six doc edits as one uninterleaved batch so a watched-file drift guard never halts a `plan-tool run` mid-edit.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-ee1fd862": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/scope-out-executor/01-deterministic-carved-region-forward.md`: required the done-context block to lead with an explicit \"done-context \u2014 do not re-plan\" framing line mirroring `render_create_seed` in the `## Implementation` seed-structure item 5.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-7baaf495": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-scope-out-executor.md`: extended the Testing section's integration-test directive to assert the emitted carved seed is consumable by `create --from-existing` as a round-trip, not merely written to disk.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-44b515d4": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/scope-out-executor/02-narrow-primitive-own-drop-renumber.md`: state in the detail-migration section that the direct-drive `detail_renames` path must apply renames in ascending old-id order and carry its own destination-collision guard (the helper's non-clobber invariant).",
+      "halt_reason": ""
+    }
+  }
+}

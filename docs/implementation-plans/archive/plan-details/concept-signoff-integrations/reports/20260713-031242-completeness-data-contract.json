@@ -1,0 +1,138 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-0d3c56b2": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/02-evidence-only-concept-enrichment.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/02-evidence-only-concept-enrichment.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-cfceb635": {
+      "code_anchor": "plan_tool/concept_tree.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/02-evidence-only-concept-enrichment.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/02-evidence-only-concept-enrichment.md",
+      "reason": "code anchor path `plan_tool/concept_tree.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-7e9ed0c4": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/03-wire-concept-review-explicit-ownership.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/03-wire-concept-review-explicit-ownership.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-dc2bd8ae": {
+      "code_anchor": "plan_tool/concept_tree.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/03-wire-concept-review-explicit-ownership.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/03-wire-concept-review-explicit-ownership.md",
+      "reason": "code anchor path `plan_tool/concept_tree.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-657e54f9": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/04-structured-detail-deferrals-regenerate.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/04-structured-detail-deferrals-regenerate.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-ecd0b748": {
+      "code_anchor": "plan_tool/concept_tree.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/04-structured-detail-deferrals-regenerate.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/04-structured-detail-deferrals-regenerate.md",
+      "reason": "code anchor path `plan_tool/concept_tree.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-a1924a30": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/05-explicit-link-concept-completeness.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/05-explicit-link-concept-completeness.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-02b98a89": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/06-require-split-remedies-preserve-every.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/06-require-split-remedies-preserve-every.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-cab347ec": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/07-make-merge-remedies-union-concept.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/07-make-merge-remedies-union-concept.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-c4d39190": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/08-make-re-grounding-preserve-concept.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/08-make-re-grounding-preserve-concept.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-052ab274": {
+      "code_anchor": "plan_tool/schema.py:Step.concept_ids",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/09-make-scope-out-defer-concepts-no.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/09-make-scope-out-defer-concepts-no.md",
+      "reason": "code anchor `plan_tool/schema.py:Step.concept_ids` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-12eb2f12": {
+      "code_anchor": "plan_tool/scope_out.py:NarrowPreview.new_steps",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/concept-signoff-integrations/09-make-scope-out-defer-concepts-no.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/concept-signoff-integrations/09-make-scope-out-defer-concepts-no.md",
+      "reason": "code anchor `plan_tool/scope_out.py:NarrowPreview.new_steps` does not resolve in HEAD",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260713-031242-completeness"
+}

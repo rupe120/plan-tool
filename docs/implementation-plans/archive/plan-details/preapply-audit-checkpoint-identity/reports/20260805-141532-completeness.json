@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "plan_slug": "preapply-audit-checkpoint-identity",
+  "plan_path": "docs/implementation-plans/2-preapply-audit-checkpoint-identity.md",
+  "created_at": "2026-08-05T14:15:32Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6601fe64c3520e22c673bda26b558324fc25544d440009f1075a50f740d37caa",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "706754f16aa2bf7f8b8ca44ec5dabaa1a53fb35c45872c80cc0b05d20d8caad3",
+    "DATA_CONTRACT.md": "f6fc0fa2def3932831fe77209036babc76d2921d7d173682692b98a23565c1d9",
+    "docs/AUDIT_FLOW.md": "8bbceb8b49c21bdb8436a007566023e22ef1ac1916311584b820cb48755ff710",
+    "docs/AUDIT_RESUME_FLOW.md": "d56d36fa5b7c336f9b8313d8d3e26743b67a7bed160330d19abede4fe048d6df",
+    "docs/cli/completeness-audit.md": "22abff60931a7fcd38136885e7e4a6a3d9b8c271b0cf33ec69fa50dbf6a339d1",
+    "handoffs/2026-08-05-checkpoint-identity-session.md": "43f806f91fff62b050d8f7630fd04de5992cb96f154c4a940fee13bb19045278",
+    "plan_tool/cli/completeness_phases.py": "266a0faddfc1ce15dc42d7b0259b61c8b841f6226b72b26dd9a95467bf7fa7af",
+    "plan_tool/completeness_report.py": "e6b012fef57305abb4b0cdac41aadafb43681238b4f17b52fef72e5893c19c8c",
+    "plan_tool/convergence_diagnosis.py": "95e73e1e818289c33c5cf824e1fd7da1afd128ae3a083dab5a71f193f4f97252",
+    "plan_tool/data_contract.py": "9cfda95206ba8cab23fd20d54d91063e01275be520322189ee12ac2e7734b12b",
+    "plan_tool/review_persistence.py": "b4d75206075d78dc0cdad1776109fcdfe1b9a8fc9dba2e97cd9ad9e09fc2405b",
+    "tests/cli/test_completeness_cmd.py": "06c1543cefe134370145b1f5a155a6b59ebcc602e8faa99594592829e8a728b9",
+    "tests/test_completeness_report.py": "a2f757912c4d605ab1423afc44619ca5733b12ddd40d93664d2aeaab645c8bd2",
+    "tests/test_convergence_diagnosis.py": "407d10d0fe1177c5402ac177db1a8d247fd23e1b160f3df4ae1ca1edd862c81f",
+    "tests/test_data_contract.py": "2fe947cbecbbca2d9472af7b26334c44cfb8411a0ecfc10723b27fa0c494f4a9",
+    "tests/test_review_persistence.py": "e605ea46ebf578801e533d04317064ce15efc4c708548d8886d742af0e856e1d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Preapply Audit Checkpoint Identity\n\n`preapply-audit-checkpoint-identity` \u00b7 generated 2026-08-05T14:15:32Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7c214629]`: The plan's `## Acceptance criteria` names `is_pre_apply_checkpoint=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a38009df]`: The plan's `## Acceptance criteria` names `load_report_history`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b8061cb6]`: The plan's `## Acceptance criteria` names `resolve_reusable_audit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1d8f0421]`: The plan's `## Acceptance criteria` names `runsnapshot`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1e2ee778]`: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-99c45abe]`: The plan's `## Acceptance criteria` names `write_pre_apply_audit_checkpoint`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run preapply-audit-checkpoint-identity` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Preapply Audit Checkpoint Identity\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `is_pre_apply_checkpoint=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `load_report_history`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `resolve_reusable_audit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `runsnapshot`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_pre_apply_audit_checkpoint`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  }
+}

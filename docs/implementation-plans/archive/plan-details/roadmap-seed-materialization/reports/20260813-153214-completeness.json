@@ -1,0 +1,253 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-materialization",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization.md",
+  "created_at": "2026-08-13T15:32:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a3d2c53058829c986cd00e303d60264a0b246df832c15e9b49cdb6530109a88c",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "899df9b41c913450b7fa7c4f23b68236aade0e22a5f9b6565074e12d17e37174",
+    "CLAUDE.md": "ecbbd38f8c30f51e24b58c0426982d577a29e7e23cadfd70999b4f4f359a3e6d",
+    "DATA_CONTRACT.md": "794df0c5ab85cbc982763ab41b15ac262bbd4b9357c8b895c4da9b493503da3e",
+    "ROADMAP_FORMAT.md": "44ea729b381cb58c80cd5e2eb0466faefe4a67fdc866490d896d1ecbc9d7ebc9",
+    "TESTING.md": "d458676d9b84c8b7a6ab5d42f8aed8dd767c3ae6dfb9b7284c62e295745e1827",
+    "docs/ARCHITECTURE.md": "2d876c211e77bb38f9ac248771b134f63bda4b03d0fbd770b39d58f43da63904",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "2513d73c683f37c9fa801c55c42c58ad7723604f50e01678e548509b0fd8c872",
+    "docs/ROADMAP_WALKTHROUGH.md": "5452be18e6d4b658b51d83c6f62727397ee4fbc469553dfd3f6c202e5091878c",
+    "plan_tool/cli/authoring.py": "25c1919c82adbbddc61e9500ec20b7a52325591973cac42f48be7cf7e5f0fc80",
+    "plan_tool/cli/roadmap_cmd.py": "fbd467295201da2d95a2a9d57007fb7b686633e94462aa222b4f1f2f4aea1137",
+    "plan_tool/prompts/roadmap-plans.md": "55a1ea44c40475af4f769d6a32fc107a378c3b6461d2cd68fa91cf14acc5d2e4",
+    "plan_tool/prompts/roadmap-refresh-seeds.md": "d7244c661d2d84cfd7400d5bc14f1d5782b8749c18305c1fa17a648f650bc320",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap.py": "4f1b944c0326b3c008dc11dfcc134c67222f8a891132435b84c04e4867e9b750",
+    "plan_tool/roadmap_artifacts.py": "84100525e837dbea2ae3d0a7455b4c8254c0088ded194a2e354f41c550106c15",
+    "plan_tool/roadmap_gates.py": "17b9e7009fbd9f5ae1fa69bd633f5611dc2018e4d763a582ccfc6559e54f8dc6",
+    "plan_tool/roadmap_seed_state.py": "95194405cb4f9036e2c60debb842dc8048a8e670230bd9e39530f717cf995208",
+    "plan_tool/roadmap_view.py": "fe68ab5bda63cfd2ab1326f38515e01b673c493068efd13ca1e558ae8883616e",
+    "plan_tool/run_log.py": "c33ad0f9599aa9f9fde80a7f304917754ef534c311e9d5e0c987caf0d724979d",
+    "tests/cli/test_authoring_cmds.py": "11b1a426515fdb6e96232eaefb1139cadd1ced931bca21540102175f994a016c",
+    "tests/cli/test_roadmap_cmd.py": "157ddbe3eef8ac5071f7fbe5eda4372405b3cf841a585957734dbe318bcc52b9",
+    "tests/test_roadmap.py": "6fbdfe45a7c5cc68e18edbbb2a646b99d9ba3ee84031548bcba77997ffe3dced",
+    "tests/test_roadmap_artifacts.py": "0c19385ffd5b0ab3bc71cdd195f15c1b6b090e096e2d42754a44a620945f7eee",
+    "tests/test_roadmap_format.py": "2d6b096ff60f964bc882b75f3c8bc745df4c4beeb7b5b1c21f591d8dd30b35bf",
+    "tests/test_roadmap_gates.py": "35d510fa8b4c8a6dcba100e2a00fe7a301e7af17f29b77c7bbc8aaed693395b2",
+    "tests/test_roadmap_seed_state.py": "30f393bb4b36108d9506b860481b5a5911161bcaba5b3a7391dab5da9268c2bf",
+    "tests/test_roadmap_view.py": "b5b0f4b925175c4adac78a72b85c5b329bf9829c366a9f173e6dbd57eced48cc"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md": "89885c3c8e3457b2c2335d104ce7dfc10e132b17834a46ab8e64f140bd40e28a",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/02-call-that-generates-validates-one-plan.md": "feaafa717291c50d8e4a3fdbff428f1c9cb486cc19b7c23314d9da19c8d9ff5c",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md": "cd2f577ff48c99dae24eb0985a41adf2fe991ef578bf6a4e7796bfc6bb298d67",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/04-make-explicit-seed-refresh-generate.md": "fe9b45dfd17b5284f9d42a83ce2c5d7cb884a01b82dc3613d6c6c1d1814b9218",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/05-cli-flag-materialize-recoverable-draft.md": "c9d2cb148118f6748897f0c8582a34a6d16e2c622129bc887ef680b114ff48a3",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/06-make-seed-promotion-refuse-missing.md": "639c8664b48a0220fd8ef1a388a8d1552b7b067b5356e33001891110d24a9a6e",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/07-route-roadmap-view-seed-summary-through.md": "df623f185dd613c70aed8085a326bfee8569aaaaa322e03490c72eec9644ed7c",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/08-show-missing-stale-malformed-path.md": "dab69642381bd4adcd0487e89b267c2ea6092a7b8a9382f1ed157accb5fbf425",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/09-stop-stage-generating-any-seed-body.md": "bbf50451e8b01d7491c4f02a7ce1462b65130e6602bb8f78718314df7de08299",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/10-cli-action-accept-hand-edited-draft.md": "9970130e2eacac76c40a2bc9becc97b999268b3220af57eb40478e61de50ab11",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization/11-update-roadmap-docs-per-seed-draft.md": "f2a412f84be81df264c0ddd07a4fe0aad5b525d42d04121e0cadd455a241bd8f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Materialization\n\n`roadmap-seed-materialization` \u00b7 generated 2026-08-13T15:32:14Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-seed-materialization   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[draft-seed-duplicate-violation-kind]`: Step 1's Implementation section instructs renaming `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME` \"and every reference to it in `plan_tool/roadmap_gates.py` and its tests,\" but at HEAD that one constant covers two distinct violations inside `check_draft_seed_bundle_alignment` \u2014 the basename-collision branch (`len(plan_ids) > 1`) and a separate missing-bundle-entry branch (a single, non-colliding plan row whose basename isn't in the bundle). Step 1's own Implementation says the missing-bundle-entry check \"keeps its existing bundle-membership check... exactly as today,\" and its Tests section lists `test_missing_bundle_entry_for_plan_row_violates` as staying \"unchanged\" (the test asserts `violation.kind == VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` at `tests/test_roadmap_gates.py:1020`) while only `test_duplicate_draft_seed_basename_across_plan_rows_violates`'s kind assertion is meant to change. A literal \"rename every reference\" would also convert the missing-bundle-entry emission to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME`, mislabeling a non-collision violation and breaking the very test the same document calls unmodified evidence.\n  - Fix: reword the Implementation sentence so only `find_duplicate_draft_seed_basenames`'s collision emission is renamed, and state explicitly that `check_draft_seed_bundle_alignment`'s separate missing-bundle-entry check keeps emitting `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` unchanged.\n- MEDIUM `[step5-refresh-dependency]`: Step 5's dependency on step 4 is stated inconsistently across the plan. The plan's own frontmatter declares `id: 5` with `depends_on: [2, 3, 4]` and a note that step 5 \"reuses step 4's landed refresh symbols (`RoadmapSeedRefreshChange`/`Failure`/`Result`, `SEED_REFRESH_OUTCOME_PARTIAL`, `_RC_PARTIAL`, `_render_seed_refresh_result`) verbatim.\" But step 4's detail file says twice (\"Files,\" \"Deferred\") that step 5 \"does not `depends_on` step 4,\" and step 5's own detail file's Input section repeats it (\"reused rather than depended on (step 4's own Deferred explicitly leaves this choice to this step)\"), framing the reuse as a free, independent design choice rather than a required one. Step 5's actual Implementation section then does exactly what the frontmatter says \u2014 imports and reuses step 4's types and rc mapping directly \u2014 so the three prose passages describe a dependency-graph and design-freedom relationship that doesn't match either the frontmatter or step 5's own chosen design.\n  - Fix: correct the three passages (step 4's Files section, step 4's Deferred section, step 5's Input section) to state plainly that step 5 depends on step 4 landing first and reuses its refresh vocabulary by requirement, matching the plan's own `depends_on`/`depends_on_notes`.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d49498d5]`: The plan's `## Acceptance criteria` names `plan-seeds/<id>.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]`: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6317d754]`: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step7-granularity-merge-638f09a3]`: Steps 7 and 8 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap_view.py', 'tests/test_roadmap_view.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-materialization` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Materialization\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[draft-seed-duplicate-violation-kind]`: Step 1's Implementation section instructs renaming `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME` \"and every reference to it in `plan_tool/roadmap_gates.py` and its tests,\" but at HEAD that one constant covers two distinct violations inside `check_draft_seed_bundle_alignment` \u2014 the basename-collision branch (`len(plan_ids) > 1`) and a separate missing-bundle-entry branch (a single, non-colliding plan row whose basename isn't in the bundle). Step 1's own Implementation says the missing-bundle-entry check \"keeps its existing bundle-membership check... exactly as today,\" and its Tests section lists `test_missing_bundle_entry_for_plan_row_violates` as staying \"unchanged\" (the test asserts `violation.kind == VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` at `tests/test_roadmap_gates.py:1020`) while only `test_duplicate_draft_seed_basename_across_plan_rows_violates`'s kind assertion is meant to change. A literal \"rename every reference\" would also convert the missing-bundle-entry emission to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME`, mislabeling a non-collision violation and breaking the very test the same document calls unmodified evidence.\n- MEDIUM `[step5-refresh-dependency]`: Step 5's dependency on step 4 is stated inconsistently across the plan. The plan's own frontmatter declares `id: 5` with `depends_on: [2, 3, 4]` and a note that step 5 \"reuses step 4's landed refresh symbols (`RoadmapSeedRefreshChange`/`Failure`/`Result`, `SEED_REFRESH_OUTCOME_PARTIAL`, `_RC_PARTIAL`, `_render_seed_refresh_result`) verbatim.\" But step 4's detail file says twice (\"Files,\" \"Deferred\") that step 5 \"does not `depends_on` step 4,\" and step 5's own detail file's Input section repeats it (\"reused rather than depended on (step 4's own Deferred explicitly leaves this choice to this step)\"), framing the reuse as a free, independent design choice rather than a required one. Step 5's actual Implementation section then does exactly what the frontmatter says \u2014 imports and reuses step 4's types and rc mapping directly \u2014 so the three prose passages describe a dependency-graph and design-freedom relationship that doesn't match either the frontmatter or step 5's own chosen design.\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/roadmap.py` resembling declared `plan_tool/roadmap_gates.py` (typo/stale path?)\n- INFO: step 1 detail cites `tests/test_roadmap.py` resembling declared `tests/test_roadmap_gates.py` (typo/stale path?)\n- INFO: step 1 detail cites `tests/test_roadmap_view.py` resembling declared `tests/test_roadmap_gates.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/prompts/roadmap-refresh-seeds.md` resembling declared `plan_tool/prompts/roadmap-seed.md` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/roadmap_gates.py` resembling declared `plan_tool/roadmap.py` (typo/stale path?)\n- INFO: step 3 detail cites `cli/authoring.py` resembling declared `plan_tool/cli/authoring.py` (typo/stale path?)\n- INFO: step 3 detail cites `plan_tool/roadmap_seed_state.py` resembling declared `plan_tool/roadmap_seed_manifest.py` (typo/stale path?)\n- INFO: step 3 detail cites `tests/test_roadmap_seed_state.py` resembling declared `tests/test_roadmap_seed_manifest.py` (typo/stale path?)\n- INFO: step 8 detail cites `plan_tool/roadmap.py` resembling declared `plan_tool/roadmap_view.py` (typo/stale path?)\n- INFO: step 10 detail cites `plan_tool/roadmap_gates.py` resembling declared `plan_tool/roadmap.py` (typo/stale path?)\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-backendspawn-backendspawn]`: DATA_CONTRACT.md:BackendSpawn is missing `BackendSpawn` from the code-owned BackendSpawn data contract.\n- MEDIUM `[data-contract-backendtermination-backendtermination]`: DATA_CONTRACT.md:BackendTermination is missing `BackendTermination` from the code-owned BackendTermination data contract.\n- MEDIUM `[data-contract-runinterrupted-runinterrupted]`: DATA_CONTRACT.md:RunInterrupted is missing `RunInterrupted` from the code-owned RunInterrupted data contract.\n- MEDIUM `[data-contract-backendrecoverywait-backendrecoverywait]`: DATA_CONTRACT.md:BackendRecoveryWait is missing `BackendRecoveryWait` from the code-owned BackendRecoveryWait data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `plan-seeds/<id>.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `seed-state.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 7 and 8 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap_view.py', 'tests/test_roadmap_view.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-seed-materialization` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2739dd3b",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1's Implementation section instructs renaming `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` to `VIOLATION_DUPLICATE_D",
+      "body": "Step 1's Implementation section instructs renaming `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME` \"and every reference to it in `plan_tool/roadmap_gates.py` and its tests,\" but at HEAD that one constant covers two distinct violations inside `check_draft_seed_bundle_alignment` \u2014 the basename-collision branch (`len(plan_ids) > 1`) and a separate missing-bundle-entry branch (a single, non-colliding plan row whose basename isn't in the bundle). Step 1's own Implementation says the missing-bundle-entry check \"keeps its existing bundle-membership check... exactly as today,\" and its Tests section lists `test_missing_bundle_entry_for_plan_row_violates` as staying \"unchanged\" (the test asserts `violation.kind == VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` at `tests/test_roadmap_gates.py:1020`) while only `test_duplicate_draft_seed_basename_across_plan_rows_violates`'s kind assertion is meant to change. A literal \"rename every reference\" would also convert the missing-bundle-entry emission to `VIOLATION_DUPLICATE_DRAFT_SEED_BASENAME`, mislabeling a non-collision violation and breaking the very test the same document calls unmodified evidence.",
+      "suggested_action": "reword the Implementation sentence so only `find_duplicate_draft_seed_basenames`'s collision emission is renamed, and state explicitly that `check_draft_seed_bundle_alignment`'s separate missing-bundle-entry check keeps emitting `VIOLATION_MISSING_DRAFT_SEED_BUNDLE_ENTRY` unchanged.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "draft-seed-duplicate-violation-kind",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c00c0fd2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5's dependency on step 4 is stated inconsistently across the plan. The plan's own frontmatter declares `id: 5` with",
+      "body": "Step 5's dependency on step 4 is stated inconsistently across the plan. The plan's own frontmatter declares `id: 5` with `depends_on: [2, 3, 4]` and a note that step 5 \"reuses step 4's landed refresh symbols (`RoadmapSeedRefreshChange`/`Failure`/`Result`, `SEED_REFRESH_OUTCOME_PARTIAL`, `_RC_PARTIAL`, `_render_seed_refresh_result`) verbatim.\" But step 4's detail file says twice (\"Files,\" \"Deferred\") that step 5 \"does not `depends_on` step 4,\" and step 5's own detail file's Input section repeats it (\"reused rather than depended on (step 4's own Deferred explicitly leaves this choice to this step)\"), framing the reuse as a free, independent design choice rather than a required one. Step 5's actual Implementation section then does exactly what the frontmatter says \u2014 imports and reuses step 4's types and rc mapping directly \u2014 so the three prose passages describe a dependency-graph and design-freedom relationship that doesn't match either the frontmatter or step 5's own chosen design.",
+      "suggested_action": "correct the three passages (step 4's Files section, step 4's Deferred section, step 5's Input section) to state plainly that step 5 depends on step 4 landing first and reuses its refresh vocabulary by requirement, matching the plan's own `depends_on`/`depends_on_notes`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "step5-refresh-dependency",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-acd5c307",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:BackendSpawn is missing `BackendSpawn` from the code-owned BackendSpawn data contract.",
+      "body": "DATA_CONTRACT.md:BackendSpawn is missing `BackendSpawn` from the code-owned BackendSpawn data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'BackendSpawn' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-backendspawn-backendspawn",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-d217c8c5",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:BackendTermination is missing `BackendTermination` from the code-owned BackendTermination data contract.",
+      "body": "DATA_CONTRACT.md:BackendTermination is missing `BackendTermination` from the code-owned BackendTermination data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'BackendTermination' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-backendtermination-backendtermination",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-d6bdbdbd",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RunInterrupted is missing `RunInterrupted` from the code-owned RunInterrupted data contract.",
+      "body": "DATA_CONTRACT.md:RunInterrupted is missing `RunInterrupted` from the code-owned RunInterrupted data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RunInterrupted' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-runinterrupted-runinterrupted",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-d9ef2a0d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:BackendRecoveryWait is missing `BackendRecoveryWait` from the code-owned BackendRecoveryWait data contract.",
+      "body": "DATA_CONTRACT.md:BackendRecoveryWait is missing `BackendRecoveryWait` from the code-owned BackendRecoveryWait data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'BackendRecoveryWait' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-backendrecoverywait-backendrecoverywait",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "0809e364b2b503ca597aaf06acd157c52e13884c78ef5bc8f1ce9c1870795c81",
+    "detail_bundle_digest": "43d2f98baa66b9c620c09cf109e3b275b4f534a0be8b650960312269613ab0e4",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md",
+        "state": "present",
+        "digest": "89885c3c8e3457b2c2335d104ce7dfc10e132b17834a46ab8e64f140bd40e28a"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/02-call-that-generates-validates-one-plan.md",
+        "state": "present",
+        "digest": "feaafa717291c50d8e4a3fdbff428f1c9cb486cc19b7c23314d9da19c8d9ff5c"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md",
+        "state": "present",
+        "digest": "cd2f577ff48c99dae24eb0985a41adf2fe991ef578bf6a4e7796bfc6bb298d67"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/04-make-explicit-seed-refresh-generate.md",
+        "state": "present",
+        "digest": "fe9b45dfd17b5284f9d42a83ce2c5d7cb884a01b82dc3613d6c6c1d1814b9218"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/05-cli-flag-materialize-recoverable-draft.md",
+        "state": "present",
+        "digest": "c9d2cb148118f6748897f0c8582a34a6d16e2c622129bc887ef680b114ff48a3"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/06-make-seed-promotion-refuse-missing.md",
+        "state": "present",
+        "digest": "639c8664b48a0220fd8ef1a388a8d1552b7b067b5356e33001891110d24a9a6e"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/07-route-roadmap-view-seed-summary-through.md",
+        "state": "present",
+        "digest": "df623f185dd613c70aed8085a326bfee8569aaaaa322e03490c72eec9644ed7c"
+      },
+      {
+        "step_id": 8,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/08-show-missing-stale-malformed-path.md",
+        "state": "present",
+        "digest": "dab69642381bd4adcd0487e89b267c2ea6092a7b8a9382f1ed157accb5fbf425"
+      },
+      {
+        "step_id": 9,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/09-stop-stage-generating-any-seed-body.md",
+        "state": "present",
+        "digest": "bbf50451e8b01d7491c4f02a7ce1462b65130e6602bb8f78718314df7de08299"
+      },
+      {
+        "step_id": 10,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/10-cli-action-accept-hand-edited-draft.md",
+        "state": "present",
+        "digest": "9970130e2eacac76c40a2bc9becc97b999268b3220af57eb40478e61de50ab11"
+      },
+      {
+        "step_id": 11,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-seed-materialization/11-update-roadmap-docs-per-seed-draft.md",
+        "state": "present",
+        "digest": "f2a412f84be81df264c0ddd07a4fe0aad5b525d42d04121e0cadd455a241bd8f"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

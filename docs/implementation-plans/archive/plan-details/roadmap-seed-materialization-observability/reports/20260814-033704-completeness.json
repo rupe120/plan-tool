@@ -1,0 +1,154 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T03:37:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "28dca0ea60e3bf775fce66100229d25f7cb74cc51107c0c0e90ad0533e513d7b",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "90d25439138870c999be1f7119d66502fedeb27291802bb47dd640077748c8ef",
+    "DATA_CONTRACT.md": "821c05a4a6437ede959bb8d4964c5a6aaffe36b703609c150b2243d5cffbb113",
+    "README.md": "4557296ecc98543a6ebe5befd9e05f9840f9a03290087054cfc0069727215f57",
+    "TESTING.md": "0363b23456629a35c3efaf433091cc9cc89e6c1e3d79d5dc812d6ea17f9a5c31",
+    "plan_tool/cli/roadmap_cmd.py": "603e959ca4c038d300bf33f1732cce02b908ca956c885460d2af67c38e7efa91",
+    "plan_tool/roadmap.py": "f37dee97535ee1fcf1d341aa0aac24d3858147cb7ce702f1aeefdeb50009c604",
+    "tests/cli/test_roadmap_cmd.py": "dea0ebf35c2dc51f462b1ec3698fae3b046c97da740600e2c995cbfc78f06d39",
+    "tests/test_roadmap.py": "0c5b98feb371c65e84468802a38e1b2a4bc95e9d5dc9f77e6d60db3f60ed3bdb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-shared-roadmap-command-run-log.md": "65012af1bb12e4c26c6ca147ae31620969d39b118970f1e17e326126ad6f90a2",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-log-plan-attributed-materialization.md": "8c70b2e0798bc84c21de858daaf892395e0c340693de89ae5c370bd2b5a03b85",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-give-selected-all-eligible-materialize.md": "eb474fbaede849f8e791e09ea96d892ff8b3ba10cde07ce44bf1fbb868ca4026",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-refresh-seeds-one-ordered-run.md": "8e63cbf3b273c66f8c7243984dd939245d3e69a52cd68e74cc9443d2c5328444",
+    "docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-document-materialization-refresh-run.md": "12616c58ac8fba1098e8c1448f40c3385b51395e708cb2acb60ef147394d33d2"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Seed Materialization Observability\n\n`roadmap-seed-materialization-observability` \u00b7 generated 2026-08-14T03:37:04Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-seed-materialization-observability   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-seed-materialization-observability  # alternative interactive review/apply\n\n- HIGH `[materialization-order]`: The `roadmap-order` contract says Architecture will run \u201cone phase for every recoverable row in roadmap order,\u201d but `plan_tool/prompts/roadmap-plans.md` defines `ordering` as \u201cthe execution sequence\u201d while `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` and `plan_tool.roadmap:refresh_roadmap_seeds` iterate `artifact.plans` in source order. Steps 3 and 4, Testing, and both ordered-phase acceptance criteria never choose whether logs follow the current row order or change actual materialization and report order.\n  - Fix: Define one command order for both materialization modes and refresh, and state whether it preserves source-row behavior or deliberately adopts `ordering` across calls, phases, reports, and tests.\n- HIGH `[plan-id-attribution]`: Architecture\u2019s \u201cplan-ID-attributed phase convention\u201d and \u201cactive-plan field,\u201d steps 2\u20134, and the acceptance criterion that \u201cEvery event and active snapshot identifies the command, roadmap slug, and active plan ID\u201d do not define the fields or their absent-state rules. At HEAD, `plan_tool.run_log:RunLogWriter.start` puts `command` and `plan_slug` only on `run_start` and the initial snapshot, while `RunLogWriter.phase_start` records only `current_phase`; `plan_tool.shell:_ClaudeInvokeRunnerObserver` also forwards backend events without plan context. A phase-name encoding, per-event field, and selected-plan preflight record produce materially different JSONL and snapshot contracts.\n  - Fix: Define a materialization-only attribution schema for every event and snapshot, including command and slug, requested-plan attribution for selected preflight failures, active-plan attribution during a phase, and exact clear/null behavior before, after, no-op, and empty-batch states.\n- MEDIUM `[batch-terminal-outcomes]`: The command terminal vocabulary omits mixed all-eligible materialization: Architecture lists materialization completion, no-op, exhaustion, preflight refusal, and interrupt, but lists `partial` only for refresh; step 3, Testing, and the acceptance criteria retain that omission. `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` already returns `SEED_REFRESH_OUTCOME_PARTIAL` when one eligible row succeeds and another exhausts, and Architecture also promises a refresh \u201ccompleted empty batch\u201d without defining its observable terminal result.\n  - Fix: Define one closed command-outcome and terminal-record mapping for selected materialization, all-eligible materialization, and refresh, including mixed materialization partial and zero-row refresh completion, then cover each state in the acceptance criteria and tests.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[refresh-empty-batch]`: Architecture requires refresh to \u201crecord[] a completed empty batch when the roadmap contains no rows,\u201d but step 4 (`Give --refresh-seeds one ordered run...`), Testing\u2019s zero-row case, and the refresh acceptance criteria cover only all-eligible materialization\u2019s no-op; `plan_tool.roadmap:refresh_roadmap_seeds` currently returns a completed result for an empty `artifact.plans` loop. A refresh can therefore meet the broad completed-outcome wording without proving its one run, zero phases, and snapshot cleanup.\n  - Fix: add an explicit zero-row refresh lifecycle criterion and deterministic test that requires a completed record with no plan phase and terminal snapshot removal.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-5113ad49]`: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-230e3ecb]`: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-bb6d6099]`: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2a2e5cfa]`: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-835bb881]`: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8c045618]`: The plan's `## Acceptance criteria` names `tool_input_summary`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-seed-materialization-observability` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Seed Materialization Observability\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[materialization-order]`: The `roadmap-order` contract says Architecture will run \u201cone phase for every recoverable row in roadmap order,\u201d but `plan_tool/prompts/roadmap-plans.md` defines `ordering` as \u201cthe execution sequence\u201d while `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` and `plan_tool.roadmap:refresh_roadmap_seeds` iterate `artifact.plans` in source order. Steps 3 and 4, Testing, and both ordered-phase acceptance criteria never choose whether logs follow the current row order or change actual materialization and report order.\n- HIGH `[plan-id-attribution]`: Architecture\u2019s \u201cplan-ID-attributed phase convention\u201d and \u201cactive-plan field,\u201d steps 2\u20134, and the acceptance criterion that \u201cEvery event and active snapshot identifies the command, roadmap slug, and active plan ID\u201d do not define the fields or their absent-state rules. At HEAD, `plan_tool.run_log:RunLogWriter.start` puts `command` and `plan_slug` only on `run_start` and the initial snapshot, while `RunLogWriter.phase_start` records only `current_phase`; `plan_tool.shell:_ClaudeInvokeRunnerObserver` also forwards backend events without plan context. A phase-name encoding, per-event field, and selected-plan preflight record produce materially different JSONL and snapshot contracts.\n- MEDIUM `[batch-terminal-outcomes]`: The command terminal vocabulary omits mixed all-eligible materialization: Architecture lists materialization completion, no-op, exhaustion, preflight refusal, and interrupt, but lists `partial` only for refresh; step 3, Testing, and the acceptance criteria retain that omission. `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` already returns `SEED_REFRESH_OUTCOME_PARTIAL` when one eligible row succeeds and another exhausts, and Architecture also promises a refresh \u201ccompleted empty batch\u201d without defining its observable terminal result.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[refresh-empty-batch]`: Architecture requires refresh to \u201crecord[] a completed empty batch when the roadmap contains no rows,\u201d but step 4 (`Give --refresh-seeds one ordered run...`), Testing\u2019s zero-row case, and the refresh acceptance criteria cover only all-eligible materialization\u2019s no-op; `plan_tool.roadmap:refresh_roadmap_seeds` currently returns a completed result for an empty `artifact.plans` loop. A refresh can therefore meet the broad completed-outcome wording without proving its one run, zero phases, and snapshot cleanup.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backend_recovery_wait`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_spawn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backend_termination`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `in-flight.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `run_interrupted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `tool_input_summary`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'tests/test_roadmap.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-seed-materialization-observability` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-18fdb685",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The `roadmap-order` contract says Architecture will run \u201cone phase for every recoverable row in roadmap order,\u201d but `pla",
+      "body": "The `roadmap-order` contract says Architecture will run \u201cone phase for every recoverable row in roadmap order,\u201d but `plan_tool/prompts/roadmap-plans.md` defines `ordering` as \u201cthe execution sequence\u201d while `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` and `plan_tool.roadmap:refresh_roadmap_seeds` iterate `artifact.plans` in source order. Steps 3 and 4, Testing, and both ordered-phase acceptance criteria never choose whether logs follow the current row order or change actual materialization and report order.",
+      "suggested_action": "Define one command order for both materialization modes and refresh, and state whether it preserves source-row behavior or deliberately adopts `ordering` across calls, phases, reports, and tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "materialization-order",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3165e5b2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s \u201cplan-ID-attributed phase convention\u201d and \u201cactive-plan field,\u201d steps 2\u20134, and the acceptance criterion th",
+      "body": "Architecture\u2019s \u201cplan-ID-attributed phase convention\u201d and \u201cactive-plan field,\u201d steps 2\u20134, and the acceptance criterion that \u201cEvery event and active snapshot identifies the command, roadmap slug, and active plan ID\u201d do not define the fields or their absent-state rules. At HEAD, `plan_tool.run_log:RunLogWriter.start` puts `command` and `plan_slug` only on `run_start` and the initial snapshot, while `RunLogWriter.phase_start` records only `current_phase`; `plan_tool.shell:_ClaudeInvokeRunnerObserver` also forwards backend events without plan context. A phase-name encoding, per-event field, and selected-plan preflight record produce materially different JSONL and snapshot contracts.",
+      "suggested_action": "Define a materialization-only attribution schema for every event and snapshot, including command and slug, requested-plan attribution for selected preflight failures, active-plan attribution during a phase, and exact clear/null behavior before, after, no-op, and empty-batch states.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "plan-id-attribution",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-6cc7f073",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The command terminal vocabulary omits mixed all-eligible materialization: Architecture lists materialization completion,",
+      "body": "The command terminal vocabulary omits mixed all-eligible materialization: Architecture lists materialization completion, no-op, exhaustion, preflight refusal, and interrupt, but lists `partial` only for refresh; step 3, Testing, and the acceptance criteria retain that omission. `plan_tool.cli.roadmap_cmd:_cmd_roadmap_materialize` already returns `SEED_REFRESH_OUTCOME_PARTIAL` when one eligible row succeeds and another exhausts, and Architecture also promises a refresh \u201ccompleted empty batch\u201d without defining its observable terminal result.",
+      "suggested_action": "Define one closed command-outcome and terminal-record mapping for selected materialization, all-eligible materialization, and refresh, including mixed materialization partial and zero-row refresh completion, then cover each state in the acceptance criteria and tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "batch-terminal-outcomes",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-e6db5e17",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture requires refresh to \u201crecord[] a completed empty batch when the roadmap contains no rows,\u201d but step 4 (`Give",
+      "body": "Architecture requires refresh to \u201crecord[] a completed empty batch when the roadmap contains no rows,\u201d but step 4 (`Give --refresh-seeds one ordered run...`), Testing\u2019s zero-row case, and the refresh acceptance criteria cover only all-eligible materialization\u2019s no-op; `plan_tool.roadmap:refresh_roadmap_seeds` currently returns a completed result for an empty `artifact.plans` loop. A refresh can therefore meet the broad completed-outcome wording without proving its one run, zero phases, and snapshot cleanup.",
+      "suggested_action": "add an explicit zero-row refresh lifecycle criterion and deterministic test that requires a completed record with no plan phase and terminal snapshot removal.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refresh-empty-batch",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "28dca0ea60e3bf775fce66100229d25f7cb74cc51107c0c0e90ad0533e513d7b",
+    "detail_bundle_digest": "8d844db7e0f21cc54e33a4734b392e7e470aa4762509fa96cf9fa42f722fc5b6",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/01-extract-shared-roadmap-command-run-log.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/02-log-plan-attributed-materialization.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/03-give-selected-all-eligible-materialize.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/04-give-refresh-seeds-one-ordered-run.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-seed-materialization-observability/05-document-materialization-refresh-run.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

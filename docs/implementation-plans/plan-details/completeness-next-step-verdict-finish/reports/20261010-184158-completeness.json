@@ -1,0 +1,206 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "plan_path": "docs/implementation-plans/2-completeness-next-step-verdict-finish.md",
+  "created_at": "2026-10-10T18:41:58Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fc47081eb607e293b23039b16ce648bf8dad7156d6c85910fcc5531049391603",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md": "e098fc1a3be632f386363a6ba4b80953ed6664768d47d8382d6b829ebc0bcd4c",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md": "7768207b09285829ad1c0921da7fcb59c1fb5f91e295f450c70b6068be8346a7",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md": "8f04a2fa96c4000680fac2c1462395022bc98a61d7c5cfe578b02736c468b180",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md": "20429f9e7d2cd0a1f955503344038b9992e5f92fd4591ad5013a73777a00a6e8",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md": "1a82b170ab36c3d8f620ee5527c45fa1ec4e9c488025c7c932105541c2489298"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Step Verdict Finish\n\n`completeness-next-step-verdict-finish` \u00b7 generated 2026-10-10T18:41:58Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c8cbf6120790cc2fef52cb9865cee160df3904f86b724431911b48fdf1854770`\n- **Detail bundle digest:** `000b720f7750e35a11ec03420238051ec657331a5f7a8e455b9c571957ad6d18`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 51523 bytes (+51523 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[transient-vs-nonempty-set-precedence]` [confidence: limited]: The Architecture precedence list never says what a transient stop does when the blocking set is non-empty. At HEAD, `_verdict_untrusted_cause` returns `\"\"` (trusted, gaps named) for `blocking_set_nonempty` before it looks at the stop reason, which is #479's \"a non-empty set then names its gaps whatever the stop\" rule. The plan's rule (3) reads \"`max_iterations`, `deadline_exceeded`, or `no_progress` on an otherwise qualified result; re-audit\". The Acceptance criterion reads \"No reader prescribes hand triage for a stop a plain re-audit would continue\". The Out-of-scope list forbids re-deciding \"trust-follows-the-gate\". A reader can take a `max_iterations` stop with HIGH gaps as `transient` (re-audit, ids not offered) or as trusted (gaps named, a stage possibly offered). The step 1 detail and the Testing rows (\"transient \u00d7 persistent hand-apply stop\") do not pin either. State where the non-empty-set rule sits in the precedence, and add one Testing row for a cut-short stop with a non-empty set.\n  - Fix: Insert the non-empty-blocking-set rule into the Architecture precedence list, and reconcile steps 1 and 4 and the Testing and Acceptance wording to it.\n- MEDIUM `[bar-ids-gate-vs-verdict-split]` [confidence: limited]: The plan body and step 2 disagree about where retained ids live. The Architecture says \"`_conceptual_bar_from_audit_recs` keeps the established blocking ids for an incomplete audit. The finalize gate's bool keeps its current value.\" Step 2's detail says the gate ids stay `()` on an incomplete audit, \"only the verdict's copy of the ids changes\", and the function's returned gate pair is left unchanged. At HEAD the function returns `(), True` on an incomplete audit. The Testing line \"iterate stop reason and `_remap_iterate_stop_for_conceptual_bar` result are asserted identical for an incomplete audit with and without ids\" only makes sense with step 2's two-value reading. Step 2 is the more detailed decision, so the body should be fixed to match it.\n  - Fix: Reword the Architecture paragraph and the Problem statement to say the function's gate pair is unchanged and the verdict receives separately computed stage-bar ids, matching step 2.\n- MEDIUM `[incomplete-with-max-iterations-vs-acceptance]` [confidence: limited]: Acceptance criterion 1 conflicts with Architecture rule (2). The criterion says \"No reader prescribes hand triage for a stop a plain re-audit would continue.\" Rule (2) says \"a `max_iterations` stop on a budget-limited audit is still incomplete\", with hand triage and no stage, and the Testing row \"incomplete \u00d7 `max_iterations` (ids named, hand triage, no stage)\" repeats it. A reader who applies the criterion literally can read `max_iterations` as always re-auditable.\n  - Fix: Narrow criterion 1 to cut-short stops on an otherwise qualified, current-revision result, and name the budget-limited exception explicitly.\n- MEDIUM `[stale-trigger-not-in-qualified-set]` [confidence: limited]: The `not-sampled` `revision_status` has no assigned cause. Architecture rule (1) fires only for `stale` or `unknown-legacy`. Rule (5) catches \"any other untrusted result with a current revision\", but `not-sampled` is not `current`. Step 1's Input says `not-sampled` \"is also a no-evidence result and is not stale\". A `not-sampled` result therefore matches no rule. The likely fallthrough to `persistent` would print \"re-auditing unchanged text reproduces this\", which is false when no sample exists yet. Sites: Architecture precedence rules (1) and (5); the Testing row for \"a current-revision untrusted result matching no earlier rule\"; step 1's Input and Implementation.\n  - Fix: State which cause and action a `not-sampled` result gets (fresh audit, since no evidence exists). Widen rule (5)'s wording to cover non-stale results regardless of revision, and add a Testing row for `not-sampled`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[stale-trigger-not-in-qualified-set]` [confidence: limited]: The plan's stale trigger is `revision_status` `stale` or `unknown-legacy` under the `no-qualified-current-evidence` headline. Step 1 notes `not-sampled` is a no-evidence result that is \"not stale\". Neither the Architecture precedence nor the Testing rows say which cause `not-sampled` gets. By rule (5) it falls to `persistent`, but that is by implication only, and HEAD's first branch treats it as `persistent` because of the no-evidence headline. Add one Testing row for `not-sampled` so the catch-all is pinned against the stale rule.\n  - Fix: Name `not-sampled` as a `persistent` case in the Architecture precedence rule (5) and add one Testing row for it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-6b161ed7]` [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- 5 conceptual gap(s) are listed in the report as advisory (outside the blocking set).\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 re-auditing unchanged text reproduces this result \u2014 triage the saved report's findings, correct them in a session-directed edit, commit, then re-audit the changed snapshot; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Step Verdict Finish\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c8cbf6120790cc2fef52cb9865cee160df3904f86b724431911b48fdf1854770`\n- **Detail bundle digest:** `000b720f7750e35a11ec03420238051ec657331a5f7a8e455b9c571957ad6d18`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[transient-vs-nonempty-set-precedence]` [confidence: limited]: The Architecture precedence list never says what a transient stop does when the blocking set is non-empty. At HEAD, `_verdict_untrusted_cause` returns `\"\"` (trusted, gaps named) for `blocking_set_nonempty` before it looks at the stop reason, which is #479's \"a non-empty set then names its gaps whatever the stop\" rule. The plan's rule (3) reads \"`max_iterations`, `deadline_exceeded`, or `no_progress` on an otherwise qualified result; re-audit\". The Acceptance criterion reads \"No reader prescribes hand triage for a stop a plain re-audit would continue\". The Out-of-scope list forbids re-deciding \"trust-follows-the-gate\". A reader can take a `max_iterations` stop with HIGH gaps as `transient` (re-audit, ids not offered) or as trusted (gaps named, a stage possibly offered). The step 1 detail and the Testing rows (\"transient \u00d7 persistent hand-apply stop\") do not pin either. State where the non-empty-set rule sits in the precedence, and add one Testing row for a cut-short stop with a non-empty set.\n- MEDIUM `[bar-ids-gate-vs-verdict-split]` [confidence: limited]: The plan body and step 2 disagree about where retained ids live. The Architecture says \"`_conceptual_bar_from_audit_recs` keeps the established blocking ids for an incomplete audit. The finalize gate's bool keeps its current value.\" Step 2's detail says the gate ids stay `()` on an incomplete audit, \"only the verdict's copy of the ids changes\", and the function's returned gate pair is left unchanged. At HEAD the function returns `(), True` on an incomplete audit. The Testing line \"iterate stop reason and `_remap_iterate_stop_for_conceptual_bar` result are asserted identical for an incomplete audit with and without ids\" only makes sense with step 2's two-value reading. Step 2 is the more detailed decision, so the body should be fixed to match it.\n- MEDIUM `[incomplete-with-max-iterations-vs-acceptance]` [confidence: limited]: Acceptance criterion 1 conflicts with Architecture rule (2). The criterion says \"No reader prescribes hand triage for a stop a plain re-audit would continue.\" Rule (2) says \"a `max_iterations` stop on a budget-limited audit is still incomplete\", with hand triage and no stage, and the Testing row \"incomplete \u00d7 `max_iterations` (ids named, hand triage, no stage)\" repeats it. A reader who applies the criterion literally can read `max_iterations` as always re-auditable.\n- MEDIUM `[stale-trigger-not-in-qualified-set]` [confidence: limited]: The `not-sampled` `revision_status` has no assigned cause. Architecture rule (1) fires only for `stale` or `unknown-legacy`. Rule (5) catches \"any other untrusted result with a current revision\", but `not-sampled` is not `current`. Step 1's Input says `not-sampled` \"is also a no-evidence result and is not stale\". A `not-sampled` result therefore matches no rule. The likely fallthrough to `persistent` would print \"re-auditing unchanged text reproduces this\", which is false when no sample exists yet. Sites: Architecture precedence rules (1) and (5); the Testing row for \"a current-revision untrusted result matching no earlier rule\"; step 1's Input and Implementation.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[stale-trigger-not-in-qualified-set]` [confidence: limited]: The plan's stale trigger is `revision_status` `stale` or `unknown-legacy` under the `no-qualified-current-evidence` headline. Step 1 notes `not-sampled` is a no-evidence result that is \"not stale\". Neither the Architecture precedence nor the Testing rows say which cause `not-sampled` gets. By rule (5) it falls to `persistent`, but that is by implication only, and HEAD's first branch treats it as `persistent` because of the no-evidence headline. Add one Testing row for `not-sampled` so the catch-all is pinned against the stale rule.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 re-auditing unchanged text reproduces this result \u2014 triage the saved report's findings, correct them in a session-directed edit, commit, then re-audit the changed snapshot; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-af09566e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture precedence list never says what a transient stop does when the blocking set is non-empty. At HEAD, `_ve",
+      "body": "The Architecture precedence list never says what a transient stop does when the blocking set is non-empty. At HEAD, `_verdict_untrusted_cause` returns `\"\"` (trusted, gaps named) for `blocking_set_nonempty` before it looks at the stop reason, which is #479's \"a non-empty set then names its gaps whatever the stop\" rule. The plan's rule (3) reads \"`max_iterations`, `deadline_exceeded`, or `no_progress` on an otherwise qualified result; re-audit\". The Acceptance criterion reads \"No reader prescribes hand triage for a stop a plain re-audit would continue\". The Out-of-scope list forbids re-deciding \"trust-follows-the-gate\". A reader can take a `max_iterations` stop with HIGH gaps as `transient` (re-audit, ids not offered) or as trusted (gaps named, a stage possibly offered). The step 1 detail and the Testing rows (\"transient \u00d7 persistent hand-apply stop\") do not pin either. State where the non-empty-set rule sits in the precedence, and add one Testing row for a cut-short stop with a non-empty set.",
+      "suggested_action": "Insert the non-empty-blocking-set rule into the Architecture precedence list, and reconcile steps 1 and 4 and the Testing and Acceptance wording to it.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "transient-vs-nonempty-set-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a84cfa28",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan body and step 2 disagree about where retained ids live. The Architecture says \"`_conceptual_bar_from_audit_recs",
+      "body": "The plan body and step 2 disagree about where retained ids live. The Architecture says \"`_conceptual_bar_from_audit_recs` keeps the established blocking ids for an incomplete audit. The finalize gate's bool keeps its current value.\" Step 2's detail says the gate ids stay `()` on an incomplete audit, \"only the verdict's copy of the ids changes\", and the function's returned gate pair is left unchanged. At HEAD the function returns `(), True` on an incomplete audit. The Testing line \"iterate stop reason and `_remap_iterate_stop_for_conceptual_bar` result are asserted identical for an incomplete audit with and without ids\" only makes sense with step 2's two-value reading. Step 2 is the more detailed decision, so the body should be fixed to match it.",
+      "suggested_action": "Reword the Architecture paragraph and the Problem statement to say the function's gate pair is unchanged and the verdict receives separately computed stage-bar ids, matching step 2.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "bar-ids-gate-vs-verdict-split",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-18013109",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Acceptance criterion 1 conflicts with Architecture rule (2). The criterion says \"No reader prescribes hand triage for a ",
+      "body": "Acceptance criterion 1 conflicts with Architecture rule (2). The criterion says \"No reader prescribes hand triage for a stop a plain re-audit would continue.\" Rule (2) says \"a `max_iterations` stop on a budget-limited audit is still incomplete\", with hand triage and no stage, and the Testing row \"incomplete \u00d7 `max_iterations` (ids named, hand triage, no stage)\" repeats it. A reader who applies the criterion literally can read `max_iterations` as always re-auditable.",
+      "suggested_action": "Narrow criterion 1 to cut-short stops on an otherwise qualified, current-revision result, and name the budget-limited exception explicitly.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "incomplete-with-max-iterations-vs-acceptance",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-dcd1f022",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `not-sampled` `revision_status` has no assigned cause. Architecture rule (1) fires only for `stale` or `unknown-lega",
+      "body": "The `not-sampled` `revision_status` has no assigned cause. Architecture rule (1) fires only for `stale` or `unknown-legacy`. Rule (5) catches \"any other untrusted result with a current revision\", but `not-sampled` is not `current`. Step 1's Input says `not-sampled` \"is also a no-evidence result and is not stale\". A `not-sampled` result therefore matches no rule. The likely fallthrough to `persistent` would print \"re-auditing unchanged text reproduces this\", which is false when no sample exists yet. Sites: Architecture precedence rules (1) and (5); the Testing row for \"a current-revision untrusted result matching no earlier rule\"; step 1's Input and Implementation.",
+      "suggested_action": "State which cause and action a `not-sampled` result gets (fresh audit, since no evidence exists). Widen rule (5)'s wording to cover non-stale results regardless of revision, and add a Testing row for `not-sampled`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stale-trigger-not-in-qualified-set",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-dcd1f022",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan's stale trigger is `revision_status` `stale` or `unknown-legacy` under the `no-qualified-current-evidence` head",
+      "body": "The plan's stale trigger is `revision_status` `stale` or `unknown-legacy` under the `no-qualified-current-evidence` headline. Step 1 notes `not-sampled` is a no-evidence result that is \"not stale\". Neither the Architecture precedence nor the Testing rows say which cause `not-sampled` gets. By rule (5) it falls to `persistent`, but that is by implication only, and HEAD's first branch treats it as `persistent` because of the no-evidence headline. Add one Testing row for `not-sampled` so the catch-all is pinned against the stale rule.",
+      "suggested_action": "Name `not-sampled` as a `persistent` case in the Architecture precedence rule (5) and add one Testing row for it.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stale-trigger-not-in-qualified-set",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c8cbf6120790cc2fef52cb9865cee160df3904f86b724431911b48fdf1854770",
+      "detail_bundle_digest": "000b720f7750e35a11ec03420238051ec657331a5f7a8e455b9c571957ad6d18",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md",
+          "state": "present",
+          "digest": "e098fc1a3be632f386363a6ba4b80953ed6664768d47d8382d6b829ebc0bcd4c"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md",
+          "state": "present",
+          "digest": "7768207b09285829ad1c0921da7fcb59c1fb5f91e295f450c70b6068be8346a7"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md",
+          "state": "present",
+          "digest": "8f04a2fa96c4000680fac2c1462395022bc98a61d7c5cfe578b02736c468b180"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md",
+          "state": "present",
+          "digest": "20429f9e7d2cd0a1f955503344038b9992e5f92fd4591ad5013a73777a00a6e8"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md",
+          "state": "present",
+          "digest": "1a82b170ab36c3d8f620ee5527c45fa1ec4e9c488025c7c932105541c2489298"
+        }
+      ],
+      "source_seed_digest": "d3ad2373cec38bb40436faa604b3e13653eedc1a7374e5e87a3528fb813796a7",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 51523,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-plan-set-creation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-set-creation.md",
+  "created_at": "2026-10-16T15:53:13Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "20305c9095af0f5aef7fcf42dbb78efd484ad4db8418f94aa454f8181b158938",
+  "code_fingerprint": {
+    "BACKLOG.md": "b8b9f545f25589d2904ffce7ebdd6b7e1d64e14682e9b4b79cc90ea5d47a068b",
+    "CAPABILITIES.md": "08427aecec829eb93d1ca4c05418179cc8951029746c49d3e068be339a5f14e4",
+    "ROADMAP_FORMAT.md": "f599681a6e047e79fed865bd4ae211de9356e7692884f7e4be7254a08a34cc62",
+    "TESTING.md": "aed085deceba3c1892b096af95359ff2f7939b5d9ff69525f192a61f11f11987",
+    "docs/ARCHITECTURE.md": "663005e9b70b35670104a61523521ca3975b3103ad39c3059657c80aca0bb43d",
+    "docs/cli/create.md": "9f8460b7415bae47fed691ae7ec4f1bb9833d2f740c4e0d7fbdf71ab30bba2bb",
+    "docs/evidence/roadmap-plan-set-benchmark.md": "ae19133ef6dd62ab5a2388ddf0d8f483d5f2aad9145ec854947689e0c50c5d2e",
+    "docs/how-to/roadmap.md": "538060aa8fc62cc73f9d011deaf5ac3739cb606f0fa0936567992413834cc393",
+    "plan_tool/cli/authoring.py": "55b31879049c705108debdcf10f8493afd5b39cf34a79ea49db8b930e98e47b5",
+    "tests/cli/test_authoring_cmds.py": "112613ae2c5a865f3508bbaa53cab6a29544c8df7c4bc075a93543464cfc44cd",
+    "tests/cli/test_cli_parser.py": "264e3806a4a5a39f4da0b5d28e129963ebc56b6a3d1dba8ada7814b5556241a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/01-define-source-bound-plan-set-record.md": "2699f74e547c96abd739dd25a41c2e623b16f05a26f1185885a70ba40122fd1f",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/02-derive-complete-implementation-set.md": "02e09f561c715883552383adf3f5e495f317e6ab724181dfac974a6548e604c8",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/03-author-members-serially-safe-retry.md": "d8b04fd1fa36336e73506768d17a6be9688826132d24209ede341b72af8cba9b",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/04-expose-opt-plan-set-creation-through.md": "bd3f4d6c60527063a3bf85808c8e20651f96d8c651639b41bbbb0d638f3f7067",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/05-compare-baseline-plan-set-authoring-on.md": "a96b23e5a25d0a2bf02825ab9b158704ae2f6ece5ab9a5881b74f3cbcc9e261b",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/06-document-plan-set-ownership-recovery.md": "ad15ddf51f4ac3134395bcad32f65073a216f6a8e328235c0f68cceceb66ebad"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Plan Set Creation\n\n`roadmap-plan-set-creation` \u00b7 generated 2026-10-16T15:53:13Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9acf1bfaaf72edf373894ccba7f1ab5b7ab48f0b4db8e304d7da867396ba8ded`\n- **Detail bundle digest:** `1b02b29289d78d0aae23d5684f810244ce0dde767357324fb1780a5d0b7b9b02`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 87590 bytes (+87590 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[member-seed-input]` [confidence: limited]: Step 3 (`Author members serially with safe retry, replacing only owned progress records and preserving completed plans and seeds`) specifies passing the saved seed through `from_existing_path`, but that argument does not load its text. In `plan_tool/create.py:_prepare_create_plan`, authoring content comes from `seed_body` or `from_description`; `plan_tool/cli/authoring.py:cmd_create` supplies the text separately. Step 3\u2019s \u201cDelegate individual creation unchanged\u201d instruction and `test_create_receives_saved_seed_and_disallows_collision_replacement` therefore leave out a required input, allowing member authoring to lose the saved source, ownership, dependency and acceptance content despite `test_member_seed_preserves_source_ownership_dependencies_and_acceptance`.\n  - Fix: Specify that each member call receives both the saved seed\u2019s current text as authoring input and its path as source identity, and require the adapter tests to verify both on initial authoring and retry.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-plan-set-creation --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Plan Set Creation\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `9acf1bfaaf72edf373894ccba7f1ab5b7ab48f0b4db8e304d7da867396ba8ded`\n- **Detail bundle digest:** `1b02b29289d78d0aae23d5684f810244ce0dde767357324fb1780a5d0b7b9b02`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[member-seed-input]` [confidence: limited]: Step 3 (`Author members serially with safe retry, replacing only owned progress records and preserving completed plans and seeds`) specifies passing the saved seed through `from_existing_path`, but that argument does not load its text. In `plan_tool/create.py:_prepare_create_plan`, authoring content comes from `seed_body` or `from_description`; `plan_tool/cli/authoring.py:cmd_create` supplies the text separately. Step 3\u2019s \u201cDelegate individual creation unchanged\u201d instruction and `test_create_receives_saved_seed_and_disallows_collision_replacement` therefore leave out a required input, allowing member authoring to lose the saved source, ownership, dependency and acceptance content despite `test_member_seed_preserves_source_ownership_dependencies_and_acceptance`.\n\n### Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-plan-set-creation --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ed0dd5e7",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 (`Author members serially with safe retry, replacing only owned progress records and preserving completed plans a",
+      "body": "Step 3 (`Author members serially with safe retry, replacing only owned progress records and preserving completed plans and seeds`) specifies passing the saved seed through `from_existing_path`, but that argument does not load its text. In `plan_tool/create.py:_prepare_create_plan`, authoring content comes from `seed_body` or `from_description`; `plan_tool/cli/authoring.py:cmd_create` supplies the text separately. Step 3\u2019s \u201cDelegate individual creation unchanged\u201d instruction and `test_create_receives_saved_seed_and_disallows_collision_replacement` therefore leave out a required input, allowing member authoring to lose the saved source, ownership, dependency and acceptance content despite `test_member_seed_preserves_source_ownership_dependencies_and_acceptance`.",
+      "suggested_action": "Specify that each member call receives both the saved seed\u2019s current text as authoring input and its path as source identity, and require the adapter tests to verify both on initial authoring and retry.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "member-seed-input",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "9acf1bfaaf72edf373894ccba7f1ab5b7ab48f0b4db8e304d7da867396ba8ded",
+      "detail_bundle_digest": "1b02b29289d78d0aae23d5684f810244ce0dde767357324fb1780a5d0b7b9b02",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/01-define-source-bound-plan-set-record.md",
+          "state": "present",
+          "digest": "2699f74e547c96abd739dd25a41c2e623b16f05a26f1185885a70ba40122fd1f"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/02-derive-complete-implementation-set.md",
+          "state": "present",
+          "digest": "02e09f561c715883552383adf3f5e495f317e6ab724181dfac974a6548e604c8"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/03-author-members-serially-safe-retry.md",
+          "state": "present",
+          "digest": "d8b04fd1fa36336e73506768d17a6be9688826132d24209ede341b72af8cba9b"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/04-expose-opt-plan-set-creation-through.md",
+          "state": "present",
+          "digest": "bd3f4d6c60527063a3bf85808c8e20651f96d8c651639b41bbbb0d638f3f7067"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/05-compare-baseline-plan-set-authoring-on.md",
+          "state": "present",
+          "digest": "a96b23e5a25d0a2bf02825ab9b158704ae2f6ece5ab9a5881b74f3cbcc9e261b"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/06-document-plan-set-ownership-recovery.md",
+          "state": "present",
+          "digest": "ad15ddf51f4ac3134395bcad32f65073a216f6a8e328235c0f68cceceb66ebad"
+        }
+      ],
+      "source_seed_digest": "30068b1918c3958963bf40c8e40aff28462218dc773493ab52a6cfaa54f7269e",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 87590,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-39cbc448": {
+      "code_anchor": "plan_tool/review_persistence.py:AuditInputSnapshot.capture",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-5440c24a": {
+      "code_anchor": "plan_tool/review_persistence.py:AuditInputSnapshot.capture",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260820-111649-completeness"
+}

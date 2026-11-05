@@ -1,0 +1,128 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-315-guarded-reopen-proof",
+  "plan_path": "docs/implementation-plans/2-roadmap-315-guarded-reopen-proof.md",
+  "created_at": "2026-08-27T12:12:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "65e7055f8c9908d2113957cf8fda21b3f9afa12c43263a368b3f8d0397fc41da",
+  "code_fingerprint": {
+    "BACKLOG.md": "92af122efd9068256d36a9d54ce0ec6007f8c03024df500b3440c14ef6e28189",
+    "BUG_BACKLOG.md": "147e6d788e695a3bfbc5d8156e3b7f432d84e84779dbf2b772eb6628caa9aae1",
+    "CAPABILITIES.md": "ec5841a91819ac76f0035f8086099a0e8e743411d2f8a32ff770671ed12cd8a9",
+    "README.md": "3e02fe1e80a559fe5865089f468af97690f0f5255f344ce83dbd63766368445f",
+    "ROADMAP_FORMAT.md": "092ac75e04cce53615a138f37bb55ecb8d4fdc81cedb5d8231a416ae17e9dd2a",
+    "RUNBOOK.md": "edb4bf1a62053f048ef2c7e5fd259aa3da8d057b1310ca0d37cb4ec045a95fd8",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "295112896b637b940180815d11fff474dfb2549e6590d8edcdfb038a8e0b3e65",
+    "docs/ROADMAP_WALKTHROUGH.md": "dc2ad5fbb0ff16990e14de381f17e3fc320edc6b23a605789bb457a29be8b010",
+    "docs/cli/roadmap.md": "f2c63c2575e3e500d4703430f0e7d6f67d78bb26883eb25c7bcc5e386b5f9919",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "ed015b94a5944c6384233bc10ff867463a4a843984e938d5f4e0d3129f1cf800",
+    "plan_tool/cli/roadmap_cmd.py": "df551cd01e016815d2d668e73851dd8652f605829175febd978f5998515b6d2c",
+    "plan_tool/roadmap.py": "b4f58ef622a11925ae448764a5e4f82ce43e58dad22e7eb8e2424761a327c425",
+    "plan_tool/roadmap_artifacts.py": "bc8fea1c8cbc4cfdb409ed1eed3c01d601ea882c399ccd3c5d6a98e3b837d474",
+    "plan_tool/roadmap_escalation.py": "0784573a8070f40f84bd0069dd9ca30a02522d69f4014c7cd810dd0590173eff",
+    "plan_tool/roadmap_escalation_run.py": "357663cfd0886a78133578f4f41ee07eb69b05965ad0e6c7b8b7e2151132d7fe",
+    "plan_tool/roadmap_escalation_selection.py": "88dc3d9dd3a7a49e24dfc36ad24087d0eb274a7c2b3cceb0ea04fba1effe7e19",
+    "plan_tool/roadmap_impact_analysis.py": "226c9cde08c8e59b4033c7a82b7f37acae2b7cf531bf22a892091035973a9181",
+    "plan_tool/roadmap_revision_publish.py": "b6d611ffad356f81f7e657202a9e0ef659b2f9f9fd8422a48d9a97407e2b5dfb",
+    "tests/cli/package_surface_help.golden.txt": "64ac994b6554a59825248f6121173a5a46b2d4e76f12752506afeadb83f7b754",
+    "tests/cli/test_roadmap_cmd.py": "c07b87807588acd86bc8caed136bd5578b16f4f51048240ad84932f76aab9c5d",
+    "tests/test_roadmap_artifacts.py": "3b5fb3a4833047501875fe3c9f70c9b22d69c96c4bd6a46c8b626496ad572a80",
+    "tests/test_roadmap_escalation.py": "779d97a6c5594d1b5c672f8ad4fb85bbc8cbfffc1c052550843347c7d84f6866",
+    "tests/test_roadmap_escalation_run.py": "b7d4c5f533d36d22efe3bd38169a1052951d7e7ed16c73dd4839ce0e9fec1bac",
+    "tests/test_roadmap_escalation_selection.py": "bddbfd22f9d9e1981e3419a0f726595b133260a7375b1d62c578b2a7670d43fc",
+    "tests/test_roadmap_format.py": "670461ddba26ec2fe2489e2f3eab41b6aaa31dab98c7c030e7a880a1a7c0abf6",
+    "tests/test_roadmap_impact_analysis.py": "11eb2ba3208547f7dbf54b7a7e94c213633b2c92cd4395f92b78d6ac310ff388",
+    "tests/test_roadmap_revision_publish.py": "8e8190e80c2aa51793d82dbb637c74cc5f2ed283d342b455e725c67ee62a1b22"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/01-redacted-315-reopen-record-fresh-nonce.md": "5b1b64e0621c0d482d88c5882d349ed03ac9fb8109dfcab138f852b927b7ad3c",
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/02-315-reopen-eligibility-candidate.md": "5366d995b3c826657d3e728cad9dcdf5760fd190a0fd6e98041845af9dc1f772",
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/03-fold-reopen-nonce-escalation-receipt.md": "b391110b470fe58e89055a5d70731489dabdc79fd7b5576da953cb42e589be8f",
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/04-guarded-315-reopen-orchestrator-that.md": "a7a59eda51e93a26445dc2b263f01ee92c2a6564faa0e27dd092f0140590abcb",
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/05-wire-exclusive-reopen-315-feedback.md": "f2c8093f8aa8a5c4e9f31a6234f9e1aae497cbaf880159f8da5d1e9f98e10f90",
+    "docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/06-record-315-delivered-outcome-backlog.md": "fb48cbadce12f6c3454f3fb360345999d3d33aa07e9497c685e7eb6c220cf859"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap 315 Guarded Reopen Proof\n\n`roadmap-315-guarded-reopen-proof` \u00b7 generated 2026-08-27T12:12:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-8459c6f4]`: The plan's `## Acceptance criteria` names `--reopen-315-feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-315-guarded-reopen-proof` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap 315 Guarded Reopen Proof\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `--reopen-315-feedback`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "65e7055f8c9908d2113957cf8fda21b3f9afa12c43263a368b3f8d0397fc41da",
+    "detail_bundle_digest": "14fe33dd59671e75feb13e2e98f0b521ddaaa49ba6746ca7562e0b410888d14d",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/01-redacted-315-reopen-record-fresh-nonce.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/02-315-reopen-eligibility-candidate.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/03-fold-reopen-nonce-escalation-receipt.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/04-guarded-315-reopen-orchestrator-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/05-wire-exclusive-reopen-315-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-315-guarded-reopen-proof/06-record-315-delivered-outcome-backlog.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "e43376778f14a2f933a68a563f13dc468657fc14c39f69eb5140b98215b69104",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

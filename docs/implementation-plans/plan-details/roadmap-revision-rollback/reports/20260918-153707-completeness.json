@@ -1,0 +1,181 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-revision-rollback",
+  "plan_path": "docs/implementation-plans/2-roadmap-revision-rollback.md",
+  "created_at": "2026-09-18T15:37:07Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "edbdb48ac2761a1f91ab6d01e8485d156c919044cda5c2782ba97df05b678757",
+  "code_fingerprint": {
+    "BACKLOG.md": "c45daf5cf5b89b5575539e23a814a6b7207ee99c7e32fa6d1279577cdc87ae84",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap.py": "a58515b8bcbc81e2dc2f4cc2fc32778e8c20d5f22f311c447b40651b426cc085",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap.py": "bf46be48d327efc56d15ffb532759a1aa0f8425da0db85dbbe922c4039d969a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md": "dbb59c905d9ddf654ae72fea4199bd7ddb3a4ea4d3cd787d179f9f51ee310f10",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/02-have-run-roadmap-run-recover-roadmap.md": "54235406c9da996f1a192520e21c166fc7f68a370bac9f991ef8ace4b99f4db9",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md": "69696eada7b48130d461879af4b5adeb1db84da5c7927fab77b128d9d88365a9",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md": "d4056e580f34e80202692b481ff000371620a0bde00644e139b919381913b065",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-when-checkpoint.md": "03cf9e003c1b4d9c89ddafb7c674c8d454ba0fcb5bc40f95290ef327e6979b4d",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md": "701b562d171ee9b9902f3538765ad3ecf36df245d8f94c6e079df07b467513ae"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Revision Rollback\n\n`roadmap-revision-rollback` \u00b7 generated 2026-09-18T15:37:07Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `edbdb48ac2761a1f91ab6d01e8485d156c919044cda5c2782ba97df05b678757`\n- **Detail bundle digest:** `b4692bba24875b397113a394da1f988db23defd31a40adc14c5066f746e09ea6`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-revision-rollback  # optional interactive review of the saved findings\n\n- HIGH `[checkpoint-recovery-ordering]` [confidence: limited]: Step 2 requires two things that cannot both hold given HEAD's write order. It requires the checkpoint's pre-run snapshot to be taken only after `recover_roadmap_publication` has resolved any dangling journal, and it requires the checkpoint to capture the run's first write, naming a confirmed brief rebind of `source.json` as a case of that first write. In `_run_roadmap` (`plan_tool/roadmap.py`), the confirmed-rebind write (`_write_brief_source`, in the `confirm_brief_rebind` branch around line 2647) runs and completes before `recover_roadmap_publication` is called (around line 2687) \u2014 the rebind write is not guarded by the recovery call at all. So for a rebind run there is no place to take the pre-run snapshot that satisfies both rules: take it before the rebind write and recovery has not run yet; wait for recovery first and the rebind write already landed uncheckpointed. This directly undercuts the plan's own top Risk (\"Taking the pre-run snapshot before resolving a dangling journal... would capture transient, never-stable bytes\") for exactly the file (`source.json`) the step calls out by name.\n\n  ```\n  Both the pre-run snapshot and the ongoing last-written bytes are trusted only after recover_roadmap_publication has resolved any dangling journal -- a run takes its pre-run snapshot only after that call, not before, so a journal left by an earlier crash is settled to its fully-committed state first.\n  ```\n  - Fix: Reorder `_run_roadmap` so `recover_roadmap_publication` runs before the confirmed-rebind `source.json` write, then have step 2 take the checkpoint's pre-run snapshot immediately ahead of whichever write is now genuinely first for every case, rebind included.\n- HIGH `[cmd-roadmap-outcome-paths]` [confidence: limited]: Step 5 claims to name the restore command at \"all three\" of `cmd_roadmap`'s non-completion exit points for a stage run, but there is a fourth. `cmd_roadmap` (`plan_tool/cli/roadmap_cmd.py`) wraps the `run_roadmap` call in two `except` clauses: `except (OSError, RoadmapEnvironmentalError)` (around line 628, one of the three named) and a separate `except (RoadmapError, RoadmapArtifactError, RoadmapWriterGuardError)` (around line 631) that today just calls `error()` and returns `_RC_USAGE` \u2014 step 5 does not name this second clause at all. It is reachable after a checkpoint would already exist: `_render_stage_prompt` (`plan_tool/roadmap.py`, around line 1221) raises plain `RoadmapError` \u2014 not the `RoadmapEnvironmentalError` subclass step 5's second named branch catches \u2014 when a stage's prompt template file is missing, and this call runs once per stage inside the same loop that already published earlier stages via `publish_stage_artifact`. `_rebind_stage_failure_context`, wrapped around every stage in the loop, explicitly re-raises `RoadmapError`/`RoadmapArtifactError` rather than converting it to a `RoadmapResult`. So a missing prompt template (or missing shared header/footer file) at stage 2 or later, after stage 1 already committed and the checkpoint already updated, lands in the unnamed fourth branch \u2014 exactly the case where an operator most needs to be told a restore is available, and step 5 as written leaves that branch silent.\n\n  ```\n  Name the restore command, when a checkpoint exists, at all three of cmd_roadmap's disconnected outcome paths -- the RoadmapResult-based invalid/exhausted branch that already reaches _print_invalid/_print_exhausted, the except (OSError, RoadmapEnvironmentalError) branch that today only calls error() and returns _RC_INCOMPLETE, and the except KeyboardInterrupt branch that today only prints \"interrupted\" -- and never after a completed run\n  ```\n  - Fix: Add the `except (RoadmapError, RoadmapArtifactError, RoadmapWriterGuardError)` branch in `cmd_roadmap` as a fourth site step 5 must name the restore command at (when a checkpoint exists), alongside the three already listed, and extend the Testing section's \"ways a run can stop\" enumeration to cover a mid-run environmental failure of this kind.\n- MEDIUM `[checkpoint-name-collision]` [confidence: limited]: The plan names its new artifact a \"roadmap revision checkpoint\" (Overview, step 1, step 6), but `plan-tool` already has a distinct, CLI-facing, documented concept with the same name: `plan-tool checkpoint list` / `plan-tool checkpoint clear`, covering `create`/`detail`'s own resumable authoring state under `.plan-tool/checkpoints/<plan-slug>/` (see `RUNBOOK.md`'s command-families table: `\"checkpoint\", \"runs\", \"lessons\", \"register\", \"deregister\", \"sweep\", \"withdraw\"` under state management, and its `<slug>/<checkpoint>` identifier convention). Both concepts key off the same kind of `<slug>` an operator already types for `plan-tool roadmap <slug>` and `plan-tool checkpoint list <slug>`, so an operator reading step 6's new operator docs about \"the checkpoint file\" could reasonably expect `plan-tool checkpoint list`/`clear` to see or touch it, when it is in fact a separate file with no relation to that subcommand family \u2014 nothing in the plan or in `ROADMAP_FORMAT.md`/`docs/how-to/roadmap.md` (neither currently mentions \"checkpoint\") flags the collision or tells step 6's docs to disambiguate it.\n  - Fix: Either pick a term for the roadmap artifact that doesn't collide with the existing `plan-tool checkpoint` subcommand family (e.g. \"revision snapshot\" or \"restore point\"), or keep \"checkpoint\" but have step 6's operator documentation explicitly state that it is unrelated to `plan-tool checkpoint list`/`clear`.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a696aa98]` [confidence: limited]: The plan's `## Acceptance criteria` names `recover_roadmap_publication`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 3 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Revision Rollback\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `edbdb48ac2761a1f91ab6d01e8485d156c919044cda5c2782ba97df05b678757`\n- **Detail bundle digest:** `b4692bba24875b397113a394da1f988db23defd31a40adc14c5066f746e09ea6`\n- **Detail grade:** `run`\n\n### Audit provenance\n\nThis audit resumed from a durable sampler pass boundary. This provenance does not change its findings, coverage, or qualified result.\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[checkpoint-recovery-ordering]` [confidence: limited]: Step 2 requires two things that cannot both hold given HEAD's write order. It requires the checkpoint's pre-run snapshot to be taken only after `recover_roadmap_publication` has resolved any dangling journal, and it requires the checkpoint to capture the run's first write, naming a confirmed brief rebind of `source.json` as a case of that first write. In `_run_roadmap` (`plan_tool/roadmap.py`), the confirmed-rebind write (`_write_brief_source`, in the `confirm_brief_rebind` branch around line 2647) runs and completes before `recover_roadmap_publication` is called (around line 2687) \u2014 the rebind write is not guarded by the recovery call at all. So for a rebind run there is no place to take the pre-run snapshot that satisfies both rules: take it before the rebind write and recovery has not run yet; wait for recovery first and the rebind write already landed uncheckpointed. This directly undercuts the plan's own top Risk (\"Taking the pre-run snapshot before resolving a dangling journal... would capture transient, never-stable bytes\") for exactly the file (`source.json`) the step calls out by name.\n\n  ```\n  Both the pre-run snapshot and the ongoing last-written bytes are trusted only after recover_roadmap_publication has resolved any dangling journal -- a run takes its pre-run snapshot only after that call, not before, so a journal left by an earlier crash is settled to its fully-committed state first.\n  ```\n- HIGH `[cmd-roadmap-outcome-paths]` [confidence: limited]: Step 5 claims to name the restore command at \"all three\" of `cmd_roadmap`'s non-completion exit points for a stage run, but there is a fourth. `cmd_roadmap` (`plan_tool/cli/roadmap_cmd.py`) wraps the `run_roadmap` call in two `except` clauses: `except (OSError, RoadmapEnvironmentalError)` (around line 628, one of the three named) and a separate `except (RoadmapError, RoadmapArtifactError, RoadmapWriterGuardError)` (around line 631) that today just calls `error()` and returns `_RC_USAGE` \u2014 step 5 does not name this second clause at all. It is reachable after a checkpoint would already exist: `_render_stage_prompt` (`plan_tool/roadmap.py`, around line 1221) raises plain `RoadmapError` \u2014 not the `RoadmapEnvironmentalError` subclass step 5's second named branch catches \u2014 when a stage's prompt template file is missing, and this call runs once per stage inside the same loop that already published earlier stages via `publish_stage_artifact`. `_rebind_stage_failure_context`, wrapped around every stage in the loop, explicitly re-raises `RoadmapError`/`RoadmapArtifactError` rather than converting it to a `RoadmapResult`. So a missing prompt template (or missing shared header/footer file) at stage 2 or later, after stage 1 already committed and the checkpoint already updated, lands in the unnamed fourth branch \u2014 exactly the case where an operator most needs to be told a restore is available, and step 5 as written leaves that branch silent.\n\n  ```\n  Name the restore command, when a checkpoint exists, at all three of cmd_roadmap's disconnected outcome paths -- the RoadmapResult-based invalid/exhausted branch that already reaches _print_invalid/_print_exhausted, the except (OSError, RoadmapEnvironmentalError) branch that today only calls error() and returns _RC_INCOMPLETE, and the except KeyboardInterrupt branch that today only prints \"interrupted\" -- and never after a completed run\n  ```\n- MEDIUM `[checkpoint-name-collision]` [confidence: limited]: The plan names its new artifact a \"roadmap revision checkpoint\" (Overview, step 1, step 6), but `plan-tool` already has a distinct, CLI-facing, documented concept with the same name: `plan-tool checkpoint list` / `plan-tool checkpoint clear`, covering `create`/`detail`'s own resumable authoring state under `.plan-tool/checkpoints/<plan-slug>/` (see `RUNBOOK.md`'s command-families table: `\"checkpoint\", \"runs\", \"lessons\", \"register\", \"deregister\", \"sweep\", \"withdraw\"` under state management, and its `<slug>/<checkpoint>` identifier convention). Both concepts key off the same kind of `<slug>` an operator already types for `plan-tool roadmap <slug>` and `plan-tool checkpoint list <slug>`, so an operator reading step 6's new operator docs about \"the checkpoint file\" could reasonably expect `plan-tool checkpoint list`/`clear` to see or touch it, when it is in fact a separate file with no relation to that subcommand family \u2014 nothing in the plan or in `ROADMAP_FORMAT.md`/`docs/how-to/roadmap.md` (neither currently mentions \"checkpoint\") flags the collision or tells step 6's docs to disambiguate it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `recover_roadmap_publication`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7b365c6d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 requires two things that cannot both hold given HEAD's write order. It requires the checkpoint's pre-run snapshot",
+      "body": "Step 2 requires two things that cannot both hold given HEAD's write order. It requires the checkpoint's pre-run snapshot to be taken only after `recover_roadmap_publication` has resolved any dangling journal, and it requires the checkpoint to capture the run's first write, naming a confirmed brief rebind of `source.json` as a case of that first write. In `_run_roadmap` (`plan_tool/roadmap.py`), the confirmed-rebind write (`_write_brief_source`, in the `confirm_brief_rebind` branch around line 2647) runs and completes before `recover_roadmap_publication` is called (around line 2687) \u2014 the rebind write is not guarded by the recovery call at all. So for a rebind run there is no place to take the pre-run snapshot that satisfies both rules: take it before the rebind write and recovery has not run yet; wait for recovery first and the rebind write already landed uncheckpointed. This directly undercuts the plan's own top Risk (\"Taking the pre-run snapshot before resolving a dangling journal... would capture transient, never-stable bytes\") for exactly the file (`source.json`) the step calls out by name.\n\n  ```\n  Both the pre-run snapshot and the ongoing last-written bytes are trusted only after recover_roadmap_publication has resolved any dangling journal -- a run takes its pre-run snapshot only after that call, not before, so a journal left by an earlier crash is settled to its fully-committed state first.\n  ```",
+      "suggested_action": "Reorder `_run_roadmap` so `recover_roadmap_publication` runs before the confirmed-rebind `source.json` write, then have step 2 take the checkpoint's pre-run snapshot immediately ahead of whichever write is now genuinely first for every case, rebind included.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-recovery-ordering",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-e920a303",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 claims to name the restore command at \"all three\" of `cmd_roadmap`'s non-completion exit points for a stage run, ",
+      "body": "Step 5 claims to name the restore command at \"all three\" of `cmd_roadmap`'s non-completion exit points for a stage run, but there is a fourth. `cmd_roadmap` (`plan_tool/cli/roadmap_cmd.py`) wraps the `run_roadmap` call in two `except` clauses: `except (OSError, RoadmapEnvironmentalError)` (around line 628, one of the three named) and a separate `except (RoadmapError, RoadmapArtifactError, RoadmapWriterGuardError)` (around line 631) that today just calls `error()` and returns `_RC_USAGE` \u2014 step 5 does not name this second clause at all. It is reachable after a checkpoint would already exist: `_render_stage_prompt` (`plan_tool/roadmap.py`, around line 1221) raises plain `RoadmapError` \u2014 not the `RoadmapEnvironmentalError` subclass step 5's second named branch catches \u2014 when a stage's prompt template file is missing, and this call runs once per stage inside the same loop that already published earlier stages via `publish_stage_artifact`. `_rebind_stage_failure_context`, wrapped around every stage in the loop, explicitly re-raises `RoadmapError`/`RoadmapArtifactError` rather than converting it to a `RoadmapResult`. So a missing prompt template (or missing shared header/footer file) at stage 2 or later, after stage 1 already committed and the checkpoint already updated, lands in the unnamed fourth branch \u2014 exactly the case where an operator most needs to be told a restore is available, and step 5 as written leaves that branch silent.\n\n  ```\n  Name the restore command, when a checkpoint exists, at all three of cmd_roadmap's disconnected outcome paths -- the RoadmapResult-based invalid/exhausted branch that already reaches _print_invalid/_print_exhausted, the except (OSError, RoadmapEnvironmentalError) branch that today only calls error() and returns _RC_INCOMPLETE, and the except KeyboardInterrupt branch that today only prints \"interrupted\" -- and never after a completed run\n  ```",
+      "suggested_action": "Add the `except (RoadmapError, RoadmapArtifactError, RoadmapWriterGuardError)` branch in `cmd_roadmap` as a fourth site step 5 must name the restore command at (when a checkpoint exists), alongside the three already listed, and extend the Testing section's \"ways a run can stop\" enumeration to cover a mid-run environmental failure of this kind.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "cmd-roadmap-outcome-paths",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-127d182a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan names its new artifact a \"roadmap revision checkpoint\" (Overview, step 1, step 6), but `plan-tool` already has ",
+      "body": "The plan names its new artifact a \"roadmap revision checkpoint\" (Overview, step 1, step 6), but `plan-tool` already has a distinct, CLI-facing, documented concept with the same name: `plan-tool checkpoint list` / `plan-tool checkpoint clear`, covering `create`/`detail`'s own resumable authoring state under `.plan-tool/checkpoints/<plan-slug>/` (see `RUNBOOK.md`'s command-families table: `\"checkpoint\", \"runs\", \"lessons\", \"register\", \"deregister\", \"sweep\", \"withdraw\"` under state management, and its `<slug>/<checkpoint>` identifier convention). Both concepts key off the same kind of `<slug>` an operator already types for `plan-tool roadmap <slug>` and `plan-tool checkpoint list <slug>`, so an operator reading step 6's new operator docs about \"the checkpoint file\" could reasonably expect `plan-tool checkpoint list`/`clear` to see or touch it, when it is in fact a separate file with no relation to that subcommand family \u2014 nothing in the plan or in `ROADMAP_FORMAT.md`/`docs/how-to/roadmap.md` (neither currently mentions \"checkpoint\") flags the collision or tells step 6's docs to disambiguate it.",
+      "suggested_action": "Either pick a term for the roadmap artifact that doesn't collide with the existing `plan-tool checkpoint` subcommand family (e.g. \"revision snapshot\" or \"restore point\"), or keep \"checkpoint\" but have step 6's operator documentation explicitly state that it is unrelated to `plan-tool checkpoint list`/`clear`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-name-collision",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "edbdb48ac2761a1f91ab6d01e8485d156c919044cda5c2782ba97df05b678757",
+      "detail_bundle_digest": "b4692bba24875b397113a394da1f988db23defd31a40adc14c5066f746e09ea6",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/02-have-run-roadmap-run-recover-roadmap.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-when-checkpoint.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "5c46f3d940d46f8b6487cb294d01176c6131d24276682e603cbabf2e131c38ce",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

@@ -1,0 +1,213 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-concept-comparison",
+  "plan_path": "docs/implementation-plans/2-roadmap-concept-comparison.md",
+  "created_at": "2026-09-21T14:46:59Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2f9dc2ec165056623bf026fd926836f5c3eed4444387f190ae79434ce7c37a50",
+  "code_fingerprint": {
+    "BACKLOG.md": "a7c8568d0b1d2f52c6f4c0e059ce343fba6b14cc660a99dcbf02b697c3c40944",
+    "CAPABILITIES.md": "7ea4e0da3a2ce66917d755b564dee35e33edaeecda7a28219b7096d18f4a5206",
+    "CLAUDE.md": "3d350ea4550fd068aac06112c4eb8f803dd0648126f7ee6757d929522c95c7be",
+    "README.md": "93a16eba1a614b8cc3c30cca268208445e88141b02cb460023e913415ecd8bc4",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "docs/ARCHITECTURE.md": "e1de16f828ed55f87ac4d4182f4052d57c30c1ac60d386aa44e86718f258531a",
+    "docs/cli/roadmap.md": "30d505ee75bef5f4ac81df533a47905526e529046e4bb28ffc2346a32e391471",
+    "docs/how-to/roadmap.md": "8b9991202338b787b123445dd7df55bf885655609639c0384459edfb7b96f497",
+    "docs/reference/commands.md": "8147bd006d72c89409144957c30ff73652383a1164aa0cfc627aa3c12d98db80",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap_candidate.py": "1dbe9abb634bc8872c644f780670df691ffae90b40fc3c7ece87de18e8ded602",
+    "plan_tool/roadmap_versions.py": "35528bbea5b455b4b7f234bb4895f9f98bd334dc1e33d451d40fc3395d242c08",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap_candidate.py": "e5ca9a562ad194c501ebebed264120bbb2e5e97dada454b4047c8a4f6f88f969",
+    "tests/test_roadmap_format.py": "983c1b957113833eb0f9dc579dcbd6315360f9175e95b3c559758c0da7cd6b61",
+    "tests/test_roadmap_versions.py": "25af58c31ba449755c27c0c1aea62d4eda31fcd1e6fe20a71608417019a8a40a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md": "fc93a4479f0d652d7f2803312c28a9118ab9ac953791f09d60a81b23901e2457",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-attribution.md": "d3797ddfb3d68cf84e43749befe3731c3e225e7b8131e1ac3dbd940b343032dd",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md": "ff784a2e6dbe246539ee9b7574b8882b535baa6a326d75f94e714de3ecbaed08",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md": "85dc1a4f8fcac34a46af244e99906caa893c46ac047ed9325f766cf72ba0b95c",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md": "1c370010aed46ddd11ad020d59b521295c7d60739a0a9c7fa4adae4f58bcafce",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md": "712377f1f8fb86ff085e835ec729819a1470579ba8b5d0e6bc02bb4be445e96c",
+    "docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md": "3b6d31e8b80251b5f431afadbdc46debb5043603652131edcd83f44746b64092"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Concept Comparison\n\n`roadmap-concept-comparison` \u00b7 generated 2026-09-21T14:46:59Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `b237534502257c487b06ff682ee4f96c0b61f47f7e6d06ad2195b97718089a70`\n- **Detail bundle digest:** `a1b9b3a417cfe1864c2058b3a1ed3d368a64b8d83a098ba101f403b4b463e9d0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 79527 bytes (+79527 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[raw-evidence-attribution]` [confidence: limited]: Step 2 (`Add typed comparison and raw patch attribution`) defines residual evidence only for an artifact whose raw bytes have no typed explanation, while Architecture, **Risks \u2192 Pretty output hides evidence**, Acceptance criterion 4, and step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) require every unattributed change to appear in the unmapped section. No rule or test covers an artifact with both a typed row edit and a comment, narrative, formatting, or reorder-only edit, so one implementation can omit that residual text from cards/JSON while another reports it.\n\n```text\n\u201cAny byte delta not attributable to a typed row, ordering entry, or declared relation appears in an unmapped/raw-text section even when the typed delta is empty.\u201d\n```\n  - Fix: Define the residual-evidence rule for mixed typed and raw changes, then require step 2\u2019s facts and step 5\u2019s terminal/JSON tests to preserve that result for every affected artifact.\n- HIGH `[stored-snapshot-parse-validation]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) requires parsing and refusing invalid working members, but step 3 (`Add complete read-only loading for an explicit stored roadmap version`) verifies stored members only as UTF-8 and digest-correct bytes, and step 4 never requires parsing immutable members before Git runs. `plan_tool/roadmap_versions.py:load_accepted_version` has that same byte-only boundary. A digest-valid but syntactically invalid stored artifact can therefore reach comparison without the plan\u2019s promised invalid-snapshot refusal or a defined parsed input for the typed diff.\n\n  ```text\n  Absence of an accepted-head selector requires an explicit stored-version base, and invalid, incomplete, or identity-mismatched snapshots refuse rather than falling back to another source.\n  ```\n  - Fix: Require step 4 to parse and validate immutable as well as working artifact bundles from their captured bytes before Git collection, with refusal coverage for digest-valid but unparseable stored members.\n- MEDIUM `[byte-identical-artifact-identification]` [confidence: limited]: Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) retains status-0 pairs, but its patch renderer permits their empty patches to contribute no text and neither its terminal nor JSON contract requires a per-artifact identical marker. Step 4\u2019s status-0 result and Acceptance criterion 4 therefore cannot show an operator which of the four artifact pairs was byte-identical.\n\n```text\nAcceptance criteria: \u201cRaw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\u201d\n```\n  - Fix: Require terminal and JSON output to identify every byte-identical artifact pair while retaining its empty Git evidence unchanged.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[byte-identical-artifact-identification]` [confidence: limited]: Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) does not require any output form to identify which individual artifacts are byte-identical. Step 4 retains status-0 pairs, but step 5 says their empty patches contribute no text and specifies only snapshot digests and aggregate counts, leaving the plan\u2019s acceptance criterion without an observable delivery route.\n\n  ```text\n  Raw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\n  ```\n  - Fix: Require the card, patch, and JSON contracts to expose each artifact pair\u2019s identical-or-differing evidence outcome, and add rendering coverage for a mixed bundle containing identical and changed artifacts.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-b0fa81ca]` [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ae3effe6]` [confidence: limited]: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-2e7cebc0]` [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-concept-comparison` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Concept Comparison\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `b237534502257c487b06ff682ee4f96c0b61f47f7e6d06ad2195b97718089a70`\n- **Detail bundle digest:** `a1b9b3a417cfe1864c2058b3a1ed3d368a64b8d83a098ba101f403b4b463e9d0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[raw-evidence-attribution]` [confidence: limited]: Step 2 (`Add typed comparison and raw patch attribution`) defines residual evidence only for an artifact whose raw bytes have no typed explanation, while Architecture, **Risks \u2192 Pretty output hides evidence**, Acceptance criterion 4, and step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) require every unattributed change to appear in the unmapped section. No rule or test covers an artifact with both a typed row edit and a comment, narrative, formatting, or reorder-only edit, so one implementation can omit that residual text from cards/JSON while another reports it.\n\n```text\n\u201cAny byte delta not attributable to a typed row, ordering entry, or declared relation appears in an unmapped/raw-text section even when the typed delta is empty.\u201d\n```\n- HIGH `[stored-snapshot-parse-validation]` [confidence: limited]: Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) requires parsing and refusing invalid working members, but step 3 (`Add complete read-only loading for an explicit stored roadmap version`) verifies stored members only as UTF-8 and digest-correct bytes, and step 4 never requires parsing immutable members before Git runs. `plan_tool/roadmap_versions.py:load_accepted_version` has that same byte-only boundary. A digest-valid but syntactically invalid stored artifact can therefore reach comparison without the plan\u2019s promised invalid-snapshot refusal or a defined parsed input for the typed diff.\n\n  ```text\n  Absence of an accepted-head selector requires an explicit stored-version base, and invalid, incomplete, or identity-mismatched snapshots refuse rather than falling back to another source.\n  ```\n- MEDIUM `[byte-identical-artifact-identification]` [confidence: limited]: Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) retains status-0 pairs, but its patch renderer permits their empty patches to contribute no text and neither its terminal nor JSON contract requires a per-artifact identical marker. Step 4\u2019s status-0 result and Acceptance criterion 4 therefore cannot show an operator which of the four artifact pairs was byte-identical.\n\n```text\nAcceptance criteria: \u201cRaw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\u201d\n```\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/roadmap_candidate_run.py` resembling declared `plan_tool/roadmap_candidate.py` (typo/stale path?)\n- INFO: step 4 detail cites `plan_tool/roadmap_compare.py` resembling declared `plan_tool/roadmap_compare_run.py` (typo/stale path?)\n- INFO: step 7 detail cites `docs/cli/roadmap.md` resembling declared `docs/how-to/roadmap.md` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[byte-identical-artifact-identification]` [confidence: limited]: Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) does not require any output form to identify which individual artifacts are byte-identical. Step 4 retains status-0 pairs, but step 5 says their empty patches contribute no text and specifies only snapshot digests and aggregate counts, leaving the plan\u2019s acceptance criterion without an observable delivery route.\n\n  ```text\n  Raw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\n  ```\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `0`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `1`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Extract the shared typed roadmap diff while preserving candidate add, replace, and remove behavior\" carries refactor verb(s) ['extract'] and feature verb(s) ['add'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-concept-comparison` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-84e7c209",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Add typed comparison and raw patch attribution`) defines residual evidence only for an artifact whose raw bytes",
+      "body": "Step 2 (`Add typed comparison and raw patch attribution`) defines residual evidence only for an artifact whose raw bytes have no typed explanation, while Architecture, **Risks \u2192 Pretty output hides evidence**, Acceptance criterion 4, and step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) require every unattributed change to appear in the unmapped section. No rule or test covers an artifact with both a typed row edit and a comment, narrative, formatting, or reorder-only edit, so one implementation can omit that residual text from cards/JSON while another reports it.\n\n```text\n\u201cAny byte delta not attributable to a typed row, ordering entry, or declared relation appears in an unmapped/raw-text section even when the typed delta is empty.\u201d\n```",
+      "suggested_action": "Define the residual-evidence rule for mixed typed and raw changes, then require step 2\u2019s facts and step 5\u2019s terminal/JSON tests to preserve that result for every affected artifact.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "raw-evidence-attribution",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-d1e4b8e5",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) requir",
+      "body": "Step 4 (`Resolve comparison snapshots and capture all four controlled Git patches without writing roadmap state`) requires parsing and refusing invalid working members, but step 3 (`Add complete read-only loading for an explicit stored roadmap version`) verifies stored members only as UTF-8 and digest-correct bytes, and step 4 never requires parsing immutable members before Git runs. `plan_tool/roadmap_versions.py:load_accepted_version` has that same byte-only boundary. A digest-valid but syntactically invalid stored artifact can therefore reach comparison without the plan\u2019s promised invalid-snapshot refusal or a defined parsed input for the typed diff.\n\n  ```text\n  Absence of an accepted-head selector requires an explicit stored-version base, and invalid, incomplete, or identity-mismatched snapshots refuse rather than falling back to another source.\n  ```",
+      "suggested_action": "Require step 4 to parse and validate immutable as well as working artifact bundles from their captured bytes before Git collection, with refusal coverage for digest-valid but unparseable stored members.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stored-snapshot-parse-validation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-af711bc2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) retains status-0 p",
+      "body": "Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) retains status-0 pairs, but its patch renderer permits their empty patches to contribute no text and neither its terminal nor JSON contract requires a per-artifact identical marker. Step 4\u2019s status-0 result and Acceptance criterion 4 therefore cannot show an operator which of the four artifact pairs was byte-identical.\n\n```text\nAcceptance criteria: \u201cRaw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\u201d\n```",
+      "suggested_action": "Require terminal and JSON output to identify every byte-identical artifact pair while retaining its empty Git evidence unchanged.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "byte-identical-artifact-identification",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-af711bc2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) does not require a",
+      "body": "Step 5 (`Render base-then-target-ordered comparison cards, complete patches, and deterministic JSON`) does not require any output form to identify which individual artifacts are byte-identical. Step 4 retains status-0 pairs, but step 5 says their empty patches contribute no text and specifies only snapshot digests and aggregate counts, leaving the plan\u2019s acceptance criterion without an observable delivery route.\n\n  ```text\n  Raw-only changes remain visible in an unmapped section, byte-identical artifacts are identified, and the patch view emits the complete controlled Git diff for all four pairs.\n  ```",
+      "suggested_action": "Require the card, patch, and JSON contracts to expose each artifact pair\u2019s identical-or-differing evidence outcome, and add rendering coverage for a mixed bundle containing identical and changed artifacts.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "byte-identical-artifact-identification",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "b237534502257c487b06ff682ee4f96c0b61f47f7e6d06ad2195b97718089a70",
+      "detail_bundle_digest": "a1b9b3a417cfe1864c2058b3a1ed3d368a64b8d83a098ba101f403b4b463e9d0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/01-extract-shared-typed-roadmap-diff-while.md",
+          "state": "present",
+          "digest": "fc93a4479f0d652d7f2803312c28a9118ab9ac953791f09d60a81b23901e2457"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/02-typed-comparison-raw-patch-attribution.md",
+          "state": "present",
+          "digest": "d3797ddfb3d68cf84e43749befe3731c3e225e7b8131e1ac3dbd940b343032dd"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/03-complete-read-only-loading-explicit.md",
+          "state": "present",
+          "digest": "ff784a2e6dbe246539ee9b7574b8882b535baa6a326d75f94e714de3ecbaed08"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/04-resolve-comparison-snapshots-capture.md",
+          "state": "present",
+          "digest": "85dc1a4f8fcac34a46af244e99906caa893c46ac047ed9325f766cf72ba0b95c"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/05-render-base-then-target-ordered.md",
+          "state": "present",
+          "digest": "1c370010aed46ddd11ad020d59b521295c7d60739a0a9c7fa4adae4f58bcafce"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/06-exclusive-read-only-roadmap-comparison.md",
+          "state": "present",
+          "digest": "712377f1f8fb86ff085e835ec729819a1470579ba8b5d0e6bc02bb4be445e96c"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-concept-comparison/07-document-roadmap-comparison-mark.md",
+          "state": "present",
+          "digest": "3b6d31e8b80251b5f431afadbdc46debb5043603652131edcd83f44746b64092"
+        }
+      ],
+      "source_seed_digest": "b54017aabff13e71baba57739619addaf7c211394827ad1a18b85d4f8b842992",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 79527,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

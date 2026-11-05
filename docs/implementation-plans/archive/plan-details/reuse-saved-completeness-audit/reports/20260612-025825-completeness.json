@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "plan_slug": "reuse-saved-completeness-audit",
+  "plan_path": "docs/implementation-plans/2-reuse-saved-completeness-audit.md",
+  "created_at": "2026-06-12T02:58:25Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Reuse Saved Completeness Audit\n\n`reuse-saved-completeness-audit` \u00b7 generated 2026-06-12T02:58:25Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 3 (3 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Architecture section and step-3's Why write `compute_plan_fingerprint(plan_path, repo_root)`, but the authoritative step-1 and step-4 details define and call it single-arg `compute_plan_fingerprint(plan_path)` (the bundle derives from `plan_path.parent`, so no `repo_root`). Reconcile the body prose to the single-arg signature. \u2014 - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: changed `compute_plan_fingerprint(plan_path, repo_root)` to `compute_plan_fingerprint(plan_path)` in the Architecture section.\n- [APPLIED] Step-05's detail states `depends_on: 1, 2` and steps 04/05 reference `compute_code_fingerprint` as a \"step 2\" symbol, contradicting the canonical frontmatter (`compute_code_fingerprint` is step 3; step 5 `depends_on: 1, 3`); the off-by-one prose post-dates inserting the hash-promotion as step 2 and will misdirect an implementer reading the detail bundle. \u2014 - `docs/implementation-plans/plan-details/reuse-saved-completeness-audit/04-widen-write-completeness-report-accept.md`: relabeled the three `compute_code_fingerprint`/`drift_detection`+`scope_guard`-import references from \"step 2\" to \"step 3\".\n- [APPLIED] Step-01 Deferred claims the inlined streamed-hash copy's dedup is \"left to later steps,\" but the leaf-preservation rule forbids `review_persistence.py` from importing `drift_detection` \u2014 the dedup is unsatisfiable, not deferred.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[empty-code-fingerprint-vs-legacy]`: The design collapses two distinct states into an empty `code_fingerprint` dict: a legacy/unset sidecar *and* a valid sidecar for a plan with no extant in-scope code files (docs-only plans, or plans whose `step.all_files` are all not-yet-created `(new)` files). Step 4's \"`not saved.code_fingerprint` \u2192 `code_match = False`\" rule forces `fresh = False` permanently for the latter, so a pre-implementation plan \u2014 exactly the repeatedly-audited case the Problem statement names \u2014 can never reuse its audit. No step distinguishes \"computed-and-empty\" from \"unset\" (e.g. a separate `code_fingerprint_present` marker, or falling back to plan-match-only when the watched-code surface is legitimately empty).\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor empty-code-fingerprint-vs-legacy`\n- MEDIUM `[auditor-version-invalidation]`: The reuse cache keys only on plan and code content, but sidecars are never GC'd (deferred); a sidecar persisted before a `plan-tool`/audit-prompt upgrade would be silently reused with stale conceptual findings from the prior auditor version. Add an auditor/prompt version component to the freshness verdict, or scope-out the cross-version case in writing.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor auditor-version-invalidation`\n- MEDIUM `[reuse-audit-id-not-found]`: The design specifies `resolve_reusable_audit` returns `None` only for the no-sidecar case, leaving an unresolvable `--reuse-audit-id <stem>` to `resolve_saved_review`'s `FileNotFoundError`; a typo'd pin should fall back cleanly with a note, not surface a traceback. Name the bad-pin path's behavior.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-audit-id-not-found`\n- MEDIUM `[reuse-vs-audit-samples]`: Precedence between an explicit `--audit-samples N` (an operator asking for a fresh sample) and auto-accepted reuse under `--yes`/non-TTY is unspecified; a scripted run can silently honor the cache and ignore the requested sample count.\n- INFO: [reuse-run-resave] The plan does not say whether a reuse-accepted run re-writes a fresh sidecar (new timestamp, recomputed fingerprints) or leaves the existing one; either choice affects which sidecar the next run picks as \"newest\" and how fast the un-GC'd reports dir grows.\n  - Address: `plan-tool completeness-apply reuse-saved-completeness-audit --anchor reuse-vs-audit-samples`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step2-files-coherence-89eeccee]`: `plan_tool/drift_detection.py::compute_content_hash` is in step 2's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step3-files-coherence-b6ce35ea]`: `plan_tool/completeness_report.py::compute_code_fingerprint` is in step 3's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply reuse-saved-completeness-audit` \u2014 walk the 4 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 3 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail reuse-saved-completeness-audit` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reuse Saved Completeness Audit\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 2 declared `plan_tool/drift_detection.py::compute_content_hash` not mentioned in detail\n- NIT: step 3 declared `plan_tool/completeness_report.py::compute_code_fingerprint` not mentioned in detail\n- NIT: step 8 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[empty-code-fingerprint-vs-legacy]`: The design collapses two distinct states into an empty `code_fingerprint` dict: a legacy/unset sidecar *and* a valid sidecar for a plan with no extant in-scope code files (docs-only plans, or plans whose `step.all_files` are all not-yet-created `(new)` files). Step 4's \"`not saved.code_fingerprint` \u2192 `code_match = False`\" rule forces `fresh = False` permanently for the latter, so a pre-implementation plan \u2014 exactly the repeatedly-audited case the Problem statement names \u2014 can never reuse its audit. No step distinguishes \"computed-and-empty\" from \"unset\" (e.g. a separate `code_fingerprint_present` marker, or falling back to plan-match-only when the watched-code surface is legitimately empty).\n- MEDIUM `[auditor-version-invalidation]`: The reuse cache keys only on plan and code content, but sidecars are never GC'd (deferred); a sidecar persisted before a `plan-tool`/audit-prompt upgrade would be silently reused with stale conceptual findings from the prior auditor version. Add an auditor/prompt version component to the freshness verdict, or scope-out the cross-version case in writing.\n- MEDIUM `[reuse-audit-id-not-found]`: The design specifies `resolve_reusable_audit` returns `None` only for the no-sidecar case, leaving an unresolvable `--reuse-audit-id <stem>` to `resolve_saved_review`'s `FileNotFoundError`; a typo'd pin should fall back cleanly with a note, not surface a traceback. Name the bad-pin path's behavior.\n- MEDIUM `[reuse-vs-audit-samples]`: Precedence between an explicit `--audit-samples N` (an operator asking for a fresh sample) and auto-accepted reuse under `--yes`/non-TTY is unspecified; a scripted run can silently honor the cache and ignore the requested sample count.\n- INFO: [reuse-run-resave] The plan does not say whether a reuse-accepted run re-writes a fresh sidecar (new timestamp, recomputed fingerprints) or leaves the existing one; either choice affects which sidecar the next run picks as \"newest\" and how fast the un-GC'd reports dir grows.\n\n### Suggested next steps\n\n- `plan-tool review-walk reuse-saved-completeness-audit` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply reuse-saved-completeness-audit` \u2014 walk the 4 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-78a5caae",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The design collapses two distinct states into an empty `code_fingerprint` dict: a legacy/unset sidecar *and* a valid sid",
+      "body": "The design collapses two distinct states into an empty `code_fingerprint` dict: a legacy/unset sidecar *and* a valid sidecar for a plan with no extant in-scope code files (docs-only plans, or plans whose `step.all_files` are all not-yet-created `(new)` files). Step 4's \"`not saved.code_fingerprint` \u2192 `code_match = False`\" rule forces `fresh = False` permanently for the latter, so a pre-implementation plan \u2014 exactly the repeatedly-audited case the Problem statement names \u2014 can never reuse its audit. No step distinguishes \"computed-and-empty\" from \"unset\" (e.g. a separate `code_fingerprint_present` marker, or falling back to plan-match-only when the watched-code surface is legitimately empty).",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "empty-code-fingerprint-vs-legacy"
+    },
+    {
+      "id": "plan-plan-completeness-9edccc17",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The reuse cache keys only on plan and code content, but sidecars are never GC'd (deferred); a sidecar persisted before a",
+      "body": "The reuse cache keys only on plan and code content, but sidecars are never GC'd (deferred); a sidecar persisted before a `plan-tool`/audit-prompt upgrade would be silently reused with stale conceptual findings from the prior auditor version. Add an auditor/prompt version component to the freshness verdict, or scope-out the cross-version case in writing.",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "auditor-version-invalidation"
+    },
+    {
+      "id": "plan-plan-completeness-97441373",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The design specifies `resolve_reusable_audit` returns `None` only for the no-sidecar case, leaving an unresolvable `--re",
+      "body": "The design specifies `resolve_reusable_audit` returns `None` only for the no-sidecar case, leaving an unresolvable `--reuse-audit-id <stem>` to `resolve_saved_review`'s `FileNotFoundError`; a typo'd pin should fall back cleanly with a note, not surface a traceback. Name the bad-pin path's behavior.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-audit-id-not-found"
+    },
+    {
+      "id": "plan-plan-completeness-eee59110",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Precedence between an explicit `--audit-samples N` (an operator asking for a fresh sample) and auto-accepted reuse under",
+      "body": "Precedence between an explicit `--audit-samples N` (an operator asking for a fresh sample) and auto-accepted reuse under `--yes`/non-TTY is unspecified; a scripted run can silently honor the cache and ignore the requested sample count.\n- INFO: [reuse-run-resave] The plan does not say whether a reuse-accepted run re-writes a fresh sidecar (new timestamp, recomputed fingerprints) or leaves the existing one; either choice affects which sidecar the next run picks as \"newest\" and how fast the un-GC'd reports dir grows.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "reuse-vs-audit-samples"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-78a5caae": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/reuse-saved-completeness-audit/01-plan-fingerprint-code-fingerprint.md`: added a `code_fingerprint_present: bool` marker field to `SavedReview` and threaded it through the `save_review`/`load_review`/`update_annotation` seams, on-green/summary/files notes, two test cases, and the acceptance criteria, so emptiness is never read as \"unset\".",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-9edccc17": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-97441373": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: in the Architecture section, specified that `resolve_reusable_audit` swallows `resolve_saved_review`'s `FileNotFoundError` for an unresolvable `--reuse-audit-id` and returns `None` with a one-line note, falling back to a fresh audit instead of surfacing a traceback.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-eee59110": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-reuse-saved-completeness-audit.md`: specified in the Architecture section that an explicit `--audit-samples N` suppresses `--yes`/non-TTY auto-accept and forces a fresh audit (the default count does not, and `--reuse-audit` still overrides), and that a reuse-accepted run leaves the existing sidecar in place rather than re-writing one, keeping reuse idempotent.",
+      "halt_reason": ""
+    }
+  }
+}

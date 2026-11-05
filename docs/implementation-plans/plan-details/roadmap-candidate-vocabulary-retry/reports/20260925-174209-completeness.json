@@ -1,0 +1,95 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-vocabulary-retry",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-vocabulary-retry.md",
+  "created_at": "2026-09-25T17:42:09Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cf58ba6a4898b06454e26445805591af591f88274cb47703dd07e278b515a609",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "c3740d565b03ab0cf84a0e70bda125195045357e9094c63b497175df7334109b",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "16318b8b7603c6910d1d607fe69647fff27688ccdd8f57de47344482534734de",
+    "plan_tool/roadmap_candidate_context.py": "f1dfc225b217b5a50cd2b6a7b96bb3ac681007cd68a2d7a2bb0d0962fdf2f164",
+    "plan_tool/roadmap_candidate_review.py": "16cc4e2e0281479a3ce2f3bd2baaa3a62f05d8d95bf6229022e9e21cc2439630",
+    "plan_tool/roadmap_candidate_run.py": "581c7bf1b585939688839f47169ddf03eafa4151c224ebeb6b5af6018ddab71f",
+    "tests/test_roadmap_candidate_review.py": "9696e65c0df27a179a5da11db349fca5698eb278da5b577857a3da583164484c",
+    "tests/test_roadmap_candidate_run.py": "bcc39ec078d2710326c882c1bc869cbf1c17ef2e9b6e3c2b3933374e763676de"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md": "fc80439259176df4b6ed370f5172b7ba3c6e036db0d32ba0df1849333e8cc5e4",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md": "8df42c920f00beda1f9d066ab9747191c96843afe0377c0f68238a8528784f45",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md": "88ef265d2dd4a125b857ae183c010bd5ae23d4587c38cde04b332b1dc878ae12"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Vocabulary Retry\n\n`roadmap-candidate-vocabulary-retry` \u00b7 generated 2026-09-25T17:42:08Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ae4f0ad5d160a9eb9a96135e3f6b16bb6ca6c10fb94acd87ad3482e7b402541b`\n- **Detail bundle digest:** `85cecf9208e66f7f3491d81b5c0cc3edac11d55234e4790065d06bbdb3d3d578`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 24760 bytes (+24760 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-0d91f46c]` [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-398bb909]` [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d1d835d]` [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-84586581]` [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-candidate-vocabulary-retry` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Vocabulary Retry\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `ae4f0ad5d160a9eb9a96135e3f6b16bb6ca6c10fb94acd87ad3482e7b402541b`\n- **Detail bundle digest:** `85cecf9208e66f7f3491d81b5c0cc3edac11d55234e4790065d06bbdb3d3d578`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ae4f0ad5d160a9eb9a96135e3f6b16bb6ca6c10fb94acd87ad3482e7b402541b",
+      "detail_bundle_digest": "85cecf9208e66f7f3491d81b5c0cc3edac11d55234e4790065d06bbdb3d3d578",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md",
+          "state": "present",
+          "digest": "fc80439259176df4b6ed370f5172b7ba3c6e036db0d32ba0df1849333e8cc5e4"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md",
+          "state": "present",
+          "digest": "8df42c920f00beda1f9d066ab9747191c96843afe0377c0f68238a8528784f45"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md",
+          "state": "present",
+          "digest": "88ef265d2dd4a125b857ae183c010bd5ae23d4587c38cde04b332b1dc878ae12"
+        }
+      ],
+      "source_seed_digest": "51eb3ef89135657369e9b153c1f5efc06373814a60c81ed86c53bfff5ff08ef7",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 24760,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

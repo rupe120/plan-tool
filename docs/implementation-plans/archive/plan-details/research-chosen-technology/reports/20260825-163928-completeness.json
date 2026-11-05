@@ -1,0 +1,115 @@
+{
+  "version": 4,
+  "plan_slug": "research-chosen-technology",
+  "plan_path": "docs/implementation-plans/2-research-chosen-technology.md",
+  "created_at": "2026-08-25T16:39:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "cfd8c2fa4688663b3271f78e8c9d87960c3fcf500a414f9f07cdc6b76b62ddaf",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "7488640abf02955b45d09e2329afea97c7d2329973d363bbe4557e717f98ba32",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/prompts/roadmap-components.md": "c1229755f77ffdfd8635d3c7fba5cdc8ba4e98cc36ba7e5954091dcaca137279",
+    "plan_tool/prompts/roadmap-constraints.md": "da4763ef1b0a4854c01d7601648c0a2b63def98e2985d1899bee2cb90ecb932a",
+    "plan_tool/roadmap_artifacts.py": "de7ba1b7fad2d81ac008cda7fa35df92bf5c3a15034971e095b44dc8e981ab5e",
+    "plan_tool/roadmap_revision.py": "332d776cb8cbc77b7ed88b63e5d4aa2ee5d75c5665acd3e250864ca7579a9bd2",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_direct_cmd.py": "e54333d82d6ce9510cc95c48f1fd6a5a869d9eef564142635efe7728b42fab36",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap.py": "2ca5da4cfedc0b3d79ff664d44ab1afa08d759d0c5a9dc9d03d870bb741b34d4",
+    "tests/test_roadmap_artifacts.py": "5f1b2d52727478f9f436df076c7f9ef6e4d2610c425b19ba942a0b9e53fbefb3",
+    "tests/test_roadmap_format.py": "6e3c318dcdf02c4f97fa645ff75416e8eedf91e86691d332432fabf4cf0d1483",
+    "tests/test_roadmap_revision.py": "a167c6cebc2f838e336a300e49b9c5437b855cdc4cfe2a4bd5f7b539da340f84"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md": "d0b216bb46906a6db00c7cc92a65a0268146ecd589abc21b35f0eaf08139a22e",
+    "docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md": "711e57012b020d3802f15c6bdd2adb7c26c8ae5e576f938e238cbf17eb760d01",
+    "docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md": "23910f5e41eb47921aa32b7ac966d32633dc8785eb3383bc66141fdf835b7e7d",
+    "docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Research Chosen Technology\n\n`research-chosen-technology` \u00b7 generated 2026-08-25T16:39:28Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 1\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply research-chosen-technology   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[research-input-confidentiality]`: Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) sends every product literal to external research even though Architecture says descriptions cover \u201cinternal, or proprietary\u201d products. Overview; `Source selection and research records`; Testing; the first Acceptance criterion; and step 2\u2019s Summary, Implementation, Tests, and Acceptance keep descriptions and origins private but require the product literal in the request. A description only permits an empty result after that request, so an internal product cannot use its documented fallback without first disclosing its name.\n  - Fix: Define a row-level disclosure decision and a local description-backed route for confidential product names, then align selection, request, refusal, retry, and tests to it\n\n## Pending concept decisions\n\nConcept deferrals still awaiting a human decision \u2014 advisory, never blocking. Resolve each with `plan-tool scope-review research-chosen-technology`.\n\n### Unsigned deferrals \u2014 a proposed defer/wont_do not yet reviewed\n\n- INFO `[7f957293972de2d3834443890f509fe3f08b6a184c3402a69940a78522fa7beb]`: Concept `7f957293972de2d3834443890f509fe3f08b6a184c3402a69940a78522fa7beb` (stop/defer) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Research Chosen Technology\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[research-input-confidentiality]`: Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) sends every product literal to external research even though Architecture says descriptions cover \u201cinternal, or proprietary\u201d products. Overview; `Source selection and research records`; Testing; the first Acceptance criterion; and step 2\u2019s Summary, Implementation, Tests, and Acceptance keep descriptions and origins private but require the product literal in the request. A description only permits an empty result after that request, so an internal product cannot use its documented fallback without first disclosing its name.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[concept-7f957293972de2d3834443890f509fe3f08b6a184c3402a69940a78522fa7beb]`: Concept `7f957293972de2d3834443890f509fe3f08b6a184c3402a69940a78522fa7beb` (stop/defer) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk research-chosen-technology` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-027b1f82",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) sends every produc",
+      "body": "Step 2 (`Select a tracked roadmap source and request source evidence for every recorded product row`) sends every product literal to external research even though Architecture says descriptions cover \u201cinternal, or proprietary\u201d products. Overview; `Source selection and research records`; Testing; the first Acceptance criterion; and step 2\u2019s Summary, Implementation, Tests, and Acceptance keep descriptions and origins private but require the product literal in the request. A description only permits an empty result after that request, so an internal product cannot use its documented fallback without first disclosing its name.",
+      "suggested_action": "Define a row-level disclosure decision and a local description-backed route for confidential product names, then align selection, request, refusal, retry, and tests to it",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "research-input-confidentiality",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "e3e2966f74a5083918b9ab1026a47842c7340002e1b1486b6acff185b129990c",
+    "detail_bundle_digest": "9a70ece8a3669d0f1d905e23f45c7926b47c60038c9b2eb553a4a844aafe7cd4",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md",
+        "state": "present",
+        "digest": "d0b216bb46906a6db00c7cc92a65a0268146ecd589abc21b35f0eaf08139a22e"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md",
+        "state": "present",
+        "digest": "711e57012b020d3802f15c6bdd2adb7c26c8ae5e576f938e238cbf17eb760d01"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md",
+        "state": "present",
+        "digest": "23910f5e41eb47921aa32b7ac966d32633dc8785eb3383bc66141fdf835b7e7d"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md",
+        "state": "present",
+        "digest": "140000935c0469bcad8eca9831d6ce53299042d494d7448d879628e8cab4611f"
+      }
+    ],
+    "source_seed_digest": "9148d97382b8eea24943db46d9323eb3a750301afc8f7b0456ef309b3c7fe7e1",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

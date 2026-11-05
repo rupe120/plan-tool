@@ -1,0 +1,70 @@
+{
+  "version": 4,
+  "plan_slug": "reconcile-code-later-step-context",
+  "plan_path": "docs/implementation-plans/2-reconcile-code-later-step-context.md",
+  "created_at": "2026-08-18T21:05:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2a607e73bf776e49fb7fd44cb8782321fad4e75d1cbb80e8b7f41d57c9e43240",
+  "code_fingerprint": {
+    "plan_tool/cli/reconcile.py": "9f9eac74d7e72f55b8d70a2cf3b190a7ec7ee8f0290f1e405b923e44193b8870",
+    "plan_tool/launcher.py": "348b0c7cdeb417235fc8fed038998e788394cd9cbd2a0eb9dd2720aa423666df",
+    "plan_tool/prompts/run-reconcile.md": "0f142536f6506fea8c0389c77559dc22c3039d9485e45010885dc1f39cb6aa35",
+    "plan_tool/scope_guard.py": "46a685b4371c4eef97217968c22522f8dbb11402611be8b8a1001fbaafbbe596",
+    "tests/test_cli.py": "9f133e01ad3bf60cbc0f47430b4f24d0c2a650c396051c8d5c8038c73a95cd2c",
+    "tests/test_launcher.py": "cfce7804553f4ba82905da2aad58858219f9eb3e409df5bec3804196d3327e89",
+    "tests/test_scope_guard.py": "ae59f15a001c7adef5cabe6134d16b39c8fac763d472fe4dbeedbccd7ae4525b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md": "c0c40429222d0b8c18bf82a81a776474a1fcbbe0324f0236421f6d25d750ae36"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Reconcile Code Later Step Context\n\n`reconcile-code-later-step-context` \u00b7 generated 2026-08-18T21:05:26Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `42f154bf5b3311b275a3e7805b9bb7658635b029e21034dd5c412b2b69b7d527`\n- **Detail bundle digest:** `6e526bf864240841b41c05c2b126b951b2ca4a800e4fd80f02efaaec034f8c11`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 1 (+0 vs. first audit)\n- **Detail-bundle size:** 12878 bytes (+1075 vs. first audit)\n- **Keystone fan-out:** n/a (not computable for this plan)\n- **Satellite ratio:** n/a (not computable for this plan)\n- **Inert-step ratio:** n/a (not computable for this plan)\n- **Audit-induced growth:** n/a (not computable for this plan)\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-606aeae4]`: The plan's `## Acceptance criteria` names `done`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run reconcile-code-later-step-context` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Reconcile Code Later Step Context\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `42f154bf5b3311b275a3e7805b9bb7658635b029e21034dd5c412b2b69b7d527`\n- **Detail bundle digest:** `6e526bf864240841b41c05c2b126b951b2ca4a800e4fd80f02efaaec034f8c11`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `done`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "42f154bf5b3311b275a3e7805b9bb7658635b029e21034dd5c412b2b69b7d527",
+      "detail_bundle_digest": "6e526bf864240841b41c05c2b126b951b2ca4a800e4fd80f02efaaec034f8c11",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md",
+          "state": "present",
+          "digest": "c0c40429222d0b8c18bf82a81a776474a1fcbbe0324f0236421f6d25d750ae36"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 1,
+    "detail_bundle_bytes": 12878,
+    "keystone_fan_out": null,
+    "satellite_ratio": null,
+    "inert_step_ratio": null,
+    "audit_induced_growth": null,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

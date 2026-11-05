@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-a8388977": {
+      "code_anchor": "plan_tool/roadmap_source_identity.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md",
+      "reason": "code anchor path `plan_tool/roadmap_source_identity.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-adfbbc86": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.roadmap_stage_written",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.roadmap_stage_written` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-f4e7f32b": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.revision_feedback_delivered",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.revision_feedback_delivered` does not resolve in HEAD",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260820-171107-completeness"
+}

@@ -1,0 +1,164 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T20:20:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "fea70466567862a8cb2c5624df916b5272929d88d53603117f14a34bd9c08cb5",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "4c63f2e8a7190e6b357b65ae2dbee1b42998d61b34d978d69ff066643d7c92d0",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "9d242b54ccf5e899ad9212e5e03ad5765aa4144d4de097d634b5bdad492dbaaa",
+    "plan_tool/roadmap_gates.py": "65ee870bd27cc6b15e7e5322f46109e54be74e5acc3bdc4736678943c92a8f44",
+    "tests/cli/test_roadmap_cmd.py": "60c2161907f2ae9a8675b326eb42084bc39d882164a1877fbc92abdc857a2a1a",
+    "tests/test_roadmap.py": "712613c6992c4f6f9d73d42da4830de0c14f31ce293560efc2d0597a457b4c07",
+    "tests/test_roadmap_artifacts.py": "1654dc0ac0956d3c1cc864b63bbb40331a657a6269b2f39b6048906d0d83c110",
+    "tests/test_roadmap_format.py": "176be1b1032a9c923b3b14ff36e576b93ca941155922f0012f9620c41476cce8",
+    "tests/test_roadmap_gates.py": "7caf2dbf0110551f07d8f6d5e213d2d26eebd9620afa733c1b2af487e63a572b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md": "ebac87a229ad494cc262cd4bedd233c595176a616ad01a8e954611de2fbd57c7",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md": "ddeb2c4e138a23b6f24318d6dbe8e3adbaaaa7a8b98f8cf4959971056538fe45",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md": "247b53508f0ae74fe807a8e7d7a37d09654dc3ba34ba6228a300c5175881c72a",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md": "f79531b06eedca7f3531a7a5091975d69c612993c605880b8f9f707b89cd5bed"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Hosting And Stores\n\n`roadmap-hosting-and-stores` \u00b7 generated 2026-08-18T20:20:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-hosting-and-stores   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[stateless-component-store]`: The Overview, Architecture\u2019s \u201cStores are definitions,\u201d Testing, and Acceptance criteria require every component to name a store; step 2 (`Add store definitions and component store references`) preserves an empty `store_ids`, then step 4 (`Require resolved, concrete store references`) rejects it. `STORE_CATEGORIES` never says that `in-process` represents no persisted data, so a stateless component must either invent a store or fail the gate\u2014the harm this plan aims to prevent.\n  - Fix: Define the representation and gate result for a component with no persisted roadmap data, then align the schema, prompts, gates, examples, and tests to that policy.\n- MEDIUM `[hosting-row-error-precedence]`: Architecture\u2019s \u201cParsing preserves recoverable defects\u201d says out-of-vocabulary input reaches gates; step 1\u2019s implementation says to reject `product` unless `facet == \"compute\"` while its Tests say an unknown facet parses; step 3 (`Require complete, concrete hosting answers`) expects `check_hosting_totality` to report an unknown facet. A row with both an unknown facet and `product` has no defined result, so either parsing hides the facet violation or the product rule waits for a later edit.\n  - Fix: Define which result wins when an unknown hosting facet carries a product, and cover that policy in the parser and hosting-gate tests.\n- MEDIUM `[global-id-gate-boundary]`: Architecture and step 3 require hosting and store ids to share the `check_duplicate_row_ids` identity view, but step 4 (`Require resolved, concrete store references`) says its gates \u201cdo not inspect hosting\u201d and its acceptance criteria says \u201cno gate reads `envelope.constraints.hosting`.\u201d The planned global duplicate check must read hosting during the components stage to reject a hosting/store collision, so both statements cannot hold.\n  - Fix: state that store-specific validation stays independent of hosting while the shared global-id gate remains the explicit cross-artifact exception, and align step 4\u2019s acceptance and tests to that boundary.\n- HIGH `[hosting-model-topology]`: `hosting.model: bridge` means one operator combines dedicated and shared application deployments (Architecture, step 3 Implementation), but only `compute: mixed` requires `topology: multi-unit` (Architecture; step 3 `check_hosting_compute_topology`, Tests, and Acceptance criteria). `model: bridge` with `topology: single-unit` can therefore pass while contradicting the recorded deployment shape.\n  - Fix: define and gate the topology required by a bridge hosting model, then align the prompt, format example, and tests\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[supporting-row-id-collision-tests]`: Architecture\u2019s global identity contract and the Acceptance criteria require hosting and store ids not to collide with each other. Step 3\u2019s Tests cover a hosting/design-row collision, and step 4 (`Require resolved, concrete store references`) covers a store/design-row collision and duplicate store definitions, but neither covers a hosting/store collision. An identity view that omits hosting rows during the components-stage check would pass every named test.\n  - Fix: Add a final global-identity test that proves a store id colliding with a hosting id is rejected while both rows remain outside anchor, feedback, prose, and continuity routes.\n  - Address: `plan-tool completeness-apply roadmap-hosting-and-stores --anchor supporting-row-id-collision-tests`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-c79c7d79]`: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-760a3674]`: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5c8e4247]`: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1ee6638e]`: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ce143fe6]`: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-hosting-and-stores` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Hosting And Stores\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[stateless-component-store]`: The Overview, Architecture\u2019s \u201cStores are definitions,\u201d Testing, and Acceptance criteria require every component to name a store; step 2 (`Add store definitions and component store references`) preserves an empty `store_ids`, then step 4 (`Require resolved, concrete store references`) rejects it. `STORE_CATEGORIES` never says that `in-process` represents no persisted data, so a stateless component must either invent a store or fail the gate\u2014the harm this plan aims to prevent.\n- MEDIUM `[hosting-row-error-precedence]`: Architecture\u2019s \u201cParsing preserves recoverable defects\u201d says out-of-vocabulary input reaches gates; step 1\u2019s implementation says to reject `product` unless `facet == \"compute\"` while its Tests say an unknown facet parses; step 3 (`Require complete, concrete hosting answers`) expects `check_hosting_totality` to report an unknown facet. A row with both an unknown facet and `product` has no defined result, so either parsing hides the facet violation or the product rule waits for a later edit.\n- MEDIUM `[global-id-gate-boundary]`: Architecture and step 3 require hosting and store ids to share the `check_duplicate_row_ids` identity view, but step 4 (`Require resolved, concrete store references`) says its gates \u201cdo not inspect hosting\u201d and its acceptance criteria says \u201cno gate reads `envelope.constraints.hosting`.\u201d The planned global duplicate check must read hosting during the components stage to reject a hosting/store collision, so both statements cannot hold.\n- HIGH `[hosting-model-topology]`: `hosting.model: bridge` means one operator combines dedicated and shared application deployments (Architecture, step 3 Implementation), but only `compute: mixed` requires `topology: multi-unit` (Architecture; step 3 `check_hosting_compute_topology`, Tests, and Acceptance criteria). `model: bridge` with `topology: single-unit` can therefore pass while contradicting the recorded deployment shape.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[supporting-row-id-collision-tests]`: Architecture\u2019s global identity contract and the Acceptance criteria require hosting and store ids not to collide with each other. Step 3\u2019s Tests cover a hosting/design-row collision, and step 4 (`Require resolved, concrete store references`) covers a store/design-row collision and duplicate store definitions, but neither covers a hosting/store collision. An identity view that omits hosting rows during the components-stage check would pass every named test.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-hosting-and-stores` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply roadmap-hosting-and-stores` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-083e1279",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Overview, Architecture\u2019s \u201cStores are definitions,\u201d Testing, and Acceptance criteria require every component to name ",
+      "body": "The Overview, Architecture\u2019s \u201cStores are definitions,\u201d Testing, and Acceptance criteria require every component to name a store; step 2 (`Add store definitions and component store references`) preserves an empty `store_ids`, then step 4 (`Require resolved, concrete store references`) rejects it. `STORE_CATEGORIES` never says that `in-process` represents no persisted data, so a stateless component must either invent a store or fail the gate\u2014the harm this plan aims to prevent.",
+      "suggested_action": "Define the representation and gate result for a component with no persisted roadmap data, then align the schema, prompts, gates, examples, and tests to that policy.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stateless-component-store",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b2b4ba28",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture\u2019s \u201cParsing preserves recoverable defects\u201d says out-of-vocabulary input reaches gates; step 1\u2019s implementati",
+      "body": "Architecture\u2019s \u201cParsing preserves recoverable defects\u201d says out-of-vocabulary input reaches gates; step 1\u2019s implementation says to reject `product` unless `facet == \"compute\"` while its Tests say an unknown facet parses; step 3 (`Require complete, concrete hosting answers`) expects `check_hosting_totality` to report an unknown facet. A row with both an unknown facet and `product` has no defined result, so either parsing hides the facet violation or the product rule waits for a later edit.",
+      "suggested_action": "Define which result wins when an unknown hosting facet carries a product, and cover that policy in the parser and hosting-gate tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hosting-row-error-precedence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-37f09dfd",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture and step 3 require hosting and store ids to share the `check_duplicate_row_ids` identity view, but step 4 (",
+      "body": "Architecture and step 3 require hosting and store ids to share the `check_duplicate_row_ids` identity view, but step 4 (`Require resolved, concrete store references`) says its gates \u201cdo not inspect hosting\u201d and its acceptance criteria says \u201cno gate reads `envelope.constraints.hosting`.\u201d The planned global duplicate check must read hosting during the components stage to reject a hosting/store collision, so both statements cannot hold.",
+      "suggested_action": "state that store-specific validation stays independent of hosting while the shared global-id gate remains the explicit cross-artifact exception, and align step 4\u2019s acceptance and tests to that boundary.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "global-id-gate-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-621e08b7",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`hosting.model: bridge` means one operator combines dedicated and shared application deployments (Architecture, step 3 I",
+      "body": "`hosting.model: bridge` means one operator combines dedicated and shared application deployments (Architecture, step 3 Implementation), but only `compute: mixed` requires `topology: multi-unit` (Architecture; step 3 `check_hosting_compute_topology`, Tests, and Acceptance criteria). `model: bridge` with `topology: single-unit` can therefore pass while contradicting the recorded deployment shape.",
+      "suggested_action": "define and gate the topology required by a bridge hosting model, then align the prompt, format example, and tests",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hosting-model-topology",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-b5ff2ddc",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture\u2019s global identity contract and the Acceptance criteria require hosting and store ids not to collide with ea",
+      "body": "Architecture\u2019s global identity contract and the Acceptance criteria require hosting and store ids not to collide with each other. Step 3\u2019s Tests cover a hosting/design-row collision, and step 4 (`Require resolved, concrete store references`) covers a store/design-row collision and duplicate store definitions, but neither covers a hosting/store collision. An identity view that omits hosting rows during the components-stage check would pass every named test.",
+      "suggested_action": "Add a final global-identity test that proves a store id colliding with a hosting id is rejected while both rows remain outside anchor, feedback, prose, and continuity routes.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "supporting-row-id-collision-tests",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "547fcc3139a4afe21c9948b35f8a80ab87e643e60a3f28cda3ac4febbeb99136",
+    "detail_bundle_digest": "926b8dba73f2866714426d790af93ebd38ed6cd166ed0fcd2ca10a86e2364f41",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+        "state": "present",
+        "digest": "ebac87a229ad494cc262cd4bedd233c595176a616ad01a8e954611de2fbd57c7"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+        "state": "present",
+        "digest": "ddeb2c4e138a23b6f24318d6dbe8e3adbaaaa7a8b98f8cf4959971056538fe45"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+        "state": "present",
+        "digest": "247b53508f0ae74fe807a8e7d7a37d09654dc3ba34ba6228a300c5175881c72a"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+        "state": "present",
+        "digest": "f79531b06eedca7f3531a7a5091975d69c612993c605880b8f9f707b89cd5bed"
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

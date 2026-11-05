@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T21:02:29Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "10a27473c50fe7003238f5b34fa6fa8ee223510e2792294a864091c5826ddec8",
+  "code_fingerprint": {
+    "BACKLOG.md": "13009e2611cbf09d6b43f95182e968b2e6cbb012ce1336947a16245321ec21dd",
+    "BUG_BACKLOG.md": "bb3b8e1c6d6248542c7b251a3d5c38ab73da384246a033a17020635a969fd1d3",
+    "ROADMAP_FORMAT.md": "403c6fcf50fa33ad37d1fd8c7a7ef4bc9a1bc134f1db103fa9d53da2ac546c27",
+    "plan_tool/cli/roadmap_cmd.py": "2d664b47a8ef88a833345e434a01bcf0ccc22b8bfb1713608417a43ef96245f5",
+    "plan_tool/roadmap.py": "1181cc60b3ebba017b395435f4fe82169b9855abb57f2ffa342c33e11fc0598e",
+    "plan_tool/roadmap_revision_run.py": "840b66df934aa794e7923a35be9c7c9e99c82e50bec0edb5f9a9f4707eaa498e",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "02bb3a98fbc87143cab376444a40592ce9dbcd557fc0ff910e0fced162adcd3e",
+    "tests/test_roadmap.py": "7ad1ddd42961938c7f6b8517e97202f0c29bab03a4848040bab7aa4ccb2011e3",
+    "tests/test_roadmap_revision_run.py": "955450482c1d36a77958f60eeb1a3e86c1c47b1d9ea09f6c9409db49bfc4e8fc"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 1 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 5 of 5 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step3-run-reconcile-042f1590",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 3,
+      "title": "`run_roadmap()` in `plan_tool/roadmap.py` (step 3 \u201cPreserve writer-guard origins and terminal records before or during a",
+      "body": "`run_roadmap()` in `plan_tool/roadmap.py` (step 3 \u201cPreserve writer-guard origins and terminal records before or during a roadmap run\u201d) converts an enrolled or corrupt accepted-head validation refusal from `require_unenrolled_roadmap_writer()` into `RoadmapError` without entering the preflight lifecycle, so this known pre-stage writer validation failure leaves no owned `preflight-refused` `run_end` or in-flight cleanup",
+      "suggested_action": "route `RoadmapRevisionPublishError` validation refusals through the same owned preflight terminal-record boundary as `RoadmapWriterGuardError` in `run_roadmap()`",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

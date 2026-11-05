@@ -1,0 +1,185 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-revision-rollback",
+  "plan_path": "docs/implementation-plans/2-roadmap-revision-rollback.md",
+  "created_at": "2026-09-18T14:42:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a5bd3aba43be1ef0d92a50b29fdaad4d82e9d65f8ede745abaf22501ce72190e",
+  "code_fingerprint": {
+    "BACKLOG.md": "c45daf5cf5b89b5575539e23a814a6b7207ee99c7e32fa6d1279577cdc87ae84",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "RUNBOOK.md": "7609f51d03a2eac4c245fbd156195ae218291961f4a5ab3eeb245955eaf11537",
+    "docs/ARCHITECTURE.md": "17e34c2b2a9b6234afbaea54465fa05e550a3366ace2c08a7f65ad944789338f",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap.py": "a58515b8bcbc81e2dc2f4cc2fc32778e8c20d5f22f311c447b40651b426cc085",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap.py": "bf46be48d327efc56d15ffb532759a1aa0f8425da0db85dbbe922c4039d969a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md": "dbb59c905d9ddf654ae72fea4199bd7ddb3a4ea4d3cd787d179f9f51ee310f10",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/02-have-run-roadmap-take-checkpoint-right.md": "87e339d64338bf065e6dac83413f73b364dd7d91d0b227764c579307e9d8aac5",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md": "69696eada7b48130d461879af4b5adeb1db84da5c7927fab77b128d9d88365a9",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md": "d4056e580f34e80202692b481ff000371620a0bde00644e139b919381913b065",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-closing-message.md": "3a009af65b561bdf7e553a2f75a75e1da2d91204e148d06492a175f406dc62ba",
+    "docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md": "701b562d171ee9b9902f3538765ad3ecf36df245d8f94c6e079df07b467513ae"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Revision Rollback\n\n`roadmap-revision-rollback` \u00b7 generated 2026-09-18T14:42:18Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-revision-rollback  # optional interactive review of the saved findings\n\n- HIGH `[checkpoint-last-written-sync]` [confidence: limited]: Step 2 says to \"update the last-written bytes after each stage publish and each source.json write,\" but a stage publish's commit (`publish_stage_artifact` \u2192 `publish_roadmap_generation` in `plan_tool/roadmap_revision_publish.py`) and the checkpoint's own bookkeeping update are two separate writes with nothing tying them together, so an ordinary crash or operator interrupt landing between them leaves the checkpoint's last-tracked bytes stale while the file on disk already holds the new, fully-committed value. `recover_roadmap_publication` already recognizes and accepts exactly this case:\n\n  ```\n  states = [_member_state(root / member.relative_path) for member in generation.members]\n  old = [member.old_bytes for member in generation.members]\n  new = [member.new_bytes for member in generation.members]\n  if states == new or states == old:\n      journal_path.unlink(missing_ok=True)\n      return\n  ```\n\n  (`roadmap_revision_publish.py:388-393`): when the publish fully committed before the crash, it just deletes the leftover journal and returns, touching nothing else. On a later failed run, restore's own case matrix (Architecture, \"Restore case matrix\") then sees a file that matches neither the stale last-tracked value nor the pre-run value, and falls into \"Anything else: refuse \u2014 the roadmap changed since the failed run\" \u2014 even though nothing outside the tool touched it; the run's own successful, committed progress is what changed it. This can defeat the plan's own acceptance criterion (\"one explicit, confirmed command restores every inventory file... from before the first consecutive failed run\") in exactly the ordinary crash/interrupt scenario the plan exists to handle \u2014 the Integration incident this plan cites was itself an interrupted retry, not an outside edit.\n  - Fix: State that the checkpoint's last-written bytes must reflect each tracked file's true committed state after `recover_roadmap_publication` runs, not only after this run's own stage-loop publishes and source.json writes, so a dangling-but-already-fully-committed generation left by an earlier crash keeps the checkpoint in sync instead of going stale.\n- MEDIUM `[restore-hint-on-incomplete-run]` [confidence: limited]: Step 5 promises the restore command is named \"in the closing message of every stage run that did not complete (invalid, exhausted, interrupted, or stopped by an error after a write) whenever a checkpoint exists,\" but at HEAD these four situations surface through three different, disconnected code paths in `plan_tool/cli/roadmap_cmd.py:cmd_roadmap`, and two of them have no closing-message machinery to hook into today. \"Invalid\" and \"exhausted\" produce a `RoadmapResult` that flows through `_print_invalid`/`_print_exhausted`/`emit_roadmap_terminal_status` (lines 636-661). \"Stopped by an error after a write\" \u2014 for example the `OSError`\u2192`RoadmapEnvironmentalError` raised out of `_write_brief_source` right after a stage publishes, or any `RoadmapWriterGuardError` \u2014 instead raises an exception caught at lines 628-633, which only does `error(str(exc)); return _RC_INCOMPLETE`: no result object, no detail lines. \"Interrupted\" is caught separately at lines 663-665 (`except KeyboardInterrupt: error(\"interrupted\"); return 130`), which today prints nothing but that one word. The plan does not say which of these three surfaces gains the checkpoint-existence check and the restore-command line, so two of the four named categories risk shipping with no reminder at all, undercutting the seed's own \"In scope\" line that \"the closing message of a run that did not complete names it.\"\n  - Fix: Say which layer \u2014 the CLI's plain exception-handling branches, the `KeyboardInterrupt` handler, or a change to what `run_roadmap` returns/raises so every incomplete run reaches one shared closing-message path \u2014 is responsible for checking checkpoint existence and printing the restore command for the \"stopped by an error after a write\" and \"interrupted\" categories, not only for the `RoadmapResult`-based \"invalid\"/\"exhausted\" categories.\n- HIGH `[checkpoint-precedes-recovery]` [confidence: limited]: Step 2 says `run_roadmap` takes the checkpoint \"right before its first write (including a confirmed brief rebind of source.json),\" but at HEAD a confirmed brief rebind (the `_write_brief_source` call gated by `confirm_brief_rebind` in `plan_tool/roadmap.py:_run_roadmap`) runs *before* `recover_roadmap_publication` is called later in the same function. If an earlier, unrelated crash left a stage-publication journal half-applied from a previous stage publish, that journal has not yet been rolled back to its old bytes at the point this ordering would capture the checkpoint, so the checkpoint's \"pre-run bytes\" would record whatever transient, partially-replaced state happens to be on disk at that moment instead of the roadmap's actual last-stable state. The plan's own Architecture section requires the opposite ordering for restore (\"Restore holds the writer lock and runs recover_roadmap_publication first ... so any half-written stage publish resolves before restore reads anything\") but never applies that same reasoning to when `run_roadmap` takes its own checkpoint snapshot. A later restore replayed against that checkpoint would publish back bytes that never stably existed, instead of the state the roadmap was actually at before the revision started.\n  - Fix: Specify that `run_roadmap` resolves any pending publication recovery (`recover_roadmap_publication`) before it captures the checkpoint's pre-run bytes, so the checkpoint's baseline is always the last fully-committed state rather than a possibly half-written one \u2014 and only then perform this run's own first write, including a confirmed brief rebind.\n- HIGH `[cross-run-hand-edit-absorption]` [confidence: limited]: The Risks section states that \"Restoring after another change would silently discard that work. The change check (last-tracked bytes) and the \"anything else\" refusal exist to prevent it,\" but Architecture's own design for spanning a checkpoint across consecutive failed runs \u2014 \"a run that starts while an earlier failed run's checkpoint exists keeps that checkpoint, and its pre-run bytes stay those of the first failed run. The new run continues tracking what it writes\" \u2014 describes the exact mechanism that defeats that guarantee. A later run in the same checkpoint lineage overwrites the checkpoint's last-written value for whatever file it touches, with no check that the file's current on-disk bytes still equal what the checkpoint last recorded before that run started writing to it. Concretely: run 1 fails after publishing stage 1 only, leaving checkpoint state pre_run[X]=P, last_written[X]=P for an untouched file X. Between run 1 and run 2, X is hand-edited to H. Run 2 starts (keeping the same checkpoint per Architecture), and its own stage work happens to also revise X \u2014 reading the current disk value H as input and writing a new value H\u2032 \u2014 then run 2 fails too. The checkpoint's last_written[X] is now H\u2032, with no trace H ever existed. An operator invoking restore finds X on disk equal to last_written[X]=H\u2032, matches the \"Files equal the run's last-tracked bytes\" row of the restore matrix, and restore reverts X to the original pre_run bytes P \u2014 silently discarding both the hand edit and run 2's own work. This is precisely the scenario the Risks entry says the change check exists to prevent, in a case the described mechanism does not actually catch. It is the unaddressed complement of the Risks section's third entry, which only considers the checkpoint's tracked bytes falling *behind* reality (causing false refusals), not a later run *absorbing* an intervening independent change into its own tracked state (causing a false, silent accept).\n  - Fix: Specify that before a run within an existing checkpoint's lineage writes to any inventory file, it confirms the file's current on-disk bytes still equal the checkpoint's own last-tracked value for that file, and treat a mismatch as an intervening change to handle explicitly rather than silently folding it into that run's own last-written record \u2014 covering Architecture's cross-run tracking description, step 2's update rule, and the Risks entry on restoring after another change.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-revision-rollback` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Revision Rollback\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[checkpoint-last-written-sync]` [confidence: limited]: Step 2 says to \"update the last-written bytes after each stage publish and each source.json write,\" but a stage publish's commit (`publish_stage_artifact` \u2192 `publish_roadmap_generation` in `plan_tool/roadmap_revision_publish.py`) and the checkpoint's own bookkeeping update are two separate writes with nothing tying them together, so an ordinary crash or operator interrupt landing between them leaves the checkpoint's last-tracked bytes stale while the file on disk already holds the new, fully-committed value. `recover_roadmap_publication` already recognizes and accepts exactly this case:\n\n  ```\n  states = [_member_state(root / member.relative_path) for member in generation.members]\n  old = [member.old_bytes for member in generation.members]\n  new = [member.new_bytes for member in generation.members]\n  if states == new or states == old:\n      journal_path.unlink(missing_ok=True)\n      return\n  ```\n\n  (`roadmap_revision_publish.py:388-393`): when the publish fully committed before the crash, it just deletes the leftover journal and returns, touching nothing else. On a later failed run, restore's own case matrix (Architecture, \"Restore case matrix\") then sees a file that matches neither the stale last-tracked value nor the pre-run value, and falls into \"Anything else: refuse \u2014 the roadmap changed since the failed run\" \u2014 even though nothing outside the tool touched it; the run's own successful, committed progress is what changed it. This can defeat the plan's own acceptance criterion (\"one explicit, confirmed command restores every inventory file... from before the first consecutive failed run\") in exactly the ordinary crash/interrupt scenario the plan exists to handle \u2014 the Integration incident this plan cites was itself an interrupted retry, not an outside edit.\n- MEDIUM `[restore-hint-on-incomplete-run]` [confidence: limited]: Step 5 promises the restore command is named \"in the closing message of every stage run that did not complete (invalid, exhausted, interrupted, or stopped by an error after a write) whenever a checkpoint exists,\" but at HEAD these four situations surface through three different, disconnected code paths in `plan_tool/cli/roadmap_cmd.py:cmd_roadmap`, and two of them have no closing-message machinery to hook into today. \"Invalid\" and \"exhausted\" produce a `RoadmapResult` that flows through `_print_invalid`/`_print_exhausted`/`emit_roadmap_terminal_status` (lines 636-661). \"Stopped by an error after a write\" \u2014 for example the `OSError`\u2192`RoadmapEnvironmentalError` raised out of `_write_brief_source` right after a stage publishes, or any `RoadmapWriterGuardError` \u2014 instead raises an exception caught at lines 628-633, which only does `error(str(exc)); return _RC_INCOMPLETE`: no result object, no detail lines. \"Interrupted\" is caught separately at lines 663-665 (`except KeyboardInterrupt: error(\"interrupted\"); return 130`), which today prints nothing but that one word. The plan does not say which of these three surfaces gains the checkpoint-existence check and the restore-command line, so two of the four named categories risk shipping with no reminder at all, undercutting the seed's own \"In scope\" line that \"the closing message of a run that did not complete names it.\"\n- HIGH `[checkpoint-precedes-recovery]` [confidence: limited]: Step 2 says `run_roadmap` takes the checkpoint \"right before its first write (including a confirmed brief rebind of source.json),\" but at HEAD a confirmed brief rebind (the `_write_brief_source` call gated by `confirm_brief_rebind` in `plan_tool/roadmap.py:_run_roadmap`) runs *before* `recover_roadmap_publication` is called later in the same function. If an earlier, unrelated crash left a stage-publication journal half-applied from a previous stage publish, that journal has not yet been rolled back to its old bytes at the point this ordering would capture the checkpoint, so the checkpoint's \"pre-run bytes\" would record whatever transient, partially-replaced state happens to be on disk at that moment instead of the roadmap's actual last-stable state. The plan's own Architecture section requires the opposite ordering for restore (\"Restore holds the writer lock and runs recover_roadmap_publication first ... so any half-written stage publish resolves before restore reads anything\") but never applies that same reasoning to when `run_roadmap` takes its own checkpoint snapshot. A later restore replayed against that checkpoint would publish back bytes that never stably existed, instead of the state the roadmap was actually at before the revision started.\n- HIGH `[cross-run-hand-edit-absorption]` [confidence: limited]: The Risks section states that \"Restoring after another change would silently discard that work. The change check (last-tracked bytes) and the \"anything else\" refusal exist to prevent it,\" but Architecture's own design for spanning a checkpoint across consecutive failed runs \u2014 \"a run that starts while an earlier failed run's checkpoint exists keeps that checkpoint, and its pre-run bytes stay those of the first failed run. The new run continues tracking what it writes\" \u2014 describes the exact mechanism that defeats that guarantee. A later run in the same checkpoint lineage overwrites the checkpoint's last-written value for whatever file it touches, with no check that the file's current on-disk bytes still equal what the checkpoint last recorded before that run started writing to it. Concretely: run 1 fails after publishing stage 1 only, leaving checkpoint state pre_run[X]=P, last_written[X]=P for an untouched file X. Between run 1 and run 2, X is hand-edited to H. Run 2 starts (keeping the same checkpoint per Architecture), and its own stage work happens to also revise X \u2014 reading the current disk value H as input and writing a new value H\u2032 \u2014 then run 2 fails too. The checkpoint's last_written[X] is now H\u2032, with no trace H ever existed. An operator invoking restore finds X on disk equal to last_written[X]=H\u2032, matches the \"Files equal the run's last-tracked bytes\" row of the restore matrix, and restore reverts X to the original pre_run bytes P \u2014 silently discarding both the hand edit and run 2's own work. This is precisely the scenario the Risks entry says the change check exists to prevent, in a case the described mechanism does not actually catch. It is the unaddressed complement of the Risks section's third entry, which only considers the checkpoint's tracked bytes falling *behind* reality (causing false refusals), not a later run *absorbing* an intervening independent change into its own tracked state (causing a false, silent accept).\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 4 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-97acfdcf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 says to \"update the last-written bytes after each stage publish and each source.json write,\" but a stage publish'",
+      "body": "Step 2 says to \"update the last-written bytes after each stage publish and each source.json write,\" but a stage publish's commit (`publish_stage_artifact` \u2192 `publish_roadmap_generation` in `plan_tool/roadmap_revision_publish.py`) and the checkpoint's own bookkeeping update are two separate writes with nothing tying them together, so an ordinary crash or operator interrupt landing between them leaves the checkpoint's last-tracked bytes stale while the file on disk already holds the new, fully-committed value. `recover_roadmap_publication` already recognizes and accepts exactly this case:\n\n  ```\n  states = [_member_state(root / member.relative_path) for member in generation.members]\n  old = [member.old_bytes for member in generation.members]\n  new = [member.new_bytes for member in generation.members]\n  if states == new or states == old:\n      journal_path.unlink(missing_ok=True)\n      return\n  ```\n\n  (`roadmap_revision_publish.py:388-393`): when the publish fully committed before the crash, it just deletes the leftover journal and returns, touching nothing else. On a later failed run, restore's own case matrix (Architecture, \"Restore case matrix\") then sees a file that matches neither the stale last-tracked value nor the pre-run value, and falls into \"Anything else: refuse \u2014 the roadmap changed since the failed run\" \u2014 even though nothing outside the tool touched it; the run's own successful, committed progress is what changed it. This can defeat the plan's own acceptance criterion (\"one explicit, confirmed command restores every inventory file... from before the first consecutive failed run\") in exactly the ordinary crash/interrupt scenario the plan exists to handle \u2014 the Integration incident this plan cites was itself an interrupted retry, not an outside edit.",
+      "suggested_action": "State that the checkpoint's last-written bytes must reflect each tracked file's true committed state after `recover_roadmap_publication` runs, not only after this run's own stage-loop publishes and source.json writes, so a dangling-but-already-fully-committed generation left by an earlier crash keeps the checkpoint in sync instead of going stale.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-last-written-sync",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0c38eea1",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 promises the restore command is named \"in the closing message of every stage run that did not complete (invalid, ",
+      "body": "Step 5 promises the restore command is named \"in the closing message of every stage run that did not complete (invalid, exhausted, interrupted, or stopped by an error after a write) whenever a checkpoint exists,\" but at HEAD these four situations surface through three different, disconnected code paths in `plan_tool/cli/roadmap_cmd.py:cmd_roadmap`, and two of them have no closing-message machinery to hook into today. \"Invalid\" and \"exhausted\" produce a `RoadmapResult` that flows through `_print_invalid`/`_print_exhausted`/`emit_roadmap_terminal_status` (lines 636-661). \"Stopped by an error after a write\" \u2014 for example the `OSError`\u2192`RoadmapEnvironmentalError` raised out of `_write_brief_source` right after a stage publishes, or any `RoadmapWriterGuardError` \u2014 instead raises an exception caught at lines 628-633, which only does `error(str(exc)); return _RC_INCOMPLETE`: no result object, no detail lines. \"Interrupted\" is caught separately at lines 663-665 (`except KeyboardInterrupt: error(\"interrupted\"); return 130`), which today prints nothing but that one word. The plan does not say which of these three surfaces gains the checkpoint-existence check and the restore-command line, so two of the four named categories risk shipping with no reminder at all, undercutting the seed's own \"In scope\" line that \"the closing message of a run that did not complete names it.\"",
+      "suggested_action": "Say which layer \u2014 the CLI's plain exception-handling branches, the `KeyboardInterrupt` handler, or a change to what `run_roadmap` returns/raises so every incomplete run reaches one shared closing-message path \u2014 is responsible for checking checkpoint existence and printing the restore command for the \"stopped by an error after a write\" and \"interrupted\" categories, not only for the `RoadmapResult`-based \"invalid\"/\"exhausted\" categories.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "restore-hint-on-incomplete-run",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-ac240526",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 says `run_roadmap` takes the checkpoint \"right before its first write (including a confirmed brief rebind of sour",
+      "body": "Step 2 says `run_roadmap` takes the checkpoint \"right before its first write (including a confirmed brief rebind of source.json),\" but at HEAD a confirmed brief rebind (the `_write_brief_source` call gated by `confirm_brief_rebind` in `plan_tool/roadmap.py:_run_roadmap`) runs *before* `recover_roadmap_publication` is called later in the same function. If an earlier, unrelated crash left a stage-publication journal half-applied from a previous stage publish, that journal has not yet been rolled back to its old bytes at the point this ordering would capture the checkpoint, so the checkpoint's \"pre-run bytes\" would record whatever transient, partially-replaced state happens to be on disk at that moment instead of the roadmap's actual last-stable state. The plan's own Architecture section requires the opposite ordering for restore (\"Restore holds the writer lock and runs recover_roadmap_publication first ... so any half-written stage publish resolves before restore reads anything\") but never applies that same reasoning to when `run_roadmap` takes its own checkpoint snapshot. A later restore replayed against that checkpoint would publish back bytes that never stably existed, instead of the state the roadmap was actually at before the revision started.",
+      "suggested_action": "Specify that `run_roadmap` resolves any pending publication recovery (`recover_roadmap_publication`) before it captures the checkpoint's pre-run bytes, so the checkpoint's baseline is always the last fully-committed state rather than a possibly half-written one \u2014 and only then perform this run's own first write, including a confirmed brief rebind.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-precedes-recovery",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-d9befb4d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Risks section states that \"Restoring after another change would silently discard that work. The change check (last-t",
+      "body": "The Risks section states that \"Restoring after another change would silently discard that work. The change check (last-tracked bytes) and the \"anything else\" refusal exist to prevent it,\" but Architecture's own design for spanning a checkpoint across consecutive failed runs \u2014 \"a run that starts while an earlier failed run's checkpoint exists keeps that checkpoint, and its pre-run bytes stay those of the first failed run. The new run continues tracking what it writes\" \u2014 describes the exact mechanism that defeats that guarantee. A later run in the same checkpoint lineage overwrites the checkpoint's last-written value for whatever file it touches, with no check that the file's current on-disk bytes still equal what the checkpoint last recorded before that run started writing to it. Concretely: run 1 fails after publishing stage 1 only, leaving checkpoint state pre_run[X]=P, last_written[X]=P for an untouched file X. Between run 1 and run 2, X is hand-edited to H. Run 2 starts (keeping the same checkpoint per Architecture), and its own stage work happens to also revise X \u2014 reading the current disk value H as input and writing a new value H\u2032 \u2014 then run 2 fails too. The checkpoint's last_written[X] is now H\u2032, with no trace H ever existed. An operator invoking restore finds X on disk equal to last_written[X]=H\u2032, matches the \"Files equal the run's last-tracked bytes\" row of the restore matrix, and restore reverts X to the original pre_run bytes P \u2014 silently discarding both the hand edit and run 2's own work. This is precisely the scenario the Risks entry says the change check exists to prevent, in a case the described mechanism does not actually catch. It is the unaddressed complement of the Risks section's third entry, which only considers the checkpoint's tracked bytes falling *behind* reality (causing false refusals), not a later run *absorbing* an intervening independent change into its own tracked state (causing a false, silent accept).",
+      "suggested_action": "Specify that before a run within an existing checkpoint's lineage writes to any inventory file, it confirms the file's current on-disk bytes still equal the checkpoint's own last-tracked value for that file, and treat a mismatch as an intervening change to handle explicitly rather than silently folding it into that run's own last-written record \u2014 covering Architecture's cross-run tracking description, step 2's update rule, and the Risks entry on restoring after another change.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "cross-run-hand-edit-absorption",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "a5bd3aba43be1ef0d92a50b29fdaad4d82e9d65f8ede745abaf22501ce72190e",
+    "detail_bundle_digest": "c8776b4ec29091f77cfdb78a6e2bf50df5b63a10ca642734fe9de2546c309b57",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/01-roadmap-revision-checkpoint-file-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/02-have-run-roadmap-take-checkpoint-right.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/03-revision-restore-runner-under-writer.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/04-paired-restore-confirm-options-plan.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/05-name-restore-command-closing-message.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-revision-rollback/06-document-checkpoint-file-restore-route.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "5c46f3d940d46f8b6487cb294d01176c6131d24276682e603cbabf2e131c38ce",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

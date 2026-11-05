@@ -1,0 +1,208 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-revision-retention",
+  "plan_path": "docs/implementation-plans/2-roadmap-revision-retention.md",
+  "created_at": "2026-08-19T14:56:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "773e789b2524bb4aff625fd125a55378e5178984301c8b23c654bfcfe43f384e",
+  "code_fingerprint": {
+    "BACKLOG.md": "eb52ecd4e557d428e8b542edc2365382b60833efda8ed6c844981c443ad141bc",
+    "README.md": "2ce65273752d3ef08302dc7acc9984935e97606d3227ff605a949522e0dc3ae9",
+    "ROADMAP_FORMAT.md": "c1f7b7bafabd24bad54483cb764cac76d3d3d505ed6fe023d2ce06fef5616266",
+    "RUNBOOK.md": "bc3eeaacff3696054823f30a5ca897ed7eca22629e68ce83b78cf3f8f78d7061",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/ROADMAP_WALKTHROUGH.md": "8c5ffad859b39576ac380ba72325abeaac7798d83009592e0d564d47072bc0e8",
+    "docs/cli/roadmap.md": "a35a30f067478aa5a13db3bc98bd33cc2119052baf32f7531ad922dadebae539",
+    "integrations/claude/SKILL.md": "8beaeabd51318829d4960f421a073db73e0636fbd2d1cb864c5605a37c1c4d7a",
+    "plan_tool/cli/__init__.py": "5c0b98b708e24910bd69c66ff02590e7d9bdd91223ed163e90894a1965f12e74",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_gates.py": "05773d5d38e0cc014a3f20a68769844d9b6e7d265fefd9ee4db600a40ca45c20",
+    "plan_tool/roadmap_view.py": "5d4ec04e29bf47779ec171cc0ff6ce6249362ec0d6f410fac57e77cef3add03f",
+    "tests/cli/package_surface_help.golden.txt": "a6d38b7b22a87872f6ab9b43f4c38a8ac0264a2695da88e7e275c62e8d0823c3",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_roadmap.py": "74fd35d9d764863b501887fa3e3271ea012f0eef39b1b820caf414082c5fb110",
+    "tests/test_roadmap_artifacts.py": "7ea6ff0017abcd833e3028696ba875218b4d85927c74d567d64eb8fcb245b2dc",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_gates.py": "3589a6765b4597d49246ba595bcb30c100300d71ee240ae4607e14b7e47543e1",
+    "tests/test_roadmap_view.py": "95fb5697690fe3e98201b66ec801846ed89326e343f43c6b8e935798dd75eff6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/01-removed-row-content-snapshot.md": "1e7648a1a1df6dc85e3f86cfdec976996aba534dd464cdc04dd07eac2c12f553",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/02-optional-decision-reference.md": "c77540f6b5a28a0015078d117ae12a89d19f3d1fa860c280a61700ab313637bf",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/03-closed-feedbackstate-answered-feedback.md": "26c371c98597453dba9dccc58262a40e0f4eabf3bd385a8ee2393daff4be5474",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/04-deterministic-stable-closed-last-sort.md": "46002d890a275b92955f1d823d3f6d72fadb4cf7e70af334439d5a541b15aca3",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/05-count-closed-rows-mode-history-summary.md": "feb6df7d2e8c0b14855d2decbc12384c846abe2474b949df1f2fe3fabf830a87",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/06-rename-mode-review-mode-history.md": "49441df6bf4cec7c2baa545c62bf187a249fff5694fd545a57ee64ee06cd9489",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/07-document-removal-snapshot-decision.md": "e513ef834741e6d4f650426d188e10d7461053e12b697582493eeaeea33d60fc",
+    "docs/implementation-plans/plan-details/roadmap-revision-retention/08-update-backlog-242-sweep-roadmap-gate.md": "b2dfb017448f172a74fbe20071e14377c226e43121b89965597b72198f27f1c7"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Revision Retention\n\n`roadmap-revision-retention` \u00b7 generated 2026-08-19T14:56:49Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-revision-retention   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-revision-retention  # alternative interactive review/apply\n\n- HIGH `[closed-row-sort-structural-revision]`: Step 4 puts the feedback collection's closed-last order into the shared render layer (`_review_mappings`, consumed by `render_domain_artifact`/`render_constraints_artifact`/`render_components_artifact`/`render_plans_artifact`), and `## Architecture` claims this \"guarantees the invariant unconditionally, including after a reviewer's own hand-edit that leaves a closed row mid-list (the artifact self-corrects the next time any tool-driven write touches it...)\" \u2014 the acceptance criteria echo this as \"a deterministic sort, not a rejection.\" That claim is false for one real write path. `plan_tool/roadmap_structural_revision_patch.py:merge_structural_revision_patch` builds its patch by splicing `preflight.selected_artifact_text` \u2014 the literal on-disk bytes, per `roadmap_impact_snapshot.py:_capture_artifact`, which never re-renders \u2014 and unconditionally calls `_parse_canonical_candidate`, which raises `StructuralRevisionPatchError(\"structural patch candidate is not render-canonical\")` whenever `render(candidate) != candidate_text` (a behavior pinned by `tests/test_roadmap_structural_revision_patch.py`'s render-canonical test). Once `render()` sorts closed rows last, an artifact holding a closed row that a reviewer hand-set mid-list \u2014 precisely the case Architecture calls legitimate \u2014 stops being render-canonical. The very next structural-revision attempt on that stage, even one answering a completely unrelated feedback row, then fails outright with \"not render-canonical\" instead of the file self-correcting: a rejection where the plan promises a sort, on a route named nowhere in the plan or its testing section.\n  - Fix: state how step 4's render-time sort coexists with the structural-revision route's render-canonical check \u2014 e.g. have the structural-revision preflight capture a freshly re-rendered (already-sorted) source before building a patch, or scope the canonical check to ignore feedback-row order \u2014 and add an acceptance criterion covering a structural revision attempted against an artifact carrying an out-of-order closed row.\n- MEDIUM `[feedback-close-vocabulary]`: `## Architecture`'s \"close by deleting the row\" paragraph opens \"Five sites currently say 'close by deleting the row,' and none is claimed twice,\" then itself names eleven: three for step 3 (`check_feedback_integrity`'s `VIOLATION_DROPPED_FEEDBACK` message, and `prompts/roadmap-revision.md`'s carry-forward instruction and \"never do\" text), one for step 5 (`_feedback_summary_lines`'s CLI guidance), and seven for step 7 (README.md, `docs/ROADMAP_WALKTHROUGH.md`, plus five inside `ROADMAP_FORMAT.md` \u2014 situation 5, the schema `state` comment, the Closed vocabularies table, the worked example near \"## Decisions\", and `check_feedback_integrity`'s gate-documentation table row \u2014 all independently confirmed present in the file at HEAD). \"Five\" matches only step 7's own internal `ROADMAP_FORMAT.md` count, not the paragraph's own combined total, so a reader can't tell from the sentence whether it means five sites overall (contradicted by its own list) or five within one file (unstated).\n  - Fix: correct the opening sentence to either state the true combined site count or say explicitly it's counting only the `ROADMAP_FORMAT.md` subset.\n- MEDIUM `[removal-tampering-violation-target]`: Step 1's justification for the tampering-specific branch makes a false claim about which check fires next. It says that if the model drops a tampered removal record in response to `VIOLATION_REMOVAL_WITHOUT_A_PREDECESSOR_ROW`'s \"drop the record\" message, this \"re-trips the earlier `VIOLATION_DROPPED_DESIGN_ROW` check on the already-removed design row.\" But `VIOLATION_DROPPED_DESIGN_ROW` (`roadmap_gates.py:1312`) only fires for a row id still present in `_rows_of(predecessor)` \u2014 predecessor's currently-declared design rows \u2014 and a row with an existing removal record in predecessor is by definition not declared there (`VIOLATION_REMOVAL_NAMES_A_PRESENT_ROW` already forbids a row and its own removal record coexisting in one artifact). So dropping a tampered-but-carried removal record cannot retrigger `VIOLATION_DROPPED_DESIGN_ROW`; it instead falls into the exact gap the plan's own next paragraph names (\"a model that simply omits a carried removals record from its reply passes every existing check\") \u2014 what actually catches it is the new dropped-removal check step 1 adds in this same step, not the existing check the plan cites.\n  - Fix: correct the tampering-branch justification to name the new dropped-removal check, not `VIOLATION_DROPPED_DESIGN_ROW`, as what a model hits after wrongly dropping a tampered record \u2014 grounding step 1's rationale for shipping both pieces together in what the code actually does.\n- MEDIUM `[architecture-doc-review-collection-sweep]`: Step 8's stated reason for touching `docs/ARCHITECTURE.md` \u2014 \"the architecture summary stops stating a gate count and a close-by-deleting workflow that are no longer true\" \u2014 describes a defect that doesn't exist in the file today. Its roadmap paragraph (the `**Roadmap (...)**` block) says \"twenty-eight relation gates,\" which still matches the code (`grep -c \"^def check_\" plan_tool/roadmap_gates.py` = 28) even after this plan ships, because step 1's tampering and dropped-removal checks are added as branches inside the existing `check_design_row_continuity` function, not as new top-level `check_*` gates \u2014 so the count doesn't go stale. A full search of the file for feedback/removal/close language finds no \"close-by-deleting\" claim anywhere; the only relevant sentence, \"feedback rows and their text are the reviewer's,\" stays true unchanged once `closed` ships.\n  - Fix: drop the gate-count and close-by-deleting claims from step 8's stated reason for editing `docs/ARCHITECTURE.md`, and if a real update to that file is needed once the new fields/state ship, name the actual sentence it corrects instead.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- HIGH `[mode-review-rename-sweep]`: Step 6's site list for renaming `--mode review` to `--mode history` \u2014 argparse choices, `roadmap_view.py`'s `MODE_REVIEW` branches and docstrings, `cli/roadmap_cmd.py`'s help text, `plan_tool/cli/__init__.py`'s catalog docstring plus its golden snapshot, and every literal `--mode review` example in README.md, `docs/ROADMAP_WALKTHROUGH.md`, and `docs/ARCHITECTURE.md` \u2014 leaves out `docs/cli/roadmap.md`. That file is generated from the live argparse parser (CLAUDE.md's own Reference docs entry: \"regenerate with `python -m plan_tool.cli_reference --write`\") and currently documents `--mode {current,review}` at three spots (its usage line, its `--view` row, and its own `--mode` row). It is drift-guarded by `tests/cli/test_cli_reference.py`'s `TestCliReferenceDrift.test_every_generated_file_matches_disk`, which fails whenever the parser's rendered output disagrees with the committed `docs/cli/` files. Once step 6 changes `choices=[MODE_CURRENT, MODE_REVIEW]` and its help text, this existing test goes red against the unregenerated file.\n  - Fix: add `docs/cli/roadmap.md` and the `python -m plan_tool.cli_reference --write` regeneration step to step 6's site list, so the rename lands with the generated CLI reference in sync and the existing drift-guard test stays green.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9e803eb6]`: The plan's `## Acceptance criteria` names `check_feedback_integrity`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a506760f]`: The plan's `## Acceptance criteria` names `proposed_response`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-revision-retention` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Revision Retention\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[closed-row-sort-structural-revision]`: Step 4 puts the feedback collection's closed-last order into the shared render layer (`_review_mappings`, consumed by `render_domain_artifact`/`render_constraints_artifact`/`render_components_artifact`/`render_plans_artifact`), and `## Architecture` claims this \"guarantees the invariant unconditionally, including after a reviewer's own hand-edit that leaves a closed row mid-list (the artifact self-corrects the next time any tool-driven write touches it...)\" \u2014 the acceptance criteria echo this as \"a deterministic sort, not a rejection.\" That claim is false for one real write path. `plan_tool/roadmap_structural_revision_patch.py:merge_structural_revision_patch` builds its patch by splicing `preflight.selected_artifact_text` \u2014 the literal on-disk bytes, per `roadmap_impact_snapshot.py:_capture_artifact`, which never re-renders \u2014 and unconditionally calls `_parse_canonical_candidate`, which raises `StructuralRevisionPatchError(\"structural patch candidate is not render-canonical\")` whenever `render(candidate) != candidate_text` (a behavior pinned by `tests/test_roadmap_structural_revision_patch.py`'s render-canonical test). Once `render()` sorts closed rows last, an artifact holding a closed row that a reviewer hand-set mid-list \u2014 precisely the case Architecture calls legitimate \u2014 stops being render-canonical. The very next structural-revision attempt on that stage, even one answering a completely unrelated feedback row, then fails outright with \"not render-canonical\" instead of the file self-correcting: a rejection where the plan promises a sort, on a route named nowhere in the plan or its testing section.\n- MEDIUM `[feedback-close-vocabulary]`: `## Architecture`'s \"close by deleting the row\" paragraph opens \"Five sites currently say 'close by deleting the row,' and none is claimed twice,\" then itself names eleven: three for step 3 (`check_feedback_integrity`'s `VIOLATION_DROPPED_FEEDBACK` message, and `prompts/roadmap-revision.md`'s carry-forward instruction and \"never do\" text), one for step 5 (`_feedback_summary_lines`'s CLI guidance), and seven for step 7 (README.md, `docs/ROADMAP_WALKTHROUGH.md`, plus five inside `ROADMAP_FORMAT.md` \u2014 situation 5, the schema `state` comment, the Closed vocabularies table, the worked example near \"## Decisions\", and `check_feedback_integrity`'s gate-documentation table row \u2014 all independently confirmed present in the file at HEAD). \"Five\" matches only step 7's own internal `ROADMAP_FORMAT.md` count, not the paragraph's own combined total, so a reader can't tell from the sentence whether it means five sites overall (contradicted by its own list) or five within one file (unstated).\n- MEDIUM `[removal-tampering-violation-target]`: Step 1's justification for the tampering-specific branch makes a false claim about which check fires next. It says that if the model drops a tampered removal record in response to `VIOLATION_REMOVAL_WITHOUT_A_PREDECESSOR_ROW`'s \"drop the record\" message, this \"re-trips the earlier `VIOLATION_DROPPED_DESIGN_ROW` check on the already-removed design row.\" But `VIOLATION_DROPPED_DESIGN_ROW` (`roadmap_gates.py:1312`) only fires for a row id still present in `_rows_of(predecessor)` \u2014 predecessor's currently-declared design rows \u2014 and a row with an existing removal record in predecessor is by definition not declared there (`VIOLATION_REMOVAL_NAMES_A_PRESENT_ROW` already forbids a row and its own removal record coexisting in one artifact). So dropping a tampered-but-carried removal record cannot retrigger `VIOLATION_DROPPED_DESIGN_ROW`; it instead falls into the exact gap the plan's own next paragraph names (\"a model that simply omits a carried removals record from its reply passes every existing check\") \u2014 what actually catches it is the new dropped-removal check step 1 adds in this same step, not the existing check the plan cites.\n- MEDIUM `[architecture-doc-review-collection-sweep]`: Step 8's stated reason for touching `docs/ARCHITECTURE.md` \u2014 \"the architecture summary stops stating a gate count and a close-by-deleting workflow that are no longer true\" \u2014 describes a defect that doesn't exist in the file today. Its roadmap paragraph (the `**Roadmap (...)**` block) says \"twenty-eight relation gates,\" which still matches the code (`grep -c \"^def check_\" plan_tool/roadmap_gates.py` = 28) even after this plan ships, because step 1's tampering and dropped-removal checks are added as branches inside the existing `check_design_row_continuity` function, not as new top-level `check_*` gates \u2014 so the count doesn't go stale. A full search of the file for feedback/removal/close language finds no \"close-by-deleting\" claim anywhere; the only relevant sentence, \"feedback rows and their text are the reviewer's,\" stays true unchanged once `closed` ships.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[mode-review-rename-sweep]`: Step 6's site list for renaming `--mode review` to `--mode history` \u2014 argparse choices, `roadmap_view.py`'s `MODE_REVIEW` branches and docstrings, `cli/roadmap_cmd.py`'s help text, `plan_tool/cli/__init__.py`'s catalog docstring plus its golden snapshot, and every literal `--mode review` example in README.md, `docs/ROADMAP_WALKTHROUGH.md`, and `docs/ARCHITECTURE.md` \u2014 leaves out `docs/cli/roadmap.md`. That file is generated from the live argparse parser (CLAUDE.md's own Reference docs entry: \"regenerate with `python -m plan_tool.cli_reference --write`\") and currently documents `--mode {current,review}` at three spots (its usage line, its `--view` row, and its own `--mode` row). It is drift-guarded by `tests/cli/test_cli_reference.py`'s `TestCliReferenceDrift.test_every_generated_file_matches_disk`, which fails whenever the parser's rendered output disagrees with the committed `docs/cli/` files. Once step 6 changes `choices=[MODE_CURRENT, MODE_REVIEW]` and its help text, this existing test goes red against the unregenerated file.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `check_feedback_integrity`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `proposed_response`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-revision-retention` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-03dba490",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 puts the feedback collection's closed-last order into the shared render layer (`_review_mappings`, consumed by `r",
+      "body": "Step 4 puts the feedback collection's closed-last order into the shared render layer (`_review_mappings`, consumed by `render_domain_artifact`/`render_constraints_artifact`/`render_components_artifact`/`render_plans_artifact`), and `## Architecture` claims this \"guarantees the invariant unconditionally, including after a reviewer's own hand-edit that leaves a closed row mid-list (the artifact self-corrects the next time any tool-driven write touches it...)\" \u2014 the acceptance criteria echo this as \"a deterministic sort, not a rejection.\" That claim is false for one real write path. `plan_tool/roadmap_structural_revision_patch.py:merge_structural_revision_patch` builds its patch by splicing `preflight.selected_artifact_text` \u2014 the literal on-disk bytes, per `roadmap_impact_snapshot.py:_capture_artifact`, which never re-renders \u2014 and unconditionally calls `_parse_canonical_candidate`, which raises `StructuralRevisionPatchError(\"structural patch candidate is not render-canonical\")` whenever `render(candidate) != candidate_text` (a behavior pinned by `tests/test_roadmap_structural_revision_patch.py`'s render-canonical test). Once `render()` sorts closed rows last, an artifact holding a closed row that a reviewer hand-set mid-list \u2014 precisely the case Architecture calls legitimate \u2014 stops being render-canonical. The very next structural-revision attempt on that stage, even one answering a completely unrelated feedback row, then fails outright with \"not render-canonical\" instead of the file self-correcting: a rejection where the plan promises a sort, on a route named nowhere in the plan or its testing section.",
+      "suggested_action": "state how step 4's render-time sort coexists with the structural-revision route's render-canonical check \u2014 e.g. have the structural-revision preflight capture a freshly re-rendered (already-sorted) source before building a patch, or scope the canonical check to ignore feedback-row order \u2014 and add an acceptance criterion covering a structural revision attempted against an artifact carrying an out-of-order closed row.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "closed-row-sort-structural-revision",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e8743454",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`## Architecture`'s \"close by deleting the row\" paragraph opens \"Five sites currently say 'close by deleting the row,' a",
+      "body": "`## Architecture`'s \"close by deleting the row\" paragraph opens \"Five sites currently say 'close by deleting the row,' and none is claimed twice,\" then itself names eleven: three for step 3 (`check_feedback_integrity`'s `VIOLATION_DROPPED_FEEDBACK` message, and `prompts/roadmap-revision.md`'s carry-forward instruction and \"never do\" text), one for step 5 (`_feedback_summary_lines`'s CLI guidance), and seven for step 7 (README.md, `docs/ROADMAP_WALKTHROUGH.md`, plus five inside `ROADMAP_FORMAT.md` \u2014 situation 5, the schema `state` comment, the Closed vocabularies table, the worked example near \"## Decisions\", and `check_feedback_integrity`'s gate-documentation table row \u2014 all independently confirmed present in the file at HEAD). \"Five\" matches only step 7's own internal `ROADMAP_FORMAT.md` count, not the paragraph's own combined total, so a reader can't tell from the sentence whether it means five sites overall (contradicted by its own list) or five within one file (unstated).",
+      "suggested_action": "correct the opening sentence to either state the true combined site count or say explicitly it's counting only the `ROADMAP_FORMAT.md` subset.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "feedback-close-vocabulary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-a23a5bbe",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1's justification for the tampering-specific branch makes a false claim about which check fires next. It says that ",
+      "body": "Step 1's justification for the tampering-specific branch makes a false claim about which check fires next. It says that if the model drops a tampered removal record in response to `VIOLATION_REMOVAL_WITHOUT_A_PREDECESSOR_ROW`'s \"drop the record\" message, this \"re-trips the earlier `VIOLATION_DROPPED_DESIGN_ROW` check on the already-removed design row.\" But `VIOLATION_DROPPED_DESIGN_ROW` (`roadmap_gates.py:1312`) only fires for a row id still present in `_rows_of(predecessor)` \u2014 predecessor's currently-declared design rows \u2014 and a row with an existing removal record in predecessor is by definition not declared there (`VIOLATION_REMOVAL_NAMES_A_PRESENT_ROW` already forbids a row and its own removal record coexisting in one artifact). So dropping a tampered-but-carried removal record cannot retrigger `VIOLATION_DROPPED_DESIGN_ROW`; it instead falls into the exact gap the plan's own next paragraph names (\"a model that simply omits a carried removals record from its reply passes every existing check\") \u2014 what actually catches it is the new dropped-removal check step 1 adds in this same step, not the existing check the plan cites.",
+      "suggested_action": "correct the tampering-branch justification to name the new dropped-removal check, not `VIOLATION_DROPPED_DESIGN_ROW`, as what a model hits after wrongly dropping a tampered record \u2014 grounding step 1's rationale for shipping both pieces together in what the code actually does.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "removal-tampering-violation-target",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d664dcf3",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 8's stated reason for touching `docs/ARCHITECTURE.md` \u2014 \"the architecture summary stops stating a gate count and a ",
+      "body": "Step 8's stated reason for touching `docs/ARCHITECTURE.md` \u2014 \"the architecture summary stops stating a gate count and a close-by-deleting workflow that are no longer true\" \u2014 describes a defect that doesn't exist in the file today. Its roadmap paragraph (the `**Roadmap (...)**` block) says \"twenty-eight relation gates,\" which still matches the code (`grep -c \"^def check_\" plan_tool/roadmap_gates.py` = 28) even after this plan ships, because step 1's tampering and dropped-removal checks are added as branches inside the existing `check_design_row_continuity` function, not as new top-level `check_*` gates \u2014 so the count doesn't go stale. A full search of the file for feedback/removal/close language finds no \"close-by-deleting\" claim anywhere; the only relevant sentence, \"feedback rows and their text are the reviewer's,\" stays true unchanged once `closed` ships.",
+      "suggested_action": "drop the gate-count and close-by-deleting claims from step 8's stated reason for editing `docs/ARCHITECTURE.md`, and if a real update to that file is needed once the new fields/state ship, name the actual sentence it corrects instead.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "architecture-doc-review-collection-sweep",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-1c775e6f",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 6's site list for renaming `--mode review` to `--mode history` \u2014 argparse choices, `roadmap_view.py`'s `MODE_REVIEW",
+      "body": "Step 6's site list for renaming `--mode review` to `--mode history` \u2014 argparse choices, `roadmap_view.py`'s `MODE_REVIEW` branches and docstrings, `cli/roadmap_cmd.py`'s help text, `plan_tool/cli/__init__.py`'s catalog docstring plus its golden snapshot, and every literal `--mode review` example in README.md, `docs/ROADMAP_WALKTHROUGH.md`, and `docs/ARCHITECTURE.md` \u2014 leaves out `docs/cli/roadmap.md`. That file is generated from the live argparse parser (CLAUDE.md's own Reference docs entry: \"regenerate with `python -m plan_tool.cli_reference --write`\") and currently documents `--mode {current,review}` at three spots (its usage line, its `--view` row, and its own `--mode` row). It is drift-guarded by `tests/cli/test_cli_reference.py`'s `TestCliReferenceDrift.test_every_generated_file_matches_disk`, which fails whenever the parser's rendered output disagrees with the committed `docs/cli/` files. Once step 6 changes `choices=[MODE_CURRENT, MODE_REVIEW]` and its help text, this existing test goes red against the unregenerated file.",
+      "suggested_action": "add `docs/cli/roadmap.md` and the `python -m plan_tool.cli_reference --write` regeneration step to step 6's site list, so the rename lands with the generated CLI reference in sync and the existing drift-guard test stays green.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "mode-review-rename-sweep",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 2,
+    "detail_grade": "run",
+    "plan_digest": "773e789b2524bb4aff625fd125a55378e5178984301c8b23c654bfcfe43f384e",
+    "detail_bundle_digest": "64ed9559b0434ab1ac12426f54519f1800f1f2ab6c25d8831ce55ef3ae79122a",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/01-removed-row-content-snapshot.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/02-optional-decision-reference.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/03-closed-feedbackstate-answered-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/04-deterministic-stable-closed-last-sort.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/05-count-closed-rows-mode-history-summary.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/06-rename-mode-review-mode-history.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/07-document-removal-snapshot-decision.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-revision-retention/08-update-backlog-242-sweep-roadmap-gate.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": null
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

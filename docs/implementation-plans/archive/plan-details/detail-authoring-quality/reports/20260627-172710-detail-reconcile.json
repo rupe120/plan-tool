@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "plan_slug": "detail-authoring-quality",
+  "plan_path": "docs/implementation-plans/2-detail-authoring-quality.md",
+  "created_at": "2026-06-27T17:27:10Z",
+  "kind": "detail-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "93e7cacfb9e699cb02e72123e6063c360df6981249bb96660f51d30d297bcdc8",
+  "code_fingerprint": {
+    "DETAIL_FORMAT.md": "56d63e2c70075ebea5e06605477cd82d2cded28775a89ed66c3326047610cd24",
+    "plan_tool/detail.py": "142ad3460139a8034cc50d8c32c58fbd6296e0e6f11611fd6973c09c1d0ef7b8",
+    "plan_tool/prompts/detail-quality.md": "7ba50093dc138ebc374472b070fe4134a34f721d1ecd2757234519439492d40c",
+    "plan_tool/prompts/plan-audit.md": "61abfa2926681eb09ccc3920dbbdfa8ffb181ecc82665ddbe6c926c738c1bbd1",
+    "plan_tool/review.py": "c3b5bd2d764e192ac05498427dc0350ffe09d38c40890d6b957ef2141d81c882",
+    "tests/test_detail.py": "ff1a436c6a8459f52effa06c37ba29ee72683954c51e9634ff65a97a7253278e",
+    "tests/test_review.py": "9a3c8d56f1ac9b247df669e3b6a030d81c8ae7819828d385601dcbabf34c16e1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "I\u2019ll inspect the repo\u2019s plan/detail files plus the claimed implementation files, then compare the delivered behavior to the step text. I\u2019ll keep this read-only for code and produce only reconciliation findings.\nI found the detail-authoring plan files are currently untracked and the seed was removed, so I\u2019ll treat the new docs under `docs/implementation-plans/...` as the plan/detail artifacts to reconcile. Next I\u2019m reading the prompt, tests, review parser, and the step frontmatter/details.\nThe implementation already has plan-audit prompt text and review parser anchors, but my first detail path was wrong because the plan frontmatter points to `03-concept-phrase-consistency-guidance.md`. I\u2019m reading that exact detail now and checking the new test coverage around the audit prompt.\nThe detail file promises four phrase-specific tests, but the visible `TestCheckPlanAudit` block I read only showed the older audit tests. I\u2019m doing targeted searches now to confirm whether those names or their asserted strings exist elsewhere.\nTargeted search found no concept-phrase guidance strings in `plan_tool/prompts/plan-audit.md` or `tests/test_review.py`. I\u2019m checking the plan state metadata now so any finding uses the right plan-field remediation rather than narrowing the acceptance criteria.\n**Matches intent**\n\n`plan_tool/review.py` already has the expected non-new-source parser path: `_parse_plan_audit_findings()` routes the two existing sections to `plan-correctness` and `plan-completeness`, `_split_audit_key()` preserves concept anchors, and there is no deterministic phrase linter or new phrase-specific source.\n\n**Plan over-promises**\n\n`plan_tool/prompts/plan-audit.md:### Completeness \u2014 does the plan cover everything it needs to?` does not include concept phrase drift guidance or the harmless-variation guard. `tests/test_review.py:TestCheckPlanAudit` also lacks the four phrase-specific tests named in the step detail. The step should remain unfinished rather than narrowing its acceptance criteria.\n\n**Plan under-describes**\n\nNone found.\n\n## Findings\n\n- HIGH: step 3 (\"Add concept phrase consistency guidance to plan audit and tests\") declares prompt guidance and phrase-specific tests, but `plan_tool/prompts/plan-audit.md:### Completeness \u2014 does the plan cover everything it needs to?` has no concept phrase drift rule and `tests/test_review.py:TestCheckPlanAudit` has no phrase-consistency prompt or parser regressions, so the step\u2019s acceptance criteria are not delivered on disk \u2192 fix: add `status: current` and `status_note: \"Missing plan-audit concept phrase drift guidance and phrase-specific tests in tests/test_review.py\"` to step 3 (impact: high, complexity: low)\n",
+  "recommendations": [
+    {
+      "id": "step3-detail-reconcile-d0b22877",
+      "source": "detail-reconcile",
+      "severity": "high",
+      "step_id": 3,
+      "title": "step 3 (\"Add concept phrase consistency guidance to plan audit and tests\") declares prompt guidance and phrase-specific ",
+      "body": "step 3 (\"Add concept phrase consistency guidance to plan audit and tests\") declares prompt guidance and phrase-specific tests, but `plan_tool/prompts/plan-audit.md:### Completeness \u2014 does the plan cover everything it needs to?` has no concept phrase drift rule and `tests/test_review.py:TestCheckPlanAudit` has no phrase-consistency prompt or parser regressions, so the step\u2019s acceptance criteria are not delivered on disk",
+      "suggested_action": "add `status: current` and `status_note: \"Missing plan-audit concept phrase drift guidance and phrase-specific tests in tests/test_review.py\"` to step 3",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {}
+}

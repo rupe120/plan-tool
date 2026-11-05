@@ -1,0 +1,138 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-14dea120": {
+      "code_anchor": "convergence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/02-stage-aware-blocking-finding-classify.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/02-stage-aware-blocking-finding-classify.md",
+      "reason": "code anchor path `convergence.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-cbf03bdd": {
+      "code_anchor": "plan_tool/cli/completeness_phases.py:_IterateOutcome.budget",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md",
+      "reason": "code anchor `plan_tool/cli/completeness_phases.py:_IterateOutcome.budget` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-f7d2f01c": {
+      "code_anchor": "completeness_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md",
+      "reason": "code anchor path `completeness_cmd.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-647f37f1": {
+      "code_anchor": "completeness_phases.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md",
+      "reason": "code anchor path `completeness_phases.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-943009f8": {
+      "code_anchor": "completeness_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md",
+      "reason": "code anchor path `completeness_cmd.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-1d209297": {
+      "code_anchor": "convergence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md",
+      "reason": "code anchor path `convergence.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-cd352ebd": {
+      "code_anchor": "completeness_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md",
+      "reason": "code anchor path `completeness_cmd.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-d5079fdf": {
+      "code_anchor": "review_persistence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/06-carry-stage-bar-finalize-json-fail-on.md",
+      "reason": "code anchor path `review_persistence.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-073c11ce": {
+      "code_anchor": "completeness_report.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md",
+      "reason": "code anchor path `completeness_report.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-2876eab3": {
+      "code_anchor": "plan_tool/convergence.py:is_blocking_finding",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md",
+      "reason": "code anchor `plan_tool/convergence.py:is_blocking_finding` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-a9f1af6e": {
+      "code_anchor": "plan_tool/cli/completeness_phases.py:derive_audit_stage",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md",
+      "reason": "code anchor `plan_tool/cli/completeness_phases.py:derive_audit_stage` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-e4a979cf": {
+      "code_anchor": "plan_tool/review.py:classify_finding_domain",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md",
+      "reason": "code anchor `plan_tool/review.py:classify_finding_domain` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260810-151058-completeness"
+}

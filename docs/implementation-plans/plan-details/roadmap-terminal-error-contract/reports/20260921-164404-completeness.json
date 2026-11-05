@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T16:44:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4c0d640ffb7a7bdeeaec61ebb61489c4a8b3256ad56ce03683e5309524ac9149",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md": "541b2fb48d43972c152243176f7f696a0bf149ad732daed27875d7fc81bd76fb",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md": "63ca16b4872c0c566a7f82a129f6877e93ac3275770733ea0fb50f6d959c7e05",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-writer-guard-origins-terminal.md": "f55374a9d500ac67e8077b5148d4e7e5050f3320bb326fb922a176e1ccc55c30",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md": "f662edcc7ffd631690bbe54bf0be8bc9f0090f11fccb2ba53fce0a4cc6a8a9b2",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md": "fc09c8186b77505f7621b2d99688bd487add6f6965cd90882eba74129ed5894c",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md": "9cba7ad9cb767c0843ed8d2be34b76d1abced62c295a34f4080464d1e5120109"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Terminal Error Contract\n\n`roadmap-terminal-error-contract` \u00b7 generated 2026-09-21T16:44:04Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-terminal-error-contract  # optional interactive review of the saved findings\n\n- MEDIUM `[template-failure-human-rendering]` [confidence: limited]: Step 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) leaves who controls the human error for equivalent template failures unresolved. Architecture, Testing, and Acceptance require one disposition, but Risks preserves caller-selected messages; implementations can therefore either normalize the text or keep route-specific text while claiming the same disposition.\n\n```text\nTesting: \u201cProve the same expected template failure yields the same human error\u201d\nRisks: \u201cIts caller selects the exception family and message.\u201d\n```\n\n  This affects step 2 (`Centralize roadmap text reads without changing their exception meanings`), step 4, and step 5 (`Apply each terminal disposition across the primary, materialization, and local revision exits`), and makes the stated cross-route human-error criterion unverifiable.\n  - Fix: Specify whether the disposition matrix owns one shared human error for equivalent template failures or which bounded route context may vary, then align steps 2, 4, 5, Testing, and Risks to that rule.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-ecc2b717]` [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-ffe748e5]` [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-terminal-error-contract` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Terminal Error Contract\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[template-failure-human-rendering]` [confidence: limited]: Step 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) leaves who controls the human error for equivalent template failures unresolved. Architecture, Testing, and Acceptance require one disposition, but Risks preserves caller-selected messages; implementations can therefore either normalize the text or keep route-specific text while claiming the same disposition.\n\n```text\nTesting: \u201cProve the same expected template failure yields the same human error\u201d\nRisks: \u201cIts caller selects the exception family and message.\u201d\n```\n\n  This affects step 2 (`Centralize roadmap text reads without changing their exception meanings`), step 4, and step 5 (`Apply each terminal disposition across the primary, materialization, and local revision exits`), and makes the stated cross-route human-error criterion unverifiable.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n### Suggested next steps\n\n- Close the 1 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3aa07c1a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) l",
+      "body": "Step 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) leaves who controls the human error for equivalent template failures unresolved. Architecture, Testing, and Acceptance require one disposition, but Risks preserves caller-selected messages; implementations can therefore either normalize the text or keep route-specific text while claiming the same disposition.\n\n```text\nTesting: \u201cProve the same expected template failure yields the same human error\u201d\nRisks: \u201cIts caller selects the exception family and message.\u201d\n```\n\n  This affects step 2 (`Centralize roadmap text reads without changing their exception meanings`), step 4, and step 5 (`Apply each terminal disposition across the primary, materialization, and local revision exits`), and makes the stated cross-route human-error criterion unverifiable.",
+      "suggested_action": "Specify whether the disposition matrix owns one shared human error for equivalent template failures or which bounded route context may vary, then align steps 2, 4, 5, Testing, and Risks to that rule.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "template-failure-human-rendering",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "4c0d640ffb7a7bdeeaec61ebb61489c4a8b3256ad56ce03683e5309524ac9149",
+    "detail_bundle_digest": "c0573146076c848df663dfc6da9a29723022ada8efdd59a0365fc0522ab8dac3",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-writer-guard-origins-terminal.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "4705cb7e35edf4a94efd48ef6d174b9829a158e9b00683afdd09d7cbc3a0fc4a",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

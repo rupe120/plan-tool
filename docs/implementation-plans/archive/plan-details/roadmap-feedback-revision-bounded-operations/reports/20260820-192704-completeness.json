@@ -1,0 +1,165 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-feedback-revision-bounded-operations",
+  "plan_path": "docs/implementation-plans/2-roadmap-feedback-revision-bounded-operations.md",
+  "created_at": "2026-08-20T19:27:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "97da3da93dd036c1888f0be85c4aeee3f76680a9163c3631e5bc262678d46c7c",
+  "code_fingerprint": {
+    "BACKLOG.md": "d7d7ce1ad24f649522632c9920d0f1af5ed9e6bba17bcd2e0f4db90b630affe7",
+    "BUG_BACKLOG.md": "48f0f1b18b3777e5d08ec51b033ce055af0927d878608ab68d7e348f9e88e962",
+    "CAPABILITIES.md": "c2eda7c0a303c3404c88bf29b1c6757b47bc6afd715de67b2ba08676f2ae0da1",
+    "DATA_CONTRACT.md": "b75be36ff31ad1457c7720afcce2e2fd528d12c96d53efb3b948cbeb646a48ba",
+    "README.md": "563c3db41825d122d8b2b6b5a4b8f9376ada5e1f3ff98856dbc87548160d2174",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "RUNBOOK.md": "6f4e15df2df7831ae5ae30e9395dd3663b1bd2e65451630e480160d375e45be2",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "59ce4c96c379f2dd95ef307e78471b9215fbb4a77aaeab421a32df05e7c738f1",
+    "docs/ROADMAP_WALKTHROUGH.md": "8c5ffad859b39576ac380ba72325abeaac7798d83009592e0d564d47072bc0e8",
+    "docs/cli/roadmap.md": "a35a30f067478aa5a13db3bc98bd33cc2119052baf32f7531ad922dadebae539",
+    "docs/implementation-plans/2-roadmap-canonical-source-identity.md": "2db3ccf2aa747644bd00bd7c079f17250746ff0280aa37d85a92739b3dce0500",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "3161c72f83e8a2d33bd049c8a6ac9ff466c45afe92ef9558f93628995c41d09e",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/data_contract.py": "0068be4531574747312829788a4b56a5f32a7e87bf7c2bd7620cee125e7d9604",
+    "plan_tool/project_config.py": "08fcb3241c474dabe4cca25d051f08318e87441688fdd9a40a77b95785ef96dd",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap.py": "b6374ee054911778e909b0c417beeaf746f5301304bcaf4322b78d4fe124cbcb",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_gates.py": "9b9beebf295c531108629d2bf34dc31450d618638b265d33a3d0212959e37eb2",
+    "plan_tool/roadmap_relations.py": "eeb609117a3e07f802d04c18fef3ac58dcf6224ddeba25268ea3ddaddc0d2b82",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_revision_patch.py": "b348cc8a9bdef63ae38830439df636cf40844c24e1450fbbe1b17d19735f6838",
+    "plan_tool/roadmap_revision_publish.py": "98eb23f964798dff71269081c4d81a8090d7b8c506ce34c47b283f3b3c36e86e",
+    "plan_tool/roadmap_revision_run.py": "fd8c06bbffa0eba872a6d81f79d981513ce2eacc43c73bde206f9a04e5a13f18",
+    "plan_tool/roadmap_seed_state.py": "b59f605a734b4fd483c5a182fd81c575e72b01e56f3c88025d9897ed99fd3431",
+    "plan_tool/roadmap_structural_revision_run.py": "6871aab3e199919b7209d20cff38d8d19e63b1b5cb2c987bae8e771874d8778b",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_data_contract.py": "e3f074d0d926b45a816ee06f0382ec760d21ab3cbdb2b12d7f4d19cde39b8a7a",
+    "tests/test_project_config.py": "331f8251a721f2d1fc6cf2ae78ecdc25960e83284b0ebeadfaf09bde6ac0f90e",
+    "tests/test_roadmap.py": "740b938e9b7284ca3e0fbbae4868f498e9c0fb0df6cd599e47e8ec419bbfa631",
+    "tests/test_roadmap_artifacts.py": "e65a9b6a791f9ea6428a8913a5818d311ba1f2b3c411ecf6391546d8dd5c90e9",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_gates.py": "7befcaba2fc959e1e73ef31ef3796d86bf2046912927da572b43b6c7dbcbb8cc",
+    "tests/test_roadmap_relations.py": "b2c059f99192a8734efa05b4c6a42058ebe965fef09f3ccdd3f1bd5304dd2c17",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_patch.py": "0b10d94eb3a7394365cb8c4cf2880d97ada7583d26cff4daa86276e834b14102",
+    "tests/test_roadmap_revision_publish.py": "afd192ea907b84ed1a6ab2573fe75c65f0f8730845db20aa1d397c8297dd39b5",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9",
+    "tests/test_roadmap_seed_state.py": "db35775498280835737bf0264590312e00d4affd7a6c8c543a962b257ea5e15d",
+    "tests/test_roadmap_structural_revision_run.py": "01f10c46cf76cacd8331f96a6290ad07c062bde43af2b8dcb5468306abedf24e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-envelope-operations.md": "563a42b1bbb5b490a9d5a8d9466d15f36c691d6bcbf589c5f8ca9e20c45f0ce3",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-envelope-feedback.md": "96091c5049763b91e8e265ad7a86c9a08852c6246f12ea38becb66d09cd4b578",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row-prose.md": "620d1459ccd4b5cca51717d5fbe9a04c7b6abb77c40a57401b6e7aac1b92c9ad",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-enroll-trusted-canonical-baseline.md": "f1ae2a3e5e9a290ae8aeb3133b909a8c4ac397cdbe5fd26ee14a6bb9f432e3fd",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md": "2597cb978bc86b7ec73c2f2838eb460e97d54a57fa5f9999184989dfdfddcc74",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md": "e44acf31a2c126d2393ba22246bd4fb218261572be34314c1799121cf6b1e23b",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/07-close-297-its-whole-artifact-revision.md": "04b99af065be329bf17d31b857f35b268a53ffbd2f9a015d96dbdb83872a1162"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Feedback Revision Bounded Operations\n\n`roadmap-feedback-revision-bounded-operations` \u00b7 generated 2026-08-20T19:27:04Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `3c1ee65fc5829d1af92482e2c225d2705edaccc9011f1422193098ee8c497d8e`\n- **Detail bundle digest:** `fc773ecb7d38c763be898665dfd086ea407af466cb30589e8d2920c8fbd86706`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+1 vs. first audit)\n- **Detail-bundle size:** 133888 bytes (+133888 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-24eca65b]`: The plan's `## Acceptance criteria` names `.plan-tool/config.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-247acfea]`: The plan's `## Acceptance criteria` names `componentrow.store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-7b1eed8d]`: The plan's `## Acceptance criteria` names `json_object_contracts`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-397ebcc1]`: The plan's `## Acceptance criteria` names `outcome_completed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-974a52ae]`: The plan's `## Acceptance criteria` names `outcome_completed_no_change`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e3bca955]`: The plan's `## Acceptance criteria` names `outcome_stage_exhausted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2c67bfdb]`: The plan's `## Acceptance criteria` names `outcome_stage_invalid`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c80da3fd]`: The plan's `## Acceptance criteria` names `plansartifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b545b03c]`: The plan's `## Acceptance criteria` names `roadmap_feedback.stage_limits`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-feedback-revision-bounded-operations` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Feedback Revision Bounded Operations\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `3c1ee65fc5829d1af92482e2c225d2705edaccc9011f1422193098ee8c497d8e`\n- **Detail bundle digest:** `fc773ecb7d38c763be898665dfd086ea407af466cb30589e8d2920c8fbd86706`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `.plan-tool/config.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `componentrow.store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `json_object_contracts`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_completed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_completed_no_change`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_stage_exhausted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_stage_invalid`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plansartifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `roadmap_feedback.stage_limits`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "3c1ee65fc5829d1af92482e2c225d2705edaccc9011f1422193098ee8c497d8e",
+      "detail_bundle_digest": "fc773ecb7d38c763be898665dfd086ea407af466cb30589e8d2920c8fbd86706",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-envelope-operations.md",
+          "state": "present",
+          "digest": "563a42b1bbb5b490a9d5a8d9466d15f36c691d6bcbf589c5f8ca9e20c45f0ce3"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-envelope-feedback.md",
+          "state": "present",
+          "digest": "96091c5049763b91e8e265ad7a86c9a08852c6246f12ea38becb66d09cd4b578"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row-prose.md",
+          "state": "present",
+          "digest": "620d1459ccd4b5cca51717d5fbe9a04c7b6abb77c40a57401b6e7aac1b92c9ad"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-enroll-trusted-canonical-baseline.md",
+          "state": "present",
+          "digest": "f1ae2a3e5e9a290ae8aeb3133b909a8c4ac397cdbe5fd26ee14a6bb9f432e3fd"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md",
+          "state": "present",
+          "digest": "2597cb978bc86b7ec73c2f2838eb460e97d54a57fa5f9999184989dfdfddcc74"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md",
+          "state": "present",
+          "digest": "e44acf31a2c126d2393ba22246bd4fb218261572be34314c1799121cf6b1e23b"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/07-close-297-its-whole-artifact-revision.md",
+          "state": "present",
+          "digest": "04b99af065be329bf17d31b857f35b268a53ffbd2f9a015d96dbdb83872a1162"
+        }
+      ],
+      "source_seed_digest": "2cbcf0e04ef6f5ee953a75d52cd904dca98b6c2fb1ebd1a3079a97bbf5ef6adb",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 133888,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

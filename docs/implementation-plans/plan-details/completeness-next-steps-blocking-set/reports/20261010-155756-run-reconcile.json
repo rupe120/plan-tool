@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "plan_slug": "completeness-next-steps-blocking-set",
+  "plan_path": "docs/implementation-plans/2-completeness-next-steps-blocking-set.md",
+  "created_at": "2026-10-10T15:57:56Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "e35ec64dc05a05abc8cca3cd3f04570cceef436bb03357f8c2c4a90a7b208656",
+  "code_fingerprint": {
+    "BACKLOG.md": "2696256d5e2751ad70c7eeacbcf1d6e171fdce434ab88b91c24bcb42e9e29195",
+    "docs/how-to/pipeline/audit.md": "b530718d9be7cc09d34ede52d798f4f06cf7e062c1b8309c035fd9a3430528b6",
+    "plan_tool/cli/authoring.py": "331d4388b7c89d85aff457600b266e3e6d080326586ef2d3cd4db0903ec5b2e1",
+    "plan_tool/cli/completeness_cmd.py": "764924df18a97a34c685798c76da54fe567e462ed66f0573613b45b9c52e09a8",
+    "plan_tool/cli/completeness_phases.py": "9cf1630cd872589a9fbef3971b41f3ab6aa2230d4640be2531cf49afe9173f7b",
+    "plan_tool/completeness_report.py": "b39cc0c38077d4f367e872422a7d30b4f06faf4036fa24282f00fd0a07012ef6",
+    "tests/cli/test_completeness_cmd.py": "f0552c521b29694afc6d9e8569ba25fbc1a3a675c573c90cefa00a96289d5907",
+    "tests/test_completeness_report.py": "364bce6446ab4609acd168d1cadbec928908ec92c7340b1bf6c82cce8dc2bd77"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 4 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

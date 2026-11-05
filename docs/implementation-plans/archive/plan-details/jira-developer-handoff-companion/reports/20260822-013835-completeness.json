@@ -1,0 +1,219 @@
+{
+  "version": 4,
+  "plan_slug": "jira-developer-handoff-companion",
+  "plan_path": "docs/implementation-plans/2-jira-developer-handoff-companion.md",
+  "created_at": "2026-08-22T01:38:35Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "56466159a95db1ea91171243a20bd7cb4db1650740aa92a5af068c30f59c181c",
+  "code_fingerprint": {
+    "BACKLOG.md": "f11a50db863b589a949afcbdaa26f5c0e5310dee9aed5cbe552dc81c65528805",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "ec08f476bc4e5b83c8c0e21ae7606c3219d86e05c84aa576a018f40a8ad028c6",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "734122c105ffc9447aabd9c7d9a1efca1d62b2019033aa0abb37d1b5531e3024",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_concept_sync.py": "a5ed2cd6e34cb160eb317e257889befb732faef5dcb5e0d429331ee0404c89fd",
+    "tests/test_detail.py": "a152a622453bf18511f288850e69e3953158e983369682fcfa8f1a43cb31cb3e",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c",
+    "tests/test_review_persistence.py": "9a6eb8b6937953c26175db7cc220e108047deb4c60351b065cab212f75d4875a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md": "31db143508fb70419e2394157d0ed42886b72e086ce86ff079d651c08b199425",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md": "89759a65e777f9ee308bf9ceb465eee64f169b0d0d6a4e8edb4cb803e1360357",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md": "8ad1594e6da46078511e38b52457acc89d5a6fa3d1c931a68df12f9df33817e0",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md": "3d83d0f0b1157ccbb42eaeb4b833358c37f59ac9aa7a0d29795bd78c2652d4af",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md": "f31bd9a9e59cfbca7506011d494063787f23444d834991b1f603b313049e8a6c",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md": "267252645fa046bd3c7701ac14c98edcbad2776f160afe4dc8e5a752d739b98d",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md": "821e4253a4ae3eb01b3434d44de50b2afbef0dc623b7fab8950df26bae5ff993"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Jira Developer Handoff Companion\n\n`jira-developer-handoff-companion` \u00b7 generated 2026-08-22T01:38:34Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `56466159a95db1ea91171243a20bd7cb4db1650740aa92a5af068c30f59c181c`\n- **Detail bundle digest:** `b57f8ab0e11e74a50ba516fff0c2f36ec4f2962a14e787d73fa133e593936aef`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+1 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply jira-developer-handoff-companion   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk jira-developer-handoff-companion  # alternative interactive review/apply\n\n- HIGH `[publish-time-ownership]`: Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) promises to protect every human-owned target, but Architecture checks ownership only \u201cBefore invoking or staging\u201d; a human can create or replace either target after that check and before final publication. The Architecture staging rule, Testing\u2019s final-write-failure fixtures, Acceptance criteria\u2019s same-plan-only overwrite rule, and current `plan_tool.jira:export_jira` provide no publish-time changed-target outcome, so the safety promise can still overwrite human guidance.\n  - Fix: Define a publish-time ownership rule that refuses a target appearing or changing after preflight while retaining recognized same-plan replacement, and add an acceptance result for that race.\n- HIGH `[dropped-step-coverage]`: Architecture says the companion \u201ccontains an ordered prose section for every covered plan step and never omits, reorders, or collapses that path,\u201d and Acceptance criteria says \u201cEach map gives every plan step ordered Jira-grade prose,\u201d but Architecture also says \u201cA dropped record never re-enters a regenerated current story or companion plan path.\u201d Steps 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) and 4 (`Define the generated Jira developer-handoff format and lifecycle`), Testing, and Acceptance criteria do not resolve a dropped record that still names a current step; `plan_tool.jira:_ExistingExport.covered_current_steps` counts it as coverage, so a live step can disappear.\n  - Fix: Refuse a dropped source record that names a current plan step and align the story, handoff, tests, and criteria around complete current-step coverage.\n- MEDIUM `[handoff-state-preservation]`: Step 3 promises to preserve every existing record\u2019s handoff state, and Architecture says \u201ca created record stays created,\u201d but its one-to-one rule only covers records with a nonempty `jira_issue_key`. `plan_tool.jira:_resolve_export_state` accepts `created` without a key, while Testing and Acceptance criteria never say whether companion mode preserves or refuses that source state.\n  - Fix: Define the treatment of a non-dropped `created` record without a Jira key and add it to the state-preservation contract and tests.\n- HIGH `[created-ticket-divergence]`: Companion regeneration can change the source story for a `created` record while retaining its Jira key, but Architecture, steps 3 and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`), Testing, and Acceptance criteria do not require notifying the operator. `JIRA_FORMAT.md` and `plan_tool.jira:_export_jira_append` already require that warning when a created ticket\u2019s source changes, and reporting it does not classify any source conflict.\n  - Fix: Require companion mode to report every created Jira record whose regenerated story changes, with CLI and result coverage for the manual Jira update.\n- MEDIUM `[dropped-record-lifecycle]`: Architecture says \u201ca `dropped` record stays a historical dropped record,\u201d while its later publication rule says \u201cIt does not preserve old stories, append to a prior export, or maintain state about an earlier output.\u201d Step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`), step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and Acceptance criteria require historical retention without saying where that record appears; `plan_tool.jira:reconcile_existing_statuses` currently re-emits it.\n  - Fix: Choose and state the generated artifact\u2019s treatment of dropped records, including any visible historical representation, and align steps 3 and 5, Testing, and Acceptance criteria to it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-56e85ccc]`: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e88a7362]`: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-807aded8]`: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-a5f5459e]`: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Jira Developer Handoff Companion\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `56466159a95db1ea91171243a20bd7cb4db1650740aa92a5af068c30f59c181c`\n- **Detail bundle digest:** `b57f8ab0e11e74a50ba516fff0c2f36ec4f2962a14e787d73fa133e593936aef`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[publish-time-ownership]`: Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) promises to protect every human-owned target, but Architecture checks ownership only \u201cBefore invoking or staging\u201d; a human can create or replace either target after that check and before final publication. The Architecture staging rule, Testing\u2019s final-write-failure fixtures, Acceptance criteria\u2019s same-plan-only overwrite rule, and current `plan_tool.jira:export_jira` provide no publish-time changed-target outcome, so the safety promise can still overwrite human guidance.\n- HIGH `[dropped-step-coverage]`: Architecture says the companion \u201ccontains an ordered prose section for every covered plan step and never omits, reorders, or collapses that path,\u201d and Acceptance criteria says \u201cEach map gives every plan step ordered Jira-grade prose,\u201d but Architecture also says \u201cA dropped record never re-enters a regenerated current story or companion plan path.\u201d Steps 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) and 4 (`Define the generated Jira developer-handoff format and lifecycle`), Testing, and Acceptance criteria do not resolve a dropped record that still names a current step; `plan_tool.jira:_ExistingExport.covered_current_steps` counts it as coverage, so a live step can disappear.\n- MEDIUM `[handoff-state-preservation]`: Step 3 promises to preserve every existing record\u2019s handoff state, and Architecture says \u201ca created record stays created,\u201d but its one-to-one rule only covers records with a nonempty `jira_issue_key`. `plan_tool.jira:_resolve_export_state` accepts `created` without a key, while Testing and Acceptance criteria never say whether companion mode preserves or refuses that source state.\n- HIGH `[created-ticket-divergence]`: Companion regeneration can change the source story for a `created` record while retaining its Jira key, but Architecture, steps 3 and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`), Testing, and Acceptance criteria do not require notifying the operator. `JIRA_FORMAT.md` and `plan_tool.jira:_export_jira_append` already require that warning when a created ticket\u2019s source changes, and reporting it does not classify any source conflict.\n- MEDIUM `[dropped-record-lifecycle]`: Architecture says \u201ca `dropped` record stays a historical dropped record,\u201d while its later publication rule says \u201cIt does not preserve old stories, append to a prior export, or maintain state about an earlier output.\u201d Step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`), step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and Acceptance criteria require historical retention without saying where that record appears; `plan_tool.jira:reconcile_existing_statuses` currently re-emits it.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-50a4c851",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) promises to protect ev",
+      "body": "Step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) promises to protect every human-owned target, but Architecture checks ownership only \u201cBefore invoking or staging\u201d; a human can create or replace either target after that check and before final publication. The Architecture staging rule, Testing\u2019s final-write-failure fixtures, Acceptance criteria\u2019s same-plan-only overwrite rule, and current `plan_tool.jira:export_jira` provide no publish-time changed-target outcome, so the safety promise can still overwrite human guidance.",
+      "suggested_action": "Define a publish-time ownership rule that refuses a target appearing or changing after preflight while retaining recognized same-plan replacement, and add an acceptance result for that race.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "publish-time-ownership",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dffc9e0c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says the companion \u201ccontains an ordered prose section for every covered plan step and never omits, reorders",
+      "body": "Architecture says the companion \u201ccontains an ordered prose section for every covered plan step and never omits, reorders, or collapses that path,\u201d and Acceptance criteria says \u201cEach map gives every plan step ordered Jira-grade prose,\u201d but Architecture also says \u201cA dropped record never re-enters a regenerated current story or companion plan path.\u201d Steps 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) and 4 (`Define the generated Jira developer-handoff format and lifecycle`), Testing, and Acceptance criteria do not resolve a dropped record that still names a current step; `plan_tool.jira:_ExistingExport.covered_current_steps` counts it as coverage, so a live step can disappear.",
+      "suggested_action": "Refuse a dropped source record that names a current plan step and align the story, handoff, tests, and criteria around complete current-step coverage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "dropped-step-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-bd46d812",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 promises to preserve every existing record\u2019s handoff state, and Architecture says \u201ca created record stays created",
+      "body": "Step 3 promises to preserve every existing record\u2019s handoff state, and Architecture says \u201ca created record stays created,\u201d but its one-to-one rule only covers records with a nonempty `jira_issue_key`. `plan_tool.jira:_resolve_export_state` accepts `created` without a key, while Testing and Acceptance criteria never say whether companion mode preserves or refuses that source state.",
+      "suggested_action": "Define the treatment of a non-dropped `created` record without a Jira key and add it to the state-preservation contract and tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "handoff-state-preservation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c6df2c02",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Companion regeneration can change the source story for a `created` record while retaining its Jira key, but Architecture",
+      "body": "Companion regeneration can change the source story for a `created` record while retaining its Jira key, but Architecture, steps 3 and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`), Testing, and Acceptance criteria do not require notifying the operator. `JIRA_FORMAT.md` and `plan_tool.jira:_export_jira_append` already require that warning when a created ticket\u2019s source changes, and reporting it does not classify any source conflict.",
+      "suggested_action": "Require companion mode to report every created Jira record whose regenerated story changes, with CLI and result coverage for the manual Jira update.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "created-ticket-divergence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dd7d1a87",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says \u201ca `dropped` record stays a historical dropped record,\u201d while its later publication rule says \u201cIt does",
+      "body": "Architecture says \u201ca `dropped` record stays a historical dropped record,\u201d while its later publication rule says \u201cIt does not preserve old stories, append to a prior export, or maintain state about an earlier output.\u201d Step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`), step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and Acceptance criteria require historical retention without saying where that record appears; `plan_tool.jira:reconcile_existing_statuses` currently re-emits it.",
+      "suggested_action": "Choose and state the generated artifact\u2019s treatment of dropped records, including any visible historical representation, and align steps 3 and 5, Testing, and Acceptance criteria to it.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "dropped-record-lifecycle",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "56466159a95db1ea91171243a20bd7cb4db1650740aa92a5af068c30f59c181c",
+      "detail_bundle_digest": "b57f8ab0e11e74a50ba516fff0c2f36ec4f2962a14e787d73fa133e593936aef",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "14f8a11652141ab52994fb0c37ebb1227594d2b824b38b942dea3a0dfd86b32b",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

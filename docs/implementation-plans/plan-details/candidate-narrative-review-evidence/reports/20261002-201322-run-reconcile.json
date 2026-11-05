@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "plan_slug": "candidate-narrative-review-evidence",
+  "plan_path": "docs/implementation-plans/2-candidate-narrative-review-evidence.md",
+  "created_at": "2026-10-02T20:13:22Z",
+  "kind": "run-reconcile",
+  "step_id": 5,
+  "plan_fingerprint": "fb156775352004aeeb0450631aef52c3884f5ae94b3b3f80ca8cfefd05bd04c0",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "435e2b940b4b0601f67cabb9f7b85bdfbe3a9ee9c315d9221db50060ba7f7780",
+    "ROADMAP_FORMAT.md": "4f5fd8a91c98b10881b2bb74a15c958ddd043e7574ed481a7b63c5ac3771dedd",
+    "docs/ARCHITECTURE.md": "d0db644f3c3c1e59a83c9ea61605ff88f998457443dfcd46798da69a0a90464f",
+    "docs/cli/roadmap.md": "b9af83d76a9fe7b26691d69f33e3bb00d9fb6939262627375f68d5402ca1ef09",
+    "plan_tool/cli/roadmap_cmd.py": "5313ba6f71269d4f17e39d6af8707e3db14d7a4f6babbdd3091dec7bcbab9bd9",
+    "plan_tool/roadmap_candidate_narrative.py": "b693d3de87c1db688e5eb7fab9b14db59b1049270ea423075b35c46d22520fc7",
+    "plan_tool/roadmap_candidate_review.py": "3766ba1451d9d4392a5efdb43ac1b276597160ed52ea2e0085183ace4be7c31b",
+    "plan_tool/roadmap_gates.py": "2a468b9b93eeb37bf2a288335d7327afa54b79dd49953bbf4819ddd14f5c254d",
+    "tests/cli/test_roadmap_cmd.py": "444ca12fbfb83e8339a6f1b5e60678046a8fbf0e5f1a1daa7790f7b505561231",
+    "tests/test_roadmap_candidate_narrative.py": "54bec29b1f6e00ea6a9c94ee16e8a1a472fa246a39ad57f7774c12fbbdbf38ea",
+    "tests/test_roadmap_candidate_review.py": "54f2f1012415d7b78ce2bff79cbe7f8e21a55ea5627e5f6b5fd798b774b2587c",
+    "tests/test_roadmap_gates.py": "2267a59c2e88908691d5833c81a09ef3e7ec1c456aa8e0393b616726f553e14b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 5 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context informed this classification: 5 of 5 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step5-run-reconcile-09661d53",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 5,
+      "title": "`plan_tool/cli/roadmap_cmd.py` option help for `--propose-candidate`, `--review-candidate`, `--answer-question` and `--d",
+      "body": "`plan_tool/cli/roadmap_cmd.py` option help for `--propose-candidate`, `--review-candidate`, `--answer-question` and `--decide-candidate` (step 5 \"Show the computed narrative evidence on the roadmap candidate CLI surfaces\") named no narrative evidence, although the detail requires a short pointer on each option whose output gains it. The four help strings are edited; `docs/cli/roadmap.md` still needs regeneration",
+      "suggested_action": "run `python -m plan_tool.cli_reference --write` and commit the regenerated `docs/cli/roadmap.md`",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

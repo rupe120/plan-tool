@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "plan_slug": "depends-on-consumes-note",
+  "plan_path": "docs/implementation-plans/2-depends-on-consumes-note.md",
+  "created_at": "2026-08-08T19:32:34Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "372a829a50cbc355ba417535bcc4b1724370d939b88c45797cef901401011904",
+  "code_fingerprint": {
+    "BACKLOG.md": "1243201d751cb348af5ba16695dd0c81acf6a93a564f68fbcc23c39246caf21c",
+    "PLAN_FORMAT.md": "82f07265c4a5ea82a9ee2a77528d8ccf0d9f67583a303f2ae44f4116980514ba",
+    "plan_tool/create.py": "dbf52a421274b2af9dd480edf9a59357867616b5d6714e57749836ed877f2ece",
+    "plan_tool/schema.py": "7623b313dbcad4438afe93e00063937aa7694ec8ea6b07ac279f3c5e2dbcfa26",
+    "plan_tool/scope_out.py": "135a41e407084423915ea9cf6bae0f9433f6df41d9f765504a3232d558607ec1",
+    "tests/test_create.py": "e9570b9beb6cf072f1b80139cb919c0ac1aae8f5396d12c149e8e809b475f0de",
+    "tests/test_detail.py": "006cbc02962c99c4c543e2e21444ce8d0c6e862dff0f94db43ce7f5db83dc323",
+    "tests/test_fingerprint.py": "e8c96c12a15d10fb721cb3f705a41e098fed3a60856e3506aa7340bad32fc427",
+    "tests/test_launcher.py": "a96879672994ea6b7646639684d6f90b3619729c0dfaeb06e12bd64e34aff4ca",
+    "tests/test_parser.py": "851a36960a7ca401327d286ba9df3432494ca8ef32ecd7d230e48394e35c79c2",
+    "tests/test_scope_out.py": "f15a3353dff0dcef31125740bb0fb4f82150af11f125d8ebc82bff9c4ea4b098"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/01-depends-on-notes-field-step-reject-key.md": "170092d590ddf7e4547093393f2f49d2c5b6376f34376b30d503ee90969c44fd",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/02-carry-notes-their-edges-through-split.md": "ca939fab123fba8544557397202a43d6826e10a2d70a65d8b7b13d21902a5c6a",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/03-ask-create-step-proposal-manual-step.md": "11e4bd6334802e60593d8e35f5d1596faf2cceec44f9229cf96bb2abb7c9eb87",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/04-show-each-proposed-step-depends-on-ids.md": "9df17de4c8830dd0197ceab4951237086eface93cdc5f75051e357dac1b35bf3",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/05-re-author-withdrawn-audit-trajectory.md": "e6ccbf90274b64121ebe0e016d2e486e5147d57fe4cedeb7e13451a4979b94ad",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/06-document-depends-on-notes-plan-format.md": "7d90331a999a9a68501a9f5a1f40902e1cbf148e0daa893d85672516b620c839"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Depends On Consumes Note\n\n`depends-on-consumes-note` \u00b7 generated 2026-08-08T19:32:33Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 95263 bytes (+95263 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply depends-on-consumes-note   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[split-replacement-notes]`: Plan Architecture\u2019s fan-out **split** row and `## Testing` still say only \u201cnever copy a note onto the surviving [repointed] edge,\u201d while step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves, forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract (HEAD: `plan_tool/create.py:_propose_step_split` forbids only `depends_on`), and add matching tests \u2014 step 2 detail already pins this, but the plan body and step 6\u2019s mutation-table draft do not, so a reader of Architecture alone would miss half the split contract and the model-supplied-note leak `_apply_step_split`\u2019s `model_copy(update={\u2026})` only overwrites `id`/`depends_on`/`status` today.\n  - Fix: extend the Architecture fan-out split row, `## Testing` split bullet, and step 6\u2019s planned mutation-table split row to match step 2\u2019s full split contract \u2014 clear inbound repointed edges, always `{}` on both replacement halves from the transform, forbid `depends_on_notes` in `_propose_step_split`, and name the three test obligations \u2014 so plan-level prose matches step 2 detail everywhere it restates split policy.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[split-replacement-notes]`: Plan Architecture\u2019s fan-out table split row and `## Testing` split bullet say a split \u201cnever copies a note onto the surviving edge,\u201d but step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves (including notes parsed from `_parse_steps_json`), clear notes on inbound edges repointed to the terminal half, and forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract \u2014 none of which appear in the plan body; step 6 mirrors this table into `PLAN_FORMAT.md`, so the omission would ship an incomplete mutation contract.\n  - Fix: extend the Architecture split row and the matching `## Testing`/acceptance split prose to include all three step 2 rules (always `{}` on replacement halves, clear inbound repoint notes, forbid notes in split-proposal JSON), not only the \u201cnever copy onto the surviving edge\u201d case.\n  - Address: `plan-tool completeness-apply depends-on-consumes-note --anchor split-replacement-notes`\n- MEDIUM `[create-iterate-note-preservation]`: `create --iterate` re-proposes steps and merges each through `plan_tool/create.py:_preserve_on_disk_step_fields`, which at HEAD carries forward `status` and same-title `intent` but not `depends_on_notes`; a later proposal that omits notes can silently drop notes already on disk from an earlier pass, while step 3 detail only says \u201cno special case required unless re-proposal starts dropping operator-entered notes\u201d without choosing preserve-vs-accept-loss or pinning a test.\n  - Fix: state explicitly in Architecture or step 3 whether same-title iterate merges carry forward non-empty `depends_on_notes` when the new proposal leaves them empty (parallel to `intent` preservation) or accept silent loss as deliberate, and add the matching test obligation to step 3 either way.\n  - Address: `plan-tool completeness-apply depends-on-consumes-note --anchor create-iterate-note-preservation`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-db606b65]`: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-cc93c4d7]`: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d54050c]`: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-15fac6fc]`: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply depends-on-consumes-note` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Depends On Consumes Note\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[split-replacement-notes]`: Plan Architecture\u2019s fan-out **split** row and `## Testing` still say only \u201cnever copy a note onto the surviving [repointed] edge,\u201d while step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves, forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract (HEAD: `plan_tool/create.py:_propose_step_split` forbids only `depends_on`), and add matching tests \u2014 step 2 detail already pins this, but the plan body and step 6\u2019s mutation-table draft do not, so a reader of Architecture alone would miss half the split contract and the model-supplied-note leak `_apply_step_split`\u2019s `model_copy(update={\u2026})` only overwrites `id`/`depends_on`/`status` today.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[split-replacement-notes]`: Plan Architecture\u2019s fan-out table split row and `## Testing` split bullet say a split \u201cnever copies a note onto the surviving edge,\u201d but step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves (including notes parsed from `_parse_steps_json`), clear notes on inbound edges repointed to the terminal half, and forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract \u2014 none of which appear in the plan body; step 6 mirrors this table into `PLAN_FORMAT.md`, so the omission would ship an incomplete mutation contract.\n- MEDIUM `[create-iterate-note-preservation]`: `create --iterate` re-proposes steps and merges each through `plan_tool/create.py:_preserve_on_disk_step_fields`, which at HEAD carries forward `status` and same-title `intent` but not `depends_on_notes`; a later proposal that omits notes can silently drop notes already on disk from an earlier pass, while step 3 detail only says \u201cno special case required unless re-proposal starts dropping operator-entered notes\u201d without choosing preserve-vs-accept-loss or pinning a test.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk depends-on-consumes-note` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply depends-on-consumes-note` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-33cf31e0",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan Architecture\u2019s fan-out **split** row and `## Testing` still say only \u201cnever copy a note onto the surviving [repoint",
+      "body": "Plan Architecture\u2019s fan-out **split** row and `## Testing` still say only \u201cnever copy a note onto the surviving [repointed] edge,\u201d while step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves, forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract (HEAD: `plan_tool/create.py:_propose_step_split` forbids only `depends_on`), and add matching tests \u2014 step 2 detail already pins this, but the plan body and step 6\u2019s mutation-table draft do not, so a reader of Architecture alone would miss half the split contract and the model-supplied-note leak `_apply_step_split`\u2019s `model_copy(update={\u2026})` only overwrites `id`/`depends_on`/`status` today.",
+      "suggested_action": "extend the Architecture fan-out split row, `## Testing` split bullet, and step 6\u2019s planned mutation-table split row to match step 2\u2019s full split contract \u2014 clear inbound repointed edges, always `{}` on both replacement halves from the transform, forbid `depends_on_notes` in `_propose_step_split`, and name the three test obligations \u2014 so plan-level prose matches step 2 detail everywhere it restates split policy.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-replacement-notes",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-33cf31e0",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan Architecture\u2019s fan-out table split row and `## Testing` split bullet say a split \u201cnever copies a note onto the surv",
+      "body": "Plan Architecture\u2019s fan-out table split row and `## Testing` split bullet say a split \u201cnever copies a note onto the surviving edge,\u201d but step 2 (`Carry the notes with their edges through split\u2026`) also requires `_apply_step_split` to always set `depends_on_notes={}` on both replacement halves (including notes parsed from `_parse_steps_json`), clear notes on inbound edges repointed to the terminal half, and forbid `depends_on_notes` in `_propose_step_split`\u2019s JSON contract \u2014 none of which appear in the plan body; step 6 mirrors this table into `PLAN_FORMAT.md`, so the omission would ship an incomplete mutation contract.",
+      "suggested_action": "extend the Architecture split row and the matching `## Testing`/acceptance split prose to include all three step 2 rules (always `{}` on replacement halves, clear inbound repoint notes, forbid notes in split-proposal JSON), not only the \u201cnever copy onto the surviving edge\u201d case.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-replacement-notes",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-068ddcda",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`create --iterate` re-proposes steps and merges each through `plan_tool/create.py:_preserve_on_disk_step_fields`, which ",
+      "body": "`create --iterate` re-proposes steps and merges each through `plan_tool/create.py:_preserve_on_disk_step_fields`, which at HEAD carries forward `status` and same-title `intent` but not `depends_on_notes`; a later proposal that omits notes can silently drop notes already on disk from an earlier pass, while step 3 detail only says \u201cno special case required unless re-proposal starts dropping operator-entered notes\u201d without choosing preserve-vs-accept-loss or pinning a test.",
+      "suggested_action": "state explicitly in Architecture or step 3 whether same-title iterate merges carry forward non-empty `depends_on_notes` when the new proposal leaves them empty (parallel to `intent` preservation) or accept silent loss as deliberate, and add the matching test obligation to step 3 either way.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "create-iterate-note-preservation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  },
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 95263,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  }
+}

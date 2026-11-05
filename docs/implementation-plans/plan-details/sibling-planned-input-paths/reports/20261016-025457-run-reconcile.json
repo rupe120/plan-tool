@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "plan_slug": "sibling-planned-input-paths",
+  "plan_path": "docs/implementation-plans/2-sibling-planned-input-paths.md",
+  "created_at": "2026-10-16T02:54:57Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "ec86c6b8fbb6136265e0f9cf0a5f599ab8731ec6ad915f1cebc6f6bc3bee33c1",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "dd6ce7ceead5b7a160873edfafa520c7092f07076c5fc4f679846d68149c5f74",
+    "DATA_CONTRACT.md": "3e4530e431d92919a4e1e2b697925a287dec54861f1389f0fec6729504ed655d",
+    "plan_tool/review.py": "9a8f7e825e00d13b6fbdc10ab2912d9c5e0bd6eb98bc8c74937ab52b23c27174",
+    "tests/test_data_contract.py": "f4c4b17466cbc2f3eb46a48e4277a567e6ce226a5839945cdfde36cdb5684c3f",
+    "tests/test_review.py": "13ff0bb9bf983cb3c7a0364975fd613819fdd614d96479501642b1a706cae046"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 1 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 2 of 2 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-05234a1d",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "`plan_tool/review.py:_sibling_roadmap_identity()` (step 1 \u201cSelect eligible sibling creates using existing roadmap identi",
+      "body": "`plan_tool/review.py:_sibling_roadmap_identity()` (step 1 \u201cSelect eligible sibling creates using existing roadmap identity\u201d) assigns plain-frontmatter seeds to `plan_path.parent/roadmaps/<slug>` even when the resolved source structurally identifies another roadmap root. With unavailable lifecycle state, a seed under `a/roadmaps/demo/seeds` incorrectly accepts creates from `b/roadmaps/demo` when both accepted versions contain matching row IDs. This violates same-owner isolation; existing tests cover separate plan directories but not conflicting source ownership.",
+      "suggested_action": "in `plan_tool/review.py:_sibling_roadmap_identity()`, preserve structurally identified source ownership during plain-frontmatter fallback and add conflicting-owner regression coverage in `tests/test_review.py:TestEligibleSiblingCreates`",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

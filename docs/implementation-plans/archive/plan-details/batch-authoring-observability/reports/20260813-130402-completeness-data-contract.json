@@ -1,0 +1,182 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-5b0b36a4": {
+      "code_anchor": "shell.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md",
+      "reason": "code anchor path `shell.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-fb261853": {
+      "code_anchor": "backend.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/02-move-streaming-popen-runner-out.md",
+      "reason": "code anchor path `backend.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-1c72768a": {
+      "code_anchor": "claude_errors.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/04-configured-timeout-kill-termination.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/04-configured-timeout-kill-termination.md",
+      "reason": "code anchor path `claude_errors.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-406da8fd": {
+      "code_anchor": "shell.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md",
+      "reason": "code anchor path `shell.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-5f81adce": {
+      "code_anchor": "claude_errors.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md",
+      "reason": "code anchor path `claude_errors.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-8adc1c65": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.bind_shell_sink",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.bind_shell_sink` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-9e029302": {
+      "code_anchor": "rate_limit_loop.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/05-backend-spawn-backend-termination-run.md",
+      "reason": "code anchor path `rate_limit_loop.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-1b167135": {
+      "code_anchor": "claude_errors.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md",
+      "reason": "code anchor path `claude_errors.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-55156f90": {
+      "code_anchor": "shell.py:claude_invoke",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md",
+      "reason": "code anchor path `shell.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-81d54912": {
+      "code_anchor": "backend_runner.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md",
+      "reason": "code anchor path `backend_runner.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-fa50ce0c": {
+      "code_anchor": "launcher.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/06-run-batch-claude-calls-through-shared.md",
+      "reason": "code anchor path `launcher.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-18c91825": {
+      "code_anchor": "shell.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md",
+      "reason": "code anchor path `shell.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-ac9da76b": {
+      "code_anchor": "backend_runner.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md",
+      "reason": "code anchor path `backend_runner.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-e971fce8": {
+      "code_anchor": "progress.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/07-widen-active-shell-sink-so-batch-calls.md",
+      "reason": "code anchor path `progress.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-0c59e248": {
+      "code_anchor": "run_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/08-record-ctrl-interrupt-reap-child.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/08-record-ctrl-interrupt-reap-child.md",
+      "reason": "code anchor path `run_cmd.py` does not exist",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-5ac570a7": {
+      "code_anchor": "run_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/batch-authoring-observability/09-keep-flight-json-current-whole-life-call.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/batch-authoring-observability/09-keep-flight-json-current-whole-life-call.md",
+      "reason": "code anchor path `run_cmd.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260813-130402-completeness"
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-8647b0d6": {
+      "code_anchor": "plan_tool/review_walk.py:WalkState.pending_feedback",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/human-input-seam/02-route-review-walk-command-feedback.md",
+      "reason": "code anchor `plan_tool/review_walk.py:WalkState.pending_feedback` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260827-200746-completeness"
+}

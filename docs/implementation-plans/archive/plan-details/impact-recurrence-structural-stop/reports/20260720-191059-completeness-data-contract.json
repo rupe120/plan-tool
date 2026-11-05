@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-f95eb97e": {
+      "code_anchor": "plan_tool/impact_recurrence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/impact-recurrence-structural-stop/04-recommend-only-next-action-rendering.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/impact-recurrence-structural-stop/04-recommend-only-next-action-rendering.md",
+      "reason": "code anchor path `plan_tool/impact_recurrence.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-cd56a674": {
+      "code_anchor": "plan_tool/impact_recurrence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/impact-recurrence-structural-stop/05-structural-stop-reason-should-continue.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/impact-recurrence-structural-stop/05-structural-stop-reason-should-continue.md",
+      "reason": "code anchor path `plan_tool/impact_recurrence.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260720-191059-completeness"
+}

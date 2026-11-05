@@ -1,0 +1,143 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-brief-rebind-confirmation",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-rebind-confirmation.md",
+  "created_at": "2026-09-15T22:39:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "e59c9f727417cd636a6f866614a0907c10289d1a8661e3a367a010a6e8a2b12e",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "c14e38ab6631204ea96f8967a1607a0c71830b1c32ee648e93f04f995f472e5d",
+    "DATA_CONTRACT.md": "5bee95fb5ace30fa42bf52599c49d0ceaf60625933f27b4d868324f6905f1d7f",
+    "README.md": "ad1650e13e09150da1ad6a60d281dcee39258dcb8513288b6f49719089dee05b",
+    "ROADMAP_FORMAT.md": "b754e3c3cb074a1995370332cbc9c44743ac22e8426be6e7448f8d4bc7149bb4",
+    "RUNBOOK.md": "0a0ca9937d907a5e7d99c3b496dd9f2b7349e67aea2c70da84c545a96c4c2638",
+    "USE_CASES.md": "871a87c66b3e85944c54710ff4415379b12e90fc68e803792ba3b8e68492dfca",
+    "docs/ARCHITECTURE.md": "5ba0f0291bab9ba06982ecef95488d1b901df7fe549cf5a5646d4bd4f85c970b",
+    "docs/ROADMAP_WALKTHROUGH.md": "3212cbe2881924a2bdc12d66dedb8f23fdd292e268935772107e45f873901447",
+    "docs/cli/roadmap.md": "aa9a8e42b5c9db882a0473b9908970b286d81156a5a766233c88c540018b633e",
+    "integrations/claude/SKILL.md": "d8a8d76bc0a200087f153e22e62d9d758e582cd73e39b830cfc19ebfe8ff8ec1",
+    "plan_tool/cli/__init__.py": "1af01cbb3e42ac02112e69836c002a577ca1f9c0be092933c157bc8fe01c0698",
+    "plan_tool/cli/roadmap_cmd.py": "d550176659f4990f1620574839180ff01116feccb23e52d3e6cbfa94f6213d1e",
+    "plan_tool/roadmap.py": "9f3b779ed1525c38be1fdeb8c53bd3840f526b01f8bec4be672641c475fbedaf",
+    "tests/cli/package_surface_help.golden.txt": "95a304b944e1b1145f482bcca6c5724546b1db976ed5c70243e5cb0c4f032316",
+    "tests/cli/test_roadmap_cmd.py": "aab6d52a97e2d8e9d5b4bf39f70e2fc22e73da0c647a5112d955ab0e4f5fdd73",
+    "tests/test_data_contract.py": "6faf1351f5ef0537db7924c7e406eaf0d1ec0d6e7986322d4593322ef29c7532",
+    "tests/test_roadmap.py": "3bd3b2d130b123f1de6e1cd18a5969228bdaaf388df7c6519b278fb313bb33d6",
+    "tests/test_roadmap_format.py": "85209bffb04ef445a4cd69644c330924bd20b89e5d45603313cf7c981a3755f1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md": "9877d924580d6be0cea160870026e5cdd65dc3059b7ff28f9dd230939e93395e",
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/02-confirm-brief-rebind-only-stage-runs.md": "14458f4c31c8c31ecae1b69f7cb4d9909f0742bd625c52e617dd8f0860ee0454",
+    "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/03-document-confirmed-brief-rebinds-across.md": "2dfb1f455d045781d4cd7e79c0bdbf783dc3b13dd1248dea1f3f99061a2d2ee0"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Brief Rebind Confirmation\n\n`roadmap-brief-rebind-confirmation` \u00b7 generated 2026-09-15T22:39:36Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `96a4197bae2d03022d9e57373b75995e3d7b753f86af3d767948e74004d9de8a`\n- **Detail bundle digest:** `2c089b8e8cea4ea255e32cb57bab6919127d15b74a998de8f9692ffeb1f321c0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (-1 vs. first audit)\n- **Detail-bundle size:** 31848 bytes (+31848 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-brief-rebind-confirmation   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[confirm-brief-rebind-noop-policy]` [confidence: limited]: The flag\u2019s behavior on a matching or initial stage run is contradictory. `Architecture` says \u201cIncompatible or otherwise useless combinations fail before source persistence with clear, redacted operator guidance,\u201d while step 1 (`Require confirmation before replacing changed or legacy source.json`) says matching content continues normally and an initial source is recorded after its first successful artifact; step 2 (`Add --confirm-brief-rebind only to stage runs`) makes the flag valid for ordinary stage dispatch, and step 3 retains normal-admission guidance. A confirmation is useless for matching and initial inputs, so implementers cannot tell whether those calls must fail or proceed as no-ops.\n  - Fix: Define one policy for confirmed matching and initial stage runs, then align the Architecture, Testing, and steps 1\u20133 around it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-brief-rebind-confirmation` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Brief Rebind Confirmation\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `96a4197bae2d03022d9e57373b75995e3d7b753f86af3d767948e74004d9de8a`\n- **Detail bundle digest:** `2c089b8e8cea4ea255e32cb57bab6919127d15b74a998de8f9692ffeb1f321c0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[confirm-brief-rebind-noop-policy]` [confidence: limited]: The flag\u2019s behavior on a matching or initial stage run is contradictory. `Architecture` says \u201cIncompatible or otherwise useless combinations fail before source persistence with clear, redacted operator guidance,\u201d while step 1 (`Require confirmation before replacing changed or legacy source.json`) says matching content continues normally and an initial source is recorded after its first successful artifact; step 2 (`Add --confirm-brief-rebind only to stage runs`) makes the flag valid for ordinary stage dispatch, and step 3 retains normal-admission guidance. A confirmation is useless for matching and initial inputs, so implementers cannot tell whether those calls must fail or proceed as no-ops.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-roadmap-py:roadmapresult-baseline-rebound]` [confidence: limited]: docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md:## Input cites `plan_tool/roadmap.py:RoadmapResult.baseline_rebound`, but code anchor `plan_tool/roadmap.py:RoadmapResult.baseline_rebound` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-brief-rebind-confirmation --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0fbc38c8",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The flag\u2019s behavior on a matching or initial stage run is contradictory. `Architecture` says \u201cIncompatible or otherwise ",
+      "body": "The flag\u2019s behavior on a matching or initial stage run is contradictory. `Architecture` says \u201cIncompatible or otherwise useless combinations fail before source persistence with clear, redacted operator guidance,\u201d while step 1 (`Require confirmation before replacing changed or legacy source.json`) says matching content continues normally and an initial source is recorded after its first successful artifact; step 2 (`Add --confirm-brief-rebind only to stage runs`) makes the flag valid for ordinary stage dispatch, and step 3 retains normal-admission guidance. A confirmation is useless for matching and initial inputs, so implementers cannot tell whether those calls must fail or proceed as no-ops.",
+      "suggested_action": "Define one policy for confirmed matching and initial stage runs, then align the Architecture, Testing, and steps 1\u20133 around it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "confirm-brief-rebind-noop-policy",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "step1-data-contract-eceb03a7",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `plan_tool/roadmap.py:RoadmapResult.baseline_rebound`",
+      "body": "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md:## Input cites `plan_tool/roadmap.py:RoadmapResult.baseline_rebound`, but code anchor `plan_tool/roadmap.py:RoadmapResult.baseline_rebound` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-roadmap-py:roadmapresult-baseline-rebound",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "96a4197bae2d03022d9e57373b75995e3d7b753f86af3d767948e74004d9de8a",
+      "detail_bundle_digest": "2c089b8e8cea4ea255e32cb57bab6919127d15b74a998de8f9692ffeb1f321c0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md",
+          "state": "present",
+          "digest": "9877d924580d6be0cea160870026e5cdd65dc3059b7ff28f9dd230939e93395e"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/02-confirm-brief-rebind-only-stage-runs.md",
+          "state": "present",
+          "digest": "14458f4c31c8c31ecae1b69f7cb4d9909f0742bd625c52e617dd8f0860ee0454"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/03-document-confirmed-brief-rebinds-across.md",
+          "state": "present",
+          "digest": "2dfb1f455d045781d4cd7e79c0bdbf783dc3b13dd1248dea1f3f99061a2d2ee0"
+        }
+      ],
+      "source_seed_digest": "e4f159889caf7dd7bb7ff6e308f3b4d704796bf4bf02b201c3939b794ead224c",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 31848,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

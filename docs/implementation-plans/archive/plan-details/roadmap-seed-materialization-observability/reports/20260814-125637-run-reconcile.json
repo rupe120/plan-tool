@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-seed-materialization-observability",
+  "plan_path": "docs/implementation-plans/2-roadmap-seed-materialization-observability.md",
+  "created_at": "2026-08-14T12:56:37Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "77f425d8bacbced45d859e1ce1944e66cc9780270776693673bdba8579a2bb2f",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "e2fae57163a8efe948dd30a121b0635166d7aa131ac492ced24734947ed2c579",
+    "DATA_CONTRACT.md": "c7e90ff770da370e104c27a165334b3e3914c6098ba7546be432cc3f3f1d55ff",
+    "README.md": "afd7e1dd563b4f45d83a062e24a533ec24de6b32f9ebd01f0e4bccb2243c3e17",
+    "TESTING.md": "e50e2805856e5a2f550345be9ba164160b8306349430c50e3571b2163e3b4c4c",
+    "plan_tool/cli/roadmap_cmd.py": "7491a9d50499454eaa7874558573849fe9953e8f7ecea46faba298875705fa75",
+    "plan_tool/roadmap.py": "df8d5a4705a365ee554e9f3014c87bda823d74dcf94b7fd678e240eeb3a6091b",
+    "plan_tool/run_log.py": "a1dc4492940d7471d25cdca57b8cf0c15334543ff2c928892eb8696334cdd19f",
+    "tests/cli/test_roadmap_cmd.py": "55dd2dfff199482854bcf88543a74c07d31f7ba6053623b18b15b2d12de8b0c1",
+    "tests/test_roadmap.py": "ce232dcd820ab60cd727ebcbf0064381e7eb6398daa393abea29dbe798c75089",
+    "tests/test_run_log.py": "1cec984beeb81cec135c614ef0ff0956b6a166d07fd168a8c63babd6e0251564"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 4 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step3-run-reconcile-f8f92391",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "`_MaterializationObserver.backend_termination()` in `plan_tool/roadmap.py` (step 3 \u201cLog source-ordered, plan-attributed ",
+      "body": "`_MaterializationObserver.backend_termination()` in `plan_tool/roadmap.py` (step 3 \u201cLog source-ordered, plan-attributed materialization attempts through a redacting observer\u201d) returns before recording a spawn-failure termination, although `backend_runner.run_streaming_once()` emits that lifecycle callback without a matching child. Preserve the safe termination event with `backend_attempt: null` and `backend_child_started: false` so no-child failures retain complete liveness evidence",
+      "suggested_action": "forward no-child `backend_termination` events with the seed attempt as the legacy ordinal and add a spawn-failure regression in `tests/test_roadmap.py`",
+      "impact": "medium",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

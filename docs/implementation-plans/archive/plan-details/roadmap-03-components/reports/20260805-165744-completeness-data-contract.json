@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-24ef95ff": {
+      "code_anchor": "plan_tool/roadmap.py:_validate_feedback_targets",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-03-components/01-03-components-md-artifact-contract.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-03-components/01-03-components-md-artifact-contract.md",
+      "reason": "code anchor `plan_tool/roadmap.py:_validate_feedback_targets` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-d59b7653": {
+      "code_anchor": "plan_tool/roadmap.py:_validate_feedback_targets",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-03-components/02-widen-gate-envelope-row-helpers-third.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-03-components/02-widen-gate-envelope-row-helpers-third.md",
+      "reason": "code anchor `plan_tool/roadmap.py:_validate_feedback_targets` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260805-165744-completeness"
+}

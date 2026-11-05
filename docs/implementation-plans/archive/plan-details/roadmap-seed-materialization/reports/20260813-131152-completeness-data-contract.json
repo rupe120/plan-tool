@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-669be4a8": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-seed-materialization/01-share-draft-seed-content-validation.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-42e7b6b5": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-b2576728": {
+      "code_anchor": "cli/authoring.py:_confirm_invalidated_roadmap_seed",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-seed-materialization/03-module-that-classifies-every-plan-draft.md",
+      "reason": "code anchor path `cli/authoring.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260813-131152-completeness"
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "plan_slug": "prompt-budget-shared-seam-suppression",
+  "plan_path": "docs/implementation-plans/2-prompt-budget-shared-seam-suppression.md",
+  "created_at": "2026-07-07T21:59:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "65b16df1d55fc8caa052a0ece0fb0268022b5864b7819f3cbef15b3a5a4f48c3",
+  "code_fingerprint": {
+    "BACKLOG.md": "ea7e6c583a8ab1581d5913ac4f5595e11a2a960f442049cfb75362dbf0cb377d",
+    "plan_tool/create.py": "1256ef3c17fc8b1530e5e60324d93bfbf9febc5682100e4808210d279533a991",
+    "plan_tool/detail.py": "1f4eade7d9380f2994e9c1f99fe7c381267ec42a1d4a0b06411ce2cad4de8545",
+    "plan_tool/review.py": "cdb78c3eadc3e2237ed917f7ab443f318a49c4f93ab03212e4dd75843fd91418",
+    "plan_tool/shell.py": "b51d06a7edace3e7d6e045eb5080093a890785d43fc36fca04a290643fae43de",
+    "tests/test_create.py": "6539888cf6fbc26986e829a1aa72afbf63cf5b9be1e0ff50ca10412a2d7ba43b",
+    "tests/test_detail.py": "001d1e160b1c168fb026de3d006f266ba0d3a422e04086fae4fb79b45d64deba",
+    "tests/test_review.py": "e6aa46f64e24d0cf366dd020f4ee684a16b450ef28342e66f8aa7d1d881d1590",
+    "tests/test_shell.py": "123fd94176339218ce1e82a63d2ddb11dd5e5fe06cdeec513d4d58129ded1827",
+    "tests/test_telemetry.py": "c9c320e198298716e27a1b84746a4345031bc28f6a33655010da1ffc9711f870"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/01-extract-shell-prompt-budget-backstop.md": "790d8e9007e3a0c4ec38e94ab6d5b847ca73bf2663846a51961890e1e611a86d",
+    "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/02-scoped-shell-backstop-suppression-named.md": "d1952ef59974dde8051c8d92c701a3e5c63c92f65c216d61a601374cef6ca625",
+    "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/03-prompt-budget-telemetry-regression.md": "6a297d4d4dd4b080d183e2172c15d46b2ef082e5adffb166a7c00c0c3ba3b21b",
+    "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/04-remove-completed-99-backlog-entry.md": "07010051213fb2dc2224f1a76f5f3ec3342fe74f1994c062c0b0dfb4889ead6d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Prompt Budget Shared Seam Suppression\n\n`prompt-budget-shared-seam-suppression` \u00b7 generated 2026-07-07T21:59:20Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run prompt-budget-shared-seam-suppression` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Prompt Budget Shared Seam Suppression\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-backend-py:prompttransport-prompt-bytes]`: docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/01-extract-shell-prompt-budget-backstop.md:## Input cites `plan_tool/backend.py:PromptTransport.prompt_bytes`, but code anchor `plan_tool/backend.py:PromptTransport.prompt_bytes` does not resolve in HEAD.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk prompt-budget-shared-seam-suppression` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "step1-data-contract-812dea7e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `plan_tool/backend.py:PromptTransport.prompt_bytes`",
+      "body": "docs/implementation-plans/plan-details/prompt-budget-shared-seam-suppression/01-extract-shell-prompt-budget-backstop.md:## Input cites `plan_tool/backend.py:PromptTransport.prompt_bytes`, but code anchor `plan_tool/backend.py:PromptTransport.prompt_bytes` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-backend-py:prompttransport-prompt-bytes"
+    }
+  ],
+  "annotations": {}
+}

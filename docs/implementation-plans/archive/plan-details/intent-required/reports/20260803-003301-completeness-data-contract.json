@@ -1,0 +1,149 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-a4850f1f": {
+      "code_anchor": "review.py:_is_usable_intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-intent-required.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-intent-required.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-3781ea2b": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/02-map-seed-outcome-section-plan-intent.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/02-map-seed-outcome-section-plan-intent.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-427758b7": {
+      "code_anchor": "plan_tool/review.py:is_usable_intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/02-map-seed-outcome-section-plan-intent.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/02-map-seed-outcome-section-plan-intent.md",
+      "reason": "code anchor `plan_tool/review.py:is_usable_intent` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-105ca18a": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/03-ask-intent-step-proposal-json-retry.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/03-ask-intent-step-proposal-json-retry.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-2e87c6ef": {
+      "code_anchor": "plan_tool/review.py:is_usable_intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/03-ask-intent-step-proposal-json-retry.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/03-ask-intent-step-proposal-json-retry.md",
+      "reason": "code anchor `plan_tool/review.py:is_usable_intent` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-0bd9c2cf": {
+      "code_anchor": "scope_fence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md",
+      "reason": "code anchor path `scope_fence.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-54fb9354": {
+      "code_anchor": "review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-9b57cff3": {
+      "code_anchor": "plan_tool/review.py:is_usable_intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/04-intent-proposal-helper-module-that.md",
+      "reason": "code anchor `plan_tool/review.py:is_usable_intent` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-4ddd8cf7": {
+      "code_anchor": "plan_tool/review.py:is_usable_intent",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/05-offer-proposed-intent-create-wizard.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/05-offer-proposed-intent-create-wizard.md",
+      "reason": "code anchor `plan_tool/review.py:is_usable_intent` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-b5622855": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/05-offer-proposed-intent-create-wizard.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/05-offer-proposed-intent-create-wizard.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-4c713e4c": {
+      "code_anchor": "plan_tool/review.py:parse_intent_action",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/07-dispatch-intent-proposer-review.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/07-dispatch-intent-proposer-review.md",
+      "reason": "code anchor `plan_tool/review.py:parse_intent_action` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-e645b5d7": {
+      "code_anchor": "plan_tool/cli/review_actions.py:_saved_directive_is_stale",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/07-dispatch-intent-proposer-review.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/07-dispatch-intent-proposer-review.md",
+      "reason": "code anchor `plan_tool/cli/review_actions.py:_saved_directive_is_stale` does not resolve in HEAD",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step9-data-contract-36453dd9": {
+      "code_anchor": "review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/intent-required/09-document-both-intent-fields-outcome.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/intent-required/09-document-both-intent-fields-outcome.md",
+      "reason": "code anchor path `review.py` does not exist",
+      "step_id": 9,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260803-003301-completeness"
+}

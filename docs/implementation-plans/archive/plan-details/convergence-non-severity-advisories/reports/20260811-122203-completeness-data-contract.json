@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step6-data-contract-ca305dc4": {
+      "code_anchor": "completeness_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/convergence-non-severity-advisories/06-surface-advisories-on-completeness.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/convergence-non-severity-advisories/06-surface-advisories-on-completeness.md",
+      "reason": "code anchor path `completeness_cmd.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260811-122203-completeness"
+}

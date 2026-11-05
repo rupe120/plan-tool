@@ -1,0 +1,33 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-428d0881": {
+      "candidate": {
+        "field": "step_authoring_fingerprints",
+        "field_or_key": "step_authoring_fingerprints",
+        "owner": "Grounding",
+        "source_symbol": "plan_tool/grounding.py:Grounding",
+        "target_section": "Grounding"
+      },
+      "candidate_fields": {
+        "field": "step_authoring_fingerprints",
+        "field_or_key": "step_authoring_fingerprints",
+        "owner": "Grounding",
+        "source_symbol": "plan_tool/grounding.py:Grounding",
+        "target_section": "Grounding"
+      },
+      "contract_fingerprint": "26ee7d8f4c1d47a6390e1cad3bb31697bd565a9f581b92bf001db945b88342d8",
+      "field_or_key": "step_authoring_fingerprints",
+      "freshness": {
+        "contract_fingerprint": "26ee7d8f4c1d47a6390e1cad3bb31697bd565a9f581b92bf001db945b88342d8",
+        "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf"
+      },
+      "operation": "remove",
+      "owner": "Grounding",
+      "registry_fingerprint": "318b7626f4e9fce5c0220cbbf04ec240b776161838678eec96d0cee80589adcf",
+      "source_type": "dataclass",
+      "target_section": "Grounding"
+    }
+  },
+  "review_id": "20260819-140505-completeness"
+}

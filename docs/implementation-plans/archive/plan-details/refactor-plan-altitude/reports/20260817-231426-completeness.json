@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "refactor-plan-altitude",
+  "plan_path": "docs/implementation-plans/2-refactor-plan-altitude.md",
+  "created_at": "2026-08-17T23:14:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f9acf5fc4ca97612cfa446379c30b9f843729cfe8f6721489d022da7c808ff36",
+  "code_fingerprint": {
+    "BACKLOG.md": "a52b0f24bf33da54b9454f00557513e5c23d0b5391c1b0ca5a929d15e624bab3",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "plan_tool/foundational_logic.py": "6392f8de51b92ca84bf243fe18d10570c74b035daace017fe5c6e08179536710",
+    "plan_tool/prompts/foundational-logic-sweep.md": "c3d90909d075d8f0460a0a590a6d6cb9b364140b9bd38b5f25bda178e9e8c993",
+    "plan_tool/prompts/synthesize-body.md": "be635d0b60f0229aa38b153e04f4504cf779849c21dca6c313f47185a1fae14a",
+    "tests/test_create.py": "621f29e0fadd14ad21270459ea9f179c69204415805608caecd161d48ee42de5",
+    "tests/test_detail.py": "f9c2d87394518b42c7d80482c94eb347b471d3cc78015ae0129e24050079a95e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/01-apply-refactor-boundary-rule-across.md": "b297a7f9f2f78f7f5a859b6491b487a9101b8fc94092714ffc823c88b0696526",
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/02-keep-synthesized-architecture-promoting.md": "7c66643c77a85d0f8575f60153c5b101154b3598bd827c2861c91742d70ae853"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Refactor Plan Altitude\n\n`refactor-plan-altitude` \u00b7 generated 2026-08-17T23:14:26Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `51458e3c4addce3e2e920515be63316feee39e469384a3d620bfbd8bd237de79`\n- **Detail bundle digest:** `d02bee8b1c6c6d184275da23f9119cf7adc26564e23113525251091c42d49c50`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 19968 bytes (+19968 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply refactor-plan-altitude   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[type-purity-before-sweep]`: Step 1 (`Apply the refactor boundary rule across create proposal paths`) requires Stage 2 type purity before Stage 3 in `Overview`, `Architecture`, Testing\u2019s first bullet, and acceptance criterion 1; its Summary, `Use one refactor-boundary rule`, `Give the split sweep the needed context`, `Apply a strict merge policy`, `Preserve the type-pure execution graph`, `test_refactor_boundary_rule_survives_both_proposal_arms`, `test_create_sweep_keeps_feature_leg_a_feature_after_refactor_consolidation`, and acceptance bullets rely on that order. At HEAD, `plan_tool/create.py:_prepare_create_plan` runs `propose_steps_from_claude` and its split-sweep merge before `_review_step_change_types`, while `_apply_step_split` rewires direct consumers to the terminal feature half; a consolidation attached to a reviewer-split mixed step therefore lands after the feature.\n  - Fix: select and attach split-sweep consolidations only after final type review, or define an equivalent refactor-half remap, and test a reviewer-split mixed proposal with a sweep suggestion.\n- HIGH `[consolidation-type-order]`: Step 1\u2019s `Preserve the type-pure execution graph`, `test_create_sweep_inserts_eligible_consolidation_before_refactor_dependents`, `test_create_sweep_keeps_feature_leg_a-feature_after_refactor_consolidation`, and accepted-consolidation criterion require insertion between an anchor and its consumers, but do not choose an ID policy. `plan_tool/create.py:_parse_steps_json` assigns IDs in list order, `plan_tool/foundational_logic.py:merge_sweep_into_steps` currently appends the next ID, and `plan_tool/detail.py:split_step` and `merge_steps` reject plans whose IDs are not contiguous and in list order; inserting ID 3 between steps 1 and 2 breaks later detail operations, while appending it violates the required execution order.\n  - Fix: define canonical insertion as renumbering the full proposal and repointing every dependency and dependency note, then pin the resulting refactor-to-consolidation-to-feature IDs and graph.\n- HIGH `[split-sweep-checkpoint]`: Step 1\u2019s `Apply a strict merge policy only for create`, `Tests`, and acceptance criteria cover a fresh split-sweep merge but not the Overview\u2019s unchanged checkpoint and create-lifecycle contract. At HEAD, `plan_tool/create.py:propose_steps_from_claude` saves the unmerged raw proposal after applying the sweep and skips the sweep on a cache hit; `_initial_steps_input_hash` also omits the prompt arm. A resumed split run can therefore drop an accepted consolidation, and an arm change can reuse the other arm\u2019s proposal.\n  - Fix: define how checkpoints preserve or deterministically replay the accepted split-sweep result for each arm, and test fresh versus resumed proposals produce the same graph.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-2e7cebc0]`: Step 1 \"Apply the refactor boundary rule across create proposal paths\" carries refactor verb(s) ['refactor'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply refactor-plan-altitude` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Refactor Plan Altitude\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `51458e3c4addce3e2e920515be63316feee39e469384a3d620bfbd8bd237de79`\n- **Detail bundle digest:** `d02bee8b1c6c6d184275da23f9119cf7adc26564e23113525251091c42d49c50`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[type-purity-before-sweep]`: Step 1 (`Apply the refactor boundary rule across create proposal paths`) requires Stage 2 type purity before Stage 3 in `Overview`, `Architecture`, Testing\u2019s first bullet, and acceptance criterion 1; its Summary, `Use one refactor-boundary rule`, `Give the split sweep the needed context`, `Apply a strict merge policy`, `Preserve the type-pure execution graph`, `test_refactor_boundary_rule_survives_both_proposal_arms`, `test_create_sweep_keeps_feature_leg_a_feature_after_refactor_consolidation`, and acceptance bullets rely on that order. At HEAD, `plan_tool/create.py:_prepare_create_plan` runs `propose_steps_from_claude` and its split-sweep merge before `_review_step_change_types`, while `_apply_step_split` rewires direct consumers to the terminal feature half; a consolidation attached to a reviewer-split mixed step therefore lands after the feature.\n- HIGH `[consolidation-type-order]`: Step 1\u2019s `Preserve the type-pure execution graph`, `test_create_sweep_inserts_eligible_consolidation_before_refactor_dependents`, `test_create_sweep_keeps_feature_leg_a-feature_after_refactor_consolidation`, and accepted-consolidation criterion require insertion between an anchor and its consumers, but do not choose an ID policy. `plan_tool/create.py:_parse_steps_json` assigns IDs in list order, `plan_tool/foundational_logic.py:merge_sweep_into_steps` currently appends the next ID, and `plan_tool/detail.py:split_step` and `merge_steps` reject plans whose IDs are not contiguous and in list order; inserting ID 3 between steps 1 and 2 breaks later detail operations, while appending it violates the required execution order.\n- HIGH `[split-sweep-checkpoint]`: Step 1\u2019s `Apply a strict merge policy only for create`, `Tests`, and acceptance criteria cover a fresh split-sweep merge but not the Overview\u2019s unchanged checkpoint and create-lifecycle contract. At HEAD, `plan_tool/create.py:propose_steps_from_claude` saves the unmerged raw proposal after applying the sweep and skips the sweep on a cache hit; `_initial_steps_input_hash` also omits the prompt arm. A resumed split run can therefore drop an accepted consolidation, and an arm change can reuse the other arm\u2019s proposal.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight]`: DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.\n- MEDIUM `[data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt]`: DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 1 \"Apply the refactor boundary rule across create proposal paths\" carries refactor verb(s) ['refactor'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit refactor-plan-altitude --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f8d04193",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Apply the refactor boundary rule across create proposal paths`) requires Stage 2 type purity before Stage 3 in ",
+      "body": "Step 1 (`Apply the refactor boundary rule across create proposal paths`) requires Stage 2 type purity before Stage 3 in `Overview`, `Architecture`, Testing\u2019s first bullet, and acceptance criterion 1; its Summary, `Use one refactor-boundary rule`, `Give the split sweep the needed context`, `Apply a strict merge policy`, `Preserve the type-pure execution graph`, `test_refactor_boundary_rule_survives_both_proposal_arms`, `test_create_sweep_keeps_feature_leg_a_feature_after_refactor_consolidation`, and acceptance bullets rely on that order. At HEAD, `plan_tool/create.py:_prepare_create_plan` runs `propose_steps_from_claude` and its split-sweep merge before `_review_step_change_types`, while `_apply_step_split` rewires direct consumers to the terminal feature half; a consolidation attached to a reviewer-split mixed step therefore lands after the feature.",
+      "suggested_action": "select and attach split-sweep consolidations only after final type review, or define an equivalent refactor-half remap, and test a reviewer-split mixed proposal with a sweep suggestion.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "type-purity-before-sweep",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-5ad233cd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s `Preserve the type-pure execution graph`, `test_create_sweep_inserts_eligible_consolidation_before_refactor_dep",
+      "body": "Step 1\u2019s `Preserve the type-pure execution graph`, `test_create_sweep_inserts_eligible_consolidation_before_refactor_dependents`, `test_create_sweep_keeps_feature_leg_a-feature_after_refactor_consolidation`, and accepted-consolidation criterion require insertion between an anchor and its consumers, but do not choose an ID policy. `plan_tool/create.py:_parse_steps_json` assigns IDs in list order, `plan_tool/foundational_logic.py:merge_sweep_into_steps` currently appends the next ID, and `plan_tool/detail.py:split_step` and `merge_steps` reject plans whose IDs are not contiguous and in list order; inserting ID 3 between steps 1 and 2 breaks later detail operations, while appending it violates the required execution order.",
+      "suggested_action": "define canonical insertion as renumbering the full proposal and repointing every dependency and dependency note, then pin the resulting refactor-to-consolidation-to-feature IDs and graph.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "consolidation-type-order",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9b490797",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s `Apply a strict merge policy only for create`, `Tests`, and acceptance criteria cover a fresh split-sweep merge",
+      "body": "Step 1\u2019s `Apply a strict merge policy only for create`, `Tests`, and acceptance criteria cover a fresh split-sweep merge but not the Overview\u2019s unchanged checkpoint and create-lifecycle contract. At HEAD, `plan_tool/create.py:propose_steps_from_claude` saves the unmerged raw proposal after applying the sweep and skips the sweep on a cache hit; `_initial_steps_input_hash` also omits the prompt arm. A resumed split run can therefore drop an accepted consolidation, and an arm change can reuse the other arm\u2019s proposal.",
+      "suggested_action": "define how checkpoints preserve or deterministically replay the accepted split-sweep result for each arm, and test fresh versus resumed proposals produce the same graph.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-sweep-checkpoint",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-a0c1406f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionPreflight' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-5a8d161e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionAttempt' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "51458e3c4addce3e2e920515be63316feee39e469384a3d620bfbd8bd237de79",
+      "detail_bundle_digest": "d02bee8b1c6c6d184275da23f9119cf7adc26564e23113525251091c42d49c50",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/01-apply-refactor-boundary-rule-across.md",
+          "state": "present",
+          "digest": "b297a7f9f2f78f7f5a859b6491b487a9101b8fc94092714ffc823c88b0696526"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/02-keep-synthesized-architecture-promoting.md",
+          "state": "present",
+          "digest": "7c66643c77a85d0f8575f60153c5b101154b3598bd827c2861c91742d70ae853"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 19968,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

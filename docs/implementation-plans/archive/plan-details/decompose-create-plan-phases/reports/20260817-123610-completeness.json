@@ -1,0 +1,132 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-create-plan-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-create-plan-phases.md",
+  "created_at": "2026-08-17T12:36:10Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6c3676b69d5e42cca426ccfed37f9f988842b295f9d80720883261031948c168",
+  "code_fingerprint": {
+    "plan_tool/create.py": "339edec2cfdac4de6c4b715372d827888e5b2bde4eb256215d5ca246697f7afa",
+    "tests/test_create.py": "de390fb51025f16f536dd4a7e89768b66e71c1c0327f7e8fb958936c34cf6522"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/01-pin-create-plan-signature-remaining.md": "2e99b2b5b06edb24ac4376abe48bf1d432444999755dd676b828a476ec213177",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-only-convergence-loop-one.md": "7afdf4cae7e8647c82d13d51d6ee8a3b642ea96154c50eede35998362704e853",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/03-move-create-plan-setup-authoring-named.md": "74a684088b0e64ed62a6b668b84c000a3e7be7d9018599f13a8ebbe8a240f3db",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/04-move-create-plan-publication-named.md": "6224b5149e4b4b32ed535a449336497faee27e27b2db4f7665442521763c9d0b",
+    "docs/implementation-plans/plan-details/decompose-create-plan-phases/05-move-create-plan-finalization-named.md": "061b784ad6bab98e66e6b8aa0026a0e23475e228249b1704f09be9f4f52bac18"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Create Plan Phases\n\n`decompose-create-plan-phases` \u00b7 generated 2026-08-17T12:36:10Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply decompose-create-plan-phases   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk decompose-create-plan-phases  # alternative interactive review/apply\n\n- HIGH `[references-patch-guard]`: Step 2\u2019s \u201cReferences replacement,\u201d Architecture\u2019s \u201capply the loop's References patch even when that iteration's step re-proposal fails,\u201d and Input, Testing, and Acceptance criteria\u2019s \u201cunconditional\u201d patch omit the non-empty guard. `plan_tool/create.py:create_plan` patches only under `if refs_proposal`; `TestCreatePlanIterationLoop.test_iteration_references_patched_despite_step_failure` pins independence from step failure, while `TestCreatePlanReferencesIteration.test_iteration_loop_preserves_references_when_refs_empty` pins that `[]` and `None` preserve the existing body.\n  - Fix: Define across the Step 2 contract that only a non-empty `refs_proposal` replaces References, regardless of step re-proposal failure; empty or missing proposals preserve it.\n- MEDIUM `[post-loop-plan-source]`: Architecture says \u201c`plan_path` remains the single source of truth, and later phases re-parse from disk,\u201d but `plan_tool/create.py:create_plan` calls `advise_path_issues(plan, repo_root)` after the loop using the original in-memory `plan`; only the post-loop concept synchronization and pending-decision check reparse `plan_path`. Re-parsing for the advisory would change its warnings when an iteration re-proposes steps.\n  - Fix: State which final consumers reparse `plan_path` and preserve `advise_path_issues`\u2019s original-plan input, with an acceptance criterion that pins the two sources.\n- MEDIUM `[step1-test-authoring]`: Step 1 promises \u201cunit and integration tests\u201d that lock down contracts, but its frontmatter marks it `non-code` and Testing says \u201cverification appropriate to the artifacts rather than unit tests.\u201d `plan_tool/launcher.py:_step_requires_test_authoring` never requires test changes for non-code steps, so step 1 can complete without the characterization coverage it is meant to establish before steps 2\u20135.\n  - Fix: Classify step 1 as a refactor and align its Testing entry with the required signature and write-order characterization tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-73f9027c]`: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a02a2cbc]`: The plan's `## Acceptance criteria` names `plan_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-286e1354]`: The plan's `## Acceptance criteria` names `refs_proposal`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-95c7cf48]`: The plan's `## Acceptance criteria` names `write_new_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-21e77265]`: The plan's `## Acceptance criteria` names `write_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-split-c353f6d2]`: Step 2 \"Move the create-only convergence loop into one explicit-state function, keeping write_plan, apply rollback, References replacement, and iteration checkpoints unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step3-granularity-split-5aa81f74]`: Step 3 \"Move create_plan setup and authoring into named functions, keeping checkpoint overwrites and backend-call order unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step4-granularity-split-958871d7]`: Step 4 \"Move create_plan publication into named functions, keeping collision archival and manifest removal, write_new_plan and concept rollback, detail renames, and manifest append unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step5-granularity-split-35023ee5]`: Step 5 \"Move create_plan finalization into named functions and pin the short top-level sequence, keeping clean-run checkpoint deletion, failed-run retention, post-loop plan and concept sync, and sidecar clearing unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit decompose-create-plan-phases` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Create Plan Phases\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[references-patch-guard]`: Step 2\u2019s \u201cReferences replacement,\u201d Architecture\u2019s \u201capply the loop's References patch even when that iteration's step re-proposal fails,\u201d and Input, Testing, and Acceptance criteria\u2019s \u201cunconditional\u201d patch omit the non-empty guard. `plan_tool/create.py:create_plan` patches only under `if refs_proposal`; `TestCreatePlanIterationLoop.test_iteration_references_patched_despite_step_failure` pins independence from step failure, while `TestCreatePlanReferencesIteration.test_iteration_loop_preserves_references_when_refs_empty` pins that `[]` and `None` preserve the existing body.\n- MEDIUM `[post-loop-plan-source]`: Architecture says \u201c`plan_path` remains the single source of truth, and later phases re-parse from disk,\u201d but `plan_tool/create.py:create_plan` calls `advise_path_issues(plan, repo_root)` after the loop using the original in-memory `plan`; only the post-loop concept synchronization and pending-decision check reparse `plan_path`. Re-parsing for the advisory would change its warnings when an iteration re-proposes steps.\n- MEDIUM `[step1-test-authoring]`: Step 1 promises \u201cunit and integration tests\u201d that lock down contracts, but its frontmatter marks it `non-code` and Testing says \u201cverification appropriate to the artifacts rather than unit tests.\u201d `plan_tool/launcher.py:_step_requires_test_authoring` never requires test changes for non-code steps, so step 1 can complete without the characterization coverage it is meant to establish before steps 2\u20135.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `create_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_path`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `refs_proposal`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_new_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_plan`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 2 \"Move the create-only convergence loop into one explicit-state function, keeping write_plan, apply rollback, References replacement, and iteration checkpoints unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 3 \"Move create_plan setup and authoring into named functions, keeping checkpoint overwrites and backend-call order unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 4 \"Move create_plan publication into named functions, keeping collision archival and manifest removal, write_new_plan and concept rollback, detail renames, and manifest append unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Step 5 \"Move create_plan finalization into named functions and pin the short top-level sequence, keeping clean-run checkpoint deletion, failed-run retention, post-loop plan and concept sync, and sidecar clearing unchanged\" carries refactor verb(s) ['move'] and feature verb(s) ['create'] \u2014 likely two concerns in one step.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply decompose-create-plan-phases` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-239d6753",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2\u2019s \u201cReferences replacement,\u201d Architecture\u2019s \u201capply the loop's References patch even when that iteration's step re-",
+      "body": "Step 2\u2019s \u201cReferences replacement,\u201d Architecture\u2019s \u201capply the loop's References patch even when that iteration's step re-proposal fails,\u201d and Input, Testing, and Acceptance criteria\u2019s \u201cunconditional\u201d patch omit the non-empty guard. `plan_tool/create.py:create_plan` patches only under `if refs_proposal`; `TestCreatePlanIterationLoop.test_iteration_references_patched_despite_step_failure` pins independence from step failure, while `TestCreatePlanReferencesIteration.test_iteration_loop_preserves_references_when_refs_empty` pins that `[]` and `None` preserve the existing body.",
+      "suggested_action": "Define across the Step 2 contract that only a non-empty `refs_proposal` replaces References, regardless of step re-proposal failure; empty or missing proposals preserve it.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "references-patch-guard",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9a3f250e",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says \u201c`plan_path` remains the single source of truth, and later phases re-parse from disk,\u201d but `plan_tool/",
+      "body": "Architecture says \u201c`plan_path` remains the single source of truth, and later phases re-parse from disk,\u201d but `plan_tool/create.py:create_plan` calls `advise_path_issues(plan, repo_root)` after the loop using the original in-memory `plan`; only the post-loop concept synchronization and pending-decision check reparse `plan_path`. Re-parsing for the advisory would change its warnings when an iteration re-proposes steps.",
+      "suggested_action": "State which final consumers reparse `plan_path` and preserve `advise_path_issues`\u2019s original-plan input, with an acceptance criterion that pins the two sources.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "post-loop-plan-source",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-38e32135",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 promises \u201cunit and integration tests\u201d that lock down contracts, but its frontmatter marks it `non-code` and Testi",
+      "body": "Step 1 promises \u201cunit and integration tests\u201d that lock down contracts, but its frontmatter marks it `non-code` and Testing says \u201cverification appropriate to the artifacts rather than unit tests.\u201d `plan_tool/launcher.py:_step_requires_test_authoring` never requires test changes for non-code steps, so step 1 can complete without the characterization coverage it is meant to establish before steps 2\u20135.",
+      "suggested_action": "Classify step 1 as a refactor and align its Testing entry with the required signature and write-order characterization tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "step1-test-authoring",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "6c3676b69d5e42cca426ccfed37f9f988842b295f9d80720883261031948c168",
+    "detail_bundle_digest": "f888ff97af7ac287896129cd8251a7782ce092441cdec61cc3af17cb54a3e73b",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/01-pin-create-plan-signature-remaining.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-only-convergence-loop-one.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/03-move-create-plan-setup-authoring-named.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/04-move-create-plan-publication-named.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-create-plan-phases/05-move-create-plan-finalization-named.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

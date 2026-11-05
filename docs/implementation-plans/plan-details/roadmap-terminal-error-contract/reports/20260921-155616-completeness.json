@@ -1,0 +1,148 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T15:56:16Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "736e58344c92c59a9a55e5955be0a399b801b05de8a36422ad8f116fc5b477fa",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md": "541b2fb48d43972c152243176f7f696a0bf149ad732daed27875d7fc81bd76fb",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md": "63ca16b4872c0c566a7f82a129f6877e93ac3275770733ea0fb50f6d959c7e05",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-preflight-mid-run-writer-guard.md": "4b030170c5cf32620cc1bc6248c29281e728efb7e18a5cb454abc91cc84f68cf",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md": "f662edcc7ffd631690bbe54bf0be8bc9f0090f11fccb2ba53fce0a4cc6a8a9b2",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-emit-one-roadmap-terminal-status-every.md": "c44362ed1cf90027f8b1dfae0927f64e2d8b83dff1aada3a255143587788b0ba",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md": "9cba7ad9cb767c0843ed8d2be34b76d1abced62c295a34f4080464d1e5120109"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Terminal Error Contract\n\n`roadmap-terminal-error-contract` \u00b7 generated 2026-09-21T15:56:16Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-terminal-error-contract  # optional interactive review of the saved findings\n\n- HIGH `[terminal-disposition-run-log]` [confidence: limited]: Step 5 (`Emit one roadmap terminal status for every ordinary exception exit`) has no route that makes the run-log ending agree with the matrix-selected CLI exit code. The acceptance criterion promises:\n\n  ```\n  Every ordinary exception exit in the primary `run_roadmap` dispatch emits\n  exactly one roadmap-level terminal status fact consistent with its human\n  message, run log, return code, and crash behavior.\n  ```\n\n  `plan_tool/roadmap.py:_roadmap_command_lifecycle` currently records an escaping exception as `outcome=\"error\", rc=1`, while `plan_tool/cli/roadmap_cmd.py:cmd_roadmap` maps `RoadmapError`, `RoadmapArtifactError`, and `RoadmapWriterGuardError` to usage rc 2. The same lifecycle is used by `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_materialize_owned`, so normalizing seed-template errors can recreate the mismatch there. A matrix alone and terminal-status emission cannot make the log and process result agree.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The terminal-disposition contract needs one delivery route that records each ordinary exception exit consistently in both the run log and the CLI result.\n  - Fix: Extend step 5 to own applying the matrix-selected terminal disposition to the primary run lifecycle and its CLI exception exits, including regression coverage that compares the run-log ending with the returned code.\n- HIGH `[template-route-terminal-disposition]` [confidence: limited]: Steps 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) and 5 (`Emit one roadmap terminal status for every ordinary exception exit`) do not assign the full terminal disposition to local revision and seed materialization after their template errors are normalized. Step 4 selects the exception-family treatment, but step 5 is limited to the primary stage run; HEAD has separate terminal paths in `roadmap_revision_run.py:run_local_feedback_revision`, `roadmap.py:materialize_plan_seed`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize`. The testing contract requires the same status, run-log, exit-code, and crash result for all four routes, so implementations can satisfy the steps while leaving the two non-primary routes different.\n\n  ```\n  ## Testing\n\n  Prove the same expected template failure yields the same human error,\n  terminal status, run-log ending, exit code, and no crash file whether reached\n  through fresh stage authoring, bounded feedback, local revision, or seed\n  materialization.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Equivalent expected template failures across all four named routes must have the same observable terminal result.\n  - Fix: Extend the terminal-disposition ownership across steps 4 and 5 so local revision and seed materialization, as well as the two primary-run renderer routes, select and expose the same matrix outcome.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-ecc2b717]` [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-ffe748e5]` [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-terminal-error-contract` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Terminal Error Contract\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[terminal-disposition-run-log]` [confidence: limited]: Step 5 (`Emit one roadmap terminal status for every ordinary exception exit`) has no route that makes the run-log ending agree with the matrix-selected CLI exit code. The acceptance criterion promises:\n\n  ```\n  Every ordinary exception exit in the primary `run_roadmap` dispatch emits\n  exactly one roadmap-level terminal status fact consistent with its human\n  message, run log, return code, and crash behavior.\n  ```\n\n  `plan_tool/roadmap.py:_roadmap_command_lifecycle` currently records an escaping exception as `outcome=\"error\", rc=1`, while `plan_tool/cli/roadmap_cmd.py:cmd_roadmap` maps `RoadmapError`, `RoadmapArtifactError`, and `RoadmapWriterGuardError` to usage rc 2. The same lifecycle is used by `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_materialize_owned`, so normalizing seed-template errors can recreate the mismatch there. A matrix alone and terminal-status emission cannot make the log and process result agree.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The terminal-disposition contract needs one delivery route that records each ordinary exception exit consistently in both the run log and the CLI result.\n- HIGH `[template-route-terminal-disposition]` [confidence: limited]: Steps 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) and 5 (`Emit one roadmap terminal status for every ordinary exception exit`) do not assign the full terminal disposition to local revision and seed materialization after their template errors are normalized. Step 4 selects the exception-family treatment, but step 5 is limited to the primary stage run; HEAD has separate terminal paths in `roadmap_revision_run.py:run_local_feedback_revision`, `roadmap.py:materialize_plan_seed`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize`. The testing contract requires the same status, run-log, exit-code, and crash result for all four routes, so implementations can satisfy the steps while leaving the two non-primary routes different.\n\n  ```\n  ## Testing\n\n  Prove the same expected template failure yields the same human error,\n  terminal status, run-log ending, exit code, and no crash file whether reached\n  through fresh stage authoring, bounded feedback, local revision, or seed\n  materialization.\n  ```\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): Equivalent expected template failures across all four named routes must have the same observable terminal result.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b18f54df",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 (`Emit one roadmap terminal status for every ordinary exception exit`) has no route that makes the run-log ending",
+      "body": "Step 5 (`Emit one roadmap terminal status for every ordinary exception exit`) has no route that makes the run-log ending agree with the matrix-selected CLI exit code. The acceptance criterion promises:\n\n  ```\n  Every ordinary exception exit in the primary `run_roadmap` dispatch emits\n  exactly one roadmap-level terminal status fact consistent with its human\n  message, run log, return code, and crash behavior.\n  ```\n\n  `plan_tool/roadmap.py:_roadmap_command_lifecycle` currently records an escaping exception as `outcome=\"error\", rc=1`, while `plan_tool/cli/roadmap_cmd.py:cmd_roadmap` maps `RoadmapError`, `RoadmapArtifactError`, and `RoadmapWriterGuardError` to usage rc 2. The same lifecycle is used by `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_materialize_owned`, so normalizing seed-template errors can recreate the mismatch there. A matrix alone and terminal-status emission cannot make the log and process result agree.",
+      "suggested_action": "Extend step 5 to own applying the matrix-selected terminal disposition to the primary run lifecycle and its CLI exception exits, including regression coverage that compares the run-log ending with the returned code.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "terminal-disposition-run-log",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "The terminal-disposition contract needs one delivery route that records each ordinary exception exit consistently in both the run log and the CLI result."
+    },
+    {
+      "id": "plan-plan-correctness-a3c86815",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Steps 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) ",
+      "body": "Steps 4 (`Normalize template read failures across stage authoring, feedback, local revision, and seed materialization`) and 5 (`Emit one roadmap terminal status for every ordinary exception exit`) do not assign the full terminal disposition to local revision and seed materialization after their template errors are normalized. Step 4 selects the exception-family treatment, but step 5 is limited to the primary stage run; HEAD has separate terminal paths in `roadmap_revision_run.py:run_local_feedback_revision`, `roadmap.py:materialize_plan_seed`, and `cli/roadmap_cmd.py:_cmd_roadmap_materialize`. The testing contract requires the same status, run-log, exit-code, and crash result for all four routes, so implementations can satisfy the steps while leaving the two non-primary routes different.\n\n  ```\n  ## Testing\n\n  Prove the same expected template failure yields the same human error,\n  terminal status, run-log ending, exit code, and no crash file whether reached\n  through fresh stage authoring, bounded feedback, local revision, or seed\n  materialization.\n  ```",
+      "suggested_action": "Extend the terminal-disposition ownership across steps 4 and 5 so local revision and seed materialization, as well as the two primary-run renderer routes, select and expose the same matrix outcome.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "template-route-terminal-disposition",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "Equivalent expected template failures across all four named routes must have the same observable terminal result."
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "736e58344c92c59a9a55e5955be0a399b801b05de8a36422ad8f116fc5b477fa",
+    "detail_bundle_digest": "fb2f254dc886cc37a6d680090bd2c8c4d895625130580f68fd3a395a39575723",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-preflight-mid-run-writer-guard.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-emit-one-roadmap-terminal-status-every.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "4705cb7e35edf4a94efd48ef6d174b9829a158e9b00683afdd09d7cbc3a0fc4a",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

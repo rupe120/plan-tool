@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "plan_slug": "merge-steps-executor",
+  "plan_path": "docs/implementation-plans/2-merge-steps-executor.md",
+  "created_at": "2026-06-19T11:15:52Z",
+  "kind": "review",
+  "step_id": null,
+  "plan_fingerprint": "2c1dadb19bb266c792a7751cb2903500f36325ffb76363bd416391912f9691df",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "55d7d58e5fa948c8afb0b97a1fbbaf51cec0de6118257f931c0e34f9be57c6fc",
+    "RUNBOOK.md": "c2f9bac4d5fa456fceaa228d1a8654671d1d388e5051901a2e66de4c204ef06d",
+    "docs/cli/README.md": "612b1df0eb2839d4f06f0e7603472496cfc0a5cb0f5b5dddf9ccd5544ec05637",
+    "integrations/claude/SKILL.md": "d6b655f7b9bf6f3d2749abf2473e1857d5169ded1a465638c3e46e30eaa4a62b",
+    "integrations/codex/SKILL.md": "3837ec61a9dd2dabbd3bdd5baf313a3f74953eddf3def74c8884f73425261051",
+    "plan_tool/cli/__init__.py": "6df12bf2fda35595eb3ed1f3368faffd1821a36f2478fab71982f03b60a45de6",
+    "plan_tool/cli/app.py": "46c30cab17e4c52d19038638e7f96e2777808dc7c61b59f7d1b2212e8e18d9b1",
+    "plan_tool/cli/authoring.py": "7d972d396074e4406c4b8e9e10870fb497f13557b016a5e4133eab6c3042abc2",
+    "plan_tool/create.py": "d0f830c9e39bbc44085ed0eb1f5159f17d797350d70612b387782280dc9b3f8d",
+    "plan_tool/detail.py": "b4acef5b8ae0783ab27cd9b135e2518f91ee176f860762e9edf5bb4d0391cdc6",
+    "plan_tool/prompts/detail.md": "53550bee6b1798864f6545d6261bfedcb1f6aff9a188f069713cc3f536d3f6e8",
+    "tests/cli/test_authoring_cmds.py": "cac4950830cd42f71eef19431679feb11b9921d19dfdf8fc57d01cb14431f978",
+    "tests/test_create.py": "75422d5e1f598767e485a752ff26aa30b0d8f0468648725a55fd2a193026f474",
+    "tests/test_detail.py": "1ab9eda370b3ea39b8caad3580cc8d3786e7e7a83fb62ffd152a72baff74898a"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "## Plan Review: Merge Steps Executor\n\nMetadata: status=planning \u00b7 priority=medium \u00b7 4 steps\nRepo root: `/Users/joshrusso/github/rupe120/plan-tool`\nFindings: 3 medium \u00b7 2 nit\n\n### Claude's semantic review\n\nI have enough to write the review. Key findings confirmed against disk:\n\n- **No over-implementation:** none of the merge code exists (`_apply_step_merge`, `merge_steps` cluster, `cmd_merge` all absent), so the `[current]`/`[pending]` tags are honest. The richly detailed merge content in the accumulated lessons is from a *prior, archived take* of this same plan \u2014 exactly the staleness the lessons themselves warn about.\n- **Steps 1\u20133 anchors all valid:** `_apply_step_split` (create.py:3209, renumbers to contiguous 1..N per its docstring), the test import block + `TestApplyStepSplit` (test_create.py:9450/9548), the detail.py split cluster (2830\u20132973), and the authoring.py split/register cluster (1390/1566/2085/2172) all exist as the details describe.\n- **Step 4 has two stale PLAN_FORMAT.md premises**, because the feature-health plan landed content into that file *after* step 4 was detailed.\n\n---\n\nNothing is over-implemented and the status tags are honest: this is a clean pre-execution plan, built bottom-up (transform \u2192 orchestrator \u2192 CLI \u2192 docs) against split siblings that all exist exactly where steps 1\u20133 cite them. The detailed merge implementation described in the accumulated lessons is from a **prior archived take** of this plan \u2014 not code on disk \u2014 so the lessons must be read as superseded context, not current state.\n\nTwo real problems sit in **step 4** (`pending`), both caused by `PLAN_FORMAT.md` gaining feature-health content after step 4 was authored against an older HEAD. One heads-up sits in **step 2** where the current design deliberately reverses what the accumulated lessons describe.\n\n**Step 4 \u2014 `PLAN_FORMAT.md` already names `split`/`merge`.** Step 4's detail asserts \"`split` \u2026 nowhere in `PLAN_FORMAT.md`\" and \"`split` has zero presence at HEAD.\" But the `**features**` field bullet already reads \"a `split`/`merge` step renumber **cannot dangle it**.\" Both verbs are already in the file. The planned `steps[].id` note is still warranted, but the detail's \"first/only mention\" framing is wrong and the author must reconcile the new note with the existing features-bullet reference rather than treating it as the introduction.\n\n**Step 4 \u2014 the `steps[].id` bullet documents gaps-allowed, not contiguity.** Step 4's Why claims \"the `steps[].id` semantics \u2026 explain id contiguity,\" and the note frames the bullet as asserting \"the id-contiguity convention these commands maintain.\" The actual bullet says the opposite: \"Not required to be sequential (gaps are allowed) but conventionally 1, 2, 3\u2026\". The planned note (\"renumber survivors to a contiguous 1..N\") will land directly beside \"gaps are allowed,\" so it must read as *what split/merge produce*, not as a pre-existing format invariant \u2014 otherwise the two sentences contradict.\n\n**Step 2 \u2014 `_merge_is_safe` design reverses the accumulated lessons; no stale-guidance note.** Step 2's detail gates the merged set **and** every non-PENDING downstream step (it argues a downstream step gets renumbered/renamed and would orphan its run-state \u2014 the safer, split-symmetric choice). The injected project lessons describe a prior take where `_merge_is_safe` gated **members only**, with an explicit `test_downstream_nonpending_does_not_block`. The current design is the better one and is authoritative, but under `--iterate` the stale lesson can push the loop to regress the gate to members-only. Step 2's detail should carry an explicit stale-guidance note (the same pattern as the `$prior_body` placeholder, which likewise reverses the lessons' deferred-placeholder/sibling-glob approach).\n\n## Findings\n\n- MEDIUM: step 4 (\"Document the merge command in PLAN_FORMAT.md and RUNBOOK.md\") asserts in its Summary and Implementation that `split` has \"zero presence at HEAD\" and `merge` appears \"nowhere in PLAN_FORMAT.md,\" but `PLAN_FORMAT.md`'s `**features**` field bullet already states \"a `split`/`merge` step renumber **cannot dangle it**\" \u2014 so the premise is stale and the new `steps[].id` note risks reading as a contradictory first mention \u2192 fix: update step 4's detail to record that the `features` bullet already references split/merge renumber, and frame the `steps[].id` note as complementary to it\n- MEDIUM: step 4's Why claims `PLAN_FORMAT.md`'s `steps[].id` bullet \"explain[s] id contiguity,\" but the bullet actually says ids are \"Not required to be sequential (gaps are allowed) but conventionally 1, 2, 3\u2026\" \u2014 placing a \"renumber to contiguous 1..N\" note there without reframing will sit beside and contradict \"gaps are allowed\" \u2192 fix: correct step 4's detail to acknowledge the bullet documents gaps-allowed and frame the note as \"split/merge renumber survivors to contiguous 1..N,\" not as a pre-existing contiguity invariant\n- MEDIUM: step 2 (\"Add merge_steps orchestrator \u2026 to detail.py\") designs `_merge_is_safe` to block non-PENDING **downstream** steps as well as members, which reverses the accumulated project lesson describing a members-only gate plus `test_downstream_nonpending_does_not_block`; without a stale-guidance note the `--iterate` loop may regress the gate to members-only \u2192 fix: add a stale-guidance note to step 2's detail flagging that the lessons' members-only `_merge_is_safe` scope and `test_downstream_nonpending_does_not_block` are superseded \u2014 the current design also blocks non-PENDING downstream steps\n- NIT: step 2's `$prior_body`/`${prior_body_block}` placeholder design reverses the accumulated lesson that a prior take Deferred the placeholder and reused the truncating sibling-glob seam; the detail commits to the placeholder correctly but carries no note marking that lesson stale \u2192 fix: add a one-line stale-guidance note to step 2's detail stating the deferred-placeholder/sibling-seam lesson is superseded and the `$prior_body` placeholder is in scope\n\n### Per-step status\n\n- Step 1 (current)  OK \u2014 2 file(s) declared, all exist\n- Step 2 (pending)  OK \u2014 3 file(s) declared, all exist\n- Step 3 (pending)  OK \u2014 7 existing, 1 to be created\n- Step 4 (pending)  OK \u2014 2 file(s) declared, all exist\n\n### Plan completeness\n\n**Files coherence**\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n",
+  "recommendations": [
+    {
+      "id": "step4-files-coherence-20573fb2",
+      "source": "files-coherence",
+      "severity": "nit",
+      "step_id": 4,
+      "title": "Step 4: declared `(no declared files cited in detail body)` not mentioned in detail",
+      "body": "`(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.",
+      "suggested_action": "mention `(no declared files cited in detail body)` in step 4's detail `## Implementation`, or drop it from `files:` if the step doesn't touch it",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-claude-e1ac2fab",
+      "source": "claude",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 4 (\"Document the merge command in PLAN_FORMAT.md and RUNBOOK.md\") asserts in its Summary and Implementation that `s",
+      "body": "step 4 (\"Document the merge command in PLAN_FORMAT.md and RUNBOOK.md\") asserts in its Summary and Implementation that `split` has \"zero presence at HEAD\" and `merge` appears \"nowhere in PLAN_FORMAT.md,\" but `PLAN_FORMAT.md`'s `**features**` field bullet already states \"a `split`/`merge` step renumber **cannot dangle it**\" \u2014 so the premise is stale and the new `steps[].id` note risks reading as a contradictory first mention",
+      "suggested_action": "update step 4's detail to record that the `features` bullet already references split/merge renumber, and frame the `steps[].id` note as complementary to it",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-claude-63fa954e",
+      "source": "claude",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 4's Why claims `PLAN_FORMAT.md`'s `steps[].id` bullet \"explain[s] id contiguity,\" but the bullet actually says ids ",
+      "body": "step 4's Why claims `PLAN_FORMAT.md`'s `steps[].id` bullet \"explain[s] id contiguity,\" but the bullet actually says ids are \"Not required to be sequential (gaps are allowed) but conventionally 1, 2, 3\u2026\" \u2014 placing a \"renumber to contiguous 1..N\" note there without reframing will sit beside and contradict \"gaps are allowed\"",
+      "suggested_action": "correct step 4's detail to acknowledge the bullet documents gaps-allowed and frame the note as \"split/merge renumber survivors to contiguous 1..N,\" not as a pre-existing contiguity invariant",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-claude-a973622f",
+      "source": "claude",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 2 (\"Add merge_steps orchestrator \u2026 to detail.py\") designs `_merge_is_safe` to block non-PENDING **downstream** step",
+      "body": "step 2 (\"Add merge_steps orchestrator \u2026 to detail.py\") designs `_merge_is_safe` to block non-PENDING **downstream** steps as well as members, which reverses the accumulated project lesson describing a members-only gate plus `test_downstream_nonpending_does_not_block`; without a stale-guidance note the `--iterate` loop may regress the gate to members-only",
+      "suggested_action": "add a stale-guidance note to step 2's detail flagging that the lessons' members-only `_merge_is_safe` scope and `test_downstream_nonpending_does_not_block` are superseded \u2014 the current design also blocks non-PENDING downstream steps",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "plan-claude-1a5c8fb3",
+      "source": "claude",
+      "severity": "nit",
+      "step_id": null,
+      "title": "step 2's `$prior_body`/`${prior_body_block}` placeholder design reverses the accumulated lesson that a prior take Deferr",
+      "body": "step 2's `$prior_body`/`${prior_body_block}` placeholder design reverses the accumulated lesson that a prior take Deferred the placeholder and reused the truncating sibling-glob seam; the detail commits to the placeholder correctly but carries no note marking that lesson stale",
+      "suggested_action": "add a one-line stale-guidance note to step 2's detail stating the deferred-placeholder/sibling-seam lesson is superseded and the `$prior_body` placeholder is in scope",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {
+    "step4-files-coherence-20573fb2": {
+      "status": "applied",
+      "note": "",
+      "halt_reason": ""
+    },
+    "plan-claude-e1ac2fab": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-claude-63fa954e": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-claude-a973622f": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-claude-1a5c8fb3": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    }
+  }
+}

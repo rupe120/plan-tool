@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "plan_slug": "risk-profile-2",
+  "plan_path": "docs/implementation-plans/2-risk-profile-2.md",
+  "created_at": "2026-08-25T21:24:52Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "2a1d15500ca81364331ff5412951f5c7b01a747f22de918a8c19e7326193d4e7",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "dadbd5748258e7616c2809790e07591ed290a2434ed8e05bf35bc83fe6fb9b21",
+    "plan_tool/launcher.py": "e37e66042a5d32f0315521dbe17a4f97f0b42ef756b683d483fd8476bfc26cc7",
+    "plan_tool/prompts/apply-finding.md": "c7c26ecf5a35c98b932fd460072dc872cfd1f0e3478c95dd4750a5a8e71d1ccb",
+    "plan_tool/prompts/detail-quality.md": "2d5f9a662a6681484dbaee047f3baff27dcf60c8fcc3ac81bd0301b80ee1d4d4",
+    "plan_tool/prompts/detail.md": "008821e1d56f1f144eee42f82c437e87d2b49fbbcf1ee24e31a8b2e8a5146a4e",
+    "tests/test_detail.py": "c02c35eb535f15ed7181066f42d796c79ebf494eeaeefd1a9b21d96217fae7fa",
+    "tests/test_launcher.py": "83242bb0520e5b878f13f776cec87f4dc8338700476e0eb06dc8317376e1e74c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 1 of 1 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

@@ -1,0 +1,205 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-revision-escalation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-revision-escalation.md",
+  "created_at": "2026-08-15T12:57:29Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d4ded0ffa12241a0d9b128214e9f5ad282419872b46d641d9855de229c8d9636",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "afb753dd86d26eb2bc1506485247fffc072a60ec99c386bacda969df7e325a64",
+    "CLAUDE.md": "8fb431c12858a1d577ed60bde3d7a0e58711446a761d9638380f8cc6cd1395f1",
+    "DATA_CONTRACT.md": "2e76c419aa8d6695fbd02934738ec3e5b0b1dbfd1d6ec3591e3d7e859a8ea8f8",
+    "README.md": "1dbf5858642e538412558320782222faea1bc8032c6ffa40a4e8f25c9f420c50",
+    "ROADMAP_FORMAT.md": "94698942b45ed66579623b3f087a3815a38201bbb3990f6e9667a3ede9000191",
+    "RUNBOOK.md": "7bac353501c2061704daf71186b17d41833a882f4c8b88b84a9d9937a2aacd66",
+    "TESTING.md": "d97def2a36eb1b704077041dc2d2cecb8482cdfa29d061991a8014c3108ec3bc",
+    "docs/ARCHITECTURE.md": "3e9c9710098eee00628c65f23a32d9e20870e06540a23bcfa7f41283c5430030",
+    "docs/ROADMAP_WALKTHROUGH.md": "67be7883e9d0344cc713ebd2b7992f2eb4815e51e282c00724d5e3ad41ad184e",
+    "docs/cli/roadmap.md": "2c16183a136b6c8991e9067de5b9644ae76506dfa5dd388fff36bc7f321ba2b6",
+    "plan_tool/cli/__init__.py": "af8f869d1ce82b395e0d32ed15ade91d351d28b9f2316404698e528de4b20036",
+    "plan_tool/cli/roadmap_cmd.py": "53f84fd678c24e4ab76dea1dc1837e74b86932e149d0d8861d47fa0db4db06df",
+    "plan_tool/roadmap_artifacts.py": "078e89f9b700ef972ef698b0ddad9758b65835534307ccabf9f9bb93e9a0bbea",
+    "plan_tool/roadmap_revision.py": "e08406219dad9721726d64f41b657d97371ae52d5f834b22a92b777d64d03e42",
+    "plan_tool/run_log.py": "bb9a2b8c5c0808dd36fca449e947a8c144dcf5452d18098b28abf0972ae00da0",
+    "tests/cli/package_surface_help.golden.txt": "e1e971be8e9e962a3cec8764bd3b0aa5b790d40b648a091d439add7af2f21ebb",
+    "tests/cli/test_roadmap_cmd.py": "bf9b79187aebb88fdbe5f8c0a5d04de523ebabe179c0c79db9dd6996b08bd921",
+    "tests/test_roadmap_artifacts.py": "2e82e3e1d31649f0b632d8b9cc63f7029ee716f1e96c1f884b070d1a9b748d9e",
+    "tests/test_roadmap_format.py": "a527a6a855129580d7b50a28aa86b782b1b90a7b1071324ce2c698f6336abece",
+    "tests/test_roadmap_revision.py": "e8b13fe2173908ee0740ce156ce75063863fed038a9898d2b4b8fb2d3ded4507",
+    "tests/test_run_log.py": "edc0c54b94f4bbaa957345bd24233b9d89c2bd4c21b87aa59f8d88a569718b97"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md": "c5412cb87e796b2642dd3835f6751759d8a6ec8e0d4bdf812f108f8e9f821bed",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md": "d56f937f19b279338a488ed8f46e82405eb00450d132387cbbfb6cdcead94459",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md": "ea3405968502c00d7cce7ed24ce7cddb5899796a81411decf756dc5e1327bc1e",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md": "ce26c40d4a521bed32fc4a6bf063f26345eb06c88e094f8b5e1e7dc12c7706ac",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md": "de4b86b2ba2e8a9fb7596e10bbc35e6e84805bca1c752b0d118d41cef97d88c4",
+    "docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md": "42b3ee9f72708d816cee93f5d991b7d1076d3e9b1b851b7e7d1cf12480e242b8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Escalation Receipt\n\n`roadmap-structural-revision-escalation` \u00b7 generated 2026-08-15T12:57:28Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `d4ded0ffa12241a0d9b128214e9f5ad282419872b46d641d9855de229c8d9636`\n- **Detail bundle digest:** `1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 5\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (-1 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-revision-escalation   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-structural-revision-escalation  # alternative interactive review/apply\n\n- MEDIUM `[receipt-view-no-write]`: Step 4\u2019s prerequisite storage handoff and step 5 (`Wire exclusive escalation creation and log-free receipt views`) cannot preserve the Overview\u2019s \u201cwrites only the declared immutable receipt and creation-command telemetry\u201d boundary for a pure `--view escalations`: `plan_tool/roadmap_evidence_store:scan_evidence` always calls `_ensure_namespace`, which creates the evidence directory tree on an empty namespace. Architecture\u2019s pure-view rule, step 6\u2019s no-write boundary, Testing\u2019s pure-view coverage, and acceptance criteria 3, 6, and 7 leave a first inspection mutating the roadmap without a receipt or log.\n  - Fix: Define a read-only empty-namespace inspection path and require pure receipt views never create evidence directories.\n- HIGH `[receipt-final-entry-validation]`: Architecture\u2019s `--view escalations` rule promises to accept only regular final files, and the receipt-substitution Risk, steps 4 and 5, Testing\u2019s prerequisite-owned enumeration, and acceptance criterion 4 rely on that promise. `plan_tool/roadmap_evidence_store:EvidenceRecord` exposes only a name and bytes, while `scan_evidence` filters names without checking entry type and reads paths normally, so the receipt runner cannot reject a matching symlink or other non-regular entry before consuming it.\n  - Fix: Make regular, non-follow final-entry attestation an explicit prerequisite capability before retaining the receipt view\u2019s regular-file guarantee.\n- MEDIUM `[view-source-canonicality]`: Step 2\u2019s raw-byte canonicality rule and step 5\u2019s receipt view leave no result for a current selected source that is strict UTF-8 and parseable but whose rendered UTF-8 bytes differ from the raw snapshot, such as CRLF input. Architecture says the view reuses the full snapshot rule but labels every readable digest change `stale`, while `source-unavailable`, the Freshness risk, Testing\u2019s CRLF coverage, and acceptance criterion 5 omit this canonicality failure; `plan_tool/roadmap_revision:RenderCanonicalMismatch` shows it is distinct at creation.\n  - Fix: Choose the no-handoff view result and precedence for a parseable but noncanonical current source, including the CRLF case.\n- MEDIUM `[creation-interruption-lifecycle]`: Step 4 (`Map immutable-evidence storage results to redacted receipt lifecycle evidence`) promises one terminal result for every creation invocation, but Architecture\u2019s terminal outcomes omit interruption and `plan_tool/roadmap_evidence_store:publish_evidence` returns only ordinary storage results. An interrupt during or immediately after publication has no specified redacted terminal event or receipt-id nullability in the lifecycle paragraph, Testing, or acceptance criteria 2, 4, and 6.\n  - Fix: define a runner-owned interrupted terminal outcome, its redacted fields and receipt-id rules, and interruption coverage around storage publication.\n- MEDIUM `[receipt-view-enumeration-failure]`: Step 5 (`Wire exclusive escalation creation and log-free receipt views`) and Architecture define only per-receipt view statuses, while `roadmap_evidence_store:scan_evidence` can return `EvidenceScanResult.failure=\"write-failed\"`. Testing lists publication results and leaves matching-final enumeration to the prerequisite, so a failed scan can reasonably be rendered as an empty view or a command error.\n  - Fix: Define one log-free failure result for prerequisite enumeration failure that renders no receipts or handoff and lock its exit behavior in tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Escalation Receipt\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `d4ded0ffa12241a0d9b128214e9f5ad282419872b46d641d9855de229c8d9636`\n- **Detail bundle digest:** `1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[receipt-view-no-write]`: Step 4\u2019s prerequisite storage handoff and step 5 (`Wire exclusive escalation creation and log-free receipt views`) cannot preserve the Overview\u2019s \u201cwrites only the declared immutable receipt and creation-command telemetry\u201d boundary for a pure `--view escalations`: `plan_tool/roadmap_evidence_store:scan_evidence` always calls `_ensure_namespace`, which creates the evidence directory tree on an empty namespace. Architecture\u2019s pure-view rule, step 6\u2019s no-write boundary, Testing\u2019s pure-view coverage, and acceptance criteria 3, 6, and 7 leave a first inspection mutating the roadmap without a receipt or log.\n- HIGH `[receipt-final-entry-validation]`: Architecture\u2019s `--view escalations` rule promises to accept only regular final files, and the receipt-substitution Risk, steps 4 and 5, Testing\u2019s prerequisite-owned enumeration, and acceptance criterion 4 rely on that promise. `plan_tool/roadmap_evidence_store:EvidenceRecord` exposes only a name and bytes, while `scan_evidence` filters names without checking entry type and reads paths normally, so the receipt runner cannot reject a matching symlink or other non-regular entry before consuming it.\n- MEDIUM `[view-source-canonicality]`: Step 2\u2019s raw-byte canonicality rule and step 5\u2019s receipt view leave no result for a current selected source that is strict UTF-8 and parseable but whose rendered UTF-8 bytes differ from the raw snapshot, such as CRLF input. Architecture says the view reuses the full snapshot rule but labels every readable digest change `stale`, while `source-unavailable`, the Freshness risk, Testing\u2019s CRLF coverage, and acceptance criterion 5 omit this canonicality failure; `plan_tool/roadmap_revision:RenderCanonicalMismatch` shows it is distinct at creation.\n- MEDIUM `[creation-interruption-lifecycle]`: Step 4 (`Map immutable-evidence storage results to redacted receipt lifecycle evidence`) promises one terminal result for every creation invocation, but Architecture\u2019s terminal outcomes omit interruption and `plan_tool/roadmap_evidence_store:publish_evidence` returns only ordinary storage results. An interrupt during or immediately after publication has no specified redacted terminal event or receipt-id nullability in the lifecycle paragraph, Testing, or acceptance criteria 2, 4, and 6.\n- MEDIUM `[receipt-view-enumeration-failure]`: Step 5 (`Wire exclusive escalation creation and log-free receipt views`) and Architecture define only per-receipt view statuses, while `roadmap_evidence_store:scan_evidence` can return `EvidenceScanResult.failure=\"write-failed\"`. Testing lists publication results and leaves matching-final enumeration to the prerequisite, so a failed scan can reasonably be rendered as an empty view or a command error.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-revision-escalation` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7053288b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4\u2019s prerequisite storage handoff and step 5 (`Wire exclusive escalation creation and log-free receipt views`) canno",
+      "body": "Step 4\u2019s prerequisite storage handoff and step 5 (`Wire exclusive escalation creation and log-free receipt views`) cannot preserve the Overview\u2019s \u201cwrites only the declared immutable receipt and creation-command telemetry\u201d boundary for a pure `--view escalations`: `plan_tool/roadmap_evidence_store:scan_evidence` always calls `_ensure_namespace`, which creates the evidence directory tree on an empty namespace. Architecture\u2019s pure-view rule, step 6\u2019s no-write boundary, Testing\u2019s pure-view coverage, and acceptance criteria 3, 6, and 7 leave a first inspection mutating the roadmap without a receipt or log.",
+      "suggested_action": "Define a read-only empty-namespace inspection path and require pure receipt views never create evidence directories.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-view-no-write",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-5017c524",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s `--view escalations` rule promises to accept only regular final files, and the receipt-substitution Risk,",
+      "body": "Architecture\u2019s `--view escalations` rule promises to accept only regular final files, and the receipt-substitution Risk, steps 4 and 5, Testing\u2019s prerequisite-owned enumeration, and acceptance criterion 4 rely on that promise. `plan_tool/roadmap_evidence_store:EvidenceRecord` exposes only a name and bytes, while `scan_evidence` filters names without checking entry type and reads paths normally, so the receipt runner cannot reject a matching symlink or other non-regular entry before consuming it.",
+      "suggested_action": "Make regular, non-follow final-entry attestation an explicit prerequisite capability before retaining the receipt view\u2019s regular-file guarantee.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-final-entry-validation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9696150c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2\u2019s raw-byte canonicality rule and step 5\u2019s receipt view leave no result for a current selected source that is stri",
+      "body": "Step 2\u2019s raw-byte canonicality rule and step 5\u2019s receipt view leave no result for a current selected source that is strict UTF-8 and parseable but whose rendered UTF-8 bytes differ from the raw snapshot, such as CRLF input. Architecture says the view reuses the full snapshot rule but labels every readable digest change `stale`, while `source-unavailable`, the Freshness risk, Testing\u2019s CRLF coverage, and acceptance criterion 5 omit this canonicality failure; `plan_tool/roadmap_revision:RenderCanonicalMismatch` shows it is distinct at creation.",
+      "suggested_action": "Choose the no-handoff view result and precedence for a parseable but noncanonical current source, including the CRLF case.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "view-source-canonicality",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d7c0d78d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Map immutable-evidence storage results to redacted receipt lifecycle evidence`) promises one terminal result fo",
+      "body": "Step 4 (`Map immutable-evidence storage results to redacted receipt lifecycle evidence`) promises one terminal result for every creation invocation, but Architecture\u2019s terminal outcomes omit interruption and `plan_tool/roadmap_evidence_store:publish_evidence` returns only ordinary storage results. An interrupt during or immediately after publication has no specified redacted terminal event or receipt-id nullability in the lifecycle paragraph, Testing, or acceptance criteria 2, 4, and 6.",
+      "suggested_action": "define a runner-owned interrupted terminal outcome, its redacted fields and receipt-id rules, and interruption coverage around storage publication.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "creation-interruption-lifecycle",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b93312a1",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Wire exclusive escalation creation and log-free receipt views`) and Architecture define only per-receipt view s",
+      "body": "Step 5 (`Wire exclusive escalation creation and log-free receipt views`) and Architecture define only per-receipt view statuses, while `roadmap_evidence_store:scan_evidence` can return `EvidenceScanResult.failure=\"write-failed\"`. Testing lists publication results and leaves matching-final enumeration to the prerequisite, so a failed scan can reasonably be rendered as an empty view or a command error.",
+      "suggested_action": "Define one log-free failure result for prerequisite enumeration failure that renders no receipts or handoff and lock its exit behavior in tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-view-enumeration-failure",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "d4ded0ffa12241a0d9b128214e9f5ad282419872b46d641d9855de229c8d9636",
+      "detail_bundle_digest": "1a2625a7fa7a25469514b57636b94b475357cfab5983ef851e7606d2ebbbc00e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/01-extract-behavior-preserving-shared.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/02-define-strict-receipt-selection.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/03-define-versioned-redacted-immutable.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/04-map-immutable-evidence-storage-results.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/05-wire-exclusive-escalation-creation-log.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-revision-escalation/06-document-escalation-receipts-scope.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

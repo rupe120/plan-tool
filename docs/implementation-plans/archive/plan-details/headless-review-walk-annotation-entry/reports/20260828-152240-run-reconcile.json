@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "plan_slug": "headless-review-walk-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-walk-annotation-entry.md",
+  "created_at": "2026-08-28T15:22:40Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "951a09ab54f064035ed5b43826fddf6d57642e3e14e3fe615bec825b28ec5fbd",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "bac77ef66b1721b0791d4103ce8083c327c4c9857f27a0bc074ccfc81de2111e",
+    "plan_tool/cli/review_cmd.py": "de7020f2bb7c69931f9c83315b8d271ebdf24e1e67289c300d02b4906606d18d",
+    "tests/test_review_walk.py": "f50411e3396014a809694f17557bdd097a145752675e72a63425ad57f30bb489"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 1 of 1 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T21:23:04Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "813dd7d5a7770c1ce071465f64bde55cd1cb4008cd7071f89af4726b5f283024",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "4108ebac206a7e38bd495334aa34ac851cf74ba5cdc0f94cea56c10f071c58ed",
+    "plan_tool/prompts/roadmap-components.md": "0b6fa488421e4c6f7706e1e53102283ac429d7895fde3383c627c3af72c1b9b0",
+    "plan_tool/prompts/roadmap-constraints.md": "134b86ce10277aefa9edd2aa3c1b09be2a4f53438c8354eb7d84e03023ea93ab",
+    "plan_tool/roadmap_artifacts.py": "4fc5e418a06af3d51065d7efdee69826fc48691b8993cfbdd742eeb6d51a7226",
+    "plan_tool/roadmap_gates.py": "2cf1431df91623cfcd79367c05705aaf082ca13eaa7552474d239dcbf1d198f9",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_roadmap.py": "1d34ce7bcd635fe3109c020f5c2896786c2c2e51cef28bc13cbe301987ef023f",
+    "tests/test_roadmap_artifacts.py": "7ea6ff0017abcd833e3028696ba875218b4d85927c74d567d64eb8fcb245b2dc",
+    "tests/test_roadmap_format.py": "370880687d9faf11da8571506b29cdc48c72f9d40fc183bf1e0fe8d4f1c6381d",
+    "tests/test_roadmap_gates.py": "67e16fe5d6ad51fae47e0ef1db502e9ad3d711499fff88bbbabba1f93d2d5faa"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context: considered 3 completed sibling step(s); 3 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step2-run-reconcile-28325ee8",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "`plan_tool/prompts/roadmap-components.md: ## The frontmatter inventory` (step 2 \u201cAdd store definitions and component sto",
+      "body": "`plan_tool/prompts/roadmap-components.md: ## The frontmatter inventory` (step 2 \u201cAdd store definitions and component store references\u201d) mandates store authoring and gate behavior that the selected detail defers; `TestComponentsPromptTemplate.test_components_prompt_states_every_components_gate_rule` establishes this as the intentional completed step-4 contract, so reverting it would regress that contract\n\n## Redirect\n\n- **Reason**: The selected step\u2019s ownership context omits a prompt change that its detail defers to completed step 4, so the plan/detail scope needs reconciliation rather than a code rollback.\n- **Suggested next**: detail --reconcile",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": {
+        "reason": "The selected step\u2019s ownership context omits a prompt change that its detail defers to completed step 4, so the plan/detail scope needs reconciliation rather than a code rollback.",
+        "suggested_next": "detail --reconcile"
+      },
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

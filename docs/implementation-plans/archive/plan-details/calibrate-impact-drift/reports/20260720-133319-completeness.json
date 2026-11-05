@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "plan_slug": "calibrate-impact-drift",
+  "plan_path": "docs/implementation-plans/2-calibrate-impact-drift.md",
+  "created_at": "2026-07-20T13:33:19Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a0df65f98437b5af514c574f7e2f5c01cb613006bea0be70aa16008fc3086901",
+  "code_fingerprint": {
+    "BACKLOG.md": "940bd3ee322f06a63abb615610b0978ba4809407f450ed7163986f732054af72",
+    "DATA_CONTRACT.md": "268185b5735dfcb7324e75e6e3372f315a5b9b1d6fb339b05b32cb836aba98c0",
+    "docs/implementation-plans/2-gate-convergence-by-impact.md": "936b58dfe97a64b929c4eb230976be793f43b2ed46eb1b9cd35366eb86990538",
+    "plan_tool/cli/completeness_phases.py": "8ab3ff73e540ece77b0f9c7d57527b7d19c1f3bf690b902e16114fcd67b6bc83",
+    "plan_tool/cli/telemetry_cmd.py": "f2ccc73fa0f6d50115eff22c434a5aa12f9ea429d7ee97941b66192f94a64c28",
+    "plan_tool/convergence_diagnosis.py": "7b0c8a5e0c14f61892e25cc1a98cf020c8b4a3979e98c184bbfb6e8b22d0b841",
+    "plan_tool/detail.py": "1696f3f06126fb9ebc5061ad5db15790f6be4e56d396467796ba63d4245ea168",
+    "plan_tool/review.py": "3159ed4594f35f8f9071d8d851a07be6ef665f7cab44b7e92d39f42ef3718215",
+    "plan_tool/telemetry_analysis.py": "8def73a68c43c2e594efb627443cce788c6f3c1ce801b75d3cd6061b8ce9521a",
+    "tests/cli/test_completeness_cmd.py": "3eee024878ff59b6fa1901ad94f8691b39cc01f9031e5d35592ffd109a4d45cf",
+    "tests/cli/test_telemetry_cmd.py": "8f60288b59d5c9036bdc41085ceef7af8b1a6ed9a75f5d90e7fbdce540e54405",
+    "tests/test_convergence_diagnosis.py": "e12559f4efa18298fdabb38ba694e4524335c9df9f01b5b1b7aa7bcd2fda7dc5",
+    "tests/test_detail.py": "9c618a8baa5a2ba759f0657835bbfa70296d27e8d6ea3ef4f867c192ff195982",
+    "tests/test_review_persistence.py": "7e1ee54e55f9d80ead298616a4ae5fc66bc10c743059ec4b61f9753527797c22",
+    "tests/test_telemetry_analysis.py": "91bb9dbe6479f692edaeac6824d654a67ce9831121d970da51ebf05e239f5ccb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md": "6623691793b848ce83ba93890798742be2fc6ccaee288b3cef89a9a891a21b7c",
+    "docs/implementation-plans/plan-details/calibrate-impact-drift/02-calculate-drift-signals-audit-finding.md": "ace5c9b281629f13053a283263d7cc465cf2996abce04361ee887bb30359f6e5",
+    "docs/implementation-plans/plan-details/calibrate-impact-drift/03-show-calibration-results-telemetry.md": "d284053969cbef1569bb59cd594ee463ee12565d5378581ef44f6fde98607167",
+    "docs/implementation-plans/plan-details/calibrate-impact-drift/04-document-calibration-result-clear-its.md": "ee42bc5fec6a9ddf3e1a3358220722d09ca2d76cbde1981f7749209bcb43c66d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Calibrate Impact Drift\n\n`calibrate-impact-drift` \u00b7 generated 2026-07-20T13:33:19Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 4 (0 missing-concept-link, 4 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 2\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply calibrate-impact-drift   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk calibrate-impact-drift  # alternative interactive review/apply\n\n- MEDIUM `[run-reconcile-outcome]`: Architecture names the outcome producer as \"`plan-tool reconcile-code` persists `kind=\\\"run-reconcile\\\"` reports,\" but step 2 (`Calculate drift signals for audit finding classes`) correctly specifies \"`plan-tool run <name> --reconcile`\"; HEAD exposes the latter, not a `reconcile-code` command, so the body misstates the mechanism operators and implementers must rely on.\n\n## Pending concept decisions\n\nConcept deferrals still awaiting a human decision \u2014 advisory, never blocking. Resolve each with `plan-tool scope-review calibrate-impact-drift`.\n\n### Unsigned deferrals \u2014 a proposed defer/wont_do not yet reviewed\n\n- INFO `[bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]`: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252]`: Concept `74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252` (out of scope) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8bfec1d8]`: The plan's `## Acceptance criteria` names `classify_calibration_recommendation(recommendation)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1a997ecb]`: The plan's `## Acceptance criteria` names `plan_tool.cli`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- MEDIUM `[data-contract-input-recommendation-source]`: docs/implementation-plans/2-calibrate-impact-drift.md:## Input cites `Recommendation.source`, but `Recommendation.source` lacks a matching HEAD code-location anchor.\n- MEDIUM `[data-contract-input-recommendation-redirect]`: docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md:## Input cites `Recommendation.redirect`, but `Recommendation.redirect` lacks a matching HEAD code-location anchor.\n- NIT `[step4-files-coherence-32732139]`: `BACKLOG.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step4-files-coherence-b744b86b]`: `DATA_CONTRACT.md` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply calibrate-impact-drift` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n- Resolve 4 structural diagnostic(s) directly:\n    \u2022 `plan-tool completeness-apply calibrate-impact-drift` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (2 files-coherence drift(s)).\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n    \u2022 Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Calibrate Impact Drift\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[run-reconcile-outcome]`: Architecture names the outcome producer as \"`plan-tool reconcile-code` persists `kind=\\\"run-reconcile\\\"` reports,\" but step 2 (`Calculate drift signals for audit finding classes`) correctly specifies \"`plan-tool run <name> --reconcile`\"; HEAD exposes the latter, not a `reconcile-code` command, so the body misstates the mechanism operators and implementers must rely on.\n\n### Files coherence\n\n- NIT: step 4 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 4 declared `DATA_CONTRACT.md` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-recommendation-source]`: docs/implementation-plans/2-calibrate-impact-drift.md:## Input cites `Recommendation.source`, but `Recommendation.source` lacks a matching HEAD code-location anchor.\n- MEDIUM `[data-contract-input-recommendation-redirect]`: docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md:## Input cites `Recommendation.redirect`, but `Recommendation.redirect` lacks a matching HEAD code-location anchor.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `classify_calibration_recommendation(recommendation)`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_tool.cli`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[concept-bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]`: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[concept-74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252]`: Concept `74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252` (out of scope) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk calibrate-impact-drift` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-840dc53f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture names the outcome producer as \"`plan-tool reconcile-code` persists `kind=\\\"run-reconcile\\\"` reports,\" but s",
+      "body": "Architecture names the outcome producer as \"`plan-tool reconcile-code` persists `kind=\\\"run-reconcile\\\"` reports,\" but step 2 (`Calculate drift signals for audit finding classes`) correctly specifies \"`plan-tool run <name> --reconcile`\"; HEAD exposes the latter, not a `reconcile-code` command, so the body misstates the mechanism operators and implementers must rely on.",
+      "suggested_action": "Replace or explicitly bridge `reconcile-code` wording to the existing `plan-tool run <name> --reconcile` / `run-reconcile` outcome surface.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "run-reconcile-outcome",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-46d39710",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Stale Input contract reference `Recommendation.source`",
+      "body": "docs/implementation-plans/2-calibrate-impact-drift.md:## Input cites `Recommendation.source`, but `Recommendation.source` lacks a matching HEAD code-location anchor.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-recommendation-source",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-43e75752",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `Recommendation.redirect`",
+      "body": "docs/implementation-plans/plan-details/calibrate-impact-drift/01-record-how-each-purity-verdict-was.md:## Input cites `Recommendation.redirect`, but `Recommendation.redirect` lacks a matching HEAD code-location anchor.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-recommendation-redirect",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

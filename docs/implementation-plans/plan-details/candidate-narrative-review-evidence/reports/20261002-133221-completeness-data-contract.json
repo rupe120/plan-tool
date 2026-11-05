@@ -1,0 +1,61 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-da92b9ee": {
+      "code_anchor": "roadmap_gates.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md",
+      "reason": "code anchor path `roadmap_gates.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-7a871e0e": {
+      "code_anchor": "roadmap_candidate_run.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-bounded-semantic-narrative-review-one.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-bounded-semantic-narrative-review-one.md",
+      "reason": "code anchor path `roadmap_candidate_run.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-0175bdbf": {
+      "code_anchor": "roadmap_candidate_review.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md",
+      "reason": "code anchor path `roadmap_candidate_review.py` does not exist",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-b79acdce": {
+      "code_anchor": "roadmap_candidate_run.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md",
+      "reason": "code anchor path `roadmap_candidate_run.py` does not exist",
+      "step_id": 8,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-ff4f8ac5": {
+      "code_anchor": "roadmap_gates.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/08-update-roadmap-format-md-docs.md",
+      "reason": "code anchor path `roadmap_gates.py` does not exist",
+      "step_id": 8,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261002-133221-completeness"
+}

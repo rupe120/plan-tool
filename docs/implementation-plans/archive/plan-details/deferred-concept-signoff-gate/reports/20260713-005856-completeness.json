@@ -1,0 +1,453 @@
+{
+  "version": 1,
+  "plan_slug": "deferred-concept-signoff-gate",
+  "plan_path": "docs/implementation-plans/2-deferred-concept-signoff-gate.md",
+  "created_at": "2026-07-13T00:58:56Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2ed57f0a6243c1e4caacabf8be841273ef9476564f681c11554c7c8acf736419",
+  "code_fingerprint": {
+    "BACKLOG.md": "18673cba7cf0d5ddda8a29d000a651cc943bd0b86d31ffc22011826565c1fe5f",
+    "CAPABILITIES.md": "8577e7ad0edfe8673dac37df88eebd07241662c9b42381df9f6f059f01a722df",
+    "CLAUDE.md": "8548257ec1695a1ea0319d7be3f2ea58625696d3ce3335ca2d2515d04a8a9cdb",
+    "DATA_CONTRACT.md": "b287be2851857fd8bac43653364e70696a2c035fa7e9e9b2f02ba3d8c8320937",
+    "RUNBOOK.md": "8eea88000376f74300873a4f761cc9f0104af03becd0418412a050cd8a77d0c5",
+    "TESTING.md": "7bcb03abec79f6f6b66eee3141cd63e1a505b9627c5e3d39cad6af6361ef53c9",
+    "docs/cli/README.md": "dc8a70efb57f3880bea42dc13b3b6c6260f963c4e897619df53a7f82391afe10",
+    "plan_tool/cli/__init__.py": "c441849d6d8c3ce2a895e8cfb1912966cbdc84f03b45cd317e5001dc4635df09",
+    "plan_tool/cli/app.py": "7c97be0b721fbe64f01c924082d7a134389e3090572ec7253318b765c7081361",
+    "plan_tool/cli/parser.py": "c0d0548e055fd067d5dbe43cd366f745eab7675eb222aa201ea470af82e64bed",
+    "plan_tool/completeness_report.py": "edbf60e6da194b8727c69620736349d7fd42515dd481aace4c060a1cf1779a57",
+    "plan_tool/create.py": "9bb998219c21ab856b994345c8d949012c0e52e843539c55555f588c6bd55bc7",
+    "plan_tool/data_contract.py": "c10ca90f92e20b10fb78a9c5f5b60e01d08f332bc3bb67fc37eb66cc85f697e0",
+    "plan_tool/detail.py": "6a842efe1759cda0c7655b962f3d0744b846a6afb65f14f566c4a3eb8df51c48",
+    "plan_tool/prompts/detail.md": "2eec8fd942cb160d59a2ebc17f44252d326780e1907b505dec32d37720d709fe",
+    "plan_tool/prompts/distill-seed.md": "52a3d610eabded063ce745c6a4ad81e6619e6e1a4177eb62b68640b3cae0e687",
+    "plan_tool/review.py": "cc4d207d96eb97e958a6086521f4ce4f41e84936bfd0d872579d0d98d0ce4070",
+    "plan_tool/scope_out.py": "251614e8f28262eb828d5a4e4bb666eb84737f45831380fbe7c2967caf4401d5",
+    "tests/cli/package_surface_help.golden.txt": "3d6c2e6eb6ece94eafa0c301ca87395cf68e513e250563736dc2c6f6eb1d62a5",
+    "tests/cli/test_completeness_apply_parallel.py": "c9ee87acfde0d3084d7593e3cf29bb43d53764e092c0793c1bcd8c11d3178f3e",
+    "tests/test_completeness_report.py": "dbd392559986b0c8e4a8d4d588b87088fc1cb207e6416f2c14ce137b7d1d84d0",
+    "tests/test_create.py": "20b6f7fcea0bf79841c701e09b8bac4deedfef078369ec33cb1c09850231cd20",
+    "tests/test_detail.py": "6b05ca94ec1e663a92e914e71389443b6834a95178aa04738c49143682012047",
+    "tests/test_scope_out.py": "7f5cb7c4bd22ab1e194bc07d3825180eea2dbd980833bd5e0ae49bcc94a9988f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/01-concept-tree-sidecar-leaf-conceptnode.md": "72a110ad96e5d7dcb1894fbbd2e38d1e64b2211805f16183309e779cb211ede7",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/02-concept-emit-round-trip-producer-its.md": "58746f1da34463a9035969b3e05ae4283bac8ba34948096da3a868c1b61e3ddb",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/03-interactive-navigate-concepts-walker.md": "4b1fa2fb7e2563496691292c39da68e2aedd4a74f0c3a2f7ed7371c734e25d7f",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/04-wire-concept-sign-off-gate-create.md": "afed8c4f8b627d7269552ab660ee42958cf526cdf43b31692a8172479d26b23d",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/05-wire-concepts-detail-inline-sign-off.md": "a1c5fab60fdb2c3782654f18d63f6ae436990f9820421e4395e0b9eefb9ea63a",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/06-two-completeness-concept-checks-concept.md": "44f47ae82c78973bde671545b840cb531bcccc919fef30321f64eabfda984c9f",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/07-make-scope-out-step-flip-carved-step.md": "6c9d0d4186ed6e8caf8367991138f2ab868cba645334a792b972e9c9d839ce5b",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/08-standalone-scope-review-command-create.md": "b8b30e4f78f2ff1bff08bd90f27d70824b14806094b10ad1c99f33ec44a38a83",
+    "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/09-reconcile-docs-backlog-121-register-new.md": "d2bec023bd1e1b0e856277770f08d8f2e35b8b66ed711b9ae917fbee9603df79"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Deferred Concept Signoff Gate\n\n`deferred-concept-signoff-gate` \u00b7 generated 2026-07-13T00:58:56Z \u00b7 mode: audit-only\n\n## Disposition summary\n\n- **Conceptual correctness:** 11\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply deferred-concept-signoff-gate   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk deferred-concept-signoff-gate  # alternative interactive review/apply\n\n- HIGH `[three-state-navigation]`: step 3 (`navigate_concepts`) supports only \u201cmark each concept **include** / **defer**\u201d and says toggles operate \u201cbetween `include` and `defer`,\u201d while the Overview promises selection among \u201c**included** vs **deferred** vs **won't-do**\u201d at every level and Architecture \u00a7A defines `wont_do` as the source of `## Out of scope`. The navigator cannot create or reliably preserve the third decision, so the operator gate cannot fulfill its stated scope model.\n- HIGH `[detail-candidate-deferrals]`: Architecture \u00a7B requires detail to emit \u201cwhatever the body would route to `## Deferred` \u2026 as a candidate-deferral node,\u201d and Architecture \u00a7D requires batch runs to \u201caccumulate each step's candidate concepts into a union tree.\u201d Step 5 (`Wire the concept sign-off gate into detail`) instead describes reading or emitting the plan tree once and walking it after authoring, while feeding existing signed scope into `prompts/detail.md`; it never specifies parsing fresh per-step candidate-deferral output or unioning it, so detail\u2019s silent deferral path remains ungated.\n- HIGH `[structural-remedy-coverage]`: Architecture \u00a7H claims split, merge, and re-ground \u201cintegrate for free\u201d because a remedy \u201crewrites only the `NN-` filename prefix, never the title,\u201d yet the same section describes split as \u201c1 \u2192 2\u201d and merge as \u201c2 \u2192 1\u201d; those remedies necessarily create replacement step identities/titles rather than merely renumbering one unchanged title. A title-slug heuristic therefore does not guarantee that both split children or a merged replacement retain the original concept match, contradicting the acceptance criterion that coverage survives every structural remedy.\n- HIGH `[signoff-invalidation]`: step 3 (`navigate_concepts`) persists each state change but states only that terminal `c` sets `signed_off=True`; it never requires a toggle on a previously signed tree to clear `signed_off` and `signed_off_at`. A re-run can therefore change an operator-approved state while retaining the old approval stamp, making the machine-recorded signoff false.\n- HIGH `[review-depth-signoff]`: step 3 (`Add the interactive navigate_concepts walker`) lets `c` at the root stamp every node `signed_off=True`, including descendants the operator never drilled into; because a frame displays only the current parent\u2019s children, this recreates silent approval of unseen deferrals.\n- HIGH `[detail-signoff-ordering]`: step 5 (`Wire the concept sign-off gate into detail`) runs the walk \u201cafter all authoring finishes\u201d but also claims the detail prompt receives \u201csigned-off concept scope so a per-step detail body respects\u201d it; on a treeless run, the tree is emitted only after those prompts have already authored every body, so the gate cannot constrain that run.\n- MEDIUM `[stale-tree-behavior]`: Architecture \u00a7A says a stale fingerprint reads as \u201cre-derive,\u201d Architecture \u00a7F says an existing tree spends no Claude except under `--rederive`, and step 8 (`Add the standalone scope-review command`) registers \u201conly `-y/--yes`\u201d with no `--rederive`; the described stale-tree recovery path is therefore unavailable.\n- MEDIUM `[scope-review-exit-status]`: Architecture \u00a7F says `scope-review` returns non-zero on \u201cfailure-to-complete,\u201d but step 8 (`Add the standalone scope-review command`) says an unparseable emit \u201cwarns, writes nothing, and exits 0\u201d; a treeless plan therefore reports success despite failing to create or review anything.\n- HIGH `[create-fingerprint-ordering]`: step 4 (`Wire the concept sign-off gate into create`) saves `concepts.json` \u201cbefore the plan `.md` is written,\u201d while step 1 (`Add the concept-tree sidecar leaf`) says `plan_fingerprint` is \u201ccomputed via `compute_plan_fingerprint`\u201d during persistence. Because `compute_plan_fingerprint` hashes the plan file and detail bundle, the subsequent plan write immediately invalidates the newly created sidecar, so every successful `create` produces a stale tree.\n- HIGH `[invalid-sidecar-handling]`: step 1 (`Add the concept-tree sidecar leaf`) makes an \u201cunreadable/malformed JSON\u201d or schema-mismatched sidecar return `None`, and step 6 (`Add the two completeness concept checks`) says both checks \u201creturn `[]` on `None`.\u201d This silently treats corruption of the VCS-tracked machine contract as absence, disabling both coverage enforcement and unsigned-deferral reporting despite the Overview\u2019s guarantee that an included concept \u201ccan never be silently dropped.\u201d\n- HIGH `[cold-start-seeding]`: Step 2 (`Add the concept-emit round-trip producer`) says cold-start seeding from `## Out of scope` / `## Deferred` bullets and committed steps \u201cspends no Claude,\u201d while Architecture \u00a7G says cold start uses \u201cone emit pass\u201d and step 8 (`Add the standalone scope-review command`) calls `emit_concept_tree` with the plan merely as evidence. The step 8 design does not guarantee Architecture \u00a7G\u2019s promise that \u201ceach\u201d existing bullet and committed step becomes a node, so Claude can silently omit the exact concepts the signoff gate must preserve.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[hierarchical-state-semantics]`: Architecture \u00a7C displays mixed-descendant markers but never defines whether parent state is independent, inherited by descendants, or derived from them, nor how rendering and coverage treat combinations such as a deferred parent with an included child. Steps 3, 4, 6, and 8 consequently lack one consistent rule for navigation, `## Deferred` rendering, and included-concept auditing.\n  - Address: `plan-tool completeness-apply deferred-concept-signoff-gate --anchor hierarchical-state-semantics`\n- MEDIUM `[sidecar-write-atomicity]`: step 7 (`Make scope_out_step flip\u2026in the same transaction`) promises the plan narrowing, forward-seed write, and `concepts.json` transition occur \u201cin the same transaction,\u201d but neither the plan nor the detail defines commit ordering, rollback, or recovery across these separate artifacts. A failure after only some writes can leave the concept marked deferred without a seed, or the step carved while the concept remains included.\n  - Address: `plan-tool completeness-apply deferred-concept-signoff-gate --anchor sidecar-write-atomicity`\n- MEDIUM `[stale-tree-behavior]`: Architecture \u00a7A says a stale `plan_fingerprint` reads as \u201cre-derive,\u201d while \u00a7F says an existing tree spends no Claude unless the operator supplies `--rederive`, and \u00a7G says passive completeness only reads existing trees. The bundle never defines whether stale reads return the old tree, suppress checks, block navigation, or merely warn, so create, detail, scope-review, and completeness can treat the same stale sidecar differently.\n  - Address: `plan-tool completeness-apply deferred-concept-signoff-gate --anchor stale-tree-behavior`\n- HIGH `[detail-candidate-deferrals]`: Architecture \u00a7B requires detail to emit anything routed to `## Deferred` as a candidate-deferral node, and \u00a7D requires batch runs to union those candidates; step 5 (`Wire the concept sign-off gate into detail`) only reads an existing tree or emits a whole tree when absent, so new deferrals discovered during detail are never added to an existing tree or consolidated.\n  - Address: `plan-tool completeness-apply deferred-concept-signoff-gate --anchor detail-candidate-deferrals`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-3b70ec2f]`: The plan's `## Acceptance criteria` names `plan-details/<slug>/concepts.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1b6b3706]`: The plan's `## Acceptance criteria` names `tests/test_data_contract.py`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-40dadda5]`: The plan's `## Acceptance criteria` names `conceptnode`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53263ca3]`: The plan's `## Acceptance criteria` names `concepts.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-21fe42cd]`: The plan's `## Acceptance criteria` names `create.py:1958`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-090192bb]`: The plan's `## Acceptance criteria` names `prompt_fn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b82f3ec4]`: The plan's `## Acceptance criteria` names `signed_off`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-0446f60f]`: The plan's `## Acceptance criteria` names `signed_off=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5258bdb5]`: The plan's `## Acceptance criteria` names `signed_off=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d72ab4d]`: The plan's `## Acceptance criteria` names `signed_off_at`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a685c5cb]`: The plan's `## Acceptance criteria` names `wont_do`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step5-granularity-split-35023ee5]`: Step 5 \"Wire concepts into detail: inline sign-off for a single step, one consolidated sign-off after a full/batch run\" carries refactor verb(s) ['inline'] and feature verb(s) ['wire'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply deferred-concept-signoff-gate` \u2014 apply the 11 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Deferred Concept Signoff Gate\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 4 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated \u2014 new findings are tapering (7\u21925\u21922\u21921) \u2014 rerun with --audit-passes 5 for headroom to converge.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[three-state-navigation]`: step 3 (`navigate_concepts`) supports only \u201cmark each concept **include** / **defer**\u201d and says toggles operate \u201cbetween `include` and `defer`,\u201d while the Overview promises selection among \u201c**included** vs **deferred** vs **won't-do**\u201d at every level and Architecture \u00a7A defines `wont_do` as the source of `## Out of scope`. The navigator cannot create or reliably preserve the third decision, so the operator gate cannot fulfill its stated scope model.\n- HIGH `[detail-candidate-deferrals]`: Architecture \u00a7B requires detail to emit \u201cwhatever the body would route to `## Deferred` \u2026 as a candidate-deferral node,\u201d and Architecture \u00a7D requires batch runs to \u201caccumulate each step's candidate concepts into a union tree.\u201d Step 5 (`Wire the concept sign-off gate into detail`) instead describes reading or emitting the plan tree once and walking it after authoring, while feeding existing signed scope into `prompts/detail.md`; it never specifies parsing fresh per-step candidate-deferral output or unioning it, so detail\u2019s silent deferral path remains ungated.\n- HIGH `[structural-remedy-coverage]`: Architecture \u00a7H claims split, merge, and re-ground \u201cintegrate for free\u201d because a remedy \u201crewrites only the `NN-` filename prefix, never the title,\u201d yet the same section describes split as \u201c1 \u2192 2\u201d and merge as \u201c2 \u2192 1\u201d; those remedies necessarily create replacement step identities/titles rather than merely renumbering one unchanged title. A title-slug heuristic therefore does not guarantee that both split children or a merged replacement retain the original concept match, contradicting the acceptance criterion that coverage survives every structural remedy.\n- HIGH `[signoff-invalidation]`: step 3 (`navigate_concepts`) persists each state change but states only that terminal `c` sets `signed_off=True`; it never requires a toggle on a previously signed tree to clear `signed_off` and `signed_off_at`. A re-run can therefore change an operator-approved state while retaining the old approval stamp, making the machine-recorded signoff false.\n- HIGH `[review-depth-signoff]`: step 3 (`Add the interactive navigate_concepts walker`) lets `c` at the root stamp every node `signed_off=True`, including descendants the operator never drilled into; because a frame displays only the current parent\u2019s children, this recreates silent approval of unseen deferrals.\n- HIGH `[detail-signoff-ordering]`: step 5 (`Wire the concept sign-off gate into detail`) runs the walk \u201cafter all authoring finishes\u201d but also claims the detail prompt receives \u201csigned-off concept scope so a per-step detail body respects\u201d it; on a treeless run, the tree is emitted only after those prompts have already authored every body, so the gate cannot constrain that run.\n- MEDIUM `[stale-tree-behavior]`: Architecture \u00a7A says a stale fingerprint reads as \u201cre-derive,\u201d Architecture \u00a7F says an existing tree spends no Claude except under `--rederive`, and step 8 (`Add the standalone scope-review command`) registers \u201conly `-y/--yes`\u201d with no `--rederive`; the described stale-tree recovery path is therefore unavailable.\n- MEDIUM `[scope-review-exit-status]`: Architecture \u00a7F says `scope-review` returns non-zero on \u201cfailure-to-complete,\u201d but step 8 (`Add the standalone scope-review command`) says an unparseable emit \u201cwarns, writes nothing, and exits 0\u201d; a treeless plan therefore reports success despite failing to create or review anything.\n- HIGH `[create-fingerprint-ordering]`: step 4 (`Wire the concept sign-off gate into create`) saves `concepts.json` \u201cbefore the plan `.md` is written,\u201d while step 1 (`Add the concept-tree sidecar leaf`) says `plan_fingerprint` is \u201ccomputed via `compute_plan_fingerprint`\u201d during persistence. Because `compute_plan_fingerprint` hashes the plan file and detail bundle, the subsequent plan write immediately invalidates the newly created sidecar, so every successful `create` produces a stale tree.\n- HIGH `[invalid-sidecar-handling]`: step 1 (`Add the concept-tree sidecar leaf`) makes an \u201cunreadable/malformed JSON\u201d or schema-mismatched sidecar return `None`, and step 6 (`Add the two completeness concept checks`) says both checks \u201creturn `[]` on `None`.\u201d This silently treats corruption of the VCS-tracked machine contract as absence, disabling both coverage enforcement and unsigned-deferral reporting despite the Overview\u2019s guarantee that an included concept \u201ccan never be silently dropped.\u201d\n- HIGH `[cold-start-seeding]`: Step 2 (`Add the concept-emit round-trip producer`) says cold-start seeding from `## Out of scope` / `## Deferred` bullets and committed steps \u201cspends no Claude,\u201d while Architecture \u00a7G says cold start uses \u201cone emit pass\u201d and step 8 (`Add the standalone scope-review command`) calls `emit_concept_tree` with the plan merely as evidence. The step 8 design does not guarantee Architecture \u00a7G\u2019s promise that \u201ceach\u201d existing bullet and committed step becomes a node, so Claude can silently omit the exact concepts the signoff gate must preserve.\n\n### Files coherence\n\n- NIT: step 1 declared `DATA_CONTRACT.md` not mentioned in detail\n- INFO: step 2 detail cites `prompts/concept-emit.md` resembling declared `plan_tool/prompts/concept-emit.md` (typo/stale path?)\n- NIT: step 2 declared `TESTING.md` not mentioned in detail\n- NIT: step 8 declared `CAPABILITIES.md` not mentioned in detail\n- NIT: step 8 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 9 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-concept-tree-py]`: docs/implementation-plans/plan-details/deferred-concept-signoff-gate/02-concept-emit-round-trip-producer-its.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.\n- MEDIUM `[data-contract-input-plan-tool-concept-tree-py]`: docs/implementation-plans/plan-details/deferred-concept-signoff-gate/03-interactive-navigate-concepts-walker.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.\n- MEDIUM `[data-contract-input-plan-tool-concept-tree-py]`: docs/implementation-plans/plan-details/deferred-concept-signoff-gate/04-wire-concept-sign-off-gate-create.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.\n- MEDIUM `[data-contract-input-plan-tool-concept-tree-py]`: docs/implementation-plans/plan-details/deferred-concept-signoff-gate/09-reconcile-docs-backlog-121-register-new.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.\n- MEDIUM `[data-contract-input-plan-tool-cli-scope-review-cmd-py]`: docs/implementation-plans/plan-details/deferred-concept-signoff-gate/09-reconcile-docs-backlog-121-register-new.md:## Input cites `plan_tool/cli/scope_review_cmd.py`, but code anchor path `plan_tool/cli/scope_review_cmd.py` does not exist.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[hierarchical-state-semantics]`: Architecture \u00a7C displays mixed-descendant markers but never defines whether parent state is independent, inherited by descendants, or derived from them, nor how rendering and coverage treat combinations such as a deferred parent with an included child. Steps 3, 4, 6, and 8 consequently lack one consistent rule for navigation, `## Deferred` rendering, and included-concept auditing.\n- MEDIUM `[sidecar-write-atomicity]`: step 7 (`Make scope_out_step flip\u2026in the same transaction`) promises the plan narrowing, forward-seed write, and `concepts.json` transition occur \u201cin the same transaction,\u201d but neither the plan nor the detail defines commit ordering, rollback, or recovery across these separate artifacts. A failure after only some writes can leave the concept marked deferred without a seed, or the step carved while the concept remains included.\n- MEDIUM `[stale-tree-behavior]`: Architecture \u00a7A says a stale `plan_fingerprint` reads as \u201cre-derive,\u201d while \u00a7F says an existing tree spends no Claude unless the operator supplies `--rederive`, and \u00a7G says passive completeness only reads existing trees. The bundle never defines whether stale reads return the old tree, suppress checks, block navigation, or merely warn, so create, detail, scope-review, and completeness can treat the same stale sidecar differently.\n- HIGH `[detail-candidate-deferrals]`: Architecture \u00a7B requires detail to emit anything routed to `## Deferred` as a candidate-deferral node, and \u00a7D requires batch runs to union those candidates; step 5 (`Wire the concept sign-off gate into detail`) only reads an existing tree or emits a whole tree when absent, so new deferrals discovered during detail are never added to an existing tree or consolidated.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers). Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `plan-details/<slug>/concepts.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `tests/test_data_contract.py`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `conceptnode`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `concepts.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `create.py:1958`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `prompt_fn`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `signed_off`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `signed_off=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `signed_off=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `signed_off_at`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `wont_do`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 5 \"Wire concepts into detail: inline sign-off for a single step, one consolidated sign-off after a full/batch run\" carries refactor verb(s) ['inline'] and feature verb(s) ['wire'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit deferred-concept-signoff-gate --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply deferred-concept-signoff-gate` \u2014 walk the 4 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a90672dd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 3 (`navigate_concepts`) supports only \u201cmark each concept **include** / **defer**\u201d and says toggles operate \u201cbetween",
+      "body": "step 3 (`navigate_concepts`) supports only \u201cmark each concept **include** / **defer**\u201d and says toggles operate \u201cbetween `include` and `defer`,\u201d while the Overview promises selection among \u201c**included** vs **deferred** vs **won't-do**\u201d at every level and Architecture \u00a7A defines `wont_do` as the source of `## Out of scope`. The navigator cannot create or reliably preserve the third decision, so the operator gate cannot fulfill its stated scope model.",
+      "suggested_action": "specify a navigator interaction and persistence rule that exposes all three states at every level without collapsing existing `wont_do` decisions.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "three-state-navigation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b2babbec",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture \u00a7B requires detail to emit \u201cwhatever the body would route to `## Deferred` \u2026 as a candidate-deferral node,\u201d",
+      "body": "Architecture \u00a7B requires detail to emit \u201cwhatever the body would route to `## Deferred` \u2026 as a candidate-deferral node,\u201d and Architecture \u00a7D requires batch runs to \u201caccumulate each step's candidate concepts into a union tree.\u201d Step 5 (`Wire the concept sign-off gate into detail`) instead describes reading or emitting the plan tree once and walking it after authoring, while feeding existing signed scope into `prompts/detail.md`; it never specifies parsing fresh per-step candidate-deferral output or unioning it, so detail\u2019s silent deferral path remains ungated.",
+      "suggested_action": "make step 5 collect structured candidate deferrals from every detail-generation result, merge them deterministically into the persisted tree, and navigate the merged tree once after the run.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "detail-candidate-deferrals",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c0d2b192",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture \u00a7H claims split, merge, and re-ground \u201cintegrate for free\u201d because a remedy \u201crewrites only the `NN-` filena",
+      "body": "Architecture \u00a7H claims split, merge, and re-ground \u201cintegrate for free\u201d because a remedy \u201crewrites only the `NN-` filename prefix, never the title,\u201d yet the same section describes split as \u201c1 \u2192 2\u201d and merge as \u201c2 \u2192 1\u201d; those remedies necessarily create replacement step identities/titles rather than merely renumbering one unchanged title. A title-slug heuristic therefore does not guarantee that both split children or a merged replacement retain the original concept match, contradicting the acceptance criterion that coverage survives every structural remedy.",
+      "suggested_action": "define explicit concept-to-replacement matching semantics for split, merge, and re-ground, including how each remedy\u2019s new titles/features preserve or recompute coverage.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "structural-remedy-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-da66d4b8",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 3 (`navigate_concepts`) persists each state change but states only that terminal `c` sets `signed_off=True`; it nev",
+      "body": "step 3 (`navigate_concepts`) persists each state change but states only that terminal `c` sets `signed_off=True`; it never requires a toggle on a previously signed tree to clear `signed_off` and `signed_off_at`. A re-run can therefore change an operator-approved state while retaining the old approval stamp, making the machine-recorded signoff false.",
+      "suggested_action": "define signoff invalidation so any decision change clears the affected approval scope before persistence and only a subsequent interactive confirmation restores the stamp.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "signoff-invalidation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-475790c4",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 3 (`Add the interactive navigate_concepts walker`) lets `c` at the root stamp every node `signed_off=True`, includi",
+      "body": "step 3 (`Add the interactive navigate_concepts walker`) lets `c` at the root stamp every node `signed_off=True`, including descendants the operator never drilled into; because a frame displays only the current parent\u2019s children, this recreates silent approval of unseen deferrals.",
+      "suggested_action": "require explicit review or level acceptance of every descendant-bearing frame before global confirmation can sign the full tree",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "review-depth-signoff",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f421238a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 5 (`Wire the concept sign-off gate into detail`) runs the walk \u201cafter all authoring finishes\u201d but also claims the d",
+      "body": "step 5 (`Wire the concept sign-off gate into detail`) runs the walk \u201cafter all authoring finishes\u201d but also claims the detail prompt receives \u201csigned-off concept scope so a per-step detail body respects\u201d it; on a treeless run, the tree is emitted only after those prompts have already authored every body, so the gate cannot constrain that run.",
+      "suggested_action": "separate pre-authoring scope derivation/navigation from the single post-authoring candidate-deferral sign-off, while preserving one consolidated operator walk",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "detail-signoff-ordering",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-16e175da",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture \u00a7A says a stale fingerprint reads as \u201cre-derive,\u201d Architecture \u00a7F says an existing tree spends no Claude ex",
+      "body": "Architecture \u00a7A says a stale fingerprint reads as \u201cre-derive,\u201d Architecture \u00a7F says an existing tree spends no Claude except under `--rederive`, and step 8 (`Add the standalone scope-review command`) registers \u201conly `-y/--yes`\u201d with no `--rederive`; the described stale-tree recovery path is therefore unavailable.",
+      "suggested_action": "make step 8 own `--rederive` and define how every read surface reports and handles staleness without silently using the stale tree",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "stale-tree-behavior",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-64a2b733",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture \u00a7F says `scope-review` returns non-zero on \u201cfailure-to-complete,\u201d but step 8 (`Add the standalone scope-rev",
+      "body": "Architecture \u00a7F says `scope-review` returns non-zero on \u201cfailure-to-complete,\u201d but step 8 (`Add the standalone scope-review command`) says an unparseable emit \u201cwarns, writes nothing, and exits 0\u201d; a treeless plan therefore reports success despite failing to create or review anything.",
+      "suggested_action": "classify an emit/parse failure as failure-to-complete and reserve exit 0 for a successfully created or reviewed tree, including an intentionally empty tree",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "scope-review-exit-status",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-011317db",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 4 (`Wire the concept sign-off gate into create`) saves `concepts.json` \u201cbefore the plan `.md` is written,\u201d while st",
+      "body": "step 4 (`Wire the concept sign-off gate into create`) saves `concepts.json` \u201cbefore the plan `.md` is written,\u201d while step 1 (`Add the concept-tree sidecar leaf`) says `plan_fingerprint` is \u201ccomputed via `compute_plan_fingerprint`\u201d during persistence. Because `compute_plan_fingerprint` hashes the plan file and detail bundle, the subsequent plan write immediately invalidates the newly created sidecar, so every successful `create` produces a stale tree.",
+      "suggested_action": "defer or refresh the create-time sidecar fingerprint after the finalized plan markdown has been written while preserving incremental navigator saves as unsigned resume state",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "create-fingerprint-ordering",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-bd7248fe",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 1 (`Add the concept-tree sidecar leaf`) makes an \u201cunreadable/malformed JSON\u201d or schema-mismatched sidecar return `N",
+      "body": "step 1 (`Add the concept-tree sidecar leaf`) makes an \u201cunreadable/malformed JSON\u201d or schema-mismatched sidecar return `None`, and step 6 (`Add the two completeness concept checks`) says both checks \u201creturn `[]` on `None`.\u201d This silently treats corruption of the VCS-tracked machine contract as absence, disabling both coverage enforcement and unsigned-deferral reporting despite the Overview\u2019s guarantee that an included concept \u201ccan never be silently dropped.\u201d",
+      "suggested_action": "distinguish an absent sidecar from an invalid one and require invalid persisted trees to surface a blocking integrity failure rather than making concept checks inert",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "invalid-sidecar-handling",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3f67a914",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Add the concept-emit round-trip producer`) says cold-start seeding from `## Out of scope` / `## Deferred` bulle",
+      "body": "Step 2 (`Add the concept-emit round-trip producer`) says cold-start seeding from `## Out of scope` / `## Deferred` bullets and committed steps \u201cspends no Claude,\u201d while Architecture \u00a7G says cold start uses \u201cone emit pass\u201d and step 8 (`Add the standalone scope-review command`) calls `emit_concept_tree` with the plan merely as evidence. The step 8 design does not guarantee Architecture \u00a7G\u2019s promise that \u201ceach\u201d existing bullet and committed step becomes a node, so Claude can silently omit the exact concepts the signoff gate must preserve.",
+      "suggested_action": "define cold start as deterministic seeding of every existing scope bullet and committed step, with the emit pass allowed only to enrich that guaranteed seed with hierarchy or additional evidence-backed concepts.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "cold-start-seeding",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-d289ae4c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture \u00a7C displays mixed-descendant markers but never defines whether parent state is independent, inherited by de",
+      "body": "Architecture \u00a7C displays mixed-descendant markers but never defines whether parent state is independent, inherited by descendants, or derived from them, nor how rendering and coverage treat combinations such as a deferred parent with an included child. Steps 3, 4, 6, and 8 consequently lack one consistent rule for navigation, `## Deferred` rendering, and included-concept auditing.",
+      "suggested_action": "establish canonical parent/child state semantics, propagation behavior, and how mixed subtrees participate in rendering, signoff, and coverage checks.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "hierarchical-state-semantics",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-34f7fc71",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 7 (`Make scope_out_step flip\u2026in the same transaction`) promises the plan narrowing, forward-seed write, and `concep",
+      "body": "step 7 (`Make scope_out_step flip\u2026in the same transaction`) promises the plan narrowing, forward-seed write, and `concepts.json` transition occur \u201cin the same transaction,\u201d but neither the plan nor the detail defines commit ordering, rollback, or recovery across these separate artifacts. A failure after only some writes can leave the concept marked deferred without a seed, or the step carved while the concept remains included.",
+      "suggested_action": "specify an all-or-recoverable multi-artifact commit protocol for scope-out, including failure behavior and a partial-write regression criterion.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "sidecar-write-atomicity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-16e175da",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture \u00a7A says a stale `plan_fingerprint` reads as \u201cre-derive,\u201d while \u00a7F says an existing tree spends no Claude un",
+      "body": "Architecture \u00a7A says a stale `plan_fingerprint` reads as \u201cre-derive,\u201d while \u00a7F says an existing tree spends no Claude unless the operator supplies `--rederive`, and \u00a7G says passive completeness only reads existing trees. The bundle never defines whether stale reads return the old tree, suppress checks, block navigation, or merely warn, so create, detail, scope-review, and completeness can treat the same stale sidecar differently.",
+      "suggested_action": "define one stale-tree state and explicit behavior for every consuming surface, preserving the rule that passive audits never derive or mutate.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "stale-tree-behavior",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-b2babbec",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture \u00a7B requires detail to emit anything routed to `## Deferred` as a candidate-deferral node, and \u00a7D requires b",
+      "body": "Architecture \u00a7B requires detail to emit anything routed to `## Deferred` as a candidate-deferral node, and \u00a7D requires batch runs to union those candidates; step 5 (`Wire the concept sign-off gate into detail`) only reads an existing tree or emits a whole tree when absent, so new deferrals discovered during detail are never added to an existing tree or consolidated.",
+      "suggested_action": "specify a per-step candidate-deferral output, deterministic union/merge into the persisted tree, and one post-batch sign-off over the accumulated candidates",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "detail-candidate-deferrals",
+      "target_signature": null
+    },
+    {
+      "id": "step2-data-contract-44e3d004",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `plan_tool/concept_tree.py`",
+      "body": "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/02-concept-emit-round-trip-producer-its.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-concept-tree-py",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-80138d8f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `plan_tool/concept_tree.py`",
+      "body": "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/03-interactive-navigate-concepts-walker.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-concept-tree-py",
+      "target_signature": null
+    },
+    {
+      "id": "step4-data-contract-36af38e8",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "Stale Input contract reference `plan_tool/concept_tree.py`",
+      "body": "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/04-wire-concept-sign-off-gate-create.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-concept-tree-py",
+      "target_signature": null
+    },
+    {
+      "id": "step9-data-contract-9973dd9f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 9,
+      "title": "Stale Input contract reference `plan_tool/concept_tree.py`",
+      "body": "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/09-reconcile-docs-backlog-121-register-new.md:## Input cites `plan_tool/concept_tree.py`, but code anchor path `plan_tool/concept_tree.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-concept-tree-py",
+      "target_signature": null
+    },
+    {
+      "id": "step9-data-contract-18f5c55d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 9,
+      "title": "Stale Input contract reference `plan_tool/cli/scope_review_cmd.py`",
+      "body": "docs/implementation-plans/plan-details/deferred-concept-signoff-gate/09-reconcile-docs-backlog-121-register-new.md:## Input cites `plan_tool/cli/scope_review_cmd.py`, but code anchor path `plan_tool/cli/scope_review_cmd.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-cli-scope-review-cmd-py",
+      "target_signature": null
+    }
+  ],
+  "annotations": {
+    "plan-plan-correctness-a90672dd": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md` and step 3 detail: specify three-state navigation and preserve `wont_do` unless explicitly changed.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-b2babbec": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/deferred-concept-signoff-gate/05-wire-concepts-detail-inline-sign-off.md`: require per-result candidate-deferral collection, deterministic persisted-tree merging, and one post-run navigation. (+ follow-up: - `docs/implementation-plans/plan-details/deferred-concept-signoff-gate/05-wire-concepts-detail-inline-sign-off.md`: replace `prompts/detail.md` with the declared `plan_tool/prompts/detail.md` path.)",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-c0d2b192": {
+      "status": "applied",
+      "note": "applied finding: - Define split, merge, and re-ground replacement coverage semantics in the plan and steps 6\u20137 details.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-da66d4b8": {
+      "status": "applied",
+      "note": "applied finding: - Update the plan and step 3 detail to invalidate affected signoff stamps before persisting decision changes and require interactive reconfirmation.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-475790c4": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md` and step 3 detail: require review or acceptance of every descendant-bearing frame before global sign-off.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-f421238a": {
+      "status": "applied",
+      "note": "applied finding: - Separate pre-authoring scope navigation from consolidated post-authoring candidate signoff in the plan and step 5 detail.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-16e175da": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md` and affected step details: assign `--rederive` to step 8 and require every read surface to report and reject stale concept trees.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-64a2b733": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md` and step 8 detail: classify emit/parse failure as non-zero while reserving exit 0 for successfully created or reviewed trees, including intentionally empty trees.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-011317db": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md`: require unsigned pre-write checkpoints and a post-write fingerprint refresh.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-bd7248fe": {
+      "status": "applied",
+      "note": "applied finding: - `2-deferred-concept-signoff-gate.md` and steps 1 and 6 details: distinguish absent sidecars from invalid trees and emit a blocking `concept-integrity` finding.",
+      "halt_reason": ""
+    },
+    "plan-plan-correctness-3f67a914": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md`: require deterministic cold-start seeds before optional emit enrichment.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-d289ae4c": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-deferred-concept-signoff-gate.md` and steps 3, 4, 6, and 8: define independent node states, display-only mixed markers, non-propagating navigation, per-node rendering, signoff, and coverage.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-34f7fc71": {
+      "status": "applied",
+      "note": "applied finding: - Specify the all-or-recoverable scope-out commit protocol and partial-write regression criteria in the plan and step 7 detail.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-16e175da": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/deferred-concept-signoff-gate/01-concept-tree-sidecar-leaf-conceptnode.md`: define stale-tree loading, consumer behavior, acceptance criteria, and test coverage.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-b2babbec": {
+      "status": "skip",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied)",
+      "halt_reason": ""
+    },
+    "step2-data-contract-44e3d004": {
+      "status": "skip",
+      "note": "data-contract finding is not applyable by completeness-apply (target is plan/detail or the structured payload is missing)",
+      "halt_reason": ""
+    },
+    "step3-data-contract-80138d8f": {
+      "status": "skip",
+      "note": "data-contract finding is not applyable by completeness-apply (target is plan/detail or the structured payload is missing)",
+      "halt_reason": ""
+    },
+    "step4-data-contract-36af38e8": {
+      "status": "skip",
+      "note": "data-contract finding is not applyable by completeness-apply (target is plan/detail or the structured payload is missing)",
+      "halt_reason": ""
+    },
+    "step9-data-contract-9973dd9f": {
+      "status": "skip",
+      "note": "data-contract finding is not applyable by completeness-apply (target is plan/detail or the structured payload is missing)",
+      "halt_reason": ""
+    },
+    "step9-data-contract-18f5c55d": {
+      "status": "skip",
+      "note": "data-contract finding is not applyable by completeness-apply (target is plan/detail or the structured payload is missing)",
+      "halt_reason": ""
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-a8f1e056": {
+      "code_anchor": "roadmap_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/04-traceability-walk-view-over-plans.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/04-traceability-walk-view-over-plans.md",
+      "reason": "code anchor path `roadmap_artifacts.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-1f018cb3": {
+      "code_anchor": "roadmap_view.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md",
+      "reason": "code anchor path `roadmap_view.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-6e7f53c4": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-a06d705f": {
+      "code_anchor": "roadmap_artifacts.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md",
+      "reason": "code anchor path `roadmap_artifacts.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-a87f0a32": {
+      "code_anchor": "cli/roadmap_cmd.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md",
+      "reason": "code anchor path `cli/roadmap_cmd.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-b7048a18": {
+      "code_anchor": "roadmap_gates.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-view/07-update-roadmap-module-chain-docs.md",
+      "reason": "code anchor path `roadmap_gates.py` does not exist",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260807-151829-completeness"
+}

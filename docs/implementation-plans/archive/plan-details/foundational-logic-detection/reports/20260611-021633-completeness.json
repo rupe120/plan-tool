@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "plan_slug": "foundational-logic-detection",
+  "plan_path": "docs/implementation-plans/2-foundational-logic-detection.md",
+  "created_at": "2026-06-11T02:16:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "report_md": "# Completeness report: Foundational Logic Detection\n\n`foundational-logic-detection` \u00b7 generated 2026-06-11T02:16:33Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 4\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The Deferred bullet (\"The create-from-existing synthesis surface (`_render_synthesis_prompt` / `prompts/synthesize-body.md`) \u2014 it also produces plan steps but is left uncovered\") is factually wrong on both counts: `synthesize-body.md` excludes the Steps section by design, and `--from-existing` step generation runs through `propose_steps_from_claude` \u2192 `_render_from_prompt`, which Step 1 already edits. The named surface produces no steps and the real from-existing step path is covered; correct the bullet so it doesn't misdirect a fix to a non-step prompt. \u2014 - `docs/implementation-plans/2-foundational-logic-detection.md`: corrected the Deferred bullet to note the create-from-existing step path already runs through `_render_from_prompt` (covered by Step 1) and that `synthesize-body.md` produces no steps by design.\n- [APPLIED] Step 1's Deferred (\"Mirroring the instruction into the `reconcile` or `create-from-existing` prompts \u2014 those prompts are separate surfaces\") repeats the same wrong premise: create-from-existing shares `_render_from_prompt`, so it is not a separate uncovered surface. Drop or correct the create-from-existing half. \u2014 - `docs/implementation-plans/plan-details/foundational-logic-detection/01-extend-create-step-list-proposal-prompt.md`: corrected the Deferred bullet to scope it to the `reconcile` prompt only, noting create-from-existing is already covered via `_render_from_prompt`.\n- [APPLIED] Step 1's \"Files (creates vs edits)\" says to add the instruction \"inside the audit list \u2026 renumbering the gate instruction,\" but its \"Implementation\" section says append it as item **8** *after* the item-7 gate block (no renumber). The two descriptions of where the bullet lands contradict each other; pick one (append-as-8 is correct, since `_render_from_prompt` ends item 7 with the gate then the JSON-shape line). \u2014 - `docs/implementation-plans/plan-details/foundational-logic-detection/01-extend-create-step-list-proposal-prompt.md`: rewrote the `create.py` bullet in `## Files (creates vs edits)` to say append as item 8 after the gate block with no renumber, matching the Implementation section.\n- [APPLIED] The Architecture commits to consolidation \"operationalized as a dedicated refactor/consolidation step,\" but `detail` (Step 2) authors a single step's body and cannot add steps or expand the plan footprint \u2014 it can only fold siblings into `## Implementation`/`## Files`/`## Deferred`. The detail-side detection can name a shared location that *needs* a new consolidation step but has no path to create one, so that case silently degrades to a Deferred note. Acknowledge this asymmetry (only `create` can mint the consolidation step; `detail` routes such finds to Deferred/reconcile). \u2014 - `docs/implementation-plans/2-foundational-logic-detection.md`: appended a sentence to `## Architecture` noting only `create` can mint a consolidation step while `detail` routes such finds to Deferred/reconcile.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[detail-consolidation-wording]`: The plan-level acceptance criterion requires *both* prompts to instruct surfacing locations \"that may need to be updated **or consolidated to prevent side effects**,\" but Step 2's detail bullet (Surface in `## Implementation`/`## Files`/`## Deferred`) names only update/defer \u2014 no consolidation framing \u2014 and Step 2's own criteria don't lock it. The detail prompt can carry consolidation guidance in `## Deferred`; add it so the criterion is satisfied symmetrically.\n\n- INFO: [missed-duplications-risk] The \"Missed duplications give false confidence\" risk is rated HIGH with mitigation \"none,\" and no step or criterion constrains recall \u2014 the gap is inherent to prompt-only detection and explicitly accepted in Deferred. Flagging only to confirm the plan owns an unmitigated HIGH risk by design, not as a blockable gap.\n  - Address: `plan-tool completeness-apply foundational-logic-detection --anchor detail-consolidation-wording`\n- MEDIUM `[deferred-synthesis-mischaracterization]`: The Deferred bullet claims the synthesis surface (`_render_synthesis_prompt` / `prompts/synthesize-body.md`) \"also produces plan steps but is left uncovered.\" It produces **body sections only** \u2014 `synthesize-body.md` explicitly excludes `Steps`. Create-from-existing proposes steps via `propose_steps_from_claude` \u2192 `_render_from_prompt` (already covered by Step 1) or the deterministic `extract_steps_from_canonical` (no prompt). Reword to name the real surfaces; the cited synthesis gap does not exist.\n  - Address: `plan-tool completeness-apply foundational-logic-detection --anchor deferred-synthesis-mischaracterization`\n- MEDIUM `[canonical-seed-bypasses-create-detection]`: When a seed carries canonical `### N.` steps, `create` calls the deterministic `extract_steps_from_canonical` and **never invokes `_render_from_prompt`**, so Step 1's foundational-logic instruction does not fire for those plans (this plan's own seed likely among them). `detail` (Step 2) still covers each step, but the create-side guarantee is silently skipped for canonical seeds \u2014 note this limit so the acceptance criteria aren't read as \"fires on every create.\"\n  - Address: `plan-tool completeness-apply foundational-logic-detection --anchor canonical-seed-bypasses-create-detection`\n- MEDIUM `[step1-deferred-reconcile-mirror]`: Step 1 defers mirroring the instruction into the reconcile prompts, but `detail-reconcile.md` already proposes plan/detail footprint edits (adding undeclared files, flagging declared-but-absent ones) and runs in the `--iterate` convergence loop \u2014 the cheapest place to catch a sibling missed at create/detail time. The deferral's rationale undersells reconcile's relevance to the same shared-logic-footprint concern; at least flag reconcile as a follow-on rather than a clean out-of-scope.\n  - Address: `plan-tool completeness-apply foundational-logic-detection --anchor step1-deferred-reconcile-mirror`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply foundational-logic-detection` \u2014 walk the 4 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Foundational Logic Detection\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[detail-consolidation-wording]`: The plan-level acceptance criterion requires *both* prompts to instruct surfacing locations \"that may need to be updated **or consolidated to prevent side effects**,\" but Step 2's detail bullet (Surface in `## Implementation`/`## Files`/`## Deferred`) names only update/defer \u2014 no consolidation framing \u2014 and Step 2's own criteria don't lock it. The detail prompt can carry consolidation guidance in `## Deferred`; add it so the criterion is satisfied symmetrically.\n\n- INFO: [missed-duplications-risk] The \"Missed duplications give false confidence\" risk is rated HIGH with mitigation \"none,\" and no step or criterion constrains recall \u2014 the gap is inherent to prompt-only detection and explicitly accepted in Deferred. Flagging only to confirm the plan owns an unmitigated HIGH risk by design, not as a blockable gap.\n- MEDIUM `[deferred-synthesis-mischaracterization]`: The Deferred bullet claims the synthesis surface (`_render_synthesis_prompt` / `prompts/synthesize-body.md`) \"also produces plan steps but is left uncovered.\" It produces **body sections only** \u2014 `synthesize-body.md` explicitly excludes `Steps`. Create-from-existing proposes steps via `propose_steps_from_claude` \u2192 `_render_from_prompt` (already covered by Step 1) or the deterministic `extract_steps_from_canonical` (no prompt). Reword to name the real surfaces; the cited synthesis gap does not exist.\n- MEDIUM `[canonical-seed-bypasses-create-detection]`: When a seed carries canonical `### N.` steps, `create` calls the deterministic `extract_steps_from_canonical` and **never invokes `_render_from_prompt`**, so Step 1's foundational-logic instruction does not fire for those plans (this plan's own seed likely among them). `detail` (Step 2) still covers each step, but the create-side guarantee is silently skipped for canonical seeds \u2014 note this limit so the acceptance criteria aren't read as \"fires on every create.\"\n- MEDIUM `[step1-deferred-reconcile-mirror]`: Step 1 defers mirroring the instruction into the reconcile prompts, but `detail-reconcile.md` already proposes plan/detail footprint edits (adding undeclared files, flagging declared-but-absent ones) and runs in the `--iterate` convergence loop \u2014 the cheapest place to catch a sibling missed at create/detail time. The deferral's rationale undersells reconcile's relevance to the same shared-logic-footprint concern; at least flag reconcile as a follow-on rather than a clean out-of-scope.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply foundational-logic-detection` \u2014 walk the 4 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-93b2b115",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan-level acceptance criterion requires *both* prompts to instruct surfacing locations \"that may need to be updated",
+      "body": "The plan-level acceptance criterion requires *both* prompts to instruct surfacing locations \"that may need to be updated **or consolidated to prevent side effects**,\" but Step 2's detail bullet (Surface in `## Implementation`/`## Files`/`## Deferred`) names only update/defer \u2014 no consolidation framing \u2014 and Step 2's own criteria don't lock it. The detail prompt can carry consolidation guidance in `## Deferred`; add it so the criterion is satisfied symmetrically.\n\n- INFO: [missed-duplications-risk] The \"Missed duplications give false confidence\" risk is rated HIGH with mitigation \"none,\" and no step or criterion constrains recall \u2014 the gap is inherent to prompt-only detection and explicitly accepted in Deferred. Flagging only to confirm the plan owns an unmitigated HIGH risk by design, not as a blockable gap.",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "detail-consolidation-wording"
+    },
+    {
+      "id": "plan-plan-completeness-6eb8a97d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Deferred bullet claims the synthesis surface (`_render_synthesis_prompt` / `prompts/synthesize-body.md`) \"also produ",
+      "body": "The Deferred bullet claims the synthesis surface (`_render_synthesis_prompt` / `prompts/synthesize-body.md`) \"also produces plan steps but is left uncovered.\" It produces **body sections only** \u2014 `synthesize-body.md` explicitly excludes `Steps`. Create-from-existing proposes steps via `propose_steps_from_claude` \u2192 `_render_from_prompt` (already covered by Step 1) or the deterministic `extract_steps_from_canonical` (no prompt). Reword to name the real surfaces; the cited synthesis gap does not exist.",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "deferred-synthesis-mischaracterization"
+    },
+    {
+      "id": "plan-plan-completeness-7482c3dc",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "When a seed carries canonical `### N.` steps, `create` calls the deterministic `extract_steps_from_canonical` and **neve",
+      "body": "When a seed carries canonical `### N.` steps, `create` calls the deterministic `extract_steps_from_canonical` and **never invokes `_render_from_prompt`**, so Step 1's foundational-logic instruction does not fire for those plans (this plan's own seed likely among them). `detail` (Step 2) still covers each step, but the create-side guarantee is silently skipped for canonical seeds \u2014 note this limit so the acceptance criteria aren't read as \"fires on every create.\"",
+      "suggested_action": null,
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "canonical-seed-bypasses-create-detection"
+    },
+    {
+      "id": "plan-plan-completeness-6d23aca3",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 defers mirroring the instruction into the reconcile prompts, but `detail-reconcile.md` already proposes plan/deta",
+      "body": "Step 1 defers mirroring the instruction into the reconcile prompts, but `detail-reconcile.md` already proposes plan/detail footprint edits (adding undeclared files, flagging declared-but-absent ones) and runs in the `--iterate` convergence loop \u2014 the cheapest place to catch a sibling missed at create/detail time. The deferral's rationale undersells reconcile's relevance to the same shared-logic-footprint concern; at least flag reconcile as a follow-on rather than a clean out-of-scope.",
+      "suggested_action": null,
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "step1-deferred-reconcile-mirror"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-93b2b115": {
+      "status": "applied",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-6eb8a97d": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-7482c3dc": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/foundational-logic-detection/01-extend-create-step-list-proposal-prompt.md`: added a \"Scope limit\" note to `## Acceptance criteria` stating canonical `### N.` seeds route through `extract_steps_from_canonical` and skip `_render_from_prompt`, so the criteria are not \"fires on every create.\"",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-6d23aca3": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/plan-details/foundational-logic-detection/01-extend-create-step-list-proposal-prompt.md`: reframed the reconcile-prompt Deferred bullet as a strong follow-on, noting `detail-reconcile.md` already proposes footprint edits in the `--iterate` loop and is the cheapest place to catch missed siblings.",
+      "halt_reason": ""
+    }
+  }
+}

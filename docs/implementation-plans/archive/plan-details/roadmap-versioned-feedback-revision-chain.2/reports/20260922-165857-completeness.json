@@ -1,0 +1,150 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-versioned-feedback-revision-chain",
+  "plan_path": "docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md",
+  "created_at": "2026-09-22T16:58:57Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f200d363f7bc937faa9b38949862a7674c3bec42fc88905463589be061c54917",
+  "code_fingerprint": {
+    "BACKLOG.md": "27c80a0c758959ebdc585ee5a8060a827a6838c59d02b7da19895c423fed825f",
+    "BUG_BACKLOG.md": "c1cb36f720c91572d174d0953c549789e071724daf4486301e44a1703b9ccf64",
+    "CAPABILITIES.md": "356f0b82c62fd7ba4f09619193be1bdef8354b8bec2ccf1cb5474bb60f46265d",
+    "DATA_CONTRACT.md": "dd7ba201b043426021810e826d3d5ef8632f48b7e265e35c7e9e8929242ed69c",
+    "README.md": "076cbc041dd67a9e25411bbf817e1f2a41601ea894f30194bebb7df005df44d5",
+    "ROADMAP_FORMAT.md": "b712fe4e44528a283d1d3956c215646bcf9af65fe040058fecd67b8d82f60a6c",
+    "RUNBOOK.md": "60f483a5a790065f218ee83bc302237785efc9ba30f160750d84cb5f2b89c6a6",
+    "TESTING.md": "f9a4f28e299937b63f81e4c0dd1653ca3ec936373f49bd1f9b90574c421048dd",
+    "docs/ARCHITECTURE.md": "114f3eb320dff4e3bd97c6f8e146fe216f4912952ba2a27b713d9b352554dcba",
+    "docs/cli/roadmap.md": "4bb0f10dafb0d94e6710731818dfbc1701ae19f0d57f517f87c6defa642f98dd",
+    "docs/how-to/common-workflows.md": "4b3c0b37630446e56d5794364237c3328ee9f3db1cb8a9ffa655591d5c054350",
+    "docs/how-to/roadmap.md": "1c0e8f56d433cf566711c1e0f1e26f2b0701cb75f58a790f7cfef62f5719d814",
+    "docs/reference/commands.md": "afc1f5e998d4ed8c2ddd5a072911e3c2bd181722d403befb980fa39e80dfa7fb",
+    "plan_tool/cli/roadmap_cmd.py": "6e5f4f9636728c5cc810b917611d384c46069d09d62bfc737ab9820bf466cf83",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "36d13261879444c0320309f239119a2e4be617284de6918be37f7fefa6e72fb9",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "7723615e66084d4809a4611da27f738042823856bca99118633a4e982e5b3431",
+    "plan_tool/roadmap_candidate.py": "6c2dba1936658c1d319ad8108cda1ddd8b587c48c7f2acfae719de3751825ab2",
+    "plan_tool/roadmap_candidate_context.py": "38449c043aff59e7e08f2fd752ec6d6a02f23be8ae39e2f28f3f2e05629d0f25",
+    "plan_tool/roadmap_candidate_review.py": "cbf867758e9b253efa6c751e4edc82875475f7f97b3ecf7626eecec7340a3167",
+    "plan_tool/roadmap_candidate_run.py": "873b73dc4da77a9ad6453d82233afafb6f67470233038a201fb6f6935375fdeb",
+    "plan_tool/roadmap_decision_settlement_enrolled.py": "f3b2bf7173eae5f25aa5c9cc9f1ff4896931a1a4bebef486320545ba7ce78a98",
+    "plan_tool/roadmap_version_promotion.py": "8863c8286d5180685316088ac738b74c2e0e5669cbec16e4e785afced00be6ac",
+    "tests/cli/test_cli_reference.py": "527e30f605409ba8e803452ecce91d2395fce0915df987766032f79c1266f401",
+    "tests/cli/test_roadmap_cmd.py": "ae7a39073016477f8a92b4e77de6b1e48ccbeaa18bd29811e592412a4cf931e8",
+    "tests/test_roadmap_candidate.py": "a2c73d62354e816d4071367618b21ec54462c45fbad18bd42d8d162889bc51d1",
+    "tests/test_roadmap_candidate_context.py": "245ebe9cca7479886bb9305284fdb4c69b197c91c80e0a814a41a9ed5f91be7c",
+    "tests/test_roadmap_candidate_review.py": "729bf2579f890682f186a8de9a45c38aa07569de3bcfc4398be38b4e8a2e1efa",
+    "tests/test_roadmap_candidate_run.py": "972d58645deef98a0b9bf3a0f25fe124634bf656d5ca2798dbc26e06f53a83b8",
+    "tests/test_roadmap_decision_settlement_enrolled.py": "bca029328c0fcbe0bb9bd52f43a7577fafa47db918f7c7eb1af8f78119d87563",
+    "tests/test_roadmap_format.py": "460bff6ecd455bb0911a7a035ea249c8cfab4e6327dc9908c985657249b8ea37",
+    "tests/test_roadmap_version_promotion.py": "5e69979ddec359ac0ba457d052a0033a118b6d20accde1a7202f2d84b7472ba5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-build-one-ordered-accepted-head.md": "b57ff56ad47171064cea3a59c450b375aef7c3a9db3900d119397f90f09ff954",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-build-one-complete-successor-batch.md": "3ea5a700184f93bb7059f7bd96834decb8926241d3f2e656b39f26ea3e48b1f2",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-narrow-candidate-admission-replacement.md": "31b3ef950e108f920150a3b088415086e4550fb4b89e387f6fe1144af86d9dd2",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-block-enrolled-decision-settlement-only.md": "d4cc307d7a322e111598a7f1a7ab7d0ff967d0f8bbf037a327164cb066db67da",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-bind-review-questions-answers-exact.md": "9e1347de69bc80fef53aa610bbe8e00e47fb90db68900bc0facf1ef8f2b11d4b",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-preserve-exact-seal-accepted-head.md": "518e697190b0cb1011c0c0edc84ad9df9af1fad9924a28f2337103001f176290",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-route-selector-free-revise-feedback.md": "55eaeab2e7ba5e428a83048c38a4af44b7d3094d92a6576aa78ee1b98eb48dd9",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-document-batch-successor-workflow.md": "eb2ad693dbecee3dc01833cb562d3e801f28a8494fb0cbf12e6cc68393d2f062"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Versioned Feedback Revision Chain\n\n`roadmap-versioned-feedback-revision-chain` \u00b7 generated 2026-09-22T16:58:57Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-versioned-feedback-revision-chain` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Versioned Feedback Revision Chain\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail roadmap-versioned-feedback-revision-chain` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "f200d363f7bc937faa9b38949862a7674c3bec42fc88905463589be061c54917",
+    "detail_bundle_digest": "bf56d3a61cde4e1a42b87df795267846ee8d871e92f6b130224c04697580ed55",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-build-one-ordered-accepted-head.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-build-one-complete-successor-batch.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-narrow-candidate-admission-replacement.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-block-enrolled-decision-settlement-only.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-bind-review-questions-answers-exact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-preserve-exact-seal-accepted-head.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-route-selector-free-revise-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-document-batch-successor-workflow.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "60d330b3968c257a46c7ed1ab712fc0e1564f24c2d4bf95d2251eb5fe1f62c7a",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

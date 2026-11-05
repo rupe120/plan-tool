@@ -1,0 +1,61 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-111d58f5": {
+      "code_anchor": null,
+      "field_or_key": "kind",
+      "location": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+      "reason": "`SavedReview.kind` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-47983148": {
+      "code_anchor": null,
+      "field_or_key": "is_pre_apply_checkpoint",
+      "location": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+      "reason": "`SavedReview.is_pre_apply_checkpoint` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-49ba2b3b": {
+      "code_anchor": null,
+      "field_or_key": "qualified_result",
+      "location": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+      "reason": "`SavedReview.qualified_result` is not a registered persisted field or alias",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-6010832d": {
+      "code_anchor": null,
+      "field_or_key": "audit_stage",
+      "location": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+      "reason": "`SavedReview.audit_stage` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-f79cc3f9": {
+      "code_anchor": null,
+      "field_or_key": "audit_revision",
+      "location": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+      "reason": "`SavedReview.audit_revision` is not a registered persisted field or alias",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260821-130703-completeness"
+}

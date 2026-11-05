@@ -1,0 +1,39 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step4-data-contract-474b9ffa": {
+      "code_anchor": null,
+      "field_or_key": "step_id",
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/04-calibrated-check-saturation-advice.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/04-calibrated-check-saturation-advice.md",
+      "reason": "`Recommendation.step_id` lacks a matching HEAD code-location anchor",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-94a21b24": {
+      "code_anchor": null,
+      "field_or_key": "source",
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/04-calibrated-check-saturation-advice.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/04-calibrated-check-saturation-advice.md",
+      "reason": "`Recommendation.source` lacks a matching HEAD code-location anchor",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step7-data-contract-a8c9ca16": {
+      "code_anchor": null,
+      "field_or_key": "report_md",
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/07-record-saved-report-calibration.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/07-record-saved-report-calibration.md",
+      "reason": "`SavedReview.report_md` lacks a matching HEAD code-location anchor",
+      "step_id": 7,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260803-152543-completeness"
+}

@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "plan_slug": "completeness-cli-layering",
+  "plan_path": "docs/implementation-plans/2-completeness-cli-layering.md",
+  "created_at": "2026-08-15T14:00:15Z",
+  "kind": "run-reconcile",
+  "step_id": 6,
+  "plan_fingerprint": "05c9d38ee9b2a2c7c509a71d662f010d20860304e03898d09bedc0092d85f368",
+  "code_fingerprint": {
+    ".plan-tool/lessons/project.md": "2b4f0134d1d1fbabd9e99b222c01e360987fe0d18d43a4ead1b5b092883decc3",
+    "BACKLOG.md": "feb2cb3bd3f323082acd5d2b1601fea73afd8649b6cee8498fbedbc0048a1ac5",
+    "BUG_BACKLOG.md": "0101aebbef7ac3f86414207eea5389be0fb817842bc33fb7f60d8a2fd8c2a90d",
+    "docs/AUDIT_FLOW.md": "67bc2485b12da8c9a5a84aae3965907c3a5b6b74fe317718c088acb8c1216e31",
+    "docs/implementation-plans/plan-details/per-call-timeout-budgets/02-give-purity-scans-conceptual-audits.md": "01b9bdf08887855276e40642789c71678120d2c1558d3176d304cf28c51e5c51",
+    "docs/implementation-plans/plan-details/security-check-command/08-iterate-apply-convergence-loop-security.md": "9e051ed6def34d12424674f83f98b320000da5506358174ce896e2d4d5709567",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/03-hoist-one-stage-derivation-before.md": "528776d887636432f74e76717bb847b0311bc63528bb54313f5f4725f6161d47",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/04-surface-pass-conformance-compute.md": "157c8c0a7279c970fdafeaf3ba903753ddd14c2ba0fa5dc718f1878830ddca2f",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/05-steer-iterate-loop-mid-run-stage-bar.md": "74becd3b9ba158649dfe58605d2b09016c0e2cb870b56242d5e1c3c697820616",
+    "docs/implementation-plans/plan-details/stage-differentiated-blocking/07-update-gate-docs-close-backlog-91-248.md": "d75d3b00ff6491e76bd79267a8b9f914da9d579465f451f9afe140a1478802d2",
+    "plan_tool/cli/app.py": "89f5913209278b43844b74f346d99bfeba45139d203789e4af7e5a350756c6a3",
+    "plan_tool/cli/completeness_cmd.py": "f009b18d84b9564f6e53210b04a78c9f3a41591542789b5970efc76dd8d19b92",
+    "plan_tool/cli/completeness_phases.py": "98f98325102284619b0303175226798adb8c6f51f9a38cfa36e05d1b8fe5ae85",
+    "tests/cli/test_completeness_cmd.py": "700bbc03ed3f5b2a8f8523de5d42de486e8cdf838230fea93c193cbc52cd5f02",
+    "tests/test_convergence.py": "ea5bb91397840ca41dfa2b35b3515c717576dd5efbe3a134b14c92abc4ea8424"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 6 \u2014 0 critical / 0 high / 0 medium / 1 nits\n\nCompleted-sibling context: considered 5 completed sibling step(s); 5 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step6-run-reconcile-25607d5d",
+      "source": "run-reconcile",
+      "severity": "nit",
+      "step_id": 6,
+      "title": "`.plan-tool/lessons/project.md` line 619 (`[domain-shape]` lesson on `parse_apply_verdict`'s resolution mapping) cited `",
+      "body": "`.plan-tool/lessons/project.md` line 619 (`[domain-shape]` lesson on `parse_apply_verdict`'s resolution mapping) cited `_resolution_for_verdict` under `completeness_cmd.py`; the function is defined in `completeness_phases.py` per step 1's move, and this specific parenthetical was missed by both prior reconcile-code rounds (which fixed sibling entries at lines 878, 618, 125)",
+      "suggested_action": "applied directly \u2014 corrected the file-path parenthetical to `completeness_phases.py`, leaving the surrounding behavior claim and historical example verbatim Full test suite (`uv run pytest tests/ -q -n auto`) is running in the background \u2014 I'll confirm green and commit once it completes.The suite finished. Let me verify the actual results in the log before trusting the exit code.Full suite green: 9469 passed, 1 skipped, no failures. Now committing this round's fix, following the same rhythm as the prior two reconcile-code rounds.Reconcile-code for step 6 has converged: round 3 found and fixed one residual stale citation (`.plan-tool/lessons/project.md:619`, `_resolution_for_verdict` still attributed to `completeness_cmd.py`) missed by rounds 1 and 2, using a comprehensive sweep of all 20 relocated symbol names across every previously-tracked file plus two newly-discovered candidates (both confirmed clean). Full suite is green (9469 passed, 1 skipped), and the fix is committed (`40abb26f`). All 6 steps of `completeness-cli-layering` are now `status: done` with reconcile-code clean across the board. Per this repo's post-run tail convention, the one remaining item before the plan is fully wrapped is a `/code-review` pass over the branch (19 commits ahead of `origin/main`) \u2014 I haven't run that yet. Let me know if you'd like me to kick that off, or to push now and follow up with review separately.Reconcile-code for step 6 has converged: round 3 found and fixed one residual stale citation (`.plan-tool/lessons/project.md:619`, `_resolution_for_verdict` still attributed to `completeness_cmd.py`) missed by rounds 1 and 2, using a comprehensive sweep of all 20 relocated symbol names across every previously-tracked file plus two newly-discovered candidates (both confirmed clean). Full suite is green (9469 passed, 1 skipped), and the fix is committed (`40abb26f`). All 6 steps of `completeness-cli-layering` are now `status: done` with reconcile-code clean across the board. Per this repo's post-run tail convention, the one remaining item before the plan is fully wrapped is a `/code-review` pass over the branch (19 commits ahead of `origin/main`) \u2014 I haven't run that yet. Let me know if you'd like me to kick that off, or to push now and follow up with review separately.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

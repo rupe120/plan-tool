@@ -1,0 +1,148 @@
+{
+  "version": 4,
+  "plan_slug": "retire-roadmap-v1-evidence",
+  "plan_path": "docs/implementation-plans/2-retire-roadmap-v1-evidence.md",
+  "created_at": "2026-08-24T13:13:39Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5cf8558997569b9e42284628e4ef5e927d82b5c0c7cf122518f07f6c26c9f932",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "017a5f4271bcd09b7eaf5f5d65e5ce5768780223b6f3f50bde54df01ce911a12",
+    "ROADMAP_FORMAT.md": "ed0ac9a2337186c94935c3ddf6c4ac69895251e9bcf50022820a8b0c06b09062",
+    "docs/ARCHITECTURE.md": "80b5d051c4c4db18b8d66e01e6eae0ef70862796e447e3d00d039cbb157dbf05",
+    "plan_tool/roadmap_escalation.py": "7d6072e1b3a095a725835a179ecc4ace15e61c9ab5e268d410d3c43dfa634d1f",
+    "plan_tool/roadmap_escalation_run.py": "5c6e08bc641702b67b9abb2d38cd378cc76259342d550fb8ca5c86613add87cb",
+    "plan_tool/roadmap_escalation_selection.py": "60eb80470f7aa5417a1a28e97f84f12d578397f85b8f80314c6acc2125892985",
+    "plan_tool/roadmap_impact_analysis.py": "833e864e8bbd1aa63fd2ac938d7dcea28378734dd91ec15d904cc91ccee3ddc9",
+    "plan_tool/roadmap_impact_run.py": "41ea60772fe69978f1e3f4caac76adef03654e9ba4f8197a648709a3d2266585",
+    "plan_tool/roadmap_impact_snapshot.py": "6e6a846ba856b7410377fadb3c1d2fa1c781f57afc71ddadf406f80226e17b75",
+    "plan_tool/roadmap_source_identity.py": "6f0a9734fc081a000432f85f00ca6886e98ae373813d1b071ddf0ed96ae52603",
+    "plan_tool/roadmap_structural_revision.py": "bd5722d845d114f2f266fb93e64c1131a0ec88a3bdc465dc772f357d917b264a",
+    "plan_tool/roadmap_structural_revision_run.py": "1a2dbd527ba427459806ea8e2490a1c83d5a2734944b5c6b89f1f34c0c7d659a",
+    "tests/cli/test_roadmap_cmd.py": "201e63bb402e3606d7e40f94956b74e7feff175016a3331d61e8c3ebb84611a7",
+    "tests/test_roadmap_escalation.py": "ae45e1da7e2c1abd44edfbd876c245ad05fd4761e5da2208b878331a6e24f46c",
+    "tests/test_roadmap_escalation_run.py": "f800c0dd3a4ac1a0bcbe8769ac0f10af7897eb5e8dc123d8b32ecc6040ec0fbb",
+    "tests/test_roadmap_escalation_selection.py": "6fdc44c58c74e6a0d8a0e5aa70ea0b4ab4fdeacb7912b9f654759ec2a3679550",
+    "tests/test_roadmap_format.py": "694423bdc80104084e48a72170c6ac0b1a5c3daac4c6f259cc4e9af89e1c3e1d",
+    "tests/test_roadmap_impact_analysis.py": "883ddda8fe98383ad7a803c861c34ccb688b9e6840458aae8d4dc165ffb4b115",
+    "tests/test_roadmap_impact_run.py": "c8fbb32c519f6a4234c3742a7b3046442c807baaf85671e671b5483474b63229",
+    "tests/test_roadmap_impact_snapshot.py": "9ecb6c1df6a2491e3a654ffb4decbd042a9fafa1b0f9c8e36d6f6841162771e2",
+    "tests/test_roadmap_revision_publish.py": "b0e057cd02839a72433abc0325e5b586729dc49ac7a9b589fe586feacedeb14b",
+    "tests/test_roadmap_source_identity.py": "27e7fb8a35b7390dbac87a4b63c79fd6095560cc7a5c71739c2d5caaeffb27ec",
+    "tests/test_roadmap_structural_revision.py": "4213e603e3a662ea89953a6e0f0a394cef48748593e3a9b92493449db5c82c8d",
+    "tests/test_roadmap_structural_revision_proof.py": "d90f18f74e42d505b3c4edc148b2391fd0d3df90091e83644c5f14eecdb8401e",
+    "tests/test_roadmap_structural_revision_run.py": "5f79e758275132362eae06f0d2d30166adbe28ca290b5457129d3b2f38fd56fd"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md": "b432aded1328f541f70b6975e35bf4eeab1a08d47a3620fd7c907103d86d82b4",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md": "a519ba67dc31b0654f2a72f06009790b48545b8bbbd95286de4a0ddf6006fb49",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md": "a0af7f253e86ab0e7f054efea4c8a054ecf1c49f03de58ed9c58d2f6cad5c421",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md": "e72501d173b9b81a44bd04069e86ca55e696fbc2e559d31376c6c00e294fd463",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md": "d2487c2f3c34b886730954cfb25c99c5a40ecbaab5bb8293f8e7a0de98988c35"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Retire Roadmap V1 Evidence\n\n`retire-roadmap-v1-evidence` \u00b7 generated 2026-08-24T13:13:38Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `96817757563f0c1cb3af944c6d9b6ea97875c0f588312681c950d005636ab202`\n- **Detail bundle digest:** `d591ce9d8c490cf051c374fd5d06a9481f321819f522ac3bc884d1b6f905c60c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 81446 bytes (+81446 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply retire-roadmap-v1-evidence   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[reissued-legacy-retention]`: Step 1 makes `reissue` and `archive-safe` exclusive, but `verify_reissue_chain` requires only replacement and consumer cutover while history retention and active-scan absence apply only to `archive-safe` rows. This conflicts with the Overview\u2019s \u201cmove only non-routable history out of active evidence namespaces\u201d: after cutover, a reissued original is non-routable but may remain active; `scan_evidence`, `_cmd_roadmap_escalations_view`, and `_cmd_roadmap_impact_analyses_view` will keep presenting it as invalid.\n  - Fix: Require every resolved reissue row to retain the original in dated history and prove its active-namespace absence after consumer cutover, while retaining `reissue` as its sole disposition.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-2830a839]`: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3a9368c3]`: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply retire-roadmap-v1-evidence` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Retire Roadmap V1 Evidence\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `96817757563f0c1cb3af944c6d9b6ea97875c0f588312681c950d005636ab202`\n- **Detail bundle digest:** `d591ce9d8c490cf051c374fd5d06a9481f321819f522ac3bc884d1b6f905c60c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[reissued-legacy-retention]`: Step 1 makes `reissue` and `archive-safe` exclusive, but `verify_reissue_chain` requires only replacement and consumer cutover while history retention and active-scan absence apply only to `archive-safe` rows. This conflicts with the Overview\u2019s \u201cmove only non-routable history out of active evidence namespaces\u201d: after cutover, a reissued original is non-routable but may remain active; `scan_evidence`, `_cmd_roadmap_escalations_view`, and `_cmd_roadmap_impact_analyses_view` will keep presenting it as invalid.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk retire-roadmap-v1-evidence` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-26ba536f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 makes `reissue` and `archive-safe` exclusive, but `verify_reissue_chain` requires only replacement and consumer c",
+      "body": "Step 1 makes `reissue` and `archive-safe` exclusive, but `verify_reissue_chain` requires only replacement and consumer cutover while history retention and active-scan absence apply only to `archive-safe` rows. This conflicts with the Overview\u2019s \u201cmove only non-routable history out of active evidence namespaces\u201d: after cutover, a reissued original is non-routable but may remain active; `scan_evidence`, `_cmd_roadmap_escalations_view`, and `_cmd_roadmap_impact_analyses_view` will keep presenting it as invalid.",
+      "suggested_action": "Require every resolved reissue row to retain the original in dated history and prove its active-namespace absence after consumer cutover, while retaining `reissue` as its sole disposition.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reissued-legacy-retention",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "96817757563f0c1cb3af944c6d9b6ea97875c0f588312681c950d005636ab202",
+      "detail_bundle_digest": "d591ce9d8c490cf051c374fd5d06a9481f321819f522ac3bc884d1b6f905c60c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md",
+          "state": "present",
+          "digest": "b432aded1328f541f70b6975e35bf4eeab1a08d47a3620fd7c907103d86d82b4"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md",
+          "state": "present",
+          "digest": "a519ba67dc31b0654f2a72f06009790b48545b8bbbd95286de4a0ddf6006fb49"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md",
+          "state": "present",
+          "digest": "a0af7f253e86ab0e7f054efea4c8a054ecf1c49f03de58ed9c58d2f6cad5c421"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md",
+          "state": "present",
+          "digest": "e72501d173b9b81a44bd04069e86ca55e696fbc2e559d31376c6c00e294fd463"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md",
+          "state": "present",
+          "digest": "d2487c2f3c34b886730954cfb25c99c5a40ecbaab5bb8293f8e7a0de98988c35"
+        }
+      ],
+      "source_seed_digest": "e172f91558bd4743f14218cf48d468bda4b6632e3d55b00e07a521bc2edcc60b",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 81446,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

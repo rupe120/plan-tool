@@ -1,0 +1,155 @@
+{
+  "version": 4,
+  "plan_slug": "escalation-receipt-persistence",
+  "plan_path": "docs/implementation-plans/2-escalation-receipt-persistence.md",
+  "created_at": "2026-08-28T12:13:41Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "dfeeadfeb5110f4f7743759badd9d3c06bbe0d2bb45e3982bae4f66d77ccaada",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "43d588214d65196c135b01ac205af556d50813e4c4ad36b3b150909364363864",
+    "BUG_BACKLOG.md": "633c316e2d089b38c2bf68d6decc13ca71de5fe0260dd9817da99b9ffab7d6a4",
+    "CAPABILITIES.md": "bc35b6a1bcc973e17e60b3f5f71a7863eb193a77eb6e845cb0f5e01a719a5c7e",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "README.md": "23b5708bac76c8df7835fb048309b99a82ba8760c6040842932aeae2e504661e",
+    "ROADMAP_FORMAT.md": "f71fff214c8ec3263e6da6ba3f48b266513d2afe5edf066ea99a198b4a1fa5c5",
+    "RUNBOOK.md": "81eb10715fd22b163d165a344ae560735bb704a400ded142ce75bc2213d19274",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "docs/ARCHITECTURE.md": "491a9b11c255e56fafebea94526f3a236a4af80b63958e0ad5cae161295b6a16",
+    "docs/ROADMAP_WALKTHROUGH.md": "3e49e31c5e8e793be3bc15ace8dc7a6eda919e08cf2acd33d598ccee464e26fc",
+    "docs/cli/roadmap.md": "eed7749f6cc52614c779c95a5aefea0d189209154fd65fd440951345a1451fb7",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "d1498218c99eb70ca0a480225f5911f77fd62bf56be9a7ed10d57a10500ad35e",
+    "docs/implementation-plans/backlog-arcs/bug-backlog-draining-arc.md": "d7001d3fed7d4a386d7ccacd37a17934c203fb3ebf99f7ab17c3140a4d19edbd",
+    "plan_tool/cli/gitcommit.py": "237e11b303ca704beccd2541574f9c20dbac012e29f40f18df9716250963ff47",
+    "plan_tool/cli/roadmap_cmd.py": "1997d5d952ce937fcea29aa03ab6a6d9c727d4864e18a5a91ab62b7a142977a7",
+    "plan_tool/roadmap_escalation_run.py": "4733cf5b8d58b86de03847d7a7c03642dd3853cfa7f00c1ba32dfaae1e628043",
+    "plan_tool/run_log.py": "0e02bbfd87afb5d3d016af0d57c90793633ecc89cf6ec20b0388928e2d5c8beb",
+    "tests/cli/test_gitcommit.py": "a0994b1c620e5370e1d5f482c6703191bd91fff2de84005593eac1a2fdcfccc4",
+    "tests/cli/test_roadmap_cmd.py": "9333d9992488a7adecead28985584544c80a1901842853f98a77db360901f990",
+    "tests/test_roadmap_escalation_run.py": "62b15c0a62cee58fba798e9596698ff895d3ef3bd74c4dec3676af0ac0be3331",
+    "tests/test_roadmap_impact_run.py": "4a6f71136616582d8919394700e4750393889967c00518dfcb181fd0fbac4f10",
+    "tests/test_run_log.py": "65f4b1217f524970d9fa28307fb41b23d257a0b3874f1019b1710b30cfd618cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-receipt-commit-helper-that.md": "d3b2257dd439feafd7416420844ae8c3e5ee369e589a6ded1199bd140e7c8826",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/02-complete-receipt-only-commit-lifecycle.md": "8a64c31981ffcbdc4ebb39f75116b4e4c5f99e479e4da6454b21ac58dec85875",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md": "af2db285c976d2f2da3ee52c572d1cee55e47d31841cd9b90d80605fa03e4b38",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md": "c2fff9838de9c4f2df683d7537d7d90bbb10e258934cfca4dc17e9d0773b595c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Escalation Receipt Persistence\n\n`escalation-receipt-persistence` \u00b7 generated 2026-08-28T12:13:40Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `dfeeadfeb5110f4f7743759badd9d3c06bbe0d2bb45e3982bae4f66d77ccaada`\n- **Detail bundle digest:** `15c05413f4ff24dbbd2ba26fd7ff97c7c3de0e93e43f52fcc253045d94c1fe58`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply escalation-receipt-persistence   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk escalation-receipt-persistence  # alternative interactive review/apply\n\n- HIGH `[receipt-shared-admission]` [confidence: limited]: Step 2 says a matching local receipt \u201cresumes only its own commit,\u201d but `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` / `_render_escalation_receipts`, `plan_tool/roadmap_impact_run.py:_load_requested_receipt`, and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` accept local receipt bytes with no `HEAD` check. A `commit-failed` or `interrupted` receipt can therefore expose a trusted handoff, create an analysis, or drive a structural rewrite before it is shared.\n  - Fix: Define shared-commit admission for every receipt consumer so only byte-identical `HEAD` receipts grant a handoff or downstream work, while a matching local receipt is recoverable only through step 2\u2019s resume path.\n- HIGH `[impact-analysis-no-git]` [confidence: limited]: Step 2 removes `**/.plan-tool/evidence/`, while step 3 requires impact-analysis no-Git claims to stay unchanged; `plan_tool/roadmap_evidence_store.py:_NAMESPACE_COMPONENTS` places both evidence namespaces under that rule, and `plan_tool/roadmap_impact_run.py:_run_while_guarded` publishes `IMPACT_ANALYSES`. Removing the rule while committing only receipts makes impact analyses untracked worktree changes and recreates the dirty-tree failure for that existing command.\n  - Fix: Preserve the impact-analysis namespace\u2019s local no-Git behavior while releasing only escalation receipts for scoped commits, with an acceptance proof that analysis publication stays clean.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-904caaff]` [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-split-3de39f0f]` [confidence: limited]: Step 2 \"Complete the receipt-only commit lifecycle, distinguish an uncommitted matching receipt from reuse, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply escalation-receipt-persistence` \u2014 apply the 2 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Escalation Receipt Persistence\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `dfeeadfeb5110f4f7743759badd9d3c06bbe0d2bb45e3982bae4f66d77ccaada`\n- **Detail bundle digest:** `15c05413f4ff24dbbd2ba26fd7ff97c7c3de0e93e43f52fcc253045d94c1fe58`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[receipt-shared-admission]` [confidence: limited]: Step 2 says a matching local receipt \u201cresumes only its own commit,\u201d but `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` / `_render_escalation_receipts`, `plan_tool/roadmap_impact_run.py:_load_requested_receipt`, and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` accept local receipt bytes with no `HEAD` check. A `commit-failed` or `interrupted` receipt can therefore expose a trusted handoff, create an analysis, or drive a structural rewrite before it is shared.\n- HIGH `[impact-analysis-no-git]` [confidence: limited]: Step 2 removes `**/.plan-tool/evidence/`, while step 3 requires impact-analysis no-Git claims to stay unchanged; `plan_tool/roadmap_evidence_store.py:_NAMESPACE_COMPONENTS` places both evidence namespaces under that rule, and `plan_tool/roadmap_impact_run.py:_run_while_guarded` publishes `IMPACT_ANALYSES`. Removing the rule while committing only receipts makes impact analyses untracked worktree changes and recreates the dirty-tree failure for that existing command.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `head`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 2 \"Complete the receipt-only commit lifecycle, distinguish an uncommitted matching receipt from reuse, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply escalation-receipt-persistence` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f355bfe9",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 says a matching local receipt \u201cresumes only its own commit,\u201d but `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escal",
+      "body": "Step 2 says a matching local receipt \u201cresumes only its own commit,\u201d but `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_escalations_view` / `_render_escalation_receipts`, `plan_tool/roadmap_impact_run.py:_load_requested_receipt`, and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` accept local receipt bytes with no `HEAD` check. A `commit-failed` or `interrupted` receipt can therefore expose a trusted handoff, create an analysis, or drive a structural rewrite before it is shared.",
+      "suggested_action": "Define shared-commit admission for every receipt consumer so only byte-identical `HEAD` receipts grant a handoff or downstream work, while a matching local receipt is recoverable only through step 2\u2019s resume path.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-shared-admission",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-f690252f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 removes `**/.plan-tool/evidence/`, while step 3 requires impact-analysis no-Git claims to stay unchanged; `plan_t",
+      "body": "Step 2 removes `**/.plan-tool/evidence/`, while step 3 requires impact-analysis no-Git claims to stay unchanged; `plan_tool/roadmap_evidence_store.py:_NAMESPACE_COMPONENTS` places both evidence namespaces under that rule, and `plan_tool/roadmap_impact_run.py:_run_while_guarded` publishes `IMPACT_ANALYSES`. Removing the rule while committing only receipts makes impact analyses untracked worktree changes and recreates the dirty-tree failure for that existing command.",
+      "suggested_action": "Preserve the impact-analysis namespace\u2019s local no-Git behavior while releasing only escalation receipts for scoped commits, with an acceptance proof that analysis publication stays clean.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "impact-analysis-no-git",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "dfeeadfeb5110f4f7743759badd9d3c06bbe0d2bb45e3982bae4f66d77ccaada",
+      "detail_bundle_digest": "15c05413f4ff24dbbd2ba26fd7ff97c7c3de0e93e43f52fcc253045d94c1fe58",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-receipt-commit-helper-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/02-complete-receipt-only-commit-lifecycle.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": null,
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

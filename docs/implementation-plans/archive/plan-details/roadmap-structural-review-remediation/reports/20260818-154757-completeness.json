@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-structural-review-remediation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-review-remediation.md",
+  "created_at": "2026-08-18T15:47:57Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "99748ce3a82590231010d3736feea7de90500b04dc369d2f6f2f81864a2647ec",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "70086e23afe68540cfef5476fdc5a7f5a3078846e30596c5cca86c83d2ca4063",
+    "CLAUDE.md": "9b8896d2ee3013183dd2aff56acce5f358f35ee8c02eb11e0471f3700449f5b6",
+    "README.md": "151a22851b94f9db120c7830796d1c358576c4008e5c4db66cc6e4e7777cf64b",
+    "ROADMAP_FORMAT.md": "a11b4b00c4c4fa930003857bf9b93c55688095f3a909ebf06725f8fb7daef205",
+    "RUNBOOK.md": "0d2d0c65d6a928173616a12e5de72d0036b657b2125b08ec25f01e72843d87ea",
+    "docs/ARCHITECTURE.md": "5e97c39fe271e108095c1baca5aeeb55bc2603f645e56e7e38f2b86f35ff28d9",
+    "docs/CODEX_CLI_CONTRACT.md": "487d5fa1127eec3d625f0a01c0d8e77f349176b55cde0a963680540866e4f392",
+    "docs/ROADMAP_WALKTHROUGH.md": "5589fd1ec828fe914d87a9f105bc12e6afd473ed4d46d1125863a99f3cbb5e88",
+    "docs/cli/roadmap.md": "db3757fc4b6caa1f10834cec87c7f2d9d47e94b9c7ae5f87bc1515f6e4061b1c",
+    "integrations/claude/SKILL.md": "4791bea0eda7051d6494fcfeb0f3c4f63f35a42406ca6ef0bdda5fd3a8d38d7b",
+    "plan_tool/cli/roadmap_cmd.py": "557a558588b19df257e8e8b6f277273fcb630f4f73ebbbf73cdcbd891165223a",
+    "plan_tool/roadmap_structural_revision_patch.py": "8f8ea7c33685f4a058f431b0e5f67e96dd81719e7dfc7ae2cdafd008ab19e6fb",
+    "plan_tool/roadmap_structural_revision_run.py": "87a4262d82ef876d034429e19678923a670e6efabea9f1f258d3194484d8f9d4",
+    "tests/cli/test_cli_reference.py": "ee848179f21e3703c9d8669729be3a00181d7352ee89428b887819581bdcba25",
+    "tests/test_roadmap_format.py": "f2af9b585469bb3d8810fefed5b7ece0669d9ca8bf84b6a12e6a5490da26dee2",
+    "tests/test_roadmap_structural_revision_patch.py": "1be65ba19c463ab75f79258483e5d1d6d3db855d64123f002acc19371051059b",
+    "tests/test_roadmap_structural_revision_run.py": "c77fdb62105c9c7537631a0264f4911b8c46cc5244094a82932a40bb11605852"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md": "7254b4450f730c89adfb602fd7c0d94eb114acb3022c20b78d56c783bcbee19b",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-prove-generic-repository-owned.md": "92c90e20ff315956f9562749c7ed44e0f1d5c856121ac473208ba84de28694b7",
+    "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md": "90422badc3b08e4d5f2d065e9c429c318d403f56952e9fd2703ccc10c3be0347"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Structural Review Remediation\n\n`roadmap-structural-review-remediation` \u00b7 generated 2026-08-18T15:47:57Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `107711b7bb4829dbb09369d411f858d3ae3583dcf6568e6175cecb18c68b240f`\n- **Detail bundle digest:** `25e5518362ef2b07c2f25ffd9670a025864be463b9ff23827ba6725ef7cb025b`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 28114 bytes (+28114 vs. first audit)\n- **Keystone fan-out:** 1.00\n- **Satellite ratio:** 0.67\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-structural-review-remediation   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[structural-preflight-ordering]`: Step 2 (`Prove a generic repository-owned evaluator probe\u2026`) says `run_structural_revision` must reject \u201cbefore preflight evidence loading,\u201d while step 3 (`Document both admitted route classes\u2026`) says `requires-scope-review` refusal belongs to `load_structural_revision_preflight` \u201cbefore the structural evaluator.\u201d `run_structural_revision` currently enters `verified_structural_evaluator` before calling `load_structural_revision_preflight`, and `test_structural_evaluator_rejection_stops_before_evidence_seed_or_backend` pins that order; `load_structural_revision_preflight` must read the analysis to classify the route. Plan Architecture/Risks/Acceptance and step 3\u2019s Summary, Input, Implementation, and Acceptance would therefore publish a precedence the implementation cannot provide.\n  - Fix: Define one evaluator-first preflight order across step 3\u2019s guide sweep and tests: classify and refuse `requires-scope-review` after evaluator admission but before writer, seed, backend, or publication work.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[route-guidance-sweep]`: Step 3\u2019s Files and Acceptance criteria promise every named public guide carries the route contract, but its Tests cover only `ROADMAP_FORMAT.md` and generated `docs/cli/roadmap.md`; `TestCliReferenceDrift` only checks generated-file freshness. `README.md`, `RUNBOOK.md`, `CLAUDE.md`, `CAPABILITIES.md`, `docs/ARCHITECTURE.md`, `docs/CODEX_CLI_CONTRACT.md`, `docs/ROADMAP_WALKTHROUGH.md`, `integrations/claude/SKILL.md`, and the `plan_tool/cli/roadmap_cmd.py` module description can remain incomplete while the planned tests pass.\n  - Fix: Add focused coverage for every step-3 public guide and CLI description that checks both admitted classes, writer-only scope refusal, and the single-artifact boundary.\n  - Address: `plan-tool completeness-apply roadmap-structural-review-remediation --anchor route-guidance-sweep`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-structural-review-remediation` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Structural Review Remediation\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `107711b7bb4829dbb09369d411f858d3ae3583dcf6568e6175cecb18c68b240f`\n- **Detail bundle digest:** `25e5518362ef2b07c2f25ffd9670a025864be463b9ff23827ba6725ef7cb025b`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[structural-preflight-ordering]`: Step 2 (`Prove a generic repository-owned evaluator probe\u2026`) says `run_structural_revision` must reject \u201cbefore preflight evidence loading,\u201d while step 3 (`Document both admitted route classes\u2026`) says `requires-scope-review` refusal belongs to `load_structural_revision_preflight` \u201cbefore the structural evaluator.\u201d `run_structural_revision` currently enters `verified_structural_evaluator` before calling `load_structural_revision_preflight`, and `test_structural_evaluator_rejection_stops_before_evidence_seed_or_backend` pins that order; `load_structural_revision_preflight` must read the analysis to classify the route. Plan Architecture/Risks/Acceptance and step 3\u2019s Summary, Input, Implementation, and Acceptance would therefore publish a precedence the implementation cannot provide.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-roadmap-structural-revision-py:structuralrevisionpreflight-selected-artifact-text]`: docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md:## Input cites `plan_tool/roadmap_structural_revision.py:StructuralRevisionPreflight.selected_artifact_text`, but code anchor `plan_tool/roadmap_structural_revision.py:StructuralRevisionPreflight.selected_artifact_text` does not resolve in HEAD.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[route-guidance-sweep]`: Step 3\u2019s Files and Acceptance criteria promise every named public guide carries the route contract, but its Tests cover only `ROADMAP_FORMAT.md` and generated `docs/cli/roadmap.md`; `TestCliReferenceDrift` only checks generated-file freshness. `README.md`, `RUNBOOK.md`, `CLAUDE.md`, `CAPABILITIES.md`, `docs/ARCHITECTURE.md`, `docs/CODEX_CLI_CONTRACT.md`, `docs/ROADMAP_WALKTHROUGH.md`, `integrations/claude/SKILL.md`, and the `plan_tool/cli/roadmap_cmd.py` module description can remain incomplete while the planned tests pass.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-structural-review-remediation --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n- `plan-tool completeness-apply roadmap-structural-review-remediation` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-0706e9aa",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Prove a generic repository-owned evaluator probe\u2026`) says `run_structural_revision` must reject \u201cbefore prefligh",
+      "body": "Step 2 (`Prove a generic repository-owned evaluator probe\u2026`) says `run_structural_revision` must reject \u201cbefore preflight evidence loading,\u201d while step 3 (`Document both admitted route classes\u2026`) says `requires-scope-review` refusal belongs to `load_structural_revision_preflight` \u201cbefore the structural evaluator.\u201d `run_structural_revision` currently enters `verified_structural_evaluator` before calling `load_structural_revision_preflight`, and `test_structural_evaluator_rejection_stops_before_evidence_seed_or_backend` pins that order; `load_structural_revision_preflight` must read the analysis to classify the route. Plan Architecture/Risks/Acceptance and step 3\u2019s Summary, Input, Implementation, and Acceptance would therefore publish a precedence the implementation cannot provide.",
+      "suggested_action": "Define one evaluator-first preflight order across step 3\u2019s guide sweep and tests: classify and refuse `requires-scope-review` after evaluator admission but before writer, seed, backend, or publication work.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "structural-preflight-ordering",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-ae1f34a6",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3\u2019s Files and Acceptance criteria promise every named public guide carries the route contract, but its Tests cover ",
+      "body": "Step 3\u2019s Files and Acceptance criteria promise every named public guide carries the route contract, but its Tests cover only `ROADMAP_FORMAT.md` and generated `docs/cli/roadmap.md`; `TestCliReferenceDrift` only checks generated-file freshness. `README.md`, `RUNBOOK.md`, `CLAUDE.md`, `CAPABILITIES.md`, `docs/ARCHITECTURE.md`, `docs/CODEX_CLI_CONTRACT.md`, `docs/ROADMAP_WALKTHROUGH.md`, `integrations/claude/SKILL.md`, and the `plan_tool/cli/roadmap_cmd.py` module description can remain incomplete while the planned tests pass.",
+      "suggested_action": "Add focused coverage for every step-3 public guide and CLI description that checks both admitted classes, writer-only scope refusal, and the single-artifact boundary.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "route-guidance-sweep",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-446582ab",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `plan_tool/roadmap_structural_revision.py:StructuralRevisionPreflight.selected_artifact_text`",
+      "body": "docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md:## Input cites `plan_tool/roadmap_structural_revision.py:StructuralRevisionPreflight.selected_artifact_text`, but code anchor `plan_tool/roadmap_structural_revision.py:StructuralRevisionPreflight.selected_artifact_text` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-roadmap-structural-revision-py:structuralrevisionpreflight-selected-artifact-text",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "107711b7bb4829dbb09369d411f858d3ae3583dcf6568e6175cecb18c68b240f",
+      "detail_bundle_digest": "25e5518362ef2b07c2f25ffd9670a025864be463b9ff23827ba6725ef7cb025b",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/01-reject-target-scalars-that-cross.md",
+          "state": "present",
+          "digest": "7254b4450f730c89adfb602fd7c0d94eb114acb3022c20b78d56c783bcbee19b"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/02-prove-generic-repository-owned.md",
+          "state": "present",
+          "digest": "92c90e20ff315956f9562749c7ed44e0f1d5c856121ac473208ba84de28694b7"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-structural-review-remediation/03-document-both-admitted-route-classes.md",
+          "state": "present",
+          "digest": "90422badc3b08e4d5f2d065e9c429c318d403f56952e9fd2703ccc10c3be0347"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 28114,
+    "keystone_fan_out": 1.0,
+    "satellite_ratio": 0.6666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

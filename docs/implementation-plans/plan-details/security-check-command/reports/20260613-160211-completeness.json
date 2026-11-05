@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "plan_slug": "security-check-command",
+  "plan_path": "docs/implementation-plans/2-security-check-command.md",
+  "created_at": "2026-06-13T16:02:11Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6bd4368b74578405aade504eebe6417ab17a055d5e5a3a77f5094a9292794f07",
+  "code_fingerprint": {
+    "BACKLOG.md": "f6e74b823c8569680d1b516d81b6bad691cb7350b74a538a441b2c25ddfbfbb4",
+    "CLAUDE.md": "9d55991c34043646a540580b88457d4d01884245562421aebaaff45579d8216e",
+    "README.md": "cc37783db1520704a97f8928d819139c1992a083d0579da8c387c726acffb3bd",
+    "RUNBOOK.md": "597c91f0f8cc557e17f3f83b03d7b3db23ee84b0d71f2a374fd36c8113ce8f29",
+    "TESTING.md": "b3efe9f42c9cf07758b188f0b5a5d2f298ce8bdc00db494768303ebaf7d78f1d",
+    "docs/AUDIT_FLOW.md": "bbfa2739357116d14f89f56dad2c41e2a7755d74670f6e906019bddc24e13d6c",
+    "docs/AUDIT_RESUME_FLOW.md": "4bc4cc97a1eaf7b604eff9dc1356c802a3302403372d6d24636e3ab482640e5e",
+    "docs/RESUME_FLOW.md": "0b48fa267b593e9637fb3d611c424b0ac1b48dd56918e0f38105dadd37840fa7",
+    "integrations/claude/SKILL.md": "452c47c0d539e9fe750299513cc80b8a5d47f7c36fd4db1bf3aba9e897677131",
+    "integrations/codex/SKILL.md": "ab5ec946b5d29583f555c89250c9122ca4aad923aa22cdd17a28d75674dd23f1",
+    "plan_tool/auto_reconcile.py": "d3921dfdea1059070807c2cfe654c2d4183f0fef7cbfeb579ee669994baa1d4c",
+    "plan_tool/cli/__init__.py": "909e58915fbfee7c8e45427642e554dd02064c921e1ada71b6b9699202be3f10",
+    "plan_tool/cli/app.py": "c2550409d1224aa1768867573daacf0532c019490e9985acb233831194804013",
+    "plan_tool/cli/completeness_cmd.py": "832e1bfd91545e0578c7fe7f547f0505df5b91c6b759387660a55e9f80990b7b",
+    "plan_tool/cli/completeness_phases.py": "abb72f5d90de57900ddf386fa7e43151ca8a56222cbf8f0fba7ffe5c1c73b75a",
+    "plan_tool/cli/parser.py": "076e8bd1932c0cabf4c5554682c7557e093d5eae897fa7f044f18a6b52686916",
+    "plan_tool/cli/reconcile.py": "c3210ba6dca14b1d4c5b4901f070c8e7ceb6f52e607da28dee23fcc7d513b2b8",
+    "plan_tool/convergence.py": "b2704bb9e9528bd4692c9b0290d68664c31bbc0cb1a348bb5354ea2859e87199",
+    "tests/cli/package_surface_help.golden.txt": "ef38e052b84984de7c70017940db3da6210708aea284d3f8ab39f1b148c547fe",
+    "tests/cli/test_completeness_cmd.py": "dea0efb535a7be86f92f2fb4dbe8f73094d521dc348bfed9f6495e3a006b50d1",
+    "tests/cli/test_reconcile_engine.py": "97140fe7f6d1fbec1cc43dd04de5fa09a705974d981887af385ddb73c3a310ee",
+    "tests/test_auto_reconcile.py": "92a3ea4a43721719dbb11723a930c1151518f21465a3d3453b34eb75c1c3420c",
+    "tests/test_cli.py": "0d16d0537fcfd5b0799442c00e7f7c136441b2b3d22d515ca3dba41953909a12",
+    "tests/test_convergence.py": "755c9ba5c20fb3eeeec78ece182db343624511aa61eca8ecd3059341523ce35f"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Security Check Command\n\n`security-check-command` \u00b7 generated 2026-06-13T16:02:11Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 4 dispatched (4 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 7\n- **Deferred:** 7 (7 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] step 3 (`register-security-subcommand`) routes `cmd_security --reconcile` to `run_security_audit(target=\"reconcile\")`, but step 1 (`security-audit-py-orchestrator`) hard-closes `_SECURITY_TARGETS = (\"plan\",\"code\")` and raises `SecurityError` on `\"reconcile\"`. Step 3's detail expects step 4 to make this target resolve (\"returns rc 2 until step 4 lands\"), yet step 4 (`security-reconcile-reconcilekind`) only adds a `_RECONCILE_KINDS` row and parameterizes `run_auto_reconcile_on_drift` \u2014 it never touches `run_security_audit` or `_SECURITY_TARGETS`, and step 3 explicitly does *not* call that reconcile machinery. No step connects the two, so `plan-tool security --reconcile` exits rc 2 permanently and the acceptance criterion \"reports drift between the plan's stated security intent and the code's actual posture\" is unsatisfiable as sequenced. \u2014 - `docs/implementation-plans/2-security-check-command.md`: extended step 4's title and `files:` (added `plan_tool/security_audit.py` and `tests/test_security_audit.py`) to teach `run_security_audit` the `reconcile` target wired to the `security-reconcile` engine. (+ follow-up: - `docs/implementation-plans/plan-details/security-check-command/04-security-reconcile-reconcilekind-run.md`: added a `plan_tool/security_audit.py` bullet (teach `run_security_audit` the `target=\"reconcile\"` dispatch to the hook) and a `tests/test_security_audit.py` bullet to the \"Files (creates vs edits)\" section.)\n- [APPLIED] The plan reuses `review.py:_CLAUDE_SEVERITY_MAP` (step 1's `_security_recommendations`), where `LOW` folds to `\"medium\"` and `is_blocking` (`convergence.py`) treats `medium/high/critical` as blocking \u2014 so every `LOW` security finding flips the `--fail-on-findings` rc in step 3 (`register-security-subcommand`) and `has_blocking_findings` in step 5 (`wire-security-dimension-completeness`). This contradicts the plan's framing of `LOW`/`NIT` as droppable noise (Risks: *False-positive noise*); given security findings \"skew toward maybe,\" LOW false positives will fail CI gates the plan claims they shouldn't. \u2014 - `docs/implementation-plans/2-security-check-command.md`: added a **Severity-blocking policy** paragraph to the Architecture convergence section declaring security `LOW`/`NIT` findings non-blocking (never flip `--fail-on-findings` or `has_blocking_findings`; only `MEDIUM`/`HIGH`/`CRITICAL` block).\n- [APPLIED] The Deferred section's step references contradict the Risks section for the same concepts: Deferred says the completeness-default decision is \"postponed to the step 4 detail pass\" and the auto-apply allowlist \"start[s] \u2026 (step 5),\" while Risks and the actual detail bundle place the relevance gate / `--with-security` flag at step 6 and the auto-apply allowlist at step 7. A reader triaging the plan can't tell which step owns each deferral.\n- [APPLIED] Step 4 (`security-reconcile-reconcilekind`) runs the reconcile pass via `mode=\"security\"`, which renders the existing per-step `prompts/security.md` *code* audit \u2014 its own Deferred admits a true \"plan-stated-intent-vs-code-posture\" prompt is a future enhancement. So even once wired, the `security-reconcile` output is a relabeled per-step code audit, not the \"drift between the plan's stated security intent and the code's actual posture\" the Architecture and acceptance criterion define; the reconcile direction can't detect a plan that *states* an authz step the code lacks. \u2014 - `docs/implementation-plans/2-security-check-command.md`: in the Architecture reconcile paragraph, specified that `security-reconcile` requires a dedicated drift prompt comparing plan-stated security intent against code posture and noted reusing `prompts/security.md` via `mode=\"security\"` does not satisfy drift semantics.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[code-target-reuse-orphan]`: the acceptance criterion \"`plan-tool security --target code <name>` \u2026 reuses a saved report when plan+code fingerprints are unchanged\" is never delivered. Step 2 (`resolve-reusable-security-fingerprinted`) builds `resolve_reusable_security`, but step 3 defers the reuse-prompt wiring (\"wire it in a follow-up once step 2 has landed\") and step 5 explicitly does not call it \u2014 so no step in the plan ever invokes the resolver. The reuse path exists only as an uncalled primitive; every `security --target code` run re-spends a Claude call.\n  - Address: `plan-tool completeness-apply security-check-command --anchor code-target-reuse-orphan`\n- MEDIUM `[code-target-sweep]`: the acceptance criterion \"`plan-tool security --target code <name>` audits the changed code\" cannot be met by the bare command: step 1 makes `--target code` require an explicit `step_id` (single-step audit) and assigns the plan-wide multi-step sweep to step 3, which then cuts it (\"`--target code` requires `--step` \u2026 the sweep \u2026 left unimplemented\"). So `security --target code <name>` with no `--step` raises `SecurityError`, and there is no path that audits all changed code in one run.\n  - Address: `plan-tool completeness-apply security-check-command --anchor code-target-sweep`\n- MEDIUM `[auto-apply-loop-wiring]`: the Overview's claim that security \"participates in the `--iterate` convergence loop where findings are applicable\" and the Architecture's \"conservative auto-apply allowlist\" are not delivered end-to-end. Step 7 (`conservative-mechanical-auto-apply`) ships the `is_security_auto_apply_eligible` / `security_finding_is_auto_applicable` predicate but defers the loop wiring, ships an empty allowlist, and notes the prompts emit no category slug (`anchor`) \u2014 so the predicate has no production caller and can never return `True` for a real finding. No security finding can ever be auto-applied or enter the apply loop across the whole plan.\n  - Address: `plan-tool completeness-apply security-check-command --anchor auto-apply-loop-wiring`\n- MEDIUM `[completeness-security-reuse]`: the completeness security dimension (steps 5\u20136) samples `run_security_audit(target=\"plan\")` fresh on every relevance-matched `completeness-audit` run \u2014 step 5 explicitly skips step 2's `resolve_reusable_security` / `write_security_report` (\"no reuse / no persistence\"). The Risks entry *Cost/latency in completeness* is only half-mitigated: the relevance gate avoids the call on unrelated plans, but a security-relevant plan re-spends the Claude pass every run despite an unchanged plan+code fingerprint and an existing reuse resolver.\n  - Address: `plan-tool completeness-apply security-check-command --anchor completeness-security-reuse`\n- MEDIUM `[completeness-security-section-conditional]`: The acceptance criterion \"`plan-tool completeness <name>` includes a **Security** section in both the grouped report and the JSON output\" reads as unconditional, but step 6 (`cost-relevance-gate-security-flag`) makes the dimension relevance-/flag-gated by default and step 5 (`wire-security-dimension-completeness`) renders `### Security` only when findings are non-empty. A bare `completeness <name>` on a non-relevant plan therefore emits no Security section and an empty `checks.security` \u2014 the criterion is only conditionally met.\n  - Address: `plan-tool completeness-apply security-check-command --anchor completeness-security-section-conditional`\n- MEDIUM `[relevance-gate-silent-skip]`: Step 6's `_security_is_cost_relevant` suppresses the expensive security dimension on plans whose title/step-titles/file paths lack `_SECURITY_RELEVANT_HINTS` tokens, but no step emits a \"security dimension skipped (not relevant)\" note. An operator running bare `completeness-audit` on a security-relevant-but-unhinted plan (e.g. a new unauthenticated endpoint with no \"security\" wording) gets no Security section and no signal it was skipped \u2014 false assurance that security was checked.\n  - Address: `plan-tool completeness-apply security-check-command --anchor relevance-gate-silent-skip`\n- MEDIUM `[auto-reconcile-drift-hook-unwired]`: The Architecture commits to \"reusing\u2026 the `run_auto_reconcile_on_drift` hook so a code change since the last security audit re-triggers it,\" and step 4 (`security-reconcile-reconcilekind`) delivers the `mode`/`save_kind` parameterization for exactly that \u2014 but every existing caller (`create.py`, `detail.py`, `completeness_cmd.py`) passes neither param (defaulting to `detail-reconcile`), and step 4's Deferred punts \"Iteration-loop triggers\" to a \"call-site step\" that does not exist in steps 5\u20138. The drift-retrigger concept is built and never invoked with `mode=\"security\"`.\n  - Address: `plan-tool completeness-apply security-check-command --anchor auto-reconcile-drift-hook-unwired`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step1-files-coherence-4836da47]`: The detail body for step 1 cites `plan_tool/prompts/security.md`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/prompts/security-plan.md`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n- NIT `[step1-files-coherence-16cf0414]`: `TESTING.md` is in step 1's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step3-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 3's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-32732139]`: `BACKLOG.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-1776785d]`: `CLAUDE.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-b404ada7]`: `README.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply security-check-command` \u2014 walk the 7 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Resolve 7 structural diagnostic(s) directly \u2014 fix declared paths, `plan-tool detail security-check-command` for missing detail files, or author the lessons file.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Security Check Command\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- INFO: step 1 detail cites `plan_tool/prompts/security.md` resembling declared `plan_tool/prompts/security-plan.md` (typo/stale path?)\n- NIT: step 1 declared `TESTING.md` not mentioned in detail\n- NIT: step 3 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 8 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 8 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 8 declared `README.md` not mentioned in detail\n- NIT: step 8 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[code-target-reuse-orphan]`: the acceptance criterion \"`plan-tool security --target code <name>` \u2026 reuses a saved report when plan+code fingerprints are unchanged\" is never delivered. Step 2 (`resolve-reusable-security-fingerprinted`) builds `resolve_reusable_security`, but step 3 defers the reuse-prompt wiring (\"wire it in a follow-up once step 2 has landed\") and step 5 explicitly does not call it \u2014 so no step in the plan ever invokes the resolver. The reuse path exists only as an uncalled primitive; every `security --target code` run re-spends a Claude call.\n- MEDIUM `[code-target-sweep]`: the acceptance criterion \"`plan-tool security --target code <name>` audits the changed code\" cannot be met by the bare command: step 1 makes `--target code` require an explicit `step_id` (single-step audit) and assigns the plan-wide multi-step sweep to step 3, which then cuts it (\"`--target code` requires `--step` \u2026 the sweep \u2026 left unimplemented\"). So `security --target code <name>` with no `--step` raises `SecurityError`, and there is no path that audits all changed code in one run.\n- MEDIUM `[auto-apply-loop-wiring]`: the Overview's claim that security \"participates in the `--iterate` convergence loop where findings are applicable\" and the Architecture's \"conservative auto-apply allowlist\" are not delivered end-to-end. Step 7 (`conservative-mechanical-auto-apply`) ships the `is_security_auto_apply_eligible` / `security_finding_is_auto_applicable` predicate but defers the loop wiring, ships an empty allowlist, and notes the prompts emit no category slug (`anchor`) \u2014 so the predicate has no production caller and can never return `True` for a real finding. No security finding can ever be auto-applied or enter the apply loop across the whole plan.\n- MEDIUM `[completeness-security-reuse]`: the completeness security dimension (steps 5\u20136) samples `run_security_audit(target=\"plan\")` fresh on every relevance-matched `completeness-audit` run \u2014 step 5 explicitly skips step 2's `resolve_reusable_security` / `write_security_report` (\"no reuse / no persistence\"). The Risks entry *Cost/latency in completeness* is only half-mitigated: the relevance gate avoids the call on unrelated plans, but a security-relevant plan re-spends the Claude pass every run despite an unchanged plan+code fingerprint and an existing reuse resolver.\n- MEDIUM `[completeness-security-section-conditional]`: The acceptance criterion \"`plan-tool completeness <name>` includes a **Security** section in both the grouped report and the JSON output\" reads as unconditional, but step 6 (`cost-relevance-gate-security-flag`) makes the dimension relevance-/flag-gated by default and step 5 (`wire-security-dimension-completeness`) renders `### Security` only when findings are non-empty. A bare `completeness <name>` on a non-relevant plan therefore emits no Security section and an empty `checks.security` \u2014 the criterion is only conditionally met.\n- MEDIUM `[relevance-gate-silent-skip]`: Step 6's `_security_is_cost_relevant` suppresses the expensive security dimension on plans whose title/step-titles/file paths lack `_SECURITY_RELEVANT_HINTS` tokens, but no step emits a \"security dimension skipped (not relevant)\" note. An operator running bare `completeness-audit` on a security-relevant-but-unhinted plan (e.g. a new unauthenticated endpoint with no \"security\" wording) gets no Security section and no signal it was skipped \u2014 false assurance that security was checked.\n- MEDIUM `[auto-reconcile-drift-hook-unwired]`: The Architecture commits to \"reusing\u2026 the `run_auto_reconcile_on_drift` hook so a code change since the last security audit re-triggers it,\" and step 4 (`security-reconcile-reconcilekind`) delivers the `mode`/`save_kind` parameterization for exactly that \u2014 but every existing caller (`create.py`, `detail.py`, `completeness_cmd.py`) passes neither param (defaulting to `detail-reconcile`), and step 4's Deferred punts \"Iteration-loop triggers\" to a \"call-site step\" that does not exist in steps 5\u20138. The drift-retrigger concept is built and never invoked with `mode=\"security\"`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk security-check-command` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply security-check-command` \u2014 walk the 7 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-ab90450b",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "the acceptance criterion \"`plan-tool security --target code <name>` \u2026 reuses a saved report when plan+code fingerprints ",
+      "body": "the acceptance criterion \"`plan-tool security --target code <name>` \u2026 reuses a saved report when plan+code fingerprints are unchanged\" is never delivered. Step 2 (`resolve-reusable-security-fingerprinted`) builds `resolve_reusable_security`, but step 3 defers the reuse-prompt wiring (\"wire it in a follow-up once step 2 has landed\") and step 5 explicitly does not call it \u2014 so no step in the plan ever invokes the resolver. The reuse path exists only as an uncalled primitive; every `security --target code` run re-spends a Claude call.",
+      "suggested_action": "assign a step to wire `resolve_reusable_security` into `cmd_security` (the reuse prompt) so the fingerprint-gated reuse criterion is actually met, or drop the reuse claim from the acceptance criteria",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "code-target-reuse-orphan"
+    },
+    {
+      "id": "plan-plan-completeness-338ae73b",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "the acceptance criterion \"`plan-tool security --target code <name>` audits the changed code\" cannot be met by the bare c",
+      "body": "the acceptance criterion \"`plan-tool security --target code <name>` audits the changed code\" cannot be met by the bare command: step 1 makes `--target code` require an explicit `step_id` (single-step audit) and assigns the plan-wide multi-step sweep to step 3, which then cuts it (\"`--target code` requires `--step` \u2026 the sweep \u2026 left unimplemented\"). So `security --target code <name>` with no `--step` raises `SecurityError`, and there is no path that audits all changed code in one run.",
+      "suggested_action": "name an owning step for the plan-wide code sweep (or restate the criterion to require `--step` for a single-step code audit) so the code target's promised behavior is operationalized",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "code-target-sweep"
+    },
+    {
+      "id": "plan-plan-completeness-05f40635",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "the Overview's claim that security \"participates in the `--iterate` convergence loop where findings are applicable\" and ",
+      "body": "the Overview's claim that security \"participates in the `--iterate` convergence loop where findings are applicable\" and the Architecture's \"conservative auto-apply allowlist\" are not delivered end-to-end. Step 7 (`conservative-mechanical-auto-apply`) ships the `is_security_auto_apply_eligible` / `security_finding_is_auto_applicable` predicate but defers the loop wiring, ships an empty allowlist, and notes the prompts emit no category slug (`anchor`) \u2014 so the predicate has no production caller and can never return `True` for a real finding. No security finding can ever be auto-applied or enter the apply loop across the whole plan.",
+      "suggested_action": "either assign a step that wires the predicate into the iterate loop and emits a category slug for the seeded `hardcoded-secret` case, or downgrade the Overview/Architecture to state security findings are advisory-only this cycle",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "auto-apply-loop-wiring"
+    },
+    {
+      "id": "plan-plan-completeness-e97ea45e",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "the completeness security dimension (steps 5\u20136) samples `run_security_audit(target=\"plan\")` fresh on every relevance-mat",
+      "body": "the completeness security dimension (steps 5\u20136) samples `run_security_audit(target=\"plan\")` fresh on every relevance-matched `completeness-audit` run \u2014 step 5 explicitly skips step 2's `resolve_reusable_security` / `write_security_report` (\"no reuse / no persistence\"). The Risks entry *Cost/latency in completeness* is only half-mitigated: the relevance gate avoids the call on unrelated plans, but a security-relevant plan re-spends the Claude pass every run despite an unchanged plan+code fingerprint and an existing reuse resolver.",
+      "suggested_action": "note in step 5/6 whether the completeness dimension should reuse the `<ts>-security.json` sidecar, or document the deliberate always-fresh tradeoff against the cost risk",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "completeness-security-reuse"
+    },
+    {
+      "id": "plan-plan-completeness-30f001c1",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance criterion \"`plan-tool completeness <name>` includes a **Security** section in both the grouped report and",
+      "body": "The acceptance criterion \"`plan-tool completeness <name>` includes a **Security** section in both the grouped report and the JSON output\" reads as unconditional, but step 6 (`cost-relevance-gate-security-flag`) makes the dimension relevance-/flag-gated by default and step 5 (`wire-security-dimension-completeness`) renders `### Security` only when findings are non-empty. A bare `completeness <name>` on a non-relevant plan therefore emits no Security section and an empty `checks.security` \u2014 the criterion is only conditionally met.",
+      "suggested_action": "reword the criterion to scope the Security section to \"when the security dimension runs (relevance-gated or `--with-security`) and surfaces findings,\" so it is not read as always-present",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "completeness-security-section-conditional"
+    },
+    {
+      "id": "plan-plan-completeness-7a9bcffb",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 6's `_security_is_cost_relevant` suppresses the expensive security dimension on plans whose title/step-titles/file ",
+      "body": "Step 6's `_security_is_cost_relevant` suppresses the expensive security dimension on plans whose title/step-titles/file paths lack `_SECURITY_RELEVANT_HINTS` tokens, but no step emits a \"security dimension skipped (not relevant)\" note. An operator running bare `completeness-audit` on a security-relevant-but-unhinted plan (e.g. a new unauthenticated endpoint with no \"security\" wording) gets no Security section and no signal it was skipped \u2014 false assurance that security was checked.",
+      "suggested_action": "have completeness print a one-line note when the relevance gate suppresses the security dimension so the skip is visible to the operator",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "relevance-gate-silent-skip"
+    },
+    {
+      "id": "plan-plan-completeness-cb1b1c8c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture commits to \"reusing\u2026 the `run_auto_reconcile_on_drift` hook so a code change since the last security au",
+      "body": "The Architecture commits to \"reusing\u2026 the `run_auto_reconcile_on_drift` hook so a code change since the last security audit re-triggers it,\" and step 4 (`security-reconcile-reconcilekind`) delivers the `mode`/`save_kind` parameterization for exactly that \u2014 but every existing caller (`create.py`, `detail.py`, `completeness_cmd.py`) passes neither param (defaulting to `detail-reconcile`), and step 4's Deferred punts \"Iteration-loop triggers\" to a \"call-site step\" that does not exist in steps 5\u20138. The drift-retrigger concept is built and never invoked with `mode=\"security\"`.",
+      "suggested_action": "add an owning step (or expand a consumer's footprint) to fire the security drift hook from an iteration loop, so the \"code change re-triggers the security audit\" concept is operationalized",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "auto-reconcile-drift-hook-unwired"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-ab90450b": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-338ae73b": {
+      "status": "applied",
+      "note": "name owning step",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-05f40635": {
+      "status": "applied",
+      "note": "assign a step",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-e97ea45e": {
+      "status": "applied",
+      "note": "re-use the sidecar",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-30f001c1": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-security-check-command.md`: reworded the completeness acceptance criterion to scope the **Security** section/`security` bucket to when the dimension runs (relevance-gated or `--with-security`) and surfaces findings, noting it is absent/empty otherwise.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-7a9bcffb": {
+      "status": "applied",
+      "note": "apply-finding NOT-APPLICABLE: - (no change required \u2014 finding already satisfied: `docs/implementation-plans/plan-details/security-check-command/06-cost-relevance-gate-security-flag.md` lines 90\u201394 already specify the one-line stderr note for the auto-skip case, `plan-tool: [security] no security-relevant signals \u2014 skipping security dimension (pass --with-security to force)`)",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-cb1b1c8c": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    }
+  }
+}

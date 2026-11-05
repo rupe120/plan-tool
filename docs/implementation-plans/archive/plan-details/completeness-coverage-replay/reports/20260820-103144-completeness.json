@@ -1,0 +1,88 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T10:31:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ddc8975bdbe985a387441a2f5e15fc5346e730f4d75ea6fc97079b3ea65d9696",
+  "code_fingerprint": {
+    "BACKLOG.md": "46206a3ddc88d2df17c58b821cb86ae50c50554873bbb6b5864973022b403b7d",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "005ab8fa0e7dd000ac43581e88b554986ff07e3291b224a2108d1840d70fa6b0",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "99f4987a69c3e4844ee370667083f25483465814c6a8f83dab980df5f64ebf74",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "2e1ee2b3902744aee35b312d4498272eebc5a4bab2428be426a380092a61ba23",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "dfbb58500ed9e528509e25b2a97c2d6250be00503c8831bf11e3a4174109c185"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T10:31:44Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-coverage-replay` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "ddc8975bdbe985a387441a2f5e15fc5346e730f4d75ea6fc97079b3ea65d9696",
+    "detail_bundle_digest": "b62b6fbbf9eed32a0f972eeba5f49b2ca33dc016835bf7577ae7e06d1c7a5f32",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

@@ -1,0 +1,149 @@
+{
+  "version": 4,
+  "plan_slug": "skill-router-and-shared-reference",
+  "plan_path": "docs/implementation-plans/2-skill-router-and-shared-reference.md",
+  "created_at": "2026-09-16T23:50:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b4fcc4c3b495b5a93782d0772eba00fcb60c580b43d0a94e195565155b084b0e",
+  "code_fingerprint": {
+    "BACKLOG.md": "6c14c89aef7f4167918dac5e373575b961f0e3a08847705ecade9f59aa9d1980",
+    "README.md": "8fbea936d77daf00c75408abe9de4e7f90307cbc21b6ae1640a9dc0998154336",
+    "docs/ARCHITECTURE.md": "87589ff6f9b3a58618a1a1321fba6ed318714661ce242e5be7b36bfbb9a25e81",
+    "docs/cli/README.md": "e61dd086e6e5be9f8ff9ee3197a7891c001fc4e84c159fbfa3326f21f4188ec7",
+    "docs/cli/install-skill.md": "1c8eca129c46f1d1039aaba6a9ad452efae9b1237d0d2b9c4d1864e6c57fcc24",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md": "98977129198fa68a01c8142e17aff0c27a193b6a4f4cf35c664add52b38cffd9",
+    "handoffs/2026-09-16-roadmap-orchestration-primer.md": "10c0bf950b360c555364af3604583bc1b450c41eb043f5457725ff7a0755e46d",
+    "integrations/claude/SKILL.md": "e4457f4e0a6d2c4b58b602a670ddfbae46a24ecaaccacbf91d3dea4b0fccc055",
+    "integrations/codex/SKILL.md": "00abf3a0f0745d8787e82728ce32a3c5c578b009b497a49e43d60cb9db89e4ef",
+    "integrations/shared/DIRECTIVES.md": "d49f6f00ef4937602cfb780c44a20f8f5dd0df7ffc38a5d64ccd6ab8082c1d49",
+    "plan_tool/cli/__init__.py": "3c8ab5eafcb706ddc4812588e1f7a6bc9fb0c9c3896e87509743d82f0e967bb6",
+    "plan_tool/cli/inspect.py": "a9d0f1d287f0853e88d24b1ce1027a63820acd7b9aea4755e1f7bfb47c1db291",
+    "plan_tool/cli/parser.py": "d23b7c648259882ae0071731994d904debcd0d1c788776ef79b863d5266e9787",
+    "plan_tool/cli/review_cmd.py": "82732f5ef96a0a22c1983db363985a979c7876a96d89e923aee650dbd9e2409e",
+    "plan_tool/cli/skill_cmd.py": "8574b907e41240f7358888f88606989cdf610153a636325e2a18cb43707fde5c",
+    "tests/cli/package_surface_help.golden.txt": "c53151e9b97399c92ad1016715b554dee8842d44936ac32af3a533979bb5ac79",
+    "tests/cli/test_skill_cmd.py": "2a6f9a421f1fbe02853d91488366eb10a88861f2e4ecfed617ab16e158dda8d7",
+    "tests/test_backend.py": "7973c99a92cbafc90d57da45448edbdf358ec263214214d74a29a5da31266aed",
+    "tests/test_model_specs.py": "d2ba21b320ca154bace6df64407d5912b0704992df794b908107ed0bed255f2c",
+    "tests/test_roadmap_format.py": "a85d3538e62114c2c5a647da418c17db9c21ef21edc9a6eed28e2f4df939cf5e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md": "8f529bdce62284b3f89c98d02a21259c232470f9891b8041c6b1dd57e4693aaf",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md": "277e785a30f066638fb924c33bb5f3a657c913b6af89685bb5d60c8fb832564b",
+    "docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md": "65117138f8a043a9d74828f48710cbf0dc5d14e5b9b27ec4a1d17190d14ff72f"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Skill Router And Shared Reference\n\n`skill-router-and-shared-reference` \u00b7 generated 2026-09-16T23:50:21Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[codex-worktrees-link-label]` [confidence: limited]: `` Step 3's cross-file link-repointing instructions never say whether Codex's converted plain-name pointer should follow the link's current *display text* (\"README\") or its actual *href target* (`docs/OPERATIONS.md`) \u2014 and at HEAD these two already disagree. Confirmed in `integrations/codex/SKILL.md`: both the \"run two plans at once\" decision-tree row and the \"Workspaces\" Subcommands-at-a-glance row render as\n\n  ````\n  [README \u2192 Worktrees](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  [README](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  ````\n\n  \u2014 label \"README\" pointing at `docs/OPERATIONS.md`, a different, real file that carries its own `## Worktrees (parallel plans)` section (confirmed at HEAD), so this isn't a stale rename artifact \u2014 it's a genuine label/target mismatch. Step 3's Implementation section says only:\n\n  ````\n  Codex's Workspaces-equivalent links point at `../../docs/OPERATIONS.md#worktrees-parallel-plans` instead of README.md \u2014 preserve that existing per-router difference rather than harmonizing it, since neither this step's title nor the plan's scope guardrails ask for it.\n  ````\n\n  That sentence correctly names the *cross-backend* difference (Codex cites a different file than Claude) but never resolves the mismatch *inside* Codex's own link. A plain, mechanical carry-forward of the current label produces prose reading \"see README's Worktrees section (in the plan-tool repo)\" for Codex \u2014 a permanent, unlinked claim that is simply false once the href is gone and nothing can check it again. This is the same underlying commitment a prior completeness-audit round on this plan already raised (its saved report is still on disk, unresolved, while a sibling finding from the same round \u2014 a stale `change_type` claim in step 5's detail \u2014 was fixed in the immediately preceding commit).\n  - Fix: State explicitly in step 3's cross-file link-repointing instructions that Codex's converted plain-name form for this pointer names `docs/OPERATIONS.md` \u2014 the link's actual target \u2014 not \"README\", its current mismatched display text, so the conversion corrects the pre-existing label rather than freezing it into unlinked prose.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[arc-doc-370-sweep-completeness]` [confidence: limited]: Step 5's own enumerated sweep instructions for closing out `BACKLOG.md` #370 are narrower than what actually exists at HEAD in both files they target, so following the named list and the matching Acceptance criteria bullet literally leaves live, present/future-tense `#370` references behind. For `docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md`, step 5's Implementation section names exactly five sections to correct (`## File intent`, `## Details`, `## Ordered route`, `## Decision gates`, `## Exit and handoff`, plus a separate sentence for `## Out of scope`) and its Acceptance criteria bullet repeats that same five-section list \u2014 but `## Choose this arc when` (confirmed at HEAD, line 64) reads \"even though #383/#384 are exactly the kind of content #370's future DIRECTIVES.md relocation could eventually carry,\" a live claim that the relocation has not happened yet, false the moment step 1 lands it. Symmetrically, for `BACKLOG.md`'s `#378` entry, the Implementation section names only \"its `Why` bullet, its `Dependencies` field, and its `Readiness` field\" as needing correction, but `#378` also cites `#370` in its Risks bullet (\"touching the Claude router's lines twice if this lands before #370 thins it,\" line 5203), its In scope bullet (\"the router pointers as #370 leaves them,\" line 5213), and its Verification bullet (\"extends #370's install test,\" line 5243) \u2014 none named in either the Implementation list or the Acceptance criteria bullet (\"`#371`, `#377`, `#378`, and `#379`'s `Dependencies`/`Readiness`/`Out of scope`/`Origin` fields read as complete, accurate sentences...\"). The step's own Tests section (item 1: `grep -rn '#370' BACKLOG.md` \u2014 \"every remaining hit is a dated, past-tense provenance citation... never a present-tense claim that #370 is open, pending, or a dependency\"; item 2: the same grep against the arc doc) would still catch every one of these lines and force a fix, so the Acceptance criteria and the grep-based verification disagree about what the step needs to deliver \u2014 an implementer who stops at the named list and its matching criteria bullet can honestly believe the step is done while the hand-check grep still fails.\n  - Fix: Extend step 5's Implementation \"full pass\" list and its matching Acceptance criteria bullet to name `## Choose this arc when` alongside the arc doc's other five sections, and to name `#378`'s Risks, In scope, and Verification bullets alongside its Why/Dependencies/Readiness fields, so the enumerated sections and the acceptance criterion match what the grep-based verification already requires.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-f9866a59]` [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit skill-router-and-shared-reference` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Skill Router And Shared Reference\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Converged (low-yield):** this audit stopped at 2 pass(es) once only advisory (nit/info) findings remained \u2014 no material (medium+) finding resurfaced. Some listed advisory findings may be residual precision noise the sampler never fully explored.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[codex-worktrees-link-label]` [confidence: limited]: `` Step 3's cross-file link-repointing instructions never say whether Codex's converted plain-name pointer should follow the link's current *display text* (\"README\") or its actual *href target* (`docs/OPERATIONS.md`) \u2014 and at HEAD these two already disagree. Confirmed in `integrations/codex/SKILL.md`: both the \"run two plans at once\" decision-tree row and the \"Workspaces\" Subcommands-at-a-glance row render as\n\n  ````\n  [README \u2192 Worktrees](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  [README](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  ````\n\n  \u2014 label \"README\" pointing at `docs/OPERATIONS.md`, a different, real file that carries its own `## Worktrees (parallel plans)` section (confirmed at HEAD), so this isn't a stale rename artifact \u2014 it's a genuine label/target mismatch. Step 3's Implementation section says only:\n\n  ````\n  Codex's Workspaces-equivalent links point at `../../docs/OPERATIONS.md#worktrees-parallel-plans` instead of README.md \u2014 preserve that existing per-router difference rather than harmonizing it, since neither this step's title nor the plan's scope guardrails ask for it.\n  ````\n\n  That sentence correctly names the *cross-backend* difference (Codex cites a different file than Claude) but never resolves the mismatch *inside* Codex's own link. A plain, mechanical carry-forward of the current label produces prose reading \"see README's Worktrees section (in the plan-tool repo)\" for Codex \u2014 a permanent, unlinked claim that is simply false once the href is gone and nothing can check it again. This is the same underlying commitment a prior completeness-audit round on this plan already raised (its saved report is still on disk, unresolved, while a sibling finding from the same round \u2014 a stale `change_type` claim in step 5's detail \u2014 was fixed in the immediately preceding commit).\n\n### Files coherence\n\n- INFO: step 3 detail cites `integrations/cursor/SKILL.md` resembling declared `integrations/codex/SKILL.md` (typo/stale path?)\n- INFO: step 4 detail cites `<root>/skills/plan-tool/SKILL.md` resembling declared `integrations/cursor/SKILL.md` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[arc-doc-370-sweep-completeness]` [confidence: limited]: Step 5's own enumerated sweep instructions for closing out `BACKLOG.md` #370 are narrower than what actually exists at HEAD in both files they target, so following the named list and the matching Acceptance criteria bullet literally leaves live, present/future-tense `#370` references behind. For `docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md`, step 5's Implementation section names exactly five sections to correct (`## File intent`, `## Details`, `## Ordered route`, `## Decision gates`, `## Exit and handoff`, plus a separate sentence for `## Out of scope`) and its Acceptance criteria bullet repeats that same five-section list \u2014 but `## Choose this arc when` (confirmed at HEAD, line 64) reads \"even though #383/#384 are exactly the kind of content #370's future DIRECTIVES.md relocation could eventually carry,\" a live claim that the relocation has not happened yet, false the moment step 1 lands it. Symmetrically, for `BACKLOG.md`'s `#378` entry, the Implementation section names only \"its `Why` bullet, its `Dependencies` field, and its `Readiness` field\" as needing correction, but `#378` also cites `#370` in its Risks bullet (\"touching the Claude router's lines twice if this lands before #370 thins it,\" line 5203), its In scope bullet (\"the router pointers as #370 leaves them,\" line 5213), and its Verification bullet (\"extends #370's install test,\" line 5243) \u2014 none named in either the Implementation list or the Acceptance criteria bullet (\"`#371`, `#377`, `#378`, and `#379`'s `Dependencies`/`Readiness`/`Out of scope`/`Origin` fields read as complete, accurate sentences...\"). The step's own Tests section (item 1: `grep -rn '#370' BACKLOG.md` \u2014 \"every remaining hit is a dated, past-tense provenance citation... never a present-tense claim that #370 is open, pending, or a dependency\"; item 2: the same grep against the arc doc) would still catch every one of these lines and force a fix, so the Acceptance criteria and the grep-based verification disagree about what the step needs to deliver \u2014 an implementer who stops at the named list and its matching criteria bullet can honestly believe the step is done while the hand-check grep still fails.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 1 \"Add the Claude router's roadmap operational guidance to integrations/shared/DIRECTIVES.md and add DIRECTIVES.md to the roadmap guide-sweep tests\" reads as 2 verb-led clauses \u2014 likely 2 concerns in one step.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk skill-router-and-shared-reference` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-90338fc7",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`` Step 3's cross-file link-repointing instructions never say whether Codex's converted plain-name pointer should follow",
+      "body": "`` Step 3's cross-file link-repointing instructions never say whether Codex's converted plain-name pointer should follow the link's current *display text* (\"README\") or its actual *href target* (`docs/OPERATIONS.md`) \u2014 and at HEAD these two already disagree. Confirmed in `integrations/codex/SKILL.md`: both the \"run two plans at once\" decision-tree row and the \"Workspaces\" Subcommands-at-a-glance row render as\n\n  ````\n  [README \u2192 Worktrees](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  [README](../../docs/OPERATIONS.md#worktrees-parallel-plans)\n  ````\n\n  \u2014 label \"README\" pointing at `docs/OPERATIONS.md`, a different, real file that carries its own `## Worktrees (parallel plans)` section (confirmed at HEAD), so this isn't a stale rename artifact \u2014 it's a genuine label/target mismatch. Step 3's Implementation section says only:\n\n  ````\n  Codex's Workspaces-equivalent links point at `../../docs/OPERATIONS.md#worktrees-parallel-plans` instead of README.md \u2014 preserve that existing per-router difference rather than harmonizing it, since neither this step's title nor the plan's scope guardrails ask for it.\n  ````\n\n  That sentence correctly names the *cross-backend* difference (Codex cites a different file than Claude) but never resolves the mismatch *inside* Codex's own link. A plain, mechanical carry-forward of the current label produces prose reading \"see README's Worktrees section (in the plan-tool repo)\" for Codex \u2014 a permanent, unlinked claim that is simply false once the href is gone and nothing can check it again. This is the same underlying commitment a prior completeness-audit round on this plan already raised (its saved report is still on disk, unresolved, while a sibling finding from the same round \u2014 a stale `change_type` claim in step 5's detail \u2014 was fixed in the immediately preceding commit).",
+      "suggested_action": "State explicitly in step 3's cross-file link-repointing instructions that Codex's converted plain-name form for this pointer names `docs/OPERATIONS.md` \u2014 the link's actual target \u2014 not \"README\", its current mismatched display text, so the conversion corrects the pre-existing label rather than freezing it into unlinked prose.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "codex-worktrees-link-label",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-42ad19e4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5's own enumerated sweep instructions for closing out `BACKLOG.md` #370 are narrower than what actually exists at H",
+      "body": "Step 5's own enumerated sweep instructions for closing out `BACKLOG.md` #370 are narrower than what actually exists at HEAD in both files they target, so following the named list and the matching Acceptance criteria bullet literally leaves live, present/future-tense `#370` references behind. For `docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md`, step 5's Implementation section names exactly five sections to correct (`## File intent`, `## Details`, `## Ordered route`, `## Decision gates`, `## Exit and handoff`, plus a separate sentence for `## Out of scope`) and its Acceptance criteria bullet repeats that same five-section list \u2014 but `## Choose this arc when` (confirmed at HEAD, line 64) reads \"even though #383/#384 are exactly the kind of content #370's future DIRECTIVES.md relocation could eventually carry,\" a live claim that the relocation has not happened yet, false the moment step 1 lands it. Symmetrically, for `BACKLOG.md`'s `#378` entry, the Implementation section names only \"its `Why` bullet, its `Dependencies` field, and its `Readiness` field\" as needing correction, but `#378` also cites `#370` in its Risks bullet (\"touching the Claude router's lines twice if this lands before #370 thins it,\" line 5203), its In scope bullet (\"the router pointers as #370 leaves them,\" line 5213), and its Verification bullet (\"extends #370's install test,\" line 5243) \u2014 none named in either the Implementation list or the Acceptance criteria bullet (\"`#371`, `#377`, `#378`, and `#379`'s `Dependencies`/`Readiness`/`Out of scope`/`Origin` fields read as complete, accurate sentences...\"). The step's own Tests section (item 1: `grep -rn '#370' BACKLOG.md` \u2014 \"every remaining hit is a dated, past-tense provenance citation... never a present-tense claim that #370 is open, pending, or a dependency\"; item 2: the same grep against the arc doc) would still catch every one of these lines and force a fix, so the Acceptance criteria and the grep-based verification disagree about what the step needs to deliver \u2014 an implementer who stops at the named list and its matching criteria bullet can honestly believe the step is done while the hand-check grep still fails.",
+      "suggested_action": "Extend step 5's Implementation \"full pass\" list and its matching Acceptance criteria bullet to name `## Choose this arc when` alongside the arc doc's other five sections, and to name `#378`'s Risks, In scope, and Verification bullets alongside its Why/Dependencies/Readiness fields, so the enumerated sections and the acceptance criterion match what the grep-based verification already requires.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "arc-doc-370-sweep-completeness",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-low-yield",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "f3b3f9d4c2e4e260d43d52401e52335391e24d467f739a227babcc32fdf9f8be",
+    "detail_bundle_digest": "bad3a2f446ad86098542bc2834b6a099bda3ce058ad518d9925fcdc24e02c002",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/01-claude-router-roadmap-operational.md",
+        "state": "present",
+        "digest": "ebec806bf1b9a9a101367d271d75336d294eeaa4f57e93b52b035425465388fc"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/02-make-install-skill-install-router.md",
+        "state": "present",
+        "digest": "6f2ecd42c023fe95220bc89520c774ebccbecd971164c862174e10bbdde6cfaa"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/03-trim-claude-codex-routers-router-half.md",
+        "state": "present",
+        "digest": "8f529bdce62284b3f89c98d02a21259c232470f9891b8041c6b1dd57e4693aaf"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/04-thin-cursor-router-accept-cursor.md",
+        "state": "present",
+        "digest": "277e785a30f066638fb924c33bb5f3a657c913b6af89685bb5d60c8fb832564b"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/skill-router-and-shared-reference/05-update-install-skill-docs-including.md",
+        "state": "present",
+        "digest": "65117138f8a043a9d74828f48710cbf0dc5d14e5b9b27ec4a1d17190d14ff72f"
+      }
+    ],
+    "source_seed_digest": "468393fadc9abf27bfc7d16eb80620532a615842fa7f0794a395f190db902755",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

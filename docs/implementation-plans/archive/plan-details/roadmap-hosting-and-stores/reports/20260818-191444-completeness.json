@@ -1,0 +1,146 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-hosting-and-stores",
+  "plan_path": "docs/implementation-plans/2-roadmap-hosting-and-stores.md",
+  "created_at": "2026-08-18T19:14:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "28b89b92b8ff7222c3f9f5dffff4f3d4614a642296d2be622cd15bdb17c3fb82",
+  "code_fingerprint": {
+    "ROADMAP_FORMAT.md": "4c63f2e8a7190e6b357b65ae2dbee1b42998d61b34d978d69ff066643d7c92d0",
+    "plan_tool/prompts/roadmap-components.md": "68aa3ff076422c753eda1cf68ad7f2b3694f460a444a42ea67db243f4d02c9bf",
+    "plan_tool/prompts/roadmap-constraints.md": "5b5cfb9d6b37cff83d06bd032cdef46c71d65a7db234f51644799c2b15dbc8a5",
+    "plan_tool/roadmap_artifacts.py": "9d242b54ccf5e899ad9212e5e03ad5765aa4144d4de097d634b5bdad492dbaaa",
+    "plan_tool/roadmap_gates.py": "65ee870bd27cc6b15e7e5322f46109e54be74e5acc3bdc4736678943c92a8f44",
+    "tests/cli/test_roadmap_cmd.py": "60c2161907f2ae9a8675b326eb42084bc39d882164a1877fbc92abdc857a2a1a",
+    "tests/test_roadmap.py": "712613c6992c4f6f9d73d42da4830de0c14f31ce293560efc2d0597a457b4c07",
+    "tests/test_roadmap_artifacts.py": "1654dc0ac0956d3c1cc864b63bbb40331a657a6269b2f39b6048906d0d83c110",
+    "tests/test_roadmap_format.py": "176be1b1032a9c923b3b14ff36e576b93ca941155922f0012f9620c41476cce8",
+    "tests/test_roadmap_gates.py": "7caf2dbf0110551f07d8f6d5e213d2d26eebd9620afa733c1b2af487e63a572b"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md": "91434f579f93212340e4a8d3042ad33acff2dc18aadf6e1f84a52ab739a86463",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md": "18c6ecb0c8adea22307ad7bd53842b15dd60ec389e406afaee362375738641bc",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md": "c06fed5e0110aac19167e3530044417300bace6a5a0b446d0a2000a091e3f10c",
+    "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md": "b23b54bc3f41f5d6c14270c05bc59d9a9c527e9b8fcab0833e2e1beeade30c7c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Hosting And Stores\n\n`roadmap-hosting-and-stores` \u00b7 generated 2026-08-18T19:14:44Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 1 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `confirmed`\n- **Audit revision:** `stale`\n- **Audit stage:** `detail`\n- **Plan digest:** `124e4ebe757f01436bce9c641cdad1eafbc0251c42ace65848e7908f1c7ad375`\n- **Detail bundle digest:** `b7ac9bc3128263f8e8ca893daad7229c2a221eae7070c99e8b39d15085979afa`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 11 dispatched (11 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (-2 vs. first audit)\n- **Detail-bundle size:** 0 bytes (-187198 vs. first audit)\n- **Keystone fan-out:** 0.67\n- **Satellite ratio:** 0.50\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Applied this run\n\n- [APPLIED] required H2 section `## References` is absent from the plan body\n\nRecommended content shape: Bulleted list of authoritative sources -- spec docs, RFCs, vendor APIs, related plans -- each with a one-line note on why it matters here. Falls back to `_(TODO)_` when the body is otherwise empty. \u2014 - `docs/implementation-plans/2-roadmap-hosting-and-stores.md`: Add authoritative roadmap and backlog references.\n- [APPLIED] required H2 section `## Steps` is absent from the plan body\n\nRecommended content shape: Pointer to the `steps:` block in the frontmatter. The machine-readable list lives there; restating it in prose is the most common drift source. \u2014 - Add `## Steps` with a pointer to the authoritative `steps:` frontmatter list.\n- [APPLIED] required H2 section `## Out of scope` is absent from the plan body\n\nRecommended content shape: Bulleted exclusions with a one-line rationale each. Captures the work this plan deliberately doesn't tackle, so future reviewers don't re-litigate the boundary. \u2014 - `docs/implementation-plans/2-roadmap-hosting-and-stores.md`: Add `## Out of scope` with rationales for the six existing exclusions.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md` lacks a populated `## Table of Contents` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md`: Add a table of contents with the required section links.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md` lacks a populated `## Why` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - Add the Step 1 rationale separating roadmap ownership from Step 3 validation.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md` lacks a populated `## Table of Contents` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - Add the populated Table of Contents to `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md`.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md` lacks a populated `## Why` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `02-stores-rows-store-ids-components.md`: Add a populated `## Why` section for reviewed store definitions and existing revision boundaries.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md` lacks a populated `## Table of Contents` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md`: Add a linked table of contents with all required tokens.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md` lacks a populated `## Why` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `03-enforce-hosting-block-totality-value.md`: Add a `## Why` rationale for the required hosting gates.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md` lacks a populated `## Table of Contents` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md`: Add a populated table of contents with the required section links.\n- [APPLIED] `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md` lacks a populated `## Why` section. Required tokens: Why / Files / Implementation / Tests / Acceptance criteria. \u2014 - `docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md`: Add a rationale for gate-enforced reviewed store references.\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-hosting-and-stores   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[hosting-value-vocabulary]`: Step 3 (`Require complete, concrete hosting answers`) never defines the literal members of `HOSTING_FACET_VALUES`: Architecture and step 3 Implementation describe categories, while step 3\u2019s prompt, `ROADMAP_FORMAT.md`, valid examples, and membership tests must use exact values. Different vendor-neutral spellings could all satisfy the prose, so a valid hosting block is not reproducible.\n  - Fix: Define the complete literal value set for each hosting facet once and make Architecture, step 3, the prompt, format example, and tests use it.\n- HIGH `[store-value-vocabularies]`: Step 4 (`Require resolved, concrete store references`) names `STORE_CATEGORIES` and `STORE_SHARING_MODELS` but never states either closed set. Architecture, step 4 Implementation, the components prompt, `ROADMAP_FORMAT.md`, and the membership tests therefore leave \u201cconcrete\u201d values to each implementer.\n  - Fix: Define the complete literal category and sharing value sets once and reconcile the step 4 gate contract, prompt, format example, and tests to them.\n- MEDIUM `[store-id-uniqueness]`: Step 4 promises \u201cunique, concrete store definitions,\u201d but its `check_store_definitions` wording only says it rejects \u201ca component with \u2026 duplicate store ids,\u201d which can mean repeated entries in one component\u2019s `store_ids`. Step 2 keeps stores out of `components_design_rows`, and current `roadmap_gates.check_duplicate_row_ids` only inspects that inventory, so two `StoreRow` definitions with the same id can otherwise both look defined and make a reference ambiguous.\n  - Fix: State that duplicate ids among `stores` definitions are rejected directly, separately from duplicate references on one component, and require tests for both cases.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-c79c7d79]`: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-760a3674]`: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5c8e4247]`: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1ee6638e]`: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ce143fe6]`: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-hosting-and-stores` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Hosting And Stores\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `confirmed`\n- **Audit revision:** `stale`\n- **Audit stage:** `detail`\n- **Plan digest:** `124e4ebe757f01436bce9c641cdad1eafbc0251c42ace65848e7908f1c7ad375`\n- **Detail bundle digest:** `b7ac9bc3128263f8e8ca893daad7229c2a221eae7070c99e8b39d15085979afa`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[hosting-value-vocabulary]`: Step 3 (`Require complete, concrete hosting answers`) never defines the literal members of `HOSTING_FACET_VALUES`: Architecture and step 3 Implementation describe categories, while step 3\u2019s prompt, `ROADMAP_FORMAT.md`, valid examples, and membership tests must use exact values. Different vendor-neutral spellings could all satisfy the prose, so a valid hosting block is not reproducible.\n- HIGH `[store-value-vocabularies]`: Step 4 (`Require resolved, concrete store references`) names `STORE_CATEGORIES` and `STORE_SHARING_MODELS` but never states either closed set. Architecture, step 4 Implementation, the components prompt, `ROADMAP_FORMAT.md`, and the membership tests therefore leave \u201cconcrete\u201d values to each implementer.\n- MEDIUM `[store-id-uniqueness]`: Step 4 promises \u201cunique, concrete store definitions,\u201d but its `check_store_definitions` wording only says it rejects \u201ca component with \u2026 duplicate store ids,\u201d which can mean repeated entries in one component\u2019s `store_ids`. Step 2 keeps stores out of `components_design_rows`, and current `roadmap_gates.check_duplicate_row_ids` only inspects that inventory, so two `StoreRow` definitions with the same id can otherwise both look defined and make a reference ambiguous.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `hosting.model`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `store_ids`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `stores[].sharing`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-hosting-and-stores` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-6682165f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 (`Require complete, concrete hosting answers`) never defines the literal members of `HOSTING_FACET_VALUES`: Archi",
+      "body": "Step 3 (`Require complete, concrete hosting answers`) never defines the literal members of `HOSTING_FACET_VALUES`: Architecture and step 3 Implementation describe categories, while step 3\u2019s prompt, `ROADMAP_FORMAT.md`, valid examples, and membership tests must use exact values. Different vendor-neutral spellings could all satisfy the prose, so a valid hosting block is not reproducible.",
+      "suggested_action": "Define the complete literal value set for each hosting facet once and make Architecture, step 3, the prompt, format example, and tests use it.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "hosting-value-vocabulary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-7b10fe49",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Require resolved, concrete store references`) names `STORE_CATEGORIES` and `STORE_SHARING_MODELS` but never sta",
+      "body": "Step 4 (`Require resolved, concrete store references`) names `STORE_CATEGORIES` and `STORE_SHARING_MODELS` but never states either closed set. Architecture, step 4 Implementation, the components prompt, `ROADMAP_FORMAT.md`, and the membership tests therefore leave \u201cconcrete\u201d values to each implementer.",
+      "suggested_action": "Define the complete literal category and sharing value sets once and reconcile the step 4 gate contract, prompt, format example, and tests to them.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "store-value-vocabularies",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-772d8268",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 promises \u201cunique, concrete store definitions,\u201d but its `check_store_definitions` wording only says it rejects \u201ca ",
+      "body": "Step 4 promises \u201cunique, concrete store definitions,\u201d but its `check_store_definitions` wording only says it rejects \u201ca component with \u2026 duplicate store ids,\u201d which can mean repeated entries in one component\u2019s `store_ids`. Step 2 keeps stores out of `components_design_rows`, and current `roadmap_gates.check_duplicate_row_ids` only inspects that inventory, so two `StoreRow` definitions with the same id can otherwise both look defined and make a reference ambiguous.",
+      "suggested_action": "State that duplicate ids among `stores` definitions are rejected directly, separately from duplicate references on one component, and require tests for both cases.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "store-id-uniqueness",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "stale",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "124e4ebe757f01436bce9c641cdad1eafbc0251c42ace65848e7908f1c7ad375",
+      "detail_bundle_digest": "b7ac9bc3128263f8e8ca893daad7229c2a221eae7070c99e8b39d15085979afa",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+          "state": "present",
+          "digest": "91434f579f93212340e4a8d3042ad33acff2dc18aadf6e1f84a52ab739a86463"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+          "state": "present",
+          "digest": "18c6ecb0c8adea22307ad7bd53842b15dd60ec389e406afaee362375738641bc"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+          "state": "present",
+          "digest": "c06fed5e0110aac19167e3530044417300bace6a5a0b446d0a2000a091e3f10c"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+          "state": "present",
+          "digest": "b23b54bc3f41f5d6c14270c05bc59d9a9c527e9b8fcab0833e2e1beeade30c7c"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.6666666666666666,
+    "satellite_ratio": 0.5,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

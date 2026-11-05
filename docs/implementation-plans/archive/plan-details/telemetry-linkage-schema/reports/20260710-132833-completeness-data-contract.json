@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-7461a6dd": {
+      "code_anchor": null,
+      "field_or_key": "context",
+      "location": "docs/implementation-plans/plan-details/telemetry-linkage-schema/02-forward-new-keys-through-recorder.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "DecisionEvent",
+      "path": "docs/implementation-plans/plan-details/telemetry-linkage-schema/02-forward-new-keys-through-recorder.md",
+      "reason": "`DecisionEvent.context` lacks a matching HEAD code-location anchor",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260710-132833-completeness"
+}

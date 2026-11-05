@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "plan_slug": "bare-plan-audit-altitude",
+  "plan_path": "docs/implementation-plans/2-bare-plan-audit-altitude.md",
+  "created_at": "2026-08-18T13:17:18Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "1009e5f2eceb0cc8099f39866f72583467a6212a8cd26bc4479c78fed9b4804c",
+  "code_fingerprint": {
+    "BACKLOG.md": "51291267818aba2506f28eb1c42f5ab41918839e5b448483ba051691cfc598d0",
+    "CLAUDE.md": "040309bfcf386c2ff24af69be043779fbe3f4fc19bfd63337e627be96d50db70",
+    "docs/AUDIT_FLOW.md": "1913b4b7fa49590b91726317025fd8156850026759887730f557bde594999e64",
+    "docs/HISTORICAL_BACKLOG_DECISIONS.md": "b550c86c03bfebf5255cf9c5efffefdb45eba17879fef533e5d1bd94a3799d26",
+    "integrations/shared/DIRECTIVES.md": "5f0f9e9f0cc179c44fcc1498893b9922515090460c38865e7cd00e865d4ca385",
+    "plan_tool/cli/completeness_cmd.py": "9f71fd01ca18f1fe44b3cfb1f51686a438b6adba537f96c39c6d7ed359868d7e",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/convergence_diagnosis.py": "5ab49b50a23b020c3961d266ca13fbe51cd747c48a8c76330251f7921acd6b48",
+    "plan_tool/prompts/plan-audit.md": "f8a13bf86453447241a67346a3538771f28b8a72b752fdec0048c89704969247",
+    "plan_tool/review.py": "fd356d74a8e450c6de7275c1e1f86ccd7c9e720ca33adbad5ade84de34a632fc",
+    "tests/cli/test_completeness_cmd.py": "4f488cc9ca80ecf6dbf427d19e3e734cf8d3ab2a92265dfaa89e70edeecb24b5",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/fixtures/convergence/bare-altitude-two-stage-replay.json": "055099a9faf3db3318eefbdf37e0204b9679214d6605d5966491ea2d7b2f3d9d",
+    "tests/test_convergence_diagnosis.py": "fd0095a7fb2ea051b0eab78ce69f2c057008aa18caff602acb13965afc61158d",
+    "tests/test_review.py": "1c71f419118fc5a814e863db002928a82772de81e823efc2886153379e919f45"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 4 completed sibling step(s); 4 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

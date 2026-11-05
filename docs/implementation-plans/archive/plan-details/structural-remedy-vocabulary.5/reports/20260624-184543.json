@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "plan_slug": "structural-remedy-vocabulary",
+  "plan_path": "docs/implementation-plans/2-structural-remedy-vocabulary.md",
+  "created_at": "2026-06-24T18:45:43Z",
+  "kind": "review",
+  "step_id": null,
+  "plan_fingerprint": "53348402d691638ca3a730fe11dd3aceab5b98c290aea1320d9a241d06e1b457",
+  "code_fingerprint": {
+    "BACKLOG.md": "59ba3da4bbfac2f8f0719255055fdf4fe02c24c627f524fe8f090e4389d08589",
+    "CLAUDE.md": "ed890990e96b8d9baf3b2bd470f12e99382ea000ab639fd45c65c6d3e814a0f8",
+    "RUNBOOK.md": "29823edaacd9851889949d8e9622cca3abe0c793143ff2b17323d14a3b0d49cb",
+    "plan_tool/convergence_diagnosis.py": "0291aadecb5422e7b4f9bd7e78b1aa9cecad2b3f2252faa6013e4f21fb1118b1",
+    "plan_tool/review.py": "20651f7668434339cb1dcc1b5eb68553d19df3a4ba11a2a3ac2e0b2730e38b28",
+    "tests/test_convergence_diagnosis.py": "830d4e878f62d1c9f60cd7c911cc3d53c8a12a0fbbeb704cb61a4344bf71a26a",
+    "tests/test_review.py": "97a15795a44dc6c4dce3b22e912727cf96cdc8e53782aeafa5db57a83b5da936"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "## Plan Review: Structural Remedy Vocabulary\n\nMetadata: status=planning \u00b7 priority=medium \u00b7 3 steps\nRepo root: `/Users/joshrusso/github/rupe120/plan-tool`\nFindings: 1 nit\n\n### Claude's semantic review\n\nI've verified the plan against the code on disk. Here's the reality check.\n\n### Review\n\nThe plan is accurate against current code. Both not-yet-implemented steps check out as pre-execution, and their premises hold against the code they build on.\n\n**Step 1 (`[current]`) \u2014 not yet implemented, correctly.** `grep` for `FORK_SCOPE_OUT` / `_region_triggers_scope_out` / `scope_out` in `plan_tool/convergence_diagnosis.py` returns nothing, and the test file's import block carries no scope-out symbols \u2014 consistent with `[current]` (work is expected *off* disk). The anchors the step extends all exist as described: `classify_fork`'s single-resolved-step arm (`convergence_diagnosis.py:919` \u2014 `if None not in foci and len(resolved) == 1:` \u2192 `FORK_LOCALIZED` + `_split_command`), the `FORK_LOCALIZED/FORK_STRUCTURAL/FORK_NONE` constant block (830\u2013832), `_spinning_body`'s fork dispatch (968), and `RegionTrend` carrying `first_severity`/`last_severity`/`max_severity` (273\u2013274) \u2014 so the detail's \"key on `last_severity`, not `max_severity`\" predicate is buildable. Declared files (`convergence_diagnosis.py`, `tests/test_convergence_diagnosis.py`) match the work.\n\n**Step 2 (`[pending]`) \u2014 not yet implemented, premise verified.** No `_GRANULARITY_MERGE_SOURCE` / `reconcile_lane` / re-ground emit exists in `review.py`. The step's core justification holds: `triage_reason` (`review.py:3447`) has a non-apply-eligible generic branch that emits the concrete *wrong* remedy `\"fix the path / run plan-tool detail / author lessons\"` \u2014 exactly the misdirection the step says it must add a `granularity-merge` arm to avoid. The anchors exist: `extract_recommendations` (2600), `review_plan_full` (4991), `collect_deterministic_findings` (3611), `heuristic_already_done` (765), `_heuristic_recommendation` (3052), `STRUCTURAL_SOURCES`/`APPLY_ELIGIBLE_SOURCES` (3343/3305). The literal it duplicates is real \u2014 `granularity.py:36 GRANULARITY_MERGE_SOURCE = \"granularity-merge\"` \u2014 and `granularity.py:30` importing `review` confirms the cycle the step avoids by not importing. Declared files match.\n\n**Step 3 (`[pending]`, depends_on=[1,2]) \u2014 docs only.** `BACKLOG.md` #70 exists (`BACKLOG.md:670`) with the absorbed-#67 / scope-out / re-ground / altitude content the step plans to trim, so the doc targets are real and the dependency on 1+2 is correct (docs follow the code they describe).\n\nNo step is already-implemented by code on disk, no declared-file path is stale, and no missing runtime dependency is implied (all symbols live in already-present first-party modules). The detail-authoring lessons that read in past tense (\"Step 1 added FORK_SCOPE_OUT\u2026\") describe *planned* detail, not landed code \u2014 they agree with the `[current]`/`[pending]` statuses, not contradict them.\n\n## Findings\n\n_(none)_\n\n### Per-step status\n\n- Step 1 (current)  OK \u2014 2 file(s) declared, all exist\n- Step 2 (pending)  OK \u2014 2 file(s) declared, all exist\n- Step 3 (pending)  OK \u2014 3 file(s) declared, all exist\n\n### Plan completeness\n\n**Files coherence**\n\n- NIT: step 3 declared `(no declared files cited in detail body)` not mentioned in detail\n",
+  "recommendations": [
+    {
+      "id": "step3-files-coherence-20573fb2",
+      "source": "files-coherence",
+      "severity": "nit",
+      "step_id": 3,
+      "title": "Step 3: declared `(no declared files cited in detail body)` not mentioned in detail",
+      "body": "`(no declared files cited in detail body)` is in step 3's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.",
+      "suggested_action": "mention `(no declared files cited in detail body)` in step 3's detail `## Implementation`, or drop it from `files:` if the step doesn't touch it",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {
+    "step3-files-coherence-20573fb2": {
+      "status": "skip",
+      "note": "",
+      "halt_reason": ""
+    }
+  }
+}

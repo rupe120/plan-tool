@@ -1,0 +1,156 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-policy-review",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-policy-review.md",
+  "created_at": "2026-09-04T18:05:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "ada0ccb5ae2ac5b2ff2ae6d78d43fd10aaf5e9161ad9bebb0abd9aabb6a554c9",
+  "code_fingerprint": {
+    "BACKLOG.md": "cc4153d4f058095bc8b74681d614885e9c068cc02bd3e9959072aa6a9221b63f",
+    "ROADMAP_FORMAT.md": "6a07cefdec5e3fecdc0c6b6fd05f2f90a52b6bd2db3e907c031925aa33536440",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "6bfebeca1af48f3e50d0743bead191b5a7880f1cb9b25dce373e8ca0800831c3",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "c23310afa49af66bf5cfc36244a1244ce019387deb0e9f13e39f22f49f1a6352",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "9f16bddb8ba3b3a5b95c045b3824ed860abd4ccbf1a51b309bd03e3615aad0a2",
+    "plan_tool/roadmap_candidate.py": "e4dd2227e256799bb09b1ca2f6238face14b4373269fa8233972a1df9de40710",
+    "plan_tool/roadmap_candidate_review.py": "edc91050cc1c58297b1d6cde2023a8f8b7dc73b45378bf70ec1309fc56b59ce9",
+    "plan_tool/roadmap_candidate_run.py": "cf9bea868f546575a6bbd5100380d8065d43a220c9ab18a25a21aa3b40a46d50",
+    "tests/test_roadmap_candidate.py": "bb28b19373762672e4698b5d61b32787673c437e9fb3391f628ba76ed6646c13",
+    "tests/test_roadmap_candidate_review.py": "000a803ccd7cef0f94e4f34183ab0321677dfbb7023c053bc95656356611e45e",
+    "tests/test_roadmap_candidate_run.py": "1c684bb9e31718353ee76db59cde202f083ff478e80365cb9c06385405095f69",
+    "tests/test_roadmap_format.py": "f278eff3b13fcb5ecd83ac91163ab4b51d0e52767c3131199b4571eb0d8fefda",
+    "tests/test_roadmap_version_promotion.py": "6f48d27bb629f8255b2ab9e0e8ab4e232dad9151be3ba785ef59081a09cfa0c0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-exact-relation.md": "a60f0fd9d3ffc574a3f809219be0a701a1395ce408579d4777ffd41e43b8b46c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md": "bb7c479c484efebd3b664aa952924193fae16f4e13bcfc5a7cbc156545475abc",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md": "db9384084f30a700faf55752363dfc1eb43f1964059a52ca909c9989ce0c710e",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-allow-equal-narrower-answer-bound.md": "a6d569b4bbf1627f4e3061c12d6c4639c76d9d6bd27e3f586cba1338d69374e4",
+    "docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md": "4d061b19dd213046bc7f941f7ff9bfa6d06ce9c261598d352b8707b33f48afbf"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Policy Review\n\n`roadmap-candidate-policy-review` \u00b7 generated 2026-09-04T18:05:49Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `ada0ccb5ae2ac5b2ff2ae6d78d43fd10aaf5e9161ad9bebb0abd9aabb6a554c9`\n- **Detail bundle digest:** `611653047306c042a6af31f6873493596d48a93c70d7bfd54ec7ac5d20040d3e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-candidate-policy-review   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-candidate-policy-review  # alternative interactive review/apply\n\n- HIGH `[review-impact-identity]` [confidence: limited]: Architecture\u2019s review-impact comparison contradicts its allowed narrower replacement. It spans Architecture\u2019s review-requirement evidence and answer-bound replacement rules, Scope guardrails\u2019 binary observable, Risks\u2019 complete ordered diff rule, Testing, the acceptance bullets beginning \u201cEvery review-required candidate binds\u201d and \u201cAn answer-bound replacement,\u201d and steps 1\u20134.  \n  ```text\n  An answer-bound replacement is eligible to seal only when it eliminates the\n  review-required impact or retains no more than the exact disclosed impact. The\n  replacement comparison is mechanical: it binds the same predecessor and\n  selected feedback, recomputes the complete diff, and rejects a changed impact\n  identity, new affected row, wider relation set, or new policy requirement.\n  ```\n  The requirement is also content-addressed and binds its complete diff and affected facts, so a genuinely narrower relation set necessarily changes those exact facts and its identity. The implementation would therefore either reject the expressly allowed narrower case or make \u201cexact impact identity\u201d no longer identify the exact impact.\n  - Fix: Define a fixed identity for the initially disclosed requirement separately from each replacement\u2019s recomputed impact identity, and compare the latter by explicit containment across steps 1\u20134, tests, risks, and acceptance criteria.\n- MEDIUM `[replacement-capsule-authority]` [confidence: limited]: Step 4 (`Allow equal-or-narrower answer-bound impacts while keeping replacement and seal files append-only and accepted-head overwrite promotion-only`) does not choose whether a review-required replacement may use the existing replacement-context expansion. Architecture says:\n\n  ```text\n  The review binding grants no new row, capsule, artifact, or standalone-relation\n  authority.\n  ```\n\n  But `plan_tool/roadmap_candidate_review.py:request_replacement` can persist an expanded `CandidateReviewReplacementState`, `_replacement_capsule` returns that expanded full-membership capsule, and `plan_tool/roadmap_version_promotion.py:_require_final_capsule_binding` accepts it. Keeping that existing route and refusing it are both reasonable readings of Architecture\u2019s same-predecessor rule; the Testing section and answer-bound-replacement acceptance criterion do not decide. The choice changes which rows may become authorized after the answer.\n  - Fix: State whether review-required replacements retain only the admitted capsule or may use the existing independently authorized expansion, and add the matching authority boundary to step 4\u2019s tests and acceptance criteria.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-candidate-policy-review` \u2014 apply the 2 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Policy Review\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `ada0ccb5ae2ac5b2ff2ae6d78d43fd10aaf5e9161ad9bebb0abd9aabb6a554c9`\n- **Detail bundle digest:** `611653047306c042a6af31f6873493596d48a93c70d7bfd54ec7ac5d20040d3e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[review-impact-identity]` [confidence: limited]: Architecture\u2019s review-impact comparison contradicts its allowed narrower replacement. It spans Architecture\u2019s review-requirement evidence and answer-bound replacement rules, Scope guardrails\u2019 binary observable, Risks\u2019 complete ordered diff rule, Testing, the acceptance bullets beginning \u201cEvery review-required candidate binds\u201d and \u201cAn answer-bound replacement,\u201d and steps 1\u20134.  \n  ```text\n  An answer-bound replacement is eligible to seal only when it eliminates the\n  review-required impact or retains no more than the exact disclosed impact. The\n  replacement comparison is mechanical: it binds the same predecessor and\n  selected feedback, recomputes the complete diff, and rejects a changed impact\n  identity, new affected row, wider relation set, or new policy requirement.\n  ```\n  The requirement is also content-addressed and binds its complete diff and affected facts, so a genuinely narrower relation set necessarily changes those exact facts and its identity. The implementation would therefore either reject the expressly allowed narrower case or make \u201cexact impact identity\u201d no longer identify the exact impact.\n- MEDIUM `[replacement-capsule-authority]` [confidence: limited]: Step 4 (`Allow equal-or-narrower answer-bound impacts while keeping replacement and seal files append-only and accepted-head overwrite promotion-only`) does not choose whether a review-required replacement may use the existing replacement-context expansion. Architecture says:\n\n  ```text\n  The review binding grants no new row, capsule, artifact, or standalone-relation\n  authority.\n  ```\n\n  But `plan_tool/roadmap_candidate_review.py:request_replacement` can persist an expanded `CandidateReviewReplacementState`, `_replacement_capsule` returns that expanded full-membership capsule, and `plan_tool/roadmap_version_promotion.py:_require_final_capsule_binding` accepts it. Keeping that existing route and refusing it are both reasonable readings of Architecture\u2019s same-predecessor rule; the Testing section and answer-bound-replacement acceptance criterion do not decide. The choice changes which rows may become authorized after the answer.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-candidate-policy-review` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-53b1084b",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s review-impact comparison contradicts its allowed narrower replacement. It spans Architecture\u2019s review-req",
+      "body": "Architecture\u2019s review-impact comparison contradicts its allowed narrower replacement. It spans Architecture\u2019s review-requirement evidence and answer-bound replacement rules, Scope guardrails\u2019 binary observable, Risks\u2019 complete ordered diff rule, Testing, the acceptance bullets beginning \u201cEvery review-required candidate binds\u201d and \u201cAn answer-bound replacement,\u201d and steps 1\u20134.  \n  ```text\n  An answer-bound replacement is eligible to seal only when it eliminates the\n  review-required impact or retains no more than the exact disclosed impact. The\n  replacement comparison is mechanical: it binds the same predecessor and\n  selected feedback, recomputes the complete diff, and rejects a changed impact\n  identity, new affected row, wider relation set, or new policy requirement.\n  ```\n  The requirement is also content-addressed and binds its complete diff and affected facts, so a genuinely narrower relation set necessarily changes those exact facts and its identity. The implementation would therefore either reject the expressly allowed narrower case or make \u201cexact impact identity\u201d no longer identify the exact impact.",
+      "suggested_action": "Define a fixed identity for the initially disclosed requirement separately from each replacement\u2019s recomputed impact identity, and compare the latter by explicit containment across steps 1\u20134, tests, risks, and acceptance criteria.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "review-impact-identity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-b8d2f345",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Allow equal-or-narrower answer-bound impacts while keeping replacement and seal files append-only and accepted-",
+      "body": "Step 4 (`Allow equal-or-narrower answer-bound impacts while keeping replacement and seal files append-only and accepted-head overwrite promotion-only`) does not choose whether a review-required replacement may use the existing replacement-context expansion. Architecture says:\n\n  ```text\n  The review binding grants no new row, capsule, artifact, or standalone-relation\n  authority.\n  ```\n\n  But `plan_tool/roadmap_candidate_review.py:request_replacement` can persist an expanded `CandidateReviewReplacementState`, `_replacement_capsule` returns that expanded full-membership capsule, and `plan_tool/roadmap_version_promotion.py:_require_final_capsule_binding` accepts it. Keeping that existing route and refusing it are both reasonable readings of Architecture\u2019s same-predecessor rule; the Testing section and answer-bound-replacement acceptance criterion do not decide. The choice changes which rows may become authorized after the answer.",
+      "suggested_action": "State whether review-required replacements retain only the admitted capsule or may use the existing independently authorized expansion, and add the matching authority boundary to step 4\u2019s tests and acceptance criteria.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "replacement-capsule-authority",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "ada0ccb5ae2ac5b2ff2ae6d78d43fd10aaf5e9161ad9bebb0abd9aabb6a554c9",
+      "detail_bundle_digest": "611653047306c042a6af31f6873493596d48a93c70d7bfd54ec7ac5d20040d3e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/01-review-required-result-exact-relation.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/02-store-review-required-initial.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/03-bind-exact-requirement-one-question.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/04-allow-equal-narrower-answer-bound.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-policy-review/05-document-three-candidate-outcomes.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "d1c71a9c01564ae431040abc26284ad3a4706cd9039a77760bee26c835fe1e08",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

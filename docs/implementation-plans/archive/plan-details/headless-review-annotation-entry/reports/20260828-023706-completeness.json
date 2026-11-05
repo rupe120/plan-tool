@@ -1,0 +1,156 @@
+{
+  "version": 4,
+  "plan_slug": "headless-review-annotation-entry",
+  "plan_path": "docs/implementation-plans/2-headless-review-annotation-entry.md",
+  "created_at": "2026-08-28T02:37:06Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7612bc1cb5f230d889a9cdaf20f53c1c376bdede0f798eced6918b995c4af58c",
+  "code_fingerprint": {
+    "HUMAN_IO_FORMAT.md": "ab817e49bd89fed3564e3ca85f2eb6d4940f89d719dbfb6e9b737de3fda6f721",
+    "plan_tool/cli/review_cmd.py": "23036eb8270ef2e20e5a46c28478a118c6bec507f9ba3ea42e397c738945f972",
+    "plan_tool/review_walk.py": "b7a85997db97c038255f36b6caed85288e8036fcc0efa95de07e9e5aa1daf0ee",
+    "tests/test_review_walk.py": "2c1cd3d6e9c24f54e581adec4b0d44d4838427b2979a688cd5bd387eec196bd6"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/01-annotation-only-walk-mode-that.md": "f31fe0bb48fb127e922682d3197533308460315cc6a01d640e377eeb802923ba",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md": "e7e71efb9fcdcaae2bb1f6f15958a91aefa796eb59bc33e2d608b9f1d7b6c354",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/03-let-explicit-remote-non-tty-cmd-review.md": "d5715da139edc0daa7791d9bae0b5599ffe9c995009295c3a1101a45e874ebf4",
+    "docs/implementation-plans/plan-details/headless-review-annotation-entry/04-document-restricted-remote-review.md": "1961ea7f7f567199e7eac6607c007557f70861c4fd35a64752ce270c04362787"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Headless Review Annotation Entry\n\n`headless-review-annotation-entry` \u00b7 generated 2026-08-28T02:37:06Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply headless-review-annotation-entry   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk headless-review-annotation-entry  # alternative interactive review/apply\n\n- HIGH `[remote-feedback-handoff]` [confidence: limited]: Step 1 (`Add an annotation-only walk mode that preserves skip rewrites, keeps feedback open, and blocks blank, apply, run, apply-all, file-check, and structural action dispatch`) promises `## Architecture` \u201cRemote feedback remains pending until a later terminal walk handles action\u201d and `## Acceptance criteria` says feedback \u201cpersists as annotations,\u201d but `review_walk._prompt_for_annotation` says \u201cLoop back to the status prompt so the user picks apply/skip,\u201d and `walk_recommendations` skips an existing `open` annotation unless `--rewalk` is used. Define how feedback persists without a prohibited follow-up and which terminal entry re-prompts it.\n  - Fix: Define the durable nonterminal feedback annotation and its exact terminal re-entry route, then add acceptance and test coverage for the remote-to-terminal handoff.\n- MEDIUM `[remote-terminal-compatibility]` [confidence: limited]: Step 2 (`Let explicit remote non-TTY cmd_review runs walk fresh saved results while preserving saved-review writes and all opt-out skips`) and Architecture say entry is allowed \u201conly when the existing remote mode is explicitly configured and stdin is non-TTY,\u201d while Overview, Risks, Testing, and Acceptance preserve terminal behavior only with remote mode unset. Current `review_cmd._review_walk_environment_allows` admits TTY walks and `review_walk.make_human_input_provider` selects the remote provider from the environment, so the plan leaves existing remote-plus-TTY behavior open to either preservation or removal.\n  - Fix: State and test the full TTY/remote gate table, retaining the existing remote TTY walk while making only remote non-TTY walks annotation-only.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[remote-reuse-disclosure]` [confidence: limited]: Step 4 (`Document the restricted remote review prompt and saved-annotation behavior`) covers `HUMAN_IO_FORMAT.md` only, while `review_cmd.register` documents `--reuse` as \u201ca non-TTY reuse prints the saved findings and skips the per-finding walk\u201d and `--no-walk` says non-TTY contexts skip automatically. Steps 2\u20133 make explicit remote non-TTY runs the exception, so the command\u2019s own help will misstate the new behavior.\n  - Fix: Update the command help and protocol documentation together to state the explicit-remote non-TTY exception and its restricted response set.\n- MEDIUM `[remote-reuse-entry]` [confidence: limited]: Step 3 (`Let explicit remote non-TTY cmd_review reuse saved reviews through the annotation-only walk while ordinary non-TTY reuse still skips`) has no distinct proof: Testing and Acceptance criteria name neither an eligible saved review nor `--reuse` or the paired ordinary non-TTY reuse skip. `review_cmd._cmd_review_body` currently has that separate non-TTY reuse branch, so steps 1\u20132 can pass every named check while step 3 is absent.\n  - Fix: Add a step-3 acceptance criterion and focused proof for remote saved-review reuse and unchanged ordinary non-TTY reuse skipping.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-4b21ec2e]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-53cc1cb4]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a1b0b27c]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool.cli.review_cmd.cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b01e2b7d]` [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2e240813]` [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]` [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/cli/review_cmd.py', 'tests/test_review_walk.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit headless-review-annotation-entry` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Headless Review Annotation Entry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[remote-feedback-handoff]` [confidence: limited]: Step 1 (`Add an annotation-only walk mode that preserves skip rewrites, keeps feedback open, and blocks blank, apply, run, apply-all, file-check, and structural action dispatch`) promises `## Architecture` \u201cRemote feedback remains pending until a later terminal walk handles action\u201d and `## Acceptance criteria` says feedback \u201cpersists as annotations,\u201d but `review_walk._prompt_for_annotation` says \u201cLoop back to the status prompt so the user picks apply/skip,\u201d and `walk_recommendations` skips an existing `open` annotation unless `--rewalk` is used. Define how feedback persists without a prohibited follow-up and which terminal entry re-prompts it.\n- MEDIUM `[remote-terminal-compatibility]` [confidence: limited]: Step 2 (`Let explicit remote non-TTY cmd_review runs walk fresh saved results while preserving saved-review writes and all opt-out skips`) and Architecture say entry is allowed \u201conly when the existing remote mode is explicitly configured and stdin is non-TTY,\u201d while Overview, Risks, Testing, and Acceptance preserve terminal behavior only with remote mode unset. Current `review_cmd._review_walk_environment_allows` admits TTY walks and `review_walk.make_human_input_provider` selects the remote provider from the environment, so the plan leaves existing remote-plus-TTY behavior open to either preservation or removal.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[remote-reuse-disclosure]` [confidence: limited]: Step 4 (`Document the restricted remote review prompt and saved-annotation behavior`) covers `HUMAN_IO_FORMAT.md` only, while `review_cmd.register` documents `--reuse` as \u201ca non-TTY reuse prints the saved findings and skips the per-finding walk\u201d and `--no-walk` says non-TTY contexts skip automatically. Steps 2\u20133 make explicit remote non-TTY runs the exception, so the command\u2019s own help will misstate the new behavior.\n- MEDIUM `[remote-reuse-entry]` [confidence: limited]: Step 3 (`Let explicit remote non-TTY cmd_review reuse saved reviews through the annotation-only walk while ordinary non-TTY reuse still skips`) has no distinct proof: Testing and Acceptance criteria name neither an eligible saved review nor `--reuse` or the paired ordinary non-TTY reuse skip. `review_cmd._cmd_review_body` currently has that separate non-TTY reuse branch, so steps 1\u20132 can pass every named check while step 3 is absent.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_review_walk`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool.cli.review_cmd.cmd_review`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `plan_tool_human_io=remote`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `walk_recommendations`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/cli/review_cmd.py', 'tests/test_review_walk.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply headless-review-annotation-entry` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-11b505ea",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Add an annotation-only walk mode that preserves skip rewrites, keeps feedback open, and blocks blank, apply, ru",
+      "body": "Step 1 (`Add an annotation-only walk mode that preserves skip rewrites, keeps feedback open, and blocks blank, apply, run, apply-all, file-check, and structural action dispatch`) promises `## Architecture` \u201cRemote feedback remains pending until a later terminal walk handles action\u201d and `## Acceptance criteria` says feedback \u201cpersists as annotations,\u201d but `review_walk._prompt_for_annotation` says \u201cLoop back to the status prompt so the user picks apply/skip,\u201d and `walk_recommendations` skips an existing `open` annotation unless `--rewalk` is used. Define how feedback persists without a prohibited follow-up and which terminal entry re-prompts it.",
+      "suggested_action": "Define the durable nonterminal feedback annotation and its exact terminal re-entry route, then add acceptance and test coverage for the remote-to-terminal handoff.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-feedback-handoff",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-728d662b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Let explicit remote non-TTY cmd_review runs walk fresh saved results while preserving saved-review writes and a",
+      "body": "Step 2 (`Let explicit remote non-TTY cmd_review runs walk fresh saved results while preserving saved-review writes and all opt-out skips`) and Architecture say entry is allowed \u201conly when the existing remote mode is explicitly configured and stdin is non-TTY,\u201d while Overview, Risks, Testing, and Acceptance preserve terminal behavior only with remote mode unset. Current `review_cmd._review_walk_environment_allows` admits TTY walks and `review_walk.make_human_input_provider` selects the remote provider from the environment, so the plan leaves existing remote-plus-TTY behavior open to either preservation or removal.",
+      "suggested_action": "State and test the full TTY/remote gate table, retaining the existing remote TTY walk while making only remote non-TTY walks annotation-only.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-terminal-compatibility",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-1f62c086",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Document the restricted remote review prompt and saved-annotation behavior`) covers `HUMAN_IO_FORMAT.md` only, ",
+      "body": "Step 4 (`Document the restricted remote review prompt and saved-annotation behavior`) covers `HUMAN_IO_FORMAT.md` only, while `review_cmd.register` documents `--reuse` as \u201ca non-TTY reuse prints the saved findings and skips the per-finding walk\u201d and `--no-walk` says non-TTY contexts skip automatically. Steps 2\u20133 make explicit remote non-TTY runs the exception, so the command\u2019s own help will misstate the new behavior.",
+      "suggested_action": "Update the command help and protocol documentation together to state the explicit-remote non-TTY exception and its restricted response set.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-reuse-disclosure",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-5c8170c2",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 (`Let explicit remote non-TTY cmd_review reuse saved reviews through the annotation-only walk while ordinary non-",
+      "body": "Step 3 (`Let explicit remote non-TTY cmd_review reuse saved reviews through the annotation-only walk while ordinary non-TTY reuse still skips`) has no distinct proof: Testing and Acceptance criteria name neither an eligible saved review nor `--reuse` or the paired ordinary non-TTY reuse skip. `review_cmd._cmd_review_body` currently has that separate non-TTY reuse branch, so steps 1\u20132 can pass every named check while step 3 is absent.",
+      "suggested_action": "Add a step-3 acceptance criterion and focused proof for remote saved-review reuse and unchanged ordinary non-TTY reuse skipping.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "remote-reuse-entry",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "7612bc1cb5f230d889a9cdaf20f53c1c376bdede0f798eced6918b995c4af58c",
+    "detail_bundle_digest": "a02d0ef73811862af3870d7b03c224fd251f6ee6a1cd465a8999d74f9f2e859d",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/01-annotation-only-walk-mode-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/02-let-explicit-remote-non-tty-cmd-review.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/03-let-explicit-remote-non-tty-cmd-review.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/headless-review-annotation-entry/04-document-restricted-remote-review.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "748ca5238e5348c160dc2f7467b284e02d4fff19040bdc2016294b6e841ca41c",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

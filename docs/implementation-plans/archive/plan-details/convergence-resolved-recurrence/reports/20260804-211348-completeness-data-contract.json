@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-c8412970": {
+      "code_anchor": null,
+      "field_or_key": "source",
+      "location": "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md",
+      "reason": "`Recommendation.source` lacks a matching HEAD code-location anchor",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260804-211348-completeness"
+}

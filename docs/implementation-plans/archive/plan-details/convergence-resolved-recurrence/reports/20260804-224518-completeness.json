@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-04T22:45:18Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "79f5511ed2a391a210a9cde432ca018f9963b06f4164b96555b9f97339d36563",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "0431ad02dacbb06bcc4d8bc43e91e09c19a2a24e6155243efa3d1f18ffb2ccbb",
+    "plan_tool/convergence_diagnosis.py": "b8fdc94611abdc55184f73cd8daccf593aab51f2e297c3872bb07fe7bb2678be",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "tests/cli/test_convergence_cmd.py": "70e17a3104cd7485340262371140876426661c60a7a320fad9a5a944bcbb453b",
+    "tests/test_convergence_diagnosis.py": "0897e15cfaef741b17e62fbd118fd9ca365ee135b5a3ceb45926ddff69ba3ff2",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "05723d649f992eefc3f75cbbc8b2fa963bb93069d7cb2471611eaa6f1bc2c6bf",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "896e3b424330110e6913031345b3fc0cd371f781f4e6298b0ab6d8f39b849519",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "159e6b2ec14bdbf013039c0db061ec851f4161e6780ff57099b6ee6447b45b1c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-04T22:45:18Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply convergence-resolved-recurrence   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[run-reconcile-validity]`: `plan_tool/cli/reconcile.py:_save_and_walk_run_reconcile` omits `outcome_evidence_valid`, so every real newest `run-reconcile` sidecar loads as legacy `None`; step 1 (`Make an absent or applied latest finding end recurrence`) can never trust a valid empty run-reconcile audit as its `## Input` and acceptance criteria require.\n  - Fix: Include the live run-reconcile save path in step 1 so parseable findings output or an explicit clean result records the existing validity marker, with a producer-to-diagnosis regression.\n- HIGH `[run-reconcile-recurrence-scope]`: `plan_tool/review.py:extract_run_reconcile_recommendations` saves real findings as `source=\"run-reconcile\"`, but `plan_tool/review.py:STRUCTURAL_SOURCES` excludes that source. Step 1 (`Make an absent or applied latest finding end recurrence`) says \u201cA `run-reconcile` no-match clears recurrence,\u201d while step 2 (`Limit re-decompose advice to structural findings`) says \u201cLet only recurring medium-or-higher structural findings supply\u201d it; after step 2, the validity rule cannot affect real run-reconcile recurrence.\n  - Fix: Define how real run-reconcile outcomes link to structural evidence before the source boundary, and cover valid and invalid persisted outcomes end to end\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[run-reconcile-validity]`: `plan_tool/cli/reconcile.py:_save_and_walk_run_reconcile` omits `outcome_evidence_valid`, so every real newest `run-reconcile` sidecar loads as legacy `None`; step 1 (`Make an absent or applied latest finding end recurrence`) can never trust a valid empty run-reconcile audit as its `## Input` and acceptance criteria require.\n- HIGH `[run-reconcile-recurrence-scope]`: `plan_tool/review.py:extract_run_reconcile_recommendations` saves real findings as `source=\"run-reconcile\"`, but `plan_tool/review.py:STRUCTURAL_SOURCES` excludes that source. Step 1 (`Make an absent or applied latest finding end recurrence`) says \u201cA `run-reconcile` no-match clears recurrence,\u201d while step 2 (`Limit re-decompose advice to structural findings`) says \u201cLet only recurring medium-or-higher structural findings supply\u201d it; after step 2, the validity rule cannot affect real run-reconcile recurrence.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-resolved-recurrence` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-8e8c729a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`plan_tool/cli/reconcile.py:_save_and_walk_run_reconcile` omits `outcome_evidence_valid`, so every real newest `run-reco",
+      "body": "`plan_tool/cli/reconcile.py:_save_and_walk_run_reconcile` omits `outcome_evidence_valid`, so every real newest `run-reconcile` sidecar loads as legacy `None`; step 1 (`Make an absent or applied latest finding end recurrence`) can never trust a valid empty run-reconcile audit as its `## Input` and acceptance criteria require.",
+      "suggested_action": "Include the live run-reconcile save path in step 1 so parseable findings output or an explicit clean result records the existing validity marker, with a producer-to-diagnosis regression.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "run-reconcile-validity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d995ede9",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`plan_tool/review.py:extract_run_reconcile_recommendations` saves real findings as `source=\"run-reconcile\"`, but `plan_t",
+      "body": "`plan_tool/review.py:extract_run_reconcile_recommendations` saves real findings as `source=\"run-reconcile\"`, but `plan_tool/review.py:STRUCTURAL_SOURCES` excludes that source. Step 1 (`Make an absent or applied latest finding end recurrence`) says \u201cA `run-reconcile` no-match clears recurrence,\u201d while step 2 (`Limit re-decompose advice to structural findings`) says \u201cLet only recurring medium-or-higher structural findings supply\u201d it; after step 2, the validity rule cannot affect real run-reconcile recurrence.",
+      "suggested_action": "Define how real run-reconcile outcomes link to structural evidence before the source boundary, and cover valid and invalid persisted outcomes end to end",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "run-reconcile-recurrence-scope",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-structural-review-remediation",
+  "plan_path": "docs/implementation-plans/2-roadmap-structural-review-remediation.md",
+  "created_at": "2026-08-18T16:34:26Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "8aa882c79aeadc076bc002b8b2b1f989d2c7bd6012c91f1ccc515ca673b369e0",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "efaa06917bf0481cd8979e56e81b21fc2bcd89c6da3e73604cd538c61a044808",
+    "CLAUDE.md": "a827c97bbbb7e45e9cc02c03ab6c989f5b8840485e4fa9b4030c0a55da5f7ab7",
+    "README.md": "ce92ed81b5ad03cb0062d43f08185f8ad3bde22cc8f2af24aef59987af3be9a5",
+    "ROADMAP_FORMAT.md": "cc2fd488c4f5817ad7d3f59a392de37394c6d5f28463a18c52ac78e7e115b405",
+    "RUNBOOK.md": "22f06a29c5496434308a86e8d22798f70578341b5e59b4668e82abd5c714a14f",
+    "docs/ARCHITECTURE.md": "9c088a8b15c4e720564f8f10170bd363e41e649cfed666aa214f79b7c0f2da51",
+    "docs/CODEX_CLI_CONTRACT.md": "d0f8c68b5d8b66964dda8e62d03a1a750cbae9065fe2fd3055524510f3a31ce9",
+    "docs/ROADMAP_WALKTHROUGH.md": "e4ccde6a905ca4050cedbdf60ce48ca9fcd49bcf4d15cd7328b4cb9c537dc55a",
+    "docs/cli/roadmap.md": "c86612d099377c4831db368676b2b961dced87ca4bc98b7b69b1ebca26f656be",
+    "integrations/claude/SKILL.md": "76f084f10c38c04483cde887987143e6cef45f22697824200ec6ca9cd8cdec5a",
+    "plan_tool/cli/roadmap_cmd.py": "89a7326a5850028b4919d0726856a72d0dd8eeb4b34a88bc50ecc18073b174fe",
+    "plan_tool/roadmap_structural_revision_patch.py": "2978a3df0e38fc53ed9c42584d27f06340a6926fe9d172eb8c007b35ade0bd12",
+    "plan_tool/roadmap_structural_revision_run.py": "cac636f688aeb51f1dd4428a3f59700d9ec6245a2c76a69649ab4d9f21ad9195",
+    "tests/cli/test_cli_reference.py": "41eb4bf16ae35b4a6cf19fc0673cd778b77531d01ad22f98326810b51a9ad345",
+    "tests/test_roadmap_format.py": "c7264434ff1217e3bdf7149b307bdf284c14398587b95d0335e2200431fd9b66",
+    "tests/test_roadmap_structural_revision_patch.py": "0ae4dbf95fb6558894c1c05f0ec7bfc3c24168ed3f7adc69b6df93483f9f723e",
+    "tests/test_roadmap_structural_revision_run.py": "0455a17f1b65d4d99aa53d3cedeb0a594dce905b1e37006da5666300b237034f"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context: considered 2 completed sibling step(s); 2 supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step3-run-reconcile-6bbae623",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "`tests/test_roadmap_format.py:test_structural_rewrite_route_guidance_sweep_covers_every_named_public_guide` (step 3 \u201cDoc",
+      "body": "`tests/test_roadmap_format.py:test_structural_rewrite_route_guidance_sweep_covers_every_named_public_guide` (step 3 \u201cDocument both admitted route classes, scope refusal to structural preflight, and keep the writer single-artifact\u201d) does not directly verify each guide\u2019s route section or `plan_tool/cli/roadmap_cmd.py` module route description, so it cannot prove the complete guide sweep required by the detail",
+      "suggested_action": "scope assertions to each guide\u2019s route anchor and assert the CLI module docstring independently of parser help",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

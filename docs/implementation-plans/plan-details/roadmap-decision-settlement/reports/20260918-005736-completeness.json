@@ -1,0 +1,204 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-decision-settlement",
+  "plan_path": "docs/implementation-plans/2-roadmap-decision-settlement.md",
+  "created_at": "2026-09-18T00:57:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4507bc68d2cfe32c75913cc5a3fe17f2435186b2c7661d0acb44aa3c9ab15564",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "bcfce1fa3bd7e1f3a8080ffb8ddf72dee81ac46971556b1ff0a411f426eeb408",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "CLAUDE.md": "1141af3b4ab1974c5b3afdbda1e9b4b0fd1a9957a08f3ad920b9c1abf0a3ff49",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "integrations/shared/DIRECTIVES.md": "7192d800437e52964ac265bb02046284bbd3a9db29721c6d5e362b06c8411fb8",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_artifacts.py": "1928d1f1fbba7733d39a0fc57c2383d9a5f0b0fb1a83467ac129ddefa69d3e5a",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "plan_tool/roadmap_revision_publish.py": "1503a6839e5c7abc3543cc3373c1a43c90f6a031c7608eae00d837233d0a8afa",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_artifacts.py": "999e009cec8d866fa7dce50ec1a0bb277bc8a1e7c2299b62c7d3cce7da4ba171",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072",
+    "tests/test_roadmap_gates.py": "4b52ed512a58f8c04b12b681ebcd586b4a2904e485b3c32d9e3df0f63488a856",
+    "tests/test_roadmap_revision_publish.py": "04732b48fd13bf91a093750462e986df30f80e37bd9a730568c9cbb56734cff8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md": "4ce39982298acdcba3ca1345585257320e0cfe4d7e9a584933b2072bb8dff9d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md": "52e896aca9d3402c2a94218121c9fe291dcc05499aaea5ee028a23f2190c011d",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md": "980a2ea8d9849d75d89270473d480351633c2f5d212b0885eb488f32450912ce",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md": "b080edf8894abe55e7604561d5232202910f1817b6a110263eb390405bf463a6",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md": "cfeabe112d58b6c2f1d845a435f4381743df8fdf27df21304c785798c3c9121f",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md": "ee721bd3406d9364b90c2955d663a44f3451bdbbc8ce69b2377f76bb709a6b9e",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md": "8079ac7b0e74671c9a1af085a6b2cd69e8bf565e36c660964af95363322357d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md": "2a6beb3a5b45888f531935def85e70543f151024a8fe757c0727c1f0475dccf9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Decision Settlement\n\n`roadmap-decision-settlement` \u00b7 generated 2026-09-18T00:57:35Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `4507bc68d2cfe32c75913cc5a3fe17f2435186b2c7661d0acb44aa3c9ab15564`\n- **Detail bundle digest:** `cd44043951359557e33082b20f7634c9cd5d71f8d28500e099d06a89d948ce94`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 8 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.29\n- **Satellite ratio:** 0.12\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-decision-settlement  # optional interactive review of the saved findings\n\n- HIGH `[unenrolled-settlement-seed-invalidation]` [confidence: limited]: Step 4 and the Architecture section both claim the un-enrolled write touches only the target artifact and its own stage baseline, but the named mechanism does not deliver that by default. Step 4's title states:\n\n```\nSettle one decision on an un-enrolled roadmap and publish its receipt through publish_stage_artifact's multi-member generation, keeping the existing journal recovery (roll back or drop an in-flight generation) unchanged and updating the selected artifact's bytes and its stage baseline record together \u2014 no seed-state or other artifact/stage is rewritten\n```\n\n  and the Architecture \"Un-enrolled roadmap\" bullet restates it: \"No other artifact, seed-state, or unrelated stage's baseline is touched.\" At HEAD, `publish_stage_artifact` (`plan_tool/roadmap_revision_publish.py:517`) defaults `invalidate_seeds=None`, which resolves `include_seed_state = True`, which always loads and rewrites the roadmap's single shared `seed_state.json` via `invalidated_seed_state(...)` \u2014 a function whose own docstring is \"Return an independent state where every derived seed is stale\" (`roadmap_seed_state.py:111`) and which unconditionally sets every existing seed entry's `status` to `\"invalidated\"` (`roadmap_seed_state.py:122`), a status consumed downstream to classify drafts as needing rework (`roadmap_seed_manifest.py:121,137`). The only existing call site of `publish_stage_artifact` (`plan_tool/roadmap.py:2932`, the ordinary stage-run path) never passes `invalidate_seeds`, so there is no precedent in the codebase for calling it with seed-state left alone \u2014 `invalidate_seeds=False` is currently unused anywhere. So the exact mechanism the plan names, used as the plan describes it, would silently mark every already-authored derived plan seed \"invalidated\" the moment an operator settles one Domain/Constraints/Components/Plans decision, on any stage, whenever the roadmap has already reached the point of deriving plan seeds \u2014 directly contradicting the plan's own stated guarantee that the write is narrow and touches nothing beyond the one artifact and its own baseline.\n  - Fix: State explicitly, in the Architecture and step 4, that the un-enrolled settlement write must call the publication primitive with seed invalidation suppressed (e.g. `invalidate_seeds=False`), and add a test/acceptance criterion asserting the roadmap's seed state is byte-identical before and after a settlement.\n- HIGH `[enrolled-settlement-version-provenance]` [confidence: limited]: Step 5 and its supporting Architecture text and Risk both assert the enrolled path can reuse `roadmap_versions.py`'s storage primitives independently of \"the seal precondition chain,\" but at HEAD that storage layer's own schema \u2014 not just `promote_review_seal`'s preconditions \u2014 is where the review-provenance binding actually lives, so the claimed decoupling doesn't hold as stated. The Architecture \"Enrolled roadmap\" bullet says:\n\n```\nSettlement instead adds one new, narrow, non-model promotion boundary: store the settled artifact bytes as a new immutable version (reusing the existing storage primitives in roadmap_versions.py), prove it gate-valid with the existing check_complete_roadmap_gates evaluator ... then advance accepted_head_path under the existing writer-token lease and PendingGeneration journal \u2014 the same selector-swap mechanics promote_review_seal uses, without its seal/review preconditions.\n```\n\n  and the Risks section states: \"an enrolled settlement must never fabricate a fake `CandidateProposalAdmission`/`CandidateReviewSeal` chain ... that would misrepresent a deterministic change as model-proposed and reviewer-sealed.\" At HEAD, `StoredRoadmapVersion.version_kind` is a closed `Literal[\"root\", \"candidate\"]` (`roadmap_versions.py:115`); `\"root\"` can only ever be written once, at initial enrollment (`build_root_enrollment_generation` refuses when a selector already exists, `roadmap_versions.py:434`), so a post-enrollment settlement can only use `\"candidate\"`. The model validator on `StoredRoadmapVersion` requires a non-null `review_lineage_identity` for every `\"candidate\"` record (`roadmap_versions.py:184-187`), and that field is not a free-form identity: it is either the sentinel `INITIAL_EMPTY_REVIEW_LINEAGE_ID` (meaning \"not yet reviewed,\" used only for a freshly-proposed, not-yet-promoted candidate at `roadmap_candidate_run.py:977,981`) or a hash of a genuine reviewer question-inventory id and answer id (`_review_lineage_identity`, `roadmap_candidate_review.py:1752`, produced only after a real review answer at `roadmap_candidate_review.py:1661`). Every `\"candidate\"`-kind stored version is additionally expected, by existing readers, to carry a matching on-disk evidence record that is checked field-for-field against it (`load_stored_candidate_proposal`, `roadmap_candidate_run.py:405-414`; `load_stored_candidate_review_replacement`, `roadmap_candidate_review.py:1281-1290`). So storing a settlement version as `\"candidate\"` forces a choice the plan never makes and that the current schema has no third option for: either give it `INITIAL_EMPTY_REVIEW_LINEAGE_ID` \u2014 misrepresenting an already-promoted, never-reviewed version as an ordinary unreviewed pending candidate, a case that has never previously reached the accepted head \u2014 or compute a lineage hash without a real inventory/answer pair, which is exactly the synthetic-provenance fabrication the plan's own Risk section forbids. Reusing \"the existing storage primitives\" is therefore not decoupled from the review-provenance meaning the plan wants to avoid; resolving this cleanly needs either a new `version_kind` (an unstated, unscoped closed-vocabulary change touching this model's own validator and its existing consumers) or an explicit, argued exception to what `review_lineage_identity` is allowed to mean, and the plan currently asserts a reuse path that neither the code nor its own stated constraint actually supports as described.\n  - Fix: Decide explicitly, in the Architecture, how a settlement-authored stored version fits the closed `root`/`candidate` vocabulary and what its `review_lineage_identity` legitimately means without claiming a review that never happened \u2014 either define and scope a new version kind (naming every site in `roadmap_versions.py` and `roadmap_candidate_review.py` that must recognize it) or state the specific non-review-claiming value settlement will use and confirm no existing consumer treats it as an ordinary reviewed or pending candidate.\n- MEDIUM `[settlement-write-path-authority]` [confidence: limited]: The plan's Problem statement and References section both point at extending `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` (`plan_tool/roadmap_revision.py`) as part of what fixes the missing settlement authority, but step 1 and the rest of Architecture commit to a wholly separate, dedicated helper that never touches that allowlist, explicitly keeping `replace_design_row` refusing enum fields exactly as today (confirmed at HEAD: `replace_design_row` in `plan_tool/roadmap_artifacts.py` rejects any field whose current value is an `enum.Enum`, which `status` is). `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` back the generic, unconfirmed `--revise-feedback` local-revision path (`replace-row-presentation`), which has no evidence selector, no confirm flag, and no receipt \u2014 the opposite of what the rest of this plan builds. An implementer following the References pointer literally, rather than step 1's title, could add `\"status\"` to the `decisions` tuple in `TEXT_FIELDS_BY_ROW_TYPE`, silently opening an unconfirmed, non-evidence-bound path to flip a decision's status that bypasses every guardrail this plan exists to add.\n\n  ```\n  Problem statement: \"TEXT_FIELDS_BY_ROW_TYPE in plan_tool/roadmap_revision.py\n  is the field-authority allowlist for --revise-feedback; it names only\n  (\"rationale\",) for decisions, so status is structurally excluded \u2014 there\n  is no explicit denial to relax, only an absent grant to add.\"\n\n  References: \"plan_tool/roadmap_revision.py (TEXT_FIELDS_BY_ROW_TYPE,\n  preflight_feedback_revision) \u2014 the field-authority allowlist to extend,\n  and the existing refusal of any operation targeting an inherited\n  (source is not None) decision row, which a settlement route must match.\"\n\n  Step 1 title: \"...replace_design_row keeps refusing enum fields and no\n  existing write path is narrowed or retired\"\n  ```\n  - Fix: Correct the Problem statement and References section to state plainly that settlement does not extend `TEXT_FIELDS_BY_ROW_TYPE` or route through `preflight_feedback_revision`'s local-revision path, and cite that module only as precedent for the inherited-row (`source is not None`) refusal check \u2014 matching step 1's actual design rather than implying the generic allowlist gets a new grant.\n\n## Suggested next steps\n\n- Close 3 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Decision Settlement\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `4507bc68d2cfe32c75913cc5a3fe17f2435186b2c7661d0acb44aa3c9ab15564`\n- **Detail bundle digest:** `cd44043951359557e33082b20f7634c9cd5d71f8d28500e099d06a89d948ce94`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[unenrolled-settlement-seed-invalidation]` [confidence: limited]: Step 4 and the Architecture section both claim the un-enrolled write touches only the target artifact and its own stage baseline, but the named mechanism does not deliver that by default. Step 4's title states:\n\n```\nSettle one decision on an un-enrolled roadmap and publish its receipt through publish_stage_artifact's multi-member generation, keeping the existing journal recovery (roll back or drop an in-flight generation) unchanged and updating the selected artifact's bytes and its stage baseline record together \u2014 no seed-state or other artifact/stage is rewritten\n```\n\n  and the Architecture \"Un-enrolled roadmap\" bullet restates it: \"No other artifact, seed-state, or unrelated stage's baseline is touched.\" At HEAD, `publish_stage_artifact` (`plan_tool/roadmap_revision_publish.py:517`) defaults `invalidate_seeds=None`, which resolves `include_seed_state = True`, which always loads and rewrites the roadmap's single shared `seed_state.json` via `invalidated_seed_state(...)` \u2014 a function whose own docstring is \"Return an independent state where every derived seed is stale\" (`roadmap_seed_state.py:111`) and which unconditionally sets every existing seed entry's `status` to `\"invalidated\"` (`roadmap_seed_state.py:122`), a status consumed downstream to classify drafts as needing rework (`roadmap_seed_manifest.py:121,137`). The only existing call site of `publish_stage_artifact` (`plan_tool/roadmap.py:2932`, the ordinary stage-run path) never passes `invalidate_seeds`, so there is no precedent in the codebase for calling it with seed-state left alone \u2014 `invalidate_seeds=False` is currently unused anywhere. So the exact mechanism the plan names, used as the plan describes it, would silently mark every already-authored derived plan seed \"invalidated\" the moment an operator settles one Domain/Constraints/Components/Plans decision, on any stage, whenever the roadmap has already reached the point of deriving plan seeds \u2014 directly contradicting the plan's own stated guarantee that the write is narrow and touches nothing beyond the one artifact and its own baseline.\n- HIGH `[enrolled-settlement-version-provenance]` [confidence: limited]: Step 5 and its supporting Architecture text and Risk both assert the enrolled path can reuse `roadmap_versions.py`'s storage primitives independently of \"the seal precondition chain,\" but at HEAD that storage layer's own schema \u2014 not just `promote_review_seal`'s preconditions \u2014 is where the review-provenance binding actually lives, so the claimed decoupling doesn't hold as stated. The Architecture \"Enrolled roadmap\" bullet says:\n\n```\nSettlement instead adds one new, narrow, non-model promotion boundary: store the settled artifact bytes as a new immutable version (reusing the existing storage primitives in roadmap_versions.py), prove it gate-valid with the existing check_complete_roadmap_gates evaluator ... then advance accepted_head_path under the existing writer-token lease and PendingGeneration journal \u2014 the same selector-swap mechanics promote_review_seal uses, without its seal/review preconditions.\n```\n\n  and the Risks section states: \"an enrolled settlement must never fabricate a fake `CandidateProposalAdmission`/`CandidateReviewSeal` chain ... that would misrepresent a deterministic change as model-proposed and reviewer-sealed.\" At HEAD, `StoredRoadmapVersion.version_kind` is a closed `Literal[\"root\", \"candidate\"]` (`roadmap_versions.py:115`); `\"root\"` can only ever be written once, at initial enrollment (`build_root_enrollment_generation` refuses when a selector already exists, `roadmap_versions.py:434`), so a post-enrollment settlement can only use `\"candidate\"`. The model validator on `StoredRoadmapVersion` requires a non-null `review_lineage_identity` for every `\"candidate\"` record (`roadmap_versions.py:184-187`), and that field is not a free-form identity: it is either the sentinel `INITIAL_EMPTY_REVIEW_LINEAGE_ID` (meaning \"not yet reviewed,\" used only for a freshly-proposed, not-yet-promoted candidate at `roadmap_candidate_run.py:977,981`) or a hash of a genuine reviewer question-inventory id and answer id (`_review_lineage_identity`, `roadmap_candidate_review.py:1752`, produced only after a real review answer at `roadmap_candidate_review.py:1661`). Every `\"candidate\"`-kind stored version is additionally expected, by existing readers, to carry a matching on-disk evidence record that is checked field-for-field against it (`load_stored_candidate_proposal`, `roadmap_candidate_run.py:405-414`; `load_stored_candidate_review_replacement`, `roadmap_candidate_review.py:1281-1290`). So storing a settlement version as `\"candidate\"` forces a choice the plan never makes and that the current schema has no third option for: either give it `INITIAL_EMPTY_REVIEW_LINEAGE_ID` \u2014 misrepresenting an already-promoted, never-reviewed version as an ordinary unreviewed pending candidate, a case that has never previously reached the accepted head \u2014 or compute a lineage hash without a real inventory/answer pair, which is exactly the synthetic-provenance fabrication the plan's own Risk section forbids. Reusing \"the existing storage primitives\" is therefore not decoupled from the review-provenance meaning the plan wants to avoid; resolving this cleanly needs either a new `version_kind` (an unstated, unscoped closed-vocabulary change touching this model's own validator and its existing consumers) or an explicit, argued exception to what `review_lineage_identity` is allowed to mean, and the plan currently asserts a reuse path that neither the code nor its own stated constraint actually supports as described.\n- MEDIUM `[settlement-write-path-authority]` [confidence: limited]: The plan's Problem statement and References section both point at extending `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` (`plan_tool/roadmap_revision.py`) as part of what fixes the missing settlement authority, but step 1 and the rest of Architecture commit to a wholly separate, dedicated helper that never touches that allowlist, explicitly keeping `replace_design_row` refusing enum fields exactly as today (confirmed at HEAD: `replace_design_row` in `plan_tool/roadmap_artifacts.py` rejects any field whose current value is an `enum.Enum`, which `status` is). `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` back the generic, unconfirmed `--revise-feedback` local-revision path (`replace-row-presentation`), which has no evidence selector, no confirm flag, and no receipt \u2014 the opposite of what the rest of this plan builds. An implementer following the References pointer literally, rather than step 1's title, could add `\"status\"` to the `decisions` tuple in `TEXT_FIELDS_BY_ROW_TYPE`, silently opening an unconfirmed, non-evidence-bound path to flip a decision's status that bypasses every guardrail this plan exists to add.\n\n  ```\n  Problem statement: \"TEXT_FIELDS_BY_ROW_TYPE in plan_tool/roadmap_revision.py\n  is the field-authority allowlist for --revise-feedback; it names only\n  (\"rationale\",) for decisions, so status is structurally excluded \u2014 there\n  is no explicit denial to relax, only an absent grant to add.\"\n\n  References: \"plan_tool/roadmap_revision.py (TEXT_FIELDS_BY_ROW_TYPE,\n  preflight_feedback_revision) \u2014 the field-authority allowlist to extend,\n  and the existing refusal of any operation targeting an inherited\n  (source is not None) decision row, which a settlement route must match.\"\n\n  Step 1 title: \"...replace_design_row keeps refusing enum fields and no\n  existing write path is narrowed or retired\"\n  ```\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bcacc390",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 and the Architecture section both claim the un-enrolled write touches only the target artifact and its own stage ",
+      "body": "Step 4 and the Architecture section both claim the un-enrolled write touches only the target artifact and its own stage baseline, but the named mechanism does not deliver that by default. Step 4's title states:\n\n```\nSettle one decision on an un-enrolled roadmap and publish its receipt through publish_stage_artifact's multi-member generation, keeping the existing journal recovery (roll back or drop an in-flight generation) unchanged and updating the selected artifact's bytes and its stage baseline record together \u2014 no seed-state or other artifact/stage is rewritten\n```\n\n  and the Architecture \"Un-enrolled roadmap\" bullet restates it: \"No other artifact, seed-state, or unrelated stage's baseline is touched.\" At HEAD, `publish_stage_artifact` (`plan_tool/roadmap_revision_publish.py:517`) defaults `invalidate_seeds=None`, which resolves `include_seed_state = True`, which always loads and rewrites the roadmap's single shared `seed_state.json` via `invalidated_seed_state(...)` \u2014 a function whose own docstring is \"Return an independent state where every derived seed is stale\" (`roadmap_seed_state.py:111`) and which unconditionally sets every existing seed entry's `status` to `\"invalidated\"` (`roadmap_seed_state.py:122`), a status consumed downstream to classify drafts as needing rework (`roadmap_seed_manifest.py:121,137`). The only existing call site of `publish_stage_artifact` (`plan_tool/roadmap.py:2932`, the ordinary stage-run path) never passes `invalidate_seeds`, so there is no precedent in the codebase for calling it with seed-state left alone \u2014 `invalidate_seeds=False` is currently unused anywhere. So the exact mechanism the plan names, used as the plan describes it, would silently mark every already-authored derived plan seed \"invalidated\" the moment an operator settles one Domain/Constraints/Components/Plans decision, on any stage, whenever the roadmap has already reached the point of deriving plan seeds \u2014 directly contradicting the plan's own stated guarantee that the write is narrow and touches nothing beyond the one artifact and its own baseline.",
+      "suggested_action": "State explicitly, in the Architecture and step 4, that the un-enrolled settlement write must call the publication primitive with seed invalidation suppressed (e.g. `invalidate_seeds=False`), and add a test/acceptance criterion asserting the roadmap's seed state is byte-identical before and after a settlement.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unenrolled-settlement-seed-invalidation",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-a9836d4f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 and its supporting Architecture text and Risk both assert the enrolled path can reuse `roadmap_versions.py`'s sto",
+      "body": "Step 5 and its supporting Architecture text and Risk both assert the enrolled path can reuse `roadmap_versions.py`'s storage primitives independently of \"the seal precondition chain,\" but at HEAD that storage layer's own schema \u2014 not just `promote_review_seal`'s preconditions \u2014 is where the review-provenance binding actually lives, so the claimed decoupling doesn't hold as stated. The Architecture \"Enrolled roadmap\" bullet says:\n\n```\nSettlement instead adds one new, narrow, non-model promotion boundary: store the settled artifact bytes as a new immutable version (reusing the existing storage primitives in roadmap_versions.py), prove it gate-valid with the existing check_complete_roadmap_gates evaluator ... then advance accepted_head_path under the existing writer-token lease and PendingGeneration journal \u2014 the same selector-swap mechanics promote_review_seal uses, without its seal/review preconditions.\n```\n\n  and the Risks section states: \"an enrolled settlement must never fabricate a fake `CandidateProposalAdmission`/`CandidateReviewSeal` chain ... that would misrepresent a deterministic change as model-proposed and reviewer-sealed.\" At HEAD, `StoredRoadmapVersion.version_kind` is a closed `Literal[\"root\", \"candidate\"]` (`roadmap_versions.py:115`); `\"root\"` can only ever be written once, at initial enrollment (`build_root_enrollment_generation` refuses when a selector already exists, `roadmap_versions.py:434`), so a post-enrollment settlement can only use `\"candidate\"`. The model validator on `StoredRoadmapVersion` requires a non-null `review_lineage_identity` for every `\"candidate\"` record (`roadmap_versions.py:184-187`), and that field is not a free-form identity: it is either the sentinel `INITIAL_EMPTY_REVIEW_LINEAGE_ID` (meaning \"not yet reviewed,\" used only for a freshly-proposed, not-yet-promoted candidate at `roadmap_candidate_run.py:977,981`) or a hash of a genuine reviewer question-inventory id and answer id (`_review_lineage_identity`, `roadmap_candidate_review.py:1752`, produced only after a real review answer at `roadmap_candidate_review.py:1661`). Every `\"candidate\"`-kind stored version is additionally expected, by existing readers, to carry a matching on-disk evidence record that is checked field-for-field against it (`load_stored_candidate_proposal`, `roadmap_candidate_run.py:405-414`; `load_stored_candidate_review_replacement`, `roadmap_candidate_review.py:1281-1290`). So storing a settlement version as `\"candidate\"` forces a choice the plan never makes and that the current schema has no third option for: either give it `INITIAL_EMPTY_REVIEW_LINEAGE_ID` \u2014 misrepresenting an already-promoted, never-reviewed version as an ordinary unreviewed pending candidate, a case that has never previously reached the accepted head \u2014 or compute a lineage hash without a real inventory/answer pair, which is exactly the synthetic-provenance fabrication the plan's own Risk section forbids. Reusing \"the existing storage primitives\" is therefore not decoupled from the review-provenance meaning the plan wants to avoid; resolving this cleanly needs either a new `version_kind` (an unstated, unscoped closed-vocabulary change touching this model's own validator and its existing consumers) or an explicit, argued exception to what `review_lineage_identity` is allowed to mean, and the plan currently asserts a reuse path that neither the code nor its own stated constraint actually supports as described.",
+      "suggested_action": "Decide explicitly, in the Architecture, how a settlement-authored stored version fits the closed `root`/`candidate` vocabulary and what its `review_lineage_identity` legitimately means without claiming a review that never happened \u2014 either define and scope a new version kind (naming every site in `roadmap_versions.py` and `roadmap_candidate_review.py` that must recognize it) or state the specific non-review-claiming value settlement will use and confirm no existing consumer treats it as an ordinary reviewed or pending candidate.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "enrolled-settlement-version-provenance",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-18c95342",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan's Problem statement and References section both point at extending `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedbac",
+      "body": "The plan's Problem statement and References section both point at extending `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` (`plan_tool/roadmap_revision.py`) as part of what fixes the missing settlement authority, but step 1 and the rest of Architecture commit to a wholly separate, dedicated helper that never touches that allowlist, explicitly keeping `replace_design_row` refusing enum fields exactly as today (confirmed at HEAD: `replace_design_row` in `plan_tool/roadmap_artifacts.py` rejects any field whose current value is an `enum.Enum`, which `status` is). `TEXT_FIELDS_BY_ROW_TYPE`/`preflight_feedback_revision` back the generic, unconfirmed `--revise-feedback` local-revision path (`replace-row-presentation`), which has no evidence selector, no confirm flag, and no receipt \u2014 the opposite of what the rest of this plan builds. An implementer following the References pointer literally, rather than step 1's title, could add `\"status\"` to the `decisions` tuple in `TEXT_FIELDS_BY_ROW_TYPE`, silently opening an unconfirmed, non-evidence-bound path to flip a decision's status that bypasses every guardrail this plan exists to add.\n\n  ```\n  Problem statement: \"TEXT_FIELDS_BY_ROW_TYPE in plan_tool/roadmap_revision.py\n  is the field-authority allowlist for --revise-feedback; it names only\n  (\"rationale\",) for decisions, so status is structurally excluded \u2014 there\n  is no explicit denial to relax, only an absent grant to add.\"\n\n  References: \"plan_tool/roadmap_revision.py (TEXT_FIELDS_BY_ROW_TYPE,\n  preflight_feedback_revision) \u2014 the field-authority allowlist to extend,\n  and the existing refusal of any operation targeting an inherited\n  (source is not None) decision row, which a settlement route must match.\"\n\n  Step 1 title: \"...replace_design_row keeps refusing enum fields and no\n  existing write path is narrowed or retired\"\n  ```",
+      "suggested_action": "Correct the Problem statement and References section to state plainly that settlement does not extend `TEXT_FIELDS_BY_ROW_TYPE` or route through `preflight_feedback_revision`'s local-revision path, and cite that module only as precedent for the inherited-row (`source is not None`) refusal check \u2014 matching step 1's actual design rather than implying the generic allowlist gets a new grant.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "settlement-write-path-authority",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "4507bc68d2cfe32c75913cc5a3fe17f2435186b2c7661d0acb44aa3c9ab15564",
+      "detail_bundle_digest": "cd44043951359557e33082b20f7634c9cd5d71f8d28500e099d06a89d948ce94",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 8,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "057f1e27940bef911e911cb4337e640fc4a26e2f9a9d6f245413704db5eb159f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 8,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2857142857142857,
+    "satellite_ratio": 0.125,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

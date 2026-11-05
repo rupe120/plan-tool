@@ -1,0 +1,109 @@
+{
+  "version": 4,
+  "plan_slug": "bare-plan-audit-altitude",
+  "plan_path": "docs/implementation-plans/2-bare-plan-audit-altitude.md",
+  "created_at": "2026-08-18T12:42:48Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4e408eb99fc52aa05f5af2cd9267f083cbe4ac80ea2041346d4ae1b17e2eb50d",
+  "code_fingerprint": {
+    "BACKLOG.md": "09807363e6eba9ddc5107ba2dfcf35758a214758074dc9cfee8d4684eba37e83",
+    "CLAUDE.md": "aa5d28fa5415fb6ee134f3f18364ad53da40d56ef260cda6a30bcc1e2d202a3c",
+    "docs/AUDIT_FLOW.md": "4175c286e7f35f2ce68e1c8aa1145fdabb8c0b65c8ebac2790f2b413a1168fc3",
+    "docs/HISTORICAL_BACKLOG_DECISIONS.md": "5e79f1d4a3b916d8bed6a25e2e761d6d2a692dc675dd041d832343393783e9a8",
+    "integrations/shared/DIRECTIVES.md": "9f701fd53adff7d8d35c12225f623ef805e10c0c9bee3dacb5aaa27152d9cc85",
+    "plan_tool/cli/completeness_cmd.py": "2a2a79eecc20edc65f629f13133fb1b04d22cf5ef32a5670743581ff080d7b9d",
+    "plan_tool/cli/convergence_cmd.py": "8cf45c753e8df23ae8f59b2fb44d752084033107f48e186128b7ef59c35a376b",
+    "plan_tool/convergence_diagnosis.py": "951b517a0a513c3c0731972c8c5e7aba79fe13ec2db926089376ce44fa75aecf",
+    "plan_tool/prompts/plan-audit.md": "eee26a89addb9fa8aeb4c6bdf2bf05c43c4fa5a23335dbbfc80201e537abda4b",
+    "plan_tool/review.py": "a694160e97f95eff79150372bcc5dcbc1f234d7abe14163d4534f31fc7d4e2b0",
+    "tests/cli/test_completeness_cmd.py": "700bbc03ed3f5b2a8f8523de5d42de486e8cdf838230fea93c193cbc52cd5f02",
+    "tests/cli/test_convergence_cmd.py": "5d84c78d1025b9ef99e05ca20dca460ac30f33a74343ff9709dbf3057dc5fcf5",
+    "tests/test_convergence_diagnosis.py": "c5322e25c1e1a800e4a1e4d27c4985018fddffd6703924fc1835de15920b48d2",
+    "tests/test_review.py": "a321456be6734bc6ddb6d8ffe6807bee21914e2f87cd9cbbaff9d898e67502db"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md": "f192c4e9fa899e97d7e05e7acf3fbcf3791c63b20adb03ce8c00142f3456f37a",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md": "dc97551fba90e07fbd076fb4f3ea20fc5b2e0557c615908ee6f4713f4a750c98",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md": "a7fc37ce7fc94a9599bd7823afdf7c0e1cad7ca9bf08b896d3ef7b4eb5f89ced",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md": "21332b9a26bd7afb3031d93f9eef69d9eefa3f8e9ace1103fed785743903e941",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md": "e54eae3c8dc885936ddcfa4ce52c575efc31a52476716bac3bd48967c342ec30"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Bare Plan Audit Altitude\n\n`bare-plan-audit-altitude` \u00b7 generated 2026-08-18T12:42:47Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `fea988b8d94341228a8029509be016a834aef437cf6f5f3397fa2cb5f22cf97a`\n- **Detail bundle digest:** `8f0613f2541cafce651b09a4b6dd25907c59872ce364a2bf8c2ad134ae0d932a`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 57455 bytes (+57455 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-8ae917e8]`: The plan's `## Acceptance criteria` names `_proposal_foundational_item`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f5ed3a67]`: The plan's `## Acceptance criteria` names `_render_sweep_context()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-0cbce6aa]`: The plan's `## Acceptance criteria` names `edit_drift`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run bare-plan-audit-altitude` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Bare Plan Audit Altitude\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `fea988b8d94341228a8029509be016a834aef437cf6f5f3397fa2cb5f22cf97a`\n- **Detail bundle digest:** `8f0613f2541cafce651b09a4b6dd25907c59872ce364a2bf8c2ad134ae0d932a`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_proposal_foundational_item`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `_render_sweep_context()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `edit_drift`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "fea988b8d94341228a8029509be016a834aef437cf6f5f3397fa2cb5f22cf97a",
+      "detail_bundle_digest": "8f0613f2541cafce651b09a4b6dd25907c59872ce364a2bf8c2ad134ae0d932a",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md",
+          "state": "present",
+          "digest": "f192c4e9fa899e97d7e05e7acf3fbcf3791c63b20adb03ce8c00142f3456f37a"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md",
+          "state": "present",
+          "digest": "dc97551fba90e07fbd076fb4f3ea20fc5b2e0557c615908ee6f4713f4a750c98"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md",
+          "state": "present",
+          "digest": "a7fc37ce7fc94a9599bd7823afdf7c0e1cad7ca9bf08b896d3ef7b4eb5f89ced"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md",
+          "state": "present",
+          "digest": "21332b9a26bd7afb3031d93f9eef69d9eefa3f8e9ace1103fed785743903e941"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md",
+          "state": "present",
+          "digest": "e54eae3c8dc885936ddcfa4ce52c575efc31a52476716bac3bd48967c342ec30"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 57455,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

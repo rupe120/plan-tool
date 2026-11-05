@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-04T21:27:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "153ce8bec23069e06c5bc8cf5bca9302ba419a9e23d9ff1f966a10c04cf50f0c",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "0431ad02dacbb06bcc4d8bc43e91e09c19a2a24e6155243efa3d1f18ffb2ccbb",
+    "plan_tool/convergence_diagnosis.py": "11bf1684a4f861a275a34189800139c3a20c1aee8af69ed034fb354b69142399",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "tests/cli/test_convergence_cmd.py": "9f6b98f4ff40f25dd6d78a36ddefa2f2ac2663284d0c51895b9cc8b6ebcc1a8a",
+    "tests/test_convergence_diagnosis.py": "f12b996301755e3b0cbbf4d8b3d1d952b08c02b9383100c1c0cd2b619789c34b",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "7acd129e789ebea1a5a249a285068c88d2726727f97dfab7de2c6e4899f2ffca",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "a9ef8d0215a9c06ccf02ccf7c375d1d5c2d862a8910af90cd0b1ba32863cc555",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "4d486be2d6c8d90eabfd10ea7a392c511a3e705c24399ec5a270cc3017a409e5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-04T21:27:49Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply convergence-resolved-recurrence   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[newest-run-cli-regression]`: Step 1 (`Make a missing latest finding end recurrence`) uses medium `granularity-split` evidence in its CLI regression, but `plan_tool/convergence_diagnosis.py:recurring_regions` at HEAD filters to `plan_tool/review.py:APPLY_ELIGIBLE_SOURCES`, which excludes that source. The test would already report `converging` with no command before step 1\u2019s newest-run change, so it cannot prove the changed behavior and assumes step 2\u2019s source-boundary work.\n  - Fix: Use a currently eligible source for step 1\u2019s CLI history, and keep structural-source CLI coverage with step 2.\n- HIGH `[resolved-latest-annotation]`: A newest-sidecar `status=\"applied\"` still counts as current recurrence: step 1 (`Make a missing latest finding end recurrence`) says \u201cdo not reinterpret an `applied` annotation here,\u201d while the plan\u2019s Acceptance criteria says \u201cResolved, claim-level, and premise-level findings do not receive a destructive re-decompose recommendation.\u201d Persisted reports retain applied recommendations, and `convergence_diagnosis:_freeze_region` closes only deliberate skips, so a latest applied structural finding can still produce re-decompose advice.\n  - Fix: Define latest-run applied resolution as non-spinning while retaining recurrence when a later audit finds the issue again, and add that persisted-sidecar regression.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[newest-run-cli-regression]`: Step 1 (`Make a missing latest finding end recurrence`) uses `granularity-split` in its CLI regression, but HEAD filters recurrence through `APPLY_ELIGIBLE_SOURCES`, which excludes it until step 2 (`Limit re-decompose advice to structural findings`) changes the source boundary. The step 1 test can therefore pass without exercising recurrence, and step 2 does not take ownership of the CLI fixture once structural evidence becomes valid.\n  - Fix: Make step 1 prove latest-run behavior with a pre-step-2 recurrence control, then have step 2 update the CLI fixture to structural evidence and retain a positive spinning control.\n  - Address: `plan-tool completeness-apply convergence-resolved-recurrence --anchor newest-run-cli-regression`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[newest-run-cli-regression]`: Step 1 (`Make a missing latest finding end recurrence`) uses medium `granularity-split` evidence in its CLI regression, but `plan_tool/convergence_diagnosis.py:recurring_regions` at HEAD filters to `plan_tool/review.py:APPLY_ELIGIBLE_SOURCES`, which excludes that source. The test would already report `converging` with no command before step 1\u2019s newest-run change, so it cannot prove the changed behavior and assumes step 2\u2019s source-boundary work.\n- HIGH `[resolved-latest-annotation]`: A newest-sidecar `status=\"applied\"` still counts as current recurrence: step 1 (`Make a missing latest finding end recurrence`) says \u201cdo not reinterpret an `applied` annotation here,\u201d while the plan\u2019s Acceptance criteria says \u201cResolved, claim-level, and premise-level findings do not receive a destructive re-decompose recommendation.\u201d Persisted reports retain applied recommendations, and `convergence_diagnosis:_freeze_region` closes only deliberate skips, so a latest applied structural finding can still produce re-decompose advice.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[newest-run-cli-regression]`: Step 1 (`Make a missing latest finding end recurrence`) uses `granularity-split` in its CLI regression, but HEAD filters recurrence through `APPLY_ELIGIBLE_SOURCES`, which excludes it until step 2 (`Limit re-decompose advice to structural findings`) changes the source boundary. The step 1 test can therefore pass without exercising recurrence, and step 2 does not take ownership of the CLI fixture once structural evidence becomes valid.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-resolved-recurrence` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-090fbaae",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Make a missing latest finding end recurrence`) uses medium `granularity-split` evidence in its CLI regression, ",
+      "body": "Step 1 (`Make a missing latest finding end recurrence`) uses medium `granularity-split` evidence in its CLI regression, but `plan_tool/convergence_diagnosis.py:recurring_regions` at HEAD filters to `plan_tool/review.py:APPLY_ELIGIBLE_SOURCES`, which excludes that source. The test would already report `converging` with no command before step 1\u2019s newest-run change, so it cannot prove the changed behavior and assumes step 2\u2019s source-boundary work.",
+      "suggested_action": "Use a currently eligible source for step 1\u2019s CLI history, and keep structural-source CLI coverage with step 2.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "newest-run-cli-regression",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-1e570bfa",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "A newest-sidecar `status=\"applied\"` still counts as current recurrence: step 1 (`Make a missing latest finding end recur",
+      "body": "A newest-sidecar `status=\"applied\"` still counts as current recurrence: step 1 (`Make a missing latest finding end recurrence`) says \u201cdo not reinterpret an `applied` annotation here,\u201d while the plan\u2019s Acceptance criteria says \u201cResolved, claim-level, and premise-level findings do not receive a destructive re-decompose recommendation.\u201d Persisted reports retain applied recommendations, and `convergence_diagnosis:_freeze_region` closes only deliberate skips, so a latest applied structural finding can still produce re-decompose advice.",
+      "suggested_action": "Define latest-run applied resolution as non-spinning while retaining recurrence when a later audit finds the issue again, and add that persisted-sidecar regression.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "resolved-latest-annotation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-090fbaae",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Make a missing latest finding end recurrence`) uses `granularity-split` in its CLI regression, but HEAD filters",
+      "body": "Step 1 (`Make a missing latest finding end recurrence`) uses `granularity-split` in its CLI regression, but HEAD filters recurrence through `APPLY_ELIGIBLE_SOURCES`, which excludes it until step 2 (`Limit re-decompose advice to structural findings`) changes the source boundary. The step 1 test can therefore pass without exercising recurrence, and step 2 does not take ownership of the CLI fixture once structural evidence becomes valid.",
+      "suggested_action": "Make step 1 prove latest-run behavior with a pre-step-2 recurrence control, then have step 2 update the CLI fixture to structural evidence and retain a positive spinning control.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "newest-run-cli-regression",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

@@ -1,0 +1,261 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-immutable-candidate-versions",
+  "plan_path": "docs/implementation-plans/2-roadmap-immutable-candidate-versions.md",
+  "created_at": "2026-08-31T21:52:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "5286d6261f34d8d82ccd600e7c30e808ea71b71f454f536e63e46807ced302d0",
+  "code_fingerprint": {
+    "BACKLOG.md": "80403c12b5812a47e98536205115325612270a23f0d5cb22cb90204f1a5cfb22",
+    "CAPABILITIES.md": "e9a842fb50858d4dcb315779dc2934975b711fe086dbac60248ba5335c30ebc0",
+    "CLAUDE.md": "b788c7ca9b3aa5415ffe7c0b069e40e9e5fb561af4f7e77f0af8efd9f7a6575b",
+    "ROADMAP_FORMAT.md": "33ad5d860d12609dcb1667738dafe31ee8ef11463e154d5346eeb0740bbd0800",
+    "TESTING.md": "3bec00214c517c6badfcf3c73cefe4956aa7706f3a57344da351cb679cf5f41f",
+    "plan_tool/cli/roadmap_cmd.py": "86772212d4cbad2b1905064ae220ea1d432d14ce20006348326f28065e088a3f",
+    "plan_tool/roadmap.py": "4c1f21aa88b5b518579f0b45bbb177e26260d284e80beb883b81524fee8c0b1f",
+    "plan_tool/roadmap_feedback_reopen.py": "bf57464daccb221b0ebf76423773ba78db963244bfced0ec5616b24f0ef1d30c",
+    "plan_tool/roadmap_impact_snapshot.py": "cbb751d933a307d246120003686f6d9b4325739ae3f3b9511e512d9e9c0ac9da",
+    "plan_tool/roadmap_revision_publish.py": "f46f41ed1852392dd83402ff16f22e0a578be4a3bfaca6f05c88939d93cc46b1",
+    "plan_tool/roadmap_revision_run.py": "dda8a8added6a241baa07e04c89fcd9951af55d451040dab9a13ad9780c01be9",
+    "plan_tool/roadmap_structural_revision_run.py": "df0283b5a7c6de1d4d1c0af43ee580b68874f022754d1ffbf06f16492e5573b4",
+    "plan_tool/roadmap_view.py": "64311d5eb38b9f064c7c2908dafdc45e13c992e0dd011bbabd1566ebb085d7cf",
+    "tests/cli/test_roadmap_cmd.py": "ec9d60c19678d080cce92979e8ea5babfeeb0e9077a86f13afffed80b0f418f3",
+    "tests/test_roadmap.py": "ccea2b20b3ca4f2e203e807eae4c4de8b7adad8b603920153998e448c787d589",
+    "tests/test_roadmap_feedback_reopen.py": "6ce45a444965621c356dc368658274bf5a5f6322e2696fa10c5e6bf2985544b5",
+    "tests/test_roadmap_format.py": "5bdb71dcc4ad12cc3f1bc48aec3551df325977f8f68593ad2982be4a93427e77",
+    "tests/test_roadmap_impact_run.py": "b90b329327f3bfdb0bfcddbe6db995ed1c409d62d5a3a4afdaff2388588e6bc9",
+    "tests/test_roadmap_impact_snapshot.py": "06341c489709ca3ef428869cb8499bc31eecc0b50b950e3022343458f5d47aa8",
+    "tests/test_roadmap_revision_publish.py": "7b6f082bf3dddace8c0e7787945d79a057bc2a408a5dd32d837b83221ae765c8",
+    "tests/test_roadmap_revision_run.py": "f86f4afb6bc63a23f890e9e7df69d5c9ac322b5a02e46f693783253acdad1936",
+    "tests/test_roadmap_structural_revision_run.py": "f07286d45200cfcac80ecc6a38ccce48e16008239369407a3ab790684adc63b7",
+    "tests/test_roadmap_view.py": "38b33d60f3eafb026c615c237b2fa4e50688f33d44dc173b1c31de2627d8873e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md": "caedf82ae70fc2d05a4f034965770c2fa5d776b14a3edd5a2eec946f99881e84",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md": "f3c6d939f42055d5d6afeeb73197a7ea5d5a11e77534ce33f0049c036d88cd3a",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-enroll-exact-immutable-root-roll-back.md": "9f607cd4ae2563a0ac7e91117e1838acc5bf1fbb9eb91e3ad3106340213fa8c8",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-build-one-bounded-inspectable-candidate.md": "17ad40fc6442fe424de5e32e39ac9b486f9a76968e569c89564586fff02cfff3",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md": "769571499bfc7415539aca1d72c81328a19680652a7f3a8dff2248552e7a6b56",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-run-one-bounded-candidate-proposal-one.md": "c1a2e3f8fd4a164ad8121c51637f8dd55d6b74d68d47565cf3ad39227a7e2c44",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-generate-diff-anchored-questions-record.md": "815c3afc93c02b3a1331fcc89f3bf663c63381e2f335cf96bbea901ef20b6c33",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-sealed-reviewed-candidate.md": "d84886785aba722d01bcfcf029432e937ac7dc531c08e68960f189056e315a58",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-route-roadmap-views-through-accepted.md": "5416e1c5c20152e5bf2514d58e9993566ecd24b6387d6fe7a13facb19575610c",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-refuse-enrolled-roadmaps-before-legacy.md": "ce8a08d8e8a3568ada1181a095415f19fe96dae93ea4f36b105c1ff89d6baeba",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md": "644402336705e1410cdd17553a0ff66f393ed858505f75af5b7d75bd3bffd36b",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md": "f1af32fe7e21f1be45b03cfad451c3c78a306d4422a2e79e356b6f074f983310"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Immutable Candidate Versions\n\n`roadmap-immutable-candidate-versions` \u00b7 generated 2026-08-31T21:52:41Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `5286d6261f34d8d82ccd600e7c30e808ea71b71f454f536e63e46807ced302d0`\n- **Detail bundle digest:** `8bf293a3a43e893c283c0d0a118ac0d884bf5d2606ff53d0e62137e3cc6e57f2`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 12 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.55\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-immutable-candidate-versions   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-immutable-candidate-versions  # alternative interactive review/apply\n\n- HIGH `[candidate-expansion-budget]` [confidence: limited]: The single-expansion rule in Architecture\u2019s \u201cDeterministic bounded context,\u201d Scope guardrails, steps 4 and 6, Testing (\u201cA second expansion refuses\u201d), and the acceptance criterion (\u201cat most one expansion is possible\u201d) does not say whether step 7\u2019s replacement request reuses its predecessor\u2019s final capsule or can compile and expand another one. Either reading is reasonable; another expansion changes membership and edit authority and violates the stated one-expansion limit.\n  - Fix: Define one expansion budget and final issued capsule for the full feedback-to-replacement lineage, including the replacement behavior, and align steps 4, 6, 7, tests, and acceptance criteria to it.\n- HIGH `[sealed-review-identity-lifecycle]` [confidence: limited]: Define the immutable review-record lifecycle: \u201cVersion authority and enrollment\u201d says a candidate\u2019s sealed review identity binds \u201cquestions, and answers,\u201d while \u201cDiff, questions, and replacement candidates\u201d says \u201cAn answer never edits a candidate.\u201d Steps 5, 7, and 8 do not establish whether the candidate keeps a fixed identity plus a later sealed review record, or whether answers change the identity promotion approves; either reading can satisfy the text but changes what exact approval means.\n  - Fix: distinguish the fixed candidate identity from an immutable sealed review record created after its question inventory and answers are complete, and require promotion to approve that record\u2019s exact candidate binding.\n- MEDIUM `[expanded-capsule-membership]` [confidence: limited]: Architecture\u2019s \u201cDeterministic bounded context\u201d gives the initial capsule the full bodies of its declared relation closure, but its expansion adds only \u201cthat row\u2019s full body and newly reached declared relations.\u201d \u201cFull-content membership is also delta authority,\u201d Scope guardrails, steps 4 and 6, Testing, and Acceptance criteria never say whether relation endpoints newly reached by expansion also enter full-content membership. Different deterministic implementations can therefore produce different final capsules, refusal results, and edit authority.\n  - Fix: Define the exact membership rule for an expanded capsule, including which newly reached endpoints gain full content and how that affects authority and byte accounting.\n- MEDIUM `[local-revision-scope]` [confidence: limited]: Overview says the existing local route \u201cpermits one material operation, and preserves relations,\u201d but `roadmap_revision.py:STAGE_MAX_MATERIAL_OPERATIONS_PER_FEEDBACK` limits one operation per active feedback, `plan_tool/roadmap.py:_run_stage` processes the active-feedback envelope, and `roadmap_revision_patch.py:_verify_stage_operations` permits additions and removals that can change the relation set. This overstates how narrow the writer is that the new route must not widen.\n  - Fix: Correct the Overview\u2019s local-route comparison to state its per-feedback limit and actual relation-preservation boundary.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-candidate-versions` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Immutable Candidate Versions\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `5286d6261f34d8d82ccd600e7c30e808ea71b71f454f536e63e46807ced302d0`\n- **Detail bundle digest:** `8bf293a3a43e893c283c0d0a118ac0d884bf5d2606ff53d0e62137e3cc6e57f2`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 12 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[candidate-expansion-budget]` [confidence: limited]: The single-expansion rule in Architecture\u2019s \u201cDeterministic bounded context,\u201d Scope guardrails, steps 4 and 6, Testing (\u201cA second expansion refuses\u201d), and the acceptance criterion (\u201cat most one expansion is possible\u201d) does not say whether step 7\u2019s replacement request reuses its predecessor\u2019s final capsule or can compile and expand another one. Either reading is reasonable; another expansion changes membership and edit authority and violates the stated one-expansion limit.\n- HIGH `[sealed-review-identity-lifecycle]` [confidence: limited]: Define the immutable review-record lifecycle: \u201cVersion authority and enrollment\u201d says a candidate\u2019s sealed review identity binds \u201cquestions, and answers,\u201d while \u201cDiff, questions, and replacement candidates\u201d says \u201cAn answer never edits a candidate.\u201d Steps 5, 7, and 8 do not establish whether the candidate keeps a fixed identity plus a later sealed review record, or whether answers change the identity promotion approves; either reading can satisfy the text but changes what exact approval means.\n- MEDIUM `[expanded-capsule-membership]` [confidence: limited]: Architecture\u2019s \u201cDeterministic bounded context\u201d gives the initial capsule the full bodies of its declared relation closure, but its expansion adds only \u201cthat row\u2019s full body and newly reached declared relations.\u201d \u201cFull-content membership is also delta authority,\u201d Scope guardrails, steps 4 and 6, Testing, and Acceptance criteria never say whether relation endpoints newly reached by expansion also enter full-content membership. Different deterministic implementations can therefore produce different final capsules, refusal results, and edit authority.\n- MEDIUM `[local-revision-scope]` [confidence: limited]: Overview says the existing local route \u201cpermits one material operation, and preserves relations,\u201d but `roadmap_revision.py:STAGE_MAX_MATERIAL_OPERATIONS_PER_FEEDBACK` limits one operation per active feedback, `plan_tool/roadmap.py:_run_stage` processes the active-feedback envelope, and `roadmap_revision_patch.py:_verify_stage_operations` permits additions and removals that can change the relation set. This overstates how narrow the writer is that the new route must not widen.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-candidate-versions` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2210a06a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The single-expansion rule in Architecture\u2019s \u201cDeterministic bounded context,\u201d Scope guardrails, steps 4 and 6, Testing (\u201c",
+      "body": "The single-expansion rule in Architecture\u2019s \u201cDeterministic bounded context,\u201d Scope guardrails, steps 4 and 6, Testing (\u201cA second expansion refuses\u201d), and the acceptance criterion (\u201cat most one expansion is possible\u201d) does not say whether step 7\u2019s replacement request reuses its predecessor\u2019s final capsule or can compile and expand another one. Either reading is reasonable; another expansion changes membership and edit authority and violates the stated one-expansion limit.",
+      "suggested_action": "Define one expansion budget and final issued capsule for the full feedback-to-replacement lineage, including the replacement behavior, and align steps 4, 6, 7, tests, and acceptance criteria to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "candidate-expansion-budget",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-ade70763",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Define the immutable review-record lifecycle: \u201cVersion authority and enrollment\u201d says a candidate\u2019s sealed review identi",
+      "body": "Define the immutable review-record lifecycle: \u201cVersion authority and enrollment\u201d says a candidate\u2019s sealed review identity binds \u201cquestions, and answers,\u201d while \u201cDiff, questions, and replacement candidates\u201d says \u201cAn answer never edits a candidate.\u201d Steps 5, 7, and 8 do not establish whether the candidate keeps a fixed identity plus a later sealed review record, or whether answers change the identity promotion approves; either reading can satisfy the text but changes what exact approval means.",
+      "suggested_action": "distinguish the fixed candidate identity from an immutable sealed review record created after its question inventory and answers are complete, and require promotion to approve that record\u2019s exact candidate binding.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "sealed-review-identity-lifecycle",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-ee291c41",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture\u2019s \u201cDeterministic bounded context\u201d gives the initial capsule the full bodies of its declared relation closur",
+      "body": "Architecture\u2019s \u201cDeterministic bounded context\u201d gives the initial capsule the full bodies of its declared relation closure, but its expansion adds only \u201cthat row\u2019s full body and newly reached declared relations.\u201d \u201cFull-content membership is also delta authority,\u201d Scope guardrails, steps 4 and 6, Testing, and Acceptance criteria never say whether relation endpoints newly reached by expansion also enter full-content membership. Different deterministic implementations can therefore produce different final capsules, refusal results, and edit authority.",
+      "suggested_action": "Define the exact membership rule for an expanded capsule, including which newly reached endpoints gain full content and how that affects authority and byte accounting.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "expanded-capsule-membership",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-4cf9561c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Overview says the existing local route \u201cpermits one material operation, and preserves relations,\u201d but `roadmap_revision.",
+      "body": "Overview says the existing local route \u201cpermits one material operation, and preserves relations,\u201d but `roadmap_revision.py:STAGE_MAX_MATERIAL_OPERATIONS_PER_FEEDBACK` limits one operation per active feedback, `plan_tool/roadmap.py:_run_stage` processes the active-feedback envelope, and `roadmap_revision_patch.py:_verify_stage_operations` permits additions and removals that can change the relation set. This overstates how narrow the writer is that the new route must not widen.",
+      "suggested_action": "Correct the Overview\u2019s local-route comparison to state its per-feedback limit and actual relation-preservation boundary.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "local-revision-scope",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "5286d6261f34d8d82ccd600e7c30e808ea71b71f454f536e63e46807ced302d0",
+      "detail_bundle_digest": "8bf293a3a43e893c283c0d0a118ac0d884bf5d2606ff53d0e62137e3cc6e57f2",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-enroll-exact-immutable-root-roll-back.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-build-one-bounded-inspectable-candidate.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-run-one-bounded-candidate-proposal-one.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-generate-diff-anchored-questions-record.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 8,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-sealed-reviewed-candidate.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 9,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-route-roadmap-views-through-accepted.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 10,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-refuse-enrolled-roadmaps-before-legacy.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 11,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 12,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "e7828a968fe2a053b4a7852918cc0d2bb4894747def358d4f3a1632d7e8b5cdd",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 12,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5454545454545454,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

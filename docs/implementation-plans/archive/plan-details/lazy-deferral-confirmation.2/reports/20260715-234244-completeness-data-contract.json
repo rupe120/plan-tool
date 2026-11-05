@@ -1,0 +1,94 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-2da76fe7": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/02-replace-create-whole-tree-confirm-walk.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/02-replace-create-whole-tree-confirm-walk.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-3bbece8a": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/02-replace-create-whole-tree-confirm-walk.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/02-replace-create-whole-tree-confirm-walk.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-72278f97": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/03-make-check-concept-coverage-total.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/03-make-check-concept-coverage-total.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-a0fd4d98": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/03-make-check-concept-coverage-total.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/03-make-check-concept-coverage-total.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-d964719a": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-let-scope-review-confirm-flat-decision.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-let-scope-review-confirm-flat-decision.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-dfd34cd7": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-let-scope-review-confirm-flat-decision.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/04-let-scope-review-confirm-flat-decision.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-65f444a5": {
+      "code_anchor": null,
+      "field_or_key": "record_kind",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-have-detail-shared-find-routing-record.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptTree",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-have-detail-shared-find-routing-record.md",
+      "reason": "`ConceptTree.record_kind` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-c0ed1f68": {
+      "code_anchor": null,
+      "field_or_key": "bucket",
+      "location": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-have-detail-shared-find-routing-record.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "ConceptNode",
+      "path": "docs/implementation-plans/plan-details/lazy-deferral-confirmation/06-have-detail-shared-find-routing-record.md",
+      "reason": "`ConceptNode.bucket` is not a registered persisted field or alias",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260715-234244-completeness"
+}

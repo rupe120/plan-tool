@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-c7eca6c6": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.run_end",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.run_end` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260914-153514-completeness"
+}

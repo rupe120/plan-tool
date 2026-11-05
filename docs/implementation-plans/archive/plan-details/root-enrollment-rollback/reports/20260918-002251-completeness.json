@@ -1,0 +1,131 @@
+{
+  "version": 4,
+  "plan_slug": "root-enrollment-rollback",
+  "plan_path": "docs/implementation-plans/2-root-enrollment-rollback.md",
+  "created_at": "2026-09-18T00:22:51Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "12acc46f039d647564924cff8463f6a818bc4e48c0b100227ada1d7b117886d5",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "7eeae5824d4d6c57020fd8d5f889f93f1de11285313aff114a04bb4a3aee00bd",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/01-roadmap-rollback-module-that-clears.md": "f7b99604c6b4f5712c15ebec5f606c82c4aecc473da30d09875826475a5c9a18",
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/02-rollback-root-confirm-root-rollback-cli.md": "5759d5da85135be0a12e9b3ad8cf675897836a09c783d68436b29031b23de6fa",
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/03-update-accepted-head-lifecycle-doc-name.md": "f4ded0a003ec6632816fa28c893f35046c4393f28d7a0cd75b53997f8bef9982"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Root Enrollment Rollback\n\n`root-enrollment-rollback` \u00b7 generated 2026-09-18T00:22:50Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `12acc46f039d647564924cff8463f6a818bc4e48c0b100227ada1d7b117886d5`\n- **Detail bundle digest:** `41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk root-enrollment-rollback  # optional interactive review of the saved findings\n\n- CRITICAL `[receipt-then-clear-atomicity]` [confidence: limited]: The Architecture section orders rollback's final two writes as \"Once eligible, rollback publishes the receipt through `roadmap_evidence_store.py`'s `publish_evidence`... then clears the selector,\" and its receipt pre-check treats receipt existence alone as proof the whole operation already finished: \"check for an existing receipt at that address with `read_evidence_final`; if one exists, report the idempotent already-rolled-back outcome and stop, with no eligibility check and no mutation.\" If the process is interrupted (killed, crashes, host reboot, OOM) after `publish_evidence` durably writes the receipt but before the next line clears `accepted-head.json`, every later invocation with the same target version id finds the receipt, reports \"already rolled back,\" and \u2014 by this stated design \u2014 performs no further check and no mutation. `accepted-head.json` is never cleared, the roadmap stays permanently enrolled, `require_unenrolled_roadmap_writer` keeps refusing the legacy writer, and the tool insists rollback already succeeded. This silently recreates the exact stranded-root symptom the plan exists to fix (BUG_BACKLOG \"Root enrollment can strand post-enrollment feedback before any candidate exists\") with no supported way back \u2014 breaking the acceptance criterion that the route \"never instructs the operator to delete a file by hand.\" Risk 5 names the bad end state (\"a receipt written with the selector still pointing at the root\") but only guards the case where `publish_evidence` itself reports failure; it does not cover a *successful* publish followed by an ordinary interruption before the selector write, which is exactly the case the stated idempotency design cannot recover from. This is the fourth distinct symptom found at this same site across audit rounds (missing receipt \u2192 unstable address \u2192 wrong check ordering \u2192 now receipt/selector divergence on crash) \u2014 per this repo's own recurring-finding guidance, a different symptom recurring at one site means the previous fix was the wrong shape, so the remedy should re-derive the full case matrix rather than patch this one more cell.\n  - Fix: Extend the receipt pre-check to also read the current selector: when a matching receipt exists but `accepted-head.json` still names the target root version, complete the interrupted clear (instead of reporting success with no mutation) before returning the idempotent outcome, and add a Risk/Testing entry proving this exact crash-recovery case alongside the already-covered receipt-absent cases.\n- MEDIUM `[rollback-confirmation-flag-shape]` [confidence: limited]: Step 2's title pairs two flags \u2014 \"Add a `--rollback-root` / `--confirm-root-rollback` CLI command\" \u2014 but the Architecture section assigns the version-id payload to the confirmation flag, not the action flag: \"The operator confirmation is a required, explicit argument on the CLI surface, not a default-yes flag, and it names the exact target root version id rather than a bare yes/no.\" Read literally, \"the operator confirmation\" (`--confirm-root-rollback`) is the flag carrying the version id, leaving `--rollback-root` a bare trigger. That is the opposite shape from this codebase's existing paired action/confirm flags for the same kind of one-off, operator-confirmed lifecycle transition \u2014 `--reopen-feedback SELECTOR --confirm-feedback-reopen` (`plan_tool/cli/roadmap_cmd.py`), where the action flag carries the target (`metavar=\"SELECTOR\"`) and the confirm flag is a bare boolean (`nargs=0, const=True`). Nothing in the plan states which of the two readings step 2 should follow, and the two produce different, incompatible CLI surfaces, help text, and tests.\n  - Fix: State explicitly which flag carries the target root version id and which is the bare confirmation boolean, matching or explicitly departing from the existing `--reopen-feedback`/`--confirm-feedback-reopen` shape.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-81062bdc]` [confidence: limited]: The plan's `## Acceptance criteria` names `publish_evidence`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-22a1bdb0]` [confidence: limited]: The plan's `## Acceptance criteria` names `read_evidence_final`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Root Enrollment Rollback\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `12acc46f039d647564924cff8463f6a818bc4e48c0b100227ada1d7b117886d5`\n- **Detail bundle digest:** `41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- CRITICAL `[receipt-then-clear-atomicity]` [confidence: limited]: The Architecture section orders rollback's final two writes as \"Once eligible, rollback publishes the receipt through `roadmap_evidence_store.py`'s `publish_evidence`... then clears the selector,\" and its receipt pre-check treats receipt existence alone as proof the whole operation already finished: \"check for an existing receipt at that address with `read_evidence_final`; if one exists, report the idempotent already-rolled-back outcome and stop, with no eligibility check and no mutation.\" If the process is interrupted (killed, crashes, host reboot, OOM) after `publish_evidence` durably writes the receipt but before the next line clears `accepted-head.json`, every later invocation with the same target version id finds the receipt, reports \"already rolled back,\" and \u2014 by this stated design \u2014 performs no further check and no mutation. `accepted-head.json` is never cleared, the roadmap stays permanently enrolled, `require_unenrolled_roadmap_writer` keeps refusing the legacy writer, and the tool insists rollback already succeeded. This silently recreates the exact stranded-root symptom the plan exists to fix (BUG_BACKLOG \"Root enrollment can strand post-enrollment feedback before any candidate exists\") with no supported way back \u2014 breaking the acceptance criterion that the route \"never instructs the operator to delete a file by hand.\" Risk 5 names the bad end state (\"a receipt written with the selector still pointing at the root\") but only guards the case where `publish_evidence` itself reports failure; it does not cover a *successful* publish followed by an ordinary interruption before the selector write, which is exactly the case the stated idempotency design cannot recover from. This is the fourth distinct symptom found at this same site across audit rounds (missing receipt \u2192 unstable address \u2192 wrong check ordering \u2192 now receipt/selector divergence on crash) \u2014 per this repo's own recurring-finding guidance, a different symptom recurring at one site means the previous fix was the wrong shape, so the remedy should re-derive the full case matrix rather than patch this one more cell.\n- MEDIUM `[rollback-confirmation-flag-shape]` [confidence: limited]: Step 2's title pairs two flags \u2014 \"Add a `--rollback-root` / `--confirm-root-rollback` CLI command\" \u2014 but the Architecture section assigns the version-id payload to the confirmation flag, not the action flag: \"The operator confirmation is a required, explicit argument on the CLI surface, not a default-yes flag, and it names the exact target root version id rather than a bare yes/no.\" Read literally, \"the operator confirmation\" (`--confirm-root-rollback`) is the flag carrying the version id, leaving `--rollback-root` a bare trigger. That is the opposite shape from this codebase's existing paired action/confirm flags for the same kind of one-off, operator-confirmed lifecycle transition \u2014 `--reopen-feedback SELECTOR --confirm-feedback-reopen` (`plan_tool/cli/roadmap_cmd.py`), where the action flag carries the target (`metavar=\"SELECTOR\"`) and the confirm flag is a bare boolean (`nargs=0, const=True`). Nothing in the plan states which of the two readings step 2 should follow, and the two produce different, incompatible CLI surfaces, help text, and tests.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `publish_evidence`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `read_evidence_final`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-3c32922a",
+      "source": "plan-correctness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "The Architecture section orders rollback's final two writes as \"Once eligible, rollback publishes the receipt through `r",
+      "body": "The Architecture section orders rollback's final two writes as \"Once eligible, rollback publishes the receipt through `roadmap_evidence_store.py`'s `publish_evidence`... then clears the selector,\" and its receipt pre-check treats receipt existence alone as proof the whole operation already finished: \"check for an existing receipt at that address with `read_evidence_final`; if one exists, report the idempotent already-rolled-back outcome and stop, with no eligibility check and no mutation.\" If the process is interrupted (killed, crashes, host reboot, OOM) after `publish_evidence` durably writes the receipt but before the next line clears `accepted-head.json`, every later invocation with the same target version id finds the receipt, reports \"already rolled back,\" and \u2014 by this stated design \u2014 performs no further check and no mutation. `accepted-head.json` is never cleared, the roadmap stays permanently enrolled, `require_unenrolled_roadmap_writer` keeps refusing the legacy writer, and the tool insists rollback already succeeded. This silently recreates the exact stranded-root symptom the plan exists to fix (BUG_BACKLOG \"Root enrollment can strand post-enrollment feedback before any candidate exists\") with no supported way back \u2014 breaking the acceptance criterion that the route \"never instructs the operator to delete a file by hand.\" Risk 5 names the bad end state (\"a receipt written with the selector still pointing at the root\") but only guards the case where `publish_evidence` itself reports failure; it does not cover a *successful* publish followed by an ordinary interruption before the selector write, which is exactly the case the stated idempotency design cannot recover from. This is the fourth distinct symptom found at this same site across audit rounds (missing receipt \u2192 unstable address \u2192 wrong check ordering \u2192 now receipt/selector divergence on crash) \u2014 per this repo's own recurring-finding guidance, a different symptom recurring at one site means the previous fix was the wrong shape, so the remedy should re-derive the full case matrix rather than patch this one more cell.",
+      "suggested_action": "Extend the receipt pre-check to also read the current selector: when a matching receipt exists but `accepted-head.json` still names the target root version, complete the interrupted clear (instead of reporting success with no mutation) before returning the idempotent outcome, and add a Risk/Testing entry proving this exact crash-recovery case alongside the already-covered receipt-absent cases.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-then-clear-atomicity",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-75ac3f95",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2's title pairs two flags \u2014 \"Add a `--rollback-root` / `--confirm-root-rollback` CLI command\" \u2014 but the Architectur",
+      "body": "Step 2's title pairs two flags \u2014 \"Add a `--rollback-root` / `--confirm-root-rollback` CLI command\" \u2014 but the Architecture section assigns the version-id payload to the confirmation flag, not the action flag: \"The operator confirmation is a required, explicit argument on the CLI surface, not a default-yes flag, and it names the exact target root version id rather than a bare yes/no.\" Read literally, \"the operator confirmation\" (`--confirm-root-rollback`) is the flag carrying the version id, leaving `--rollback-root` a bare trigger. That is the opposite shape from this codebase's existing paired action/confirm flags for the same kind of one-off, operator-confirmed lifecycle transition \u2014 `--reopen-feedback SELECTOR --confirm-feedback-reopen` (`plan_tool/cli/roadmap_cmd.py`), where the action flag carries the target (`metavar=\"SELECTOR\"`) and the confirm flag is a bare boolean (`nargs=0, const=True`). Nothing in the plan states which of the two readings step 2 should follow, and the two produce different, incompatible CLI surfaces, help text, and tests.",
+      "suggested_action": "State explicitly which flag carries the target root version id and which is the bare confirmation boolean, matching or explicitly departing from the existing `--reopen-feedback`/`--confirm-feedback-reopen` shape.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rollback-confirmation-flag-shape",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "12acc46f039d647564924cff8463f6a818bc4e48c0b100227ada1d7b117886d5",
+      "detail_bundle_digest": "41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/01-roadmap-rollback-module-that-clears.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/02-rollback-root-confirm-root-rollback-cli.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/03-update-accepted-head-lifecycle-doc-name.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "b5a5f0d8c26091a6c9dec2ce5ded22e3ebe05bbe1a4c750df08354d3b082c344",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

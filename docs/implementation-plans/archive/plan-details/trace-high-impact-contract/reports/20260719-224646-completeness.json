@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "plan_slug": "trace-high-impact-contract",
+  "plan_path": "docs/implementation-plans/2-trace-high-impact-contract.md",
+  "created_at": "2026-07-19T22:46:46Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f337bcfb56d98995066c962de169b3be2c0b1e9020276fdc0a9b26a0ecfc485b",
+  "code_fingerprint": {
+    "BACKLOG.md": "4d8dd5a5144dbafaa8f5e512d2d28981e3570f9a3025e126eb42c78658a619e8",
+    "docs/implementation-plans/2-gate-convergence-by-impact.md": "cfe943f6b0b95130189f2bf909aac0e075e860855aa2c996bcb951a4fced7ef6",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/01-impact-aware-blocking-rule.md": "e93098ec8511a33a42e697a8e944fe3b59b758b93d1d5b645f64c28ab0b973ae",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/02-use-impact-aware-rule-convergence-loops.md": "6381a70cd77a6432a936a951db033d3df1dd9ecb28c2ab37be98cfd616abdaf4",
+    "docs/implementation-plans/plan-details/gate-convergence-by-impact/03-document-shipped-impact-aware-augment.md": "c75d13ee78db7edc4e05fc7dc5e76754a3fbe4cf09de37fec8f4514a42fd638a",
+    "tests/cli/test_completeness_cmd.py": "08f592097d1967d1977028c8cbc07d090aad9969cb92e4fa6b3ae1822462a255",
+    "tests/test_cli.py": "5c69f7b0bf269203ec861a9cbd4b5e1ef211244091fce39680a3a34e8fb003b4",
+    "tests/test_convergence.py": "85ce7b724e929240ce5e1534368f117f96f1fba61ac2e7092edef7435caf048e",
+    "tests/test_review.py": "1cd84782e9779e7ce3876949278c47764d2b945e5d256372810cb60709c1ade7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/trace-high-impact-contract/01-tests-that-show-which-high-impact.md": "56ab413744f09aa1da848fe218e24b1f8fda6d6d321c4d8d29049893c8c2b3fe",
+    "docs/implementation-plans/plan-details/trace-high-impact-contract/02-trace-high-impact-findings-through-live.md": "eac6fe4d88d3520819e82409a88506d1eb3c00bb9ce03c51381d245208574853",
+    "docs/implementation-plans/plan-details/trace-high-impact-contract/03-replace-stalled-152-plan-evidence-based.md": "20ca48c355423af65dfb833de194ff1e5daceed648594faa8b2e9f3094f0e627",
+    "docs/implementation-plans/plan-details/trace-high-impact-contract/04-record-157-evidence-keep-152-blocked.md": "7879acd6124b410cb1c19a3edf1504df201d80bc25f6cfebbb40c4a0bde3e285"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Trace High Impact Contract\n\n`trace-high-impact-contract` \u00b7 generated 2026-07-19T22:46:46Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step4-files-coherence-20573fb2]`: `(no declared files cited in detail body)` is in step 4's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply trace-high-impact-contract` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Trace High Impact Contract\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 4 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk trace-high-impact-contract` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [],
+  "annotations": {}
+}

@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "plan_slug": "purity-findings-cache",
+  "plan_path": "docs/implementation-plans/2-purity-findings-cache.md",
+  "created_at": "2026-07-19T09:49:04Z",
+  "kind": "run-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "25364b05024a4df3398d82e3097450dcb106c97da93076821b4a4b3db8a02c7a",
+  "code_fingerprint": {
+    ".gitignore": "4f37fbe958da30a19f8a24c7e9c259d0b643059113ab9d56dfb750c52ca183ed",
+    "BACKLOG.md": "a2f64916f0ac8c13b7639f2bd83a0f8c1e48567784e2dcc704a9710b5ab47950",
+    "DATA_CONTRACT.md": "268185b5735dfcb7324e75e6e3372f315a5b9b1d6fb339b05b32cb836aba98c0",
+    "plan_tool/cli/completeness_phases.py": "d68951a3a2492abae1ce5cd970fd37c5fb42454287fc9359b2ba88f3ff2c4a29",
+    "plan_tool/data_contract.py": "552e84200392d2aca831c06c9aa2e166efe0b5b38c6000f476e9053c293804a8",
+    "plan_tool/detail.py": "5cdff0d0ee352fd5937ae92ef6f7155b7439395caecdae393d8171ce580eccd4",
+    "plan_tool/fingerprint.py": "1bba9b8215b3f5e815fad0bce8fdace5bca1fc34459f3784a1efe874a7d2eb3f",
+    "plan_tool/purity_cache.py": "f4e1286170a36a1aae38fd39dd57d2c62c234945f375702f7232369465092433",
+    "tests/cli/test_completeness_cmd.py": "3f94159942e0c347e344d123898d37c76ba40aae8cb334349585ee5974ddaf58",
+    "tests/test_data_contract.py": "00bc2fbff4d218d7619124a86e9d9b88ada7c5c8f1f91cd47e3e25f4bd5ee64b",
+    "tests/test_detail.py": "c1b61c60318f2e7ec9d74d73ef922df18baf8ebed605866fda75be879d0b6247",
+    "tests/test_fingerprint.py": "1eb9e2eaf76b1aee5809604e7193d2a2a977c8c9231a328e52edbcb607d1fb81",
+    "tests/test_purity_cache.py": "70ccec44b0c292f04d56b9af72a2595ce2325f48055667fb05b166755fd1ea2d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 2 \u2014 0 critical / 0 high / 1 medium / 1 nits",
+  "recommendations": [
+    {
+      "id": "step2-run-reconcile-c6eb8f4d",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "`_purity_findings_with_cache()` in `plan_tool/detail.py` (step 2 \"Add the purity-cache persistence module\") calls `load_",
+      "body": "`_purity_findings_with_cache()` in `plan_tool/detail.py` (step 2 \"Add the purity-cache persistence module\") calls `load_purity_cache(cache_path)` with no `valid_step_ids` at both the read-through hit check and the pre-save read-modify-write, even though it has already parsed the plan (`plan = parse_plan(plan_path)`) a few lines above, so `load_purity_cache`'s prune branch never runs in production and entries for steps removed by a split/merge/scope-out accrete unbounded \u2014 the exact accretion the plan's \"prune orphaned entries on load\" requirement exists to stop",
+      "suggested_action": "pass `valid_step_ids={s.id for s in plan.steps}` to the pre-save `load_purity_cache(cache_path)` call in `plan_tool/detail.py:_purity_findings_with_cache()` so every cache write drops orphaned entries",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    },
+    {
+      "id": "step2-run-reconcile-e92e1503",
+      "source": "run-reconcile",
+      "severity": "nit",
+      "step_id": 2,
+      "title": "`_utc_now_iso()` in `plan_tool/purity_cache.py` has no callers \u2014 `plan_tool/detail.py:_purity_findings_with_cache()` bui",
+      "body": "`_utc_now_iso()` in `plan_tool/purity_cache.py` has no callers \u2014 `plan_tool/detail.py:_purity_findings_with_cache()` builds `checked_at` with its own inline `datetime.now(timezone.utc).strftime(\"%Y-%m-%dT%H:%M:%SZ\")`, duplicating the format literal outside the module that owns the record shape, so a future format change has two sites to touch",
+      "suggested_action": "export the helper as `utc_now_iso()` in `plan_tool/purity_cache.py` and call it for `checked_at` in `plan_tool/detail.py:_purity_findings_with_cache()`",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

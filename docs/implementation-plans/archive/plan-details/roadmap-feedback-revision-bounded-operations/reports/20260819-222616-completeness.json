@@ -1,0 +1,191 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-feedback-revision-bounded-operations",
+  "plan_path": "docs/implementation-plans/2-roadmap-feedback-revision-bounded-operations.md",
+  "created_at": "2026-08-19T22:26:16Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "1671e2e04bf8741e29251a0296a778e244c2c089b7f6e989b84dc6ef99cb5cb0",
+  "code_fingerprint": {
+    "BACKLOG.md": "b850415a2e104980dccbf6fc493fe3bcd6622fed5c36e5ae81eec9573c99a1ce",
+    "BUG_BACKLOG.md": "ea410fcbb1713b9c5e8a9cec2c65cef0d1f7e79cf590d0106e25b1181ba58f68",
+    "CAPABILITIES.md": "09e270751f7345b5b6e0dd7c2ebe53043fe6aa4c5e76323ea7fdf95c3b23b18c",
+    "DATA_CONTRACT.md": "9d2d6982fba5c01e190c6a59aef0d7b3da5eb8c2ed760b2f142c05b1eae75ddc",
+    "README.md": "2ce65273752d3ef08302dc7acc9984935e97606d3227ff605a949522e0dc3ae9",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "RUNBOOK.md": "bc3eeaacff3696054823f30a5ca897ed7eca22629e68ce83b78cf3f8f78d7061",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "59ce4c96c379f2dd95ef307e78471b9215fbb4a77aaeab421a32df05e7c738f1",
+    "docs/ROADMAP_WALKTHROUGH.md": "8c5ffad859b39576ac380ba72325abeaac7798d83009592e0d564d47072bc0e8",
+    "docs/cli/roadmap.md": "a35a30f067478aa5a13db3bc98bd33cc2119052baf32f7531ad922dadebae539",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "d248d83f74232f5cf800fa51dc1a65c2be0823d56c465e3e4e1ac313c9c6ebb9",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap.py": "b6374ee054911778e909b0c417beeaf746f5301304bcaf4322b78d4fe124cbcb",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_relations.py": "eeb609117a3e07f802d04c18fef3ac58dcf6224ddeba25268ea3ddaddc0d2b82",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_revision_patch.py": "b348cc8a9bdef63ae38830439df636cf40844c24e1450fbbe1b17d19735f6838",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_roadmap.py": "740b938e9b7284ca3e0fbbae4868f498e9c0fb0df6cd599e47e8ec419bbfa631",
+    "tests/test_roadmap_artifacts.py": "e65a9b6a791f9ea6428a8913a5818d311ba1f2b3c411ecf6391546d8dd5c90e9",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_gates.py": "7befcaba2fc959e1e73ef31ef3796d86bf2046912927da572b43b6c7dbcbb8cc",
+    "tests/test_roadmap_relations.py": "b2c059f99192a8734efa05b4c6a42058ebe965fef09f3ccdd3f1bd5304dd2c17",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_patch.py": "0b10d94eb3a7394365cb8c4cf2880d97ada7583d26cff4daa86276e834b14102",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-revision-operations.md": "f605e08a5198f8d52019aa913c256e8cce018da52a0f4aed29b9f65becbc3423",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-feedback-context.md": "efce9d0c3982dc3ddbf5beb970ea3c8dcc88f1cb0c174776f0bc0e01430afccf",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row.md": "ad8482bdfb95ea7cb906275da8f0929da39825f1922fa379c609a0c90659ef5d",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-route-every-re-entered-stage-active.md": "2c0ac84d68d0074a93e0d7bf587fc0d723683381e907957df754271f6d220be9",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-document-bounded-stage-feedback-its.md": "def6584061d43631af4e497f4a667ae3ceb3ef9e433a66246c3b71d01ef869fb",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-close-297-its-whole-artifact-revision.md": "51fe2afd6dc58ed0d41ca40abf759a573abcc6aa04746d90654a3f09c2c82a49"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Feedback Revision Bounded Operations\n\n`roadmap-feedback-revision-bounded-operations` \u00b7 generated 2026-08-19T22:26:15Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `1671e2e04bf8741e29251a0296a778e244c2c089b7f6e989b84dc6ef99cb5cb0`\n- **Detail bundle digest:** `2bdae55c9f1f21b8cb3251f3421cb55ace5689655741543500f3419e92f05346`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-feedback-revision-bounded-operations   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-feedback-revision-bounded-operations  # alternative interactive review/apply\n\n- HIGH `[local-stage-envelope-boundary]`: Architecture says \u201cEvery material operation names one active feedback id\u201d and requires \u201cExactly one\u201d response for every active row, while its \u201ccurrent presentation replacement and feedback-response pair remain the backward-compatible subset\u201d and the Acceptance criteria retain `--revise-feedback`\u2019s current contract. At HEAD, `plan_tool/roadmap_revision:ReplaceRowPresentationOperation` has no feedback id, `preflight_feedback_revision` selects one row, `plan_tool/roadmap_revision_run:run_local_feedback_revision` handles one request, and `ROADMAP_FORMAT.md:Local feedback revision contract` permits another open row unchanged; the plan does not state which rule governs the shared operation type.\n  - Fix: Scope the authority matrix to stage envelopes and explicitly preserve the selector-bound, single-response local subset across the operation, merge, and compatibility tests.\n- HIGH `[plans-artifact-add-ordering]`: Architecture\u2019s `add-row` says \u201cAdds one typed design row\u201d and \u201cIn `PlansArtifact`, it also appends the one matching `ordering` entry,\u201d but `remove-row-with-record`, Testing, and the acceptance criterion limit ordering companions to a \u201cplan row.\u201d `plan_tool/roadmap_artifacts:design_row_collections` also treats `assumptions` and `decisions` as design rows, while `plan_tool/roadmap_gates:check_plan_ordering_totality` permits ordering entries only for plan ids.\n  - Fix: State which PlansArtifact row types `add-row` admits and make its ordering companion apply only when the added row is a plan row, then align context, merge, and authority tests.\n- HIGH `[plan-reference-retarget-boundary]`: Architecture\u2019s `edit-row` permits replacing values on any live typed row, and material operations run in envelope order, but the Plan-ordering leakage risk says retargeting surviving references stays out of the vocabulary. Because `plan_tool/roadmap_artifacts:design_row_collections` includes `AssumptionRow`, an envelope can first edit `consuming_plan_ids` and then remove that plan, bypassing the `remove-row-with-record` check; step 2, step 3, Testing, and the removal acceptance criterion cover only references that still remain.\n  - Fix: Make the no-retarget boundary an explicit operation rule and reject same-envelope reference edits that enable a plan removal.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-feedback-revision-bounded-operations` \u2014 apply the 3 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Feedback Revision Bounded Operations\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `1671e2e04bf8741e29251a0296a778e244c2c089b7f6e989b84dc6ef99cb5cb0`\n- **Detail bundle digest:** `2bdae55c9f1f21b8cb3251f3421cb55ace5689655741543500f3419e92f05346`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[local-stage-envelope-boundary]`: Architecture says \u201cEvery material operation names one active feedback id\u201d and requires \u201cExactly one\u201d response for every active row, while its \u201ccurrent presentation replacement and feedback-response pair remain the backward-compatible subset\u201d and the Acceptance criteria retain `--revise-feedback`\u2019s current contract. At HEAD, `plan_tool/roadmap_revision:ReplaceRowPresentationOperation` has no feedback id, `preflight_feedback_revision` selects one row, `plan_tool/roadmap_revision_run:run_local_feedback_revision` handles one request, and `ROADMAP_FORMAT.md:Local feedback revision contract` permits another open row unchanged; the plan does not state which rule governs the shared operation type.\n- HIGH `[plans-artifact-add-ordering]`: Architecture\u2019s `add-row` says \u201cAdds one typed design row\u201d and \u201cIn `PlansArtifact`, it also appends the one matching `ordering` entry,\u201d but `remove-row-with-record`, Testing, and the acceptance criterion limit ordering companions to a \u201cplan row.\u201d `plan_tool/roadmap_artifacts:design_row_collections` also treats `assumptions` and `decisions` as design rows, while `plan_tool/roadmap_gates:check_plan_ordering_totality` permits ordering entries only for plan ids.\n- HIGH `[plan-reference-retarget-boundary]`: Architecture\u2019s `edit-row` permits replacing values on any live typed row, and material operations run in envelope order, but the Plan-ordering leakage risk says retargeting surviving references stays out of the vocabulary. Because `plan_tool/roadmap_artifacts:design_row_collections` includes `AssumptionRow`, an envelope can first edit `consuming_plan_ids` and then remove that plan, bypassing the `remove-row-with-record` check; step 2, step 3, Testing, and the removal acceptance criterion cover only references that still remain.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-feedback-revision-bounded-operations` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-937b16f0",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says \u201cEvery material operation names one active feedback id\u201d and requires \u201cExactly one\u201d response for every ",
+      "body": "Architecture says \u201cEvery material operation names one active feedback id\u201d and requires \u201cExactly one\u201d response for every active row, while its \u201ccurrent presentation replacement and feedback-response pair remain the backward-compatible subset\u201d and the Acceptance criteria retain `--revise-feedback`\u2019s current contract. At HEAD, `plan_tool/roadmap_revision:ReplaceRowPresentationOperation` has no feedback id, `preflight_feedback_revision` selects one row, `plan_tool/roadmap_revision_run:run_local_feedback_revision` handles one request, and `ROADMAP_FORMAT.md:Local feedback revision contract` permits another open row unchanged; the plan does not state which rule governs the shared operation type.",
+      "suggested_action": "Scope the authority matrix to stage envelopes and explicitly preserve the selector-bound, single-response local subset across the operation, merge, and compatibility tests.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "local-stage-envelope-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-8979fb0f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s `add-row` says \u201cAdds one typed design row\u201d and \u201cIn `PlansArtifact`, it also appends the one matching `ord",
+      "body": "Architecture\u2019s `add-row` says \u201cAdds one typed design row\u201d and \u201cIn `PlansArtifact`, it also appends the one matching `ordering` entry,\u201d but `remove-row-with-record`, Testing, and the acceptance criterion limit ordering companions to a \u201cplan row.\u201d `plan_tool/roadmap_artifacts:design_row_collections` also treats `assumptions` and `decisions` as design rows, while `plan_tool/roadmap_gates:check_plan_ordering_totality` permits ordering entries only for plan ids.",
+      "suggested_action": "State which PlansArtifact row types `add-row` admits and make its ordering companion apply only when the added row is a plan row, then align context, merge, and authority tests.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "plans-artifact-add-ordering",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dfe41d6f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture\u2019s `edit-row` permits replacing values on any live typed row, and material operations run in envelope order,",
+      "body": "Architecture\u2019s `edit-row` permits replacing values on any live typed row, and material operations run in envelope order, but the Plan-ordering leakage risk says retargeting surviving references stays out of the vocabulary. Because `plan_tool/roadmap_artifacts:design_row_collections` includes `AssumptionRow`, an envelope can first edit `consuming_plan_ids` and then remove that plan, bypassing the `remove-row-with-record` check; step 2, step 3, Testing, and the removal acceptance criterion cover only references that still remain.",
+      "suggested_action": "Make the no-retarget boundary an explicit operation rule and reject same-envelope reference edits that enable a plan removal.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "plan-reference-retarget-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 2,
+      "detail_grade": "run",
+      "plan_digest": "1671e2e04bf8741e29251a0296a778e244c2c089b7f6e989b84dc6ef99cb5cb0",
+      "detail_bundle_digest": "2bdae55c9f1f21b8cb3251f3421cb55ace5689655741543500f3419e92f05346",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-revision-operations.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-feedback-context.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-route-every-re-entered-stage-active.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-document-bounded-stage-feedback-its.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-close-297-its-whole-artifact-revision.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "2cbcf0e04ef6f5ee953a75d52cd904dca98b6c2fb1ebd1a3079a97bbf5ef6adb"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

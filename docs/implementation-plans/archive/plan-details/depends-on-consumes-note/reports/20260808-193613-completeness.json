@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "plan_slug": "depends-on-consumes-note",
+  "plan_path": "docs/implementation-plans/2-depends-on-consumes-note.md",
+  "created_at": "2026-08-08T19:36:13Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "31e3341c7d06db0568ee7aae190506e171c050bbfb227bd93522eb22486e1286",
+  "code_fingerprint": {
+    "BACKLOG.md": "1243201d751cb348af5ba16695dd0c81acf6a93a564f68fbcc23c39246caf21c",
+    "PLAN_FORMAT.md": "82f07265c4a5ea82a9ee2a77528d8ccf0d9f67583a303f2ae44f4116980514ba",
+    "plan_tool/create.py": "dbf52a421274b2af9dd480edf9a59357867616b5d6714e57749836ed877f2ece",
+    "plan_tool/schema.py": "7623b313dbcad4438afe93e00063937aa7694ec8ea6b07ac279f3c5e2dbcfa26",
+    "plan_tool/scope_out.py": "135a41e407084423915ea9cf6bae0f9433f6df41d9f765504a3232d558607ec1",
+    "tests/test_create.py": "e9570b9beb6cf072f1b80139cb919c0ac1aae8f5396d12c149e8e809b475f0de",
+    "tests/test_detail.py": "006cbc02962c99c4c543e2e21444ce8d0c6e862dff0f94db43ce7f5db83dc323",
+    "tests/test_fingerprint.py": "e8c96c12a15d10fb721cb3f705a41e098fed3a60856e3506aa7340bad32fc427",
+    "tests/test_launcher.py": "a96879672994ea6b7646639684d6f90b3619729c0dfaeb06e12bd64e34aff4ca",
+    "tests/test_parser.py": "851a36960a7ca401327d286ba9df3432494ca8ef32ecd7d230e48394e35c79c2",
+    "tests/test_scope_out.py": "f15a3353dff0dcef31125740bb0fb4f82150af11f125d8ebc82bff9c4ea4b098"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/01-depends-on-notes-field-step-reject-key.md": "170092d590ddf7e4547093393f2f49d2c5b6376f34376b30d503ee90969c44fd",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/02-carry-notes-their-edges-through-split.md": "ca939fab123fba8544557397202a43d6826e10a2d70a65d8b7b13d21902a5c6a",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/03-ask-create-step-proposal-manual-step.md": "ca938f277a225be09c8844f395c448b6e375407aa0b2acf50bf69538a8754272",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/04-show-each-proposed-step-depends-on-ids.md": "9df17de4c8830dd0197ceab4951237086eface93cdc5f75051e357dac1b35bf3",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/05-re-author-withdrawn-audit-trajectory.md": "e6ccbf90274b64121ebe0e016d2e486e5147d57fe4cedeb7e13451a4979b94ad",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/06-document-depends-on-notes-plan-format.md": "15a8d2949941de7d78e6e945549d20bb8d1e8e03a7a49a8a22066fdaf08efc6d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Depends On Consumes Note\n\n`depends-on-consumes-note` \u00b7 generated 2026-08-08T19:36:13Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 95920 bytes (+95920 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply depends-on-consumes-note   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[create-iterate-note-preservation]`: Architecture and step 3 (`Ask create's step proposal\u2026`) say `_preserve_on_disk_step_fields` carries forward on-disk `depends_on_notes` when a `create --iterate` re-proposal omits that key (same-title merge, parallel to `intent`), but neither says preserved keys must stay within the proposal's current `depends_on`; a re-proposal that drops an edge while omitting `depends_on_notes` can merge stale note keys and fail step 1's key-in-`depends_on` check at `write_plan` (HEAD: `plan_tool/create.py:_preserve_on_disk_step_fields` only preserves `status` and `intent` today, and step 3's pinned test covers omit-vs-`{}` only, not a shrunk `depends_on`).\n  - Fix: in Architecture and step 3, require preserved notes to be intersected with the proposal step's `depends_on` (same rule as `_parse_steps_json` orphan-key drop), and add a matching test beside `test_preserve_on_disk_keeps_depends_on_notes_when_proposal_omits`.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[create-iterate-note-preservation]`: Architecture's **`create --iterate` note preservation** paragraph and step 3's preserve test pin iterate carry-forward, but `## Acceptance criteria` has no bullet locking that behavior (unlike fan-out/fan-in, interactive review, and the withdrawn fixture).\n  - Fix: add an acceptance criterion that a same-title `create --iterate` re-proposal keeps on-disk `depends_on_notes` when it omits the key, drops them when the proposal sends `{}`, and never restores keys for antecedent ids no longer in `depends_on`.\n  - Address: `plan-tool completeness-apply depends-on-consumes-note --anchor create-iterate-note-preservation`\n- MEDIUM `[canonical-extraction]`: Architecture and `## Testing` negative-space pin **`extract_canonical_steps` / `extract_steps_from_canonical`** as note-less by construction (with step 3's negative test), but step 6's planned `PLAN_FORMAT.md` **Explicit exclusions** line names carved-region synthesis, `merge_sweep_into_steps`, and `reground` only \u2014 not canonical extraction \u2014 so the format doc step would omit a documented carve-out the plan already treats as in scope.\n  - Fix: add canonical extraction to step 6's PLAN_FORMAT exclusions (and the authoring summary paragraph if one is added), matching Architecture's note-less path list. --- Prior-pass gaps on split replacement halves, silent-edge representation, scope-out `NarrowError`, fixture acceptance, never-graded allowlist, escalate-split coverage, and negative-space paths look addressed in the current plan body and detail bundle; this pass concentrates on the iterate-preservation edge case and the two small coverage holes above.\n  - Address: `plan-tool completeness-apply depends-on-consumes-note --anchor canonical-extraction`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-db606b65]`: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-cc93c4d7]`: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d54050c]`: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-15fac6fc]`: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-apply depends-on-consumes-note` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Depends On Consumes Note\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[create-iterate-note-preservation]`: Architecture and step 3 (`Ask create's step proposal\u2026`) say `_preserve_on_disk_step_fields` carries forward on-disk `depends_on_notes` when a `create --iterate` re-proposal omits that key (same-title merge, parallel to `intent`), but neither says preserved keys must stay within the proposal's current `depends_on`; a re-proposal that drops an edge while omitting `depends_on_notes` can merge stale note keys and fail step 1's key-in-`depends_on` check at `write_plan` (HEAD: `plan_tool/create.py:_preserve_on_disk_step_fields` only preserves `status` and `intent` today, and step 3's pinned test covers omit-vs-`{}` only, not a shrunk `depends_on`).\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[create-iterate-note-preservation]`: Architecture's **`create --iterate` note preservation** paragraph and step 3's preserve test pin iterate carry-forward, but `## Acceptance criteria` has no bullet locking that behavior (unlike fan-out/fan-in, interactive review, and the withdrawn fixture).\n- MEDIUM `[canonical-extraction]`: Architecture and `## Testing` negative-space pin **`extract_canonical_steps` / `extract_steps_from_canonical`** as note-less by construction (with step 3's negative test), but step 6's planned `PLAN_FORMAT.md` **Explicit exclusions** line names carved-region synthesis, `merge_sweep_into_steps`, and `reground` only \u2014 not canonical extraction \u2014 so the format doc step would omit a documented carve-out the plan already treats as in scope.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk depends-on-consumes-note` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply depends-on-consumes-note` \u2014 walk the 2 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-068ddcda",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture and step 3 (`Ask create's step proposal\u2026`) say `_preserve_on_disk_step_fields` carries forward on-disk `dep",
+      "body": "Architecture and step 3 (`Ask create's step proposal\u2026`) say `_preserve_on_disk_step_fields` carries forward on-disk `depends_on_notes` when a `create --iterate` re-proposal omits that key (same-title merge, parallel to `intent`), but neither says preserved keys must stay within the proposal's current `depends_on`; a re-proposal that drops an edge while omitting `depends_on_notes` can merge stale note keys and fail step 1's key-in-`depends_on` check at `write_plan` (HEAD: `plan_tool/create.py:_preserve_on_disk_step_fields` only preserves `status` and `intent` today, and step 3's pinned test covers omit-vs-`{}` only, not a shrunk `depends_on`).",
+      "suggested_action": "in Architecture and step 3, require preserved notes to be intersected with the proposal step's `depends_on` (same rule as `_parse_steps_json` orphan-key drop), and add a matching test beside `test_preserve_on_disk_keeps_depends_on_notes_when_proposal_omits`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "create-iterate-note-preservation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-068ddcda",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture's **`create --iterate` note preservation** paragraph and step 3's preserve test pin iterate carry-forward, ",
+      "body": "Architecture's **`create --iterate` note preservation** paragraph and step 3's preserve test pin iterate carry-forward, but `## Acceptance criteria` has no bullet locking that behavior (unlike fan-out/fan-in, interactive review, and the withdrawn fixture).",
+      "suggested_action": "add an acceptance criterion that a same-title `create --iterate` re-proposal keeps on-disk `depends_on_notes` when it omits the key, drops them when the proposal sends `{}`, and never restores keys for antecedent ids no longer in `depends_on`.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "create-iterate-note-preservation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-8d57fdeb",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture and `## Testing` negative-space pin **`extract_canonical_steps` / `extract_steps_from_canonical`** as note-",
+      "body": "Architecture and `## Testing` negative-space pin **`extract_canonical_steps` / `extract_steps_from_canonical`** as note-less by construction (with step 3's negative test), but step 6's planned `PLAN_FORMAT.md` **Explicit exclusions** line names carved-region synthesis, `merge_sweep_into_steps`, and `reground` only \u2014 not canonical extraction \u2014 so the format doc step would omit a documented carve-out the plan already treats as in scope.",
+      "suggested_action": "add canonical extraction to step 6's PLAN_FORMAT exclusions (and the authoring summary paragraph if one is added), matching Architecture's note-less path list. --- Prior-pass gaps on split replacement halves, silent-edge representation, scope-out `NarrowError`, fixture acceptance, never-graded allowlist, escalate-split coverage, and negative-space paths look addressed in the current plan body and detail bundle; this pass concentrates on the iterate-preservation edge case and the two small coverage holes above.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "canonical-extraction",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  },
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 95920,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  }
+}

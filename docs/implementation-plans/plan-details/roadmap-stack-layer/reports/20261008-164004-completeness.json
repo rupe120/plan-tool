@@ -1,0 +1,203 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-stack-layer",
+  "plan_path": "docs/implementation-plans/2-roadmap-stack-layer.md",
+  "created_at": "2026-10-08T16:40:04Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3536f534a396b15ecd52edb2bcd0824013c895f34dba04b372756d544e4c3b22",
+  "code_fingerprint": {
+    "BACKLOG.md": "48348a656456145622312f9f8de36257014c08dee3090e85a9825f989bcc698e",
+    "ROADMAP_FEEDBACK_FORMAT.md": "16d34b75a72cf798d61e7edf7693aaf61c6d8bcafc30fe5e738f35251c4c227a",
+    "ROADMAP_FORMAT.md": "063b3b5f610cd719fec0f51960e21242c2e5beb739a995c356bcfc264a1445ac",
+    "docs/ARCHITECTURE.md": "546923bf2fbba21cea2193897fb1afdb23033bf8a5cd2f244dc8abb9fe45ddae",
+    "plan_tool/cli/roadmap_cmd.py": "2cbb1f53d1704b5586d1a74d9561e4b07ec3f1db7f83d0c4c341ac8e3c548536",
+    "plan_tool/prompts/roadmap-candidate-delta-selector.md": "b1120ba10b0913dbdbbdfcbd8e33f09cc005c5293f3fa30844935f4c47db2699",
+    "plan_tool/prompts/roadmap-constraints.md": "0cf29b81d0f185b30bedff5bf1c295966d16b8df5dd7e567e4d65aa87529f7d8",
+    "plan_tool/prompts/roadmap-seed.md": "4d7e4ceba9680805258372a4f2a1759136ec6fb4e9a010ca8b97a58ac8df4d04",
+    "plan_tool/roadmap.py": "3b417be6024ae8809ec33e28cab7135de500aa1fe7ef00cb9930224738798166",
+    "plan_tool/roadmap_artifacts.py": "2a46b43c85db5be65a8a779d6b4ae0914817b0c1aef414305ef8f2ff7114a199",
+    "plan_tool/roadmap_candidate.py": "453b14ffb3ee59aabd8275eb677f6ab2a1cd4d554c7f24021ded5fa34c39ceab",
+    "plan_tool/roadmap_candidate_context.py": "b36427a7a170912a6595c3abcc22c90cc6770c4e523de73a8c53f4e3cb871260",
+    "plan_tool/roadmap_candidate_run.py": "a537917e5091325e0e959bf51d66fadd6003d0a30f19d038aa82da70f326d10e",
+    "plan_tool/roadmap_gates.py": "88e2e0c36ef6b56853472e5cefcc110b1a3abcd321e69dffbc1a65f8cd921b75",
+    "plan_tool/roadmap_index.py": "640a02436cae234a918b9991117d8ed88bdd77e741c2e3c5324ad98f90b4cb25",
+    "plan_tool/roadmap_revision.py": "d088077bf6aa0147305311e3d14963efbcd431a564e64b242299b60fb5598c31",
+    "plan_tool/roadmap_revision_patch.py": "90d82d676fc0dd13fd9f54302a7b23fae371883bc328ebb49df23f4c1b137086",
+    "tests/cli/test_roadmap_cmd.py": "00f006c0ee2f0b8e38d2478a233eed281afec0a843b2c54fd171b1563b8807d2",
+    "tests/test_roadmap.py": "49127f2e6f3998899d4d392a6ade6dc60e9cc6a134791c9be2a17351d031c317",
+    "tests/test_roadmap_artifacts.py": "b294c139e0fd478295410c4b6f822a0706a443b050d6900ae60ddd2f56190312",
+    "tests/test_roadmap_candidate.py": "db14387fc6d5f710a54e8dcf06d5ba76e510cc8324ecfa95dda9bb065418797f",
+    "tests/test_roadmap_candidate_review.py": "e81026ea261e1732fc12effd251df4375c58a6d9c802252354d84f6be96318df",
+    "tests/test_roadmap_candidate_run.py": "761b007e4bd4518ad6afd1fdba0dec51e0270cd1d757f79ba80dc4dc70d6b730",
+    "tests/test_roadmap_format.py": "a382c8410679ee0004618bcbb5cfe2616c3029c01b7c5de5b2083e18dfc493ae",
+    "tests/test_roadmap_gates.py": "5cad614a4f0953e3315203709d7e7fbea0b81c215c8e6f9083b8e6af2207232b",
+    "tests/test_roadmap_index.py": "1510f605f757511864168ef9e86275fb1e7e749186583bd1b6d8559d79d3fce5",
+    "tests/test_roadmap_revision.py": "7490c59deaa459f1bd5137ceb7127ddb2c3245841297e1a75f78aa1cab509719",
+    "tests/test_roadmap_revision_patch.py": "f1721184ca1c11a0932832c8e5ecf20a8b2b55b814a742e870e1c0b9499806f4",
+    "tests/test_roadmap_seed_manifest.py": "bcae4154b80b648a8feaf1c4a50247d594a73007ed92a8c55e70cd14fb70489c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/01-stack-collection-02-constraints-md.md": "af5d971255850fd8559e5dac46196a2be9eb946b9d889524917c3faef23e7f07",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/02-stack-gates-totality-over-three.md": "eaac57a8cd1cc041da119c5e11322f74af99d366cef5257d2269df0c02fd94ff",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/03-make-stack-rows-feedback-targets.md": "1f10dce8e8f8c49e443da43a93f4e6fda77b038543756863b2db7da895495364",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/04-teach-constraints-stage-prompt-author.md": "2bc4a2dcffc70412dec65a9900447e5a4c44073e302d58914c9803a2564225ea",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/05-show-full-stack-open-pending-concerns.md": "a7d96a6bee197a68de46a4d7c40b283c5b0fe8a7fca195693607acd2f297aae5",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/06-show-current-stack-stack-rows-candidate.md": "cc2a1e468c95a16d9419a5fc9ec57db535b009e81f2da1d57e3111e27d57dffc",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/07-render-stack-collection-materialized.md": "78587d34034e0b87c57932f67050b5d57791e393dd07a9f6add6334be667451f",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/08-document-stack-collection-its-gates-its.md": "3883d54836fc3cdfee89038bf89388f65e46ccbd2c6e0810d1d2be0b09177db6"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Stack Layer\n\n`roadmap-stack-layer` \u00b7 generated 2026-10-08T16:40:04Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[stack-concern-uniqueness]` [confidence: limited]: Step 2 (`stack gates`) and the plan's \"Totality and version compatibility\" paragraph name three checks: missing concern, unknown concern, and duplicate **id**. They never say what happens when two rows with different ids carry the same valid `concern` (for example two `language-runtime` rows). Totality passes, because every concern is present. The duplicate-id check passes, because the ids differ. Step 3 fixes `concern` on edit, so a reviewer then sees two competing choices for one concern, and the summary lists both. Readers could implement this as \"accept both\", \"report a duplicate concern\", or \"last one wins\". The plan's wording \"one row per required concern\" points to the second reading, but no gate or test says so. Verbatim anchor, Architecture \u2192 \"The `stack` collection\":\n  ```\n  `02-constraints.md` gains a `stack` collection with one row per required concern: deployment platform, store engine, and language/runtime.\n  ```\n  - Fix: State that the stack gate reports a second row for an already-present concern as its own violation (or folds it into the duplicate report). Add the matching case to the step 2 tests and the Testing list.\n- MEDIUM `[stack-no-removal-enforcement]` [confidence: limited]: The plan commits to \"Stack rows can be added but not removed, as with hosting rows, so a candidate can never turn a recorded stack back into 'stack not recorded'\". Totality only binds when the collection is present, so a candidate that deletes every stack row and also drops the `stack` key leaves an artifact with no collection. That artifact passes every gate, because absence never binds. The guarantee therefore depends entirely on step 3's stage-row policy refusing removal of the collection and of its rows. Step 3's summary describes the policy as \"concern field fixed and rows addable\" and says nothing about removal. The Testing bullet \"a candidate cannot remove a stack row or the collection\" has no step that owns it. Name step 3 (`feedback targets and revisable through candidates`) as the owner of the removal refusal, and name the layer that refuses removing the whole collection. A per-row policy cannot express that case, since the key is a collection-level change. Also have the step 3 tests assert it.\n  - Fix: Make step 3 the explicit owner of \"stack rows and the collection are not removable\". Say which layer refuses a candidate that drops the `stack` key, and add the test to step 3 and to the Testing section.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[stack-first-run-seen]` [confidence: limited]: The Outcome and Overview say \"no stack choice and no open stack question is accepted without being seen\". The plan also says hand enrollment is \"not a callout site\". `INDEX.md` is regenerated only by `write_roadmap_index` on stage runs and publishes. An enrolled folder whose `02-constraints.md` already carries a `stack` collection, with chosen or open rows, therefore reaches acceptance with no callout until some candidate or index rewrite runs. Step 5 gives no trigger for regenerating `INDEX.md` on enrollment. Either state that the property excludes enrollment, or name the event that refreshes `INDEX.md`. Plan wording to adjust: the Overview sentence and the Callouts paragraph.\n  - Fix: Narrow the Overview's \"never accepted unseen\" claim to first-run and candidate paths, and say that hand enrollment is deliberately excluded and why.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-4f735902]` [confidence: limited]: The plan's `## Acceptance criteria` names `index.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-stack-layer` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Stack Layer\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[stack-concern-uniqueness]` [confidence: limited]: Step 2 (`stack gates`) and the plan's \"Totality and version compatibility\" paragraph name three checks: missing concern, unknown concern, and duplicate **id**. They never say what happens when two rows with different ids carry the same valid `concern` (for example two `language-runtime` rows). Totality passes, because every concern is present. The duplicate-id check passes, because the ids differ. Step 3 fixes `concern` on edit, so a reviewer then sees two competing choices for one concern, and the summary lists both. Readers could implement this as \"accept both\", \"report a duplicate concern\", or \"last one wins\". The plan's wording \"one row per required concern\" points to the second reading, but no gate or test says so. Verbatim anchor, Architecture \u2192 \"The `stack` collection\":\n  ```\n  `02-constraints.md` gains a `stack` collection with one row per required concern: deployment platform, store engine, and language/runtime.\n  ```\n- MEDIUM `[stack-no-removal-enforcement]` [confidence: limited]: The plan commits to \"Stack rows can be added but not removed, as with hosting rows, so a candidate can never turn a recorded stack back into 'stack not recorded'\". Totality only binds when the collection is present, so a candidate that deletes every stack row and also drops the `stack` key leaves an artifact with no collection. That artifact passes every gate, because absence never binds. The guarantee therefore depends entirely on step 3's stage-row policy refusing removal of the collection and of its rows. Step 3's summary describes the policy as \"concern field fixed and rows addable\" and says nothing about removal. The Testing bullet \"a candidate cannot remove a stack row or the collection\" has no step that owns it. Name step 3 (`feedback targets and revisable through candidates`) as the owner of the removal refusal, and name the layer that refuses removing the whole collection. A per-row policy cannot express that case, since the key is a collection-level change. Also have the step 3 tests assert it.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[stack-first-run-seen]` [confidence: limited]: The Outcome and Overview say \"no stack choice and no open stack question is accepted without being seen\". The plan also says hand enrollment is \"not a callout site\". `INDEX.md` is regenerated only by `write_roadmap_index` on stage runs and publishes. An enrolled folder whose `02-constraints.md` already carries a `stack` collection, with chosen or open rows, therefore reaches acceptance with no callout until some candidate or index rewrite runs. Step 5 gives no trigger for regenerating `INDEX.md` on enrollment. Either state that the property excludes enrollment, or name the event that refreshes `INDEX.md`. Plan wording to adjust: the Overview sentence and the Callouts paragraph.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `index.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-stack-layer` \u2014 interactively review the finding(s) the iterate loop left open.\n- Close the 1 conceptual-completeness gap(s) above through a session-directed edit to the plan or detail prose, then commit and re-audit the changed snapshot.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9ba96314",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`stack gates`) and the plan's \"Totality and version compatibility\" paragraph name three checks: missing concern,",
+      "body": "Step 2 (`stack gates`) and the plan's \"Totality and version compatibility\" paragraph name three checks: missing concern, unknown concern, and duplicate **id**. They never say what happens when two rows with different ids carry the same valid `concern` (for example two `language-runtime` rows). Totality passes, because every concern is present. The duplicate-id check passes, because the ids differ. Step 3 fixes `concern` on edit, so a reviewer then sees two competing choices for one concern, and the summary lists both. Readers could implement this as \"accept both\", \"report a duplicate concern\", or \"last one wins\". The plan's wording \"one row per required concern\" points to the second reading, but no gate or test says so. Verbatim anchor, Architecture \u2192 \"The `stack` collection\":\n  ```\n  `02-constraints.md` gains a `stack` collection with one row per required concern: deployment platform, store engine, and language/runtime.\n  ```",
+      "suggested_action": "State that the stack gate reports a second row for an already-present concern as its own violation (or folds it into the duplicate report). Add the matching case to the step 2 tests and the Testing list.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-concern-uniqueness",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-3accfe21",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan commits to \"Stack rows can be added but not removed, as with hosting rows, so a candidate can never turn a reco",
+      "body": "The plan commits to \"Stack rows can be added but not removed, as with hosting rows, so a candidate can never turn a recorded stack back into 'stack not recorded'\". Totality only binds when the collection is present, so a candidate that deletes every stack row and also drops the `stack` key leaves an artifact with no collection. That artifact passes every gate, because absence never binds. The guarantee therefore depends entirely on step 3's stage-row policy refusing removal of the collection and of its rows. Step 3's summary describes the policy as \"concern field fixed and rows addable\" and says nothing about removal. The Testing bullet \"a candidate cannot remove a stack row or the collection\" has no step that owns it. Name step 3 (`feedback targets and revisable through candidates`) as the owner of the removal refusal, and name the layer that refuses removing the whole collection. A per-row policy cannot express that case, since the key is a collection-level change. Also have the step 3 tests assert it.",
+      "suggested_action": "Make step 3 the explicit owner of \"stack rows and the collection are not removable\". Say which layer refuses a candidate that drops the `stack` key, and add the test to step 3 and to the Testing section.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-no-removal-enforcement",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-b52e8b39",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Outcome and Overview say \"no stack choice and no open stack question is accepted without being seen\". The plan also ",
+      "body": "The Outcome and Overview say \"no stack choice and no open stack question is accepted without being seen\". The plan also says hand enrollment is \"not a callout site\". `INDEX.md` is regenerated only by `write_roadmap_index` on stage runs and publishes. An enrolled folder whose `02-constraints.md` already carries a `stack` collection, with chosen or open rows, therefore reaches acceptance with no callout until some candidate or index rewrite runs. Step 5 gives no trigger for regenerating `INDEX.md` on enrollment. Either state that the property excludes enrollment, or name the event that refreshes `INDEX.md`. Plan wording to adjust: the Overview sentence and the Callouts paragraph.",
+      "suggested_action": "Narrow the Overview's \"never accepted unseen\" claim to first-run and candidate paths, and say that hand enrollment is deliberately excluded and why.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-first-run-seen",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "7ef83e7820d19f549f29c01430341d895953024704164aeea5b56ed7721d43df",
+    "detail_bundle_digest": "c165021425a54e7c8fb2c2c648f910a4aab1e96b9c255d04c404416058528631",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/01-stack-collection-02-constraints-md.md",
+        "state": "present",
+        "digest": "af5d971255850fd8559e5dac46196a2be9eb946b9d889524917c3faef23e7f07"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/02-stack-gates-totality-over-three.md",
+        "state": "present",
+        "digest": "eaac57a8cd1cc041da119c5e11322f74af99d366cef5257d2269df0c02fd94ff"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/03-make-stack-rows-feedback-targets.md",
+        "state": "present",
+        "digest": "1f10dce8e8f8c49e443da43a93f4e6fda77b038543756863b2db7da895495364"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/04-teach-constraints-stage-prompt-author.md",
+        "state": "present",
+        "digest": "2bc4a2dcffc70412dec65a9900447e5a4c44073e302d58914c9803a2564225ea"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/05-show-full-stack-open-pending-concerns.md",
+        "state": "present",
+        "digest": "a7d96a6bee197a68de46a4d7c40b283c5b0fe8a7fca195693607acd2f297aae5"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/06-show-current-stack-stack-rows-candidate.md",
+        "state": "present",
+        "digest": "cc2a1e468c95a16d9419a5fc9ec57db535b009e81f2da1d57e3111e27d57dffc"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/07-render-stack-collection-materialized.md",
+        "state": "present",
+        "digest": "78587d34034e0b87c57932f67050b5d57791e393dd07a9f6add6334be667451f"
+      },
+      {
+        "step_id": 8,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/08-document-stack-collection-its-gates-its.md",
+        "state": "present",
+        "digest": "3883d54836fc3cdfee89038bf89388f65e46ccbd2c6e0810d1d2be0b09177db6"
+      }
+    ],
+    "source_seed_digest": "d6cd854ce17a4b7dac297f5747b7d64b324c63e5e11f2f9d6a2cd1a153704c39",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

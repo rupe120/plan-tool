@@ -1,0 +1,201 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-versioned-feedback-revision-chain",
+  "plan_path": "docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md",
+  "created_at": "2026-09-22T17:16:21Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b56f66eee7a7347453fc4cb6d19cee3c96ba6b3980f48d3008c1830154b44105",
+  "code_fingerprint": {
+    "BACKLOG.md": "27c80a0c758959ebdc585ee5a8060a827a6838c59d02b7da19895c423fed825f",
+    "BUG_BACKLOG.md": "c1cb36f720c91572d174d0953c549789e071724daf4486301e44a1703b9ccf64",
+    "CAPABILITIES.md": "356f0b82c62fd7ba4f09619193be1bdef8354b8bec2ccf1cb5474bb60f46265d",
+    "DATA_CONTRACT.md": "dd7ba201b043426021810e826d3d5ef8632f48b7e265e35c7e9e8929242ed69c",
+    "README.md": "076cbc041dd67a9e25411bbf817e1f2a41601ea894f30194bebb7df005df44d5",
+    "ROADMAP_FORMAT.md": "b712fe4e44528a283d1d3956c215646bcf9af65fe040058fecd67b8d82f60a6c",
+    "RUNBOOK.md": "60f483a5a790065f218ee83bc302237785efc9ba30f160750d84cb5f2b89c6a6",
+    "TESTING.md": "f9a4f28e299937b63f81e4c0dd1653ca3ec936373f49bd1f9b90574c421048dd",
+    "docs/ARCHITECTURE.md": "114f3eb320dff4e3bd97c6f8e146fe216f4912952ba2a27b713d9b352554dcba",
+    "docs/cli/roadmap.md": "4bb0f10dafb0d94e6710731818dfbc1701ae19f0d57f517f87c6defa642f98dd",
+    "docs/how-to/common-workflows.md": "4b3c0b37630446e56d5794364237c3328ee9f3db1cb8a9ffa655591d5c054350",
+    "docs/how-to/roadmap.md": "1c0e8f56d433cf566711c1e0f1e26f2b0701cb75f58a790f7cfef62f5719d814",
+    "docs/reference/commands.md": "afc1f5e998d4ed8c2ddd5a072911e3c2bd181722d403befb980fa39e80dfa7fb",
+    "plan_tool/cli/roadmap_cmd.py": "6e5f4f9636728c5cc810b917611d384c46069d09d62bfc737ab9820bf466cf83",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "36d13261879444c0320309f239119a2e4be617284de6918be37f7fefa6e72fb9",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "7723615e66084d4809a4611da27f738042823856bca99118633a4e982e5b3431",
+    "plan_tool/roadmap_candidate.py": "6c2dba1936658c1d319ad8108cda1ddd8b587c48c7f2acfae719de3751825ab2",
+    "plan_tool/roadmap_candidate_context.py": "38449c043aff59e7e08f2fd752ec6d6a02f23be8ae39e2f28f3f2e05629d0f25",
+    "plan_tool/roadmap_candidate_review.py": "cbf867758e9b253efa6c751e4edc82875475f7f97b3ecf7626eecec7340a3167",
+    "plan_tool/roadmap_candidate_run.py": "873b73dc4da77a9ad6453d82233afafb6f67470233038a201fb6f6935375fdeb",
+    "plan_tool/roadmap_decision_settlement_enrolled.py": "f3b2bf7173eae5f25aa5c9cc9f1ff4896931a1a4bebef486320545ba7ce78a98",
+    "plan_tool/roadmap_version_promotion.py": "8863c8286d5180685316088ac738b74c2e0e5669cbec16e4e785afced00be6ac",
+    "tests/cli/test_cli_reference.py": "527e30f605409ba8e803452ecce91d2395fce0915df987766032f79c1266f401",
+    "tests/cli/test_roadmap_cmd.py": "ae7a39073016477f8a92b4e77de6b1e48ccbeaa18bd29811e592412a4cf931e8",
+    "tests/test_roadmap_candidate.py": "a2c73d62354e816d4071367618b21ec54462c45fbad18bd42d8d162889bc51d1",
+    "tests/test_roadmap_candidate_context.py": "245ebe9cca7479886bb9305284fdb4c69b197c91c80e0a814a41a9ed5f91be7c",
+    "tests/test_roadmap_candidate_review.py": "729bf2579f890682f186a8de9a45c38aa07569de3bcfc4398be38b4e8a2e1efa",
+    "tests/test_roadmap_candidate_run.py": "972d58645deef98a0b9bf3a0f25fe124634bf656d5ca2798dbc26e06f53a83b8",
+    "tests/test_roadmap_decision_settlement_enrolled.py": "bca029328c0fcbe0bb9bd52f43a7577fafa47db918f7c7eb1af8f78119d87563",
+    "tests/test_roadmap_format.py": "460bff6ecd455bb0911a7a035ea249c8cfab4e6327dc9908c985657249b8ea37",
+    "tests/test_roadmap_version_promotion.py": "5e69979ddec359ac0ba457d052a0033a118b6d20accde1a7202f2d84b7472ba5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-build-one-ordered-accepted-head.md": "acebddaba62142566e2bc1b4218551091a4eb8ebec05ecb58f960a7a9e762d6d",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-build-one-complete-successor-batch.md": "ea3fbf7d00d541849f556c06a22a00e9b9e160f0e4f81d30e5956441514294fe",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-narrow-candidate-admission-replacement.md": "2cea4d665e03641f8b7a81d71dfbbe8a4a4009f4b151e2ab90a8952c549d7451",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-block-enrolled-decision-settlement-only.md": "4fd89a03a3087bd4e385f4fae1b1b235b4cf396516cdbd62c10293f1e4967b84",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-bind-review-questions-answers-exact.md": "287c30673770480a02ef3651c9e8b498ce620300b6c9a76bdec23a40ab5bcd62",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-preserve-exact-seal-accepted-head.md": "c6b225e05829c20817b5dfffc0272eb2bafb65ca50cf3167acbf98da3ba6f98f",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-route-selector-free-revise-feedback.md": "db46ebded671b33ec07fc90c58f126355cc35911ef1690f6e310a66c4b2b403a",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-document-batch-successor-workflow.md": "54dc162d97b67781610ee2e0910dfc31bf7d2ae7a96b945bec4070a2c70a94e8"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Versioned Feedback Revision Chain\n\n`roadmap-versioned-feedback-revision-chain` \u00b7 generated 2026-09-22T17:16:21Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c9f3624223dd52a282a654e94e86af5914a056b8954a04a58c35e67341f10019`\n- **Detail bundle digest:** `46d468ee68bd34693e2162728a7bbf4cfbfe10788f45d09f0296835d162ab10c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 8 (+0 vs. first audit)\n- **Detail-bundle size:** 91469 bytes (+91469 vs. first audit)\n- **Keystone fan-out:** 0.43\n- **Satellite ratio:** 0.12\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[accepted-head-feedback-lifecycle]` [confidence: limited]: The later-feedback promise has no path into the immutable accepted predecessor: step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) reads only `ResolvedRoadmapVersion` bytes, step 3 (`Narrow candidate admission to one accepted-head generation and store one inert batch successor`) derives its next batch only after the head changes, and step 8 (`Document the batch-to-successor workflow`) keeps `--reopen-feedback` separate. At HEAD, `plan_tool/roadmap_feedback_reopen.py:run_confirmed_feedback_reopen()` explicitly refuses enrolled roadmaps, so newly opened or reopened top-level feedback cannot become part of the promoted version that step 1 will read. The promised later revision therefore has no eligible feedback to process.\n\n  ```\n  Testing: \u201cAfter promotion, newly added, reopened, or otherwise newly\n  eligible feedback forms a fresh batch whose predecessor is the promoted\n  successor\u201d\n  ```\n  - Fix: Define the existing-authority route that records later eligible feedback in the accepted version before a new batch is derived, or narrow the later-feedback promise and its acceptance coverage to the lifecycle the plan can support.\n- HIGH `[zero-eligible-no-work]` [confidence: limited]: The zero-eligible result is promised but not delivered end-to-end. Step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) deliberately returns an empty context and assigns lifecycle handling to step 3, but step 3 has no empty-batch branch, terminal `no-work` result, or test preventing admission creation and backend invocation; step 7 (`Route selector-free feedback commands to the batch lifecycle`) does not render or map that result, and step 8 (`Document the batch-to-successor workflow`) documents only batch proposal and storage. At HEAD, `CandidateProposalOutcome` has no `no-work` outcome, so the current result contract cannot express the required non-writing success.\n\n  ```\n  Acceptance criteria: \u201cNo eligible feedback produces a deterministic no-work\n  result without a model call or state publication.\u201d\n  ```\n  - Fix: Define one empty-batch terminal outcome before admission or model work, and carry its non-writing CLI result, documentation, and regression coverage through steps 3, 7, and 8.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Versioned Feedback Revision Chain\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `c9f3624223dd52a282a654e94e86af5914a056b8954a04a58c35e67341f10019`\n- **Detail bundle digest:** `46d468ee68bd34693e2162728a7bbf4cfbfe10788f45d09f0296835d162ab10c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[accepted-head-feedback-lifecycle]` [confidence: limited]: The later-feedback promise has no path into the immutable accepted predecessor: step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) reads only `ResolvedRoadmapVersion` bytes, step 3 (`Narrow candidate admission to one accepted-head generation and store one inert batch successor`) derives its next batch only after the head changes, and step 8 (`Document the batch-to-successor workflow`) keeps `--reopen-feedback` separate. At HEAD, `plan_tool/roadmap_feedback_reopen.py:run_confirmed_feedback_reopen()` explicitly refuses enrolled roadmaps, so newly opened or reopened top-level feedback cannot become part of the promoted version that step 1 will read. The promised later revision therefore has no eligible feedback to process.\n\n  ```\n  Testing: \u201cAfter promotion, newly added, reopened, or otherwise newly\n  eligible feedback forms a fresh batch whose predecessor is the promoted\n  successor\u201d\n  ```\n- HIGH `[zero-eligible-no-work]` [confidence: limited]: The zero-eligible result is promised but not delivered end-to-end. Step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) deliberately returns an empty context and assigns lifecycle handling to step 3, but step 3 has no empty-batch branch, terminal `no-work` result, or test preventing admission creation and backend invocation; step 7 (`Route selector-free feedback commands to the batch lifecycle`) does not render or map that result, and step 8 (`Document the batch-to-successor workflow`) documents only batch proposal and storage. At HEAD, `CandidateProposalOutcome` has no `no-work` outcome, so the current result contract cannot express the required non-writing success.\n\n  ```\n  Acceptance criteria: \u201cNo eligible feedback produces a deterministic no-work\n  result without a model call or state publication.\u201d\n  ```\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-versioned-feedback-revision-chain --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-7cd13afd",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The later-feedback promise has no path into the immutable accepted predecessor: step 1 (`Build one ordered accepted-head",
+      "body": "The later-feedback promise has no path into the immutable accepted predecessor: step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) reads only `ResolvedRoadmapVersion` bytes, step 3 (`Narrow candidate admission to one accepted-head generation and store one inert batch successor`) derives its next batch only after the head changes, and step 8 (`Document the batch-to-successor workflow`) keeps `--reopen-feedback` separate. At HEAD, `plan_tool/roadmap_feedback_reopen.py:run_confirmed_feedback_reopen()` explicitly refuses enrolled roadmaps, so newly opened or reopened top-level feedback cannot become part of the promoted version that step 1 will read. The promised later revision therefore has no eligible feedback to process.\n\n  ```\n  Testing: \u201cAfter promotion, newly added, reopened, or otherwise newly\n  eligible feedback forms a fresh batch whose predecessor is the promoted\n  successor\u201d\n  ```",
+      "suggested_action": "Define the existing-authority route that records later eligible feedback in the accepted version before a new batch is derived, or narrow the later-feedback promise and its acceptance coverage to the lifecycle the plan can support.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "accepted-head-feedback-lifecycle",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-8be97e81",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The zero-eligible result is promised but not delivered end-to-end. Step 1 (`Build one ordered accepted-head feedback bat",
+      "body": "The zero-eligible result is promised but not delivered end-to-end. Step 1 (`Build one ordered accepted-head feedback batch and exact batch identity`) deliberately returns an empty context and assigns lifecycle handling to step 3, but step 3 has no empty-batch branch, terminal `no-work` result, or test preventing admission creation and backend invocation; step 7 (`Route selector-free feedback commands to the batch lifecycle`) does not render or map that result, and step 8 (`Document the batch-to-successor workflow`) documents only batch proposal and storage. At HEAD, `CandidateProposalOutcome` has no `no-work` outcome, so the current result contract cannot express the required non-writing success.\n\n  ```\n  Acceptance criteria: \u201cNo eligible feedback produces a deterministic no-work\n  result without a model call or state publication.\u201d\n  ```",
+      "suggested_action": "Define one empty-batch terminal outcome before admission or model work, and carry its non-writing CLI result, documentation, and regression coverage through steps 3, 7, and 8.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "zero-eligible-no-work",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c9f3624223dd52a282a654e94e86af5914a056b8954a04a58c35e67341f10019",
+      "detail_bundle_digest": "46d468ee68bd34693e2162728a7bbf4cfbfe10788f45d09f0296835d162ab10c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-build-one-ordered-accepted-head.md",
+          "state": "present",
+          "digest": "acebddaba62142566e2bc1b4218551091a4eb8ebec05ecb58f960a7a9e762d6d"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-build-one-complete-successor-batch.md",
+          "state": "present",
+          "digest": "ea3fbf7d00d541849f556c06a22a00e9b9e160f0e4f81d30e5956441514294fe"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-narrow-candidate-admission-replacement.md",
+          "state": "present",
+          "digest": "2cea4d665e03641f8b7a81d71dfbbe8a4a4009f4b151e2ab90a8952c549d7451"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-block-enrolled-decision-settlement-only.md",
+          "state": "present",
+          "digest": "4fd89a03a3087bd4e385f4fae1b1b235b4cf396516cdbd62c10293f1e4967b84"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-bind-review-questions-answers-exact.md",
+          "state": "present",
+          "digest": "287c30673770480a02ef3651c9e8b498ce620300b6c9a76bdec23a40ab5bcd62"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-preserve-exact-seal-accepted-head.md",
+          "state": "present",
+          "digest": "c6b225e05829c20817b5dfffc0272eb2bafb65ca50cf3167acbf98da3ba6f98f"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-route-selector-free-revise-feedback.md",
+          "state": "present",
+          "digest": "db46ebded671b33ec07fc90c58f126355cc35911ef1690f6e310a66c4b2b403a"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-document-batch-successor-workflow.md",
+          "state": "present",
+          "digest": "54dc162d97b67781610ee2e0910dfc31bf7d2ae7a96b945bec4070a2c70a94e8"
+        }
+      ],
+      "source_seed_digest": "60d330b3968c257a46c7ed1ab712fc0e1564f24c2d4bf95d2251eb5fe1f62c7a",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 8,
+    "detail_bundle_bytes": 91469,
+    "keystone_fan_out": 0.42857142857142855,
+    "satellite_ratio": 0.125,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-71a14fd2": {
+      "code_anchor": null,
+      "field_or_key": "step_id",
+      "location": "docs/implementation-plans/2-audit-shape-registry.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/2-audit-shape-registry.md",
+      "reason": "`Recommendation.step_id` lacks a matching HEAD code-location anchor",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-0c36594d": {
+      "code_anchor": null,
+      "field_or_key": "step_id",
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/02-parse-audit-tags-evaluate-arms-persist.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "Recommendation",
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/02-parse-audit-tags-evaluate-arms-persist.md",
+      "reason": "`Recommendation.step_id` lacks a matching HEAD code-location anchor",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-9b756c68": {
+      "code_anchor": "plan_tool/schema.py:Plan.steps",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/02-parse-audit-tags-evaluate-arms-persist.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/02-parse-audit-tags-evaluate-arms-persist.md",
+      "reason": "code anchor `plan_tool/schema.py:Plan.steps` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-6eea31c6": {
+      "code_anchor": "plan_tool/review_persistence.py:SavedReview.audit_shape_advisory",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/audit-shape-registry/03-render-fresh-arm-advice-retire-count.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/audit-shape-registry/03-render-fresh-arm-advice-retire-count.md",
+      "reason": "code anchor `plan_tool/review_persistence.py:SavedReview.audit_shape_advisory` names an unregistered field",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260803-180017-completeness"
+}

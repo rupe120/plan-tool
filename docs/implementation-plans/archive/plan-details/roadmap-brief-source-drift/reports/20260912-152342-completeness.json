@@ -1,0 +1,138 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-brief-source-drift",
+  "plan_path": "docs/implementation-plans/2-roadmap-brief-source-drift.md",
+  "created_at": "2026-09-12T15:23:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c99e887e61fc0d29ee5d629f0eb045a67cfc980feb54ae10ba991dfefd483027",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "85ec88e5e4b4f1402041215923bea8de61a98824c4ad274da51ba9c0a8c17ed9",
+    "DATA_CONTRACT.md": "a487b831bcd4208bdc9b6dbfeb705bae2d43d4a7bdecb3b70249d3655c904d6b",
+    "README.md": "5077388d1a53ddee451a7e65c7da47c7b41a4ad997156abb0a0b5fd45a4229b4",
+    "ROADMAP_FORMAT.md": "eaf6de6bc867c6f874e3683730e97c2ad49d9dfc2ec64a63e67e62213b4eb972",
+    "RUNBOOK.md": "7df19f082b027b36a509776898f12c6ec45dc2e50d71d51769c2d9d3a9870d05",
+    "USE_CASES.md": "64bcd3c02ca8c0acd795ec98e735cf6932bfba51c95eb075aab64f141e47ec76",
+    "docs/ARCHITECTURE.md": "c5e02d5dde29de7e9d61df18f3c8632d3df09dac17fc263955899c1400eed45e",
+    "docs/ROADMAP_WALKTHROUGH.md": "47835b411649d62e74e65dc9412d2627ff564b0d6c8f278e9488f0e0e4eac19d",
+    "docs/cli/roadmap.md": "b36cd6a5c6d85dba883ff9d35a9a5812b9835dc391de407ac2994902d7ce7624",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md": "dc11e193562bc1e8f677def57997d9594c7d1fce3c34b40771abd37397f1de5e",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "5b196bb9ecb8d7be2e8beb6ef9d972b1cfcd10b39a69ad057be52da83e03bcb5",
+    "plan_tool/cli/__init__.py": "2bc81b031c52f6490752f78502c5ff2cea38a55a42714a2c226a5f197863320b",
+    "plan_tool/cli/roadmap_cmd.py": "ead8fe581c4aae7c483feaa5fc0a2e48ebfd3f65648a446ff1e506fcb0440c88",
+    "plan_tool/roadmap.py": "62d3d92e2ff921b30b44f9ce6348cba7911ec28a709301e9a4db9f28b46508b0",
+    "plan_tool/roadmap_source.py": "13c48715bc3fe222a1289f41064e4ecc4de1a5baf5af69066f6b205af8a06db7",
+    "plan_tool/run_log.py": "f806251a711e951eca186a84fd8a1a6e474e7dc6ec42f68768988db458583b93",
+    "tests/cli/package_surface_help.golden.txt": "93a9f349c6f9fa5e011b836ffde552cfd01a649037bf404e5de99396a76b84a1",
+    "tests/cli/test_roadmap_cmd.py": "b251e5d038cd53106d36059220f08fcff47a419dd18edd35078a2729683a4748",
+    "tests/test_roadmap.py": "43893941b8b7391b0ae5dae817c2eef50c2189cd6afc1614fa7ca88da56de9ca",
+    "tests/test_roadmap_format.py": "6f2b74355c6719bb3a1813deed5109bc708fe94db3d6ae2d137e99984d1e9cfa",
+    "tests/test_roadmap_source.py": "32a6223e5122af655121eae000ce16bbf1671bb4ced1bfd70f1fdf6d198dd84e",
+    "tests/test_run_log.py": "5db88e0b4f1eb7c00fa7a16430554fb436b6e4b4d6318426851cd8c35a6a0666"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md": "9037751b077dcdbf286b05ab236d67a57967aa8b0b0a38c87b563c28a1557ddc",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md": "e68be6d93e37e3b17872fe63be9b954920f09d46c3d4af4d87e161f071f21859",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-atomically.md": "f2b0c43414b0acc73643495f7c4b9d2e0d18d25f5c890d77cc40493f5c55eeec",
+    "docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-digest-bound-source-admission.md": "a23507dc313b2fcbb82fd13fb8154acc161addb0e1d16cd4d9de857c28465507"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Brief Source Drift\n\n`roadmap-brief-source-drift` \u00b7 generated 2026-09-12T15:23:42Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c99e887e61fc0d29ee5d629f0eb045a67cfc980feb54ae10ba991dfefd483027`\n- **Detail bundle digest:** `3951866008dbaf56eb44b37e278cc3779b69de553d84f6e8fda5a5fcc707bad2`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-brief-source-drift   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-brief-source-drift  # alternative interactive review/apply\n\n- HIGH `[source-admission-audit-trail]` [confidence: limited]: Step 2 (`Persist and check brief digests before artifact admission...`) and step 3 (`Accept same-path rebinding... and report the baseline-only change`) require source-admission reporting, but the plan never defines a durable run-log result that distinguishes matched re-entry, legacy/changed refusal, malformed metadata, and explicit rebinding. Architecture assigns lifecycle reporting to the orchestrator; Testing requires \u201crun-log preflight classification\u201d; the acceptance criteria require lifecycle/run-log coverage; yet `DATA_CONTRACT.md`\u2019s `RoadmapSourceResolved`, `RoadmapSourceRecorded`, and `RoadmapPreflightFailed` contracts provide no source-admission disposition, and `roadmap.py:_run_roadmap` currently emits only generic `brief_source` failures. Implementers can therefore satisfy the message requirement while leaving the required explicit acceptance unauditable in run logs.\n  - Fix: Define one durable lifecycle contract for every digest-admission outcome, including explicit same-path rebinding and each refusal class, and align steps 2\u20134, the data contract, acceptance criteria, and tests to it.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-brief-source-drift` \u2014 apply the 1 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Brief Source Drift\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `c99e887e61fc0d29ee5d629f0eb045a67cfc980feb54ae10ba991dfefd483027`\n- **Detail bundle digest:** `3951866008dbaf56eb44b37e278cc3779b69de553d84f6e8fda5a5fcc707bad2`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[source-admission-audit-trail]` [confidence: limited]: Step 2 (`Persist and check brief digests before artifact admission...`) and step 3 (`Accept same-path rebinding... and report the baseline-only change`) require source-admission reporting, but the plan never defines a durable run-log result that distinguishes matched re-entry, legacy/changed refusal, malformed metadata, and explicit rebinding. Architecture assigns lifecycle reporting to the orchestrator; Testing requires \u201crun-log preflight classification\u201d; the acceptance criteria require lifecycle/run-log coverage; yet `DATA_CONTRACT.md`\u2019s `RoadmapSourceResolved`, `RoadmapSourceRecorded`, and `RoadmapPreflightFailed` contracts provide no source-admission disposition, and `roadmap.py:_run_roadmap` currently emits only generic `brief_source` failures. Implementers can therefore satisfy the message requirement while leaving the required explicit acceptance unauditable in run logs.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-brief-source-drift` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-d51825bf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Persist and check brief digests before artifact admission...`) and step 3 (`Accept same-path rebinding... and r",
+      "body": "Step 2 (`Persist and check brief digests before artifact admission...`) and step 3 (`Accept same-path rebinding... and report the baseline-only change`) require source-admission reporting, but the plan never defines a durable run-log result that distinguishes matched re-entry, legacy/changed refusal, malformed metadata, and explicit rebinding. Architecture assigns lifecycle reporting to the orchestrator; Testing requires \u201crun-log preflight classification\u201d; the acceptance criteria require lifecycle/run-log coverage; yet `DATA_CONTRACT.md`\u2019s `RoadmapSourceResolved`, `RoadmapSourceRecorded`, and `RoadmapPreflightFailed` contracts provide no source-admission disposition, and `roadmap.py:_run_roadmap` currently emits only generic `brief_source` failures. Implementers can therefore satisfy the message requirement while leaving the required explicit acceptance unauditable in run logs.",
+      "suggested_action": "Define one durable lifecycle contract for every digest-admission outcome, including explicit same-path rebinding and each refusal class, and align steps 2\u20134, the data contract, acceptance criteria, and tests to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "source-admission-audit-trail",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "c99e887e61fc0d29ee5d629f0eb045a67cfc980feb54ae10ba991dfefd483027",
+      "detail_bundle_digest": "3951866008dbaf56eb44b37e278cc3779b69de553d84f6e8fda5a5fcc707bad2",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/01-read-saved-brief-digests-distinguish.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/02-persist-check-brief-digests-before.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/03-accept-same-path-rebinding-atomically.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-brief-source-drift/04-document-digest-bound-source-admission.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "cff4201e20b529fdef754cb4ca1b72892108af99b00e1603e36657aaf436fc28",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

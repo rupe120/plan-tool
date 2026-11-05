@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "plan_slug": "audit-shape-registry",
+  "plan_path": "docs/implementation-plans/2-audit-shape-registry.md",
+  "created_at": "2026-08-03T18:43:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "334a64705312c8bbae0a0e4da92f862c4e77357be343eae2b537f17061717497",
+  "code_fingerprint": {
+    "BACKLOG.md": "3423770d5b3ca94a9cd4e282dd7f3c83216783ca759c3adf0919bf1835ca57be",
+    "CLAUDE.md": "b5d07b73d8f83be715d0cc8b53129544c8b6d0b0433c8132b02b363ff06f85c2",
+    "DATA_CONTRACT.md": "188119b9d4628e81aa15162ad30fbb7dcf8fb87d030e97d1aad920e8cfcd98d7",
+    "docs/AUDIT_FLOW.md": "331cb90d7ebbe616aa2e335a82658a7a829bd3ce7bc09b4e1213189bd834ff32",
+    "docs/cli/README.md": "e75d93c499daaf1f16153d3fbe8989992e37be1279ca9d8972392475b385f8f9",
+    "docs/cli/completeness-apply.md": "5533aabcb14376eee833be82af75d6d78a7667459063f12f2c420ac85a4d530a",
+    "docs/cli/completeness-audit.md": "b8a8a947e1b956cd30643e3d1cd1d8a4e5ac7694efd7d7eb54718247a70208c5",
+    "plan_tool/cli/completeness_apply_parallel.py": "e06d733d0a8bc3f9fb34a3c1f053044c072746328f7995e65b694cedddf1c52e",
+    "plan_tool/cli/completeness_cmd.py": "f4faf635f4d4d25028ec2ea9e7c21054cbc388da0228779af7b2d33ec68f2739",
+    "plan_tool/cli/completeness_phases.py": "f8ad668f471d5f641418d6142b214ce38468b69e016b7e415e109d1d7a0a98ef",
+    "plan_tool/cli/inspect.py": "e83465791666083c8493587facf1ccd409a5b80fc52f138165ecca07da61de9c",
+    "plan_tool/completeness_report.py": "4913305b9b7381e7ca1703a555666b99ac3b01a3bd5896fc2daf8d57e49a6b80",
+    "plan_tool/prompts/plan-audit.md": "efeec070b779c35875b986f6174bcd12064912cce4017b559a0c567fb459b910",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "plan_tool/review_persistence.py": "71f177e3207bf3cf37a3c69f6dec357eebc38ef85b31a6a2d57b7d04f9329d2b",
+    "tests/cli/test_completeness_apply_parallel.py": "d8fa0c9ad201e67804f1f9481271e698ab66222b56094e35280483be83a00196",
+    "tests/cli/test_completeness_cmd.py": "58c820ac3b751b8d4e98808aa31766d38101f2b807f6a130c0b44342abf589e1",
+    "tests/cli/test_inspect_cmds.py": "5a22a6b954fc033fa4a84c721ec074cef394fdb645e1cc21f7f1cb09f256581b",
+    "tests/test_cli.py": "7079ebc1ba97fca3688aba4b24a2ae3f2724cb688949077625e7df77fcd97682",
+    "tests/test_completeness_report.py": "e045dad32d0e570cceda7e1b6765e7ebfc2aadb76c4bedb62ef32c0e7dcc8a6e",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7",
+    "tests/test_review_persistence.py": "a00e9b3cbfcded921d2da251f33875241a1bba116988c41de8a256404e585a37"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-shape-registry/01-audit-shape-types-pure-checks.md": "a970c20c5ae4928c14fa2a12bf79289be316857e1098f8613e5f0466a0da7975",
+    "docs/implementation-plans/plan-details/audit-shape-registry/02-parse-audit-tags-evaluate-arms-persist.md": "5d8b0a869b2bd978070a876398b6f1d227b549fa85dac4eefd0bb4c8d30337c8",
+    "docs/implementation-plans/plan-details/audit-shape-registry/03-render-fresh-arm-advice-retire-count.md": "a94932f2fd81ea93ea71f48e8334d31632732dc640f3a5dbdc89002d0eea6dd1",
+    "docs/implementation-plans/plan-details/audit-shape-registry/04-validate-documented-boundary-record.md": "5e044406909154e992ec34cc6a452a0e8072c49742390deaebbd625e3aa19edd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Shape Registry\n\n`audit-shape-registry` \u00b7 generated 2026-08-03T18:43:42Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply audit-shape-registry   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk audit-shape-registry  # alternative interactive review/apply\n\n- MEDIUM `[audit-input-snapshot]`: step 2 (`Parse audit tags, evaluate arms, and persist the advisory`) promises \u201cthe exact plan and resolved run-grade detail inputs that were sampled\u201d (Architecture), but says to \u201cresolve every authoritative run-grade `step.detail` pointer.\u201d At HEAD, `plan_tool/review.py:_format_audit_detail_bundle()` uses `resolve_detail_artifact()`\u2019s canonical detail file when `step.detail` is unset, so a changed sampled input could still leave the advisory marked fresh.\n  - Fix: Define the snapshot to use the audit renderer\u2019s run-grade resolution for every step, including canonical fallback and set-but-missing pointer states, and pin those cases.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-1cbbb5ec]`: The plan's `## Acceptance criteria` names `claude.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-582a9ded]`: The plan's `## Acceptance criteria` names `judgment_only`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e97ca5a7]`: The plan's `## Acceptance criteria` names `recommendation_advice`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-169dc502]`: The plan's `## Acceptance criteria` names `recommendation_kind`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-574a98f3]`: The plan's `## Acceptance criteria` names `recommended_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply audit-shape-registry` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Shape Registry\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[audit-input-snapshot]`: step 2 (`Parse audit tags, evaluate arms, and persist the advisory`) promises \u201cthe exact plan and resolved run-grade detail inputs that were sampled\u201d (Architecture), but says to \u201cresolve every authoritative run-grade `step.detail` pointer.\u201d At HEAD, `plan_tool/review.py:_format_audit_detail_bundle()` uses `resolve_detail_artifact()`\u2019s canonical detail file when `step.detail` is unset, so a changed sampled input could still leave the advisory marked fresh.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `claude.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `judgment_only`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `recommendation_advice`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `recommendation_kind`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `recommended_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk audit-shape-registry` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-177a2490",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 2 (`Parse audit tags, evaluate arms, and persist the advisory`) promises \u201cthe exact plan and resolved run-grade det",
+      "body": "step 2 (`Parse audit tags, evaluate arms, and persist the advisory`) promises \u201cthe exact plan and resolved run-grade detail inputs that were sampled\u201d (Architecture), but says to \u201cresolve every authoritative run-grade `step.detail` pointer.\u201d At HEAD, `plan_tool/review.py:_format_audit_detail_bundle()` uses `resolve_detail_artifact()`\u2019s canonical detail file when `step.detail` is unset, so a changed sampled input could still leave the advisory marked fresh.",
+      "suggested_action": "Define the snapshot to use the audit renderer\u2019s run-grade resolution for every step, including canonical fallback and set-but-missing pointer states, and pin those cases.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "audit-input-snapshot",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

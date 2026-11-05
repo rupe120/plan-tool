@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-narrative-review-evidence",
+  "plan_path": "docs/implementation-plans/2-candidate-narrative-review-evidence.md",
+  "created_at": "2026-10-02T17:12:58Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "72b160d375e80dbce681fb614cece88d80fb8ac545dbcc02b1783f3af5eb5efd",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "docs/ARCHITECTURE.md": "9c2368e32d7a6a5abf3405d7122c7578af94e1fa0193706034573f26c6102797",
+    "docs/cli/roadmap.md": "b9af83d76a9fe7b26691d69f33e3bb00d9fb6939262627375f68d5402ca1ef09",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_gates.py": "63eb68b96193e6f097f947b9e72db50fd9ef6cff232c40c524e26905716f357c",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_gates.py": "5c8ae5d3a11935575025ade8d6b906ec230354337a6b0e08e5f16bfd0466e25a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md": "49c6ec8acdbe1f9121548394d626fb6d76919fb3f88481eb2c6c58a911ec5e7b",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md": "78a84beb5e5ae80976e717f12df8e7ecb9c28b141c715b54871a75c0fbba8599",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-pure-function-that-computes-candidate.md": "01c637a80ac8e7aeab5d046c9e53b4e7e291cbf8fe49a0cb49ccb7bc213247d6",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-make-approval-paths-seal-review-decide.md": "e03d9e64304b31f0d8bbb61a798d3065b33ac7d3e325ffb3769a91e2362947ed",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md": "1d93107a3e43a33c6bfacb23bd090cff2b6e2cd346c5d6c8ce5942f239a5ea9b",
+    "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-update-roadmap-format-md-docs.md": "b74d8b32e697420594080455bfe82582be2b29110165440a9a862f43a84d0f7b"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Narrative Review Evidence\n\n`candidate-narrative-review-evidence` \u00b7 generated 2026-10-02T17:12:58Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[removed-id-scope-across-artifacts]` [confidence: limited]: Steps 2 and 3 do not say whether a removed id is checked only against prose in the artifact whose removal records list it, or against prose in every member of a batch candidate. Step 2 defines the check as \"ids in the candidate artifact's own carried removals\". The plan's Binary observable says \"a live prose block names an id that the candidate or its accepted lineage removed\". Step 3's function takes one predecessor, yet it must also handle `BatchGateCleanCandidate`, where each member has its own predecessor and removals.\n  - **Two plausible readings:**\n    - Per-artifact: an id removed in 01-domain.md and still named in 03-components.md is missed.\n    - Union across the batch: an id that only coincides across artifacts blocks approval.\n  - **Why tests won't catch it:** both readings pass the Integration fixture, which is a single artifact.\n  -\n  - Fix: State in step 1's `## Narrative review evidence` section which prose each removal record is checked against. Make step 2's check and step 3's batch handling follow that rule, and add one batch-candidate test case that pins it.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit candidate-narrative-review-evidence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Narrative Review Evidence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[removed-id-scope-across-artifacts]` [confidence: limited]: Steps 2 and 3 do not say whether a removed id is checked only against prose in the artifact whose removal records list it, or against prose in every member of a batch candidate. Step 2 defines the check as \"ids in the candidate artifact's own carried removals\". The plan's Binary observable says \"a live prose block names an id that the candidate or its accepted lineage removed\". Step 3's function takes one predecessor, yet it must also handle `BatchGateCleanCandidate`, where each member has its own predecessor and removals.\n  - **Two plausible readings:**\n    - Per-artifact: an id removed in 01-domain.md and still named in 03-components.md is missed.\n    - Union across the batch: an id that only coincides across artifacts blocks approval.\n  - **Why tests won't catch it:** both readings pass the Integration fixture, which is a single artifact.\n  -\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk candidate-narrative-review-evidence` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-06dc4065",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Steps 2 and 3 do not say whether a removed id is checked only against prose in the artifact whose removal records list i",
+      "body": "Steps 2 and 3 do not say whether a removed id is checked only against prose in the artifact whose removal records list it, or against prose in every member of a batch candidate. Step 2 defines the check as \"ids in the candidate artifact's own carried removals\". The plan's Binary observable says \"a live prose block names an id that the candidate or its accepted lineage removed\". Step 3's function takes one predecessor, yet it must also handle `BatchGateCleanCandidate`, where each member has its own predecessor and removals.\n  - **Two plausible readings:**\n    - Per-artifact: an id removed in 01-domain.md and still named in 03-components.md is missed.\n    - Union across the batch: an id that only coincides across artifacts blocks approval.\n  - **Why tests won't catch it:** both readings pass the Integration fixture, which is a single artifact.\n  -",
+      "suggested_action": "State in step 1's `## Narrative review evidence` section which prose each removal record is checked against. Make step 2's check and step 3's batch handling follow that rule, and add one batch-candidate test case that pins it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "removed-id-scope-across-artifacts",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "017cbb813f392141ab92fd85ea839b195e05a3d5d603f0bd50cb3cb30ccefd03",
+    "detail_bundle_digest": "c4152e109f84094d7e85bfc569d09cb21045f7d29847a91e3d3f76bcf5d08a17",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/01-settle-narrative-review-evidence.md",
+        "state": "present",
+        "digest": "49c6ec8acdbe1f9121548394d626fb6d76919fb3f88481eb2c6c58a911ec5e7b"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/02-deterministic-check-roadmap-gates-py.md",
+        "state": "present",
+        "digest": "78a84beb5e5ae80976e717f12df8e7ecb9c28b141c715b54871a75c0fbba8599"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/03-pure-function-that-computes-candidate.md",
+        "state": "present",
+        "digest": "01c637a80ac8e7aeab5d046c9e53b4e7e291cbf8fe49a0cb49ccb7bc213247d6"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/04-make-approval-paths-seal-review-decide.md",
+        "state": "present",
+        "digest": "e03d9e64304b31f0d8bbb61a798d3065b33ac7d3e325ffb3769a91e2362947ed"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md",
+        "state": "present",
+        "digest": "1d93107a3e43a33c6bfacb23bd090cff2b6e2cd346c5d6c8ce5942f239a5ea9b"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-narrative-review-evidence/06-update-roadmap-format-md-docs.md",
+        "state": "present",
+        "digest": "b74d8b32e697420594080455bfe82582be2b29110165440a9a862f43a84d0f7b"
+      }
+    ],
+    "source_seed_digest": "c47bdb4eaa1fbdb4c32d2892e109ba79ff7f38799e8f6e2fb40ee3e599412348",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

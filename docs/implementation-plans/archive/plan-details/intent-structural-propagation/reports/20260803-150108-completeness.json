@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "plan_slug": "intent-structural-propagation",
+  "plan_path": "docs/implementation-plans/2-intent-structural-propagation.md",
+  "created_at": "2026-08-03T15:01:08Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "7840d0b644c077dbfb08fa5c2c9a11db395b805b3716cbe3a8582979e531faed",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "754d85b65b6ce058bceb57f417e391986d3649e81d51a810c9a56cc7efc70f02",
+    "docs/implementation-plans/archive/2-intent-scope-fence.md": "c94d7c0e895dc50cf3cf20eaaa30c3af66ce641b2b5483f0ded39a972e4a696a",
+    "plan_tool/detail.py": "3dcd422db665f871e2178ef5f8416819b34815e8d2f97bd95abe5de087447ed4",
+    "plan_tool/prompts/plan-audit.md": "efeec070b779c35875b986f6174bcd12064912cce4017b559a0c567fb459b910",
+    "plan_tool/reground.py": "9c387480fdc358a7076729cb8d2b76d2c842cc5d8d30e2322466ea161572b8b0",
+    "plan_tool/review.py": "723d65751772a8f885b4d3117f3c26cda507c1c2f0b1d88423b447b5ae2e9c4b",
+    "plan_tool/scope_out.py": "3caa72e59c5c326da52163e348a32876f1789c23ad32157ff0e71e58c1ba7a00",
+    "tests/test_create.py": "c8164bafbda59ce3a29017bab4a34b4edccb30a893ca372e91dee39207170131",
+    "tests/test_detail.py": "270663a9f46828528754173846632d3cd13f1f3374070533a95ae41b04fca778",
+    "tests/test_reground.py": "aa761ec70d0040c38a3de21ee9295a0a4797646fe3ca9f485eb9eb67cdb6b5c7",
+    "tests/test_review.py": "d7663e27843da5fc2dc3f96dafe9c36cc742f802f8901ba7e2368c6d026861b7",
+    "tests/test_scope_out.py": "4f8a22bdbf966fd33cf5b8dbc018e79866dfc78b2a3c67a91d7b4a220abb7998"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/intent-structural-propagation/01-make-split-drop-intent-merge-keep-only.md": "786191ba1d7467455f106558304449c3f66037183679f98de36fd97cce572c39",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/02-carry-plan-step-intent-three-forward.md": "b181a59ce3b6c65217a2a975482808a804c2697ef4710c7e6bca062a805a5c0e",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/03-put-plan-step-intents-conceptual-audit.md": "3d48b2cedb9104f39826405bce48bc282544da7e2777f4ee7a70254598fd27bf",
+    "docs/implementation-plans/plan-details/intent-structural-propagation/04-document-four-intent-rules-discharge.md": "5a1be37b8bdc9619b895804ab8afd85d616efdae049e258ccfb7b76f13d30142"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Intent Structural Propagation\n\n`intent-structural-propagation` \u00b7 generated 2026-08-03T15:01:08Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Convergence \u2014 the completeness audit/apply loop is spinning\n\nThis loop is spinning \u2014 the same region keeps re-surfacing without shrinking. Consider the remedy below before continuing; the diagnosis prints the hand-run recipe, but the one-command remedy is `plan-tool convergence intent-structural-propagation --apply-split` (in-place re-split) or `plan-tool convergence intent-structural-propagation --apply-scope-out` (carve the step out), behind the same apply-or-recommend gate.\n\n```\nconvergence: spinning \u2014 intent-structural-propagation (window 3)\n  completeness: spinning (6 audits)\n  \u2022 presence-nonvalue-set: recurs in 3 of 3 audits; severity medium \u2192 medium (peak medium)\nThe decomposition itself is wrong across steps; re-seed and re-decompose:\n  plan-tool create intent-structural-propagation --from-existing <seed.md> --iterate\n  Hand-author <seed.md> from the plan's current state (annotate can forward-seed it), then re-run the line above.\n```\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply intent-structural-propagation   # walk + apply each correctness gap, then the completeness gaps\n    plan-tool reconcile-plan-walk intent-structural-propagation  # alternative interactive review/apply\n\n- MEDIUM `[presence-nonvalue-set]`: Architecture Reuse still says \"do not import `review` into `detail` for this\" while `plan_tool/detail.py` already imports `plan_tool.review`, and step 1 (`Make split drop intent and merge keep it only when every member agrees`) already pins the real reason \u2014 fence omit so `TBD` stays outside this plan's named set \u2014 with `test_merged_step_keeps_unanimous_tbd` (and matching TBD-survives pins in steps 2\u20133). The body half-sentence still sells an import-edge story that is false at HEAD.\n  - Fix: rewrite Architecture's avoid-`is_usable_intent` clause to the TBD-outside-fence reason and drop the false no-review-import rationale\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[presence-contract-tbd]`: step 4 (`Document the four intent rules and discharge the parent Deferred`) must name that `TBD` \"may still clear under `is_usable_intent`\" and also \"point at the existing Presence is the entire contract prose\" unchanged, but at HEAD that prose claims `is_usable_intent` recognizes exactly three non-values and omits `TBD`, while `plan_tool/review.py:is_usable_intent` / `_BODY_PLACEHOLDER_RE` already drop bare `TBD`. Landing the four-rule subsection beside that claim leaves two adjacent paragraphs disagreeing about the same predicate.\n  - Fix: when adding the four-rule subsection, correct the Presence paragraph so `is_usable_intent`'s non-values include `TBD` (matching HEAD) without reopening content validation - INFO: [fence-tbd-placeholder] Unifying `plan_tool/scope_fence.py:_SECTION_PLACEHOLDER_RE` with `plan_tool/review.py:is_usable_intent`'s TBD forms (or narrowing TBD out of the presence smell) would collapse the two shipped predicates, but Out of scope / Non-goals already fence re-authoring the presence check and fence rendering \u2014 already tracked as BACKLOG #227; do not absorb into this plan. [out-of-scope-deferred] \u2192 fix: leave the shipped predicates alone here; keep alignment on BACKLOG #227\n  - Address: `plan-tool completeness-apply intent-structural-propagation --anchor presence-contract-tbd`\n\n## Suggested next steps\n\n- `plan-tool completeness-apply intent-structural-propagation` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Intent Structural Propagation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[presence-nonvalue-set]`: Architecture Reuse still says \"do not import `review` into `detail` for this\" while `plan_tool/detail.py` already imports `plan_tool.review`, and step 1 (`Make split drop intent and merge keep it only when every member agrees`) already pins the real reason \u2014 fence omit so `TBD` stays outside this plan's named set \u2014 with `test_merged_step_keeps_unanimous_tbd` (and matching TBD-survives pins in steps 2\u20133). The body half-sentence still sells an import-edge story that is false at HEAD.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[presence-contract-tbd]`: step 4 (`Document the four intent rules and discharge the parent Deferred`) must name that `TBD` \"may still clear under `is_usable_intent`\" and also \"point at the existing Presence is the entire contract prose\" unchanged, but at HEAD that prose claims `is_usable_intent` recognizes exactly three non-values and omits `TBD`, while `plan_tool/review.py:is_usable_intent` / `_BODY_PLACEHOLDER_RE` already drop bare `TBD`. Landing the four-rule subsection beside that claim leaves two adjacent paragraphs disagreeing about the same predicate.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk intent-structural-propagation` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply intent-structural-propagation` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-d5f80f2b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture Reuse still says \"do not import `review` into `detail` for this\" while `plan_tool/detail.py` already import",
+      "body": "Architecture Reuse still says \"do not import `review` into `detail` for this\" while `plan_tool/detail.py` already imports `plan_tool.review`, and step 1 (`Make split drop intent and merge keep it only when every member agrees`) already pins the real reason \u2014 fence omit so `TBD` stays outside this plan's named set \u2014 with `test_merged_step_keeps_unanimous_tbd` (and matching TBD-survives pins in steps 2\u20133). The body half-sentence still sells an import-edge story that is false at HEAD.",
+      "suggested_action": "rewrite Architecture's avoid-`is_usable_intent` clause to the TBD-outside-fence reason and drop the false no-review-import rationale",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "presence-nonvalue-set",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-4515d60a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 4 (`Document the four intent rules and discharge the parent Deferred`) must name that `TBD` \"may still clear under ",
+      "body": "step 4 (`Document the four intent rules and discharge the parent Deferred`) must name that `TBD` \"may still clear under `is_usable_intent`\" and also \"point at the existing Presence is the entire contract prose\" unchanged, but at HEAD that prose claims `is_usable_intent` recognizes exactly three non-values and omits `TBD`, while `plan_tool/review.py:is_usable_intent` / `_BODY_PLACEHOLDER_RE` already drop bare `TBD`. Landing the four-rule subsection beside that claim leaves two adjacent paragraphs disagreeing about the same predicate.",
+      "suggested_action": "when adding the four-rule subsection, correct the Presence paragraph so `is_usable_intent`'s non-values include `TBD` (matching HEAD) without reopening content validation - INFO: [fence-tbd-placeholder] Unifying `plan_tool/scope_fence.py:_SECTION_PLACEHOLDER_RE` with `plan_tool/review.py:is_usable_intent`'s TBD forms (or narrowing TBD out of the presence smell) would collapse the two shipped predicates, but Out of scope / Non-goals already fence re-authoring the presence check and fence rendering \u2014 already tracked as BACKLOG #227; do not absorb into this plan. [out-of-scope-deferred] \u2192 fix: leave the shipped predicates alone here; keep alignment on BACKLOG #227",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "presence-contract-tbd",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

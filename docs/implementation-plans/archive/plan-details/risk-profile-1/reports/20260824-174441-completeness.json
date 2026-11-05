@@ -1,0 +1,170 @@
+{
+  "version": 4,
+  "plan_slug": "risk-profile-1",
+  "plan_path": "docs/implementation-plans/2-risk-profile-1.md",
+  "created_at": "2026-08-24T17:44:41Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b61d1ee694af2793574f7b062f9539d573e7fef247d78a713b6384e33d615cbe",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "f9d63d19deb08c441a2aa998f7ed0be7cc152d6eadb583ba649dc75f2e694c3a",
+    "README.md": "6afd7dc70b9cebfc7a03b92f3a573c6ffb3dbc9c2ec3a787201a5c93b56e7294",
+    "TESTING.md": "f3e71a3b4043083bf3cef87b210f0346b8f7d563e80605c0221a88dad2e720f6",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "docs/CREATE_RESUME_FLOW.md": "2ec94959ffc5cc84ffa0810f622b293e3a212ce6dc1a3e6473c82c285e943e18",
+    "plan_tool/__init__.py": "1bb896aee2673a4eda90764d308096f65a366d9b1f2c1023e97a7d00140241e1",
+    "plan_tool/cli/authoring.py": "4b4a8974286616b1d230bac2a6dcf364aec18dc018a3bf1217cac934f49b0e3d",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/parser.py": "bf1eb94449ea49631a72a2b0859b81c45c80366d0b6d6ec1b9de869f4b6cd9b4",
+    "plan_tool/schema.py": "af9e469ce92591f79aafdfcac09105918fdcd061abea6f17f568548b9aa8946a",
+    "tests/cli/test_authoring_cmds.py": "f8ba1779881c21410b685207dcc889eb4eb009b53bb1154a741e5402c34add9f",
+    "tests/cli/test_inspect_cmds.py": "fbcc4053d80a889af4fc6850d13af8179a466ad93d5f189b6ad3d7e5ecff1b0b",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_distill.py": "3d7a5fb04fb7764e8fba20297ba4f6aff6b9216c4e88f1c8b929387b13c6c105",
+    "tests/test_parser.py": "653c6ec41947aaa99928090f63de4dec06d0df6a97cd6c3310b41a1f7582d630"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md": "42ff8b579fd68f72326b9c3475bdfba09e9ab13cc41f4bc296a4084296c09e26",
+    "docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md": "27a6d279b1f11a70768868e2f58b48814be664494839c582df88a545a0ee3ef9",
+    "docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md": "21e92ee911a5cd1a536f508004fe1eb0df999410d360820e8009d46e52ec91fc",
+    "docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md": "8b597d5689950687712f41da7dc20eae4df7a97632f4a1d1cf5ab6a60406b523",
+    "docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md": "f40770e12cdfe9297b145fa1b940499b5d3d6f47226def5bbd34af4dbc7b1e24"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Risk Profile 1\n\n`risk-profile-1` \u00b7 generated 2026-08-24T17:44:41Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8379ce9e3662c6db37053ddeb7aa013b8e93ab48dda993fb302b7b580f2ae068`\n- **Detail bundle digest:** `642d188f8c26eff17567a5065f475b9acb9e7b76c4f16aee9f563957d2dce7d0`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 56912 bytes (+56912 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply risk-profile-1   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[partial-publication-boundary]`: `plan_tool/create.py:write_new_plan` first calls `path.write_text(stub)` and only then calls `write_plan`, while `_publish_create_plan` has already archived approved collisions. Architecture \u2192 \u201cPre-publication declaration\u201d says recovery begins once a plan file exists, but step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) starts recovery handling only \u201cOnce `write_new_plan` returns,\u201d and step 5 (`Verify safe create boundaries and partial-publication recovery`) tests only failures after a successful write and parse. A failure during the second write can leave a stub or partial artifact without the required path/state report or retry protection.\n  - Fix: make the first plan-file write the recovery boundary and cover in-function as well as later publication failures with retained-artifact reporting and safe retry rules.\n- MEDIUM `[risk-rationale-shape]`: Plan Overview and Architecture \u2192 \u201cPersistence\u201d require a one-line `risk_profile_rationale`, and step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) rejects multiline values. Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) requires only a \u201cshort evidence-based rationale\u201d and tests a \u201cusable rationale\u201d; step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) permits accepting it when it explains the tier, but requires one line only for an override. A valid JSON low proposal with a multiline rationale therefore has no defined result: it can fail final schema validation instead of taking the stated classifier-failure standard fallback.\n  - Fix: require every classifier proposal and accepted final rationale to meet the persisted one-line contract, with invalid proposal shape falling back to standard before resolution.\n- MEDIUM `[risk-decision-audit-display]`: Plan Acceptance criteria says \u201cInteractive acceptance, override, and decline are recorded in the run log and completion summary,\u201d but step 4 (`Show the saved risk tier in create's completion summary`) says the summary \u201cmust describe the tier stored on disk\u201d and \u201cnever reports \u2026 decision mode.\u201d Step 3\u2019s run-log record can distinguish decision modes; the tier-only completion summary cannot distinguish an accepted, declined, or overridden `standard` declaration.\n  - Fix: make the Acceptance criteria state that the run log records the decision mode while step 4\u2019s completion summary reports only the saved tier.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply risk-profile-1` \u2014 apply the 3 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Risk Profile 1\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `8379ce9e3662c6db37053ddeb7aa013b8e93ab48dda993fb302b7b580f2ae068`\n- **Detail bundle digest:** `642d188f8c26eff17567a5065f475b9acb9e7b76c4f16aee9f563957d2dce7d0`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[partial-publication-boundary]`: `plan_tool/create.py:write_new_plan` first calls `path.write_text(stub)` and only then calls `write_plan`, while `_publish_create_plan` has already archived approved collisions. Architecture \u2192 \u201cPre-publication declaration\u201d says recovery begins once a plan file exists, but step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) starts recovery handling only \u201cOnce `write_new_plan` returns,\u201d and step 5 (`Verify safe create boundaries and partial-publication recovery`) tests only failures after a successful write and parse. A failure during the second write can leave a stub or partial artifact without the required path/state report or retry protection.\n- MEDIUM `[risk-rationale-shape]`: Plan Overview and Architecture \u2192 \u201cPersistence\u201d require a one-line `risk_profile_rationale`, and step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) rejects multiline values. Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) requires only a \u201cshort evidence-based rationale\u201d and tests a \u201cusable rationale\u201d; step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) permits accepting it when it explains the tier, but requires one line only for an override. A valid JSON low proposal with a multiline rationale therefore has no defined result: it can fail final schema validation instead of taking the stated classifier-failure standard fallback.\n- MEDIUM `[risk-decision-audit-display]`: Plan Acceptance criteria says \u201cInteractive acceptance, override, and decline are recorded in the run log and completion summary,\u201d but step 4 (`Show the saved risk tier in create's completion summary`) says the summary \u201cmust describe the tier stored on disk\u201d and \u201cnever reports \u2026 decision mode.\u201d Step 3\u2019s run-log record can distinguish decision modes; the tier-only completion summary cannot distinguish an accepted, declined, or overridden `standard` declaration.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk risk-profile-1` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-c598a97e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`plan_tool/create.py:write_new_plan` first calls `path.write_text(stub)` and only then calls `write_plan`, while `_publi",
+      "body": "`plan_tool/create.py:write_new_plan` first calls `path.write_text(stub)` and only then calls `write_plan`, while `_publish_create_plan` has already archived approved collisions. Architecture \u2192 \u201cPre-publication declaration\u201d says recovery begins once a plan file exists, but step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) starts recovery handling only \u201cOnce `write_new_plan` returns,\u201d and step 5 (`Verify safe create boundaries and partial-publication recovery`) tests only failures after a successful write and parse. A failure during the second write can leave a stub or partial artifact without the required path/state report or retry protection.",
+      "suggested_action": "make the first plan-file write the recovery boundary and cover in-function as well as later publication failures with retained-artifact reporting and safe retry rules.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "partial-publication-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-116ea05a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan Overview and Architecture \u2192 \u201cPersistence\u201d require a one-line `risk_profile_rationale`, and step 1 (`Add an explicit",
+      "body": "Plan Overview and Architecture \u2192 \u201cPersistence\u201d require a one-line `risk_profile_rationale`, and step 1 (`Add an explicit risk-profile declaration and a legacy standard fallback`) rejects multiline values. Step 2 (`Classify seed-fed single-plan paths and default no-source create to standard`) requires only a \u201cshort evidence-based rationale\u201d and tests a \u201cusable rationale\u201d; step 3 (`Resolve a bounded operator declaration and safe create recovery boundary`) permits accepting it when it explains the tier, but requires one line only for an override. A valid JSON low proposal with a multiline rationale therefore has no defined result: it can fail final schema validation instead of taking the stated classifier-failure standard fallback.",
+      "suggested_action": "require every classifier proposal and accepted final rationale to meet the persisted one-line contract, with invalid proposal shape falling back to standard before resolution.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-rationale-shape",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b740b36d",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Plan Acceptance criteria says \u201cInteractive acceptance, override, and decline are recorded in the run log and completion ",
+      "body": "Plan Acceptance criteria says \u201cInteractive acceptance, override, and decline are recorded in the run log and completion summary,\u201d but step 4 (`Show the saved risk tier in create's completion summary`) says the summary \u201cmust describe the tier stored on disk\u201d and \u201cnever reports \u2026 decision mode.\u201d Step 3\u2019s run-log record can distinguish decision modes; the tier-only completion summary cannot distinguish an accepted, declined, or overridden `standard` declaration.",
+      "suggested_action": "make the Acceptance criteria state that the run log records the decision mode while step 4\u2019s completion summary reports only the saved tier.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "risk-decision-audit-display",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "8379ce9e3662c6db37053ddeb7aa013b8e93ab48dda993fb302b7b580f2ae068",
+      "detail_bundle_digest": "642d188f8c26eff17567a5065f475b9acb9e7b76c4f16aee9f563957d2dce7d0",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/01-explicit-risk-profile-declaration.md",
+          "state": "present",
+          "digest": "42ff8b579fd68f72326b9c3475bdfba09e9ab13cc41f4bc296a4084296c09e26"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/02-classify-seed-fed-single-plan-paths.md",
+          "state": "present",
+          "digest": "27a6d279b1f11a70768868e2f58b48814be664494839c582df88a545a0ee3ef9"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/03-resolve-bounded-operator-declaration.md",
+          "state": "present",
+          "digest": "21e92ee911a5cd1a536f508004fe1eb0df999410d360820e8009d46e52ec91fc"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/04-show-saved-risk-tier-create-completion.md",
+          "state": "present",
+          "digest": "8b597d5689950687712f41da7dc20eae4df7a97632f4a1d1cf5ab6a60406b523"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/risk-profile-1/05-verify-safe-create-boundaries-partial.md",
+          "state": "present",
+          "digest": "f40770e12cdfe9297b145fa1b940499b5d3d6f47226def5bbd34af4dbc7b1e24"
+        }
+      ],
+      "source_seed_digest": "c2359e6517c23e2e14f32a9caa94b18f6119f4c1fe6a5a3faf31d7b7fb3e0b3d",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 56912,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

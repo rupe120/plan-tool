@@ -1,0 +1,125 @@
+{
+  "version": 4,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T12:08:57Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "50207bb84aab35c300729e80bd7fe38623480b437016caadff27392e7daa3fcf",
+  "code_fingerprint": {
+    "BACKLOG.md": "d551256a49299f4d352b8ee42aea95387c5c1934373390cb9fe834e97f59f2f9",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "65c7105760386d84e1459d090d81322a130513a62ffebe4353b990bb2d75ec8b",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md": "a92c90afd50077eab8f8ff62d4483078c7c110986beb2b43c29d2f02c45fdc11",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md": "402461b98c8eed132e78ae29441192df43b2a30fc25c089592b19672e307f9cc",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md": "463d8f1646496017f08379acd64cf370977f48062d1bd8935fa6d8d8d3bd0218",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md": "7a7ef55174091e06855500b811603d7bf97e6a9f978138a73d453419b81d044a"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Saved Audit Evidence Ledger\n\n`cross-invocation-audit-history` \u00b7 generated 2026-08-21T12:08:57Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply cross-invocation-audit-history   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk cross-invocation-audit-history  # alternative interactive review/apply\n\n- HIGH `[convergence-history-boundary]`: `convergence_diagnosis.render_diagnosis` says \u201cNo completeness or reconcile reports are saved yet,\u201d but `review_persistence.list_saved_reviews` gives `load_report_history` only `.json` files while Architecture defines `report-only` as \u201ca Markdown report without a same-stem JSON sidecar.\u201d Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) will show that report, while step 2 (`Render the separate ledger and preserve the existing convergence diagnosis`) and Testing require it after unchanged diagnosis text, producing a false no-history claim above visible saved evidence.\n  - Fix: preserve the verdict, advisories, telemetry, and exit behavior, but define no-history as no eligible final history sidecars and test it with report-only, checkpoint, unknown-role, and malformed entries\n- MEDIUM `[saved-artifact-state-precedence]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) does not choose one state for an unpaired JSON sidecar: Architecture defines `orphan-sidecar` as \u201ca JSON sidecar without a same-stem Markdown report,\u201d while `saved-final`, `checkpoint`, and `malformed-sidecar` classify the same sidecar by readability and role without requiring a Markdown pair. `plan_tool/review_persistence.py:save_review` can create a completeness JSON with no Markdown, so an unpaired final, checkpoint, or malformed sidecar can take more than one state; Architecture, step 2, Testing, and the Acceptance criteria do not resolve which next action wins.\n  - Fix: Define state precedence for every pairing, readability, and role combination, then carry the matrix through the reader, renderer, and state/action tests.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit cross-invocation-audit-history` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Saved Audit Evidence Ledger\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[convergence-history-boundary]`: `convergence_diagnosis.render_diagnosis` says \u201cNo completeness or reconcile reports are saved yet,\u201d but `review_persistence.list_saved_reviews` gives `load_report_history` only `.json` files while Architecture defines `report-only` as \u201ca Markdown report without a same-stem JSON sidecar.\u201d Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) will show that report, while step 2 (`Render the separate ledger and preserve the existing convergence diagnosis`) and Testing require it after unchanged diagnosis text, producing a false no-history claim above visible saved evidence.\n- MEDIUM `[saved-artifact-state-precedence]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) does not choose one state for an unpaired JSON sidecar: Architecture defines `orphan-sidecar` as \u201ca JSON sidecar without a same-stem Markdown report,\u201d while `saved-final`, `checkpoint`, and `malformed-sidecar` classify the same sidecar by readability and role without requiring a Markdown pair. `plan_tool/review_persistence.py:save_review` can create a completeness JSON with no Markdown, so an unpaired final, checkpoint, or malformed sidecar can take more than one state; Architecture, step 2, Testing, and the Acceptance criteria do not resolve which next action wins.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply cross-invocation-audit-history` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ac95bded",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`convergence_diagnosis.render_diagnosis` says \u201cNo completeness or reconcile reports are saved yet,\u201d but `review_persiste",
+      "body": "`convergence_diagnosis.render_diagnosis` says \u201cNo completeness or reconcile reports are saved yet,\u201d but `review_persistence.list_saved_reviews` gives `load_report_history` only `.json` files while Architecture defines `report-only` as \u201ca Markdown report without a same-stem JSON sidecar.\u201d Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) will show that report, while step 2 (`Render the separate ledger and preserve the existing convergence diagnosis`) and Testing require it after unchanged diagnosis text, producing a false no-history claim above visible saved evidence.",
+      "suggested_action": "preserve the verdict, advisories, telemetry, and exit behavior, but define no-history as no eligible final history sidecars and test it with report-only, checkpoint, unknown-role, and malformed entries",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "convergence-history-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-7c2c9f16",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) does not choose one state for an unpaired JSO",
+      "body": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) does not choose one state for an unpaired JSON sidecar: Architecture defines `orphan-sidecar` as \u201ca JSON sidecar without a same-stem Markdown report,\u201d while `saved-final`, `checkpoint`, and `malformed-sidecar` classify the same sidecar by readability and role without requiring a Markdown pair. `plan_tool/review_persistence.py:save_review` can create a completeness JSON with no Markdown, so an unpaired final, checkpoint, or malformed sidecar can take more than one state; Architecture, step 2, Testing, and the Acceptance criteria do not resolve which next action wins.",
+      "suggested_action": "Define state precedence for every pairing, readability, and role combination, then carry the matrix through the reader, renderer, and state/action tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-artifact-state-precedence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "50207bb84aab35c300729e80bd7fe38623480b437016caadff27392e7daa3fcf",
+    "detail_bundle_digest": "55618e08392d5834585665531a2103c1cae1e6c7159bf26351e119a756baac4f",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "2f914d4b2a1003c4e6ec58fc89d9a7eea971e0c7091bbd40a249748053ac2658",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

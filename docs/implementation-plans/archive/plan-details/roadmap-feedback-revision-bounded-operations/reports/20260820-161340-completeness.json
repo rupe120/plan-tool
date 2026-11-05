@@ -1,0 +1,179 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-feedback-revision-bounded-operations",
+  "plan_path": "docs/implementation-plans/2-roadmap-feedback-revision-bounded-operations.md",
+  "created_at": "2026-08-20T16:13:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c7f06a3057c19b95ad8c7dd74d35fc9edb865c43c391f4e0d15d8077a2c30d45",
+  "code_fingerprint": {
+    "BACKLOG.md": "018f8132e0104825fbdb234e00a89dcab304f21292ef0ef9432427a42eb02673",
+    "BUG_BACKLOG.md": "ea410fcbb1713b9c5e8a9cec2c65cef0d1f7e79cf590d0106e25b1181ba58f68",
+    "CAPABILITIES.md": "c2eda7c0a303c3404c88bf29b1c6757b47bc6afd715de67b2ba08676f2ae0da1",
+    "DATA_CONTRACT.md": "b75be36ff31ad1457c7720afcce2e2fd528d12c96d53efb3b948cbeb646a48ba",
+    "README.md": "563c3db41825d122d8b2b6b5a4b8f9376ada5e1f3ff98856dbc87548160d2174",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "RUNBOOK.md": "6f4e15df2df7831ae5ae30e9395dd3663b1bd2e65451630e480160d375e45be2",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "59ce4c96c379f2dd95ef307e78471b9215fbb4a77aaeab421a32df05e7c738f1",
+    "docs/ROADMAP_WALKTHROUGH.md": "8c5ffad859b39576ac380ba72325abeaac7798d83009592e0d564d47072bc0e8",
+    "docs/cli/roadmap.md": "a35a30f067478aa5a13db3bc98bd33cc2119052baf32f7531ad922dadebae539",
+    "docs/implementation-plans/2-roadmap-canonical-source-identity.md": "2db3ccf2aa747644bd00bd7c079f17250746ff0280aa37d85a92739b3dce0500",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "6a0323848da6130e1130365128911749b07183030b8b6ef6705823f272d5dee0",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/prompts/roadmap-revision.md": "593f753c8453fe006a643636b06e6436d27183a228cf8639d1716428f06d6442",
+    "plan_tool/roadmap.py": "b6374ee054911778e909b0c417beeaf746f5301304bcaf4322b78d4fe124cbcb",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_relations.py": "eeb609117a3e07f802d04c18fef3ac58dcf6224ddeba25268ea3ddaddc0d2b82",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_revision_patch.py": "b348cc8a9bdef63ae38830439df636cf40844c24e1450fbbe1b17d19735f6838",
+    "plan_tool/roadmap_revision_publish.py": "98eb23f964798dff71269081c4d81a8090d7b8c506ce34c47b283f3b3c36e86e",
+    "plan_tool/roadmap_revision_run.py": "fd8c06bbffa0eba872a6d81f79d981513ce2eacc43c73bde206f9a04e5a13f18",
+    "plan_tool/roadmap_seed_state.py": "b59f605a734b4fd483c5a182fd81c575e72b01e56f3c88025d9897ed99fd3431",
+    "plan_tool/roadmap_structural_revision_run.py": "6871aab3e199919b7209d20cff38d8d19e63b1b5cb2c987bae8e771874d8778b",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_roadmap.py": "740b938e9b7284ca3e0fbbae4868f498e9c0fb0df6cd599e47e8ec419bbfa631",
+    "tests/test_roadmap_artifacts.py": "e65a9b6a791f9ea6428a8913a5818d311ba1f2b3c411ecf6391546d8dd5c90e9",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_gates.py": "7befcaba2fc959e1e73ef31ef3796d86bf2046912927da572b43b6c7dbcbb8cc",
+    "tests/test_roadmap_relations.py": "b2c059f99192a8734efa05b4c6a42058ebe965fef09f3ccdd3f1bd5304dd2c17",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_patch.py": "0b10d94eb3a7394365cb8c4cf2880d97ada7583d26cff4daa86276e834b14102",
+    "tests/test_roadmap_revision_publish.py": "afd192ea907b84ed1a6ab2573fe75c65f0f8730845db20aa1d397c8297dd39b5",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9",
+    "tests/test_roadmap_seed_state.py": "db35775498280835737bf0264590312e00d4affd7a6c8c543a962b257ea5e15d",
+    "tests/test_roadmap_structural_revision_run.py": "01f10c46cf76cacd8331f96a6290ad07c062bde43af2b8dcb5468306abedf24e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-envelope-operations.md": "c35b04c8f935c9694245d2bdfebb91fd29622c05c10b9ff28a92be573360f6a6",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-envelope-feedback.md": "7e058d540ce290e080ee8d7de517c75a998124b202de8d007abbf95c426cd39d",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row-prose.md": "fd60ccf1fd453435d5a81049fdbee9d02049a6f9876457d04a8ca69f1d1caffd",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-enroll-trusted-canonical-baseline.md": "56a11d1139c6cf27a3d16d2c09dd2c7204ac836c19418d01d444d879672fe70f",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md": "10e72bfae572d657d9507ff0d18a655ae34332f68ad826e46d88003d5e536047",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md": "783dbdff8d847c825f9b59a246fa8916d6d1a16726e8c3a62d23cc392536665e",
+    "docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/07-close-297-its-whole-artifact-revision.md": "530253b4718fb9775cc81983c9f2f5b89f682c848d7655202abee8cef89f2628"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Feedback Revision Bounded Operations\n\n`roadmap-feedback-revision-bounded-operations` \u00b7 generated 2026-08-20T16:13:40Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-feedback-revision-bounded-operations   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-feedback-revision-bounded-operations  # alternative interactive review/apply\n\n- HIGH `[upstream-merge-seed-invalidation]`: Step 4 (`Enroll a trusted canonical baseline and publish it atomically with every semantic roadmap change`) defines Domain, Constraints, and Components publication as only an artifact/baseline pair, while its Plans-only sidecar rule and step 5 (`Route every re-entered stage by active feedback...`) let a successful upstream bounded merge be followed by feedback-free no-ops with no seed-state change. That leaves derived seeds marked current after an accepted upstream change; `roadmap.py:_run_roadmap` currently invalidates seeds after any feedback-bearing stage, including Domain, and `tests/test_roadmap.py` covers that case.\n  - Fix: Preserve seed invalidation for every bounded merge that can stale derived seeds and include the affected seed state in that merge\u2019s recoverable publication set, while keeping a genuinely feedback-free run side-effect free.\n- HIGH `[row-prose-isolation]`: The Architecture\u2019s row-prose amendment contract allows an edit or removal span that merely names its target and checks that replacement text preserves other row ids; the authority-matrix `edit-row` and `remove-row-with-record` rules, step 2 (`Build bounded stage-envelope feedback context...`), and step 3 (`Atomically apply authorized row, prose, and ordering operations...`) therefore allow changed wording for an unselected row inside a shared selected span as long as its id survives. That conflicts with the Acceptance criteria\u2019s promise that untargeted body bytes remain byte-for-byte unchanged, and the `Prose-patch escape` risk only protects ids and bytes outside the accepted span.\n  - Fix: Define row-prose spans so an amendment cannot alter unselected row prose, or require unchanged unselected prose within a shared span, and carry that rule through the matrix, risks, tests, and acceptance criteria.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-397ebcc1]`: The plan's `## Acceptance criteria` names `outcome_completed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-974a52ae]`: The plan's `## Acceptance criteria` names `outcome_completed_no_change`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e3bca955]`: The plan's `## Acceptance criteria` names `outcome_stage_exhausted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-2c67bfdb]`: The plan's `## Acceptance criteria` names `outcome_stage_invalid`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c80da3fd]`: The plan's `## Acceptance criteria` names `plansartifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-feedback-revision-bounded-operations` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Feedback Revision Bounded Operations\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[upstream-merge-seed-invalidation]`: Step 4 (`Enroll a trusted canonical baseline and publish it atomically with every semantic roadmap change`) defines Domain, Constraints, and Components publication as only an artifact/baseline pair, while its Plans-only sidecar rule and step 5 (`Route every re-entered stage by active feedback...`) let a successful upstream bounded merge be followed by feedback-free no-ops with no seed-state change. That leaves derived seeds marked current after an accepted upstream change; `roadmap.py:_run_roadmap` currently invalidates seeds after any feedback-bearing stage, including Domain, and `tests/test_roadmap.py` covers that case.\n- HIGH `[row-prose-isolation]`: The Architecture\u2019s row-prose amendment contract allows an edit or removal span that merely names its target and checks that replacement text preserves other row ids; the authority-matrix `edit-row` and `remove-row-with-record` rules, step 2 (`Build bounded stage-envelope feedback context...`), and step 3 (`Atomically apply authorized row, prose, and ordering operations...`) therefore allow changed wording for an unselected row inside a shared selected span as long as its id survives. That conflicts with the Acceptance criteria\u2019s promise that untargeted body bytes remain byte-for-byte unchanged, and the `Prose-patch escape` risk only protects ids and bytes outside the accepted span.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_completed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_completed_no_change`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_stage_exhausted`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `outcome_stage_invalid`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plansartifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-feedback-revision-bounded-operations` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-16ca36c5",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 4 (`Enroll a trusted canonical baseline and publish it atomically with every semantic roadmap change`) defines Doma",
+      "body": "Step 4 (`Enroll a trusted canonical baseline and publish it atomically with every semantic roadmap change`) defines Domain, Constraints, and Components publication as only an artifact/baseline pair, while its Plans-only sidecar rule and step 5 (`Route every re-entered stage by active feedback...`) let a successful upstream bounded merge be followed by feedback-free no-ops with no seed-state change. That leaves derived seeds marked current after an accepted upstream change; `roadmap.py:_run_roadmap` currently invalidates seeds after any feedback-bearing stage, including Domain, and `tests/test_roadmap.py` covers that case.",
+      "suggested_action": "Preserve seed invalidation for every bounded merge that can stale derived seeds and include the affected seed state in that merge\u2019s recoverable publication set, while keeping a genuinely feedback-free run side-effect free.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "upstream-merge-seed-invalidation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-38e33e63",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture\u2019s row-prose amendment contract allows an edit or removal span that merely names its target and checks t",
+      "body": "The Architecture\u2019s row-prose amendment contract allows an edit or removal span that merely names its target and checks that replacement text preserves other row ids; the authority-matrix `edit-row` and `remove-row-with-record` rules, step 2 (`Build bounded stage-envelope feedback context...`), and step 3 (`Atomically apply authorized row, prose, and ordering operations...`) therefore allow changed wording for an unselected row inside a shared selected span as long as its id survives. That conflicts with the Acceptance criteria\u2019s promise that untargeted body bytes remain byte-for-byte unchanged, and the `Prose-patch escape` risk only protects ids and bytes outside the accepted span.",
+      "suggested_action": "Define row-prose spans so an amendment cannot alter unselected row prose, or require unchanged unselected prose within a shared span, and carry that rule through the matrix, risks, tests, and acceptance criteria.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "row-prose-isolation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "c7f06a3057c19b95ad8c7dd74d35fc9edb865c43c391f4e0d15d8077a2c30d45",
+    "detail_bundle_digest": "7ee7eaad0967404d39bfabeb711c6b0a412108e7387f0a8e2f8d680b1cb6db0c",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/01-define-closed-stage-envelope-operations.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/02-build-bounded-stage-envelope-feedback.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/03-atomically-apply-authorized-row-prose.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/04-enroll-trusted-canonical-baseline.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/05-route-every-re-entered-stage-active.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/06-document-bounded-stage-feedback-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-feedback-revision-bounded-operations/07-close-297-its-whole-artifact-revision.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "2cbcf0e04ef6f5ee953a75d52cd904dca98b6c2fb1ebd1a3079a97bbf5ef6adb",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

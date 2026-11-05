@@ -1,0 +1,165 @@
+{
+  "version": 4,
+  "plan_slug": "seed-ingestion-routing",
+  "plan_path": "docs/implementation-plans/2-seed-ingestion-routing.md",
+  "created_at": "2026-09-03T14:46:29Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0dd1cd4c294e1a3cf6bf06c3cfb8b3c93c93c2c51c0c98ac4b461db610cf59ea",
+  "code_fingerprint": {
+    "BACKLOG.md": "35474285ea990893b4c65ebafe1b38ed439ccf41da305d6d65f0016e76cc2a79",
+    "README.md": "036dd2a41f27a6fe61aae339c55070f5e9b81584765f55516474ee53e8bd3b1a",
+    "SEED_FORMAT.md": "20a100da5071ceef20e8b8aa568bd813681fe7173f981246324f42fb05f24994",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "c96841fa7648a05062769f8313f2394d3f78bc9f53ec1f541545d3f658277aad",
+    "docs/CREATE_RESUME_FLOW.md": "7da66370ff9c6a9feff3b0b7d5bde6806dd60975bf4c58193ea917d4f6e0ce4f",
+    "docs/CREATE_SEED_INGESTION_CONTRACT.md": "267d4049f62acf645f0512c18e704a7318e53e3e5ca59892a0c035ebabf07062",
+    "docs/RESUME_FLOW.md": "59829f000d4d5ab1b2525c8c5a52ab86036aad6e0b02662a8fadd8b770c9c70c",
+    "docs/cli/create.md": "faecd3d78a1d85f5e7a2620eb90fb000b1ae46d4a6048cace0e9cef3080fc19b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "4cc3aafdcb8aa80244001634ca187ae2e5f15cc8628f7e0a5212267dd899c78b",
+    "plan_tool/cli/authoring.py": "2d13b989e2afe5bfb1fd9dca20ed7c1c9017a823ea077fd8bc967042d9efb25d",
+    "plan_tool/create.py": "76d97a7cd9583b021b166c1ceba0bcbec0f037c880202f28a67644ca3d44352f",
+    "plan_tool/distill_thresholds.py": "2088c7a36c57d6d7c51fbc8a6dbd688fe40cc57d2412f3070319005c8a02c054",
+    "plan_tool/prompts/distill-seed.md": "b7ca52ecc292d8e093d74bb2fcdce98c5bc34a5862a2ad3c5e061491119da2bb",
+    "plan_tool/split_criteria.py": "9953efa97e5e457a3ed7619bf39cffbb9d38d230551e6e79244017fd25e762b6",
+    "tests/cli/test_authoring_cmds.py": "7832c51c359d90b56a268f70cd3ee2b83c334574a9299603f2ea9a7158e6a509",
+    "tests/test_create.py": "8fad4f0c25e4df7e96b7a89ef0f00acbd5ba7d2da35232b3ee3618a97d8f725d",
+    "tests/test_distill.py": "6a617944886e2d7b0660ab5998f5665e55e9940ae12572c77ce64176ebb94e72",
+    "tests/test_split_criteria.py": "ea2c48bcd490e3aac05d4fe2c1bac22f48b5467e7618863aa3d87da693dadf99"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md": "241ded9a5cbb1559122688b41fe34dc34f0650560f47bc259646c0973b5127de",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md": "d92e4b8441e47a33d9d73a7c97dfd90ed2b13b8a836ae2ff3420223ceb30bd5b",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md": "7220410221330f4d6babb3f0915203a69cf48bdd3ad5d6740beed8d4c41aabbd",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md": "bff2c69ca2a4a4cc900e2e8853594fb9fa6295960247bc3c27765ca0fd6478e9",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md": "8f247b4e25cc685016466394b77113584ed89b145054e5c0a5ea63ad1e48527e",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md": "067cf691085d25fb424d8fcc844e97b23fbf0f01db1122acd163d9e26e63fd00",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md": "aec4b159b4a8432fcaf413240331811531baa717bc0d2f7beca5cdadbfbfa8ae"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Seed Ingestion Routing\n\n`seed-ingestion-routing` \u00b7 generated 2026-09-03T14:46:29Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply seed-ingestion-routing   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk seed-ingestion-routing  # alternative interactive review/apply\n\n- MEDIUM `[refused-route-run-record]` [confidence: limited]: Step 5 (`Publish route, exit, and --no-distill compatibility semantics for TTY, --yes, and non-TTY callers`), the Problem statement, Architecture, Testing, and acceptance criteria do not define whether a References-preflight `refused` result has a run record. The plan requires:\n\n```text\nThe existing safe split proposal must remain inside `create`, but the selected\nroute and artifact authority must be visible to operators, headless callers,\nrun records, checkpoints, and archival handling.\n```\n\n  Yet `plan_tool/cli/authoring.py:cmd_create` validates References before `RunLogWriter.start`, matching `plan_tool/create.py:validate_from_existing_seed`; the Architecture calls refusal \u201cpreflight-style exit 2.\u201d An implementer can preserve the unlogged preflight or add a refusal record, leaving headless audit evidence materially different.\n  - Fix: Define whether every `refused` result records its route or whether the pre-log References refusal is an explicit exception, and align step 5\u2019s mode-specific acceptance coverage to that rule.\n- HIGH `[direct-source-heading-cardinality]` [confidence: limited]: Step 1 (`Classify every file-backed source...`), Step 2 (`Replace the file-backed 16 KiB shortcut...`), the Architecture direct-ready rule, the direct-source acceptance criterion, and Testing do not choose a duplicate-heading rule. `plan_tool/scope_fence.py:extract_h2_sections`, `plan_tool/create.py:validate_from_existing_seed`, and `plan_tool/create.py:_render_plan_body` keep only the first matching H2, so a source with repeated exact canonical body headings or `## References` can be classified `direct` while later supplied content disappears. That conflicts with the plan\u2019s direct-route authority promise and leaves rejection/preparation versus preserving all supplied content unchosen.\n  - Fix: Define one duplicate-heading policy for every canonical body H2 and References, then align direct classification, rendered-source authority, and the direct-route acceptance/test contract to it.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit seed-ingestion-routing` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Seed Ingestion Routing\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[refused-route-run-record]` [confidence: limited]: Step 5 (`Publish route, exit, and --no-distill compatibility semantics for TTY, --yes, and non-TTY callers`), the Problem statement, Architecture, Testing, and acceptance criteria do not define whether a References-preflight `refused` result has a run record. The plan requires:\n\n```text\nThe existing safe split proposal must remain inside `create`, but the selected\nroute and artifact authority must be visible to operators, headless callers,\nrun records, checkpoints, and archival handling.\n```\n\n  Yet `plan_tool/cli/authoring.py:cmd_create` validates References before `RunLogWriter.start`, matching `plan_tool/create.py:validate_from_existing_seed`; the Architecture calls refusal \u201cpreflight-style exit 2.\u201d An implementer can preserve the unlogged preflight or add a refusal record, leaving headless audit evidence materially different.\n- HIGH `[direct-source-heading-cardinality]` [confidence: limited]: Step 1 (`Classify every file-backed source...`), Step 2 (`Replace the file-backed 16 KiB shortcut...`), the Architecture direct-ready rule, the direct-source acceptance criterion, and Testing do not choose a duplicate-heading rule. `plan_tool/scope_fence.py:extract_h2_sections`, `plan_tool/create.py:validate_from_existing_seed`, and `plan_tool/create.py:_render_plan_body` keep only the first matching H2, so a source with repeated exact canonical body headings or `## References` can be classified `direct` while later supplied content disappears. That conflicts with the plan\u2019s direct-route authority promise and leaves rejection/preparation versus preserving all supplied content unchosen.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply seed-ingestion-routing` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-f64dd918",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5 (`Publish route, exit, and --no-distill compatibility semantics for TTY, --yes, and non-TTY callers`), the Proble",
+      "body": "Step 5 (`Publish route, exit, and --no-distill compatibility semantics for TTY, --yes, and non-TTY callers`), the Problem statement, Architecture, Testing, and acceptance criteria do not define whether a References-preflight `refused` result has a run record. The plan requires:\n\n```text\nThe existing safe split proposal must remain inside `create`, but the selected\nroute and artifact authority must be visible to operators, headless callers,\nrun records, checkpoints, and archival handling.\n```\n\n  Yet `plan_tool/cli/authoring.py:cmd_create` validates References before `RunLogWriter.start`, matching `plan_tool/create.py:validate_from_existing_seed`; the Architecture calls refusal \u201cpreflight-style exit 2.\u201d An implementer can preserve the unlogged preflight or add a refusal record, leaving headless audit evidence materially different.",
+      "suggested_action": "Define whether every `refused` result records its route or whether the pre-log References refusal is an explicit exception, and align step 5\u2019s mode-specific acceptance coverage to that rule.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refused-route-run-record",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-1a7c13e1",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Classify every file-backed source...`), Step 2 (`Replace the file-backed 16 KiB shortcut...`), the Architecture",
+      "body": "Step 1 (`Classify every file-backed source...`), Step 2 (`Replace the file-backed 16 KiB shortcut...`), the Architecture direct-ready rule, the direct-source acceptance criterion, and Testing do not choose a duplicate-heading rule. `plan_tool/scope_fence.py:extract_h2_sections`, `plan_tool/create.py:validate_from_existing_seed`, and `plan_tool/create.py:_render_plan_body` keep only the first matching H2, so a source with repeated exact canonical body headings or `## References` can be classified `direct` while later supplied content disappears. That conflicts with the plan\u2019s direct-route authority promise and leaves rejection/preparation versus preserving all supplied content unchosen.",
+      "suggested_action": "Define one duplicate-heading policy for every canonical body H2 and References, then align direct classification, rendered-source authority, and the direct-route acceptance/test contract to it.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "direct-source-heading-cardinality",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 2,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "0dd1cd4c294e1a3cf6bf06c3cfb8b3c93c93c2c51c0c98ac4b461db610cf59ea",
+    "detail_bundle_digest": "d754ae912ebe6a0a5f60323b885a1ace82fbac69698e99dd510c8e1964280acd",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "7c2196a3db0a82d1ca1dab770724352c0512cd585c60f961fd469f456f688d24",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

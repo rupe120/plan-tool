@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "plan_slug": "attach-branch-to-plan",
+  "plan_path": "docs/implementation-plans/2-attach-branch-to-plan.md",
+  "created_at": "2026-06-15T16:16:41Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "626a4aa2faba72da0338880f96d819e119a7e73820a1fbae93bf77fc5bf3a426",
+  "code_fingerprint": {
+    "BACKLOG.md": "d6d04d4ac523351a443d9df1fe8ed5cd58c37aa9a4a425e96d424380aa2bc43e",
+    "CLAUDE.md": "c6bb369ae3b8e22546cab745ba4496601d98a1c9e6fc2633e6d423b882e7e404",
+    "README.md": "5b0d94d71e8cbcca9245b90cf4a42df362aa766c4c26273963c01b4270ac20bc",
+    "RUNBOOK.md": "38b23e274e2eef832fbe86e5feafda3be7aef12bbace32cab8f7ae10e941a032",
+    "integrations/claude/SKILL.md": "e6c02cfd01b8d1c1675998369f98aebc4b0f2efe24a19938c1b471509eb2273b",
+    "integrations/codex/SKILL.md": "ab5ec946b5d29583f555c89250c9122ca4aad923aa22cdd17a28d75674dd23f1",
+    "plan_tool/cli/__init__.py": "f169dd29694c9c4f5e451eb9f3e23a02499616b4aee7fcf17807976e9b15af62",
+    "plan_tool/cli/app.py": "fc1eb05124675ef3d288d528423e20466a5e7c70e4acceb2c3fad92168887b27",
+    "plan_tool/cli/authoring.py": "4b64dd109e1a4fb2daafc7237cbab3af8f639a96473d858c820a5e3554e93d6f",
+    "plan_tool/cli/gitcommit.py": "62aee85adc308626f09e2265cb169ac62a23d9b152c39bd26b67a46b740a39fe",
+    "plan_tool/cli/manifest.py": "db951dfb999d60953dcacb1a98a079c2f5d6ee22c88fc24a9ac9ed7155a047cb",
+    "plan_tool/cli/parser.py": "9df5cd82cb78a536e8ad39136edf7f157f07b11c1cd68aac6e740bfb9e6d1b94",
+    "plan_tool/cli/run_cmd.py": "b126cea483821ccb3102e636f1a5f01fd326fa0ea79dff4582a7dcf4c1e42ae3",
+    "tests/cli/package_surface_help.golden.txt": "ad58f3d0b72d9535dc5a5167ee4495b8e41274edd662ac1755c6470bb95a4c87",
+    "tests/cli/test_authoring_cmds.py": "197603ddd7f3eebfb569e6c25cae097bf705827cf0c3b31eefd7c9edc5272efe",
+    "tests/cli/test_gitcommit.py": "390228622a3b6bc3bd0f5ed8cdf32d09b185d9a6fe0d4bb320c53065029dcf68",
+    "tests/cli/test_manifest_cmds.py": "630e0f3dbbd66bef34f3d5b031ec30b66dac069f1169d322b3476cd5418f750a",
+    "tests/cli/test_run_cmd.py": "3b7ab30581f6a74438906a48dabe5cd3e976041a00facf71d0c50dd51ec20cb4"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Attach Branch To Plan\n\n`attach-branch-to-plan` \u00b7 generated 2026-06-15T16:16:41Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 2 dispatched (2 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 3\n- **Deferred:** 6 (6 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] Step 7 (`create-time namespace-collision warning`) moves a colliding new plan onto a fresh `plan/<slug>-N` branch (or, when no default branch resolves, leaves it on the current branch), but step 4's `expected_branch` still derives the canonical `plan/<slug>` \u2014 and step 7 deliberately omits step 3 from its `depends_on`, so no ad-hoc binding records the disambiguated name. Consequently when the developer later runs that plan from `plan/<slug>-N`, step 5's Tier-4 guard computes `expected = plan/<slug>` and nudges (or with `--switch-branch`, moves) them back onto the *foreign* `plan/<slug>` the disambiguation existed to avoid. Step 7's own Deferred section acknowledges this but routes the fix to reconcile on the false premise that step 3 is unavailable \u2014 step 3 ships in this same plan. The feature actively undoes itself. \u2014 - `docs/implementation-plans/2-attach-branch-to-plan.md`: added step `3` to step 7's `depends_on` in YAML frontmatter.\n- [APPLIED] Step 7's create-from-default composition (`checkout_existing_branch(base)` then `create_and_checkout_branch(candidate)`) names no recovery when the second mutator fails after the first succeeds: the developer is silently left checked out on the default branch rather than their invocation branch, with rc 1 and no plan. The design states the gate \"reports what it did\" but never specifies restoring the prior branch on partial failure.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[remote-aware-collision-scan]`: The Architecture section promises the namespace-collision warnings are \"remote-aware ('as of last fetch', scanning `refs/heads` + `refs/remotes/*`, no network)\", the References cite `git-for-each-ref` as \"the basis for `list_branches` and the remote-aware namespace-collision scan\", step 2 builds `list_branches` over `refs/heads` + `refs/remotes/*`, and Risks carries a \"Collision detection staleness / cost\" entry about the remote-tracking scan \u2014 yet no step consumes `list_branches` or any remote ref. Step 7's collision predicate is `branch_exists` (local `refs/heads` only) and step 7's Deferred explicitly punts the `origin/plan/<slug>` scan. So an unpulled/foreign remote branch \u2014 the exact \"likely someone else's / unpulled\" case Tier 3 names \u2014 is never detected at `create`, leaving `list_branches`'s remote dimension orphaned and the staleness risk mitigating an unimplemented behavior.\n  - Address: `plan-tool completeness-apply attach-branch-to-plan --anchor remote-aware-collision-scan`\n- MEDIUM `[list-branches-orphan]`: `list_branches` (step 2) is built with a remote-aware signature (`refs/heads` + `refs/remotes/*`) but is imported by no consuming step (steps 5\u20137 use `current_branch` / `branch_exists` / mutators only). Absent the remote-scan fix above, it ships as dead code.\n  - Address: `plan-tool completeness-apply attach-branch-to-plan --anchor list-branches-orphan`\n- MEDIUM `[switch-branch-fork-source]`: Step 5's Tier-4 `--switch-branch` creates a missing `expected_branch` via `create_and_checkout_branch` (`git switch -c`) from the developer's **current HEAD**, whereas step 7 deliberately forks a new plan branch **from the default branch** to avoid carrying foreign work. On an unowned (Tier 4) branch carrying unrelated commits, the switch silently bases the plan's branch on that work \u2014 an unstated inconsistency with the create path's fork-source policy.\n  - Address: `plan-tool completeness-apply attach-branch-to-plan --anchor switch-branch-fork-source`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step5-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 5's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-5b1d94db]`: `tests/cli/package_surface_help.golden.txt` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-32732139]`: `BACKLOG.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-1776785d]`: `CLAUDE.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-b404ada7]`: `README.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step8-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 8's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply attach-branch-to-plan` \u2014 walk the 3 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- Reconcile 6 files-coherence drift(s) \u2014 add the cited path to the step's `files:`/`allowed_mentions:`, or drop it from `files:`. Each finding's report entry names the exact edit; no `detail` re-author is needed.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Attach Branch To Plan\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 5 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 6 declared `tests/cli/package_surface_help.golden.txt` not mentioned in detail\n- NIT: step 8 declared `BACKLOG.md` not mentioned in detail\n- NIT: step 8 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 8 declared `README.md` not mentioned in detail\n- NIT: step 8 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[remote-aware-collision-scan]`: The Architecture section promises the namespace-collision warnings are \"remote-aware ('as of last fetch', scanning `refs/heads` + `refs/remotes/*`, no network)\", the References cite `git-for-each-ref` as \"the basis for `list_branches` and the remote-aware namespace-collision scan\", step 2 builds `list_branches` over `refs/heads` + `refs/remotes/*`, and Risks carries a \"Collision detection staleness / cost\" entry about the remote-tracking scan \u2014 yet no step consumes `list_branches` or any remote ref. Step 7's collision predicate is `branch_exists` (local `refs/heads` only) and step 7's Deferred explicitly punts the `origin/plan/<slug>` scan. So an unpulled/foreign remote branch \u2014 the exact \"likely someone else's / unpulled\" case Tier 3 names \u2014 is never detected at `create`, leaving `list_branches`'s remote dimension orphaned and the staleness risk mitigating an unimplemented behavior.\n- MEDIUM `[list-branches-orphan]`: `list_branches` (step 2) is built with a remote-aware signature (`refs/heads` + `refs/remotes/*`) but is imported by no consuming step (steps 5\u20137 use `current_branch` / `branch_exists` / mutators only). Absent the remote-scan fix above, it ships as dead code.\n- MEDIUM `[switch-branch-fork-source]`: Step 5's Tier-4 `--switch-branch` creates a missing `expected_branch` via `create_and_checkout_branch` (`git switch -c`) from the developer's **current HEAD**, whereas step 7 deliberately forks a new plan branch **from the default branch** to avoid carrying foreign work. On an unowned (Tier 4) branch carrying unrelated commits, the switch silently bases the plan's branch on that work \u2014 an unstated inconsistency with the create path's fork-source policy.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk attach-branch-to-plan` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply attach-branch-to-plan` \u2014 walk the 3 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-d526c471",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture section promises the namespace-collision warnings are \"remote-aware ('as of last fetch', scanning `refs",
+      "body": "The Architecture section promises the namespace-collision warnings are \"remote-aware ('as of last fetch', scanning `refs/heads` + `refs/remotes/*`, no network)\", the References cite `git-for-each-ref` as \"the basis for `list_branches` and the remote-aware namespace-collision scan\", step 2 builds `list_branches` over `refs/heads` + `refs/remotes/*`, and Risks carries a \"Collision detection staleness / cost\" entry about the remote-tracking scan \u2014 yet no step consumes `list_branches` or any remote ref. Step 7's collision predicate is `branch_exists` (local `refs/heads` only) and step 7's Deferred explicitly punts the `origin/plan/<slug>` scan. So an unpulled/foreign remote branch \u2014 the exact \"likely someone else's / unpulled\" case Tier 3 names \u2014 is never detected at `create`, leaving `list_branches`'s remote dimension orphaned and the staleness risk mitigating an unimplemented behavior.",
+      "suggested_action": "reconcile the Architecture/Risks/References to the delivered local-only scope, or add a step that consumes `list_branches` remote refs in the create/attach collision predicate so the remote-aware promise is operationalized.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "remote-aware-collision-scan"
+    },
+    {
+      "id": "plan-plan-completeness-3ffb918f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`list_branches` (step 2) is built with a remote-aware signature (`refs/heads` + `refs/remotes/*`) but is imported by no ",
+      "body": "`list_branches` (step 2) is built with a remote-aware signature (`refs/heads` + `refs/remotes/*`) but is imported by no consuming step (steps 5\u20137 use `current_branch` / `branch_exists` / mutators only). Absent the remote-scan fix above, it ships as dead code.",
+      "suggested_action": "either wire `list_branches` into the collision scan or narrow step 2 to the readers consumers actually call.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "list-branches-orphan"
+    },
+    {
+      "id": "plan-plan-completeness-d018bd2d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 5's Tier-4 `--switch-branch` creates a missing `expected_branch` via `create_and_checkout_branch` (`git switch -c`)",
+      "body": "Step 5's Tier-4 `--switch-branch` creates a missing `expected_branch` via `create_and_checkout_branch` (`git switch -c`) from the developer's **current HEAD**, whereas step 7 deliberately forks a new plan branch **from the default branch** to avoid carrying foreign work. On an unowned (Tier 4) branch carrying unrelated commits, the switch silently bases the plan's branch on that work \u2014 an unstated inconsistency with the create path's fork-source policy.",
+      "suggested_action": "state the intended fork source for the run-guard `--switch-branch` create (current HEAD vs default) and note why it differs from create's from-default rule.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "switch-branch-fork-source"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-d526c471": {
+      "status": "applied",
+      "note": "reconcile local-only scope",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-3ffb918f": {
+      "status": "applied",
+      "note": "wire list_branches into the collision scan",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-d018bd2d": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "plan_slug": "preapply-audit-checkpoint-identity",
+  "plan_path": "docs/implementation-plans/2-preapply-audit-checkpoint-identity.md",
+  "created_at": "2026-08-05T16:22:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c7397543fc98f33fcf8589a1bb4b9813922c0aa5857c3d754152a7bfcfd43cf5",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "706754f16aa2bf7f8b8ca44ec5dabaa1a53fb35c45872c80cc0b05d20d8caad3",
+    "DATA_CONTRACT.md": "f6fc0fa2def3932831fe77209036babc76d2921d7d173682692b98a23565c1d9",
+    "docs/AUDIT_FLOW.md": "8bbceb8b49c21bdb8436a007566023e22ef1ac1916311584b820cb48755ff710",
+    "docs/AUDIT_RESUME_FLOW.md": "d56d36fa5b7c336f9b8313d8d3e26743b67a7bed160330d19abede4fe048d6df",
+    "docs/cli/completeness-audit.md": "22abff60931a7fcd38136885e7e4a6a3d9b8c271b0cf33ec69fa50dbf6a339d1",
+    "handoffs/2026-08-05-checkpoint-identity-session.md": "02632d0a0b9e916d8af1a8e5f3e0ff5367e30bd0f20a28cd9e1924cb53d4f809",
+    "plan_tool/cli/completeness_phases.py": "266a0faddfc1ce15dc42d7b0259b61c8b841f6226b72b26dd9a95467bf7fa7af",
+    "plan_tool/completeness_report.py": "e6b012fef57305abb4b0cdac41aadafb43681238b4f17b52fef72e5893c19c8c",
+    "plan_tool/convergence_diagnosis.py": "95e73e1e818289c33c5cf824e1fd7da1afd128ae3a083dab5a71f193f4f97252",
+    "plan_tool/data_contract.py": "9cfda95206ba8cab23fd20d54d91063e01275be520322189ee12ac2e7734b12b",
+    "plan_tool/review_persistence.py": "b4d75206075d78dc0cdad1776109fcdfe1b9a8fc9dba2e97cd9ad9e09fc2405b",
+    "tests/cli/test_completeness_cmd.py": "06c1543cefe134370145b1f5a155a6b59ebcc602e8faa99594592829e8a728b9",
+    "tests/test_completeness_report.py": "a2f757912c4d605ab1423afc44619ca5733b12ddd40d93664d2aeaab645c8bd2",
+    "tests/test_convergence_diagnosis.py": "407d10d0fe1177c5402ac177db1a8d247fd23e1b160f3df4ae1ca1edd862c81f",
+    "tests/test_data_contract.py": "2fe947cbecbbca2d9472af7b26334c44cfb8411a0ecfc10723b27fa0c494f4a9",
+    "tests/test_review_persistence.py": "e605ea46ebf578801e533d04317064ce15efc4c708548d8886d742af0e856e1d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/01-checkpoint-role-saved-reviews-safe.md": "54d6ddc8845657d19f62eccd14f119504d1ba77b80351e3bbe1d157f969bb58d",
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/02-mark-pre-apply-checkpoint-sidecars.md": "6aef2c3fa6c3396ed02f11bad09ee081153a78a9b667eca7079f225a29b16a92",
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/03-keep-marked-checkpoints-out-reusable.md": "173d4c5b34da773f20c7fc571d1c281c2124e3c93488bffd7411138674bbb1d7",
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/04-keep-marked-checkpoints-out-convergence.md": "9344b86f7d32c412b9985669d8448c16e0e826d495e2ca5eff9bf2b6c33d7312",
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/05-remove-manual-newest-checkpoint-drop.md": "60589405b2610e40ce3e33fb6affee7bb4dfffcb08c1ed2463a726ca476239c0",
+    "docs/implementation-plans/plan-details/preapply-audit-checkpoint-identity/06-document-checkpoint-roles-close.md": "999873384630f2d1ade6cd7df76248d7b54a771f2d3fc9ebc5c83cfd8f910b9e"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Preapply Audit Checkpoint Identity\n\n`preapply-audit-checkpoint-identity` \u00b7 generated 2026-08-05T16:22:31Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply preapply-audit-checkpoint-identity   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[checkpoint-write-collision]`: step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends both writes through `write_completeness_report`, which builds the same second-precision `*-completeness` paths; `durable_write_text` replaces an existing path. A fast iterative final save can overwrite its checkpoint, losing the crash-recovery evidence the plan must preserve.\n  - Fix: Define a collision-safe allocation rule that preserves the existing filename compatibility while ensuring checkpoint and final artifacts remain distinct within one second.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- HIGH `[checkpoint-write-collision]`: Step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends the checkpoint and final report through `write_completeness_report`, which names both `*-completeness` files only to the second; `durable_write_text` replaces an existing path. A fast iterative run can overwrite the marked checkpoint with its final report, but the step defines no collision rule or test, breaking the promise that both artifacts remain durable recovery evidence.\n  - Fix: Define and test collision-safe allocation of distinct, existing-name-compatible checkpoint and final sidecar paths when they are written in the same second.\n  - Address: `plan-tool completeness-apply preapply-audit-checkpoint-identity --anchor checkpoint-write-collision`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7c214629]`: The plan's `## Acceptance criteria` names `is_pre_apply_checkpoint=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a38009df]`: The plan's `## Acceptance criteria` names `load_report_history`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b8061cb6]`: The plan's `## Acceptance criteria` names `resolve_reusable_audit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1d8f0421]`: The plan's `## Acceptance criteria` names `runsnapshot`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-1e2ee778]`: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-99c45abe]`: The plan's `## Acceptance criteria` names `write_pre_apply_audit_checkpoint`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool reconcile-plan preapply-audit-checkpoint-identity` \u2014 code changed under the plan since its last audit; it may be stale against current code. Rebase, then re-audit, before running.\n- `plan-tool completeness-apply preapply-audit-checkpoint-identity` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Preapply Audit Checkpoint Identity\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[checkpoint-write-collision]`: step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends both writes through `write_completeness_report`, which builds the same second-precision `*-completeness` paths; `durable_write_text` replaces an existing path. A fast iterative final save can overwrite its checkpoint, losing the crash-recovery evidence the plan must preserve.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[checkpoint-write-collision]`: Step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends the checkpoint and final report through `write_completeness_report`, which names both `*-completeness` files only to the second; `durable_write_text` replaces an existing path. A fast iterative run can overwrite the marked checkpoint with its final report, but the step defines no collision rule or test, breaking the promise that both artifacts remain durable recovery evidence.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `is_pre_apply_checkpoint=true`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `load_report_history`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `resolve_reusable_audit`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `runsnapshot`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `savedreview`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `write_pre_apply_audit_checkpoint`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk preapply-audit-checkpoint-identity` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply preapply-audit-checkpoint-identity` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-1eaad4f0",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends both writes through `write_completeness",
+      "body": "step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends both writes through `write_completeness_report`, which builds the same second-precision `*-completeness` paths; `durable_write_text` replaces an existing path. A fast iterative final save can overwrite its checkpoint, losing the crash-recovery evidence the plan must preserve.",
+      "suggested_action": "Define a collision-safe allocation rule that preserves the existing filename compatibility while ensuring checkpoint and final artifacts remain distinct within one second.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-write-collision",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-1eaad4f0",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends the checkpoint and final report through",
+      "body": "Step 2 (`Mark pre-apply checkpoint sidecars without changing their names`) sends the checkpoint and final report through `write_completeness_report`, which names both `*-completeness` files only to the second; `durable_write_text` replaces an existing path. A fast iterative run can overwrite the marked checkpoint with its final report, but the step defines no collision rule or test, breaking the promise that both artifacts remain durable recovery evidence.",
+      "suggested_action": "Define and test collision-safe allocation of distinct, existing-name-compatible checkpoint and final sidecar paths when they are written in the same second.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "checkpoint-write-collision",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry"
+  }
+}

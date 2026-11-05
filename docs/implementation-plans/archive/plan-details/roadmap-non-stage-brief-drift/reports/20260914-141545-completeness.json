@@ -1,0 +1,145 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-non-stage-brief-drift",
+  "plan_path": "docs/implementation-plans/2-roadmap-non-stage-brief-drift.md",
+  "created_at": "2026-09-14T14:15:45Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "10fb397ce6e64a9ada59c494bd12a0f3d8a742942b93ee206547350d6ecba560",
+  "code_fingerprint": {
+    "BACKLOG.md": "6d00c2124b501f8cf5586c4424d6fa1c66d2de6aff8f14bcf0043caf49fb1289",
+    "CAPABILITIES.md": "550b6dfd94c4d55b282a9b0f9b2237ef1140ea303934797ecce5c5715b13e2b2",
+    "CLAUDE.md": "a713d4344425c25788a24df060366a8e1af1341ed92521a5e0aea5cba62d2028",
+    "DATA_CONTRACT.md": "142adfc2df5a103a51e3a372298f69967d285e48d44304b59f917d14d2a5c9be",
+    "README.md": "dd0f4ddf399def2c3ac78e7ab4d49eaaaa301acff32c97afc79a9b6890e6aabc",
+    "ROADMAP_FORMAT.md": "2b1d7a9063dab00296e2eb02e9e5f760555f959cfb7fa6b7c2e94a9f39e0c6ee",
+    "RUNBOOK.md": "93da8b86aa361ab6e92c278d2e20d8d8d320e959c7f90f8ccbe0b2d6bde73c27",
+    "docs/ARCHITECTURE.md": "41cfe00cc5639acf2df6943665867782593a0843b307a2578008d35dc7d3e8e8",
+    "docs/CODEX_CLI_CONTRACT.md": "129c6c42a06ca0afaf8b1dfb724f9b70840b6b332275396e20494bdd70547558",
+    "docs/ROADMAP_WALKTHROUGH.md": "770ab28b3124ae8dc6a0dda6986266462fa39eb2d86bcbc7e0693b2b5772dea9",
+    "docs/cli/roadmap.md": "753b8f919f6bc69152d7e75a9a0ff194198e39577dbecba666931e6c9d005e89",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md": "81c60b2d38d57bad3d4af66adba489815623317e05acb4ee5c269b9661bf8394",
+    "integrations/claude/SKILL.md": "a42a6791275f1b1e687978f3af8087bb6524121e7c859ad3ba9d8d373d7799b1",
+    "plan_tool/cli/roadmap_cmd.py": "da42691cd7ef7c41013698d45a2ab92f78967d22db218c76eda7c5e9d8cb9f7e",
+    "plan_tool/roadmap.py": "65f662fd1a1d9248e8dca2cc6383271f7d5648b2174351a4e2066ff580ddd991",
+    "plan_tool/roadmap_impact_run.py": "284ebba14997bd70591bfca7d24d423a70da85c713d5a963a76068aee8a2c1a2",
+    "plan_tool/roadmap_impact_snapshot.py": "f181290d961b57ef4b59ab0e853808c906dab6eb2e248508f1095c6a992d905e",
+    "plan_tool/roadmap_structural_revision.py": "d7ae923155f8ef15ea85ab6b1e2cf10b7011b812f010d13c4982ee3c9f74da45",
+    "plan_tool/roadmap_structural_revision_run.py": "c9de93df95b56d98bf380107870fd09661049290386c517d700e5d0b33c45326",
+    "plan_tool/run_log.py": "6dd93242c6572b9239ff3e7c65f896b5cb1b1cfbf3c164d75cbe92fc9096ad30",
+    "tests/cli/test_cli_reference.py": "53717ce17fccfebb8aa65d9d98ac1b2c4a4d8c07989fc20fb0f9e52a3f09d4d3",
+    "tests/cli/test_roadmap_cmd.py": "db18fdb70786cf67a9abbdda4f67660f0665e2f1b370b3fd3ad1204c3c586bf6",
+    "tests/test_data_contract.py": "70bb805f586e1ce712fcaf660b421c7eff161b8d97f7cb4b23f3a424949ac342",
+    "tests/test_roadmap.py": "3cc2d4aa7adb9297be9d2a46b65a4d12b632ebc8a6a9fe4a36aff51be6f007f1",
+    "tests/test_roadmap_format.py": "efc7316f8224ad375b2753a4e652d23845f8f15ff155dfc5369726b16b529508",
+    "tests/test_roadmap_impact_run.py": "3a2f755a8694bf09794c25d4aa4f96477543c69c8cd84b7e9f5a6dfd921c1553",
+    "tests/test_roadmap_impact_snapshot.py": "b00798f21f9b3ed16199349712a76caa2c59cda623a2ff4ed94ecc83ad288c90",
+    "tests/test_roadmap_structural_revision.py": "13ad45035c2f30f0efac7a87e992101a1f93deeb3af51494bcd5a923f5bf5a86",
+    "tests/test_roadmap_structural_revision_run.py": "182e1d9e699ec67dcd9a9c42827ada7d2eebb029576795afae83a673ad1909f0",
+    "tests/test_run_log.py": "e9a0d0bdd51720c30adac91dce5517d8d8c546b38ce7b38ad4940dc99d3ae27d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/01-compare-snapshot-brief-text-source-json.md": "72cc2677cef38db7dc7610d74fa0aece43a8ef3819a72f2c240f0cfdfde5d3fc",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md": "e7ad3656795007434ad63a30684bdf2ee738654896957f324a22976240476de3",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/03-show-changed-brief-legacy-brief-status.md": "8bc78173d44abbdc51512fb87d64130e5cb795ea771c380ca278987b2a8f3e48",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/04-return-distinct-brief-drift-structural.md": "e6f6e53ce5dd211b31df4437e1b86038b579a774bf7a3f80f1b74003679cf2b2",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/05-return-changed-brief-legacy-brief.md": "b35b459e7e40f0813fff3bc255490ab1143c77d72d26d1397f2865de220ce110",
+    "docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/06-align-roadmap-operator-guides-close.md": "f1acd6f4114959fd11940de0eeeef1f1123392735a613182e01bb49805c8cd32"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Non Stage Brief Drift\n\n`roadmap-non-stage-brief-drift` \u00b7 generated 2026-09-14T14:15:44Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `10fb397ce6e64a9ada59c494bd12a0f3d8a742942b93ee206547350d6ecba560`\n- **Detail bundle digest:** `df6c13b5c28164225acb3527124a6aa2196e088b4ff28936f5f2669f6342c9c8`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-27923d1b]` [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool detail roadmap-non-stage-brief-drift` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Non Stage Brief Drift\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `10fb397ce6e64a9ada59c494bd12a0f3d8a742942b93ee206547350d6ecba560`\n- **Detail bundle digest:** `df6c13b5c28164225acb3527124a6aa2196e088b4ff28936f5f2669f6342c9c8`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `roadmap_source_admission`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "10fb397ce6e64a9ada59c494bd12a0f3d8a742942b93ee206547350d6ecba560",
+      "detail_bundle_digest": "df6c13b5c28164225acb3527124a6aa2196e088b4ff28936f5f2669f6342c9c8",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/01-compare-snapshot-brief-text-source-json.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/02-return-redacted-changed-brief-legacy.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/03-show-changed-brief-legacy-brief-status.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/04-return-distinct-brief-drift-structural.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/05-return-changed-brief-legacy-brief.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-non-stage-brief-drift/06-align-roadmap-operator-guides-close.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "738b60c228997d5b57a4821c69c923361597378b173bb459b185144c3ac615c6",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

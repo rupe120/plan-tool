@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-086c3483": {
+      "code_anchor": "./foo.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-reconcile-code-later-step-context.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-reconcile-code-later-step-context.md",
+      "reason": "code anchor path `./foo.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "plan-data-contract-e648ddac": {
+      "code_anchor": "foo.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-reconcile-code-later-step-context.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-reconcile-code-later-step-context.md",
+      "reason": "code anchor path `foo.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-243fb673": {
+      "code_anchor": "foo.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md",
+      "reason": "code anchor path `foo.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step1-data-contract-61acf9c4": {
+      "code_anchor": "./foo.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/reconcile-code-later-step-context/01-completed-step-context-selected-code.md",
+      "reason": "code anchor path `./foo.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260818-203458-completeness"
+}

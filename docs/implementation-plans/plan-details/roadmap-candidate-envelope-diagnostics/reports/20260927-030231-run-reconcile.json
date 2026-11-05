@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-candidate-envelope-diagnostics",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-envelope-diagnostics.md",
+  "created_at": "2026-09-27T03:02:31Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "a73a7c49d2b969e73963014dc7a144d8aeb0bcbab08325a0b373c7440c03d9c8",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "54500df2094b86829c4ef343235e5d11ad082f6a9a1b65e8d48333e7668a53cd",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "3818e64e0679aceaf24ea217c534287b03456eeaddc8ac707f2d80193ed39ce8",
+    "plan_tool/roadmap_candidate.py": "e5f00a4b33c1f7aebb3a546748c6e38871d62a73d7add0c88d37b0f3d462d0c3",
+    "plan_tool/roadmap_candidate_context.py": "9f162b8136ba4b65c4a227b78060c372c35a432f0a56156e376057fdb9b70818",
+    "plan_tool/roadmap_candidate_run.py": "c23275340c51bcd3e8c479e096ab3e52d2e1f5bbf95cb3b5a6e0d7bb9a52eb60",
+    "tests/test_roadmap_candidate.py": "ef0ee149676a73364d6f620481a0461a4bf72438c7e60d3efc20596dd7c94612",
+    "tests/test_roadmap_candidate_context.py": "8a9340a0a50cbed29e2d72ae2632685ba2ff0c1529585685ffe23ed2bf40b2f6",
+    "tests/test_roadmap_candidate_run.py": "0760ab52e60bb8495b364818165eb3cc6e7588e26e4dfc80fc6938cd1251bc85"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 5 of 6 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

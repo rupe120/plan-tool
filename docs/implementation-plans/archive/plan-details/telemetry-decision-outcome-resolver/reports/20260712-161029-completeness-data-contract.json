@@ -1,0 +1,72 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-b0995f7c": {
+      "code_anchor": "launcher.py:parse_apply_verdict",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/02-telemetry-analysis-leaf-inline-self.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/02-telemetry-analysis-leaf-inline-self.md",
+      "reason": "code anchor path `launcher.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-ef21b3ce": {
+      "code_anchor": "telemetry.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/02-telemetry-analysis-leaf-inline-self.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/02-telemetry-analysis-leaf-inline-self.md",
+      "reason": "code anchor path `telemetry.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-4a315e6e": {
+      "code_anchor": "plan_tool/telemetry_analysis.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/03-resolve-async-outcomes-joining-run-log.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/03-resolve-async-outcomes-joining-run-log.md",
+      "reason": "code anchor path `plan_tool/telemetry_analysis.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-deaf9e40": {
+      "code_anchor": "convergence_diagnosis.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/03-resolve-async-outcomes-joining-run-log.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/03-resolve-async-outcomes-joining-run-log.md",
+      "reason": "code anchor path `convergence_diagnosis.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-0c8fdd62": {
+      "code_anchor": "plan_tool/telemetry_analysis.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/04-aggregate-decisions-kind-decision.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/04-aggregate-decisions-kind-decision.md",
+      "reason": "code anchor path `plan_tool/telemetry_analysis.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-a8e2be4c": {
+      "code_anchor": "plan_tool/telemetry_analysis.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/05-plan-tool-telemetry-command-wiring.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/telemetry-decision-outcome-resolver/05-plan-tool-telemetry-command-wiring.md",
+      "reason": "code anchor path `plan_tool/telemetry_analysis.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260712-161029-completeness"
+}

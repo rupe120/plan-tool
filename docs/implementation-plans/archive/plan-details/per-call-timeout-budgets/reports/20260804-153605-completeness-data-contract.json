@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step3-data-contract-1e0631fd": {
+      "code_anchor": "plan_tool/cli/completeness_phases.py:_DeterministicReport.purity_coverage_recs",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/per-call-timeout-budgets/03-cap-full-purity-scan-report-skipped.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/per-call-timeout-budgets/03-cap-full-purity-scan-report-skipped.md",
+      "reason": "code anchor `plan_tool/cli/completeness_phases.py:_DeterministicReport.purity_coverage_recs` does not resolve in HEAD",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260804-153605-completeness"
+}

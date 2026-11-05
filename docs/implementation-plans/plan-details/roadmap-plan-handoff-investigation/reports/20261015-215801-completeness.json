@@ -1,0 +1,99 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-plan-handoff-investigation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-handoff-investigation.md",
+  "created_at": "2026-10-15T21:58:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "8c99b9ac21305f5359ad0b02691880775f666869a59ecc1ede49bdd46b09269c",
+  "code_fingerprint": {
+    "BACKLOG.md": "b793f5e4457f8aece12caa5e5c9d1b8830861dd6069bbbb2d02769e93bc6875c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/01-document-owner-answer-journey-decide.md": "0dfa1ec17759d1c2a3a3ee301a0213e67f73cba387008e48ea73926166cf398f",
+    "docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/02-review-record-against-source-evidence.md": "b192ce44b85d6dab1b801c2a1f46fcb4367353adaee57c4efa4736d604088ad0"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Plan Handoff Investigation\n\n`roadmap-plan-handoff-investigation` \u00b7 generated 2026-10-15T21:58:00Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `5a3116241333e31a160c86d92877289d64f5698253b2ef70fc6f76611ecc4101`\n- **Detail bundle digest:** `6b636a6a114268f566d403d246ee45ca8cb153c265a150e4ef1905a5331181ec`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 2 (+0 vs. first audit)\n- **Detail-bundle size:** 24584 bytes (+24584 vs. first audit)\n- **Keystone fan-out:** n/a (not computable for this plan)\n- **Satellite ratio:** n/a (not computable for this plan)\n- **Inert-step ratio:** n/a (not computable for this plan)\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[unresolved-provider-question]` [confidence: limited]: Step 1 (`Document the owner-answer journey and decide what shared input each consumer needs`) lets an unresolved owner question satisfy a required unresolved provider question. Plan Architecture, Input, Testing, and Acceptance criteria require a provider question, but detail 1\u2019s Summary, Files, Implementation, Tests, and Acceptance criteria permit only an owner question; step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) assumes the stricter provider question already exists.  \n\n  ```  \n  Acceptance criteria: \u201cincludes an unresolved provider question and extension of an existing interface\u201d  \n  ```  \n\n  Detail 1 instead says: \u201cThe record names an unresolved provider or owner question.\u201d A record with only an owner question can therefore pass step 1 while failing the plan\u2019s required evidence trace.\n  - Fix: Require step 1 to record an unresolved provider question, while keeping separate owner questions where needed, and have step 2 verify that same requirement.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-plan-handoff-investigation --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Plan Handoff Investigation\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `5a3116241333e31a160c86d92877289d64f5698253b2ef70fc6f76611ecc4101`\n- **Detail bundle digest:** `6b636a6a114268f566d403d246ee45ca8cb153c265a150e4ef1905a5331181ec`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[unresolved-provider-question]` [confidence: limited]: Step 1 (`Document the owner-answer journey and decide what shared input each consumer needs`) lets an unresolved owner question satisfy a required unresolved provider question. Plan Architecture, Input, Testing, and Acceptance criteria require a provider question, but detail 1\u2019s Summary, Files, Implementation, Tests, and Acceptance criteria permit only an owner question; step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) assumes the stricter provider question already exists.  \n\n  ```  \n  Acceptance criteria: \u201cincludes an unresolved provider question and extension of an existing interface\u201d  \n  ```  \n\n  Detail 1 instead says: \u201cThe record names an unresolved provider or owner question.\u201d A record with only an owner question can therefore pass step 1 while failing the plan\u2019s required evidence trace.\n\n### Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit (design gaps; not auto-applied under #85).\n- `plan-tool completeness-audit roadmap-plan-handoff-investigation --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-2f6912fe",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Document the owner-answer journey and decide what shared input each consumer needs`) lets an unresolved owner q",
+      "body": "Step 1 (`Document the owner-answer journey and decide what shared input each consumer needs`) lets an unresolved owner question satisfy a required unresolved provider question. Plan Architecture, Input, Testing, and Acceptance criteria require a provider question, but detail 1\u2019s Summary, Files, Implementation, Tests, and Acceptance criteria permit only an owner question; step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) assumes the stricter provider question already exists.  \n  \n  ```  \n  Acceptance criteria: \u201cincludes an unresolved provider question and extension of an existing interface\u201d  \n  ```  \n  \n  Detail 1 instead says: \u201cThe record names an unresolved provider or owner question.\u201d A record with only an owner question can therefore pass step 1 while failing the plan\u2019s required evidence trace.",
+      "suggested_action": "Require step 1 to record an unresolved provider question, while keeping separate owner questions where needed, and have step 2 verify that same requirement.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unresolved-provider-question",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "5a3116241333e31a160c86d92877289d64f5698253b2ef70fc6f76611ecc4101",
+      "detail_bundle_digest": "6b636a6a114268f566d403d246ee45ca8cb153c265a150e4ef1905a5331181ec",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/01-document-owner-answer-journey-decide.md",
+          "state": "present",
+          "digest": "0dfa1ec17759d1c2a3a3ee301a0213e67f73cba387008e48ea73926166cf398f"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/02-review-record-against-source-evidence.md",
+          "state": "present",
+          "digest": "b192ce44b85d6dab1b801c2a1f46fcb4367353adaee57c4efa4736d604088ad0"
+        }
+      ],
+      "source_seed_digest": "d4961ef5cfc11f5ab023b43b69419152ca148e75ff9208d9a18e8f5ad76a14e0",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 2,
+    "detail_bundle_bytes": 24584,
+    "keystone_fan_out": null,
+    "satellite_ratio": null,
+    "inert_step_ratio": null,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,126 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-plan-set-creation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-set-creation.md",
+  "created_at": "2026-10-16T15:42:58Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f7741240db123ac86c33586c6b932e287fb0cc84dfd70e94aa69d8f39b1ecbef",
+  "code_fingerprint": {
+    "BACKLOG.md": "b8b9f545f25589d2904ffce7ebdd6b7e1d64e14682e9b4b79cc90ea5d47a068b",
+    "CAPABILITIES.md": "08427aecec829eb93d1ca4c05418179cc8951029746c49d3e068be339a5f14e4",
+    "ROADMAP_FORMAT.md": "f599681a6e047e79fed865bd4ae211de9356e7692884f7e4be7254a08a34cc62",
+    "TESTING.md": "aed085deceba3c1892b096af95359ff2f7939b5d9ff69525f192a61f11f11987",
+    "docs/ARCHITECTURE.md": "663005e9b70b35670104a61523521ca3975b3103ad39c3059657c80aca0bb43d",
+    "docs/cli/create.md": "9f8460b7415bae47fed691ae7ec4f1bb9833d2f740c4e0d7fbdf71ab30bba2bb",
+    "docs/evidence/roadmap-plan-set-benchmark.md": "ae19133ef6dd62ab5a2388ddf0d8f483d5f2aad9145ec854947689e0c50c5d2e",
+    "docs/how-to/roadmap.md": "538060aa8fc62cc73f9d011deaf5ac3739cb606f0fa0936567992413834cc393",
+    "plan_tool/cli/authoring.py": "55b31879049c705108debdcf10f8493afd5b39cf34a79ea49db8b930e98e47b5",
+    "tests/cli/test_authoring_cmds.py": "112613ae2c5a865f3508bbaa53cab6a29544c8df7c4bc075a93543464cfc44cd",
+    "tests/cli/test_cli_parser.py": "264e3806a4a5a39f4da0b5d28e129963ebc56b6a3d1dba8ada7814b5556241a9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/01-define-source-bound-plan-set-record.md": "d756f7eb75b941a353f8aee6e0cd7a7c18d04d7d52cc7bd73a3e15cd690246b9",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/02-derive-complete-implementation-set.md": "4d1392210491c08c11538fa5e0a30704bee4e59c5e45c78fc29a677c03cc56a9",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/03-author-members-serially-safe-retry.md": "2dc279bbdaa0dda4dced40ee6cea019edaa49bb94379d64a7616b51117b0be54",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/04-expose-opt-plan-set-creation-through.md": "21d6610c3d1254557d3da6bf07b8ca1cfb631be37ecb43dec2616c5719030a6b",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/05-compare-baseline-plan-set-authoring-on.md": "df8ec7f1396689d0c0d10caa22847af5601abc17dcbb088aa2ccac90207c8a93",
+    "docs/implementation-plans/plan-details/roadmap-plan-set-creation/06-document-plan-set-ownership-recovery.md": "75b114b1a56fa2cb96fbc6a88448b1a7df3572de8bcf9dd2a93594d67bf79d46"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Plan Set Creation\n\n`roadmap-plan-set-creation` \u00b7 generated 2026-10-16T15:42:58Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f7741240db123ac86c33586c6b932e287fb0cc84dfd70e94aa69d8f39b1ecbef`\n- **Detail bundle digest:** `71d35cd27a15960bb01486d77918ac3637a5c7c1539f01da003cc1ee45b33948`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.20\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool detail roadmap-plan-set-creation` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Plan Set Creation\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `f7741240db123ac86c33586c6b932e287fb0cc84dfd70e94aa69d8f39b1ecbef`\n- **Detail bundle digest:** `71d35cd27a15960bb01486d77918ac3637a5c7c1539f01da003cc1ee45b33948`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool detail roadmap-plan-set-creation` \u2014 no plan-level gaps remain \u2014 author the detail bundle before execution.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "f7741240db123ac86c33586c6b932e287fb0cc84dfd70e94aa69d8f39b1ecbef",
+      "detail_bundle_digest": "71d35cd27a15960bb01486d77918ac3637a5c7c1539f01da003cc1ee45b33948",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/01-define-source-bound-plan-set-record.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/02-derive-complete-implementation-set.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/03-author-members-serially-safe-retry.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/04-expose-opt-plan-set-creation-through.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/05-compare-baseline-plan-set-authoring-on.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-set-creation/06-document-plan-set-ownership-recovery.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "30068b1918c3958963bf40c8e40aff28462218dc773493ab52a6cfaa54f7269e",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.2,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

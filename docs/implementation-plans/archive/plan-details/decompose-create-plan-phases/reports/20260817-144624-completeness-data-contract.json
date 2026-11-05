@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-28124fc0": {
+      "code_anchor": "plan_tool/__init__.py:create_plan",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md",
+      "reason": "code anchor `plan_tool/__init__.py:create_plan` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-d443cf2d": {
+      "code_anchor": "plan_tool/create.py:_converge_create_plan",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/decompose-create-plan-phases/02-move-create-plan-setup-authoring-its.md",
+      "reason": "code anchor `plan_tool/create.py:_converge_create_plan` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260817-144624-completeness"
+}

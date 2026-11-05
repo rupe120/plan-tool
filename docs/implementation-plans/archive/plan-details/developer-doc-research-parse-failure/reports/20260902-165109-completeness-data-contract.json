@@ -1,0 +1,83 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step2-data-contract-195d58c7": {
+      "code_anchor": "plan_tool/progress.py:ProgressReporter.start_step",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md",
+      "reason": "code anchor `plan_tool/progress.py:ProgressReporter.start_step` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-b6bce9ee": {
+      "code_anchor": "plan_tool/progress.py:StderrReporter.start_step",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md",
+      "reason": "code anchor `plan_tool/progress.py:StderrReporter.start_step` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-e43688bf": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.install_call_end_sink",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/02-retry-malformed-reference-research-once.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.install_call_end_sink` does not resolve in HEAD",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-4962f837": {
+      "code_anchor": "plan_tool/create.py:write_plan",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md",
+      "reason": "code anchor `plan_tool/create.py:write_plan` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-7200d9d6": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.phase_start",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.phase_start` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-c086bd99": {
+      "code_anchor": "plan_tool/run_log.py:RunLogWriter.phase_end",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md",
+      "reason": "code anchor `plan_tool/run_log.py:RunLogWriter.phase_end` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-c1b375c3": {
+      "code_anchor": "plan_tool/create.py:CreateResult.iteration_stage_failure",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/developer-doc-research-parse-failure/04-stage-malformed-iteration-research.md",
+      "reason": "code anchor `plan_tool/create.py:CreateResult.iteration_stage_failure` does not resolve in HEAD",
+      "step_id": 4,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260902-165109-completeness"
+}

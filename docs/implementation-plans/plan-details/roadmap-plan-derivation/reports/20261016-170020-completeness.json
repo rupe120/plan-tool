@@ -1,0 +1,100 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-plan-derivation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-derivation.md",
+  "created_at": "2026-10-16T17:00:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4e23a1aa09484908cf6f1611191a594e07f8a62fd651a93cad2af193e84a704d",
+  "code_fingerprint": {
+    "BACKLOG.md": "eee38a777ccadcd57bfeac4afa2df1fc06b6f186a6e5abc107fd37c473ab53b2",
+    "docs/how-to/pipeline/create-from-existing.md": "a71e4e25aba39619bb2adaa7b3bda552b43d9363e014949599b3dcc75ece24d3",
+    "docs/how-to/roadmap.md": "538060aa8fc62cc73f9d011deaf5ac3739cb606f0fa0936567992413834cc393",
+    "plan_tool/create.py": "a19aebd6a076f797e803194d820f52a123940ee13fab3c7ce9bcaa577319b177",
+    "plan_tool/prompts/roadmap-plans.md": "4b2925cf5dfe463ad23331163961ebc633dbfb83b0c8ff6cd650603545a3442a",
+    "plan_tool/prompts/roadmap-seed.md": "374d758d03abc2ebf97fc9c6bea24bb4ded49bb681121066e4fbae81698d32fb",
+    "tests/test_create.py": "2c2c4fbe9fe4777560d388e4b31c1c46f92ce97ea7db5c2c07d6a5d1aff9bfcf",
+    "tests/test_roadmap.py": "889deb7f1378be7709a58ad33699615fdc660376173e02876eac634fc1b89815"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-plan-derivation/01-improve-stage-four-guidance-shared.md": "2449553bc98d2e72ea297ac87a81406cdebd5fa0879ce21d440424fd7dba5d31",
+    "docs/implementation-plans/plan-details/roadmap-plan-derivation/02-keep-accepted-row-obligations-sibling.md": "8e30c974cc5ae54ec8ed339daa4a11dbf8c2013e5f27da22dcf8e379894f0d4f",
+    "docs/implementation-plans/plan-details/roadmap-plan-derivation/03-retain-source-obligations-local.md": "96591f5501d852f7f5afbb87968e84ee601b239146bf7ea178dae22a4d771ef7",
+    "docs/implementation-plans/plan-details/roadmap-plan-derivation/04-document-test-existing-roadmap-create.md": "a9411138b4bb4387aa908e90667ef31dcce354195845f06c12079e3fb1a7c189",
+    "docs/implementation-plans/plan-details/roadmap-plan-derivation/05-record-isolated-integration-comparison-raw.md": "62c89aa2be7139341c73632a8eaabf2ed9ce392221beca36b33528489ab51b5e"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Plan Derivation\n\n`roadmap-plan-derivation` \u00b7 generated 2026-10-16T17:00:20Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-plan-derivation --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Plan Derivation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-plan-derivation --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "e6f31cab6593891d9665f44901e33ca98322bf09f65b48d615077d433b3d2617",
+    "detail_bundle_digest": "b5deef27af3f298de7691c7abc61b18e65f922ead1741df5c52f1696d6cae600",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-derivation/01-improve-stage-four-guidance-shared.md",
+        "state": "present",
+        "digest": "2449553bc98d2e72ea297ac87a81406cdebd5fa0879ce21d440424fd7dba5d31"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-derivation/02-keep-accepted-row-obligations-sibling.md",
+        "state": "present",
+        "digest": "8e30c974cc5ae54ec8ed339daa4a11dbf8c2013e5f27da22dcf8e379894f0d4f"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-derivation/03-retain-source-obligations-local.md",
+        "state": "present",
+        "digest": "96591f5501d852f7f5afbb87968e84ee601b239146bf7ea178dae22a4d771ef7"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-derivation/04-document-test-existing-roadmap-create.md",
+        "state": "present",
+        "digest": "a9411138b4bb4387aa908e90667ef31dcce354195845f06c12079e3fb1a7c189"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/private/tmp/plan-tool-roadmap-plan-set-20261016/docs/implementation-plans/plan-details/roadmap-plan-derivation/05-record-isolated-integration-comparison-raw.md",
+        "state": "present",
+        "digest": "62c89aa2be7139341c73632a8eaabf2ed9ce392221beca36b33528489ab51b5e"
+      }
+    ],
+    "source_seed_digest": "6e5998f2c06357c235ee3f68dd4126b472910b1698161d0b9abec7f690e5255f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

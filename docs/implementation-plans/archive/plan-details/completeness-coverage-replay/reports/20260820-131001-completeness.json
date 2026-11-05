@@ -1,0 +1,141 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T13:10:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d6950e23f42ab19f84028b041247caa8ac8f43e31985bd8f5d9812c40200227b",
+  "code_fingerprint": {
+    "BACKLOG.md": "b4e72b459814aef429a741495495e742c68fd9e98a4ce23a2f49a780c80aa76c",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/backend.py": "31819cb12d9d272943f20516d19e858e0415a0ff44e6d2245de09cae027d5e55",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/test_backend.py": "13344d689bdaa18e38c9b69330620b84a6dd9e0fca5ed5a68c577817539ac186",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "7630bc6108087eb18eccbd1db2303d92a604090d802994eced834057c393f04a",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "f45ba6fb3480c83137f06ab0e2ecb044ed8bcea05e1bea7401ab6e277194a601",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "588819d4d6efba628635a007ab7d230289662e76c7b01c8a5a24dee87c0b78b9",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "73fa5d8e2baaed74726522a6eb93b57f61ac046be8bd306485dc84c1c039a822"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T13:10:01Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[candidate-schedule-evidence]`: The Architecture\u2019s corpus-wide diversity floor, Testing, and Acceptance criteria require branch coverage somewhere in the corpus, but step 1\u2019s `Predeclare schedules and the evidence universe` and `test_selectable_candidate_interval_leaves_an_unchanged_reuse_snapshot` do not require each candidate interval to become due. Step 2\u2019s policy replay, step 3\u2019s capture/verification, and step 4\u2019s publication can therefore select a rank-1 interval of 100 from short trajectories where its periodic discovery never runs; it has only been tested as indefinite reuse plus terminal confirmation, yet can unblock #173.\n  - Fix: require each selectable candidate to have eligible ordered evidence for its own unchanged reuse and non-terminal interval-due discovery branches, and return `insufficient-evidence` when that proof is absent.\n- HIGH `[snapshot-policy-result]`: The policy-result record has no defined relation to candidates with different intervals. The Architecture says \u201cthe candidate\u2019s\u201d interval chooses full discovery or reuse and \u201cEvery captured snapshot records that policy outcome\u201d; step 1\u2019s `Declare the full observation policy`, step 2\u2019s `Apply the declared observation policy in one order`, step 3\u2019s `Capture every fresh observation`, and step 4\u2019s published fixed policy all preserve one result per snapshot. On an unchanged, non-terminal snapshot two positions after snapshot zero, an interval of two requires discovery while an interval of three requires reuse, so one stored result either rejects a valid candidate or validates no candidate\u2019s decision.\n  - Fix: define policy evidence as candidate-indexed or derive it from shared candidate-independent facts, then use that one relation in validation, replay, capture, and publication.\n- HIGH `[fresh-label-convergence]`: Authoritative fresh labels require only \u201ccoverage is observed and not budget-limited\u201d in the Architecture, plan Acceptance criteria, step 1\u2019s `Make authoritative labels explicit`, `test_case_requires_a_complete_conforming_non_budget_limited_attempt_series`, and acceptance criteria; step 3\u2019s `Capture every fresh observation` permits an explicit audit-pass value, while step 2\u2019s `Compare declared labels` trusts the resulting labels. At HEAD, `plan_tool.review:audit_plan_until_stable` leaves `budget_limited` false for its one-pass fallback even though `confirmation_kind` is absent, so an unconfirmed single audit pass can enter the corpus as a full-discovery label set and make an unsafe cadence appear loss-free.\n  - Fix: require a recorded convergence confirmation for authoritative labels, mark unconfirmed series unresolved or excluded, and cover that rule in corpus, capture, and replay tests\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-d03f3f4b]`: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-coverage-replay` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[candidate-schedule-evidence]`: The Architecture\u2019s corpus-wide diversity floor, Testing, and Acceptance criteria require branch coverage somewhere in the corpus, but step 1\u2019s `Predeclare schedules and the evidence universe` and `test_selectable_candidate_interval_leaves_an_unchanged_reuse_snapshot` do not require each candidate interval to become due. Step 2\u2019s policy replay, step 3\u2019s capture/verification, and step 4\u2019s publication can therefore select a rank-1 interval of 100 from short trajectories where its periodic discovery never runs; it has only been tested as indefinite reuse plus terminal confirmation, yet can unblock #173.\n- HIGH `[snapshot-policy-result]`: The policy-result record has no defined relation to candidates with different intervals. The Architecture says \u201cthe candidate\u2019s\u201d interval chooses full discovery or reuse and \u201cEvery captured snapshot records that policy outcome\u201d; step 1\u2019s `Declare the full observation policy`, step 2\u2019s `Apply the declared observation policy in one order`, step 3\u2019s `Capture every fresh observation`, and step 4\u2019s published fixed policy all preserve one result per snapshot. On an unchanged, non-terminal snapshot two positions after snapshot zero, an interval of two requires discovery while an interval of three requires reuse, so one stored result either rejects a valid candidate or validates no candidate\u2019s decision.\n- HIGH `[fresh-label-convergence]`: Authoritative fresh labels require only \u201ccoverage is observed and not budget-limited\u201d in the Architecture, plan Acceptance criteria, step 1\u2019s `Make authoritative labels explicit`, `test_case_requires_a_complete_conforming_non_budget_limited_attempt_series`, and acceptance criteria; step 3\u2019s `Capture every fresh observation` permits an explicit audit-pass value, while step 2\u2019s `Compare declared labels` trusts the resulting labels. At HEAD, `plan_tool.review:audit_plan_until_stable` leaves `budget_limited` false for its one-pass fallback even though `confirmation_kind` is absent, so an unconfirmed single audit pass can enter the corpus as a full-discovery label set and make an unsafe cadence appear loss-free.\n\n### Files coherence\n\n- NIT: step 3 declared `benchmarks/corpus/completeness-coverage/fixtures.bundle` not mentioned in detail\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `fixtures.bundle`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk completeness-coverage-replay` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-ff57b5e9",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture\u2019s corpus-wide diversity floor, Testing, and Acceptance criteria require branch coverage somewhere in th",
+      "body": "The Architecture\u2019s corpus-wide diversity floor, Testing, and Acceptance criteria require branch coverage somewhere in the corpus, but step 1\u2019s `Predeclare schedules and the evidence universe` and `test_selectable_candidate_interval_leaves_an_unchanged_reuse_snapshot` do not require each candidate interval to become due. Step 2\u2019s policy replay, step 3\u2019s capture/verification, and step 4\u2019s publication can therefore select a rank-1 interval of 100 from short trajectories where its periodic discovery never runs; it has only been tested as indefinite reuse plus terminal confirmation, yet can unblock #173.",
+      "suggested_action": "require each selectable candidate to have eligible ordered evidence for its own unchanged reuse and non-terminal interval-due discovery branches, and return `insufficient-evidence` when that proof is absent.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "candidate-schedule-evidence",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e736024b",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The policy-result record has no defined relation to candidates with different intervals. The Architecture says \u201cthe cand",
+      "body": "The policy-result record has no defined relation to candidates with different intervals. The Architecture says \u201cthe candidate\u2019s\u201d interval chooses full discovery or reuse and \u201cEvery captured snapshot records that policy outcome\u201d; step 1\u2019s `Declare the full observation policy`, step 2\u2019s `Apply the declared observation policy in one order`, step 3\u2019s `Capture every fresh observation`, and step 4\u2019s published fixed policy all preserve one result per snapshot. On an unchanged, non-terminal snapshot two positions after snapshot zero, an interval of two requires discovery while an interval of three requires reuse, so one stored result either rejects a valid candidate or validates no candidate\u2019s decision.",
+      "suggested_action": "define policy evidence as candidate-indexed or derive it from shared candidate-independent facts, then use that one relation in validation, replay, capture, and publication.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "snapshot-policy-result",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ecd86da6",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Authoritative fresh labels require only \u201ccoverage is observed and not budget-limited\u201d in the Architecture, plan Acceptan",
+      "body": "Authoritative fresh labels require only \u201ccoverage is observed and not budget-limited\u201d in the Architecture, plan Acceptance criteria, step 1\u2019s `Make authoritative labels explicit`, `test_case_requires_a_complete_conforming_non_budget_limited_attempt_series`, and acceptance criteria; step 3\u2019s `Capture every fresh observation` permits an explicit audit-pass value, while step 2\u2019s `Compare declared labels` trusts the resulting labels. At HEAD, `plan_tool.review:audit_plan_until_stable` leaves `budget_limited` false for its one-pass fallback even though `confirmation_kind` is absent, so an unconfirmed single audit pass can enter the corpus as a full-discovery label set and make an unsafe cadence appear loss-free.",
+      "suggested_action": "require a recorded convergence confirmation for authoritative labels, mark unconfirmed series unresolved or excluded, and cover that rule in corpus, capture, and replay tests",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-label-convergence",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "e50b66406c5fe6b2db7f4ea9f6eb99b0b84dba96373f87d68919b190451c5a9b",
+    "detail_bundle_digest": "2eae1eea550881f7e0cd17df9a64a8d949a1c6ea6d6942f64e0a785a0473c1ec",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+        "state": "present",
+        "digest": "7630bc6108087eb18eccbd1db2303d92a604090d802994eced834057c393f04a"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+        "state": "present",
+        "digest": "f45ba6fb3480c83137f06ab0e2ecb044ed8bcea05e1bea7401ab6e277194a601"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+        "state": "present",
+        "digest": "588819d4d6efba628635a007ab7d230289662e76c7b01c8a5a24dee87c0b78b9"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+        "state": "present",
+        "digest": "73fa5d8e2baaed74726522a6eb93b57f61ac046be8bd306485dc84c1c039a822"
+      }
+    ],
+    "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

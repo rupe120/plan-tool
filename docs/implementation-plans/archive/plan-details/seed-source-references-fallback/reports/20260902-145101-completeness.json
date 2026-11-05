@@ -1,0 +1,114 @@
+{
+  "version": 4,
+  "plan_slug": "seed-source-references-fallback",
+  "plan_path": "docs/implementation-plans/2-seed-source-references-fallback.md",
+  "created_at": "2026-09-02T14:51:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0031b1ff2248d9faa3d2a873e885f2fb31719c808b537941028ff1c3cf7e38fa",
+  "code_fingerprint": {
+    "BACKLOG.md": "f6667d079f55139d6984480cd7c8127703c92635f5c993163455351e2d32cca7",
+    "docs/CREATE_SEED_INGESTION_CONTRACT.md": "3f0a0024a172f4f9597d71b8893bc847e2267fcbd58a3b5e156875a6b4a46d6e",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "9d8f293121b48c7afb3e8f066e3591df5f1ce06a776b7bb0f19d302fd82de602",
+    "plan-seeds/audit-finding-staleness-classification.md": "b5afec355bff0ed6a7350abeea7270ce35f09889677c9a9724f5937c28e03191",
+    "plan-seeds/audit-shape-advisory-generic-walk.md": "85feb9c2a5870c0f06241e121f1c8542b7d6e10233d8fedde15ef0763dec42e4",
+    "plan-seeds/audit-shape-saturation-and-provenance.md": "5d6c9bba0be20db9211616191aefa48e6211443fcf1c993f30aa5f10b399da47",
+    "plan-seeds/completeness-output-quality.md": "8f4fd8ce8a5e68a9b29b415f647149bd92abc6d497126adc6226cc78028f2645",
+    "plan-seeds/connectivity-pause-and-poll.md": "494b164ef149cf50a638314ce95c56887363e7d663c3a58c2314a4bdb4a8dbd5",
+    "plan-seeds/convergence-policy-channel-ownership.md": "518ea191e2a64a37ff25c1fac8d55402782f073b5d715755168ef047d9418392",
+    "plan-seeds/create-detail-phase-decomposition.md": "b223bdb20946ed814e23b7fac891452f1260bc65bde35e4d9ca46c7a60a6c9f0",
+    "plan-seeds/deferred-findings-digest.md": "7587ae7e511efc98aacae9e7a79ea9c746e50813324a527e7ff9a72953c9e4dd",
+    "plan-seeds/disable-jira-grade-detail-authoring.md": "1f04e45d0956292dc0dbd5ea19c49c4ec461b46f613dce1df187ecb6c6bc4d03",
+    "plan-seeds/feature-health-2-attribution-and-ledger.md": "0178646412a7f5893549a2028f456b643db471f70a512769ab961d4f67ba3585",
+    "plan-seeds/jira-sweep-verify-code-truth.md": "d29881a99d40f0bc3efdfd035d2391bac42830b1d765852d6ca1df1a01cf6f38",
+    "plan-seeds/lessons-store-restructure.md": "06cb02c9b81c0049e4ac6cb3d17e7729e161d4892f7ed40d04571785469f962b",
+    "plan-seeds/premise-ledger.md": "b26d147062837cec6a4af97ac66e7d74a360520f02b08fa28ca8685279e3b9b4",
+    "plan-seeds/reseed-advisor.md": "7b36f95d78346fff270c984985790a3139f187e4a1543c46ade097b19c7e3a57",
+    "plan-seeds/risk-profile-3-advisory-effectiveness.md": "127a055ab39dd011a74f54c6de672451fe6f06ee2b48aaa61a8899d4bb3b2a25",
+    "plan-seeds/walk-advisory-chat-mode.md": "438db764fd267f5288f3285fec2cb5198c16c9ae35304141e638ffebd72cbf54",
+    "plan_tool/annotate_render.py": "5d9d6dfc481a77a6c198442f2b68d4929c04193de41010d8697aa12515c718c1",
+    "plan_tool/create.py": "7c180bf27c66bc371cf080977dea09e23aca9010151a8fe70b94c9479e16bc68",
+    "plan_tool/prompts/roadmap-seed.md": "652f627aa352e567fd2b141bda42a2703e8f609dba42b35c88374d54309544c9",
+    "plan_tool/reground.py": "8f3d77c0f6838187a2275da94cfa1a7d2f509165545a1cefdebab79dca012916",
+    "plan_tool/roadmap_gates.py": "b1764838f1f30fb96d3757768c5ff43d7703bf30f4c7d22a64c996412e81e80a",
+    "tests/cli/test_authoring_cmds.py": "a97066b0daf75360882528497a435ef2c9521f6fb62caf8f1c9a55caa88810ac",
+    "tests/test_annotate_render.py": "1c49861e0dcbf21fe0bdf864a5ca1f27d53abeb00b1abfb073bde15ace699092",
+    "tests/test_create.py": "a5327f166f0ce0ebe9351b3b24a704a6b03de8558faadbc0335342ecf8a22491",
+    "tests/test_reground.py": "9997502c51bd079a4ebad0f1666f06b9f8d3d52a20c8482d3dcc82cd0940fc96",
+    "tests/test_roadmap.py": "6c17c2f9d467e2c3b1e01f051336f87e9fb1215af4747e4df0ebf8bd5af69abf",
+    "tests/test_roadmap_seed_manifest.py": "10da3a0aad75dc1d069564dc6c159c81f141800c9b8076e86a46c5bd2eab61ea",
+    "tests/test_scope_out.py": "59935e6b0c12981cfaca81e906a610fff08ffb9a1ead030696f2632bdd0dca86"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/seed-source-references-fallback/01-make-references-fallback-body-only-then.md": "0ee108d289dd439d4cb1f255174bf5b7a23174ee64bdce27c0e3cefc1bbcf701",
+    "docs/implementation-plans/plan-details/seed-source-references-fallback/02-admit-roadmap-seeds-only-when-their.md": "817f11b349fbd46bbc733de754b18bde2ea921be7b8a6f8d0b7740c70d4b0c12",
+    "docs/implementation-plans/plan-details/seed-source-references-fallback/03-source-plan-references-rebaseline-seeds.md": "609abdc38e2fe9658250706a56fc4ef94fb6318ab63d62b3fb791e6a3c434e90",
+    "docs/implementation-plans/plan-details/seed-source-references-fallback/04-record-repaired-seed-sources-close.md": "84e307d98402461088f393e32c034b9196359988ddf777ef8b480f6bf8af6e7c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Seed Source References Fallback\n\n`seed-source-references-fallback` \u00b7 generated 2026-09-02T14:51:01Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-cc946505]` [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c79c7d79]` [confidence: limited]: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-760a3674]` [confidence: limited]: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-6d91993a]` [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-ee8603fe]` [confidence: limited]: The plan's `## Acceptance criteria` names `validate_from_existing_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit seed-source-references-fallback` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Seed Source References Fallback\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `01-domain.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `02-constraints.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `03-components.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `04-roadmap.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `validate_from_existing_seed`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "0031b1ff2248d9faa3d2a873e885f2fb31719c808b537941028ff1c3cf7e38fa",
+    "detail_bundle_digest": "ea01ab0b9aa7f6459349cf09bb0abe884431a57b356f7225717257ae173a5e79",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/seed-source-references-fallback/01-make-references-fallback-body-only-then.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/seed-source-references-fallback/02-admit-roadmap-seeds-only-when-their.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/seed-source-references-fallback/03-source-plan-references-rebaseline-seeds.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/seed-source-references-fallback/04-record-repaired-seed-sources-close.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "7fa32ad6b1b8f6479d553ee71a7bb6f8082bc8c05027b1f5dc5970c16cdfc29d",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

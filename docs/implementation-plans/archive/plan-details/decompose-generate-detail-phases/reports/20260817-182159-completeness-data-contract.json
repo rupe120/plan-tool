@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-de88d52a": {
+      "code_anchor": "plan_tool/detail.py:parse_plan",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-exact.md",
+      "reason": "code anchor `plan_tool/detail.py:parse_plan` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260817-182159-completeness"
+}

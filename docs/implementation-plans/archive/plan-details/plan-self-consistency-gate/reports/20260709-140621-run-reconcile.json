@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "plan_slug": "plan-self-consistency-gate",
+  "plan_path": "docs/implementation-plans/2-plan-self-consistency-gate.md",
+  "created_at": "2026-07-09T14:06:21Z",
+  "kind": "run-reconcile",
+  "step_id": 4,
+  "plan_fingerprint": "46d19095b93ab7eee881db77c77f29f6c4407178aeea3c72a12e318f7a2160e3",
+  "code_fingerprint": {
+    "BACKLOG.md": "f54f75b9884a4bc6e92540e2bb14478f9d80af54e40f853f0380326352205caa",
+    "plan_tool/cli/completeness_cmd.py": "c767f0964b679024f5a4912f74e14298eef8b4aa492c9a553b2bb26894de5220",
+    "plan_tool/cli/completeness_phases.py": "f351f96c352f658fbf8b63953ef06f64770973268dcb5ff0edab924c026d9b42",
+    "plan_tool/cli/inspect.py": "5a902b77531300e8e93fd908aa8fe824c7e9a46a51ba3ed30ec76a6d70183c30",
+    "plan_tool/review.py": "f95aca1c9744ab57a01abffcdeb549900eaa79957380a17f11f82330c45ae6d2",
+    "tests/cli/test_completeness_cmd.py": "261996c62932388c0be689d82d7635273b70c35026950a1b2a3413356d1fdf6d",
+    "tests/test_review.py": "e51ae94b0c383b646b988544a93999d6f538a106c275c457b92990b88e11fb1c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 4 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

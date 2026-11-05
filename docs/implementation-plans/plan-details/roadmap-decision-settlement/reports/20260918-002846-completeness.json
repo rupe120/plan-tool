@@ -1,0 +1,208 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-decision-settlement",
+  "plan_path": "docs/implementation-plans/2-roadmap-decision-settlement.md",
+  "created_at": "2026-09-18T00:28:46Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9a770816b9fea704d4725a073d5c3660c414d2508b94e28532e0b087fce2923a",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "bcfce1fa3bd7e1f3a8080ffb8ddf72dee81ac46971556b1ff0a411f426eeb408",
+    "CAPABILITIES.md": "63ea8a29116bd7a7cfae434472e6adbfb0e7fe0450e61015bc053d38eb32cb62",
+    "CLAUDE.md": "1141af3b4ab1974c5b3afdbda1e9b4b0fd1a9957a08f3ad920b9c1abf0a3ff49",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "docs/cli/roadmap.md": "3df165a14beb194cbfaaef1473b348b5d28c8f9522d6544fe641cf1bf8c33cfe",
+    "docs/how-to/roadmap.md": "c698912ddadd01fb8b824e12b34bfc5fd84d8cdacb4190f393c419912ea637b2",
+    "integrations/shared/DIRECTIVES.md": "7192d800437e52964ac265bb02046284bbd3a9db29721c6d5e362b06c8411fb8",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_artifacts.py": "1928d1f1fbba7733d39a0fc57c2383d9a5f0b0fb1a83467ac129ddefa69d3e5a",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "plan_tool/roadmap_revision_publish.py": "1503a6839e5c7abc3543cc3373c1a43c90f6a031c7608eae00d837233d0a8afa",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_artifacts.py": "999e009cec8d866fa7dce50ec1a0bb277bc8a1e7c2299b62c7d3cce7da4ba171",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072",
+    "tests/test_roadmap_gates.py": "4b52ed512a58f8c04b12b681ebcd586b4a2904e485b3c32d9e3df0f63488a856",
+    "tests/test_roadmap_revision_publish.py": "04732b48fd13bf91a093750462e986df30f80e37bd9a730568c9cbb56734cff8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md": "4ce39982298acdcba3ca1345585257320e0cfe4d7e9a584933b2072bb8dff9d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md": "52e896aca9d3402c2a94218121c9fe291dcc05499aaea5ee028a23f2190c011d",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md": "980a2ea8d9849d75d89270473d480351633c2f5d212b0885eb488f32450912ce",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md": "b080edf8894abe55e7604561d5232202910f1817b6a110263eb390405bf463a6",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md": "cfeabe112d58b6c2f1d845a435f4381743df8fdf27df21304c785798c3c9121f",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md": "ee721bd3406d9364b90c2955d663a44f3451bdbbc8ce69b2377f76bb709a6b9e",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md": "8079ac7b0e74671c9a1af085a6b2cd69e8bf565e36c660964af95363322357d7",
+    "docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md": "2a6beb3a5b45888f531935def85e70543f151024a8fe757c0727c1f0475dccf9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Decision Settlement\n\n`roadmap-decision-settlement` \u00b7 generated 2026-09-18T00:28:46Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-decision-settlement  # optional interactive review of the saved findings\n\n- CRITICAL `[enrolled-settlement-write-boundary]` [confidence: limited]: Step 5 commits the enrolled write path to \"advancing the accepted head through the existing guarded write\" via, per the Architecture section, \"the existing `promote_review_seal` boundary\" \u2014 while step 5's own intent line requires this \"without ever editing its accepted head in place and without inventing a model-authored review lineage.\" But `promote_review_seal` (`plan_tool/roadmap_version_promotion.py:43`) is not a generic accepted-head write: it loads a `CandidateReviewSeal` (`roadmap_candidate_review.py:413`) and validates it against a full model-authored chain \u2014 an admitted `CandidateProposalAdmission` produced only by `run_initial_candidate_proposal`, which invokes a Claude backend (`shell_candidate_proposal_invoker`, `roadmap_candidate_run.py:309`), plus a question inventory, a reviewer answer, an answer-incorporation record, and a replacement binding, all cross-checked by `_require_seal_bindings`/`_require_replacement_binding`/`_require_final_capsule_binding`. `promote_review_seal` is confirmed as the *sole* writer of `accepted_head_path` after root enrollment (`roadmap.py:929` writes it once, before enrollment, and the deterministic structural-rewrite path in `roadmap_structural_revision_run.py` never touches `accepted_head_path` or `promote_review_seal`), so there is no lighter existing boundary to fall back on. Reusing it as described therefore requires either constructing a full non-model synthetic candidate/review/seal chain (never mentioned \u2014 far more than \"storing a deterministic candidate version\") or a new write path the plan's own guardrail (\"it always goes through the existing candidate/promotion boundary\") forbids. This also leaves step 2's shared preflight unresolved on the read side: `roadmap_view.py:load_roadmap()`, the only reader already converted for enrolled content, reads an enrolled roadmap's canonical bytes from `accepted_version.artifact_bytes` and explicitly refuses to fall back to \"live artifact paths,\" while the selector precedent the plan cites (`ReceiptSafeSelector`, `CanonicalArtifactSnapshot.source_digest`) is, per the plan's own References, \"wired only for an un-enrolled roadmap today\" \u2014 the plan never says which source the enrolled preflight reads.\n  - Fix: Specify the enrolled write mechanism at the plan level: either scope a new, narrower guarded write for the accepted head that step 5 can build without a model-authored candidate lineage, or state plainly that settlement will construct a full non-model candidate/review/seal chain to reuse `promote_review_seal`, and resolve step 2's preflight source (on-disk bytes vs. accepted-version bytes) for the enrolled case to match.\n- HIGH `[settlement-evidence-authorship]` [confidence: limited]: Step 2's preflight and the Architecture require the cited feedback row to carry \"non-empty reviewer-authored response text,\" and Testing repeats this as \"recorded response text,\" but `FeedbackRow` (`plan_tool/roadmap_artifacts.py:536`) has no field that is both reviewer-authored and a response. `proposed_response` is the field literally named \"response,\" and its own docstring says it \"is what the model offered back\" \u2014 confirmed by `--revise-feedback`'s CLI help text (`cli/roadmap_cmd.py`), which states the flag \"Makes exactly one backend request\" to produce it, so it is Claude-authored, not operator-authored. `request` is the only field that is genuinely \"the reviewer's own words\" (same docstring), but it is documented as a \"reviewer redirect\" \u2014 an objection or change ask, not an approval \u2014 and the plan never names it as the evidence field. Whichever field an implementer picks fails half of the plan's own two-part requirement; picking `proposed_response` (the natural reading of \"response text\") would make the route's evidentiary check a check on model output, not reviewer judgment \u2014 the exact trap CLAUDE.md's own \"Validating a semantic property you cannot observe\" section warns against, and the opposite of what the Risks section believes it has avoided by checking only \"checkable facts.\"\n  - Fix: Name the exact feedback field the settlement evidence checks \u2014 either adopt `request` as the evidence field and drop \"response\" from its description, or add a genuinely reviewer-authored acknowledgment field the route can check instead of the model-authored `proposed_response`.\n- CRITICAL `[settlement-baseline-desync]` [confidence: limited]: Step 4's un-enrolled write silently breaks every other narrow un-enrolled action on the same roadmap stage the first time it runs, and nothing in Testing would catch it. Step 4 commits to:\n\n  ```\n  Settle one decision on an un-enrolled roadmap and publish its receipt,\n  keeping the existing journal recovery (roll back or drop an in-flight\n  generation) unchanged and replacing only the selected artifact's bytes \u2014\n  no baseline, seed-state, or other artifact is rewritten\n  ```\n\n  while Architecture says the write reuses \"the same guard every other narrow un-enrolled action already uses,\" and References points step 2/4 at `ReceiptSafeSelector`/`CanonicalArtifactSnapshot.source_digest` as \"the structural precedent this route's selector, predecessor-digest staleness check, and named-reason refusal shape should follow.\" That precedent is `admit_versioned_artifact_source` \u2192 `admit_baseline_backed_source` (`plan_tool/roadmap_source_identity.py`), and both `--reopen-feedback` (`roadmap_feedback_reopen.py:_admitted_stage_source`) and `--escalate-feedback` (`roadmap_escalation_run.py`) call it before every write. `admit_baseline_backed_source` refuses with `RoadmapSourceIdentityError(\"roadmap source differs from its baseline\")` whenever the live artifact disagrees with its stored `.roadmap-baselines/<stage>.json` record, and that record is built by `canonical_projection`, which excludes only `\"feedback\"` \u2014 a decision row's `status` field is not excluded. `--reopen-feedback`'s own write (`publish_feedback_reopen_candidate`) gets away with touching only the artifact file precisely because feedback is the one thing the baseline ignores. A decision's `status` is not in that carve-out, so the moment step 4 flips `pending` \u2192 `settled` in the artifact file without touching that stage's baseline record, the two permanently disagree. From then on, any `admit_baseline_backed_source` check on that same stage \u2014 another `--reopen-feedback`, an `--escalate-feedback`, or a second settlement built the same way \u2014 fails with \"roadmap source differs from its baseline,\" locking the operator out of every other narrow action on that roadmap after the very first successful settlement, with no error at settlement time and no stated repair anywhere in Risks or Deferred. The Risks section's \"Gate interaction\" entry only asks for a \"changed-baseline fixture\" to cover a concurrent-edit race; it never names the settlement's own successful write as the thing that changes the baseline relationship. Sites: step 4's title and Architecture's \"Un-enrolled roadmap\" bullet; step 2 (whose preflight is meant to share this same admission precedent); `plan_tool/roadmap_source_identity.py:canonical_projection`/`admit_baseline_backed_source`; `plan_tool/roadmap_feedback_reopen.py:_admitted_stage_source`/`publish_feedback_reopen_candidate`; `plan_tool/roadmap_escalation_run.py`'s matching admission call.\n  - Fix: Revise step 4 (and step 2's shared preflight, if it reuses baseline admission) so the settlement write also refreshes the affected stage's `.roadmap-baselines` record alongside the artifact bytes, following the same multi-member generation pattern `publish_stage_artifact` already uses \u2014 or, if leaving the baseline untouched is meant to be safe, state at plan level why a permanently stale decisions-baseline is tolerable, since \"no baseline... is rewritten\" as written breaks every later baseline-admission check on that stage.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[refusal-class-count]` [confidence: limited]: The Testing section lists refusal cases as one semicolon-separated set:\n  ```\n  Cover every refusal class as its own case: missing or mismatched\n  decision target; an inherited decision selected as target; a\n  non-pending decision (already settled); missing, mismatched, or\n  empty-response feedback evidence; a changed source baseline between\n  evidence selection and confirmation; an in-flight pending generation\n  (enrolled only); and an attempt to write an accepted head directly\n  (enrolled only).\n  ```\n  That is seven distinct cases, but the Acceptance criteria section says\n  ```\n  Each of the six refusal classes above stops the action before any\n  publication, with a distinct, named reason.\n  ```\n  A reader can't tell whether \"six\" is a plain miscount (all seven need their own named reason, matching step 2's own \"one named refusal per rejection class\") or whether two of the seven are meant to share one refusal reason \u2014 and if so, which two. The most likely candidates to collapse, the two enrolled-only cases (\"in-flight pending generation\" and \"write the accepted head directly\"), are materially different failure conditions (one is a leftover journal, the other is a route trying to bypass the candidate/promotion path entirely), so folding them into one shared name would itself violate step 2's \"one named refusal per rejection class\" requirement. Left as written, a test author following the acceptance bar's literal count could stop one refusal case short of the coverage the Testing section already commits to.\n  - Fix: Correct the acceptance criterion's count to match the seven distinct cases the Testing section lists, or state explicitly which two cases are intended to share a single named refusal reason and why, so the acceptance bar and the test list agree on how many distinct, named refusal reasons the route must produce.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-decision-settlement` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Decision Settlement\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 8 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- CRITICAL `[enrolled-settlement-write-boundary]` [confidence: limited]: Step 5 commits the enrolled write path to \"advancing the accepted head through the existing guarded write\" via, per the Architecture section, \"the existing `promote_review_seal` boundary\" \u2014 while step 5's own intent line requires this \"without ever editing its accepted head in place and without inventing a model-authored review lineage.\" But `promote_review_seal` (`plan_tool/roadmap_version_promotion.py:43`) is not a generic accepted-head write: it loads a `CandidateReviewSeal` (`roadmap_candidate_review.py:413`) and validates it against a full model-authored chain \u2014 an admitted `CandidateProposalAdmission` produced only by `run_initial_candidate_proposal`, which invokes a Claude backend (`shell_candidate_proposal_invoker`, `roadmap_candidate_run.py:309`), plus a question inventory, a reviewer answer, an answer-incorporation record, and a replacement binding, all cross-checked by `_require_seal_bindings`/`_require_replacement_binding`/`_require_final_capsule_binding`. `promote_review_seal` is confirmed as the *sole* writer of `accepted_head_path` after root enrollment (`roadmap.py:929` writes it once, before enrollment, and the deterministic structural-rewrite path in `roadmap_structural_revision_run.py` never touches `accepted_head_path` or `promote_review_seal`), so there is no lighter existing boundary to fall back on. Reusing it as described therefore requires either constructing a full non-model synthetic candidate/review/seal chain (never mentioned \u2014 far more than \"storing a deterministic candidate version\") or a new write path the plan's own guardrail (\"it always goes through the existing candidate/promotion boundary\") forbids. This also leaves step 2's shared preflight unresolved on the read side: `roadmap_view.py:load_roadmap()`, the only reader already converted for enrolled content, reads an enrolled roadmap's canonical bytes from `accepted_version.artifact_bytes` and explicitly refuses to fall back to \"live artifact paths,\" while the selector precedent the plan cites (`ReceiptSafeSelector`, `CanonicalArtifactSnapshot.source_digest`) is, per the plan's own References, \"wired only for an un-enrolled roadmap today\" \u2014 the plan never says which source the enrolled preflight reads.\n- HIGH `[settlement-evidence-authorship]` [confidence: limited]: Step 2's preflight and the Architecture require the cited feedback row to carry \"non-empty reviewer-authored response text,\" and Testing repeats this as \"recorded response text,\" but `FeedbackRow` (`plan_tool/roadmap_artifacts.py:536`) has no field that is both reviewer-authored and a response. `proposed_response` is the field literally named \"response,\" and its own docstring says it \"is what the model offered back\" \u2014 confirmed by `--revise-feedback`'s CLI help text (`cli/roadmap_cmd.py`), which states the flag \"Makes exactly one backend request\" to produce it, so it is Claude-authored, not operator-authored. `request` is the only field that is genuinely \"the reviewer's own words\" (same docstring), but it is documented as a \"reviewer redirect\" \u2014 an objection or change ask, not an approval \u2014 and the plan never names it as the evidence field. Whichever field an implementer picks fails half of the plan's own two-part requirement; picking `proposed_response` (the natural reading of \"response text\") would make the route's evidentiary check a check on model output, not reviewer judgment \u2014 the exact trap CLAUDE.md's own \"Validating a semantic property you cannot observe\" section warns against, and the opposite of what the Risks section believes it has avoided by checking only \"checkable facts.\"\n- CRITICAL `[settlement-baseline-desync]` [confidence: limited]: Step 4's un-enrolled write silently breaks every other narrow un-enrolled action on the same roadmap stage the first time it runs, and nothing in Testing would catch it. Step 4 commits to:\n\n  ```\n  Settle one decision on an un-enrolled roadmap and publish its receipt,\n  keeping the existing journal recovery (roll back or drop an in-flight\n  generation) unchanged and replacing only the selected artifact's bytes \u2014\n  no baseline, seed-state, or other artifact is rewritten\n  ```\n\n  while Architecture says the write reuses \"the same guard every other narrow un-enrolled action already uses,\" and References points step 2/4 at `ReceiptSafeSelector`/`CanonicalArtifactSnapshot.source_digest` as \"the structural precedent this route's selector, predecessor-digest staleness check, and named-reason refusal shape should follow.\" That precedent is `admit_versioned_artifact_source` \u2192 `admit_baseline_backed_source` (`plan_tool/roadmap_source_identity.py`), and both `--reopen-feedback` (`roadmap_feedback_reopen.py:_admitted_stage_source`) and `--escalate-feedback` (`roadmap_escalation_run.py`) call it before every write. `admit_baseline_backed_source` refuses with `RoadmapSourceIdentityError(\"roadmap source differs from its baseline\")` whenever the live artifact disagrees with its stored `.roadmap-baselines/<stage>.json` record, and that record is built by `canonical_projection`, which excludes only `\"feedback\"` \u2014 a decision row's `status` field is not excluded. `--reopen-feedback`'s own write (`publish_feedback_reopen_candidate`) gets away with touching only the artifact file precisely because feedback is the one thing the baseline ignores. A decision's `status` is not in that carve-out, so the moment step 4 flips `pending` \u2192 `settled` in the artifact file without touching that stage's baseline record, the two permanently disagree. From then on, any `admit_baseline_backed_source` check on that same stage \u2014 another `--reopen-feedback`, an `--escalate-feedback`, or a second settlement built the same way \u2014 fails with \"roadmap source differs from its baseline,\" locking the operator out of every other narrow action on that roadmap after the very first successful settlement, with no error at settlement time and no stated repair anywhere in Risks or Deferred. The Risks section's \"Gate interaction\" entry only asks for a \"changed-baseline fixture\" to cover a concurrent-edit race; it never names the settlement's own successful write as the thing that changes the baseline relationship. Sites: step 4's title and Architecture's \"Un-enrolled roadmap\" bullet; step 2 (whose preflight is meant to share this same admission precedent); `plan_tool/roadmap_source_identity.py:canonical_projection`/`admit_baseline_backed_source`; `plan_tool/roadmap_feedback_reopen.py:_admitted_stage_source`/`publish_feedback_reopen_candidate`; `plan_tool/roadmap_escalation_run.py`'s matching admission call.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[refusal-class-count]` [confidence: limited]: The Testing section lists refusal cases as one semicolon-separated set:\n  ```\n  Cover every refusal class as its own case: missing or mismatched\n  decision target; an inherited decision selected as target; a\n  non-pending decision (already settled); missing, mismatched, or\n  empty-response feedback evidence; a changed source baseline between\n  evidence selection and confirmation; an in-flight pending generation\n  (enrolled only); and an attempt to write an accepted head directly\n  (enrolled only).\n  ```\n  That is seven distinct cases, but the Acceptance criteria section says\n  ```\n  Each of the six refusal classes above stops the action before any\n  publication, with a distinct, named reason.\n  ```\n  A reader can't tell whether \"six\" is a plain miscount (all seven need their own named reason, matching step 2's own \"one named refusal per rejection class\") or whether two of the seven are meant to share one refusal reason \u2014 and if so, which two. The most likely candidates to collapse, the two enrolled-only cases (\"in-flight pending generation\" and \"write the accepted head directly\"), are materially different failure conditions (one is a leftover journal, the other is a route trying to bypass the candidate/promotion path entirely), so folding them into one shared name would itself violate step 2's \"one named refusal per rejection class\" requirement. Left as written, a test author following the acceptance bar's literal count could stop one refusal case short of the coverage the Testing section already commits to.\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-53b1e3a3",
+      "source": "plan-correctness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "Step 5 commits the enrolled write path to \"advancing the accepted head through the existing guarded write\" via, per the ",
+      "body": "Step 5 commits the enrolled write path to \"advancing the accepted head through the existing guarded write\" via, per the Architecture section, \"the existing `promote_review_seal` boundary\" \u2014 while step 5's own intent line requires this \"without ever editing its accepted head in place and without inventing a model-authored review lineage.\" But `promote_review_seal` (`plan_tool/roadmap_version_promotion.py:43`) is not a generic accepted-head write: it loads a `CandidateReviewSeal` (`roadmap_candidate_review.py:413`) and validates it against a full model-authored chain \u2014 an admitted `CandidateProposalAdmission` produced only by `run_initial_candidate_proposal`, which invokes a Claude backend (`shell_candidate_proposal_invoker`, `roadmap_candidate_run.py:309`), plus a question inventory, a reviewer answer, an answer-incorporation record, and a replacement binding, all cross-checked by `_require_seal_bindings`/`_require_replacement_binding`/`_require_final_capsule_binding`. `promote_review_seal` is confirmed as the *sole* writer of `accepted_head_path` after root enrollment (`roadmap.py:929` writes it once, before enrollment, and the deterministic structural-rewrite path in `roadmap_structural_revision_run.py` never touches `accepted_head_path` or `promote_review_seal`), so there is no lighter existing boundary to fall back on. Reusing it as described therefore requires either constructing a full non-model synthetic candidate/review/seal chain (never mentioned \u2014 far more than \"storing a deterministic candidate version\") or a new write path the plan's own guardrail (\"it always goes through the existing candidate/promotion boundary\") forbids. This also leaves step 2's shared preflight unresolved on the read side: `roadmap_view.py:load_roadmap()`, the only reader already converted for enrolled content, reads an enrolled roadmap's canonical bytes from `accepted_version.artifact_bytes` and explicitly refuses to fall back to \"live artifact paths,\" while the selector precedent the plan cites (`ReceiptSafeSelector`, `CanonicalArtifactSnapshot.source_digest`) is, per the plan's own References, \"wired only for an un-enrolled roadmap today\" \u2014 the plan never says which source the enrolled preflight reads.",
+      "suggested_action": "Specify the enrolled write mechanism at the plan level: either scope a new, narrower guarded write for the accepted head that step 5 can build without a model-authored candidate lineage, or state plainly that settlement will construct a full non-model candidate/review/seal chain to reuse `promote_review_seal`, and resolve step 2's preflight source (on-disk bytes vs. accepted-version bytes) for the enrolled case to match.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "enrolled-settlement-write-boundary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-f05b2f7e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2's preflight and the Architecture require the cited feedback row to carry \"non-empty reviewer-authored response te",
+      "body": "Step 2's preflight and the Architecture require the cited feedback row to carry \"non-empty reviewer-authored response text,\" and Testing repeats this as \"recorded response text,\" but `FeedbackRow` (`plan_tool/roadmap_artifacts.py:536`) has no field that is both reviewer-authored and a response. `proposed_response` is the field literally named \"response,\" and its own docstring says it \"is what the model offered back\" \u2014 confirmed by `--revise-feedback`'s CLI help text (`cli/roadmap_cmd.py`), which states the flag \"Makes exactly one backend request\" to produce it, so it is Claude-authored, not operator-authored. `request` is the only field that is genuinely \"the reviewer's own words\" (same docstring), but it is documented as a \"reviewer redirect\" \u2014 an objection or change ask, not an approval \u2014 and the plan never names it as the evidence field. Whichever field an implementer picks fails half of the plan's own two-part requirement; picking `proposed_response` (the natural reading of \"response text\") would make the route's evidentiary check a check on model output, not reviewer judgment \u2014 the exact trap CLAUDE.md's own \"Validating a semantic property you cannot observe\" section warns against, and the opposite of what the Risks section believes it has avoided by checking only \"checkable facts.\"",
+      "suggested_action": "Name the exact feedback field the settlement evidence checks \u2014 either adopt `request` as the evidence field and drop \"response\" from its description, or add a genuinely reviewer-authored acknowledgment field the route can check instead of the model-authored `proposed_response`.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "settlement-evidence-authorship",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-094fc7fd",
+      "source": "plan-correctness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "Step 4's un-enrolled write silently breaks every other narrow un-enrolled action on the same roadmap stage the first tim",
+      "body": "Step 4's un-enrolled write silently breaks every other narrow un-enrolled action on the same roadmap stage the first time it runs, and nothing in Testing would catch it. Step 4 commits to:\n\n  ```\n  Settle one decision on an un-enrolled roadmap and publish its receipt,\n  keeping the existing journal recovery (roll back or drop an in-flight\n  generation) unchanged and replacing only the selected artifact's bytes \u2014\n  no baseline, seed-state, or other artifact is rewritten\n  ```\n\n  while Architecture says the write reuses \"the same guard every other narrow un-enrolled action already uses,\" and References points step 2/4 at `ReceiptSafeSelector`/`CanonicalArtifactSnapshot.source_digest` as \"the structural precedent this route's selector, predecessor-digest staleness check, and named-reason refusal shape should follow.\" That precedent is `admit_versioned_artifact_source` \u2192 `admit_baseline_backed_source` (`plan_tool/roadmap_source_identity.py`), and both `--reopen-feedback` (`roadmap_feedback_reopen.py:_admitted_stage_source`) and `--escalate-feedback` (`roadmap_escalation_run.py`) call it before every write. `admit_baseline_backed_source` refuses with `RoadmapSourceIdentityError(\"roadmap source differs from its baseline\")` whenever the live artifact disagrees with its stored `.roadmap-baselines/<stage>.json` record, and that record is built by `canonical_projection`, which excludes only `\"feedback\"` \u2014 a decision row's `status` field is not excluded. `--reopen-feedback`'s own write (`publish_feedback_reopen_candidate`) gets away with touching only the artifact file precisely because feedback is the one thing the baseline ignores. A decision's `status` is not in that carve-out, so the moment step 4 flips `pending` \u2192 `settled` in the artifact file without touching that stage's baseline record, the two permanently disagree. From then on, any `admit_baseline_backed_source` check on that same stage \u2014 another `--reopen-feedback`, an `--escalate-feedback`, or a second settlement built the same way \u2014 fails with \"roadmap source differs from its baseline,\" locking the operator out of every other narrow action on that roadmap after the very first successful settlement, with no error at settlement time and no stated repair anywhere in Risks or Deferred. The Risks section's \"Gate interaction\" entry only asks for a \"changed-baseline fixture\" to cover a concurrent-edit race; it never names the settlement's own successful write as the thing that changes the baseline relationship. Sites: step 4's title and Architecture's \"Un-enrolled roadmap\" bullet; step 2 (whose preflight is meant to share this same admission precedent); `plan_tool/roadmap_source_identity.py:canonical_projection`/`admit_baseline_backed_source`; `plan_tool/roadmap_feedback_reopen.py:_admitted_stage_source`/`publish_feedback_reopen_candidate`; `plan_tool/roadmap_escalation_run.py`'s matching admission call.",
+      "suggested_action": "Revise step 4 (and step 2's shared preflight, if it reuses baseline admission) so the settlement write also refreshes the affected stage's `.roadmap-baselines` record alongside the artifact bytes, following the same multi-member generation pattern `publish_stage_artifact` already uses \u2014 or, if leaving the baseline untouched is meant to be safe, state at plan level why a permanently stale decisions-baseline is tolerable, since \"no baseline... is rewritten\" as written breaks every later baseline-admission check on that stage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "settlement-baseline-desync",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-4000dc66",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Testing section lists refusal cases as one semicolon-separated set:",
+      "body": "The Testing section lists refusal cases as one semicolon-separated set:\n  ```\n  Cover every refusal class as its own case: missing or mismatched\n  decision target; an inherited decision selected as target; a\n  non-pending decision (already settled); missing, mismatched, or\n  empty-response feedback evidence; a changed source baseline between\n  evidence selection and confirmation; an in-flight pending generation\n  (enrolled only); and an attempt to write an accepted head directly\n  (enrolled only).\n  ```\n  That is seven distinct cases, but the Acceptance criteria section says\n  ```\n  Each of the six refusal classes above stops the action before any\n  publication, with a distinct, named reason.\n  ```\n  A reader can't tell whether \"six\" is a plain miscount (all seven need their own named reason, matching step 2's own \"one named refusal per rejection class\") or whether two of the seven are meant to share one refusal reason \u2014 and if so, which two. The most likely candidates to collapse, the two enrolled-only cases (\"in-flight pending generation\" and \"write the accepted head directly\"), are materially different failure conditions (one is a leftover journal, the other is a route trying to bypass the candidate/promotion path entirely), so folding them into one shared name would itself violate step 2's \"one named refusal per rejection class\" requirement. Left as written, a test author following the acceptance bar's literal count could stop one refusal case short of the coverage the Testing section already commits to.",
+      "suggested_action": "Correct the acceptance criterion's count to match the seven distinct cases the Testing section lists, or state explicitly which two cases are intended to share a single named refusal reason and why, so the acceptance bar and the test list agree on how many distinct, named refusal reasons the route must produce.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refusal-class-count",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "9a770816b9fea704d4725a073d5c3660c414d2508b94e28532e0b087fce2923a",
+    "detail_bundle_digest": "cd44043951359557e33082b20f7634c9cd5d71f8d28500e099d06a89d948ce94",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/01-settle-one-decision-helper-plan-tool.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/02-decision-settlement-preflight-leaf-that.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/03-immutable-settlement-receipt-record-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/04-settle-one-decision-on-un-enrolled.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/05-settle-one-decision-on-enrolled-roadmap.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/06-decision-selector-evidence-selector.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/07-prove-both-lineages-produce-same.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 8,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-decision-settlement/08-document-settlement-route-retire-hand.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "057f1e27940bef911e911cb4337e640fc4a26e2f9a9d6f245413704db5eb159f",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

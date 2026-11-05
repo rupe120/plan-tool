@@ -1,0 +1,94 @@
+{
+  "version": 4,
+  "plan_slug": "bare-plan-audit-altitude",
+  "plan_path": "docs/implementation-plans/2-bare-plan-audit-altitude.md",
+  "created_at": "2026-08-18T02:58:12Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c5fc77f48d018c534b13777bc8a08d5c3b1c420120b4c78971d684aa853fde5f",
+  "code_fingerprint": {
+    "BACKLOG.md": "09807363e6eba9ddc5107ba2dfcf35758a214758074dc9cfee8d4684eba37e83",
+    "CLAUDE.md": "aa5d28fa5415fb6ee134f3f18364ad53da40d56ef260cda6a30bcc1e2d202a3c",
+    "docs/AUDIT_FLOW.md": "4175c286e7f35f2ce68e1c8aa1145fdabb8c0b65c8ebac2790f2b413a1168fc3",
+    "docs/HISTORICAL_BACKLOG_DECISIONS.md": "5e79f1d4a3b916d8bed6a25e2e761d6d2a692dc675dd041d832343393783e9a8",
+    "integrations/shared/DIRECTIVES.md": "9f701fd53adff7d8d35c12225f623ef805e10c0c9bee3dacb5aaa27152d9cc85",
+    "plan_tool/cli/completeness_cmd.py": "2a2a79eecc20edc65f629f13133fb1b04d22cf5ef32a5670743581ff080d7b9d",
+    "plan_tool/convergence_diagnosis.py": "951b517a0a513c3c0731972c8c5e7aba79fe13ec2db926089376ce44fa75aecf",
+    "plan_tool/prompts/plan-audit.md": "eee26a89addb9fa8aeb4c6bdf2bf05c43c4fa5a23335dbbfc80201e537abda4b",
+    "plan_tool/review.py": "a694160e97f95eff79150372bcc5dcbc1f234d7abe14163d4534f31fc7d4e2b0",
+    "tests/cli/test_completeness_cmd.py": "700bbc03ed3f5b2a8f8523de5d42de486e8cdf838230fea93c193cbc52cd5f02",
+    "tests/cli/test_convergence_cmd.py": "5d84c78d1025b9ef99e05ca20dca460ac30f33a74343ff9709dbf3057dc5fcf5",
+    "tests/test_convergence_diagnosis.py": "c5322e25c1e1a800e4a1e4d27c4985018fddffd6703924fc1835de15920b48d2",
+    "tests/test_review.py": "a321456be6734bc6ddb6d8ffe6807bee21914e2f87cd9cbbaff9d898e67502db"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md": "9f44d3a6cc2a9d892df1d53680588e15afe13304bc917e0158bb9e5eb0ea2d80",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md": "aacce91cd009e6afc8ad642bb533e78bab18469c99511a8c73d35a2aefc86c05",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md": "c77027fde3c2e1f7e9358ce3144b0a9838a7e0f4182bc75169f102a92c5ee408",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md": "446882015d5ce2c23405db40d75a6c2877312f00b07a88813228665195a04358",
+    "docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md": "74b181853db03ab727020a6cfce22af6df7ed2c2fd2a3441d913947272a8aaa9"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Bare Plan Audit Altitude\n\n`bare-plan-audit-altitude` \u00b7 generated 2026-08-18T02:58:12Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-8ae917e8]`: The plan's `## Acceptance criteria` names `_proposal_foundational_item`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f5ed3a67]`: The plan's `## Acceptance criteria` names `_render_sweep_context()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-0cbce6aa]`: The plan's `## Acceptance criteria` names `edit_drift`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit bare-plan-audit-altitude` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Bare Plan Audit Altitude\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_proposal_foundational_item`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `_render_sweep_context()`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `edit_drift`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "c5fc77f48d018c534b13777bc8a08d5c3b1c420120b4c78971d684aa853fde5f",
+    "detail_bundle_digest": "aa6f54fe5c667e12bee7406eb559bd96655d832686bfdda7601da5964654d01f",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/01-teach-bare-audit-require-property.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/02-classify-likely-bare-plan-mechanism.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/03-show-mechanism-advisory-convergence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/04-show-same-advisory-on-completeness.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/bare-plan-audit-altitude/05-document-policy-retire-backlog-290.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

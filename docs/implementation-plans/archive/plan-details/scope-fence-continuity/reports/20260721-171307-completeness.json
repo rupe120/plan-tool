@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "plan_slug": "scope-fence-continuity",
+  "plan_path": "docs/implementation-plans/2-scope-fence-continuity.md",
+  "created_at": "2026-07-21T17:13:07Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "37e77d736aa3d0873c7752405c65a2e518085e9435efa68473589555d9b30b87",
+  "code_fingerprint": {
+    "plan_tool/create.py": "874257f33bd25aae569e623937340eb8f58dc1ec806513c97a926e68538d947e",
+    "plan_tool/prompts/distill-seed.md": "30cf79ccfa22b689335191dba02ee2327270aacecc90d7f2ed6b2d41bbdc9421",
+    "plan_tool/prompts/synthesize-body.md": "82ef307bce49a5fdc45638229f5ad4753e2e33698869ff53f27faf5c3f029b0c",
+    "tests/test_create.py": "05187de05b578539c4e98bb507c6d2e0ef3da805fdb33aef76f911ff414238f9"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/scope-fence-continuity/01-keep-supplied-guardrail-sections.md": "2e00bed91229f15c70d788565b773748003fae8ba5f74795dace787e08c4f788",
+    "docs/implementation-plans/plan-details/scope-fence-continuity/02-warn-when-create-stage-drops-supplied.md": "84a0420b8916c230baece631cddeb7f9da8dd3b20b34b0788fecbf283932dd75"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Scope Fence Continuity\n\n`scope-fence-continuity` \u00b7 generated 2026-07-21T17:13:07Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run scope-fence-continuity` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Scope Fence Continuity\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run scope-fence-continuity` executes the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {}
+}

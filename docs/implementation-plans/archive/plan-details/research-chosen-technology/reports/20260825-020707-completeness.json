@@ -1,0 +1,233 @@
+{
+  "version": 4,
+  "plan_slug": "research-chosen-technology",
+  "plan_path": "docs/implementation-plans/2-research-chosen-technology.md",
+  "created_at": "2026-08-25T02:07:07Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "02d0b812e884fa3398f93dcff7cabede1cbf8355feede074b2dce7e05cf96332",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "d109674ca46194c62fdf4dc72e5e68b9601d7cb184a5199952815aa7c846ec5e",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/roadmap_artifacts.py": "587921875ae328966e3a048f1a150f0d7a09b87d7a84ef57ccf93eb845d03981",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap_artifacts.py": "2a59d556433f5e1b3de3d0aa8ba4c8c2b2b65b03c870731c632dc5311c4f7af8",
+    "tests/test_roadmap_format.py": "7bd70cb888afb75bed535439d4f736c0800021badc3ebabfa8624b7bb253d5ce"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/research-chosen-technology/01-optional-operator-descriptions-hosting.md": "25f7f8cc6ceea93e5fe20fcc43cd10c199a2a4b9353e7198496b3e9fc3cc5034",
+    "docs/implementation-plans/plan-details/research-chosen-technology/02-load-roadmap-product-names-field.md": "72f91220ac50afc1d4e3d2cd189c45fc592f6d3cd30ea74da4a323f2548a4291",
+    "docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-each-roadmap-product-no-source.md": "51c1c40a26e6f54279b9598deb5d66012beb1adbcc285425aeb7cdea28eff00c",
+    "docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md": "422068b4afcf1919bca7a9c8b3cc97a61cc93d3b790a89e294fb474e66d05e26"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Research Chosen Technology\n\n`research-chosen-technology` \u00b7 generated 2026-08-25T02:07:06Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `02d0b812e884fa3398f93dcff7cabede1cbf8355feede074b2dce7e05cf96332`\n- **Detail bundle digest:** `84806d6106423f6ca7969d959e47cfb79df1a827121924bcd906fc222a2a2e90`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 6\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply research-chosen-technology   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk research-chosen-technology  # alternative interactive review/apply\n\n- HIGH `[recorded-field-research-scope]`: Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) leaves the research input rule contradictory and unbound. Overview says `_build_research_context` \u201calso reads\u201d product strings \u201cnot just the plan title and step titles,\u201d while Architecture\u2019s Scope of the read says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and prose-only technology \u201cis out\u201d; `_prepare_create_plan` currently sends `body_source` directly to research for `--from` and `--from-existing`, using `_build_research_context` only without a body. The plan also never says which accepted roadmap belongs to a given create invocation, so an implementation can still mine prose, choose an unrelated roadmap, or skip roadmap inputs.\n  - Fix: Make the recorded-field scope authoritative by binding a roadmap-derived create to one accepted roadmap, routing every research entry through only its recorded product fields, and retaining current behavior when no roadmap is bound.\n- HIGH `[per-product-source-verdict]`: Overview requires results \u201cper technology rather than for the batch,\u201d Architecture makes \u201cthe research step returned at least one source\u201d the binary gate fact, step 2 carries field origins, and step 3 refuses \u201ceach roadmap product\u201d; none defines the required per-product result. At HEAD, `_REFERENCE_RESPONSE_CONTRACT`, `propose_references_from_claude`, and `Reference` produce one untagged `list[Reference]`, so a source for product A gives no verdict for product B; `ROADMAP_FORMAT.md` and `_parse_hosting_rows` / `_parse_store_rows` also impose no uniqueness on optional product names, so one failed name can have several originating fields despite the Acceptance criterion promising \u201cthe field that named it.\u201d\n  - Fix: Define a per-product source/no-source verdict that retains every originating field, chooses repeated-product handling, and supplies the refusal message before References publication.\n- HIGH `[research-refusal-phase]`: Step 3 says refusal is \u201cbefore publication\u201d and must bypass \u201cReferences replacement,\u201d but `create._prepare_create_plan` researches before `_publish_create_plan` while `_converge_create_plan` invokes `propose_references_from_claude` again after publication and can call `_patch_plan_body_section`. The plan never chooses whether a later no-source result reopens refusal, preserves the previously accepted References, or skips replacement, so `--iterate` can produce materially different outcomes and may fail after the plan already exists.\n  - Fix: Define the gate\u2019s phase boundary and the required no-source behavior for every later reference refresh, including whether accepted References remain unchanged.\n- MEDIUM `[refusal-retry-recovery]`: Architecture promises not to discard completed work, Risks says an operator who adds a description should not pay for full re-proposal, and steps 2 and 3 promise checkpoint preservation; however no retry contract says which proposed work remains reusable and which research result is rechecked after the recorded row changes. `_initial_steps_input_hash` and `_references_input_hash` currently have separate inputs, so either stale empty research can survive or earlier work can be regenerated unnecessarily.\n  - Fix: Specify and test the refusal-retry boundary: a row edit rechecks the affected research while retaining pre-refusal proposal work and leaving publication state untouched.\n- HIGH `[operator-description-round-trip]`: Step 1 adds operator descriptions, step 2 reads them, and Acceptance criteria documents them on both row kinds, but `roadmap_revision.HostingRowPayload` and `StoreRowPayload` are closed models with only `product` and their `to_row()` methods cannot carry a description into `roadmap_artifacts.HostingRow` or `StoreRow`. A roadmap revision cannot add or preserve the fallback description once an unrelated row edit occurs.\n  - Fix: Extend step 1\u2019s row-field contract through the roadmap revision input/output path and test that descriptions survive unrelated hosting and store edits.\n- HIGH `[roadmap-source-selection]`: Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) calls the source \u201cthe accepted roadmap\u201d without defining how a `create` invocation selects it or handles a missing or unreadable association. `create._prepare_create_plan` sends `body_source` for `--from-existing` and calls `_build_research_context` only without `--from`, while `roadmap_seed_state.locate_tracked_seed` is used only by `cli.authoring._confirm_invalidated_roadmap_seed`; the described route therefore cannot reach the associated roadmap during the normal seed-backed create path.\n  - Fix: define how a tracked seed resolves its current roadmap, how that input reaches the actual research call, and that unassociated or unavailable roadmap input follows the unchanged path.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[refusal-retry-recovery]`: Architecture requires the run to \u201cnot discard work already done,\u201d Risks says an operator adding a description \u201cshould not pay for a full re-proposal,\u201d and steps 2 and 3 promise checkpoint preservation plus no collision archive, plan, manifest, rollback, or References mutation. Testing and Acceptance criteria cover separate initial proceed/refuse cases, but neither requires a refusal followed by a description-added retry to retain those artifacts and reuse the prepared proposal.\n  - Fix: Add one acceptance scenario for refusal then description-added retry that proves prepared work is reused and every named publication artifact remains unchanged until the retry succeeds.\n- MEDIUM `[detection-false-refusal]`: The `Risks` item \u201cDetection quality is the likeliest defect\u201d says \u201cSee Stop/defer,\u201d but `## Deferred`, steps 1\u20134, Testing, and Acceptance criteria provide no stop/defer rule for a search that misses real public documentation. Operators can only clear that false refusal with the deliberately unjudged description, without the promised condition for treating detection as the defect.\n  - Fix: Add the explicit stop/defer trigger and follow-up destination while retaining the hard refusal and no-quality-check boundary.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Research Chosen Technology\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `02d0b812e884fa3398f93dcff7cabede1cbf8355feede074b2dce7e05cf96332`\n- **Detail bundle digest:** `84806d6106423f6ca7969d959e47cfb79df1a827121924bcd906fc222a2a2e90`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[recorded-field-research-scope]`: Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) leaves the research input rule contradictory and unbound. Overview says `_build_research_context` \u201calso reads\u201d product strings \u201cnot just the plan title and step titles,\u201d while Architecture\u2019s Scope of the read says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and prose-only technology \u201cis out\u201d; `_prepare_create_plan` currently sends `body_source` directly to research for `--from` and `--from-existing`, using `_build_research_context` only without a body. The plan also never says which accepted roadmap belongs to a given create invocation, so an implementation can still mine prose, choose an unrelated roadmap, or skip roadmap inputs.\n- HIGH `[per-product-source-verdict]`: Overview requires results \u201cper technology rather than for the batch,\u201d Architecture makes \u201cthe research step returned at least one source\u201d the binary gate fact, step 2 carries field origins, and step 3 refuses \u201ceach roadmap product\u201d; none defines the required per-product result. At HEAD, `_REFERENCE_RESPONSE_CONTRACT`, `propose_references_from_claude`, and `Reference` produce one untagged `list[Reference]`, so a source for product A gives no verdict for product B; `ROADMAP_FORMAT.md` and `_parse_hosting_rows` / `_parse_store_rows` also impose no uniqueness on optional product names, so one failed name can have several originating fields despite the Acceptance criterion promising \u201cthe field that named it.\u201d\n- HIGH `[research-refusal-phase]`: Step 3 says refusal is \u201cbefore publication\u201d and must bypass \u201cReferences replacement,\u201d but `create._prepare_create_plan` researches before `_publish_create_plan` while `_converge_create_plan` invokes `propose_references_from_claude` again after publication and can call `_patch_plan_body_section`. The plan never chooses whether a later no-source result reopens refusal, preserves the previously accepted References, or skips replacement, so `--iterate` can produce materially different outcomes and may fail after the plan already exists.\n- MEDIUM `[refusal-retry-recovery]`: Architecture promises not to discard completed work, Risks says an operator who adds a description should not pay for full re-proposal, and steps 2 and 3 promise checkpoint preservation; however no retry contract says which proposed work remains reusable and which research result is rechecked after the recorded row changes. `_initial_steps_input_hash` and `_references_input_hash` currently have separate inputs, so either stale empty research can survive or earlier work can be regenerated unnecessarily.\n- HIGH `[operator-description-round-trip]`: Step 1 adds operator descriptions, step 2 reads them, and Acceptance criteria documents them on both row kinds, but `roadmap_revision.HostingRowPayload` and `StoreRowPayload` are closed models with only `product` and their `to_row()` methods cannot carry a description into `roadmap_artifacts.HostingRow` or `StoreRow`. A roadmap revision cannot add or preserve the fallback description once an unrelated row edit occurs.\n- HIGH `[roadmap-source-selection]`: Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) calls the source \u201cthe accepted roadmap\u201d without defining how a `create` invocation selects it or handles a missing or unreadable association. `create._prepare_create_plan` sends `body_source` for `--from-existing` and calls `_build_research_context` only without `--from`, while `roadmap_seed_state.locate_tracked_seed` is used only by `cli.authoring._confirm_invalidated_roadmap_seed`; the described route therefore cannot reach the associated roadmap during the normal seed-backed create path.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[refusal-retry-recovery]`: Architecture requires the run to \u201cnot discard work already done,\u201d Risks says an operator adding a description \u201cshould not pay for a full re-proposal,\u201d and steps 2 and 3 promise checkpoint preservation plus no collision archive, plan, manifest, rollback, or References mutation. Testing and Acceptance criteria cover separate initial proceed/refuse cases, but neither requires a refusal followed by a description-added retry to retain those artifacts and reuse the prepared proposal.\n- MEDIUM `[detection-false-refusal]`: The `Risks` item \u201cDetection quality is the likeliest defect\u201d says \u201cSee Stop/defer,\u201d but `## Deferred`, steps 1\u20134, Testing, and Acceptance criteria provide no stop/defer rule for a search that misses real public documentation. Operators can only clear that false refusal with the deliberately unjudged description, without the promised condition for treating detection as the defect.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-6e17631a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) leaves the research input rule con",
+      "body": "Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) leaves the research input rule contradictory and unbound. Overview says `_build_research_context` \u201calso reads\u201d product strings \u201cnot just the plan title and step titles,\u201d while Architecture\u2019s Scope of the read says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and prose-only technology \u201cis out\u201d; `_prepare_create_plan` currently sends `body_source` directly to research for `--from` and `--from-existing`, using `_build_research_context` only without a body. The plan also never says which accepted roadmap belongs to a given create invocation, so an implementation can still mine prose, choose an unrelated roadmap, or skip roadmap inputs.",
+      "suggested_action": "Make the recorded-field scope authoritative by binding a roadmap-derived create to one accepted roadmap, routing every research entry through only its recorded product fields, and retaining current behavior when no roadmap is bound.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recorded-field-research-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-45346a79",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Overview requires results \u201cper technology rather than for the batch,\u201d Architecture makes \u201cthe research step returned at ",
+      "body": "Overview requires results \u201cper technology rather than for the batch,\u201d Architecture makes \u201cthe research step returned at least one source\u201d the binary gate fact, step 2 carries field origins, and step 3 refuses \u201ceach roadmap product\u201d; none defines the required per-product result. At HEAD, `_REFERENCE_RESPONSE_CONTRACT`, `propose_references_from_claude`, and `Reference` produce one untagged `list[Reference]`, so a source for product A gives no verdict for product B; `ROADMAP_FORMAT.md` and `_parse_hosting_rows` / `_parse_store_rows` also impose no uniqueness on optional product names, so one failed name can have several originating fields despite the Acceptance criterion promising \u201cthe field that named it.\u201d",
+      "suggested_action": "Define a per-product source/no-source verdict that retains every originating field, chooses repeated-product handling, and supplies the refusal message before References publication.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "per-product-source-verdict",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-b8fe669a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 says refusal is \u201cbefore publication\u201d and must bypass \u201cReferences replacement,\u201d but `create._prepare_create_plan` ",
+      "body": "Step 3 says refusal is \u201cbefore publication\u201d and must bypass \u201cReferences replacement,\u201d but `create._prepare_create_plan` researches before `_publish_create_plan` while `_converge_create_plan` invokes `propose_references_from_claude` again after publication and can call `_patch_plan_body_section`. The plan never chooses whether a later no-source result reopens refusal, preserves the previously accepted References, or skips replacement, so `--iterate` can produce materially different outcomes and may fail after the plan already exists.",
+      "suggested_action": "Define the gate\u2019s phase boundary and the required no-source behavior for every later reference refresh, including whether accepted References remain unchanged.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "research-refusal-phase",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-7424fdec",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture promises not to discard completed work, Risks says an operator who adds a description should not pay for fu",
+      "body": "Architecture promises not to discard completed work, Risks says an operator who adds a description should not pay for full re-proposal, and steps 2 and 3 promise checkpoint preservation; however no retry contract says which proposed work remains reusable and which research result is rechecked after the recorded row changes. `_initial_steps_input_hash` and `_references_input_hash` currently have separate inputs, so either stale empty research can survive or earlier work can be regenerated unnecessarily.",
+      "suggested_action": "Specify and test the refusal-retry boundary: a row edit rechecks the affected research while retaining pre-refusal proposal work and leaving publication state untouched.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refusal-retry-recovery",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-aab1c86d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 adds operator descriptions, step 2 reads them, and Acceptance criteria documents them on both row kinds, but `roa",
+      "body": "Step 1 adds operator descriptions, step 2 reads them, and Acceptance criteria documents them on both row kinds, but `roadmap_revision.HostingRowPayload` and `StoreRowPayload` are closed models with only `product` and their `to_row()` methods cannot carry a description into `roadmap_artifacts.HostingRow` or `StoreRow`. A roadmap revision cannot add or preserve the fallback description once an unrelated row edit occurs.",
+      "suggested_action": "Extend step 1\u2019s row-field contract through the roadmap revision input/output path and test that descriptions survive unrelated hosting and store edits.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "operator-description-round-trip",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-0a311883",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) calls the source \u201cthe accepted roa",
+      "body": "Step 2 (`Load roadmap product names, field origins, and descriptions into research\u2026`) calls the source \u201cthe accepted roadmap\u201d without defining how a `create` invocation selects it or handles a missing or unreadable association. `create._prepare_create_plan` sends `body_source` for `--from-existing` and calls `_build_research_context` only without `--from`, while `roadmap_seed_state.locate_tracked_seed` is used only by `cli.authoring._confirm_invalidated_roadmap_seed`; the described route therefore cannot reach the associated roadmap during the normal seed-backed create path.",
+      "suggested_action": "define how a tracked seed resolves its current roadmap, how that input reaches the actual research call, and that unassociated or unavailable roadmap input follows the unchanged path.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "roadmap-source-selection",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-7424fdec",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture requires the run to \u201cnot discard work already done,\u201d Risks says an operator adding a description \u201cshould no",
+      "body": "Architecture requires the run to \u201cnot discard work already done,\u201d Risks says an operator adding a description \u201cshould not pay for a full re-proposal,\u201d and steps 2 and 3 promise checkpoint preservation plus no collision archive, plan, manifest, rollback, or References mutation. Testing and Acceptance criteria cover separate initial proceed/refuse cases, but neither requires a refusal followed by a description-added retry to retain those artifacts and reuse the prepared proposal.",
+      "suggested_action": "Add one acceptance scenario for refusal then description-added retry that proves prepared work is reused and every named publication artifact remains unchanged until the retry succeeds.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "refusal-retry-recovery",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-3948fab7",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The `Risks` item \u201cDetection quality is the likeliest defect\u201d says \u201cSee Stop/defer,\u201d but `## Deferred`, steps 1\u20134, Testin",
+      "body": "The `Risks` item \u201cDetection quality is the likeliest defect\u201d says \u201cSee Stop/defer,\u201d but `## Deferred`, steps 1\u20134, Testing, and Acceptance criteria provide no stop/defer rule for a search that misses real public documentation. Operators can only clear that false refusal with the deliberately unjudged description, without the promised condition for treating detection as the defect.",
+      "suggested_action": "Add the explicit stop/defer trigger and follow-up destination while retaining the hard refusal and no-quality-check boundary.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "detection-false-refusal",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "02d0b812e884fa3398f93dcff7cabede1cbf8355feede074b2dce7e05cf96332",
+      "detail_bundle_digest": "84806d6106423f6ca7969d959e47cfb79df1a827121924bcd906fc222a2a2e90",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/01-optional-operator-descriptions-hosting.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/02-load-roadmap-product-names-field.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-each-roadmap-product-no-source.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "9148d97382b8eea24943db46d9323eb3a750301afc8f7b0456ef309b3c7fe7e1",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

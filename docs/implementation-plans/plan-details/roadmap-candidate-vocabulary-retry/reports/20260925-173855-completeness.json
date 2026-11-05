@@ -1,0 +1,130 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-candidate-vocabulary-retry",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-vocabulary-retry.md",
+  "created_at": "2026-09-25T17:38:55Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b9bec7a5d24cc8fc3cc0db5f7b77d9eae7df46818d785e0b5f390a1e2aea4dd4",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "c3740d565b03ab0cf84a0e70bda125195045357e9094c63b497175df7334109b",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "16318b8b7603c6910d1d607fe69647fff27688ccdd8f57de47344482534734de",
+    "plan_tool/roadmap_candidate_context.py": "f1dfc225b217b5a50cd2b6a7b96bb3ac681007cd68a2d7a2bb0d0962fdf2f164",
+    "plan_tool/roadmap_candidate_run.py": "581c7bf1b585939688839f47169ddf03eafa4151c224ebeb6b5af6018ddab71f",
+    "tests/test_roadmap_candidate_run.py": "bcc39ec078d2710326c882c1bc869cbf1c17ef2e9b6e3c2b3933374e763676de"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md": "0eec3f631ea0c54e0994ff385cf1df1ba32fd85a746ee98632949eb7729295be",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md": "9d280d57c8ef63bde489dbc7ea30769013474e38a763197d8926c9fb1e2d7a7c",
+    "docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md": "88ef265d2dd4a125b857ae183c010bd5ae23d4587c38cde04b332b1dc878ae12"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Candidate Vocabulary Retry\n\n`roadmap-candidate-vocabulary-retry` \u00b7 generated 2026-09-25T17:38:55Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `7742361e374d6d97099270af333ba59868608cc401623fd4a848753bb0d1742a`\n- **Detail bundle digest:** `2d2682de66c4266b56d7edaf17a10454c1968c9abe3eafbe17f21cbd315232c4`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (+0 vs. first audit)\n- **Detail-bundle size:** 26088 bytes (+26088 vs. first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[stored-batch-prompt-hints]` [confidence: limited]: Step 1 leaves stored-batch model calls without the required source-bound hint route. Architecture says:\n  ```\n  The same resolution applies when a stored batch is replayed into a new model call.\n  ```\n  but step 1 says:\n  ```\n  Preserve compatible behavior for existing prompt callers, including the review callers in `plan_tool/roadmap_candidate_review.py`, unless they supply the new prompt-only input.\n  ```\n  `roadmap_candidate_review._invoke_replacement` and `run_structural_candidate_edit` call `render_candidate_delta_prompt` from stored capsule/receipt data, while that renderer has no source-resolution input; step 1\u2019s tests also omit the promised replay and source-binding-refusal cases. The implementation can therefore satisfy fresh-batch hints while a stored batch is replayed with no verified collection hint.\n  - Fix: Define the source-bound prompt-hint route for every stored-batch model call, including refusal before invocation when its recorded source or row membership cannot be proved, and cover replayed calls.\n- MEDIUM `[ledger-reply-correction-ownership]` [confidence: limited]: Step 1 and step 2 both own the same retry behavior, so their completion boundaries conflict. Step 1 says:\n  ```\n  Update `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so parsing or materialization rejection produces one correction prompt and one final model attempt.\n  ```\n  while step 2 says:\n  ```\n  Extend `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so an error from `parse_candidate_delta` or a refusal from `materialize_candidate` receives one correction attempt.\n  ```\n  Step 1 also requires corrected-success, exhaustion, transport, and storage retry tests that step 2 repeats. Since step 2 depends on step 1, step 1 either ships step 2\u2019s feature early or cannot meet its own acceptance criteria.\n  - Fix: Make step 1 own only prompt vocabulary and source-bound hints, and make step 2 the sole owner of correction, rejected-response diagnostics, and retry tests.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-0d91f46c]` [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-398bb909]` [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d1d835d]` [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-84586581]` [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Candidate Vocabulary Retry\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `7742361e374d6d97099270af333ba59868608cc401623fd4a848753bb0d1742a`\n- **Detail bundle digest:** `2d2682de66c4266b56d7edaf17a10454c1968c9abe3eafbe17f21cbd315232c4`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[stored-batch-prompt-hints]` [confidence: limited]: Step 1 leaves stored-batch model calls without the required source-bound hint route. Architecture says:\n  ```\n  The same resolution applies when a stored batch is replayed into a new model call.\n  ```\n  but step 1 says:\n  ```\n  Preserve compatible behavior for existing prompt callers, including the review callers in `plan_tool/roadmap_candidate_review.py`, unless they supply the new prompt-only input.\n  ```\n  `roadmap_candidate_review._invoke_replacement` and `run_structural_candidate_edit` call `render_candidate_delta_prompt` from stored capsule/receipt data, while that renderer has no source-resolution input; step 1\u2019s tests also omit the promised replay and source-binding-refusal cases. The implementation can therefore satisfy fresh-batch hints while a stored batch is replayed with no verified collection hint.\n- MEDIUM `[ledger-reply-correction-ownership]` [confidence: limited]: Step 1 and step 2 both own the same retry behavior, so their completion boundaries conflict. Step 1 says:\n  ```\n  Update `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so parsing or materialization rejection produces one correction prompt and one final model attempt.\n  ```\n  while step 2 says:\n  ```\n  Extend `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so an error from `parse_candidate_delta` or a refusal from `materialize_candidate` receives one correction attempt.\n  ```\n  Step 1 also requires corrected-success, exhaustion, transport, and storage retry tests that step 2 repeats. Since step 2 depends on step 1, step 1 either ships step 2\u2019s feature early or cannot meet its own acceptance criteria.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `component_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `entityrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `patternrow`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `system_patterns`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-candidate-vocabulary-retry --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bceb3caf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 leaves stored-batch model calls without the required source-bound hint route. Architecture says:",
+      "body": "Step 1 leaves stored-batch model calls without the required source-bound hint route. Architecture says:\n  ```\n  The same resolution applies when a stored batch is replayed into a new model call.\n  ```\n  but step 1 says:\n  ```\n  Preserve compatible behavior for existing prompt callers, including the review callers in `plan_tool/roadmap_candidate_review.py`, unless they supply the new prompt-only input.\n  ```\n  `roadmap_candidate_review._invoke_replacement` and `run_structural_candidate_edit` call `render_candidate_delta_prompt` from stored capsule/receipt data, while that renderer has no source-resolution input; step 1\u2019s tests also omit the promised replay and source-binding-refusal cases. The implementation can therefore satisfy fresh-batch hints while a stored batch is replayed with no verified collection hint.",
+      "suggested_action": "Define the source-bound prompt-hint route for every stored-batch model call, including refusal before invocation when its recorded source or row membership cannot be proved, and cover replayed calls.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stored-batch-prompt-hints",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-743a296b",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 and step 2 both own the same retry behavior, so their completion boundaries conflict. Step 1 says:",
+      "body": "Step 1 and step 2 both own the same retry behavior, so their completion boundaries conflict. Step 1 says:\n  ```\n  Update `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so parsing or materialization rejection produces one correction prompt and one final model attempt.\n  ```\n  while step 2 says:\n  ```\n  Extend `plan_tool/roadmap_candidate_run.py:_run_batch_candidate_proposal` so an error from `parse_candidate_delta` or a refusal from `materialize_candidate` receives one correction attempt.\n  ```\n  Step 1 also requires corrected-success, exhaustion, transport, and storage retry tests that step 2 repeats. Since step 2 depends on step 1, step 1 either ships step 2\u2019s feature early or cannot meet its own acceptance criteria.",
+      "suggested_action": "Make step 1 own only prompt vocabulary and source-bound hints, and make step 2 the sole owner of correction, rejected-response diagnostics, and retry tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "ledger-reply-correction-ownership",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "7742361e374d6d97099270af333ba59868608cc401623fd4a848753bb0d1742a",
+      "detail_bundle_digest": "2d2682de66c4266b56d7edaf17a10454c1968c9abe3eafbe17f21cbd315232c4",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/01-show-valid-collection-names.md",
+          "state": "present",
+          "digest": "0eec3f631ea0c54e0994ff385cf1df1ba32fd85a746ee98632949eb7729295be"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/02-retry-rejected-ledger-replies-once.md",
+          "state": "present",
+          "digest": "9d280d57c8ef63bde489dbc7ea30769013474e38a763197d8926c9fb1e2d7a7c"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-candidate-vocabulary-retry/03-remove-ippt-10-promotion-stub-after.md",
+          "state": "present",
+          "digest": "88ef265d2dd4a125b857ae183c010bd5ae23d4587c38cde04b332b1dc878ae12"
+        }
+      ],
+      "source_seed_digest": "51eb3ef89135657369e9b153c1f5efc06373814a60c81ed86c53bfff5ff08ef7",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 26088,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

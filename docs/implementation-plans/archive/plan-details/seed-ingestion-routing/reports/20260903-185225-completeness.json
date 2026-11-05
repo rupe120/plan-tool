@@ -1,0 +1,147 @@
+{
+  "version": 4,
+  "plan_slug": "seed-ingestion-routing",
+  "plan_path": "docs/implementation-plans/2-seed-ingestion-routing.md",
+  "created_at": "2026-09-03T18:52:25Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4537a46a925960bb5c1f04abb8e5404658723d6f2a17ae5afabd75c0fab53a37",
+  "code_fingerprint": {
+    "BACKLOG.md": "bd6637a344683ec6b796830d15aae4615b285c273355efdf28b2336a73908b28",
+    "README.md": "036dd2a41f27a6fe61aae339c55070f5e9b81584765f55516474ee53e8bd3b1a",
+    "SEED_FORMAT.md": "20a100da5071ceef20e8b8aa568bd813681fe7173f981246324f42fb05f24994",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "c96841fa7648a05062769f8313f2394d3f78bc9f53ec1f541545d3f658277aad",
+    "docs/CREATE_RESUME_FLOW.md": "7da66370ff9c6a9feff3b0b7d5bde6806dd60975bf4c58193ea917d4f6e0ce4f",
+    "docs/CREATE_SEED_INGESTION_CONTRACT.md": "45d43b4194f90a2ae0a3acba160dd176f73e1342bda368ed875ee70667ef118d",
+    "docs/RESUME_FLOW.md": "59829f000d4d5ab1b2525c8c5a52ab86036aad6e0b02662a8fadd8b770c9c70c",
+    "docs/cli/create.md": "faecd3d78a1d85f5e7a2620eb90fb000b1ae46d4a6048cace0e9cef3080fc19b",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-seed-ingestion.md": "9c561209da07870498ddc634b7e65787760af551990d94176e1d060bc9c8c8fb",
+    "plan_tool/cli/authoring.py": "2d13b989e2afe5bfb1fd9dca20ed7c1c9017a823ea077fd8bc967042d9efb25d",
+    "plan_tool/create.py": "76d97a7cd9583b021b166c1ceba0bcbec0f037c880202f28a67644ca3d44352f",
+    "plan_tool/distill_thresholds.py": "2088c7a36c57d6d7c51fbc8a6dbd688fe40cc57d2412f3070319005c8a02c054",
+    "plan_tool/prompts/distill-seed.md": "b7ca52ecc292d8e093d74bb2fcdce98c5bc34a5862a2ad3c5e061491119da2bb",
+    "plan_tool/split_criteria.py": "9953efa97e5e457a3ed7619bf39cffbb9d38d230551e6e79244017fd25e762b6",
+    "tests/cli/test_authoring_cmds.py": "7832c51c359d90b56a268f70cd3ee2b83c334574a9299603f2ea9a7158e6a509",
+    "tests/test_create.py": "8fad4f0c25e4df7e96b7a89ef0f00acbd5ba7d2da35232b3ee3618a97d8f725d",
+    "tests/test_distill.py": "6a617944886e2d7b0660ab5998f5665e55e9940ae12572c77ce64176ebb94e72",
+    "tests/test_split_criteria.py": "ea2c48bcd490e3aac05d4fe2c1bac22f48b5467e7618863aa3d87da693dadf99"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md": "0dfcbf58eceede39dcf1f897f3c6227419f2ad999e5da9152ded53453772560c",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md": "0d2da4565af440301daba7abb15072539b2e35362028e06165569a8849e2a084",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md": "0714c8d91bcf1a637a9a2028c9e6f4c5f060f2cb689ed2b5e1d957e3468136c6",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md": "e48526c2356aed1a16b0cd8ee78ad765d318e16652850e82ad728286412bb095",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md": "0eb887d8615fab2a66957e9a0463754ae1cf5f458d3328b349c0a9b58fcf61f6",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md": "f340b35ed81b9f279059d92cc3a6fc1a8e56d0609e166a2a8efcf2f2d8ab366f",
+    "docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md": "286eb67f900a89c4b79fedd1de715f22977707ce68d2b6b91e9f8ff4dee296f4"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Seed Ingestion Routing\n\n`seed-ingestion-routing` \u00b7 generated 2026-09-03T18:52:25Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 2\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply seed-ingestion-routing   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[preflight-refusal-observability]` [confidence: limited]: `## Architecture` says \u201cThe missing, placeholder, or duplicate References preflight is the only refusal exception with no run record,\u201d but step 1\u2019s Implementation says to classify after \u201cexisting unmatched-fence protection\u201d and preserve `reject_unmatched_create_sources`. At HEAD, `plan_tool/cli/authoring.py:cmd_create` runs that protection before `RunLogWriter.start`, and `plan_tool/create.py:validate_from_existing_seed` also rejects an unmatched fence; a source with valid References can therefore exit with neither a selected route nor a run record. This conflicts with the terminal lifecycle table and step 7\u2019s documentation contract.\n  - Fix: Define unmatched-fence refusal as an explicit preflight/no-record condition and align the lifecycle table, step 1 behavior/tests, and step 7 documentation with that complete preflight contract.\n\n## Pending concept decisions\n\nConcept deferrals still awaiting a human decision \u2014 advisory, never blocking. Resolve each with `plan-tool scope-review seed-ingestion-routing`.\n\n### Unsigned deferrals \u2014 a proposed defer/wont_do not yet reviewed\n\n- INFO `[bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]` [confidence: limited]: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc]` [confidence: limited]: Concept `22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc` (terminal route lifecycle) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-46511cd1]` [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_create`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-eb5567f7]` [confidence: limited]: The plan's `## Acceptance criteria` names `from_description`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-4814ee15]` [confidence: limited]: The plan's `## Acceptance criteria` names `seed_body`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit seed-ingestion-routing` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Seed Ingestion Routing\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[preflight-refusal-observability]` [confidence: limited]: `## Architecture` says \u201cThe missing, placeholder, or duplicate References preflight is the only refusal exception with no run record,\u201d but step 1\u2019s Implementation says to classify after \u201cexisting unmatched-fence protection\u201d and preserve `reject_unmatched_create_sources`. At HEAD, `plan_tool/cli/authoring.py:cmd_create` runs that protection before `RunLogWriter.start`, and `plan_tool/create.py:validate_from_existing_seed` also rejects an unmatched fence; a source with valid References can therefore exit with neither a selected route nor a run record. This conflicts with the terminal lifecycle table and step 7\u2019s documentation contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `cmd_create`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `from_description`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `seed_body`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[concept-bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06]` [confidence: limited]: Concept `bafd6791befc230e29100c87744ed929a6cb00c4e71a1168fdcba790706ccf06` (architecture) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n- INFO `[concept-22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc]` [confidence: limited]: Concept `22a740fdbaa54ae54299f4be8f7189fd05c322dc42e247bba3ec3e71d1b4abdc` (terminal route lifecycle) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk seed-ingestion-routing` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bb063532",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`## Architecture` says \u201cThe missing, placeholder, or duplicate References preflight is the only refusal exception with n",
+      "body": "`## Architecture` says \u201cThe missing, placeholder, or duplicate References preflight is the only refusal exception with no run record,\u201d but step 1\u2019s Implementation says to classify after \u201cexisting unmatched-fence protection\u201d and preserve `reject_unmatched_create_sources`. At HEAD, `plan_tool/cli/authoring.py:cmd_create` runs that protection before `RunLogWriter.start`, and `plan_tool/create.py:validate_from_existing_seed` also rejects an unmatched fence; a source with valid References can therefore exit with neither a selected route nor a run record. This conflicts with the terminal lifecycle table and step 7\u2019s documentation contract.",
+      "suggested_action": "Define unmatched-fence refusal as an explicit preflight/no-record condition and align the lifecycle table, step 1 behavior/tests, and step 7 documentation with that complete preflight contract.",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "preflight-refusal-observability",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "6b33002e367a5d8e63dda620e2bcc0da3c2eb30c9a7514daca68173f4bd34451",
+    "detail_bundle_digest": "e9fa7e80fa5811798968202379255c97963762bec3e9af5d06e4030425e07951",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/01-classify-every-file-backed-source.md",
+        "state": "present",
+        "digest": "0dfcbf58eceede39dcf1f897f3c6227419f2ad999e5da9152ded53453772560c"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/02-replace-file-backed-16-kib-shortcut.md",
+        "state": "present",
+        "digest": "0d2da4565af440301daba7abb15072539b2e35362028e06165569a8849e2a084"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/03-give-file-backed-preparation-one.md",
+        "state": "present",
+        "digest": "0714c8d91bcf1a637a9a2028c9e6f4c5f060f2cb689ed2b5e1d957e3468136c6"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/04-refuse-unsupported-normalized-evidence.md",
+        "state": "present",
+        "digest": "e48526c2356aed1a16b0cd8ee78ad765d318e16652850e82ad728286412bb095"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/05-publish-route-exit-no-distill.md",
+        "state": "present",
+        "digest": "0eb887d8615fab2a66957e9a0463754ae1cf5f458d3328b349c0a9b58fcf61f6"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/06-set-versioned-per-route-checkpoints.md",
+        "state": "present",
+        "digest": "f340b35ed81b9f279059d92cc3a6fc1a8e56d0609e166a2a8efcf2f2d8ab366f"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/seed-ingestion-routing/07-update-ingestion-resume-cli-seed-format.md",
+        "state": "present",
+        "digest": "286eb67f900a89c4b79fedd1de715f22977707ce68d2b6b91e9f8ff4dee296f4"
+      }
+    ],
+    "source_seed_digest": "7c2196a3db0a82d1ca1dab770724352c0512cd585c60f961fd469f456f688d24",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

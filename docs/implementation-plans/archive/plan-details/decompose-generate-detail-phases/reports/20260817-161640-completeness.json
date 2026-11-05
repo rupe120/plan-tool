@@ -1,0 +1,108 @@
+{
+  "version": 4,
+  "plan_slug": "decompose-generate-detail-phases",
+  "plan_path": "docs/implementation-plans/2-decompose-generate-detail-phases.md",
+  "created_at": "2026-08-17T16:16:40Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "18970878a57821c16c75b47cc2f7aec7a89523634a4e95f2234f8551ee4e3608",
+  "code_fingerprint": {
+    "plan_tool/detail.py": "2fc5b90a678602adf36677c9b022f14b734d2a11115bcb108dfc2a74e202d2af",
+    "tests/test_detail.py": "603c905fa827a06c5c7954e3e81e1111cdb20ff3efc8278eb006c9645f7761a0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-signature.md": "287e9e8ec558690ba526f4af1cd111a5052b2b5659fe7c3b58b58df1cf53f96d",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-generate-detail-setup-phases.md": "8bf65c1487e03d21ea365e96423143868428cd7420eb01da674d858cae2cefa9",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-per-step-authoring-lifecycle.md": "6c5f1f3dc728e0ea81f28d666c9d47e2914c2af5d788af42ee5100f367098829",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-split-handling-preserving.md": "4ed3a1768ba443f937059f3bccde4919aabb92091ac10117be98a6afbb18d686",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-re-entry-preserving-its.md": "de773b218806683b6a3990a9d3f06921f3857e6084f2db6a1a4c96a5f415a00d",
+    "docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-concept-persistence-shorten.md": "c67f7ba4cc5eecd3b6bf4d12d23afa9959ec7bbd984a6275a8f6e91cb24d2610"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Decompose Generate Detail Phases\n\n`decompose-generate-detail-phases` \u00b7 generated 2026-08-17T16:16:40Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply decompose-generate-detail-phases   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk decompose-generate-detail-phases  # alternative interactive review/apply\n\n- HIGH `[per-step-phase-boundary]`: Architecture assigns \u201crecursive re-entry behavior, and access to the pre-scan's `invoke_total` and `invoke_idx` correction\u201d to the per-step convergence loop, while step 5 (`Extract Trigger 2 re-entry`) assigns re-entry separately. At HEAD, `plan_tool/detail.py:generate_detail` corrects `invoke_total` before `_author_step_detail` and recursively authors split halves in the post-loop `if structural_split_ids` block, so steps 1 (`Characterize generate_detail's signature and extract its per-step convergence loop`), 3 (`Extract the per-step authoring lifecycle`), and 5 permit conflicting extraction boundaries.\n  - Fix: Define the convergence helper\u2019s inputs and returned structural state, keep invocation accounting in the authoring lifecycle and post-loop Trigger 2 re-entry in step 5, then align Architecture and the acceptance criterion.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-7e73bab7]`: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-20b44f63]`: The plan's `## Acceptance criteria` names `min_split`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-b16f44b3]`: The plan's `## Acceptance criteria` names `resume=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5d7e165f]`: The plan's `## Acceptance criteria` names `written_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-2ca8604e]`: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step4-granularity-merge-e6e32412]`: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO `[step5-granularity-merge-3dfeca58]`: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit decompose-generate-detail-phases` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Decompose Generate Detail Phases\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[per-step-phase-boundary]`: Architecture assigns \u201crecursive re-entry behavior, and access to the pre-scan's `invoke_total` and `invoke_idx` correction\u201d to the per-step convergence loop, while step 5 (`Extract Trigger 2 re-entry`) assigns re-entry separately. At HEAD, `plan_tool/detail.py:generate_detail` corrects `invoke_total` before `_author_step_detail` and recursively authors split halves in the post-loop `if structural_split_ids` block, so steps 1 (`Characterize generate_detail's signature and extract its per-step convergence loop`), 3 (`Extract the per-step authoring lifecycle`), and 5 permit conflicting extraction boundaries.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `generate_detail`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `min_split`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `resume=false`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `written_keys`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 2 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 4 and 5 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n- INFO: Steps 5 and 6 are dependency-adjacent and touch the identical file set (['plan_tool/detail.py', 'tests/test_detail.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply decompose-generate-detail-phases` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-381475bf",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture assigns \u201crecursive re-entry behavior, and access to the pre-scan's `invoke_total` and `invoke_idx` correcti",
+      "body": "Architecture assigns \u201crecursive re-entry behavior, and access to the pre-scan's `invoke_total` and `invoke_idx` correction\u201d to the per-step convergence loop, while step 5 (`Extract Trigger 2 re-entry`) assigns re-entry separately. At HEAD, `plan_tool/detail.py:generate_detail` corrects `invoke_total` before `_author_step_detail` and recursively authors split halves in the post-loop `if structural_split_ids` block, so steps 1 (`Characterize generate_detail's signature and extract its per-step convergence loop`), 3 (`Extract the per-step authoring lifecycle`), and 5 permit conflicting extraction boundaries.",
+      "suggested_action": "Define the convergence helper\u2019s inputs and returned structural state, keep invocation accounting in the authoring lifecycle and post-loop Trigger 2 re-entry in step 5, then align Architecture and the acceptance criterion.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "per-step-phase-boundary",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "18970878a57821c16c75b47cc2f7aec7a89523634a4e95f2234f8551ee4e3608",
+    "detail_bundle_digest": "b4f2bf0ceda610b052baacc33918bb21a927cd06095f5b439a381c42a2afb602",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/01-characterize-generate-detail-signature.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/02-extract-generate-detail-setup-phases.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/03-extract-per-step-authoring-lifecycle.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/04-extract-phase-split-handling-preserving.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/05-extract-trigger-re-entry-preserving-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/decompose-generate-detail-phases/06-extract-concept-persistence-shorten.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

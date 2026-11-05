@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "plan_slug": "depends-on-consumes-note",
+  "plan_path": "docs/implementation-plans/2-depends-on-consumes-note.md",
+  "created_at": "2026-08-08T19:37:17Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "57be8e9fe45bf9afd1e797db546640fb4b0cf07bba85acce41848b6edd6b6f32",
+  "code_fingerprint": {
+    "BACKLOG.md": "1243201d751cb348af5ba16695dd0c81acf6a93a564f68fbcc23c39246caf21c",
+    "PLAN_FORMAT.md": "82f07265c4a5ea82a9ee2a77528d8ccf0d9f67583a303f2ae44f4116980514ba",
+    "plan_tool/create.py": "dbf52a421274b2af9dd480edf9a59357867616b5d6714e57749836ed877f2ece",
+    "plan_tool/schema.py": "7623b313dbcad4438afe93e00063937aa7694ec8ea6b07ac279f3c5e2dbcfa26",
+    "plan_tool/scope_out.py": "135a41e407084423915ea9cf6bae0f9433f6df41d9f765504a3232d558607ec1",
+    "tests/test_create.py": "e9570b9beb6cf072f1b80139cb919c0ac1aae8f5396d12c149e8e809b475f0de",
+    "tests/test_detail.py": "006cbc02962c99c4c543e2e21444ce8d0c6e862dff0f94db43ce7f5db83dc323",
+    "tests/test_fingerprint.py": "e8c96c12a15d10fb721cb3f705a41e098fed3a60856e3506aa7340bad32fc427",
+    "tests/test_launcher.py": "a96879672994ea6b7646639684d6f90b3619729c0dfaeb06e12bd64e34aff4ca",
+    "tests/test_parser.py": "851a36960a7ca401327d286ba9df3432494ca8ef32ecd7d230e48394e35c79c2",
+    "tests/test_scope_out.py": "f15a3353dff0dcef31125740bb0fb4f82150af11f125d8ebc82bff9c4ea4b098"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/01-depends-on-notes-field-step-reject-key.md": "170092d590ddf7e4547093393f2f49d2c5b6376f34376b30d503ee90969c44fd",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/02-carry-notes-their-edges-through-split.md": "ca939fab123fba8544557397202a43d6826e10a2d70a65d8b7b13d21902a5c6a",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/03-ask-create-step-proposal-manual-step.md": "74113fc83a471b0d98c3595dbd837091b2c9525d08ca4765ef53edc647ad93f6",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/04-show-each-proposed-step-depends-on-ids.md": "9df17de4c8830dd0197ceab4951237086eface93cdc5f75051e357dac1b35bf3",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/05-re-author-withdrawn-audit-trajectory.md": "e6ccbf90274b64121ebe0e016d2e486e5147d57fe4cedeb7e13451a4979b94ad",
+    "docs/implementation-plans/plan-details/depends-on-consumes-note/06-document-depends-on-notes-plan-format.md": "1b463d9a5c085ce97b92be2949b639b516687374723e6d18669e918ab60ee9c5"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Depends On Consumes Note\n\n`depends-on-consumes-note` \u00b7 generated 2026-08-08T19:37:16Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 6 (+0 vs. first audit)\n- **Detail-bundle size:** 96646 bytes (+96646 vs. first audit)\n- **Keystone fan-out:** 0.40\n- **Satellite ratio:** 0.17\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-db606b65]`: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-cc93c4d7]`: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-9d54050c]`: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-15fac6fc]`: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run depends-on-consumes-note` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Depends On Consumes Note\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `createerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `depends_on_notes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `narrowerror`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py', 'tests/test_fingerprint.py']).\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null
+  },
+  "plan_mass": {
+    "step_count": 6,
+    "detail_bundle_bytes": 96646,
+    "keystone_fan_out": 0.4,
+    "satellite_ratio": 0.16666666666666666,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  }
+}

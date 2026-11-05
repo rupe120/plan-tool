@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-candidate-same-batch-relations",
+  "plan_path": "docs/implementation-plans/2-roadmap-candidate-same-batch-relations.md",
+  "created_at": "2026-09-28T13:02:52Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "1284eefc57952b877b388ef3f16a8b8fd85fe831cc23dbb6e5cf88fcd39a71b2",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "03415cd367d0e9ce867621cd9a8647be6148d187809195fe9330fb5b79a3581f",
+    "plan_tool/roadmap_candidate.py": "266dd59fb5cfd308c4d5814486f1409b64d88059f02dfee761e821e6084e17f2",
+    "tests/test_roadmap_candidate.py": "38b4572ff6507e7c21d7a46eb44ecef8da0b612831f3e236100e1dbca436eedf",
+    "tests/test_roadmap_candidate_run.py": "72da3ea1ba24f3c74d3d34be5d2fc773afa6d0ecd9f5d012c714b453c0280d6d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 1 high / 0 medium / 0 nits\n\nCompleted-sibling context informed this classification: 1 of 1 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-ccf46f92",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "`_same_batch_added_endpoint_identity()` in `plan_tool/roadmap_candidate.py` (step 1 \"Allow exact same-batch relation end",
+      "body": "`_same_batch_added_endpoint_identity()` in `plan_tool/roadmap_candidate.py` (step 1 \"Allow exact same-batch relation endpoints while preserving row replacement and removal\") falls back to `candidate_rows.get(relation.endpoint_id, ())` for `DECISION_ANCHOR` and `CONSTRAINT_ANCHOR`, so those endpoint kinds authorize a same-batch addition by row id without enforcing the relation\u2019s allowed artifact and row type; this weakens the detail\u2019s exact-addition boundary and lacks focused anchor-kind regression coverage",
+      "suggested_action": "make `_same_batch_added_endpoint_identity()` resolve every `RelationKind`, including decision and constraint anchors, to its permitted typed endpoint identities and add materialization tests for wrong-artifact/type anchor additions",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

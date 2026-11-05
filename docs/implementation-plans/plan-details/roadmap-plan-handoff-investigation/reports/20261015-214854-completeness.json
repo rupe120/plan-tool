@@ -1,0 +1,85 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-plan-handoff-investigation",
+  "plan_path": "docs/implementation-plans/2-roadmap-plan-handoff-investigation.md",
+  "created_at": "2026-10-15T21:48:54Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "98a7485e6480e320e1a15a7163d3e5e4f13e4c8c796efa5b830cfd08c7d4373a",
+  "code_fingerprint": {
+    "BACKLOG.md": "b793f5e4457f8aece12caa5e5c9d1b8830861dd6069bbbb2d02769e93bc6875c"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/01-document-owner-answer-journey-decide.md": "7669f929160e5608a21eb166da58419c76c4311ae76948039c5becce27eb0ada",
+    "docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/02-review-record-against-source-evidence.md": "705b8f7e4114af4779cde02e13e45d846eb82bfb71425c2e8afe8c10cfb4be75"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Plan Handoff Investigation\n\n`roadmap-plan-handoff-investigation` \u00b7 generated 2026-10-15T21:48:54Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk roadmap-plan-handoff-investigation  # optional interactive review of the saved findings\n\n- MEDIUM `[follow-on-disposition]` [confidence: limited]: Step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) must give #462 a final disposition even though the plan preserves #462\u2019s independent evidence gate. `Architecture \u2014 Decision targets` says:\n\n  ```\n  Then record a disposition for each follow-on in #492's arc: #493 (shared-context delivery), #462 (advisory cross-plan conflicts) and #494 (recorded-prerequisite status).\n  ```\n\n  But the same section says:\n\n  ```\n  #462 keeps its own scope and evidence gate, so this record assesses its applicability without declaring that gate met or blocking independent progress.\n  ```\n\n  The acceptance criterion also requires a \u201cdisposition for #493, #462 and #494.\u201d Current `BACKLOG.md #462` permits its work only after its own evidence gate is met, so the record does not say whether an unmet gate leaves #462 unresolved, allows `no-action`, or permits `build`. That can either close #462 without its required evidence or keep #492 open for an independent item.\n  - Fix: Define #462\u2019s allowed record result as an applicability and gate-status note, with `build` or `no-action` allowed only when #462\u2019s own evidence supports that conclusion; keep an unmet #462 gate independent of #492 completion.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-plan-handoff-investigation --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Plan Handoff Investigation\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[follow-on-disposition]` [confidence: limited]: Step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) must give #462 a final disposition even though the plan preserves #462\u2019s independent evidence gate. `Architecture \u2014 Decision targets` says:\n\n  ```\n  Then record a disposition for each follow-on in #492's arc: #493 (shared-context delivery), #462 (advisory cross-plan conflicts) and #494 (recorded-prerequisite status).\n  ```\n\n  But the same section says:\n\n  ```\n  #462 keeps its own scope and evidence gate, so this record assesses its applicability without declaring that gate met or blocking independent progress.\n  ```\n\n  The acceptance criterion also requires a \u201cdisposition for #493, #462 and #494.\u201d Current `BACKLOG.md #462` permits its work only after its own evidence gate is met, so the record does not say whether an unmet gate leaves #462 unresolved, allows `no-action`, or permits `build`. That can either close #462 without its required evidence or keep #492 open for an independent item.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-plan-handoff-investigation --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b6cedfc1",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) must give #462 a",
+      "body": "Step 2 (`Review the record against source evidence and reconcile #492 while preserving its staged arc`) must give #462 a final disposition even though the plan preserves #462\u2019s independent evidence gate. `Architecture \u2014 Decision targets` says:\n\n  ```\n  Then record a disposition for each follow-on in #492's arc: #493 (shared-context delivery), #462 (advisory cross-plan conflicts) and #494 (recorded-prerequisite status).\n  ```\n\n  But the same section says:\n\n  ```\n  #462 keeps its own scope and evidence gate, so this record assesses its applicability without declaring that gate met or blocking independent progress.\n  ```\n\n  The acceptance criterion also requires a \u201cdisposition for #493, #462 and #494.\u201d Current `BACKLOG.md #462` permits its work only after its own evidence gate is met, so the record does not say whether an unmet gate leaves #462 unresolved, allows `no-action`, or permits `build`. That can either close #462 without its required evidence or keep #492 open for an independent item.",
+      "suggested_action": "Define #462\u2019s allowed record result as an applicability and gate-status note, with `build` or `no-action` allowed only when #462\u2019s own evidence supports that conclusion; keep an unmet #462 gate independent of #492 completion.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "follow-on-disposition",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "98a7485e6480e320e1a15a7163d3e5e4f13e4c8c796efa5b830cfd08c7d4373a",
+    "detail_bundle_digest": "f052c7c87a341621a36f90d828f1cee03a875c5c043d808b4f9e8aabb80b5f00",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/01-document-owner-answer-journey-decide.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-plan-handoff-investigation/02-review-record-against-source-evidence.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "d4961ef5cfc11f5ab023b43b69419152ca148e75ff9208d9a18e8f5ad76a14e0",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

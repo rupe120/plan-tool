@@ -1,0 +1,111 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-terminal-error-contract",
+  "plan_path": "docs/implementation-plans/2-roadmap-terminal-error-contract.md",
+  "created_at": "2026-09-21T19:54:50Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4af1044ee5ccf1e03b5c5b1deb4e92641259aefbea122f0faecd43a123b0d83b",
+  "code_fingerprint": {
+    "BACKLOG.md": "10e3cd95e5997bb502ce71a214cd1a5872aa3e9d456025c49d31515890ffa9c7",
+    "BUG_BACKLOG.md": "66c73cc08385157197a74c29ae444900f0e182b7fe789f496ffaf4d3997d6f0b",
+    "ROADMAP_FORMAT.md": "89bbc156f557e815a04ff2beade16df267477585186f512d22d87c9426e50c9f",
+    "plan_tool/cli/roadmap_cmd.py": "665be0b4b00c902026e36a66887c15cd0840439d5e3a7762792d3fe1b636d705",
+    "plan_tool/roadmap.py": "1acceda1fe10e59dc431e16592e21b21ab3c47a7bc4d014f0c7d333879b0e8be",
+    "plan_tool/roadmap_revision_run.py": "dfd5985ed62d67b42f2c7ffa0e1b9e20e7beb8c5443bf8cd66a9424384e539c3",
+    "tests/cli/test_app.py": "0b6b5d0087af8429ae7e0153af0d5c49c582a88d3f0daa5f873d5807fa32b9c8",
+    "tests/cli/test_roadmap_cmd.py": "1c426abd9e0d061fe8d34bbf7536fb54c2125cef215049aa7bece58f82ee28e7",
+    "tests/test_roadmap.py": "3c0463e13c26d6e008a17dccdff1aa852f03298b631314be9f6881c8ca66cd1c",
+    "tests/test_roadmap_revision_run.py": "99be8c3511e2f96a3f46165c8f3577f5d9953428bd1adfe944e4d0512efd9786"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md": "54ac7edcd1a31b9b01aca87fedfa592dcd9ea1312c9a603478ff29afc50cd12b",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md": "72135516d343da6c025ee9156b1030ec5c41eb3d011f6ef59bd887309820a728",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-writer-guard-origins-terminal.md": "b42795e15b78abf3f0912f4f6f252bd4d7a586c819a635559fa2ee1f5510072f",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md": "490e008118afc7f96c5aec961b98064d665bc33555194afce953f0c417d95946",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md": "70fd820da242826a648df10419a5ce570e4809492a7915fe1fa06f279c254f14",
+    "docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md": "7c6edb13874fa49e3290d78938b2565503366b71fae663f37b479e5d6870a6cd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Terminal Error Contract\n\n`roadmap-terminal-error-contract` \u00b7 generated 2026-09-21T19:54:50Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-ecc2b717]` [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-ffe748e5]` [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-terminal-error-contract` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Terminal Error Contract\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `run_roadmap`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/roadmap.py', 'plan_tool/roadmap_revision_run.py', 'tests/test_roadmap.py', 'tests/test_roadmap_revision_run.py']).\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "1ad4584e3ed5e5a7b044ca1eb006dc26749d8a34d364d9aea30b80056dfcb442",
+    "detail_bundle_digest": "7fc4cda8896ad69273444a54926985f919c9100103e16df1825cb92649dca7b9",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/01-publish-roadmap-terminal-disposition.md",
+        "state": "present",
+        "digest": "54ac7edcd1a31b9b01aca87fedfa592dcd9ea1312c9a603478ff29afc50cd12b"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/02-centralize-roadmap-text-reads-without.md",
+        "state": "present",
+        "digest": "72135516d343da6c025ee9156b1030ec5c41eb3d011f6ef59bd887309820a728"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/03-preserve-writer-guard-origins-terminal.md",
+        "state": "present",
+        "digest": "b42795e15b78abf3f0912f4f6f252bd4d7a586c819a635559fa2ee1f5510072f"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/04-normalize-template-read-failures-across.md",
+        "state": "present",
+        "digest": "490e008118afc7f96c5aec961b98064d665bc33555194afce953f0c417d95946"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/05-apply-each-terminal-disposition-across.md",
+        "state": "present",
+        "digest": "70fd820da242826a648df10419a5ce570e4809492a7915fe1fa06f279c254f14"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-terminal-error-contract/06-reconcile-shipped-terminal-error.md",
+        "state": "present",
+        "digest": "7c6edb13874fa49e3290d78938b2565503366b71fae663f37b479e5d6870a6cd"
+      }
+    ],
+    "source_seed_digest": "4705cb7e35edf4a94efd48ef6d174b9829a158e9b00683afdd09d7cbc3a0fc4a",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

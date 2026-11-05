@@ -1,0 +1,152 @@
+{
+  "version": 4,
+  "plan_slug": "plan-quota-recovery",
+  "plan_path": "docs/implementation-plans/2-plan-quota-recovery.md",
+  "created_at": "2026-08-20T16:14:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "2daa42d23ff283826da1dd582b14a4a38e04af8da901884f50596f24b3e5f56d",
+  "code_fingerprint": {
+    "BACKLOG.md": "0b42df85b62ab05af185f043300744bac54efd474e09ec1a327aacd2a2f2b28b",
+    "BUG_BACKLOG.md": "48f0f1b18b3777e5d08ec51b033ce055af0927d878608ab68d7e348f9e88e962",
+    "README.md": "563c3db41825d122d8b2b6b5a4b8f9376ada5e1f3ff98856dbc87548160d2174",
+    "RUNBOOK.md": "6f4e15df2df7831ae5ae30e9395dd3663b1bd2e65451630e480160d375e45be2",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/AUDIT_FLOW.md": "3b595fdc86b715e8c1f2de7be4de820ce17988a711a5544accea016456d0c6cf",
+    "docs/CODEX_CLI_CONTRACT.md": "1246773cba681feba6e113fbb907edb460d1b7ab2f7c43b5196a410ff297a329",
+    "docs/CURSOR_AGENT_CLI_CONTRACT.md": "8506e63bbc7ff241d163c82309e236b6ac2065439ba5cff90ebac2be75e838b3",
+    "docs/RUN_FLOW.md": "796c233e048003c8451a74a585f349a94406bc2f2d5df10517cc9d092ead6560",
+    "docs/cli/completeness-audit.md": "6860b4d743f52a21d841f0bd0fd4f9df8b130b0c4ad4289260b68677edf2e78b",
+    "docs/design-plans/BACKEND_SELECTION.md": "5fa4cb56f8c04c420252fa4a6936693ca19dad68cfa8430b6dd891816901bc9a",
+    "docs/implementation-plans/backlog-arcs/bug-backlog-draining-arc.md": "67df10be2cd1bbe3f5e6691dd895d5b5b3f2e16396811da7bc4b565f5869cb37",
+    "integrations/cursor/backend.json": "bbe66667ae8eae7c6a44d9056c8f3d2c291c8bfadcf81fc7e5e38a7423dc1223",
+    "plan_tool/backend.py": "31819cb12d9d272943f20516d19e858e0415a0ff44e6d2245de09cae027d5e55",
+    "plan_tool/claude_errors.py": "b01ad1375824dda471062b6b5393f2cbf33bc207610a65fc7b3e45dd6fb116c1",
+    "plan_tool/cli/completeness_cmd.py": "8fb5db92b56b76b87707b75f0057ff4f727bcab4ab3193caa0a81e038eb9142f",
+    "plan_tool/cli/completeness_phases.py": "0b1c6f84d4c8143f79b1a53e4c3ce1bbd8623c84f168784f57898e8d908e8ab5",
+    "plan_tool/launcher.py": "7d130fe6d4468526a1abb95ea24623ac951e0d0651de0e07b293e2d8f28abddf",
+    "plan_tool/rate_limit_loop.py": "0c3b4a4f0e058849f0606319c4d07c7f8030e9874924dbbfadcae8956d33cd34",
+    "plan_tool/review.py": "5852d3eabd1e85a496d6c6f644b34cbdd9c03e2df7d2555d06e7755dc2411846",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/cli/test_completeness_cmd.py": "601ef6f7cba42762c84185f8c19c7aebaa78826ffc5e6a5f1049c8a598265090",
+    "tests/test_backend.py": "13344d689bdaa18e38c9b69330620b84a6dd9e0fca5ed5a68c577817539ac186",
+    "tests/test_claude_errors.py": "ed8f7fb0a00ecf1ac7b80829d6d09e1a8d7ccd1e3806cd5e624caa90506ffd08",
+    "tests/test_launcher.py": "2fed0adf766024d0486edc559299396303c7625d9b7b0816947270b317ea7ed5",
+    "tests/test_rate_limit_loop.py": "1584b07cb934572cc280fa1b92e637892ceecd9d19f045020589eeffb0a38de4",
+    "tests/test_review.py": "113f8a421fcdcb8a2c58779e1ec7c4085f75e411ff084003c7badb5f5df69d79",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/plan-quota-recovery/01-provider-scoped-plan-quota-detection.md": "0473f8b7c57ed500396e6d8768186f275554948b3f0b8da5e5385d89f10d8882",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/02-return-explicit-plan-quotas-terminal.md": "60439fc41c23320eab70ad7dba2b3cc0faa91fb1c4af6ba3d0486678acb4ea30",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/03-stop-conceptual-audit-after-plan-quota.md": "3cd932215b08fd5b8f273a054abb4af0a515ee9a6c0d6f9c73e7eb3ee4a1bd4e",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/04-update-quota-recovery-references.md": "be34a79c1de652615ea6c2a55c5a43144177a42f68b9d250c199a2614ec3e69e",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/05-remove-resolved-quota-bug-refresh-its.md": "54d084a490052e4dc802358a34c89eaea3e571c99c793737c5505ea29fca2bed"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Plan Quota Recovery\n\n`plan-quota-recovery` \u00b7 generated 2026-08-20T16:14:28Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply plan-quota-recovery   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[plan-quota-coverage-contract]`: Step 3\u2019s `## Implementation` requires `early_stop_reason: \"plan_quota\"` and says `audit_coverage_qualifies_sample` must reject it, but its `## Files` omits `plan_tool/review_persistence.py`. That module\u2019s `_AUDIT_COVERAGE_KEYS`, `normalize_audit_coverage`, `project_audit_coverage`, and `audit_coverage_qualifies_sample` only accept the old closed coverage shape; `plan_tool/cli/completeness_phases:_project_audit_coverage_for_public_output` and `_conceptual_bar_from_audit_recs` consume those functions, so the new reason would be dropped or treated as unknown. Step 3 also omits the contract tests in `tests/test_review_persistence.py`, `tests/test_data_contract.py`, and `tests/test_convergence.py` that pin this schema and reuse rule.\n  - Fix: Make `review_persistence` own the explicit quota-stop coverage state, projection, and reuse rejection, and add its contract tests to step 3\u2019s declared scope.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[quota-recovery-documentation]`: Step 4 says \u201ca confirmed Cursor monthly plan quota is terminal,\u201d but `docs/ROADMAP_DEMO_ORCHESTRATION.md: Failure modes to expect and film rather than hide` says \u201cInherited backoff handles it; do not add concurrency.\u201d `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `claude_invoke`, so roadmap runs use the changed batch recovery path; the document is outside step 4\u2019s file list, wording sweep, and acceptance criteria.\n  - Fix: Extend step 4\u2019s documentation sweep and acceptance criteria to give roadmap operators the same terminal-plan-quota exception.\n  - Address: `plan-tool completeness-apply plan-quota-recovery --anchor quota-recovery-documentation`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Add provider-scoped plan-quota detection and date-only reset context\" touches 2 unrelated areas: `integrations`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit plan-quota-recovery` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Plan Quota Recovery\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[plan-quota-coverage-contract]`: Step 3\u2019s `## Implementation` requires `early_stop_reason: \"plan_quota\"` and says `audit_coverage_qualifies_sample` must reject it, but its `## Files` omits `plan_tool/review_persistence.py`. That module\u2019s `_AUDIT_COVERAGE_KEYS`, `normalize_audit_coverage`, `project_audit_coverage`, and `audit_coverage_qualifies_sample` only accept the old closed coverage shape; `plan_tool/cli/completeness_phases:_project_audit_coverage_for_public_output` and `_conceptual_bar_from_audit_recs` consume those functions, so the new reason would be dropped or treated as unknown. Step 3 also omits the contract tests in `tests/test_review_persistence.py`, `tests/test_data_contract.py`, and `tests/test_convergence.py` that pin this schema and reuse rule.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[quota-recovery-documentation]`: Step 4 says \u201ca confirmed Cursor monthly plan quota is terminal,\u201d but `docs/ROADMAP_DEMO_ORCHESTRATION.md: Failure modes to expect and film rather than hide` says \u201cInherited backoff handles it; do not add concurrency.\u201d `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `claude_invoke`, so roadmap runs use the changed batch recovery path; the document is outside step 4\u2019s file list, wording sweep, and acceptance criteria.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Add provider-scoped plan-quota detection and date-only reset context\" touches 2 unrelated areas: `integrations`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk plan-quota-recovery` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply plan-quota-recovery` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-4031019a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3\u2019s `## Implementation` requires `early_stop_reason: \"plan_quota\"` and says `audit_coverage_qualifies_sample` must ",
+      "body": "Step 3\u2019s `## Implementation` requires `early_stop_reason: \"plan_quota\"` and says `audit_coverage_qualifies_sample` must reject it, but its `## Files` omits `plan_tool/review_persistence.py`. That module\u2019s `_AUDIT_COVERAGE_KEYS`, `normalize_audit_coverage`, `project_audit_coverage`, and `audit_coverage_qualifies_sample` only accept the old closed coverage shape; `plan_tool/cli/completeness_phases:_project_audit_coverage_for_public_output` and `_conceptual_bar_from_audit_recs` consume those functions, so the new reason would be dropped or treated as unknown. Step 3 also omits the contract tests in `tests/test_review_persistence.py`, `tests/test_data_contract.py`, and `tests/test_convergence.py` that pin this schema and reuse rule.",
+      "suggested_action": "Make `review_persistence` own the explicit quota-stop coverage state, projection, and reuse rejection, and add its contract tests to step 3\u2019s declared scope.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "plan-quota-coverage-contract",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-0ec96b72",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 says \u201ca confirmed Cursor monthly plan quota is terminal,\u201d but `docs/ROADMAP_DEMO_ORCHESTRATION.md: Failure modes ",
+      "body": "Step 4 says \u201ca confirmed Cursor monthly plan quota is terminal,\u201d but `docs/ROADMAP_DEMO_ORCHESTRATION.md: Failure modes to expect and film rather than hide` says \u201cInherited backoff handles it; do not add concurrency.\u201d `plan_tool/roadmap.py:shell_roadmap_invoker` delegates to `claude_invoke`, so roadmap runs use the changed batch recovery path; the document is outside step 4\u2019s file list, wording sweep, and acceptance criteria.",
+      "suggested_action": "Extend step 4\u2019s documentation sweep and acceptance criteria to give roadmap operators the same terminal-plan-quota exception.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "quota-recovery-documentation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "0885be824c6c49b75a34c83f9ec05de081bae34bde7985fbebd1ec398d98d8d1",
+    "detail_bundle_digest": "b9fc934be1a74eef9f97cf7b1d718ffeb13be485c798e55f7311549dc9bb0e7c",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/01-provider-scoped-plan-quota-detection.md",
+        "state": "present",
+        "digest": "0473f8b7c57ed500396e6d8768186f275554948b3f0b8da5e5385d89f10d8882"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/02-return-explicit-plan-quotas-terminal.md",
+        "state": "present",
+        "digest": "60439fc41c23320eab70ad7dba2b3cc0faa91fb1c4af6ba3d0486678acb4ea30"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/03-stop-conceptual-audit-after-plan-quota.md",
+        "state": "present",
+        "digest": "3cd932215b08fd5b8f273a054abb4af0a515ee9a6c0d6f9c73e7eb3ee4a1bd4e"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/04-update-quota-recovery-references.md",
+        "state": "present",
+        "digest": "be34a79c1de652615ea6c2a55c5a43144177a42f68b9d250c199a2614ec3e69e"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/05-remove-resolved-quota-bug-refresh-its.md",
+        "state": "present",
+        "digest": "54d084a490052e4dc802358a34c89eaea3e571c99c793737c5505ea29fca2bed"
+      }
+    ],
+    "source_seed_digest": "49862b66b179cccccd813b00e712d383c82655902039129993091f533ab4acc4",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

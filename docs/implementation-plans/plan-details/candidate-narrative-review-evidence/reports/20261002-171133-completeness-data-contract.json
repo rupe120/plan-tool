@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-15365c65": {
+      "code_anchor": "roadmap_candidate_review.py:load_stored_candidate_review_replacement",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/candidate-narrative-review-evidence/05-show-computed-narrative-evidence-on.md",
+      "reason": "code anchor path `roadmap_candidate_review.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261002-171133-completeness"
+}

@@ -1,0 +1,170 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "plan_path": "docs/implementation-plans/2-completeness-next-step-verdict-finish.md",
+  "created_at": "2026-10-10T18:35:26Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "772b831cc18c24291a433108dbfdfcfcedccbfc94fd928f95db670398a0caad2",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md": "8572690f6dd85792f201dd7e50493f2d0b0ad77b070bfb718af30731e5239e7c",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md": "45dedcb276e8eac3d74ae96a3afec8c54f19dd0a57dd55389897010a73d3e30a",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md": "e8cc2a9f6619f94af4fb28e890c8b3ecc9b25ad5e194fad8091cfe4fd9b9fb09",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md": "6c3a20e98fe4e1657d64c6c45ae4fc77f86cbba768ad9bdceb6ba0deedb7a258",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md": "d3bfc636565e9872aeba80f8359c2cce61f538bdcbc67b0f3e5877b94157ef92"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Step Verdict Finish\n\n`completeness-next-step-verdict-finish` \u00b7 generated 2026-10-10T18:35:25Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `772b831cc18c24291a433108dbfdfcfcedccbfc94fd928f95db670398a0caad2`\n- **Detail bundle digest:** `c2e87c29b9802137a8c4df304eda27517642028200aa53dd00d4290539d2d492`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk completeness-next-step-verdict-finish  # optional interactive review of the saved findings\n\n- MEDIUM `[stale-vs-incomplete-ids-precedence]` [confidence: limited]: The acceptance criterion \"An incomplete audit's blocking ids are named by every reader; the gate's bool, `--json`, and exit codes are unchanged.\" has no stale exception, but the Architecture precedence (stale first) and the third acceptance bullet say a stale result never has its saved gaps named as text to close. A budget-limited audit on a stale or `unknown-legacy` revision satisfies both criteria with opposite outcomes. The Testing row \"stale \u00d7 incomplete (fresh audit, ids not offered as text to close)\" shows the intended answer, so the criterion is the side that lags. Sites: Acceptance criteria bullet 2; step 2 (Keep an incomplete audit's blocking ids\u2026) intent \"names them as blocking and offers no stage\"; step 4 intent \"Every reader consumes step 2's retained ids through the verdict\".\n  - Fix: Qualify the incomplete-audit criterion and the step 2 and step 4 intents with \"on a current revision\". State that a stale revision takes the fresh-audit answer and its ids are not offered as text to close, matching the Architecture precedence.\n- MEDIUM `[untrusted-cause-label-vocabulary]` [confidence: limited]: The plan names the same cause set differently in different places, and one place gives a label that conflicts with the \"one label\" rule. Step 1's title and the Problem statement say \"persistent-coverage\" / \"persistent coverage\". The Architecture opening says \"Persistent coverage keeps `terminal_hand_apply`\". Precedence rule (2) carries incomplete as \"persistent coverage\", rule (4) calls `terminal_hand_apply` \"Persistent hand-apply\", and rule (5) and the Testing rows use bare `persistent`. So `terminal_hand_apply` is \"persistent coverage\" in one sentence and \"persistent hand-apply\" in the next, and the plan never says whether the enum value is `persistent` or `persistent-coverage`. The plan states \"no fourth cause value; every reader and test uses that one label\", but the label itself is not fixed. Sites: step 1 title, Problem statement, Architecture opening and precedence rules (2), (4), (5), Testing first bullet.\n  - Fix: Choose one enum value for the persistent cause (matching Testing's `persistent`), state it once in Architecture, and bridge \"persistent coverage\" and \"persistent hand-apply\" as descriptions of reasons that map to that value, then align step 1's title and the Testing rows to it.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[untrusted-cause-label-vocabulary]` [confidence: limited]: The cause vocabulary drifts between \"persistent coverage\" (step 1 title, Problem statement), \"persistent hand-apply\" (precedence rule 4), and bare \"persistent\" (rule 5 catch-all and the Testing rows). The plan says \"no fourth cause value; every reader and test uses that one label\". It never says whether rules 4 and 5 emit the same `persistent` value as rule 2 or distinct values. Readers and tests could implement different labels for the same value. Sites: Architecture precedence rules 2, 4, 5; Testing \"terminal_hand_apply stays `persistent`\"; step 1 title.\n  - Fix: Name the three cause values once (transient, persistent, stale-revision). State that rules 2, 4, and 5 all map to the single persistent value, with \"persistent coverage\" as a description of rule 2 only.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-6b161ed7]` [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- Close 2 conceptual-correctness gap(s) through a session-directed edit (design gaps; not auto-applied under #85); the non-blocking completeness gaps stay informational until a complete detail bundle exists.\n- 1 conceptual gap(s) are listed in the report as advisory (outside the blocking set); completeness gaps stay informational until a complete detail bundle exists.\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Step Verdict Finish\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `772b831cc18c24291a433108dbfdfcfcedccbfc94fd928f95db670398a0caad2`\n- **Detail bundle digest:** `c2e87c29b9802137a8c4df304eda27517642028200aa53dd00d4290539d2d492`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[stale-vs-incomplete-ids-precedence]` [confidence: limited]: The acceptance criterion \"An incomplete audit's blocking ids are named by every reader; the gate's bool, `--json`, and exit codes are unchanged.\" has no stale exception, but the Architecture precedence (stale first) and the third acceptance bullet say a stale result never has its saved gaps named as text to close. A budget-limited audit on a stale or `unknown-legacy` revision satisfies both criteria with opposite outcomes. The Testing row \"stale \u00d7 incomplete (fresh audit, ids not offered as text to close)\" shows the intended answer, so the criterion is the side that lags. Sites: Acceptance criteria bullet 2; step 2 (Keep an incomplete audit's blocking ids\u2026) intent \"names them as blocking and offers no stage\"; step 4 intent \"Every reader consumes step 2's retained ids through the verdict\".\n- MEDIUM `[untrusted-cause-label-vocabulary]` [confidence: limited]: The plan names the same cause set differently in different places, and one place gives a label that conflicts with the \"one label\" rule. Step 1's title and the Problem statement say \"persistent-coverage\" / \"persistent coverage\". The Architecture opening says \"Persistent coverage keeps `terminal_hand_apply`\". Precedence rule (2) carries incomplete as \"persistent coverage\", rule (4) calls `terminal_hand_apply` \"Persistent hand-apply\", and rule (5) and the Testing rows use bare `persistent`. So `terminal_hand_apply` is \"persistent coverage\" in one sentence and \"persistent hand-apply\" in the next, and the plan never says whether the enum value is `persistent` or `persistent-coverage`. The plan states \"no fourth cause value; every reader and test uses that one label\", but the label itself is not fixed. Sites: step 1 title, Problem statement, Architecture opening and precedence rules (2), (4), (5), Testing first bullet.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[untrusted-cause-label-vocabulary]` [confidence: limited]: The cause vocabulary drifts between \"persistent coverage\" (step 1 title, Problem statement), \"persistent hand-apply\" (precedence rule 4), and bare \"persistent\" (rule 5 catch-all and the Testing rows). The plan says \"no fourth cause value; every reader and test uses that one label\". It never says whether rules 4 and 5 emit the same `persistent` value as rule 2 or distinct values. Readers and tests could implement different labels for the same value. Sites: Architecture precedence rules 2, 4, 5; Testing \"terminal_hand_apply stays `persistent`\"; step 1 title.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `revision_status`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Close the 2 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the non-blocking completeness gaps stay informational until a detail bundle exists).\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 2 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-8eac497f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The acceptance criterion \"An incomplete audit's blocking ids are named by every reader; the gate's bool, `--json`, and e",
+      "body": "The acceptance criterion \"An incomplete audit's blocking ids are named by every reader; the gate's bool, `--json`, and exit codes are unchanged.\" has no stale exception, but the Architecture precedence (stale first) and the third acceptance bullet say a stale result never has its saved gaps named as text to close. A budget-limited audit on a stale or `unknown-legacy` revision satisfies both criteria with opposite outcomes. The Testing row \"stale \u00d7 incomplete (fresh audit, ids not offered as text to close)\" shows the intended answer, so the criterion is the side that lags. Sites: Acceptance criteria bullet 2; step 2 (Keep an incomplete audit's blocking ids\u2026) intent \"names them as blocking and offers no stage\"; step 4 intent \"Every reader consumes step 2's retained ids through the verdict\".",
+      "suggested_action": "Qualify the incomplete-audit criterion and the step 2 and step 4 intents with \"on a current revision\". State that a stale revision takes the fresh-audit answer and its ids are not offered as text to close, matching the Architecture precedence.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stale-vs-incomplete-ids-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-09ad2bfe",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan names the same cause set differently in different places, and one place gives a label that conflicts with the \"",
+      "body": "The plan names the same cause set differently in different places, and one place gives a label that conflicts with the \"one label\" rule. Step 1's title and the Problem statement say \"persistent-coverage\" / \"persistent coverage\". The Architecture opening says \"Persistent coverage keeps `terminal_hand_apply`\". Precedence rule (2) carries incomplete as \"persistent coverage\", rule (4) calls `terminal_hand_apply` \"Persistent hand-apply\", and rule (5) and the Testing rows use bare `persistent`. So `terminal_hand_apply` is \"persistent coverage\" in one sentence and \"persistent hand-apply\" in the next, and the plan never says whether the enum value is `persistent` or `persistent-coverage`. The plan states \"no fourth cause value; every reader and test uses that one label\", but the label itself is not fixed. Sites: step 1 title, Problem statement, Architecture opening and precedence rules (2), (4), (5), Testing first bullet.",
+      "suggested_action": "Choose one enum value for the persistent cause (matching Testing's `persistent`), state it once in Architecture, and bridge \"persistent coverage\" and \"persistent hand-apply\" as descriptions of reasons that map to that value, then align step 1's title and the Testing rows to it.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-label-vocabulary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-09ad2bfe",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The cause vocabulary drifts between \"persistent coverage\" (step 1 title, Problem statement), \"persistent hand-apply\" (pr",
+      "body": "The cause vocabulary drifts between \"persistent coverage\" (step 1 title, Problem statement), \"persistent hand-apply\" (precedence rule 4), and bare \"persistent\" (rule 5 catch-all and the Testing rows). The plan says \"no fourth cause value; every reader and test uses that one label\". It never says whether rules 4 and 5 emit the same `persistent` value as rule 2 or distinct values. Readers and tests could implement different labels for the same value. Sites: Architecture precedence rules 2, 4, 5; Testing \"terminal_hand_apply stays `persistent`\"; step 1 title.",
+      "suggested_action": "Name the three cause values once (transient, persistent, stale-revision). State that rules 2, 4, and 5 all map to the single persistent value, with \"persistent coverage\" as a description of rule 2 only.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-label-vocabulary",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "772b831cc18c24291a433108dbfdfcfcedccbfc94fd928f95db670398a0caad2",
+      "detail_bundle_digest": "c2e87c29b9802137a8c4df304eda27517642028200aa53dd00d4290539d2d492",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "d3ad2373cec38bb40436faa604b3e13653eedc1a7374e5e87a3528fb813796a7",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

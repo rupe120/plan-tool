@@ -1,0 +1,50 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step12-data-contract-13debd31": {
+      "code_anchor": "plan_tool/roadmap_seed_manifest.py:NoPublishedRoadmapVersionError",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/12-update-roadmap-docs-skills-directives.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/12-update-roadmap-docs-skills-directives.md",
+      "reason": "code anchor `plan_tool/roadmap_seed_manifest.py:NoPublishedRoadmapVersionError` does not resolve in HEAD",
+      "step_id": 12,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-d5ff0ca9": {
+      "code_anchor": "run_log.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/02-resume-file-module-that-owns-first-run.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/02-resume-file-module-that-owns-first-run.md",
+      "reason": "code anchor path `run_log.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-26da5e9c": {
+      "code_anchor": "roadmap_view.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/06-make-refresh-seeds-materialize-apply.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/06-make-refresh-seeds-materialize-apply.md",
+      "reason": "code anchor path `roadmap_view.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    },
+    "step6-data-contract-df50609e": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/06-make-refresh-seeds-materialize-apply.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-versioned-from-birth/06-make-refresh-seeds-materialize-apply.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 6,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20261006-164951-completeness"
+}

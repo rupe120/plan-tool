@@ -1,0 +1,210 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-versioned-feedback-revision-chain",
+  "plan_path": "docs/implementation-plans/2-roadmap-versioned-feedback-revision-chain.md",
+  "created_at": "2026-09-23T12:05:27Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a960f12f65e777c0446cd1280c947c61ebfcd86a677483bf8d23b9229675c775",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "356f0b82c62fd7ba4f09619193be1bdef8354b8bec2ccf1cb5474bb60f46265d",
+    "CLAUDE.md": "ebc8114f410cfd54bac40a3dc35bb43bc30e709c9b1a7144be83bbff3f14dc58",
+    "DATA_CONTRACT.md": "dd7ba201b043426021810e826d3d5ef8632f48b7e265e35c7e9e8929242ed69c",
+    "README.md": "5afb07faeb610bf90fabf3015bd0b7233d115836b53a8a1b50b9a87f8ea846e5",
+    "ROADMAP_FORMAT.md": "b712fe4e44528a283d1d3956c215646bcf9af65fe040058fecd67b8d82f60a6c",
+    "docs/ARCHITECTURE.md": "114f3eb320dff4e3bd97c6f8e146fe216f4912952ba2a27b713d9b352554dcba",
+    "docs/cli/roadmap.md": "4bb0f10dafb0d94e6710731818dfbc1701ae19f0d57f517f87c6defa642f98dd",
+    "docs/how-to/roadmap.md": "1c0e8f56d433cf566711c1e0f1e26f2b0701cb75f58a790f7cfef62f5719d814",
+    "plan_tool/cli/roadmap_cmd.py": "6e5f4f9636728c5cc810b917611d384c46069d09d62bfc737ab9820bf466cf83",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "36d13261879444c0320309f239119a2e4be617284de6918be37f7fefa6e72fb9",
+    "plan_tool/prompts/roadmap-candidate-questions.md": "7723615e66084d4809a4611da27f738042823856bca99118633a4e982e5b3431",
+    "plan_tool/roadmap.py": "81fd59c840a4da31bc82a6c5a115e13a823ceaaddda1e691ce339f0b88026adc",
+    "plan_tool/roadmap_candidate.py": "6c2dba1936658c1d319ad8108cda1ddd8b587c48c7f2acfae719de3751825ab2",
+    "plan_tool/roadmap_candidate_context.py": "38449c043aff59e7e08f2fd752ec6d6a02f23be8ae39e2f28f3f2e05629d0f25",
+    "plan_tool/roadmap_candidate_review.py": "cbf867758e9b253efa6c751e4edc82875475f7f97b3ecf7626eecec7340a3167",
+    "plan_tool/roadmap_candidate_run.py": "873b73dc4da77a9ad6453d82233afafb6f67470233038a201fb6f6935375fdeb",
+    "plan_tool/roadmap_decision_settlement_enrolled.py": "f3b2bf7173eae5f25aa5c9cc9f1ff4896931a1a4bebef486320545ba7ce78a98",
+    "plan_tool/roadmap_version_promotion.py": "8863c8286d5180685316088ac738b74c2e0e5669cbec16e4e785afced00be6ac",
+    "tests/cli/test_roadmap_cmd.py": "ae7a39073016477f8a92b4e77de6b1e48ccbeaa18bd29811e592412a4cf931e8",
+    "tests/test_roadmap.py": "1865726d5e650276f81a32461bffd0b9257251826a3fe0e2b710c62031937072",
+    "tests/test_roadmap_candidate.py": "a2c73d62354e816d4071367618b21ec54462c45fbad18bd42d8d162889bc51d1",
+    "tests/test_roadmap_candidate_context.py": "245ebe9cca7479886bb9305284fdb4c69b197c91c80e0a814a41a9ed5f91be7c",
+    "tests/test_roadmap_candidate_review.py": "729bf2579f890682f186a8de9a45c38aa07569de3bcfc4398be38b4e8a2e1efa",
+    "tests/test_roadmap_candidate_run.py": "972d58645deef98a0b9bf3a0f25fe124634bf656d5ca2798dbc26e06f53a83b8",
+    "tests/test_roadmap_decision_settlement_enrolled.py": "bca029328c0fcbe0bb9bd52f43a7577fafa47db918f7c7eb1af8f78119d87563",
+    "tests/test_roadmap_format.py": "460bff6ecd455bb0911a7a035ea249c8cfab4e6327dc9908c985657249b8ea37",
+    "tests/test_roadmap_version_promotion.py": "5e69979ddec359ac0ba457d052a0033a118b6d20accde1a7202f2d84b7472ba5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-define-canonical-mutable-feedback.md": "1ef62db0b3fd8d4c3f5405e3b88364e7d2e56d5af0b0e17ad0eb8b93e16daa13",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-make-root-enrollment-store-feedback.md": "1033718e248dca0a2f23b56905efa40de6931347e851a384b4f2c9bc814d19ca",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-build-one-ordered-root-active-candidate.md": "3c39fa820b58d476c51a67061b0fdc33a17c20560dccf0b2ce033dda32c95004",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-build-feedback-free-successor-artifacts.md": "7e02061b0737c9255035f0bbc0ed9837dbdbf52d430afe9de2891304a83b067a",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-store-batch-responses-one-root-active.md": "37d65fa42e1f606da81fef98b271a5748853c1c51fd4c046a13d16bba4073f49",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-explicit-idempotent-legacy-migration.md": "f48e94c536a2345e0d809397c10d6dd0eb87655fc370b254f5914036f7ae3262",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-gate-enrolled-decision-settlement.md": "cfbaf4205d332ebcc9cf632e75b7ff1b1032d1cf03f41535cf8b124cdbe5e105",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-bind-candidate-questions-answers.md": "f3d7bc4d1cb2200ac0158882b74e24843bea0e8b67f2e9ac771989b1e6c760bc",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/09-promote-only-exact-active-candidate.md": "bad5ea00af288fd865fae2f54ac7b0815fbe6dc21bc5d8e3f3055e915af97710",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md": "9b8be0ab8b677ba4411a42d0f6779295608fc3b918a4933188781e3f1e8fbb8c",
+    "docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md": "5113a5a4819c76a5b32fb69729fc38a0c91666110080655c32c23e86b59a5786"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Versioned Feedback Revision Chain\n\n`roadmap-versioned-feedback-revision-chain` \u00b7 generated 2026-09-23T12:05:27Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- HIGH `[legacy-migration-source]` [confidence: limited]: Step 2 stores an enrolled legacy root with embedded feedback removed, but step 6 says migration reads embedded rows from the selected immutable legacy version. No preserved managed snapshot or other migration source bridges those rules, so explicit migration cannot both import every legacy item and keep the enrolled immutable root feedback-free. Sites: Architecture, step 2 (`Make root enrollment store feedback-free versions while blocking legacy feedback processing until explicit ledger migration`) Implementation and acceptance criteria, and step 6 (`Add explicit idempotent legacy migration and guarded mutable reviewer edits in predecessor-grouped ledger sections`) Implementation and tests.\n\n```text\nStep 2 \u2014 Implementation: \u201cThe stored texts, digests, and resulting root version id must describe the projected content, not the original embedded feedback bytes.\u201d\n\nStep 6 \u2014 Implementation: \u201cRead embedded feedback from the selected immutable legacy version, convert every preserved row through the step 1 ledger contract...\u201d\n```\n  - Fix: Define one durable, feedback-preserving migration source at enrollment and make steps 2 and 6 use it for the exact idempotent import while keeping accepted versions feedback-free.\n- HIGH `[migration-processing-fence]` [confidence: limited]: The migration-required guarantee has no implementable owner before the candidate and review APIs that must enforce it. Step 6 promises that candidate, review, promotion, and ordinary-feedback callers refuse pending migration, but it runs after step 5, while steps 5, 8, and 9 neither depend on step 6 nor consume its readiness loader; step 6\u2019s new runtime module also cannot change those owners. A migration-pending roadmap can therefore reach a ledger lifecycle API without the required refusal boundary. Sites: Architecture, Scope guardrails, acceptance criterion \u201cNew feedback-free enrollment is ledger-native\u2026\u201d, step 3 Input, step 5 (`Store batch responses with one root-and-active-candidate pointer while retaining superseded candidate history`), step 6 Implementation, and steps 8\u20139 Inputs.\n\n```text\nStep 6 \u2014 Implementation: \u201cBefore migration completes, ledger-based candidate, review, promotion, and ordinary-feedback callers must receive a deterministic `migration-required` result...\u201d\n\nStep 5 depends_on: step 3 and step 4.\n\nStep 8 depends_on: step 4 and step 5.\n\nStep 9 depends_on: step 5 and step 8.\n```\n  - Fix: Establish the migration-readiness refusal contract before every ledger lifecycle owner that must enforce it, and align dependencies and tests so pending legacy state cannot enter candidate, review, promotion, or ordinary-feedback processing.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-versioned-feedback-revision-chain` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Versioned Feedback Revision Chain\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[legacy-migration-source]` [confidence: limited]: Step 2 stores an enrolled legacy root with embedded feedback removed, but step 6 says migration reads embedded rows from the selected immutable legacy version. No preserved managed snapshot or other migration source bridges those rules, so explicit migration cannot both import every legacy item and keep the enrolled immutable root feedback-free. Sites: Architecture, step 2 (`Make root enrollment store feedback-free versions while blocking legacy feedback processing until explicit ledger migration`) Implementation and acceptance criteria, and step 6 (`Add explicit idempotent legacy migration and guarded mutable reviewer edits in predecessor-grouped ledger sections`) Implementation and tests.\n\n```text\nStep 2 \u2014 Implementation: \u201cThe stored texts, digests, and resulting root version id must describe the projected content, not the original embedded feedback bytes.\u201d\n\nStep 6 \u2014 Implementation: \u201cRead embedded feedback from the selected immutable legacy version, convert every preserved row through the step 1 ledger contract...\u201d\n```\n- HIGH `[migration-processing-fence]` [confidence: limited]: The migration-required guarantee has no implementable owner before the candidate and review APIs that must enforce it. Step 6 promises that candidate, review, promotion, and ordinary-feedback callers refuse pending migration, but it runs after step 5, while steps 5, 8, and 9 neither depend on step 6 nor consume its readiness loader; step 6\u2019s new runtime module also cannot change those owners. A migration-pending roadmap can therefore reach a ledger lifecycle API without the required refusal boundary. Sites: Architecture, Scope guardrails, acceptance criterion \u201cNew feedback-free enrollment is ledger-native\u2026\u201d, step 3 Input, step 5 (`Store batch responses with one root-and-active-candidate pointer while retaining superseded candidate history`), step 6 Implementation, and steps 8\u20139 Inputs.\n\n```text\nStep 6 \u2014 Implementation: \u201cBefore migration completes, ledger-based candidate, review, promotion, and ordinary-feedback callers must receive a deterministic `migration-required` result...\u201d\n\nStep 5 depends_on: step 3 and step 4.\n\nStep 8 depends_on: step 4 and step 5.\n\nStep 9 depends_on: step 5 and step 8.\n```\n\n### Files coherence\n\n- INFO: step 6 detail cites `plan_tool/roadmap_feedback_ledger.py` resembling declared `plan_tool/roadmap_feedback_ledger_run.py` (typo/stale path?)\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-versioned-feedback-revision-chain` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-03e37e09",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 stores an enrolled legacy root with embedded feedback removed, but step 6 says migration reads embedded rows from",
+      "body": "Step 2 stores an enrolled legacy root with embedded feedback removed, but step 6 says migration reads embedded rows from the selected immutable legacy version. No preserved managed snapshot or other migration source bridges those rules, so explicit migration cannot both import every legacy item and keep the enrolled immutable root feedback-free. Sites: Architecture, step 2 (`Make root enrollment store feedback-free versions while blocking legacy feedback processing until explicit ledger migration`) Implementation and acceptance criteria, and step 6 (`Add explicit idempotent legacy migration and guarded mutable reviewer edits in predecessor-grouped ledger sections`) Implementation and tests.\n\n```text\nStep 2 \u2014 Implementation: \u201cThe stored texts, digests, and resulting root version id must describe the projected content, not the original embedded feedback bytes.\u201d\n\nStep 6 \u2014 Implementation: \u201cRead embedded feedback from the selected immutable legacy version, convert every preserved row through the step 1 ledger contract...\u201d\n```",
+      "suggested_action": "Define one durable, feedback-preserving migration source at enrollment and make steps 2 and 6 use it for the exact idempotent import while keeping accepted versions feedback-free.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "legacy-migration-source",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-0f9fb420",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The migration-required guarantee has no implementable owner before the candidate and review APIs that must enforce it. S",
+      "body": "The migration-required guarantee has no implementable owner before the candidate and review APIs that must enforce it. Step 6 promises that candidate, review, promotion, and ordinary-feedback callers refuse pending migration, but it runs after step 5, while steps 5, 8, and 9 neither depend on step 6 nor consume its readiness loader; step 6\u2019s new runtime module also cannot change those owners. A migration-pending roadmap can therefore reach a ledger lifecycle API without the required refusal boundary. Sites: Architecture, Scope guardrails, acceptance criterion \u201cNew feedback-free enrollment is ledger-native\u2026\u201d, step 3 Input, step 5 (`Store batch responses with one root-and-active-candidate pointer while retaining superseded candidate history`), step 6 Implementation, and steps 8\u20139 Inputs.\n\n```text\nStep 6 \u2014 Implementation: \u201cBefore migration completes, ledger-based candidate, review, promotion, and ordinary-feedback callers must receive a deterministic `migration-required` result...\u201d\n\nStep 5 depends_on: step 3 and step 4.\n\nStep 8 depends_on: step 4 and step 5.\n\nStep 9 depends_on: step 5 and step 8.\n```",
+      "suggested_action": "Establish the migration-readiness refusal contract before every ledger lifecycle owner that must enforce it, and align dependencies and tests so pending legacy state cannot enter candidate, review, promotion, or ordinary-feedback processing.",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "migration-processing-fence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "c3099b51ea680b59354bb6881fe545cf02f1dbb13dbca1829234464d842e1511",
+    "detail_bundle_digest": "356ed9087d0368a197c7f0eeba042c042ddb8ec6861ffb72a2dc4864cd70fe98",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/01-define-canonical-mutable-feedback.md",
+        "state": "present",
+        "digest": "1ef62db0b3fd8d4c3f5405e3b88364e7d2e56d5af0b0e17ad0eb8b93e16daa13"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/02-make-root-enrollment-store-feedback.md",
+        "state": "present",
+        "digest": "1033718e248dca0a2f23b56905efa40de6931347e851a384b4f2c9bc814d19ca"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/03-build-one-ordered-root-active-candidate.md",
+        "state": "present",
+        "digest": "3c39fa820b58d476c51a67061b0fdc33a17c20560dccf0b2ce033dda32c95004"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/04-build-feedback-free-successor-artifacts.md",
+        "state": "present",
+        "digest": "7e02061b0737c9255035f0bbc0ed9837dbdbf52d430afe9de2891304a83b067a"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/05-store-batch-responses-one-root-active.md",
+        "state": "present",
+        "digest": "37d65fa42e1f606da81fef98b271a5748853c1c51fd4c046a13d16bba4073f49"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/06-explicit-idempotent-legacy-migration.md",
+        "state": "present",
+        "digest": "f48e94c536a2345e0d809397c10d6dd0eb87655fc370b254f5914036f7ae3262"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/07-gate-enrolled-decision-settlement.md",
+        "state": "present",
+        "digest": "cfbaf4205d332ebcc9cf632e75b7ff1b1032d1cf03f41535cf8b124cdbe5e105"
+      },
+      {
+        "step_id": 8,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/08-bind-candidate-questions-answers.md",
+        "state": "present",
+        "digest": "f3d7bc4d1cb2200ac0158882b74e24843bea0e8b67f2e9ac771989b1e6c760bc"
+      },
+      {
+        "step_id": 9,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/09-promote-only-exact-active-candidate.md",
+        "state": "present",
+        "digest": "bad5ea00af288fd865fae2f54ac7b0815fbe6dc21bc5d8e3f3055e915af97710"
+      },
+      {
+        "step_id": 10,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/10-route-selector-free-feedback-commands.md",
+        "state": "present",
+        "digest": "9b8be0ab8b677ba4411a42d0f6779295608fc3b918a4933188781e3f1e8fbb8c"
+      },
+      {
+        "step_id": 11,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-versioned-feedback-revision-chain/11-document-ledger-candidate-workflow.md",
+        "state": "present",
+        "digest": "5113a5a4819c76a5b32fb69729fc38a0c91666110080655c32c23e86b59a5786"
+      }
+    ],
+    "source_seed_digest": "815950f7539d3f36296039dacd1780a7933c14559b190d835ba0284ecbeb7168",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

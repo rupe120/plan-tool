@@ -1,0 +1,171 @@
+{
+  "version": 4,
+  "plan_slug": "escalation-receipt-persistence",
+  "plan_path": "docs/implementation-plans/2-escalation-receipt-persistence.md",
+  "created_at": "2026-08-28T12:03:02Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "91ed8428dae40c8e1c80deaa99e599fb7f8f06ea8a38e49ac48f0f58c344d9a9",
+  "code_fingerprint": {
+    ".gitignore": "d09510dd28745751abaa2275985b4d8a20f7ca66895bfb56ffe0295f47309bdf",
+    "BACKLOG.md": "7f8519a35e97436b27cd8da5fd69337fb63d010e6eb2c771278c90821ad6528c",
+    "BUG_BACKLOG.md": "1f93f34904d1e33c865a62d6115abe50280cae5f9e70ae5fe5722504886fad60",
+    "CAPABILITIES.md": "bc35b6a1bcc973e17e60b3f5f71a7863eb193a77eb6e845cb0f5e01a719a5c7e",
+    "DATA_CONTRACT.md": "1b585da36ba9fddec9855ea9f1fb4ee349e6a9ac8651144e24c5fe2f661769cf",
+    "README.md": "23b5708bac76c8df7835fb048309b99a82ba8760c6040842932aeae2e504661e",
+    "ROADMAP_FORMAT.md": "f71fff214c8ec3263e6da6ba3f48b266513d2afe5edf066ea99a198b4a1fa5c5",
+    "RUNBOOK.md": "81eb10715fd22b163d165a344ae560735bb704a400ded142ce75bc2213d19274",
+    "TESTING.md": "b483cb4238807d5511c3abefe95debc692052659a3eaa1d3ac5adbfa881df0f1",
+    "docs/ARCHITECTURE.md": "491a9b11c255e56fafebea94526f3a236a4af80b63958e0ad5cae161295b6a16",
+    "docs/ROADMAP_WALKTHROUGH.md": "3e49e31c5e8e793be3bc15ace8dc7a6eda919e08cf2acd33d598ccee464e26fc",
+    "docs/cli/roadmap.md": "eed7749f6cc52614c779c95a5aefea0d189209154fd65fd440951345a1451fb7",
+    "docs/implementation-plans/backlog-arcs/bug-backlog-draining-arc.md": "bd5b378f0bfbff584c3b6540670b71a45f376959e9a198c6cdd8ce3f3bb7574b",
+    "plan_tool/cli/gitcommit.py": "237e11b303ca704beccd2541574f9c20dbac012e29f40f18df9716250963ff47",
+    "plan_tool/cli/roadmap_cmd.py": "1997d5d952ce937fcea29aa03ab6a6d9c727d4864e18a5a91ab62b7a142977a7",
+    "plan_tool/roadmap_escalation_run.py": "4733cf5b8d58b86de03847d7a7c03642dd3853cfa7f00c1ba32dfaae1e628043",
+    "plan_tool/run_log.py": "0e02bbfd87afb5d3d016af0d57c90793633ecc89cf6ec20b0388928e2d5c8beb",
+    "tests/cli/test_gitcommit.py": "a0994b1c620e5370e1d5f482c6703191bd91fff2de84005593eac1a2fdcfccc4",
+    "tests/cli/test_roadmap_cmd.py": "9333d9992488a7adecead28985584544c80a1901842853f98a77db360901f990",
+    "tests/test_roadmap_escalation_run.py": "62b15c0a62cee58fba798e9596698ff895d3ef3bd74c4dec3676af0ac0be3331",
+    "tests/test_roadmap_impact_run.py": "4a6f71136616582d8919394700e4750393889967c00518dfcb181fd0fbac4f10",
+    "tests/test_run_log.py": "65f4b1217f524970d9fa28307fb41b23d257a0b3874f1019b1710b30cfd618cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-git-commit-helper-that.md": "07153d4dad76b98fcf0c2ecc6d35af79c6d494b711603e38548ed1adc1b3dbec",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/02-finish-fresh-receipt-publication.md": "78ed8c2cdfc224de9f903c4ac52907ebe0bf061c3d02a7703a50a381e5f1c05c",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md": "af2db285c976d2f2da3ee52c572d1cee55e47d31841cd9b90d80605fa03e4b38",
+    "docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md": "c2fff9838de9c4f2df683d7537d7d90bbb10e258934cfca4dc17e9d0773b595c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Escalation Receipt Persistence\n\n`escalation-receipt-persistence` \u00b7 generated 2026-08-28T12:03:01Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `91ed8428dae40c8e1c80deaa99e599fb7f8f06ea8a38e49ac48f0f58c344d9a9`\n- **Detail bundle digest:** `b75510229f2bfcfef0b34e319fb0f4fa650fd0420953749ca13756d2c68db8a4`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply escalation-receipt-persistence   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk escalation-receipt-persistence  # alternative interactive review/apply\n\n- HIGH `[receipt-commit-lifecycle]` [confidence: limited]: Step 2 says \u201ckeep reuse and collision unchanged,\u201d but Architecture, Risks, Testing, and the acceptance criterion only say that commit failure and interruption use the existing result contract. After a failed or interrupted commit, `roadmap_evidence_store.py:publish_evidence` will return an existing receipt and `roadmap_escalation_run.py:_map_storage_result` / `_classify_existing` will return successful `reused`; `RunLogWriter.roadmap_escalation_result`, `DATA_CONTRACT.md`, and `ROADMAP_FORMAT.md` define no outcome for that uncommitted receipt. A retry can therefore report success while the receipt remains local.\n  - Fix: Define the full post-publication commit lifecycle, including failure/interruption result, receipt identity policy, and later matching-request behavior, then align reuse, telemetry, documentation, and proofs to it.\n- HIGH `[unrelated-change-preservation]` [confidence: limited]: Step 1 says it \u201cpreserves unrelated staged or unstaged work,\u201d while Architecture says the pathspec makes \u201cthe index and resulting commit exclude unrelated user changes,\u201d and Acceptance says \u201conly that receipt is staged and committed.\u201d A pre-staged user change can stay out of the receipt commit only by remaining staged in the index, so the current wording permits either clearing user staging or including it in the automatic commit; Testing names only a generic dirty worktree.\n  - Fix: State that receipt persistence stages and commits only its receipt while preserving existing staged entries, and require separate staged and unstaged unrelated-change proof.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[backlog-retirement-coverage]` [confidence: limited]: Step 4 covers `BUG_BACKLOG.md`, `BACKLOG.md`, and `bug-backlog-draining-arc.md`, but omits `docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md` item 4, which still routes receipt persistence to this selected plan. The `BUG_BACKLOG.md` receipt entry, `BACKLOG.md`\u2019s Current queue facts/Now table/Current selected concrete pick, and both backlog-arc records will otherwise disagree after shipment.\n  - Fix: Include every live receipt-persistence tracking record in step 4\u2019s retirement set, including the roadmap backlog arc, while retaining the separate evidence risks.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step2-granularity-split-3de39f0f]` [confidence: limited]: Step 2 \"Finish fresh receipt publication with a receipt-only commit, keep reuse and collision unchanged, report commit failure or interruption without reset or deletion, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply escalation-receipt-persistence` \u2014 apply the 2 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Escalation Receipt Persistence\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `91ed8428dae40c8e1c80deaa99e599fb7f8f06ea8a38e49ac48f0f58c344d9a9`\n- **Detail bundle digest:** `b75510229f2bfcfef0b34e319fb0f4fa650fd0420953749ca13756d2c68db8a4`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[receipt-commit-lifecycle]` [confidence: limited]: Step 2 says \u201ckeep reuse and collision unchanged,\u201d but Architecture, Risks, Testing, and the acceptance criterion only say that commit failure and interruption use the existing result contract. After a failed or interrupted commit, `roadmap_evidence_store.py:publish_evidence` will return an existing receipt and `roadmap_escalation_run.py:_map_storage_result` / `_classify_existing` will return successful `reused`; `RunLogWriter.roadmap_escalation_result`, `DATA_CONTRACT.md`, and `ROADMAP_FORMAT.md` define no outcome for that uncommitted receipt. A retry can therefore report success while the receipt remains local.\n- HIGH `[unrelated-change-preservation]` [confidence: limited]: Step 1 says it \u201cpreserves unrelated staged or unstaged work,\u201d while Architecture says the pathspec makes \u201cthe index and resulting commit exclude unrelated user changes,\u201d and Acceptance says \u201conly that receipt is staged and committed.\u201d A pre-staged user change can stay out of the receipt commit only by remaining staged in the index, so the current wording permits either clearing user staging or including it in the automatic commit; Testing names only a generic dirty worktree.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[backlog-retirement-coverage]` [confidence: limited]: Step 4 covers `BUG_BACKLOG.md`, `BACKLOG.md`, and `bug-backlog-draining-arc.md`, but omits `docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md` item 4, which still routes receipt persistence to this selected plan. The `BUG_BACKLOG.md` receipt entry, `BACKLOG.md`\u2019s Current queue facts/Now table/Current selected concrete pick, and both backlog-arc records will otherwise disagree after shipment.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: Step 2 \"Finish fresh receipt publication with a receipt-only commit, keep reuse and collision unchanged, report commit failure or interruption without reset or deletion, and remove the stopgap ignore rule\" touches 2 unrelated areas: `.gitignore`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply escalation-receipt-persistence` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-32dddb35",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 says \u201ckeep reuse and collision unchanged,\u201d but Architecture, Risks, Testing, and the acceptance criterion only sa",
+      "body": "Step 2 says \u201ckeep reuse and collision unchanged,\u201d but Architecture, Risks, Testing, and the acceptance criterion only say that commit failure and interruption use the existing result contract. After a failed or interrupted commit, `roadmap_evidence_store.py:publish_evidence` will return an existing receipt and `roadmap_escalation_run.py:_map_storage_result` / `_classify_existing` will return successful `reused`; `RunLogWriter.roadmap_escalation_result`, `DATA_CONTRACT.md`, and `ROADMAP_FORMAT.md` define no outcome for that uncommitted receipt. A retry can therefore report success while the receipt remains local.",
+      "suggested_action": "Define the full post-publication commit lifecycle, including failure/interruption result, receipt identity policy, and later matching-request behavior, then align reuse, telemetry, documentation, and proofs to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-commit-lifecycle",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-828fa483",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 says it \u201cpreserves unrelated staged or unstaged work,\u201d while Architecture says the pathspec makes \u201cthe index and ",
+      "body": "Step 1 says it \u201cpreserves unrelated staged or unstaged work,\u201d while Architecture says the pathspec makes \u201cthe index and resulting commit exclude unrelated user changes,\u201d and Acceptance says \u201conly that receipt is staged and committed.\u201d A pre-staged user change can stay out of the receipt commit only by remaining staged in the index, so the current wording permits either clearing user staging or including it in the automatic commit; Testing names only a generic dirty worktree.",
+      "suggested_action": "State that receipt persistence stages and commits only its receipt while preserving existing staged entries, and require separate staged and unstaged unrelated-change proof.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "unrelated-change-preservation",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-completeness-f328c587",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 covers `BUG_BACKLOG.md`, `BACKLOG.md`, and `bug-backlog-draining-arc.md`, but omits `docs/implementation-plans/ba",
+      "body": "Step 4 covers `BUG_BACKLOG.md`, `BACKLOG.md`, and `bug-backlog-draining-arc.md`, but omits `docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md` item 4, which still routes receipt persistence to this selected plan. The `BUG_BACKLOG.md` receipt entry, `BACKLOG.md`\u2019s Current queue facts/Now table/Current selected concrete pick, and both backlog-arc records will otherwise disagree after shipment.",
+      "suggested_action": "Include every live receipt-persistence tracking record in step 4\u2019s retirement set, including the roadmap backlog arc, while retaining the separate evidence risks.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "backlog-retirement-coverage",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "91ed8428dae40c8e1c80deaa99e599fb7f8f06ea8a38e49ac48f0f58c344d9a9",
+      "detail_bundle_digest": "b75510229f2bfcfef0b34e319fb0f4fa650fd0420953749ca13756d2c68db8a4",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/01-single-path-git-commit-helper-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/02-finish-fresh-receipt-publication.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/03-document-committed-receipt-path-replace.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/escalation-receipt-persistence/04-remove-fixed-receipt-persistence.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": null,
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

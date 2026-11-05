@@ -1,0 +1,61 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-77d6f4f7": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/01-hosting-rows-hosting-facets-constant.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step2-data-contract-2bde3945": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/02-stores-rows-store-ids-components.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 2,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-cf3f53f7": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/03-enforce-hosting-block-totality-value.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    },
+    "step4-data-contract-bffa6589": {
+      "code_anchor": "roadmap_gates.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/04-enforce-stores-definition-resolution.md",
+      "reason": "code anchor path `roadmap_gates.py` does not exist",
+      "step_id": 4,
+      "target": "plan-detail"
+    },
+    "step5-data-contract-2601fbaf": {
+      "code_anchor": "roadmap.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/05-pair-rule-cross-stage-components-gate.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-hosting-and-stores/05-pair-rule-cross-stage-components-gate.md",
+      "reason": "code anchor path `roadmap.py` does not exist",
+      "step_id": 5,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260808-001822-completeness"
+}

@@ -1,0 +1,190 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-render-canonical-tolerance",
+  "plan_path": "docs/implementation-plans/2-roadmap-render-canonical-tolerance.md",
+  "created_at": "2026-08-19T16:40:37Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "b8e17aa2a7fa689fedc8e14d2dd50654537768b26ce233207b8bf5b5852d6906",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "8508d4f010be1293f3380f089db1c950b48359976ad5ccf68c68118731fc1e75",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "plan_tool/roadmap_artifacts.py": "d22dca98bf5d9c28f0b44f595e2a16537d8b820751158cecb31bf7210dbd63aa",
+    "plan_tool/roadmap_impact_snapshot.py": "54c1a584d99dfe402441efbd498ccfa92e598028893bd89d80f7ec73f10a1f9c",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_structural_revision_patch.py": "aef6d0249d9ee416a196ed515802894078e93ad58f152ca95946a392ade9f84c",
+    "plan_tool/roadmap_structural_revision_proof.py": "2b0d3ffab4a7d0a23cf623e6b33620ea83016b4b4c95f79841c2df46009afc5b",
+    "plan_tool/roadmap_structural_revision_run.py": "6871aab3e199919b7209d20cff38d8d19e63b1b5cb2c987bae8e771874d8778b",
+    "tests/test_roadmap_artifacts.py": "e65a9b6a791f9ea6428a8913a5818d311ba1f2b3c411ecf6391546d8dd5c90e9",
+    "tests/test_roadmap_escalation_selection.py": "185eae397905f04345fec7c70607b5267faacdfbd8d72ff1eff0c7c308c81004",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_impact_snapshot.py": "d48a12c074215dde4a9bfe6e0cc6afaf22f12af142bb4e89f55ec252921b640f",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9",
+    "tests/test_roadmap_structural_revision_patch.py": "596fa7562ff2dfef8e6943963bd1c5d0609078c88b1957dfd286071a8eeda968",
+    "tests/test_roadmap_structural_revision_proof.py": "d90f18f74e42d505b3c4edc148b2391fd0d3df90091e83644c5f14eecdb8401e",
+    "tests/test_roadmap_structural_revision_run.py": "01f10c46cf76cacd8331f96a6290ad07c062bde43af2b8dcb5468306abedf24e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/01-shared-safe-canonical-text-helper-keep.md": "1df583492ce83da099ec5671cdac7a669f69af6bc5d6c48c4ce7cd1a42f4d6f7",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/02-store-semantically-equal-impact.md": "6f9998f6da5b4db0db72abdf4618bb3d50bc43dc752385afd428418b004ad93b",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/03-use-canonical-structural-patch-text.md": "ca0fd4156185a0fb55ef88dee5b402271596c549a9f60149567e7c10bd6718e5",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/04-use-canonical-text-structural-proofs.md": "5449aae8f471e75389e247bf4de434eb8ba38bc34266ce9f3b95e05bf5dbc586",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/05-accept-semantically-equal-structural.md": "f5d6767d0d1060f417f9dd62ed239bc0b160f6e67b56087193a34ef8f24e981e",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/06-accept-semantically-equal-local.md": "12402e347e25979fe2850413e993b4130e44db858c981c5e606953ec8aaec137",
+    "docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/07-document-parsed-equality-tolerance.md": "cebed1385c7452153557cb45e32df09a37277c19595fffee0d8341a48bfe5db2"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Render Canonical Tolerance\n\n`roadmap-render-canonical-tolerance` \u00b7 generated 2026-08-19T16:40:37Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-render-canonical-tolerance   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-render-canonical-tolerance  # alternative interactive review/apply\n\n- HIGH `[canonical-source-boundary]`: Architecture says to \u201cfix all three regardless\u201d and calls `roadmap_structural_revision_proof._require_canonical_text` an independent read boundary, but step 3 requires canonical replacement, step 4 requires renderer-produced publication, and Acceptance criteria names only four read/capture boundaries. At HEAD, `roadmap_structural_revision_patch._parse_canonical_candidate` and `roadmap_structural_revision_proof._require_canonical_text` validate generated candidates or normalized preflight text, not raw on-disk input; relaxing them would break `test_merge_requires_renderer_canonical_candidate_bytes` and `test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage`.\n  - Fix: define tolerance as source normalization at the capture and local-revision boundaries, and explicitly keep patch/proof candidate checks byte-strict across Architecture, steps 3\u20135, Testing, and Acceptance criteria.\n- HIGH `[receipt-evidence-digest]`: Step 1 promises \u201cpreserving raw-byte evidence binding,\u201d while step 2 promises canonical \u201ctext and digests,\u201d without assigning the two identities. `roadmap_escalation_selection.canonical_artifact_snapshot` and `roadmap_escalation_run.current_escalation_receipt` bind receipt freshness to raw bytes, while `RoadmapImpactSnapshot.artifact_digests`, `roadmap_impact_analysis._snapshot_evidence`, `roadmap_structural_revision._current_selected_slice`, `roadmap_impact_snapshot._binding`, and `roadmap_structural_revision_run._binding_digest` reuse the snapshot digest for structural evidence; a cosmetic edit therefore either invalidates the receipt or lets structural revision proceed while receipt lifecycle reports it resolved.\n  - Fix: state which records retain raw-byte identity, which bind canonical working text, and the required receipt-freshness and structural-revision result after safe cosmetic drift.\n- MEDIUM `[current-canonicality-coverage]`: Problem statement says `tests/test_roadmap_impact_snapshot.py::test_capture_rejects_parseable_but_noncanonical_artifact_text` is \u201cthe only existing test,\u201d but `tests/test_roadmap_revision.py::test_preflight_requires_exact_parser_renderer_round_trip`, `tests/test_roadmap_revision_run.py::test_render_canonical_rejection_is_distinct_from_retained_feedback`, `tests/test_roadmap_structural_revision_patch.py::test_merge_requires_renderer_canonical_candidate_bytes`, and `tests/test_roadmap_structural_revision_proof.py::test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage` already cover related canonicality refusals.\n  - Fix: correct the current-coverage inventory and identify only the new source-normalization coverage the plan needs.\n- CRITICAL `[parsed-equality-tolerance]`: The Overview\u2019s `parse(text) == parse(render(parse(text)))` rule cannot prove an edit is presentation-only: `_capture_artifact`, `_require_preflight`, and `preflight_feedback_revision` have no earlier artifact to compare, so a value edit that round-trips passes. It also rejects the stated #242 case: `roadmap_artifacts._parse_feedback_rows` preserves feedback tuple order while #242 step 4 will sort only `_review_mappings`, making the parsed values unequal for a closed row moved mid-list; Testing and Acceptance criteria require both outcomes across `_capture_artifact`, `_require_preflight`, `_parse_canonical_candidate`, `_require_canonical_text`, and `preflight_feedback_revision`.\n  - Fix: define an equivalence and source-of-truth rule that accepts only the intended presentation/order normalization while still detecting changed artifact meaning, then align every boundary and test to it\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-955725ae]`: The plan's `## Acceptance criteria` names `_capture_artifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-a9857348]`: The plan's `## Acceptance criteria` names `_require_canonical_text`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-fbe5ccb1]`: The plan's `## Acceptance criteria` names `_require_preflight`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5a41da98]`: The plan's `## Acceptance criteria` names `preflight_feedback_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-5388cabd]`: The plan's `## Acceptance criteria` names `roadmap_format.md:731-736`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e475cfa2]`: The plan's `## Acceptance criteria` names `test_merge_rejects_canonical_target_scalar_that_crosses_a_physical_yaml_line`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-render-canonical-tolerance` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Render Canonical Tolerance\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[canonical-source-boundary]`: Architecture says to \u201cfix all three regardless\u201d and calls `roadmap_structural_revision_proof._require_canonical_text` an independent read boundary, but step 3 requires canonical replacement, step 4 requires renderer-produced publication, and Acceptance criteria names only four read/capture boundaries. At HEAD, `roadmap_structural_revision_patch._parse_canonical_candidate` and `roadmap_structural_revision_proof._require_canonical_text` validate generated candidates or normalized preflight text, not raw on-disk input; relaxing them would break `test_merge_requires_renderer_canonical_candidate_bytes` and `test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage`.\n- HIGH `[receipt-evidence-digest]`: Step 1 promises \u201cpreserving raw-byte evidence binding,\u201d while step 2 promises canonical \u201ctext and digests,\u201d without assigning the two identities. `roadmap_escalation_selection.canonical_artifact_snapshot` and `roadmap_escalation_run.current_escalation_receipt` bind receipt freshness to raw bytes, while `RoadmapImpactSnapshot.artifact_digests`, `roadmap_impact_analysis._snapshot_evidence`, `roadmap_structural_revision._current_selected_slice`, `roadmap_impact_snapshot._binding`, and `roadmap_structural_revision_run._binding_digest` reuse the snapshot digest for structural evidence; a cosmetic edit therefore either invalidates the receipt or lets structural revision proceed while receipt lifecycle reports it resolved.\n- MEDIUM `[current-canonicality-coverage]`: Problem statement says `tests/test_roadmap_impact_snapshot.py::test_capture_rejects_parseable_but_noncanonical_artifact_text` is \u201cthe only existing test,\u201d but `tests/test_roadmap_revision.py::test_preflight_requires_exact_parser_renderer_round_trip`, `tests/test_roadmap_revision_run.py::test_render_canonical_rejection_is_distinct_from_retained_feedback`, `tests/test_roadmap_structural_revision_patch.py::test_merge_requires_renderer_canonical_candidate_bytes`, and `tests/test_roadmap_structural_revision_proof.py::test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage` already cover related canonicality refusals.\n- CRITICAL `[parsed-equality-tolerance]`: The Overview\u2019s `parse(text) == parse(render(parse(text)))` rule cannot prove an edit is presentation-only: `_capture_artifact`, `_require_preflight`, and `preflight_feedback_revision` have no earlier artifact to compare, so a value edit that round-trips passes. It also rejects the stated #242 case: `roadmap_artifacts._parse_feedback_rows` preserves feedback tuple order while #242 step 4 will sort only `_review_mappings`, making the parsed values unequal for a closed row moved mid-list; Testing and Acceptance criteria require both outcomes across `_capture_artifact`, `_require_preflight`, `_parse_canonical_candidate`, `_require_canonical_text`, and `preflight_feedback_revision`.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `_capture_artifact`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `_require_canonical_text`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `_require_preflight`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `preflight_feedback_revision`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `roadmap_format.md:731-736`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `test_merge_rejects_canonical_target_scalar_that_crosses_a_physical_yaml_line`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-render-canonical-tolerance` \u2014 walk the 4 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-31da9d6f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says to \u201cfix all three regardless\u201d and calls `roadmap_structural_revision_proof._require_canonical_text` an",
+      "body": "Architecture says to \u201cfix all three regardless\u201d and calls `roadmap_structural_revision_proof._require_canonical_text` an independent read boundary, but step 3 requires canonical replacement, step 4 requires renderer-produced publication, and Acceptance criteria names only four read/capture boundaries. At HEAD, `roadmap_structural_revision_patch._parse_canonical_candidate` and `roadmap_structural_revision_proof._require_canonical_text` validate generated candidates or normalized preflight text, not raw on-disk input; relaxing them would break `test_merge_requires_renderer_canonical_candidate_bytes` and `test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage`.",
+      "suggested_action": "define tolerance as source normalization at the capture and local-revision boundaries, and explicitly keep patch/proof candidate checks byte-strict across Architecture, steps 3\u20135, Testing, and Acceptance criteria.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "canonical-source-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-eafbae08",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 promises \u201cpreserving raw-byte evidence binding,\u201d while step 2 promises canonical \u201ctext and digests,\u201d without assi",
+      "body": "Step 1 promises \u201cpreserving raw-byte evidence binding,\u201d while step 2 promises canonical \u201ctext and digests,\u201d without assigning the two identities. `roadmap_escalation_selection.canonical_artifact_snapshot` and `roadmap_escalation_run.current_escalation_receipt` bind receipt freshness to raw bytes, while `RoadmapImpactSnapshot.artifact_digests`, `roadmap_impact_analysis._snapshot_evidence`, `roadmap_structural_revision._current_selected_slice`, `roadmap_impact_snapshot._binding`, and `roadmap_structural_revision_run._binding_digest` reuse the snapshot digest for structural evidence; a cosmetic edit therefore either invalidates the receipt or lets structural revision proceed while receipt lifecycle reports it resolved.",
+      "suggested_action": "state which records retain raw-byte identity, which bind canonical working text, and the required receipt-freshness and structural-revision result after safe cosmetic drift.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "receipt-evidence-digest",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-df418ab2",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Problem statement says `tests/test_roadmap_impact_snapshot.py::test_capture_rejects_parseable_but_noncanonical_artifact_",
+      "body": "Problem statement says `tests/test_roadmap_impact_snapshot.py::test_capture_rejects_parseable_but_noncanonical_artifact_text` is \u201cthe only existing test,\u201d but `tests/test_roadmap_revision.py::test_preflight_requires_exact_parser_renderer_round_trip`, `tests/test_roadmap_revision_run.py::test_render_canonical_rejection_is_distinct_from_retained_feedback`, `tests/test_roadmap_structural_revision_patch.py::test_merge_requires_renderer_canonical_candidate_bytes`, and `tests/test_roadmap_structural_revision_proof.py::test_proof_rejects_candidate_that_is_not_canonical_for_the_selected_stage` already cover related canonicality refusals.",
+      "suggested_action": "correct the current-coverage inventory and identify only the new source-normalization coverage the plan needs.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "current-canonicality-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f17bf7b3",
+      "source": "plan-correctness",
+      "severity": "critical",
+      "step_id": null,
+      "title": "The Overview\u2019s `parse(text) == parse(render(parse(text)))` rule cannot prove an edit is presentation-only: `_capture_art",
+      "body": "The Overview\u2019s `parse(text) == parse(render(parse(text)))` rule cannot prove an edit is presentation-only: `_capture_artifact`, `_require_preflight`, and `preflight_feedback_revision` have no earlier artifact to compare, so a value edit that round-trips passes. It also rejects the stated #242 case: `roadmap_artifacts._parse_feedback_rows` preserves feedback tuple order while #242 step 4 will sort only `_review_mappings`, making the parsed values unequal for a closed row moved mid-list; Testing and Acceptance criteria require both outcomes across `_capture_artifact`, `_require_preflight`, `_parse_canonical_candidate`, `_require_canonical_text`, and `preflight_feedback_revision`.",
+      "suggested_action": "define an equivalence and source-of-truth rule that accepts only the intended presentation/order normalization while still detecting changed artifact meaning, then align every boundary and test to it",
+      "impact": "high",
+      "complexity": "high",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "parsed-equality-tolerance",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 2,
+    "detail_grade": "run",
+    "plan_digest": "b8e17aa2a7fa689fedc8e14d2dd50654537768b26ce233207b8bf5b5852d6906",
+    "detail_bundle_digest": "8d8c30b66bb27fe3083fecd74da9a4ed2b8e6ab148a64746f92b17b1faca1e20",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/01-shared-safe-canonical-text-helper-keep.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/02-store-semantically-equal-impact.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/03-use-canonical-structural-patch-text.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/04-use-canonical-text-structural-proofs.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/05-accept-semantically-equal-structural.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/06-accept-semantically-equal-local.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 7,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-render-canonical-tolerance/07-document-parsed-equality-tolerance.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "6d3b060eda15f6377ebcb99aa48076e5d96c722a9bd625f7e0f37023bce092ca"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

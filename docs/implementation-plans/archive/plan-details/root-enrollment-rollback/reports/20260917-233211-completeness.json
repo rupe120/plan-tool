@@ -1,0 +1,167 @@
+{
+  "version": 4,
+  "plan_slug": "root-enrollment-rollback",
+  "plan_path": "docs/implementation-plans/2-root-enrollment-rollback.md",
+  "created_at": "2026-09-17T23:32:11Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9883a083604a88081f113cca2a49f4374363a66ac3bf60d3ba83823e2c2f962b",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "7eeae5824d4d6c57020fd8d5f889f93f1de11285313aff114a04bb4a3aee00bd",
+    "ROADMAP_FORMAT.md": "3691423297eb9c5733ebdc28553317efd7cb100dd0dbd6f0103b07adc24bbf65",
+    "plan_tool/cli/roadmap_cmd.py": "e6d31586c744e92cc32534c17e76c2bb65fc4860f97a5e51b81331c7c5bdac80",
+    "plan_tool/roadmap_evidence_store.py": "06e78dfc28e3b763a3e9b7a185afd15c9fd59685ebd77212715b00a0af12edf1",
+    "tests/cli/test_roadmap_cmd.py": "68482bdd8aae36c699178a42e59dab6244d30c5a795d326b4ec9f4efbe044c53",
+    "tests/test_roadmap_evidence_store.py": "3c47efc813b029f6ca69fbd080ff2ba0b241346e044faa94966c1472a2a7e072"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/01-roadmap-rollback-module-that-clears.md": "f7b99604c6b4f5712c15ebec5f606c82c4aecc473da30d09875826475a5c9a18",
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/02-rollback-root-confirm-root-rollback-cli.md": "5759d5da85135be0a12e9b3ad8cf675897836a09c783d68436b29031b23de6fa",
+    "docs/implementation-plans/plan-details/root-enrollment-rollback/03-update-accepted-head-lifecycle-doc-name.md": "f4ded0a003ec6632816fa28c893f35046c4393f28d7a0cd75b53997f8bef9982"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Root Enrollment Rollback\n\n`root-enrollment-rollback` \u00b7 generated 2026-09-17T23:32:10Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9883a083604a88081f113cca2a49f4374363a66ac3bf60d3ba83823e2c2f962b`\n- **Detail bundle digest:** `41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 3 (first audit)\n- **Detail-bundle size:** 0 bytes (first audit)\n- **Keystone fan-out:** 0.50\n- **Satellite ratio:** 0.33\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk root-enrollment-rollback  # optional interactive review of the saved findings\n\n- MEDIUM `[rollback-eligibility-independence]` [confidence: limited]: Step 1's eligibility gate treats \"no accepted descendant\" and \"no review/seal record\" as independent checks from \"root-only accepted head\" and \"no candidate admission\" \u2014 this five-condition list is repeated verbatim in Architecture, Risks (\"Every one of the five eligibility conditions needs its own mutation test (violate one condition at a time, prove refusal, prove no write)\"), Testing (\"for each of the five conditions, construct a fixture that violates only that one condition and assert refusal\"), and the Acceptance criteria bullet (\"Any accepted descendant, candidate admission, review/seal record, pending generation, or tracked seed state blocks rollback...\"). Neither of these two can be made false on its own under the code today: `accepted-head.json` names exactly one version at a time (`roadmap_versions.py:AcceptedRoadmapHead`/`accepted_head_path`) and `roadmap_version_promotion.py:promote_review_seal` only ever moves that selector forward from the currently accepted version to a new candidate, never back to a root \u2014 so an accepted head naming the root already rules out any accepted descendant. Likewise, every review/seal artifact (`roadmap_candidate_review.py:question_inventory_path`, `reviewer_answer_path`, `review_seal_path`) lives keyed off a materialized candidate's own version id, and a candidate can't materialize without a `CandidateProposalAdmission` first (`roadmap_candidate_run.py`, admission is written before `candidate_version_id` is ever set) \u2014 and no writer anywhere unlinks `candidate_admission_path`, so a review/seal record can't exist without a candidate-admission record also existing. A developer cannot build the \"violates only that one condition\" fixture the plan's own Testing section calls for on these two.\n  - Fix: Clarify what \"accepted descendant\" and \"review/seal record\" independently mean beyond what \"root-only accepted head\" and \"no candidate admission\" already establish, or state plainly that these two conditions are subsumed by their siblings under the current writers and adjust the \"violate one condition at a time\" testing requirement to the conditions that can actually be independently triggered.\n- HIGH `[rollback-receipt-coverage]` [confidence: limited]: The Testing section assumes a rollback receipt already exists and is checked on replay:\n\n  ```\n  Prove idempotence: roll back twice and assert the second call reports the\n  already-rolled-back state without a second receipt write or error.\n  ```\n\n  but no such requirement appears in Architecture, Risks, or Acceptance criteria \u2014 nothing obliges rollback to write a durable record at all, so \"reports the already-rolled-back state\" has no defined signal to tell that state apart from \"never enrolled.\" Step 1's own frontmatter lists `plan_tool/roadmap_evidence_store.py` as a file to modify, hinting at where a record might land, but the plan body never says so. Meanwhile the References section points the implementer at the wrong reuse candidate: `plan_tool/roadmap_escalation.py`'s `build_receipt`/`EscalationReceipt` models \"one selected, still-open feedback row\" \u2014 its `_ReceiptSemanticFields` requires a `ReceiptSelector` (`artifact_key` + `feedback_id`), a `ReceiptTarget`, a `ReceiptReason` from `roadmap_escalation_selection.py`, and enforces `feedback_state: Literal[\"open\"]` \u2014 none of which describes un-enrolling a root, and its companion `receipt_worktree_for_plans_dir` (`roadmap_escalation_run.py`) ties it to a git-committed worktree flow built for escalation/impact-run, not a lightweight lifecycle fact. `roadmap_evidence_store.py`'s `EvidenceNamespace` enum has only `ESCALATIONS` and `IMPACT_ANALYSES` today, so even the file step 1 does list has no matching namespace yet.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The plan's idempotency requirement depends on a durable, checkable record of a completed rollback, but no Architecture commitment or acceptance criterion requires that record to exist, so nothing guarantees \"already rolled back\" is distinguishable from \"never enrolled.\"\n  - Fix: Add an Architecture commitment and an acceptance criterion for a durable, checkable rollback record (what it names, when it was written, and how idempotent replay reads it), and replace the References pointer with a mechanism that actually fits a root un-selection fact instead of the escalation-specific receipt shape.\n- MEDIUM `[pending-generation-check-source]` [confidence: limited]: Architecture and References name two different functions for the same \"pending generation\" check. Architecture says:\n\n  ```\n  reuse `recover_roadmap_publication`'s pending-generation check rather than\n  adding a second one, so a route never fires while a lifecycle journal is\n  mid-write.\n  ```\n\n  but References separately lists `plan_tool/roadmap_source_identity.py:load_pending_generation` as one of \"the three other eligibility checks.\" `recover_roadmap_publication` (`roadmap_revision_publish.py`) is not a pure check \u2014 it can unlink the pending-generation journal file or raise `RoadmapPublicationRecoveryError` as a side effect of running it. Read literally, Architecture tells the implementer to call that mutating recovery function inside rollback's eligibility gate, which would make checking rollback eligibility trigger or complete unrelated in-flight publication recovery \u2014 exactly the \"separate incomplete-journal recovery bug\" the plan's Out of scope section says to keep separate (\"Keep the two mechanisms and their tests separate\"). Calling `load_pending_generation` directly avoids this, but nothing in the plan states which reading is the intended one.\n  - Fix: State explicitly that rollback's pending-generation check calls the plain read (`load_pending_generation`) and must never invoke `recover_roadmap_publication`'s recovery/mutation path.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- HIGH `[rollback-receipt-coverage]` [confidence: limited]: Step 1's own frontmatter commits to a durable rollback receipt that the plan body never specifies as a requirement. Step 1's `files:` list includes `plan_tool/roadmap_evidence_store.py` \u2014 the shared immutable evidence store whose only two existing namespaces are `ESCALATIONS` and `IMPACT_ANALYSES`, so the only reason step 1 would touch this file is to add a namespace for rollback receipts \u2014 and step 2's and step 3's `depends_on_notes` both describe step 1 as delivering it (\"delivers the eligibility predicate, receipt, and atomic selector-clear\"; \"names the shipped module and its receipt mechanism\"). Yet no step's title or intent says to build a receipt, no Risk names a missing or wrong receipt as a hazard, no Acceptance criterion requires one to exist or be readable, and the Testing section mentions it exactly once, negatively, in the idempotence bullet (\"assert the second call reports the already-rolled-back state without a second receipt write or error\") \u2014 nothing asserts the *first* successful rollback actually writes one, or that it records the right facts (which root, when, under what confirmed operator intent). The plan's own References section (\"`plan_tool/roadmap_escalation.py` \u2014 existing durable-receipt mechanism to evaluate for reuse before adding a second one\") and the BUG_BACKLOG fix text it cites (\"preserve the immutable root and write a durable rollback receipt; then atomically clear only the active accepted-head selection\") both treat the receipt as required, so this reads as dropped partway through authoring rather than a deliberate scope cut.\n  - Fix: Add the receipt to step 1's stated intent, add an Acceptance criterion requiring a durable, readable record of which root was un-selected, when, and under what confirmed operator intent, and add a Testing bullet asserting the first successful rollback writes that record and it can be read back correctly.\n\n## Suggested next steps\n\n- Close 3 conceptual-correctness gap(s) through a session-directed edit now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Root Enrollment Rollback\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9883a083604a88081f113cca2a49f4374363a66ac3bf60d3ba83823e2c2f962b`\n- **Detail bundle digest:** `41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 3 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[rollback-eligibility-independence]` [confidence: limited]: Step 1's eligibility gate treats \"no accepted descendant\" and \"no review/seal record\" as independent checks from \"root-only accepted head\" and \"no candidate admission\" \u2014 this five-condition list is repeated verbatim in Architecture, Risks (\"Every one of the five eligibility conditions needs its own mutation test (violate one condition at a time, prove refusal, prove no write)\"), Testing (\"for each of the five conditions, construct a fixture that violates only that one condition and assert refusal\"), and the Acceptance criteria bullet (\"Any accepted descendant, candidate admission, review/seal record, pending generation, or tracked seed state blocks rollback...\"). Neither of these two can be made false on its own under the code today: `accepted-head.json` names exactly one version at a time (`roadmap_versions.py:AcceptedRoadmapHead`/`accepted_head_path`) and `roadmap_version_promotion.py:promote_review_seal` only ever moves that selector forward from the currently accepted version to a new candidate, never back to a root \u2014 so an accepted head naming the root already rules out any accepted descendant. Likewise, every review/seal artifact (`roadmap_candidate_review.py:question_inventory_path`, `reviewer_answer_path`, `review_seal_path`) lives keyed off a materialized candidate's own version id, and a candidate can't materialize without a `CandidateProposalAdmission` first (`roadmap_candidate_run.py`, admission is written before `candidate_version_id` is ever set) \u2014 and no writer anywhere unlinks `candidate_admission_path`, so a review/seal record can't exist without a candidate-admission record also existing. A developer cannot build the \"violates only that one condition\" fixture the plan's own Testing section calls for on these two.\n- HIGH `[rollback-receipt-coverage]` [confidence: limited]: The Testing section assumes a rollback receipt already exists and is checked on replay:\n\n  ```\n  Prove idempotence: roll back twice and assert the second call reports the\n  already-rolled-back state without a second receipt write or error.\n  ```\n\n  but no such requirement appears in Architecture, Risks, or Acceptance criteria \u2014 nothing obliges rollback to write a durable record at all, so \"reports the already-rolled-back state\" has no defined signal to tell that state apart from \"never enrolled.\" Step 1's own frontmatter lists `plan_tool/roadmap_evidence_store.py` as a file to modify, hinting at where a record might land, but the plan body never says so. Meanwhile the References section points the implementer at the wrong reuse candidate: `plan_tool/roadmap_escalation.py`'s `build_receipt`/`EscalationReceipt` models \"one selected, still-open feedback row\" \u2014 its `_ReceiptSemanticFields` requires a `ReceiptSelector` (`artifact_key` + `feedback_id`), a `ReceiptTarget`, a `ReceiptReason` from `roadmap_escalation_selection.py`, and enforces `feedback_state: Literal[\"open\"]` \u2014 none of which describes un-enrolling a root, and its companion `receipt_worktree_for_plans_dir` (`roadmap_escalation_run.py`) ties it to a git-committed worktree flow built for escalation/impact-run, not a lightweight lifecycle fact. `roadmap_evidence_store.py`'s `EvidenceNamespace` enum has only `ESCALATIONS` and `IMPACT_ANALYSES` today, so even the file step 1 does list has no matching namespace yet.\n  - Plan-altitude restatement (delivered evidence, not a verdict on this finding): The plan's idempotency requirement depends on a durable, checkable record of a completed rollback, but no Architecture commitment or acceptance criterion requires that record to exist, so nothing guarantees \"already rolled back\" is distinguishable from \"never enrolled.\"\n- MEDIUM `[pending-generation-check-source]` [confidence: limited]: Architecture and References name two different functions for the same \"pending generation\" check. Architecture says:\n\n  ```\n  reuse `recover_roadmap_publication`'s pending-generation check rather than\n  adding a second one, so a route never fires while a lifecycle journal is\n  mid-write.\n  ```\n\n  but References separately lists `plan_tool/roadmap_source_identity.py:load_pending_generation` as one of \"the three other eligibility checks.\" `recover_roadmap_publication` (`roadmap_revision_publish.py`) is not a pure check \u2014 it can unlink the pending-generation journal file or raise `RoadmapPublicationRecoveryError` as a side effect of running it. Read literally, Architecture tells the implementer to call that mutating recovery function inside rollback's eligibility gate, which would make checking rollback eligibility trigger or complete unrelated in-flight publication recovery \u2014 exactly the \"separate incomplete-journal recovery bug\" the plan's Out of scope section says to keep separate (\"Keep the two mechanisms and their tests separate\"). Calling `load_pending_generation` directly avoids this, but nothing in the plan states which reading is the intended one.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- HIGH `[rollback-receipt-coverage]` [confidence: limited]: Step 1's own frontmatter commits to a durable rollback receipt that the plan body never specifies as a requirement. Step 1's `files:` list includes `plan_tool/roadmap_evidence_store.py` \u2014 the shared immutable evidence store whose only two existing namespaces are `ESCALATIONS` and `IMPACT_ANALYSES`, so the only reason step 1 would touch this file is to add a namespace for rollback receipts \u2014 and step 2's and step 3's `depends_on_notes` both describe step 1 as delivering it (\"delivers the eligibility predicate, receipt, and atomic selector-clear\"; \"names the shipped module and its receipt mechanism\"). Yet no step's title or intent says to build a receipt, no Risk names a missing or wrong receipt as a hazard, no Acceptance criterion requires one to exist or be readable, and the Testing section mentions it exactly once, negatively, in the idempotence bullet (\"assert the second call reports the already-rolled-back state without a second receipt write or error\") \u2014 nothing asserts the *first* successful rollback actually writes one, or that it records the right facts (which root, when, under what confirmed operator intent). The plan's own References section (\"`plan_tool/roadmap_escalation.py` \u2014 existing durable-receipt mechanism to evaluate for reuse before adding a second one\") and the BUG_BACKLOG fix text it cites (\"preserve the immutable root and write a durable rollback receipt; then atomically clear only the active accepted-head selection\") both treat the receipt as required, so this reads as dropped partway through authoring rather than a deliberate scope cut.\n\n### Suggested next steps\n\n- Close the 3 conceptual-correctness gap(s) above through a session-directed edit to the plan body (the completeness gaps stay informational until a detail bundle exists), then commit and re-audit.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-cd56a87f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1's eligibility gate treats \"no accepted descendant\" and \"no review/seal record\" as independent checks from \"root-o",
+      "body": "Step 1's eligibility gate treats \"no accepted descendant\" and \"no review/seal record\" as independent checks from \"root-only accepted head\" and \"no candidate admission\" \u2014 this five-condition list is repeated verbatim in Architecture, Risks (\"Every one of the five eligibility conditions needs its own mutation test (violate one condition at a time, prove refusal, prove no write)\"), Testing (\"for each of the five conditions, construct a fixture that violates only that one condition and assert refusal\"), and the Acceptance criteria bullet (\"Any accepted descendant, candidate admission, review/seal record, pending generation, or tracked seed state blocks rollback...\"). Neither of these two can be made false on its own under the code today: `accepted-head.json` names exactly one version at a time (`roadmap_versions.py:AcceptedRoadmapHead`/`accepted_head_path`) and `roadmap_version_promotion.py:promote_review_seal` only ever moves that selector forward from the currently accepted version to a new candidate, never back to a root \u2014 so an accepted head naming the root already rules out any accepted descendant. Likewise, every review/seal artifact (`roadmap_candidate_review.py:question_inventory_path`, `reviewer_answer_path`, `review_seal_path`) lives keyed off a materialized candidate's own version id, and a candidate can't materialize without a `CandidateProposalAdmission` first (`roadmap_candidate_run.py`, admission is written before `candidate_version_id` is ever set) \u2014 and no writer anywhere unlinks `candidate_admission_path`, so a review/seal record can't exist without a candidate-admission record also existing. A developer cannot build the \"violates only that one condition\" fixture the plan's own Testing section calls for on these two.",
+      "suggested_action": "Clarify what \"accepted descendant\" and \"review/seal record\" independently mean beyond what \"root-only accepted head\" and \"no candidate admission\" already establish, or state plainly that these two conditions are subsumed by their siblings under the current writers and adjust the \"violate one condition at a time\" testing requirement to the conditions that can actually be independently triggered.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rollback-eligibility-independence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-29420b8f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Testing section assumes a rollback receipt already exists and is checked on replay:",
+      "body": "The Testing section assumes a rollback receipt already exists and is checked on replay:\n\n  ```\n  Prove idempotence: roll back twice and assert the second call reports the\n  already-rolled-back state without a second receipt write or error.\n  ```\n\n  but no such requirement appears in Architecture, Risks, or Acceptance criteria \u2014 nothing obliges rollback to write a durable record at all, so \"reports the already-rolled-back state\" has no defined signal to tell that state apart from \"never enrolled.\" Step 1's own frontmatter lists `plan_tool/roadmap_evidence_store.py` as a file to modify, hinting at where a record might land, but the plan body never says so. Meanwhile the References section points the implementer at the wrong reuse candidate: `plan_tool/roadmap_escalation.py`'s `build_receipt`/`EscalationReceipt` models \"one selected, still-open feedback row\" \u2014 its `_ReceiptSemanticFields` requires a `ReceiptSelector` (`artifact_key` + `feedback_id`), a `ReceiptTarget`, a `ReceiptReason` from `roadmap_escalation_selection.py`, and enforces `feedback_state: Literal[\"open\"]` \u2014 none of which describes un-enrolling a root, and its companion `receipt_worktree_for_plans_dir` (`roadmap_escalation_run.py`) ties it to a git-committed worktree flow built for escalation/impact-run, not a lightweight lifecycle fact. `roadmap_evidence_store.py`'s `EvidenceNamespace` enum has only `ESCALATIONS` and `IMPACT_ANALYSES` today, so even the file step 1 does list has no matching namespace yet.",
+      "suggested_action": "Add an Architecture commitment and an acceptance criterion for a durable, checkable rollback record (what it names, when it was written, and how idempotent replay reads it), and replace the References pointer with a mechanism that actually fits a root un-selection fact instead of the escalation-specific receipt shape.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rollback-receipt-coverage",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": "The plan's idempotency requirement depends on a durable, checkable record of a completed rollback, but no Architecture commitment or acceptance criterion requires that record to exist, so nothing guarantees \"already rolled back\" is distinguishable from \"never enrolled.\""
+    },
+    {
+      "id": "plan-plan-correctness-36109472",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture and References name two different functions for the same \"pending generation\" check. Architecture says:",
+      "body": "Architecture and References name two different functions for the same \"pending generation\" check. Architecture says:\n\n  ```\n  reuse `recover_roadmap_publication`'s pending-generation check rather than\n  adding a second one, so a route never fires while a lifecycle journal is\n  mid-write.\n  ```\n\n  but References separately lists `plan_tool/roadmap_source_identity.py:load_pending_generation` as one of \"the three other eligibility checks.\" `recover_roadmap_publication` (`roadmap_revision_publish.py`) is not a pure check \u2014 it can unlink the pending-generation journal file or raise `RoadmapPublicationRecoveryError` as a side effect of running it. Read literally, Architecture tells the implementer to call that mutating recovery function inside rollback's eligibility gate, which would make checking rollback eligibility trigger or complete unrelated in-flight publication recovery \u2014 exactly the \"separate incomplete-journal recovery bug\" the plan's Out of scope section says to keep separate (\"Keep the two mechanisms and their tests separate\"). Calling `load_pending_generation` directly avoids this, but nothing in the plan states which reading is the intended one.",
+      "suggested_action": "State explicitly that rollback's pending-generation check calls the plain read (`load_pending_generation`) and must never invoke `recover_roadmap_publication`'s recovery/mutation path.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pending-generation-check-source",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-29420b8f",
+      "source": "plan-completeness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1's own frontmatter commits to a durable rollback receipt that the plan body never specifies as a requirement. Step",
+      "body": "Step 1's own frontmatter commits to a durable rollback receipt that the plan body never specifies as a requirement. Step 1's `files:` list includes `plan_tool/roadmap_evidence_store.py` \u2014 the shared immutable evidence store whose only two existing namespaces are `ESCALATIONS` and `IMPACT_ANALYSES`, so the only reason step 1 would touch this file is to add a namespace for rollback receipts \u2014 and step 2's and step 3's `depends_on_notes` both describe step 1 as delivering it (\"delivers the eligibility predicate, receipt, and atomic selector-clear\"; \"names the shipped module and its receipt mechanism\"). Yet no step's title or intent says to build a receipt, no Risk names a missing or wrong receipt as a hazard, no Acceptance criterion requires one to exist or be readable, and the Testing section mentions it exactly once, negatively, in the idempotence bullet (\"assert the second call reports the already-rolled-back state without a second receipt write or error\") \u2014 nothing asserts the *first* successful rollback actually writes one, or that it records the right facts (which root, when, under what confirmed operator intent). The plan's own References section (\"`plan_tool/roadmap_escalation.py` \u2014 existing durable-receipt mechanism to evaluate for reuse before adding a second one\") and the BUG_BACKLOG fix text it cites (\"preserve the immutable root and write a durable rollback receipt; then atomically clear only the active accepted-head selection\") both treat the receipt as required, so this reads as dropped partway through authoring rather than a deliberate scope cut.",
+      "suggested_action": "Add the receipt to step 1's stated intent, add an Acceptance criterion requiring a durable, readable record of which root was un-selected, when, and under what confirmed operator intent, and add a Testing bullet asserting the first successful rollback writes that record and it can be read back correctly.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "rollback-receipt-coverage",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "9883a083604a88081f113cca2a49f4374363a66ac3bf60d3ba83823e2c2f962b",
+      "detail_bundle_digest": "41d817c8552d402f64f4cf77d8482c723b341ae8f0324bbda5a092b1a593b575",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/01-roadmap-rollback-module-that-clears.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/02-rollback-root-confirm-root-rollback-cli.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/root-enrollment-rollback/03-update-accepted-head-lifecycle-doc-name.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "b5a5f0d8c26091a6c9dec2ce5ded22e3ebe05bbe1a4c750df08354d3b082c344",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 3,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.5,
+    "satellite_ratio": 0.3333333333333333,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

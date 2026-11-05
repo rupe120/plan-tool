@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-stack-propagation",
+  "plan_path": "docs/implementation-plans/2-roadmap-stack-propagation.md",
+  "created_at": "2026-10-08T17:54:16Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "6e7e27034758d7c7d29e584cbea229f63a944c4e6c4cfc22c709b7262e5eae04",
+  "code_fingerprint": {
+    "BACKLOG.md": "6d7d599c713f8c330ffa6828b850947a792d6f67b6755e2148481d5db9c72cb7",
+    "PLAN_FORMAT.md": "74bb42b2533849c81085cec0ba336686eacbd2b20393a9e34f8393bd3fa00cd3",
+    "ROADMAP_FORMAT.md": "c350faeabe9c52577336ab77b0b033d8eee443e0e13740379df5127fcea0ca03",
+    "docs/how-to/roadmap.md": "df769aa60ca73f24749328b84b0f0c9f52c2d0e231e996758d81d4591e119c01",
+    "plan_tool/create.py": "f871ac98bd57b56439bd8f4804a90e05deab429dfd55c031441b422e6d747061",
+    "plan_tool/prompts/distill-seed.md": "7dfbf1f50fdbeed3dd27099bec73c707ca826400b986430af752b6f55afde1db",
+    "plan_tool/prompts/plan-audit.md": "09f03911c6d68c098d7a025729f7b045cb39b9082a98b372d01973e7452385f4",
+    "plan_tool/prompts/roadmap-seed.md": "62732feb8a3799b1fd42dd3ec4db907d38d0cc93446f7ea31cc4a823b85fd51a",
+    "plan_tool/prompts/synthesize-body.md": "74f8a9ec2ffba9e2e83b7d613e8cb86b068b82af0d9611439cfa9c0093e44111",
+    "plan_tool/roadmap.py": "3b62ff776fdbc5089a72d290dd06a06b142a9395e1cbdb3386b939952977f271",
+    "plan_tool/scope_fence.py": "625f8e220747dcd38eaf8d6def6dac19d58756fa049364856bf3255c0b4a54db",
+    "tests/test_create.py": "f9b462cb36a05fb63cde253b7c53975d2c512efda3ac8169c6720e3fa6e322ee",
+    "tests/test_review.py": "4987ebb014a4664a18fb75c79cb41332139f3458d3269dc425ab9dfae6f99443",
+    "tests/test_roadmap.py": "71b7b66070c49b84bd0f1985492fb12b2a1d53e22d505a325eb7f79991ab5247",
+    "tests/test_roadmap_seed_manifest.py": "ae00ee46e7d20b914652439cba10095b188a166866071b158030df9b6bb250e2",
+    "tests/test_scope_fence.py": "9e717919409389fdb0aa17fc0ee765c514b804e1c3b5c80f7d464d206b2618a2"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 could not summarize (no findings block)\n\nCompleted-sibling context informed this classification: 3 of 3 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: scoped \u2014 the backend emitted no parseable findings block, so no clean or drift verdict is claimed.",
+  "recommendations": [],
+  "annotations": {}
+}

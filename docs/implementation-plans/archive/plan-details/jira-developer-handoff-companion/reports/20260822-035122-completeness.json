@@ -1,0 +1,251 @@
+{
+  "version": 4,
+  "plan_slug": "jira-developer-handoff-companion",
+  "plan_path": "docs/implementation-plans/2-jira-developer-handoff-companion.md",
+  "created_at": "2026-08-22T03:51:22Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "f193ec613460a8c129b02234a7409606840d1f757628ff0c98bd5eb0c62536e9",
+  "code_fingerprint": {
+    "BACKLOG.md": "6741c28d21fdc5c995dd0423526523f115d7c1d2aab0decd24a13e966cc1b342",
+    "JIRA_FORMAT.md": "68e2d37d65c992094f1c8587a34f3f3a34f1c2f288f21f29e26bff60e12695ed",
+    "docs/PROCESS_CONTRACTS.md": "ec08f476bc4e5b83c8c0e21ae7606c3219d86e05c84aa576a018f40a8ad028c6",
+    "docs/cli/jira.md": "28d5e1fd9796a06e2eaa9abf6289b45f6a748c8fe3f013c3a13904f4f825dafd",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-jira-grade.md": "33adbb45f8e5a383b04ed189e90d8c56c13a3c3f3b1340c15192d97d2a2e9fa0",
+    "plan_tool/cli/jira_cmd.py": "2764db2112226354bab1eca8062eee4b24610c2631bb6afefee2f076f14b08e5",
+    "plan_tool/jira.py": "d0fc6714b9d4be1a6b8e06f8c9f571953ed583bc4fab9ea384c869400166c091",
+    "tests/cli/package_surface_help.golden.txt": "6408fda119f6bcfdab649700e351e0421dcf886f8e33c226e11a7cb48ae281a1",
+    "tests/cli/test_direct_cmd.py": "e976cd65646bced068539675833cbe53550546985a10be5646b354ae85b8748e",
+    "tests/cli/test_jira_cmds.py": "f65f65cbd66cbb1b76f20648e4708ab3ff79a17342d920cc08efca1d4b214684",
+    "tests/test_concept_sync.py": "a5ed2cd6e34cb160eb317e257889befb732faef5dcb5e0d429331ee0404c89fd",
+    "tests/test_detail.py": "a152a622453bf18511f288850e69e3953158e983369682fcfa8f1a43cb31cb3e",
+    "tests/test_jira.py": "a3d456aa1ebffd75d176898464d9b77ad6157763416e5a4b8171b9727ef5386c",
+    "tests/test_review_persistence.py": "9a6eb8b6937953c26175db7cc220e108047deb4c60351b065cab212f75d4875a"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md": "5dcf0b929ea148eb46581203806cfbda63bbdf591caeab81788c1b0f8180b846",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md": "84f8cf957336eeb27a0ca5ca52a8eca98b93645d294d76ebffbf1dcf53453b25",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md": "c0a5c420877baf87df51fba842b293faa28ac1e91dcd6b20499ba6713546c146",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md": "51bfc4babbf5f19b021de6e93dd361f910d490957804c990e64d204b1b374e88",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md": "f2175ab77fadd6766a1664b405cb16b9e401586408538fbf56fb4027a301e9f1",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md": "fb04b8090bb96bcf6fbd05c311422699f5ca1c49266a16446d7e697a04589086",
+    "docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md": "f3e39645615d297db9193708f22c4ad50dcd1a953ddbe4c867fad8af1b2e2712"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Jira Developer Handoff Companion\n\n`jira-developer-handoff-companion` \u00b7 generated 2026-08-22T03:51:22Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `59808b094c0d82c9c6b541d82a5fe3531766024b5be12bca54aac9a4d135be7a`\n- **Detail bundle digest:** `e8af62c90018c278385af30beb12db6b1578aeee8d559557c5d6b30312cde1d5`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+1 vs. first audit)\n- **Detail-bundle size:** 84729 bytes (+84729 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.14\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply jira-developer-handoff-companion   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[source-pair-identity]`: Architecture says pair identity is \u201cthe resolved story-source path and selected format,\u201d but also says \u201cAn explicitly different, otherwise valid companion destination is a distinct pair.\u201d Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) repeats the first formula; steps 2 (`Extract a companion-ready story renderer without changing story-only output`) and 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) retain the story formatter surface; step 4 (`Define the generated Jira developer-handoff format and lifecycle`) provides provenance reading only for the handoff; and steps 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) require per-target ownership decisions. Testing and acceptance criterion 6 cover a changed story source or format, not an alternate handoff destination, so a copied or alternate same-plan handoff can reasonably be accepted as the same pair or refused as a distinct one.\n  - Fix: Define one pair identity that includes both normalized output destinations and format, persist and read it for both generated sources, and apply it consistently to capture, regeneration, publication, CLI validation, and tests.\n- HIGH `[shared-fingerprint-coverage]`: Architecture captures each existing record\u2019s \u201ccovered-step/key/state mapping\u201d and says the fingerprint covers \u201cthat complete captured representation,\u201d but step 4 (`Define the generated Jira developer-handoff format and lifecycle`) hashes only captured values \u201cthat affects this handoff\u201d and excludes other output-derived data. Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures those records, step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) uses their key and state to change the story source, and `plan_tool.jira:_resolve_export_state`, `_render_story_block`, and `_story_to_json_dict` confirm they render into stories; step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and acceptance criterion 1 require a shared full-snapshot fingerprint but do not cover this change. A key or state can therefore change the story while both artifacts retain an unchanged fingerprint that claims to represent the full snapshot.\n  - Fix: Define the shared fingerprint\u2019s complete input set for both artifacts, including carried story state and keys while excluding only predecessor ownership provenance, and test those changes.\n- HIGH `[paired-provenance-metadata]`: Architecture requires \u201cBoth outputs\u201d to identify source paths, normalized destinations, fingerprint, revisions, and generation mode, and step 5 tests that both files carry the same fingerprint. Step 4 defines a metadata block and reader only for the handoff, while step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) sends the story through the legacy renderer; at HEAD `format_markdown` and `format_json` have no such provenance carrier. The story source cannot prove its own plan identity or paired provenance on a later safe rerun.\n  - Fix: Define companion-only provenance in the generated story source, with the same required shared fields and strict recognition rules as the handoff, while preserving story-only output.\n- HIGH `[final-ownership-change-detection]`: Step 5 says step 1 supplies \u201ctarget snapshots\u201d and requires final confirmation against each target\u2019s captured \u201ccontent state,\u201d but step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures record mappings and predecessor handoff provenance, not a complete per-target content state. `plan_tool.jira:read_existing_export` at HEAD likewise parses ticket records rather than preserving a whole-file target version. A human edit outside those parsed fields can be overwritten while still appearing to have the same ownership identity.\n  - Fix: Define and capture a per-target content-state proof for final confirmation, and test edits outside parsed record mappings before either replacement begins.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-56e85ccc]`: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-e88a7362]`: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-807aded8]`: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step1-granularity-merge-a5f5459e]`: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Jira Developer Handoff Companion\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `59808b094c0d82c9c6b541d82a5fe3531766024b5be12bca54aac9a4d135be7a`\n- **Detail bundle digest:** `e8af62c90018c278385af30beb12db6b1578aeee8d559557c5d6b30312cde1d5`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[source-pair-identity]`: Architecture says pair identity is \u201cthe resolved story-source path and selected format,\u201d but also says \u201cAn explicitly different, otherwise valid companion destination is a distinct pair.\u201d Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) repeats the first formula; steps 2 (`Extract a companion-ready story renderer without changing story-only output`) and 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) retain the story formatter surface; step 4 (`Define the generated Jira developer-handoff format and lifecycle`) provides provenance reading only for the handoff; and steps 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) require per-target ownership decisions. Testing and acceptance criterion 6 cover a changed story source or format, not an alternate handoff destination, so a copied or alternate same-plan handoff can reasonably be accepted as the same pair or refused as a distinct one.\n- HIGH `[shared-fingerprint-coverage]`: Architecture captures each existing record\u2019s \u201ccovered-step/key/state mapping\u201d and says the fingerprint covers \u201cthat complete captured representation,\u201d but step 4 (`Define the generated Jira developer-handoff format and lifecycle`) hashes only captured values \u201cthat affects this handoff\u201d and excludes other output-derived data. Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures those records, step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) uses their key and state to change the story source, and `plan_tool.jira:_resolve_export_state`, `_render_story_block`, and `_story_to_json_dict` confirm they render into stories; step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and acceptance criterion 1 require a shared full-snapshot fingerprint but do not cover this change. A key or state can therefore change the story while both artifacts retain an unchanged fingerprint that claims to represent the full snapshot.\n- HIGH `[paired-provenance-metadata]`: Architecture requires \u201cBoth outputs\u201d to identify source paths, normalized destinations, fingerprint, revisions, and generation mode, and step 5 tests that both files carry the same fingerprint. Step 4 defines a metadata block and reader only for the handoff, while step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) sends the story through the legacy renderer; at HEAD `format_markdown` and `format_json` have no such provenance carrier. The story source cannot prove its own plan identity or paired provenance on a later safe rerun.\n- HIGH `[final-ownership-change-detection]`: Step 5 says step 1 supplies \u201ctarget snapshots\u201d and requires final confirmation against each target\u2019s captured \u201ccontent state,\u201d but step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures record mappings and predecessor handoff provenance, not a complete per-target content state. `plan_tool.jira:read_existing_export` at HEAD likewise parses ticket records rather than preserving a whole-file target version. A human edit outside those parsed fields can be overwritten while still appearing to have the same ownership identity.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-jira-py:jiraresult-output]`: docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md:## Input cites `plan_tool/jira.py:JiraResult.output`, but code anchor `plan_tool/jira.py:JiraResult.output` does not resolve in HEAD.\n- MEDIUM `[data-contract-input-plan-tool-schema-py:plan--validate-graph]`: docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md:## Input cites `plan_tool/schema.py:Plan._validate_graph`, but code anchor `plan_tool/schema.py:Plan._validate_graph` does not resolve in HEAD.\n- MEDIUM `[data-contract-input-tests-cli-test-cli-reference-py:testclireferencedrift-test-every-generated-file-matches-disk]`: docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md:## Input cites `tests/cli/test_cli_reference.py:TestCliReferenceDrift.test_every_generated_file_matches_disk`, but code anchor `tests/cli/test_cli_reference.py:TestCliReferenceDrift.test_every_generated_file_matches_disk` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `<plan-dir>/jira-handoffs/<plan-slug>/<normalized-story-stem>.developer-handoff.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `jira_issue_key`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `step.intent`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 1 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/jira.py', 'tests/test_jira.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit jira-developer-handoff-companion` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-129483ae",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture says pair identity is \u201cthe resolved story-source path and selected format,\u201d but also says \u201cAn explicitly di",
+      "body": "Architecture says pair identity is \u201cthe resolved story-source path and selected format,\u201d but also says \u201cAn explicitly different, otherwise valid companion destination is a distinct pair.\u201d Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) repeats the first formula; steps 2 (`Extract a companion-ready story renderer without changing story-only output`) and 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) retain the story formatter surface; step 4 (`Define the generated Jira developer-handoff format and lifecycle`) provides provenance reading only for the handoff; and steps 5 (`Publish synchronized story and handoff source files without overwriting human guidance`) and 6 (`Add an opt-in Jira companion CLI mode with explicit output behavior`) require per-target ownership decisions. Testing and acceptance criterion 6 cover a changed story source or format, not an alternate handoff destination, so a copied or alternate same-plan handoff can reasonably be accepted as the same pair or refused as a distinct one.",
+      "suggested_action": "Define one pair identity that includes both normalized output destinations and format, persist and read it for both generated sources, and apply it consistently to capture, regeneration, publication, CLI validation, and tests.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "source-pair-identity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-f2f62e36",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture captures each existing record\u2019s \u201ccovered-step/key/state mapping\u201d and says the fingerprint covers \u201cthat comp",
+      "body": "Architecture captures each existing record\u2019s \u201ccovered-step/key/state mapping\u201d and says the fingerprint covers \u201cthat complete captured representation,\u201d but step 4 (`Define the generated Jira developer-handoff format and lifecycle`) hashes only captured values \u201cthat affects this handoff\u201d and excludes other output-derived data. Step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures those records, step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) uses their key and state to change the story source, and `plan_tool.jira:_resolve_export_state`, `_render_story_block`, and `_story_to_json_dict` confirm they render into stories; step 5 (`Publish synchronized story and handoff source files without overwriting human guidance`), Testing, and acceptance criterion 1 require a shared full-snapshot fingerprint but do not cover this change. A key or state can therefore change the story while both artifacts retain an unchanged fingerprint that claims to represent the full snapshot.",
+      "suggested_action": "Define the shared fingerprint\u2019s complete input set for both artifacts, including carried story state and keys while excluding only predecessor ownership provenance, and test those changes.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "shared-fingerprint-coverage",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-be9ea987",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Architecture requires \u201cBoth outputs\u201d to identify source paths, normalized destinations, fingerprint, revisions, and gene",
+      "body": "Architecture requires \u201cBoth outputs\u201d to identify source paths, normalized destinations, fingerprint, revisions, and generation mode, and step 5 tests that both files carry the same fingerprint. Step 4 defines a metadata block and reader only for the handoff, while step 3 (`Regenerate companion-mode stories with provable Jira-key ownership and state`) sends the story through the legacy renderer; at HEAD `format_markdown` and `format_json` have no such provenance carrier. The story source cannot prove its own plan identity or paired provenance on a later safe rerun.",
+      "suggested_action": "Define companion-only provenance in the generated story source, with the same required shared fields and strict recognition rules as the handoff, while preserving story-only output.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "paired-provenance-metadata",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-e155c9de",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 5 says step 1 supplies \u201ctarget snapshots\u201d and requires final confirmation against each target\u2019s captured \u201ccontent s",
+      "body": "Step 5 says step 1 supplies \u201ctarget snapshots\u201d and requires final confirmation against each target\u2019s captured \u201ccontent state,\u201d but step 1 (`Capture companion-mode Jira inputs once without changing story-only detail tolerance`) captures record mappings and predecessor handoff provenance, not a complete per-target content state. `plan_tool.jira:read_existing_export` at HEAD likewise parses ticket records rather than preserving a whole-file target version. A human edit outside those parsed fields can be overwritten while still appearing to have the same ownership identity.",
+      "suggested_action": "Define and capture a per-target content-state proof for final confirmation, and test edits outside parsed record mappings before either replacement begins.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "final-ownership-change-detection",
+      "target_signature": null
+    },
+    {
+      "id": "step2-data-contract-38d76002",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 2,
+      "title": "Stale Input contract reference `plan_tool/jira.py:JiraResult.output`",
+      "body": "docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md:## Input cites `plan_tool/jira.py:JiraResult.output`, but code anchor `plan_tool/jira.py:JiraResult.output` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-jira-py:jiraresult-output",
+      "target_signature": null
+    },
+    {
+      "id": "step4-data-contract-b1015a3f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 4,
+      "title": "Stale Input contract reference `plan_tool/schema.py:Plan._validate_graph`",
+      "body": "docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md:## Input cites `plan_tool/schema.py:Plan._validate_graph`, but code anchor `plan_tool/schema.py:Plan._validate_graph` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-schema-py:plan--validate-graph",
+      "target_signature": null
+    },
+    {
+      "id": "step7-data-contract-b978e1ca",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 7,
+      "title": "Stale Input contract reference `tests/cli/test_cli_reference.py:TestCliReferenceDrift.test_every_generated_file_matches_disk`",
+      "body": "docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md:## Input cites `tests/cli/test_cli_reference.py:TestCliReferenceDrift.test_every_generated_file_matches_disk`, but code anchor `tests/cli/test_cli_reference.py:TestCliReferenceDrift.test_every_generated_file_matches_disk` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-tests-cli-test-cli-reference-py:testclireferencedrift-test-every-generated-file-matches-disk",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "59808b094c0d82c9c6b541d82a5fe3531766024b5be12bca54aac9a4d135be7a",
+      "detail_bundle_digest": "e8af62c90018c278385af30beb12db6b1578aeee8d559557c5d6b30312cde1d5",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/01-capture-companion-mode-jira-inputs-once.md",
+          "state": "present",
+          "digest": "5dcf0b929ea148eb46581203806cfbda63bbdf591caeab81788c1b0f8180b846"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/02-extract-companion-ready-story-renderer.md",
+          "state": "present",
+          "digest": "84f8cf957336eeb27a0ca5ca52a8eca98b93645d294d76ebffbf1dcf53453b25"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/03-regenerate-companion-mode-stories.md",
+          "state": "present",
+          "digest": "c0a5c420877baf87df51fba842b293faa28ac1e91dcd6b20499ba6713546c146"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/04-define-generated-jira-developer-handoff.md",
+          "state": "present",
+          "digest": "51bfc4babbf5f19b021de6e93dd361f910d490957804c990e64d204b1b374e88"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/05-publish-synchronized-story-handoff.md",
+          "state": "present",
+          "digest": "f2175ab77fadd6766a1664b405cb16b9e401586408538fbf56fb4027a301e9f1"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/06-opt-jira-companion-cli-mode-explicit.md",
+          "state": "present",
+          "digest": "fb04b8090bb96bcf6fbd05c311422699f5ca1c49266a16446d7e697a04589086"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/jira-developer-handoff-companion/07-finish-jira-companion-docs-mark-backlog.md",
+          "state": "present",
+          "digest": "f3e39645615d297db9193708f22c4ad50dcd1a953ddbe4c867fad8af1b2e2712"
+        }
+      ],
+      "source_seed_digest": "14f8a11652141ab52994fb0c37ebb1227594d2b824b38b942dea3a0dfd86b32b",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 84729,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.14285714285714285,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "plan_slug": "direct-pipeline-commands",
+  "plan_path": "docs/implementation-plans/2-direct-pipeline-commands.md",
+  "created_at": "2026-07-16T19:57:23Z",
+  "kind": "detail-reconcile",
+  "step_id": 2,
+  "plan_fingerprint": "61271e36b76b7efd32a513889c535939d7a29a2edc65299a3ddbc21f84b3c27e",
+  "code_fingerprint": {
+    "BACKLOG.md": "94c4920af966f91f05f06e96a972ae87789a02ab690cffd5d968667eaa5e6687",
+    "CAPABILITIES.md": "ac9f50088dde36e0f67a893e808a3fe0636ee4ad214084ae838a7a083d07b6b6",
+    "README.md": "f0ae32e04710a025d6e49772c3b95498c2481ca6f2e0933515d8c8f67dd37701",
+    "USE_CASES.md": "c086628d13779af4ea8bc0fa5db892301521ea553cd9d32cfbd56d357084a1e0",
+    "docs/cli/README.md": "f3d953b09c1059df7f473b960ceec1e7a6ff8dd9c2e774429b4c41b9f9b4eeeb",
+    "plan_tool/cli/app.py": "0c6fadbc05211c722a16b3432e09d2fd9476e66435f0148b1f2e0b7132dcae26",
+    "plan_tool/cli/authoring.py": "16b0bf05bf7673f50cc1beff3d5894e1292ba32f03437fec8df4836dba574ad0",
+    "plan_tool/cli/parser.py": "74013b1acbac36273f0c5df1fade37b9cff5bccd1ba1caf80384ab33c093b778",
+    "tests/cli/test_authoring_cmds.py": "752756027d7456fe4af56302c86b6b106efefb94d8ffc6c1d62a4b2be21733f1",
+    "tests/cli/test_cli_reference.py": "41bcdca0803bde7e8f742e8d32b87d6e559ccee9bc3b38d8aab2163c7dab6a59",
+    "tests/test_create.py": "5e137cde43489fe61fa5375a56c16870e3504d52119646ab5300ad1a3b7ce7b7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "## Reconciliation report \u2014 step 2 (\"Let `cmd_create` deposit its `CreateResult` into a caller-provided namespace sink\")\n\n**Step status:** step 2 carries no `status:` field, so it defaults to `pending` (step 1, its dependency, is still `current`). This is the key fact: the step is *planned, not delivered*. A pending step whose work is legitimately absent from the code is the expected state \u2014 not drift.\n\n### Matches intent\n\n- All three declared `step.files` exist on disk and are the correct edit targets:\n  - `plan_tool/cli/authoring.py` \u2014 holds `cmd_create`, which the step will edit.\n  - `tests/cli/test_authoring_cmds.py` and `tests/test_create.py` \u2014 the test homes the step names.\n- The feature itself is correctly **absent**: `grep` for `_create_result_sink` across `plan_tool/` and `tests/` returns nothing, and none of the step's named tests (`test_create_result_sink_*`, `test_cmd_create_without_sink_unchanged`) exist. In `cmd_create`, the deposit point the detail describes (immediately after `result = create_plan(...)`, before the `if result.split_proposal is not None:` branch) has no sink append. This is exactly what a `pending` step should look like \u2014 the work hasn't been done yet.\n- The existing `_next_steps_sink` idiom the detail says to mirror is present in the codebase (`completeness_phases.py` / the completeness-tail helper), so the plan's stated blueprint is grounded in real code.\n\n### Plan over-promises\n\n- _(none)_ \u2014 the plan declares more than the code delivers only because the step is unimplemented, which is correct for a `pending` step. This is not reconcilable drift; flipping status or narrowing criteria would misrepresent planned work as delivered-or-broken.\n\n### Plan under-describes\n\n- _(none)_ \u2014 no sink-related code, tests, or files exist beyond what the plan already tracks. The declared files are pre-existing edit targets, not undeclared new code.\n\n## Findings\n\n_(none)_## Reconciliation report \u2014 step 2 (\"Let `cmd_create` deposit its `CreateResult` into a caller-provided namespace sink\")\n\n**Step status:** step 2 carries no `status:` field, so it defaults to `pending` (step 1, its dependency, is still `current`). This is the key fact: the step is *planned, not delivered*. A pending step whose work is legitimately absent from the code is the expected state \u2014 not drift.\n\n### Matches intent\n\n- All three declared `step.files` exist on disk and are the correct edit targets:\n  - `plan_tool/cli/authoring.py` \u2014 holds `cmd_create`, which the step will edit.\n  - `tests/cli/test_authoring_cmds.py` and `tests/test_create.py` \u2014 the test homes the step names.\n- The feature itself is correctly **absent**: `grep` for `_create_result_sink` across `plan_tool/` and `tests/` returns nothing, and none of the step's named tests (`test_create_result_sink_*`, `test_cmd_create_without_sink_unchanged`) exist. In `cmd_create`, the deposit point the detail describes (immediately after `result = create_plan(...)`, before the `if result.split_proposal is not None:` branch) has no sink append. This is exactly what a `pending` step should look like \u2014 the work hasn't been done yet.\n- The existing `_next_steps_sink` idiom the detail says to mirror is present in the codebase (`completeness_phases.py` / the completeness-tail helper), so the plan's stated blueprint is grounded in real code.\n\n### Plan over-promises\n\n- _(none)_ \u2014 the plan declares more than the code delivers only because the step is unimplemented, which is correct for a `pending` step. This is not reconcilable drift; flipping status or narrowing criteria would misrepresent planned work as delivered-or-broken.\n\n### Plan under-describes\n\n- _(none)_ \u2014 no sink-related code, tests, or files exist beyond what the plan already tracks. The declared files are pre-existing edit targets, not undeclared new code.\n\n## Findings\n\n_(none)_\n",
+  "recommendations": [],
+  "annotations": {}
+}

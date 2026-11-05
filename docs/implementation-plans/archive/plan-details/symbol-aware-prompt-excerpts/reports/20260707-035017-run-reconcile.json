@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "plan_slug": "symbol-aware-prompt-excerpts",
+  "plan_path": "docs/implementation-plans/2-symbol-aware-prompt-excerpts.md",
+  "created_at": "2026-07-07T03:50:17Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "daeb1040af62f7b3e97cf66f16c8a90a504762f52fa68de97eef6f027ed5eb7e",
+  "code_fingerprint": {
+    "RUNBOOK.md": "c55aa4b6c1105b84d3b8fdd70d915324426fc17c40e10080c69f1f0a846eb2df",
+    "plan_tool/annotate.py": "f87bac8b1b205675e11857125943d52003850bbbd1685c42c463a7998d7032b7",
+    "plan_tool/detail.py": "741bba284b99e033877094742e3ab668af45fad6c762b5eda7b51b15d3504cc4",
+    "plan_tool/jira.py": "d5e6fb8d241462a9f38e3cedae931b065e4adf362b9a0c8400ad7cbbd222154f",
+    "plan_tool/prompt_excerpt.py": "a1acded38de0bc6b57fe1942254f46350e43c4156f578f449b9efad928fd2fd4",
+    "plan_tool/review.py": "9720a18f070c716e08685c694277f3ed26a85ea3e22991cad1bd5a6470306fb8",
+    "tests/test_annotate.py": "192993a7d9e6955383b75ee334246cdc667c06418e007f02334ddb671184a658",
+    "tests/test_detail.py": "8d151c331647e3ce7adedd785749a9726cd2731bd10e88a5cbdd4fbe5b8377a6",
+    "tests/test_jira.py": "4fe9cbd1e60543a825b92ada1365b4ba87cc466f8b0136bf1b757664555e2a07",
+    "tests/test_prompt_excerpt.py": "9e70ddbc1d321f4ce8cfd92d242aeb24db54c8878038099b1f06d9409c83944e",
+    "tests/test_review.py": "683910f021326121a92622e74c2449b9af7ae101dc2e9ce986f9d1614486f8e1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "report_md": "Step 1 \u2014 0 critical / 1 high / 1 medium / 0 nits",
+  "recommendations": [
+    {
+      "id": "step1-run-reconcile-3887d33d",
+      "source": "run-reconcile",
+      "severity": "high",
+      "step_id": 1,
+      "title": "`plan_tool/prompt_excerpt.py:_find_python_symbol_range()` (step 1 \"Add Stdlib-Only Prompt Excerpt Helpers\") indexes `Ass",
+      "body": "`plan_tool/prompt_excerpt.py:_find_python_symbol_range()` (step 1 \"Add Stdlib-Only Prompt Excerpt Helpers\") indexes `Assign`, `AnnAssign`, and `AugAssign` nodes from every AST nesting level, so a local variable can become the selected symbol window and block a later real `def`, `async def`, `class`, or module-level assignment match",
+      "suggested_action": "restrict assignment symbol ranges in `_find_python_symbol_range()` to module-level assignments while preserving nested function/class discovery",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    },
+    {
+      "id": "step1-run-reconcile-ed65392e",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "`plan_tool/prompt_excerpt.py:_build_markdown_excerpt()` and `_build_line_match_excerpt()` (step 1 \"Add Stdlib-Only Promp",
+      "body": "`plan_tool/prompt_excerpt.py:_build_markdown_excerpt()` and `_build_line_match_excerpt()` (step 1 \"Add Stdlib-Only Prompt Excerpt Helpers\") scan file lines before candidate priority, so an earlier lower-priority candidate can win over the first candidate\u2019s later real match",
+      "suggested_action": "iterate candidates first in markdown heading and regex line matching, selecting the first candidate with any real match",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "file_path": null,
+      "anchor": null
+    }
+  ],
+  "annotations": {}
+}

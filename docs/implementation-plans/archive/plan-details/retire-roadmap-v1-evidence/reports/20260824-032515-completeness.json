@@ -1,0 +1,117 @@
+{
+  "version": 4,
+  "plan_slug": "retire-roadmap-v1-evidence",
+  "plan_path": "docs/implementation-plans/2-retire-roadmap-v1-evidence.md",
+  "created_at": "2026-08-24T03:25:15Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "58a2307fbb7cd9921da38efb6eef6503ef98b540d19b5ea951fce46b997999f5",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "017a5f4271bcd09b7eaf5f5d65e5ce5768780223b6f3f50bde54df01ce911a12",
+    "ROADMAP_FORMAT.md": "ed0ac9a2337186c94935c3ddf6c4ac69895251e9bcf50022820a8b0c06b09062",
+    "docs/ARCHITECTURE.md": "80b5d051c4c4db18b8d66e01e6eae0ef70862796e447e3d00d039cbb157dbf05",
+    "plan_tool/roadmap_escalation.py": "7d6072e1b3a095a725835a179ecc4ace15e61c9ab5e268d410d3c43dfa634d1f",
+    "plan_tool/roadmap_escalation_run.py": "5c6e08bc641702b67b9abb2d38cd378cc76259342d550fb8ca5c86613add87cb",
+    "plan_tool/roadmap_escalation_selection.py": "60eb80470f7aa5417a1a28e97f84f12d578397f85b8f80314c6acc2125892985",
+    "plan_tool/roadmap_impact_analysis.py": "833e864e8bbd1aa63fd2ac938d7dcea28378734dd91ec15d904cc91ccee3ddc9",
+    "plan_tool/roadmap_impact_run.py": "41ea60772fe69978f1e3f4caac76adef03654e9ba4f8197a648709a3d2266585",
+    "plan_tool/roadmap_impact_snapshot.py": "6e6a846ba856b7410377fadb3c1d2fa1c781f57afc71ddadf406f80226e17b75",
+    "plan_tool/roadmap_source_identity.py": "6f0a9734fc081a000432f85f00ca6886e98ae373813d1b071ddf0ed96ae52603",
+    "plan_tool/roadmap_structural_revision.py": "bd5722d845d114f2f266fb93e64c1131a0ec88a3bdc465dc772f357d917b264a",
+    "plan_tool/roadmap_structural_revision_run.py": "1a2dbd527ba427459806ea8e2490a1c83d5a2734944b5c6b89f1f34c0c7d659a",
+    "tests/cli/test_roadmap_cmd.py": "201e63bb402e3606d7e40f94956b74e7feff175016a3331d61e8c3ebb84611a7",
+    "tests/test_roadmap_escalation.py": "ae45e1da7e2c1abd44edfbd876c245ad05fd4761e5da2208b878331a6e24f46c",
+    "tests/test_roadmap_escalation_run.py": "f800c0dd3a4ac1a0bcbe8769ac0f10af7897eb5e8dc123d8b32ecc6040ec0fbb",
+    "tests/test_roadmap_escalation_selection.py": "6fdc44c58c74e6a0d8a0e5aa70ea0b4ab4fdeacb7912b9f654759ec2a3679550",
+    "tests/test_roadmap_format.py": "694423bdc80104084e48a72170c6ac0b1a5c3daac4c6f259cc4e9af89e1c3e1d",
+    "tests/test_roadmap_impact_analysis.py": "883ddda8fe98383ad7a803c861c34ccb688b9e6840458aae8d4dc165ffb4b115",
+    "tests/test_roadmap_impact_run.py": "c8fbb32c519f6a4234c3742a7b3046442c807baaf85671e671b5483474b63229",
+    "tests/test_roadmap_impact_snapshot.py": "9ecb6c1df6a2491e3a654ffb4decbd042a9fafa1b0f9c8e36d6f6841162771e2",
+    "tests/test_roadmap_revision_publish.py": "b0e057cd02839a72433abc0325e5b586729dc49ac7a9b589fe586feacedeb14b",
+    "tests/test_roadmap_source_identity.py": "27e7fb8a35b7390dbac87a4b63c79fd6095560cc7a5c71739c2d5caaeffb27ec",
+    "tests/test_roadmap_structural_revision.py": "4213e603e3a662ea89953a6e0f0a394cef48748593e3a9b92493449db5c82c8d",
+    "tests/test_roadmap_structural_revision_proof.py": "d90f18f74e42d505b3c4edc148b2391fd0d3df90091e83644c5f14eecdb8401e",
+    "tests/test_roadmap_structural_revision_run.py": "5f79e758275132362eae06f0d2d30166adbe28ca290b5457129d3b2f38fd56fd"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md": "54fed16efd9f0a00d5a96766668b7ca2c8ac33472504f3f64f81be53e15eeed6",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md": "f9321bcc85a6f80fcd5623fb162f7546c004553278ef958e78c1d5be5dcb39dc",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md": "cc7eb46750c0a065fa6abff878af2bd14afd5bf90814ae94ab81ff6a4c47e4d2",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md": "12fdc89c9ce937ef10fab97803ce463c94afe4706c756ccd92b3d31e566ea7f9",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md": "21cd15d3fe787e7aad36db797958399a3c28926b49b95b38610e7d1b1cffd1f1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Retire Roadmap V1 Evidence\n\n`retire-roadmap-v1-evidence` \u00b7 generated 2026-08-24T03:25:15Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-2830a839]`: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3a9368c3]`: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit retire-roadmap-v1-evidence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Retire Roadmap V1 Evidence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "58a2307fbb7cd9921da38efb6eef6503ef98b540d19b5ea951fce46b997999f5",
+    "detail_bundle_digest": "ac76133e0307958ec66471f79c4ab2e350064950b50a7a50f0b5bc43a0a26a30",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "e172f91558bd4743f14218cf48d468bda4b6632e3d55b00e07a521bc2edcc60b",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

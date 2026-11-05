@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "plan_slug": "plan-refresh-against-code",
+  "plan_path": "docs/implementation-plans/2-plan-refresh-against-code.md",
+  "created_at": "2026-06-17T00:00:24Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "118482c6223c7f3a95af168d52c5ad7b49b9598656d8e4d1fac05a80a4e702a5",
+  "code_fingerprint": {
+    "CLAUDE.md": "a2e5a0ea7e7fdbedf20fd5d81e3b1f0f8c5583f8760bedd6f5d3b17ab378896e",
+    "README.md": "b4f3919d73f3ab378baeea4e471e11bb6b1ac24aa9d8b663f83119afc11fdaeb",
+    "RUNBOOK.md": "37fd0f390b406beb0d9a41d475dcc1d5354c6cb695e0b5a229263b2e65559d4f",
+    "docs/AUDIT_RESUME_FLOW.md": "4bc4cc97a1eaf7b604eff9dc1356c802a3302403372d6d24636e3ab482640e5e",
+    "integrations/claude/SKILL.md": "0a6c8eafb294fb13f3209c6c655eef6dd5115011774cccc241391f5e7951eb77",
+    "integrations/codex/SKILL.md": "d4eaacd07b7bc0dfd0828256e310b79d85834e542756cb8389a2a5913fc954c1",
+    "plan_tool/cli/authoring.py": "70be581b6ddff818d15099123a4d58d5743d13503a0659e25026f0a0d5ceca15",
+    "plan_tool/cli/reconcile.py": "96ea24409520b565f4eb0406bf56f15c9abbefc8e1f486d3605bf2476f094d10",
+    "plan_tool/cli/review_cmd.py": "a231fabde46a67aa297e3555e2bf9fdd349418436d5f44f1aa3f6aa9ff0021ae",
+    "plan_tool/completeness_report.py": "2835f8dd190bbbde0a8653cfeae30f68d5b9b04abba105035c796b0ef2a66fae",
+    "plan_tool/fingerprint.py": "eb20285c1bc6e8634aabd969ca7ad7fa956a7efb2b67df40446f69bde641ae33",
+    "tests/cli/test_authoring_cmds.py": "919daf17eba69a9caa66488aff4f385fac65c9d974cd85061ae5dae845dbbcda",
+    "tests/cli/test_review_cmds.py": "70b4bc6338b0bb9f99b4413ab2af8ef81c14de80dabc944e6081f800b1fd34d1",
+    "tests/test_fingerprint.py": "d3fd74cc4bbe8ceb5c424e0ab200f12f4ddd44bbe9f1183f1253f45bb58a19bf"
+  },
+  "code_fingerprint_present": true,
+  "report_md": "# Completeness report: Plan Refresh Against Code\n\n`plan-refresh-against-code` \u00b7 generated 2026-06-17T00:00:24Z \u00b7 mode: iterate \u00b7 loop stopped: no_blocking_findings after 1 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 3 dispatched (3 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 6\n- **Deferred:** 3 (3 structural-diagnostic, 0 info, 0 low-payoff)\n\n## Applied this run\n\n- [APPLIED] The plan body (Architecture point 3: \"invoke the existing reconcile engine scoped to the changed files, **mutate the plan**, re-stamp\") and acceptance criterion (\"runs reconcile scoped to them, **updates the plan**, and re-stamps the fingerprint\") both say refresh mutates the plan, but step 3 (`refresh.py`) drives `auto_reconcile.py:run_auto_reconcile_on_drift`, which **only saves findings for `reconcile-plan-walk` and never mutates the plan** \u2014 then re-stamps grounding regardless. Re-stamping after a save-only reconcile marks the plan grounded against code it was merely *examined* against, so the next `reconcile-plan --refresh` reports \"still grounded\" while the surfaced premises remain unapplied \u2014 the gate errs toward *under*-checking, the opposite of the Risks section's \"errs toward re-checking\" posture.\n- [APPLIED] Step 3's drift branch (`plan_tool/refresh.py`, \"Key-shape mismatch\") assumes `check_grounding_drift` returns \"repo-relative posix **strings**\" with \"no `.is_absolute()`/`.resolve()`\" and adds a `(repo_root / token).resolve()` normalization to feed the reconcile seam \u2014 but step 1 (`diff_code_fingerprint`) and step 2 (`check_grounding_drift`) both establish the return as **absolute, resolved, sorted `Path` objects** needing \"no re-resolution\" (detail step 2, \"exactly the key shape `build_file_to_step_map` attributes against, so step 3 can scope reconcile \u2026 with no re-resolution\"). Step 3's rationale conflates `compute_code_fingerprint`'s map *keys* with the diff's *output list*; a developer following it literally writes normalization premised on a false return type and asserts it in tests.\n- [APPLIED] Step 3's no-baseline branch (`grounding is None`) synthesizes whole-plan drift (`drifted_files = sorted(build_file_to_step_map(...))`) and falls through to `run_auto_reconcile_on_drift`, which spawns one `detail-reconcile` Claude call per owning step. So the first `reconcile-plan --refresh` on any plan authored before this feature triggers a full multi-call reconcile **even when the code is byte-identical to authoring time** \u2014 directly undercutting the \"cheap, deterministic gate, no Claude on no-drift\" promise the Overview and acceptance criteria sell. A missing baseline is not evidence of drift; it is absence of a baseline.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n    plan-tool completeness-apply <plan> --apply        # auto-apply every gap without prompting\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[no-baseline-restamp]`: Step 3's no-stored-grounding branch reconciles \"over the whole declared surface,\" but the step-3 summary enumerates the re-stamp **only** for the drift branch. If the no-baseline branch does not write a grounding sidecar after its reconcile, every `reconcile-plan --refresh` on a pre-feature plan re-runs a full whole-surface reconcile forever, because `read_grounding` keeps returning `None` and no first baseline is ever laid down.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor no-baseline-restamp`\n- MEDIUM `[restamp-after-plain-reconcile]`: Architecture point 1 mandates persisting the grounding fingerprint \"after **any** reconcile/refresh,\" but only step 5 (`create`/`detail`) and step 3 (`--refresh`) stamp it; a plain `reconcile-plan` / `reconcile-plan-walk` apply cycle never re-stamps. After an ordinary reconcile the baseline stays pinned to the old code state, so the next `--refresh` re-detects drift and re-reconciles needlessly.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor restamp-after-plain-reconcile`\n- MEDIUM `[orphaned-plan-digest]`: The grounding sidecar persists a plan digest (`compute_plan_fingerprint`) alongside the code map (step 2; acceptance \"code map + plan digest + timestamp\"), but step 3's `check_grounding_drift` diffs **only the code map** \u2014 no step in the bundle reads the stored plan digest for the drift decision, leaving it a write-only field whose purpose is unstated.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor orphaned-plan-digest`\n- MEDIUM `[no-baseline-cost]`: Step 3's no-baseline branch synthesizes whole-plan drift (`drifted_files = sorted(build_file_to_step_map(...))`, i.e. every declared file) and drives `run_auto_reconcile_on_drift`, which spawns one `detail-reconcile` Claude call **per owning step** (auto_reconcile.py docstring: \"one backend call per drifted step\"). So the *first* refresh of any pre-feature plan \u2014 the common case until step 5's stamping has run everywhere \u2014 is an N-step, N-Claude-call full reconcile, directly contradicting the Overview/Problem framing of refresh as a \"cheap, deterministic\" gate. No risk or criterion bounds this.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor no-baseline-cost`\n- MEDIUM `[problem-vs-declared-surface]`: The Problem statement motivates the feature partly with \"another merge already implemented part of it,\" but the *Out of scope* declared-surface blind spot concedes the gate \"cannot detect \u2026 another merge that did the work in an unlisted file\" \u2014 so the cited motivating case is only covered when the merge touched a file the plan already declares. The Problem statement oversells coverage it doesn't ship.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor problem-vs-declared-surface`\n- MEDIUM `[pre-start-framing-unoperationalized]`: The *Naming* section names two concrete differences between refresh and plain `reconcile-plan`: \"the fingerprint gate **and** the all-PENDING / pre-start framing (the useful axis is 'are the premises still valid', not 'does code satisfy a done step').\" Steps 2\u20133 operationalize the fingerprint gate, but no step operationalizes the pre-start framing \u2014 refresh's gate and `run_auto_reconcile_on_drift` run identically regardless of step run-state, so a plan with done steps is refreshed exactly like an all-PENDING one with no guard, warning, or differing treatment. One of the two stated distinguishing axes exists only in prose.\n  - Address: `plan-tool completeness-apply plan-refresh-against-code --anchor pre-start-framing-unoperationalized`\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- NIT `[step6-files-coherence-1776785d]`: `CLAUDE.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-b404ada7]`: `README.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n- NIT `[step6-files-coherence-fca2ac75]`: `RUNBOOK.md` is in step 6's `files:` array but the detail body doesn't mention it. Low-confidence drift signal \u2014 files may be touched without explicit mention.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply plan-refresh-against-code` \u2014 walk the 6 conceptual-completeness gap(s) (advisory, not auto-applied; each needs your judgment).\n- `plan-tool completeness-apply plan-refresh-against-code --apply` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (3 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Plan Refresh Against Code\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 6 declared `CLAUDE.md` not mentioned in detail\n- NIT: step 6 declared `README.md` not mentioned in detail\n- NIT: step 6 declared `RUNBOOK.md` not mentioned in detail\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[no-baseline-restamp]`: Step 3's no-stored-grounding branch reconciles \"over the whole declared surface,\" but the step-3 summary enumerates the re-stamp **only** for the drift branch. If the no-baseline branch does not write a grounding sidecar after its reconcile, every `reconcile-plan --refresh` on a pre-feature plan re-runs a full whole-surface reconcile forever, because `read_grounding` keeps returning `None` and no first baseline is ever laid down.\n- MEDIUM `[restamp-after-plain-reconcile]`: Architecture point 1 mandates persisting the grounding fingerprint \"after **any** reconcile/refresh,\" but only step 5 (`create`/`detail`) and step 3 (`--refresh`) stamp it; a plain `reconcile-plan` / `reconcile-plan-walk` apply cycle never re-stamps. After an ordinary reconcile the baseline stays pinned to the old code state, so the next `--refresh` re-detects drift and re-reconciles needlessly.\n- MEDIUM `[orphaned-plan-digest]`: The grounding sidecar persists a plan digest (`compute_plan_fingerprint`) alongside the code map (step 2; acceptance \"code map + plan digest + timestamp\"), but step 3's `check_grounding_drift` diffs **only the code map** \u2014 no step in the bundle reads the stored plan digest for the drift decision, leaving it a write-only field whose purpose is unstated.\n- MEDIUM `[no-baseline-cost]`: Step 3's no-baseline branch synthesizes whole-plan drift (`drifted_files = sorted(build_file_to_step_map(...))`, i.e. every declared file) and drives `run_auto_reconcile_on_drift`, which spawns one `detail-reconcile` Claude call **per owning step** (auto_reconcile.py docstring: \"one backend call per drifted step\"). So the *first* refresh of any pre-feature plan \u2014 the common case until step 5's stamping has run everywhere \u2014 is an N-step, N-Claude-call full reconcile, directly contradicting the Overview/Problem framing of refresh as a \"cheap, deterministic\" gate. No risk or criterion bounds this.\n- MEDIUM `[problem-vs-declared-surface]`: The Problem statement motivates the feature partly with \"another merge already implemented part of it,\" but the *Out of scope* declared-surface blind spot concedes the gate \"cannot detect \u2026 another merge that did the work in an unlisted file\" \u2014 so the cited motivating case is only covered when the merge touched a file the plan already declares. The Problem statement oversells coverage it doesn't ship.\n- MEDIUM `[pre-start-framing-unoperationalized]`: The *Naming* section names two concrete differences between refresh and plain `reconcile-plan`: \"the fingerprint gate **and** the all-PENDING / pre-start framing (the useful axis is 'are the premises still valid', not 'does code satisfy a done step').\" Steps 2\u20133 operationalize the fingerprint gate, but no step operationalizes the pre-start framing \u2014 refresh's gate and `run_auto_reconcile_on_drift` run identically regardless of step run-state, so a plan with done steps is refreshed exactly like an all-PENDING one with no guard, warning, or differing treatment. One of the two stated distinguishing axes exists only in prose.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk plan-refresh-against-code` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply plan-refresh-against-code` \u2014 walk the 6 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-completeness-1179716d",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's no-stored-grounding branch reconciles \"over the whole declared surface,\" but the step-3 summary enumerates the ",
+      "body": "Step 3's no-stored-grounding branch reconciles \"over the whole declared surface,\" but the step-3 summary enumerates the re-stamp **only** for the drift branch. If the no-baseline branch does not write a grounding sidecar after its reconcile, every `reconcile-plan --refresh` on a pre-feature plan re-runs a full whole-surface reconcile forever, because `read_grounding` keeps returning `None` and no first baseline is ever laid down.",
+      "suggested_action": "specify that the no-baseline branch also writes a grounding baseline after its reconcile so the gate clears on the next run.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "no-baseline-restamp"
+    },
+    {
+      "id": "plan-plan-completeness-64a9fe45",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture point 1 mandates persisting the grounding fingerprint \"after **any** reconcile/refresh,\" but only step 5 (`",
+      "body": "Architecture point 1 mandates persisting the grounding fingerprint \"after **any** reconcile/refresh,\" but only step 5 (`create`/`detail`) and step 3 (`--refresh`) stamp it; a plain `reconcile-plan` / `reconcile-plan-walk` apply cycle never re-stamps. After an ordinary reconcile the baseline stays pinned to the old code state, so the next `--refresh` re-detects drift and re-reconciles needlessly.",
+      "suggested_action": "either name where post-`reconcile-plan-walk` re-stamping happens, or narrow Architecture point 1's \"after any reconcile\" to the `create`/`detail`/`--refresh` paths the plan actually covers.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "restamp-after-plain-reconcile"
+    },
+    {
+      "id": "plan-plan-completeness-6f876a4c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The grounding sidecar persists a plan digest (`compute_plan_fingerprint`) alongside the code map (step 2; acceptance \"co",
+      "body": "The grounding sidecar persists a plan digest (`compute_plan_fingerprint`) alongside the code map (step 2; acceptance \"code map + plan digest + timestamp\"), but step 3's `check_grounding_drift` diffs **only the code map** \u2014 no step in the bundle reads the stored plan digest for the drift decision, leaving it a write-only field whose purpose is unstated.",
+      "suggested_action": "state what consumes the stored plan digest (or mark it reserved/parity-with-`SavedReview`) so it isn't an orphaned persisted value.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "orphaned-plan-digest"
+    },
+    {
+      "id": "plan-plan-completeness-62619c4b",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3's no-baseline branch synthesizes whole-plan drift (`drifted_files = sorted(build_file_to_step_map(...))`, i.e. ev",
+      "body": "Step 3's no-baseline branch synthesizes whole-plan drift (`drifted_files = sorted(build_file_to_step_map(...))`, i.e. every declared file) and drives `run_auto_reconcile_on_drift`, which spawns one `detail-reconcile` Claude call **per owning step** (auto_reconcile.py docstring: \"one backend call per drifted step\"). So the *first* refresh of any pre-feature plan \u2014 the common case until step 5's stamping has run everywhere \u2014 is an N-step, N-Claude-call full reconcile, directly contradicting the Overview/Problem framing of refresh as a \"cheap, deterministic\" gate. No risk or criterion bounds this.",
+      "suggested_action": "add a Risks entry (and note in Architecture) that the no-baseline path is a full multi-step reconcile, not the cheap gate, so its cost is expected and not oversold.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "no-baseline-cost"
+    },
+    {
+      "id": "plan-plan-completeness-70ab2f8a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Problem statement motivates the feature partly with \"another merge already implemented part of it,\" but the *Out of ",
+      "body": "The Problem statement motivates the feature partly with \"another merge already implemented part of it,\" but the *Out of scope* declared-surface blind spot concedes the gate \"cannot detect \u2026 another merge that did the work in an unlisted file\" \u2014 so the cited motivating case is only covered when the merge touched a file the plan already declares. The Problem statement oversells coverage it doesn't ship.",
+      "suggested_action": "qualify the Problem statement's \"another merge implemented part of it\" to the plan's declared `files`/`creates` surface, cross-referencing the declared-surface limitation.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "problem-vs-declared-surface"
+    },
+    {
+      "id": "plan-plan-completeness-5460ecd9",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The *Naming* section names two concrete differences between refresh and plain `reconcile-plan`: \"the fingerprint gate **",
+      "body": "The *Naming* section names two concrete differences between refresh and plain `reconcile-plan`: \"the fingerprint gate **and** the all-PENDING / pre-start framing (the useful axis is 'are the premises still valid', not 'does code satisfy a done step').\" Steps 2\u20133 operationalize the fingerprint gate, but no step operationalizes the pre-start framing \u2014 refresh's gate and `run_auto_reconcile_on_drift` run identically regardless of step run-state, so a plan with done steps is refreshed exactly like an all-PENDING one with no guard, warning, or differing treatment. One of the two stated distinguishing axes exists only in prose.",
+      "suggested_action": "state whether \"all-PENDING / pre-start\" is mere positioning (then stop billing it as a behavioral difference) or a real precondition (then add a step that guards/warns when refresh runs against a plan with non-PENDING steps)",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "pre-start-framing-unoperationalized"
+    }
+  ],
+  "annotations": {
+    "plan-plan-completeness-1179716d": {
+      "status": "skip",
+      "note": "apply-finding reported APPLIED but the plan file didn't change; nothing to keep",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-64a9fe45": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-plan-refresh-against-code.md`: narrowed Architecture point 1's grounding-stamp scope from \"after any reconcile/refresh\" to `create`/`detail`/`--refresh`, noting a plain `reconcile-plan`/`reconcile-plan-walk` cycle is out of scope and does not re-stamp.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-6f876a4c": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-plan-refresh-against-code.md`: clarified in Architecture wiring point 1 that the persisted plan digest is reserved for `SavedReview` parity (keeping the grounding record interchangeable with the saved-audit shape), not consumed by step 3's code-map-only drift gate.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-62619c4b": {
+      "status": "applied",
+      "note": "applied finding:",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-70ab2f8a": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-plan-refresh-against-code.md`: qualified the Problem statement's \"another merge already implemented part of it\" to the plan's declared `files`/`creates` surface, cross-referencing the Out-of-scope declared-surface blind spot.",
+      "halt_reason": ""
+    },
+    "plan-plan-completeness-5460ecd9": {
+      "status": "applied",
+      "note": "applied finding: - `docs/implementation-plans/2-plan-refresh-against-code.md`: in the Naming section, recast the \"all-PENDING / pre-start framing\" as positioning-only \u2014 refresh does not inspect run-state, guard, or warn on non-PENDING steps \u2014 leaving the fingerprint gate as the sole stated behavioral difference from `reconcile-plan`.",
+      "halt_reason": ""
+    }
+  }
+}

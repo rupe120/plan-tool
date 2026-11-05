@@ -1,0 +1,109 @@
+{
+  "version": 4,
+  "plan_slug": "research-chosen-technology",
+  "plan_path": "docs/implementation-plans/2-research-chosen-technology.md",
+  "created_at": "2026-08-25T14:36:20Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "d2698b75b84d0e7c21ddf4afafea9027c12eba4febafef088db4feeefff9f152",
+  "code_fingerprint": {
+    "BACKLOG.md": "9fdf99836464997de6f1683f08ba205bbec7d4f02b62b6c92393ac207bcf5824",
+    "ROADMAP_FORMAT.md": "d109674ca46194c62fdf4dc72e5e68b9601d7cb184a5199952815aa7c846ec5e",
+    "plan_tool/create.py": "444270f5f56487c7f786b53f52032390d013540e68ad65767a9698b1ce9c3c7c",
+    "plan_tool/roadmap_artifacts.py": "587921875ae328966e3a048f1a150f0d7a09b87d7a84ef57ccf93eb845d03981",
+    "plan_tool/roadmap_revision.py": "e2c4b01ac90425a9323d80d8ab128ec6c994be3cb892c04cfb8102f8c86eeb81",
+    "tests/test_create.py": "b00bee67c5b56394ff5ef31667ca73e10b1163a6a291c6fe4ec61b332e2c46ab",
+    "tests/test_roadmap_artifacts.py": "2a59d556433f5e1b3de3d0aa8ba4c8c2b2b65b03c870731c632dc5311c4f7af8",
+    "tests/test_roadmap_format.py": "7bd70cb888afb75bed535439d4f736c0800021badc3ebabfa8624b7bb253d5ce",
+    "tests/test_roadmap_revision.py": "aec40dad8f0cd2efe9e53137e968011dfa8baaae5e093c89ee57647ae9380631"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md": "b3b6c7afaebf68d31d914d7deeea33d07416fd46e70e766f08e44dd80af40265",
+    "docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md": "50c49f8626b7ca52c9b5f70264353c20efed6edef48009f7b8d66e56e6b1f8a2",
+    "docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md": "89792f9a97a20f3d9ba95af6aa04c251857b42b049ef64166a7561d53011f49b",
+    "docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md": "422068b4afcf1919bca7a9c8b3cc97a61cc93d3b790a89e294fb474e66d05e26"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Research Chosen Technology\n\n`research-chosen-technology` \u00b7 generated 2026-08-25T14:36:20Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply research-chosen-technology   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk research-chosen-technology  # alternative interactive review/apply\n\n- MEDIUM `[recorded-field-research-scope]`: `Architecture > Scope of the read` says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and \u201cA technology mentioned only in prose is out,\u201d but `Source selection and research records` and the acceptance criteria say a roadmap with no named product keeps existing research behavior. At HEAD, `plan_tool/create.py:_prepare_create_plan` sends that legacy branch\u2019s `body_source` to `propose_references_from_claude`, so prose-only technologies can still produce References.\n  - Fix: define the no-product roadmap route as an explicit legacy prose-research carve-out or make it skip prose research, and align Scope, Testing, and acceptance criteria to that choice.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]`: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit research-chosen-technology` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Research Chosen Technology\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[recorded-field-research-scope]`: `Architecture > Scope of the read` says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and \u201cA technology mentioned only in prose is out,\u201d but `Source selection and research records` and the acceptance criteria say a roadmap with no named product keeps existing research behavior. At HEAD, `plan_tool/create.py:_prepare_create_plan` sends that legacy branch\u2019s `body_source` to `propose_references_from_claude`, so prose-only technologies can still produce References.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply research-chosen-technology` \u2014 walk the 1 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-6e17631a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "`Architecture > Scope of the read` says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and \u201c",
+      "body": "`Architecture > Scope of the read` says \u201cOnly technologies named in a **recorded field** are researched and gated\u201d and \u201cA technology mentioned only in prose is out,\u201d but `Source selection and research records` and the acceptance criteria say a roadmap with no named product keeps existing research behavior. At HEAD, `plan_tool/create.py:_prepare_create_plan` sends that legacy branch\u2019s `body_source` to `propose_references_from_claude`, so prose-only technologies can still produce References.",
+      "suggested_action": "define the no-product roadmap route as an explicit legacy prose-research carve-out or make it skip prose research, and align Scope, Testing, and acceptance criteria to that choice.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "recorded-field-research-scope",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "d2698b75b84d0e7c21ddf4afafea9027c12eba4febafef088db4feeefff9f152",
+    "detail_bundle_digest": "56c051c94b789ee23d6d19f07f25b169300bb80c7aa9c3c9d0493784d6f536cf",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/01-preserve-optional-operator-descriptions.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/02-select-tracked-roadmap-source-request.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/03-refuse-ungrounded-roadmap-product.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/research-chosen-technology/04-mark-backlog-244-resolved-only-after.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "9148d97382b8eea24943db46d9323eb3a750301afc8f7b0456ef309b3c7fe7e1",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

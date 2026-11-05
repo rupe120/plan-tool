@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "plan-data-contract-5a4f3953": {
+      "code_anchor": "convergence.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/2-stage-differentiated-blocking.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/2-stage-differentiated-blocking.md",
+      "reason": "code anchor path `convergence.py` does not exist",
+      "step_id": null,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260809-185758-completeness"
+}

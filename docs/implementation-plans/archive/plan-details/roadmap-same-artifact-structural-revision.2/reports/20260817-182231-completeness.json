@@ -1,0 +1,170 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-same-artifact-structural-revision",
+  "plan_path": "docs/implementation-plans/2-roadmap-same-artifact-structural-revision.md",
+  "created_at": "2026-08-17T18:22:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "c9d37bc25d9295432a116714cdddda3775e9d6056d7d59be3b82b1cc24027915",
+  "code_fingerprint": {
+    "CAPABILITIES.md": "b69bf3ec51f7a1dc67b0339fcab8b10de0bc04bde8fd2d4b058d60eb33cc623b",
+    "CLAUDE.md": "aebebbede273c40797dd6c7d169038d99e35ff23fcbff2a3a9f28dfae109da71",
+    "DATA_CONTRACT.md": "594505fa8ce141cebe5d0945d433f30afedf84a845b6d9ca91d994cd78652b5b",
+    "README.md": "67fb222622436522d49b454a34d0ee89ee01655d36555abf3e7c9a1cfaab57ad",
+    "ROADMAP_FORMAT.md": "0bcb4d70c84c1deeabe6b46f49a9e06334b40186fe935502d89971d4dbac409e",
+    "RUNBOOK.md": "57186b0f35d93dd436cc97a809423b74d15b55c1c0e6789901dbed683ea74f98",
+    "TESTING.md": "02f05707d91bcf6897f91f0cb7e52d810ad1d6bb938f64b842174a83e4c0950e",
+    "docs/ARCHITECTURE.md": "30fdc9991808d9f5112562a356083fed4824f1be30603f110cd6b7a52fe082af",
+    "docs/CODEX_CLI_CONTRACT.md": "f5cbc8d265a002d6ba5f99e355af192945cb916959a2c4e2808c121dc98e324c",
+    "docs/ROADMAP_WALKTHROUGH.md": "12ae521b5635743354218b6b1b143ef8b1a53c440fc8f52c2e14cd216231b639",
+    "docs/cli/roadmap.md": "c7763825e52ea86c215700fa4fdde59ace5c3acdbe71a15f28233fda873cdedb",
+    "integrations/claude/SKILL.md": "1c9fd91690bfc37d51fdecd26d7d09f2bad4625cb0b4e27994b70b58bff7e78c",
+    "plan_tool/backend.py": "58ce7eefa816dbda763fe8703865f890ca91e3eafa02efe3b7b588a3392e6c56",
+    "plan_tool/backend_runner.py": "e417915b8ecabb98856b8b6b15a8e94e508040d5115ac87b6f48a944733ce66d",
+    "plan_tool/cli/__init__.py": "4ac19a89dc4100d8509e2e762eb5330a0f15dcb81188dedf6927d1edee0e87bc",
+    "plan_tool/cli/roadmap_cmd.py": "ebbd188c13104ac0dc3cf573f1ecf1295398c1a8ab3ee8c29f6e5c853f8a0d36",
+    "plan_tool/fileio.py": "a4ec4b7fb932dded4d3908dd2b9a26a90c8e9a795a0cd1cd2c02c3cf4f79bf60",
+    "plan_tool/roadmap_evidence_store.py": "c3f97fb7e3e9143bea103adde557b74bfe331fb20b6ce544b283098e34662788",
+    "plan_tool/roadmap_impact_snapshot.py": "90f3d30f8e2fed898423700e185b1c949ab8d0a0ecdcc9d9471df2addabd0cf4",
+    "plan_tool/roadmap_revision_publish.py": "9878ae12c98c6e49f405e83215eb376cb716ffea46a7c38b1cbb2f3701387d21",
+    "plan_tool/run_log.py": "376d6fa809602f9aa4b285e5339775827dff3cb747196d3ebcfff8733424cdf2",
+    "plan_tool/shell.py": "11868093a22e43add5acc80facb87905ffa7fdb7103c0602f74d8e2b00324653",
+    "tests/cli/package_surface_help.golden.txt": "58d58016f7e12cfd58d60ed897e5c94d6ecb2ea3e7306bb367177f2170937e2b",
+    "tests/cli/test_roadmap_cmd.py": "f562f3f6235fe812f7f275c6824900cab2b359ddea72e5e0b030222e230de9a8",
+    "tests/test_backend.py": "a4cf567952fd587edb33a98e4aaeefb5b7aac9fa33c9998c44f6f229b490e151",
+    "tests/test_backend_config.py": "25d8f123297bcfb67b35a9248e8cc102a6268ac4b392b8f9027c872a9d0a63ab",
+    "tests/test_backend_runner.py": "f605e4d40cb5f1dd7343d9e4e4b6d8fd9fb91669f31d4959c9b77a57a8fe1db8",
+    "tests/test_data_contract.py": "625606af410be5e44ad95cb9c328a0a8954bf5de6f2d8645d50cba9e36fa8112",
+    "tests/test_fileio.py": "eb71b79bf93ddb987f6942e81382f1808ae00bae0f52c6ee1859fd71626902ca",
+    "tests/test_roadmap_evidence_store.py": "e354ff2466f82cd955cb168e83e96f8bfd2c46a77ce4bc482415dd9d959531e7",
+    "tests/test_roadmap_format.py": "9d181b537f824526c51716b83b16628b44de8d074a5b6d2c1dc2ba42a659bd11",
+    "tests/test_roadmap_impact_snapshot.py": "565908db81b4df7a78ca0ff13686cff3a862b4831ed50b6c2ecdae5055248f99",
+    "tests/test_roadmap_revision_publish.py": "159a21f8851959917715f6721cf5627c02871afe50f2e99197f19b5c149d9e58",
+    "tests/test_run_log.py": "aa7f97d94e93c2ee70689a15cc9a7eaa27808ba9e5212a783a945cba4f9e514a",
+    "tests/test_shell.py": "b8763632df5b416736c5ca7296e70f5e7dd71b37bfceb140908088f6c7b6b7f1"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md": "994b4243dd4516ef3015139f2953860d8c0b15d72693f69386d9b423a58407ae",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/02-bind-current-receipt-impact-evidence.md": "21ee47954a9a62c9ca04dab9b33e3ccf6962dda7f6d3b44aee78a5aa943f8092",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/03-define-finite-row-field-existing-prose.md": "718be1f93a6588a5aa105ad1ee346fc8c159eb73d14afe46c1b559ba9278344c",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md": "560bd257c6a76f835ffd1a4e8c9544b8073fb3138a4f3205dcec58d0bf471495",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md": "46000a7108de6ebcddb2826f4f2966ce83c2227dd186b915e86e6f74b417f344",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/06-bind-publication-proof-complete-final.md": "db598913008306cb8570658feb8917ce8437e8b5577e97653844654a8a53bda5",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/07-closed-redacted-rewrite-preflight.md": "dae9f32b40cc5dec8ba6a8217d74417c90c21d4b7426336b93b2379d38b72512",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/08-run-one-bounded-exact-envelope-rewrite.md": "e78d2ca24f5864cdedb0035667e940f8c5a5dd668297290fec9d85f9275a3fff",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/09-wire-explicit-exact-pair-structural.md": "35d1d770f61b323a60408167d1ee8a72a44dc7f5db7a7053a8e5f732664b91c3",
+    "docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/10-document-local-exact-pair-rewrite-only.md": "f6343e1f238a5d1e8a5b60dac9664a9fe3658096f37c5d8ec0f8ebf8535b58ee"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Same Artifact Structural Revision\n\n`roadmap-same-artifact-structural-revision` \u00b7 generated 2026-08-17T18:22:30Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `66f5760fac35b04c45b8b79ca12e3ebcd533130c9ae87c0ecc6a3acf8b55b546`\n- **Detail bundle digest:** `392b14d8049d0fd5462b498ab900b858268c89769d25b49c556a1ce3b83bd968`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 1\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 10 (+0 vs. first audit)\n- **Detail-bundle size:** 141374 bytes (+141374 vs. first audit)\n- **Keystone fan-out:** 0.44\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Pending concept decisions\n\nConcept deferrals still awaiting a human decision \u2014 advisory, never blocking. Resolve each with `plan-tool scope-review roadmap-same-artifact-structural-revision`.\n\n### Unsigned deferrals \u2014 a proposed defer/wont_do not yet reviewed\n\n- INFO `[74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252]`: Concept `74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252` (out of scope) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-same-artifact-structural-revision` executes the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Same Artifact Structural Revision\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `66f5760fac35b04c45b8b79ca12e3ebcd533130c9ae87c0ecc6a3acf8b55b546`\n- **Detail bundle digest:** `392b14d8049d0fd5462b498ab900b858268c89769d25b49c556a1ce3b83bd968`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO `[concept-74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252]`: Concept `74b73f49705a852b50f557668e68847846dfbb86c7128a8a3a3e8a8c026fd252` (out of scope) has a proposed `defer` decision that is not reviewed; review the concept decision before relying on it.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "66f5760fac35b04c45b8b79ca12e3ebcd533130c9ae87c0ecc6a3acf8b55b546",
+      "detail_bundle_digest": "392b14d8049d0fd5462b498ab900b858268c89769d25b49c556a1ce3b83bd968",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/01-share-full-roadmap-gate-check-candidate.md",
+          "state": "present",
+          "digest": "994b4243dd4516ef3015139f2953860d8c0b15d72693f69386d9b423a58407ae"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/02-bind-current-receipt-impact-evidence.md",
+          "state": "present",
+          "digest": "21ee47954a9a62c9ca04dab9b33e3ccf6962dda7f6d3b44aee78a5aa943f8092"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/03-define-finite-row-field-existing-prose.md",
+          "state": "present",
+          "digest": "718be1f93a6588a5aa105ad1ee346fc8c159eb73d14afe46c1b559ba9278344c"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/04-merge-allowed-rewrites-update-only.md",
+          "state": "present",
+          "digest": "560bd257c6a76f835ffd1a4e8c9544b8073fb3138a4f3205dcec58d0bf471495"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/05-prove-row-relation-decision-order.md",
+          "state": "present",
+          "digest": "46000a7108de6ebcddb2826f4f2966ce83c2227dd186b915e86e6f74b417f344"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/06-bind-publication-proof-complete-final.md",
+          "state": "present",
+          "digest": "db598913008306cb8570658feb8917ce8437e8b5577e97653844654a8a53bda5"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/07-closed-redacted-rewrite-preflight.md",
+          "state": "present",
+          "digest": "dae9f32b40cc5dec8ba6a8217d74417c90c21d4b7426336b93b2379d38b72512"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/08-run-one-bounded-exact-envelope-rewrite.md",
+          "state": "present",
+          "digest": "e78d2ca24f5864cdedb0035667e940f8c5a5dd668297290fec9d85f9275a3fff"
+        },
+        {
+          "step_id": 9,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/09-wire-explicit-exact-pair-structural.md",
+          "state": "present",
+          "digest": "35d1d770f61b323a60408167d1ee8a72a44dc7f5db7a7053a8e5f732664b91c3"
+        },
+        {
+          "step_id": 10,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-same-artifact-structural-revision/10-document-local-exact-pair-rewrite-only.md",
+          "state": "present",
+          "digest": "f6343e1f238a5d1e8a5b60dac9664a9fe3658096f37c5d8ec0f8ebf8535b58ee"
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 10,
+    "detail_bundle_bytes": 141374,
+    "keystone_fan_out": 0.4444444444444444,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

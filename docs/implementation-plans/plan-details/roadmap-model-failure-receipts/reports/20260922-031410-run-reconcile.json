@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "plan_slug": "roadmap-model-failure-receipts",
+  "plan_path": "docs/implementation-plans/2-roadmap-model-failure-receipts.md",
+  "created_at": "2026-09-22T03:14:10Z",
+  "kind": "run-reconcile",
+  "step_id": 3,
+  "plan_fingerprint": "4f0607dcddd4211dc4d53cc489b856036bc05d953b381acbf2372c4ad8bf60b7",
+  "code_fingerprint": {
+    "BACKLOG.md": "e310cc1095cd691d9ec0e41601f3735ac0ea2a09d4c5af134df0864468a4bf69",
+    "BUG_BACKLOG.md": "940af3fb2ee85491703e0fef9afe42796c9acd3adb8ffdb9f2f527430abe6a8d",
+    "DATA_CONTRACT.md": "dd7ba201b043426021810e826d3d5ef8632f48b7e265e35c7e9e8929242ed69c",
+    "README.md": "076cbc041dd67a9e25411bbf817e1f2a41601ea894f30194bebb7df005df44d5",
+    "docs/ARCHITECTURE.md": "114f3eb320dff4e3bd97c6f8e146fe216f4912952ba2a27b713d9b352554dcba",
+    "docs/OPERATIONS.md": "920d834a3b8bea5275816e15caf7cbc7e2924d475e313bdd02fa5fc76c340b2f",
+    "plan_tool/data_contract.py": "eac2578df8ced406aefbab0915dae4f0ffa505a5080d21cc09781e0c0ea946c5",
+    "plan_tool/detail.py": "2c353c141159af6e2ffdc7aad78b5e212aa2f768185fcd5326eef75c30898b6e",
+    "plan_tool/model_response_sidecar.py": "60d4bf0d05ade2128d3862b9f73ef9bdcf5ea72cc57087eeb1d350a6e8ccda0c",
+    "plan_tool/roadmap.py": "2be317a36fc0d2c6883f4abe7cb29bcf33c4054a1d1f7110da147d9c6304ac8d",
+    "plan_tool/roadmap_revision_run.py": "b837963142d14c70dc524f5ad16faddeff4449a83e397dcd000a4202c627c4d7",
+    "plan_tool/run_log.py": "2b7f2645ce36a40382b985685eb4483895eb21761df085a035b3dd64184af517",
+    "tests/test_detail.py": "7b85aed971b798b33398234a157cf1162f63f99b74972bcd2a82e1c514582edc",
+    "tests/test_model_response_sidecar.py": "e6a7e2a7c1293e4c68f9bdddc81d23728adb1f4a761d2a54d7e81ae3d30323fd",
+    "tests/test_roadmap.py": "79b795c6294fb377ed516007bc4477591d9be6c362334dfd0d3341d387097ba4",
+    "tests/test_roadmap_revision_run.py": "019852645e25340532ecbf284500545dc665469ce02e41b9f60234acbb3e1d2b",
+    "tests/test_run_log.py": "8cb666dc29b79c85d3c70e732ae8605823a6c0fe90ce5991fbe4efcecc20b1d0"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 3 \u2014 0 critical / 0 high / 1 medium / 0 nits\n\nCompleted-sibling context informed this classification: 4 of 5 completed sibling step(s) supplied non-shared declared paths.\n\nSelected-step outcome: selected-step drift was reported in 1 finding(s).",
+  "recommendations": [
+    {
+      "id": "step3-run-reconcile-22ed6cae",
+      "source": "run-reconcile",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "`_run_bounded_stage_feedback()` in `plan_tool/roadmap.py` (step 3 \u201cRecord fresh roadmap stage failures before retry whil",
+      "body": "`_run_bounded_stage_feedback()` in `plan_tool/roadmap.py` (step 3 \u201cRecord fresh roadmap stage failures before retry while preserving accepted artifact writes\u201d) persists failure receipts across its invoke, parse, source-admission, and gate branches even though this step explicitly leaves that adjacent producer loop unchanged; the selected step therefore over-delivers into deferred bounded-feedback scope",
+      "suggested_action": "remove `_record_stage_failure_receipt()` calls from `_run_bounded_stage_feedback()` and retain them only in `_run_stage()`",
+      "impact": "medium",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": null,
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {}
+}

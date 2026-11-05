@@ -1,0 +1,142 @@
+{
+  "version": 4,
+  "plan_slug": "refactor-plan-altitude",
+  "plan_path": "docs/implementation-plans/2-refactor-plan-altitude.md",
+  "created_at": "2026-08-17T21:16:32Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "531e45b048f433a271529bb0466eb4a39eaba4b6b1e4b92c357b47a827f2e7ea",
+  "code_fingerprint": {
+    "BACKLOG.md": "8e36795b6b8c975dd0764d4289027afa9f0dce75a00d0170d74a4cfc01f1f8cf",
+    "plan_tool/create.py": "d9120e566eb9f73d449ce3c0ae1863f5c9953ee0b8b6c281627217882603cd99",
+    "plan_tool/prompts/synthesize-body.md": "be635d0b60f0229aa38b153e04f4504cf779849c21dca6c313f47185a1fae14a",
+    "tests/test_create.py": "7b77e167e8a8a2f847d1b8469d17d1baff4a5b2e11f89208f50e55cdc7f19d41"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-select-grounded-outer.md": "f86d9acd7359b722b5fef33ed0356467c36eaa79e4b6063b34565c505cb72344",
+    "docs/implementation-plans/plan-details/refactor-plan-altitude/02-constrain-synthesized-refactor.md": "8d82ca905033df0a40b560e17317aa33d1b76617902de4efd32fbee1129cc9dd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Refactor Plan Altitude\n\n`refactor-plan-altitude` \u00b7 generated 2026-08-17T21:16:32Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply refactor-plan-altitude   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk refactor-plan-altitude  # alternative interactive review/apply\n\n- HIGH `[boundary-contract-carrier]`: `Architecture` makes existing Architecture prose carry the outer-boundary map, but step 1 (`Teach Stage 3 to select grounded outer boundaries for refactor candidates`) selects boundaries and step 2 (`Constrain synthesized refactor Architecture to the outer-boundary map and close BACKLOG #291`) must record them. At HEAD, `plan_tool/create.py:_render_from_prompt` produces only proposal JSON, while `create_plan` separately calls `propose_body_sections` with `body_source` and seed-named code excerpts\u2014not the selected steps or their `change_type`; synthesis therefore cannot know the selected map or reliably identify a refactor. `Risks`, the canned-proposal Testing bullet, and acceptance criteria 1\u20133 assume one shared map, while the no-schema constraint supplies no alternate carrier.\n  - Fix: define the existing input that carries the refactor-only outer-boundary map into synthesis, or limit each prompt\u2019s guarantee to the evidence it receives, and align Architecture, steps 1\u20132, risks, tests, and criteria to that choice without changing the `Step` schema\n- HIGH `[split-sweep-boundary-rule]`: Step 1, the Architecture paragraph that covers both prompt arms, the A/B risk, Testing\u2019s first bullet, and acceptance criteria 1 and 5 promise the outer-boundary rule in split mode, but `plan_tool/create.py:propose_steps_from_claude` runs `run_foundational_logic_sweep` after Stage 3 and `plan_tool/foundational_logic.py:merge_sweep_into_steps` turns its `consolidation` into a new `ChangeType.REFACTOR` step. `plan_tool/prompts/foundational-logic-sweep.md` asks for a dedicated consolidation/refactor step without the outer-boundary test, so split mode can add an inner-mechanic phase after the rule has run.\n  - Fix: Specify how a split-sweep consolidation must satisfy the same outer-boundary rule before entering the final steps, and cover a split consolidation case as well as both proposal-prompt strings.\n- HIGH `[synthesis-refactor-scope]`: Step 2 promises that synthesis applies the rule only to refactors while `Out of scope`, Testing, and acceptance criterion 1 preserve feature behavior, but `plan_tool/create.py:propose_body_sections` and `_render_synthesis_prompt` pass only seed and grounding text to `plan_tool/prompts/synthesize-body.md`, not the proposal\u2019s `change_type` values or a mixed-plan decision. The template therefore has no defined way to distinguish refactor, feature, and mixed inputs, so implementers can either restrict feature Architecture too or leave the refactor rule inactive.\n  - Fix: specify and carry the refactor/mixed eligibility decision into synthesis, define mixed-plan behavior, and add a feature-synthesis regression that proves its Architecture policy stays unchanged.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit refactor-plan-altitude` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Refactor Plan Altitude\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 2 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[boundary-contract-carrier]`: `Architecture` makes existing Architecture prose carry the outer-boundary map, but step 1 (`Teach Stage 3 to select grounded outer boundaries for refactor candidates`) selects boundaries and step 2 (`Constrain synthesized refactor Architecture to the outer-boundary map and close BACKLOG #291`) must record them. At HEAD, `plan_tool/create.py:_render_from_prompt` produces only proposal JSON, while `create_plan` separately calls `propose_body_sections` with `body_source` and seed-named code excerpts\u2014not the selected steps or their `change_type`; synthesis therefore cannot know the selected map or reliably identify a refactor. `Risks`, the canned-proposal Testing bullet, and acceptance criteria 1\u20133 assume one shared map, while the no-schema constraint supplies no alternate carrier.\n- HIGH `[split-sweep-boundary-rule]`: Step 1, the Architecture paragraph that covers both prompt arms, the A/B risk, Testing\u2019s first bullet, and acceptance criteria 1 and 5 promise the outer-boundary rule in split mode, but `plan_tool/create.py:propose_steps_from_claude` runs `run_foundational_logic_sweep` after Stage 3 and `plan_tool/foundational_logic.py:merge_sweep_into_steps` turns its `consolidation` into a new `ChangeType.REFACTOR` step. `plan_tool/prompts/foundational-logic-sweep.md` asks for a dedicated consolidation/refactor step without the outer-boundary test, so split mode can add an inner-mechanic phase after the rule has run.\n- HIGH `[synthesis-refactor-scope]`: Step 2 promises that synthesis applies the rule only to refactors while `Out of scope`, Testing, and acceptance criterion 1 preserve feature behavior, but `plan_tool/create.py:propose_body_sections` and `_render_synthesis_prompt` pass only seed and grounding text to `plan_tool/prompts/synthesize-body.md`, not the proposal\u2019s `change_type` values or a mixed-plan decision. The template therefore has no defined way to distinguish refactor, feature, and mixed inputs, so implementers can either restrict feature Architecture too or leave the refactor rule inactive.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight]`: DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.\n- MEDIUM `[data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt]`: DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk refactor-plan-altitude` \u2014 interactively review the remaining finding(s) the iterate loop left open.\n- `plan-tool completeness-apply refactor-plan-altitude` \u2014 walk the 3 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b545dd33",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`Architecture` makes existing Architecture prose carry the outer-boundary map, but step 1 (`Teach Stage 3 to select grou",
+      "body": "`Architecture` makes existing Architecture prose carry the outer-boundary map, but step 1 (`Teach Stage 3 to select grounded outer boundaries for refactor candidates`) selects boundaries and step 2 (`Constrain synthesized refactor Architecture to the outer-boundary map and close BACKLOG #291`) must record them. At HEAD, `plan_tool/create.py:_render_from_prompt` produces only proposal JSON, while `create_plan` separately calls `propose_body_sections` with `body_source` and seed-named code excerpts\u2014not the selected steps or their `change_type`; synthesis therefore cannot know the selected map or reliably identify a refactor. `Risks`, the canned-proposal Testing bullet, and acceptance criteria 1\u20133 assume one shared map, while the no-schema constraint supplies no alternate carrier.",
+      "suggested_action": "define the existing input that carries the refactor-only outer-boundary map into synthesis, or limit each prompt\u2019s guarantee to the evidence it receives, and align Architecture, steps 1\u20132, risks, tests, and criteria to that choice without changing the `Step` schema",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "boundary-contract-carrier",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-9fca026b",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1, the Architecture paragraph that covers both prompt arms, the A/B risk, Testing\u2019s first bullet, and acceptance cr",
+      "body": "Step 1, the Architecture paragraph that covers both prompt arms, the A/B risk, Testing\u2019s first bullet, and acceptance criteria 1 and 5 promise the outer-boundary rule in split mode, but `plan_tool/create.py:propose_steps_from_claude` runs `run_foundational_logic_sweep` after Stage 3 and `plan_tool/foundational_logic.py:merge_sweep_into_steps` turns its `consolidation` into a new `ChangeType.REFACTOR` step. `plan_tool/prompts/foundational-logic-sweep.md` asks for a dedicated consolidation/refactor step without the outer-boundary test, so split mode can add an inner-mechanic phase after the rule has run.",
+      "suggested_action": "Specify how a split-sweep consolidation must satisfy the same outer-boundary rule before entering the final steps, and cover a split consolidation case as well as both proposal-prompt strings.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "split-sweep-boundary-rule",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-5ce59606",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 promises that synthesis applies the rule only to refactors while `Out of scope`, Testing, and acceptance criterio",
+      "body": "Step 2 promises that synthesis applies the rule only to refactors while `Out of scope`, Testing, and acceptance criterion 1 preserve feature behavior, but `plan_tool/create.py:propose_body_sections` and `_render_synthesis_prompt` pass only seed and grounding text to `plan_tool/prompts/synthesize-body.md`, not the proposal\u2019s `change_type` values or a mixed-plan decision. The template therefore has no defined way to distinguish refactor, feature, and mixed inputs, so implementers can either restrict feature Architecture too or leave the refactor rule inactive.",
+      "suggested_action": "specify and carry the refactor/mixed eligibility decision into synthesis, define mixed-plan behavior, and add a feature-synthesis regression that proves its Architecture policy stays unchanged.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "synthesis-refactor-scope",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-a0c1406f",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionPreflight is missing `RoadmapStructuralRevisionPreflight` from the code-owned RoadmapStructuralRevisionPreflight data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionPreflight' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionpreflight-roadmapstructuralrevisionpreflight",
+      "target_signature": null
+    },
+    {
+      "id": "plan-data-contract-5a8d161e",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": null,
+      "title": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "body": "DATA_CONTRACT.md:RoadmapStructuralRevisionAttempt is missing `RoadmapStructuralRevisionAttempt` from the code-owned RoadmapStructuralRevisionAttempt data contract.",
+      "suggested_action": "Update DATA_CONTRACT.md section 'RoadmapStructuralRevisionAttempt' to match the code-owned persisted data contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-roadmapstructuralrevisionattempt-roadmapstructuralrevisionattempt",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "checkpoint_audit_revision": {
+    "version": 1,
+    "detail_grade": "run",
+    "plan_digest": "531e45b048f433a271529bb0466eb4a39eaba4b6b1e4b92c357b47a827f2e7ea",
+    "detail_bundle_digest": "c44b9a14e47179abbbb5a0809cb328717ead53914f34c3fe911177a01baaec4a",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/01-teach-stage-select-grounded-outer.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/refactor-plan-altitude/02-constrain-synthesized-refactor.md",
+        "state": "missing",
+        "digest": null
+      }
+    ]
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

@@ -1,0 +1,124 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-carried-settled-decisions",
+  "plan_path": "docs/implementation-plans/2-roadmap-carried-settled-decisions.md",
+  "created_at": "2026-09-16T18:12:33Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "0f23d0ad21299531416efb1ecd227540344c51c386a07798c01db4af037f6cb5",
+  "code_fingerprint": {
+    "BACKLOG.md": "8981d8e3bf1cc8f2dc234cbb9a4f18271962b5b4ef4b0571c07c5919583b57cf",
+    "DATA_CONTRACT.md": "95399dad8144da1bc79f038e39114cae2c8912fb7b0627c829ed8a6654a84923",
+    "ROADMAP_FORMAT.md": "32ddec5099d440f0f87dcd0c09d7bd2d0b2c5f298a2075a14c39e9726943620b",
+    "docs/how-to/roadmap.md": "8f967486d52cbd3289b4e6770ca452c998036adb1525242b98072476098b254c",
+    "plan_tool/prompts/roadmap-components.md": "616c447aebd57844c09425aeac8f35b3e3fa0f1640850fced803eb4cd54a887e",
+    "plan_tool/prompts/roadmap-constraints.md": "a192218abc82e27638fa98ecf184394fd5ff52602c1590a4268c628d8a9a76a6",
+    "plan_tool/prompts/roadmap-domain.md": "879ee53b440a9380e92ca33da31f8ce859731b4a2c8b567c008a5636900f938e",
+    "plan_tool/prompts/roadmap-plans.md": "b55ca4621a3a2010f2425a3d43f7c4b7876431bc6ab54902a28b16c1eb535d88",
+    "plan_tool/roadmap.py": "0eebdad36cfe0752faf941a8cccd4a7f0018f564b8aa3eafbd56092dcfa9b3ce",
+    "plan_tool/roadmap_artifacts.py": "8b1d166df03a8ef3b2653d673b100417ba5300d41c9df8484d807c1a47db7f17",
+    "plan_tool/roadmap_gates.py": "e86aaaf99281ea836135c9bf372520f0dd6d48d637a4159a2ae0aa2060fcdab2",
+    "plan_tool/roadmap_revision.py": "9ab3e33016f89c95e78513b1d934038821b7113f1e5f6ff5999979b3ee534d10",
+    "plan_tool/roadmap_source.py": "306b92fa4944d6e1d8b224f95400e6755c55a8c883532e175a95412b21701038",
+    "tests/test_roadmap.py": "567ec9da98c8ef5907a16e44269f037d7ac52d24a34d5d942bcdc5b22943a82c",
+    "tests/test_roadmap_artifacts.py": "879edec69df96c375a61a78f33b556e0565daa6e711b9eefa6118462a6df518c",
+    "tests/test_roadmap_gates.py": "8aeef26e4dbfaba2ed3dfe1b206c8ddcdf76ab949e3706bafa8f547fe4eb8d0d",
+    "tests/test_roadmap_revision.py": "7b85dda68b56365a20715b65c2728177f9535eca98d9c9d188c7e3056b348eab",
+    "tests/test_roadmap_source.py": "57e02394bc96b889cf4b0475242df737bba15811259ad90a8e52c76289e6951e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md": "c2723081a154ba0e2d7351ba1e7adb39884e1c12f5ddb5011a99a52781ed7f31",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md": "79ba9f44a99183703306978d4144160259ff6d15e027e53e125c4bcea4ed2dab",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md": "f6366e39603e2cb1b00b9ab74dd6112d7beac82a220b76bc1a8ed184cf0fa29c",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-each-carried-decision-only-its.md": "5bcd777b627e762c751920eccf46e5c55c6a9240ff399cd60ad33bf512648268",
+    "docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md": "ab024b83cbf48022598248a3a7668e32bb1ceaecbbbbbd3c5b5808bf2bfb792c"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Carried Settled Decisions\n\n`roadmap-carried-settled-decisions` \u00b7 generated 2026-09-16T18:12:32Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `104bbee585e2f39ba3d4bc1c09a681bc61829c09f7762bb31b22926a5f5242b1`\n- **Detail bundle digest:** `6da80c70d8173451e116875aed56e0fbfba471ec27b96df3316304b1c2b6655a`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 44644 bytes (+44644 vs. first audit)\n- **Keystone fan-out:** 0.75\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-dae17653]` [confidence: limited]: The plan's `## Acceptance criteria` names `source.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run roadmap-carried-settled-decisions` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Carried Settled Decisions\n\n### Audit result\n\n- **Result:** `advisory-only`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `104bbee585e2f39ba3d4bc1c09a681bc61829c09f7762bb31b22926a5f5242b1`\n- **Detail bundle digest:** `6da80c70d8173451e116875aed56e0fbfba471ec27b96df3316304b1c2b6655a`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `source.json`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- Remaining finding(s) above are advisory (info/nit) \u2014 review them by eye; no follow-up command needed.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "advisory-only",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "104bbee585e2f39ba3d4bc1c09a681bc61829c09f7762bb31b22926a5f5242b1",
+      "detail_bundle_digest": "6da80c70d8173451e116875aed56e0fbfba471ec27b96df3316304b1c2b6655a",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/01-parse-validate-optional-carried.md",
+          "state": "present",
+          "digest": "c2723081a154ba0e2d7351ba1e7adb39884e1c12f5ddb5011a99a52781ed7f31"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/02-extend-decisionrow-parsing-rendering.md",
+          "state": "present",
+          "digest": "79ba9f44a99183703306978d4144160259ff6d15e027e53e125c4bcea4ed2dab"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/03-gate-inherited-decisions-on-settled.md",
+          "state": "present",
+          "digest": "f6366e39603e2cb1b00b9ab74dd6112d7beac82a220b76bc1a8ed184cf0fa29c"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/04-route-each-carried-decision-only-its.md",
+          "state": "present",
+          "digest": "5bcd777b627e762c751920eccf46e5c55c6a9240ff399cd60ad33bf512648268"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-carried-settled-decisions/05-document-carried-decision-source-row.md",
+          "state": "present",
+          "digest": "ab024b83cbf48022598248a3a7668e32bb1ceaecbbbbbd3c5b5808bf2bfb792c"
+        }
+      ],
+      "source_seed_digest": "d92ecf08f60e6af373e3a22e02093091022d78b18517eef2fa0589bb6852a76a",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 44644,
+    "keystone_fan_out": 0.75,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "plan_slug": "reconcile-code-later-step-context",
+  "plan_path": "docs/implementation-plans/2-reconcile-code-later-step-context.md",
+  "created_at": "2026-08-18T21:26:37Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "f545e9895d8e35996429e76b3792d2279b6a11b0ac37def6fd2acf1fa2087fbf",
+  "code_fingerprint": {
+    "plan_tool/cli/reconcile.py": "4c7844f8441d72bd74471c6ec20ba1c7117d2084f2cb42c7446b65197ff3d4f1",
+    "plan_tool/launcher.py": "40fe231306d41c758337c9919c5f81e5a21eff0fe45e611b6dcabd835e598dac",
+    "plan_tool/prompts/run-reconcile.md": "58a8eea290ce03f1f5a0c1b99cf966c0608934f152166b944b653762b41329d1",
+    "plan_tool/scope_guard.py": "98933ac759280dad3b8eceb6bc69925014d6fae49326c801d8012764b9e456d9",
+    "tests/test_cli.py": "6e0a6e9f62dac9abcd2d200f7cb55b5c2085ce2e5e9f4cd04052bf7bf916f9b6",
+    "tests/test_launcher.py": "c965663788b00c9a0e0afce6cb88bb81736b92fadc6f02057a7ef457befaf846",
+    "tests/test_scope_guard.py": "5c5242daca4ff6654ba643b773443410d4a5521fb5c0c2d8d2aee7172a0cdde5"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

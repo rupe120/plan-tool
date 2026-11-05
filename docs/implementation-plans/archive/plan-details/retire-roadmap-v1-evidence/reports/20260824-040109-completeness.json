@@ -1,0 +1,196 @@
+{
+  "version": 4,
+  "plan_slug": "retire-roadmap-v1-evidence",
+  "plan_path": "docs/implementation-plans/2-retire-roadmap-v1-evidence.md",
+  "created_at": "2026-08-24T04:01:09Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "726479af99abb05ed95b407c1b974cbd6a663b255f3a579452aae42242627e1b",
+  "code_fingerprint": {
+    "DATA_CONTRACT.md": "017a5f4271bcd09b7eaf5f5d65e5ce5768780223b6f3f50bde54df01ce911a12",
+    "ROADMAP_FORMAT.md": "ed0ac9a2337186c94935c3ddf6c4ac69895251e9bcf50022820a8b0c06b09062",
+    "docs/ARCHITECTURE.md": "80b5d051c4c4db18b8d66e01e6eae0ef70862796e447e3d00d039cbb157dbf05",
+    "plan_tool/roadmap_escalation.py": "7d6072e1b3a095a725835a179ecc4ace15e61c9ab5e268d410d3c43dfa634d1f",
+    "plan_tool/roadmap_escalation_run.py": "5c6e08bc641702b67b9abb2d38cd378cc76259342d550fb8ca5c86613add87cb",
+    "plan_tool/roadmap_escalation_selection.py": "60eb80470f7aa5417a1a28e97f84f12d578397f85b8f80314c6acc2125892985",
+    "plan_tool/roadmap_impact_analysis.py": "833e864e8bbd1aa63fd2ac938d7dcea28378734dd91ec15d904cc91ccee3ddc9",
+    "plan_tool/roadmap_impact_run.py": "41ea60772fe69978f1e3f4caac76adef03654e9ba4f8197a648709a3d2266585",
+    "plan_tool/roadmap_impact_snapshot.py": "6e6a846ba856b7410377fadb3c1d2fa1c781f57afc71ddadf406f80226e17b75",
+    "plan_tool/roadmap_source_identity.py": "6f0a9734fc081a000432f85f00ca6886e98ae373813d1b071ddf0ed96ae52603",
+    "plan_tool/roadmap_structural_revision.py": "bd5722d845d114f2f266fb93e64c1131a0ec88a3bdc465dc772f357d917b264a",
+    "plan_tool/roadmap_structural_revision_run.py": "1a2dbd527ba427459806ea8e2490a1c83d5a2734944b5c6b89f1f34c0c7d659a",
+    "tests/cli/test_roadmap_cmd.py": "201e63bb402e3606d7e40f94956b74e7feff175016a3331d61e8c3ebb84611a7",
+    "tests/test_roadmap_escalation.py": "ae45e1da7e2c1abd44edfbd876c245ad05fd4761e5da2208b878331a6e24f46c",
+    "tests/test_roadmap_escalation_run.py": "f800c0dd3a4ac1a0bcbe8769ac0f10af7897eb5e8dc123d8b32ecc6040ec0fbb",
+    "tests/test_roadmap_escalation_selection.py": "6fdc44c58c74e6a0d8a0e5aa70ea0b4ab4fdeacb7912b9f654759ec2a3679550",
+    "tests/test_roadmap_format.py": "694423bdc80104084e48a72170c6ac0b1a5c3daac4c6f259cc4e9af89e1c3e1d",
+    "tests/test_roadmap_impact_analysis.py": "883ddda8fe98383ad7a803c861c34ccb688b9e6840458aae8d4dc165ffb4b115",
+    "tests/test_roadmap_impact_run.py": "c8fbb32c519f6a4234c3742a7b3046442c807baaf85671e671b5483474b63229",
+    "tests/test_roadmap_impact_snapshot.py": "9ecb6c1df6a2491e3a654ffb4decbd042a9fafa1b0f9c8e36d6f6841162771e2",
+    "tests/test_roadmap_revision_publish.py": "b0e057cd02839a72433abc0325e5b586729dc49ac7a9b589fe586feacedeb14b",
+    "tests/test_roadmap_source_identity.py": "27e7fb8a35b7390dbac87a4b63c79fd6095560cc7a5c71739c2d5caaeffb27ec",
+    "tests/test_roadmap_structural_revision.py": "4213e603e3a662ea89953a6e0f0a394cef48748593e3a9b92493449db5c82c8d",
+    "tests/test_roadmap_structural_revision_proof.py": "d90f18f74e42d505b3c4edc148b2391fd0d3df90091e83644c5f14eecdb8401e",
+    "tests/test_roadmap_structural_revision_run.py": "5f79e758275132362eae06f0d2d30166adbe28ca290b5457129d3b2f38fd56fd"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md": "6cca24d074139f06a7ed32c655af4d0ab1ed6a08b4f53fead7aaf052f2b0ba49",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md": "4b72dd822914ac1f883258e591e608845c4cb9727c038a81db3557c0b2552845",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md": "a0af7f253e86ab0e7f054efea4c8a054ecf1c49f03de58ed9c58d2f6cad5c421",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md": "e18795ca740886dc457f262ecc8fd058b5772a47c3a0c856c7026daea58b3191",
+    "docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md": "2292834701173b11a8e89ff87dbaab89225e51195c8b87020c340ac04d199563"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Retire Roadmap V1 Evidence\n\n`retire-roadmap-v1-evidence` \u00b7 generated 2026-08-24T04:01:09Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `257ce73b25141c53c5e9f91ad40f83e3b9f654b65862c87d866fda9960f133a5`\n- **Detail bundle digest:** `a8f2de94a3ff095ef4acdd63f863287a92bef949421759b8eef42aadd295295b`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 76296 bytes (+76296 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply retire-roadmap-v1-evidence   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[retirement-blocking-gate]`: Step 1\u2019s Architecture rule says \u201cRetirement proceeds only when no blocking record remains,\u201d but its `verify_blocking_gate` only records that decision; the frontmatter gives step 2 only `depends_on: [1]` and no advancement gate. `plan_tool/launcher.py:mark_done_and_advance` and `plan_tool/schema.py:Plan.next_runnable_step` advance a completed step\u2019s dependent without reading the release record, so a documented blocker can still lead to version-1 reader removal.\n  - Fix: make a zero-blocker retirement-ready decision an explicit precondition for completing step 1 and advancing steps 2\u20135.\n- MEDIUM `[impact-reader-refusal]`: Architecture says \u201cEach matrix entry receives a direct boundary test and its CLI-view test where applicable,\u201d and Testing requires refusal for impact publication, impact inspection, and its CLI view; Step 4\u2019s Files section instead says `tests/test_roadmap_impact_run.py` uses \u201cversion-2 receipt fixtures throughout\u201d and `tests/cli/test_roadmap_cmd.py` has \u201cno legacy-version fixtures or names.\u201d Its Tests section names no legacy refusal tests for `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, or `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view`, leaving the required `invalid` / no-route / no-publication result unprotected.\n  - Fix: retain one scoped legacy wire fixture in step 4 and test all three impact-reader boundaries for the documented fail-closed result.\n- HIGH `[reissue-route-cutover]`: Step 1 promises no project loses a usable route, but its reissue rule and `verify_reissue_chain` only validate replacement final names. `plan_tool/roadmap_impact_run.py:_load_requested_receipt` and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` consume exact final names and provide no redirect, so a workflow still naming the version-1 receipt or pair loses its route when the original leaves the active namespace.\n  - Fix: Require each reissue record to identify and verify every named consumer\u2019s cutover to its replacement before the original can become non-blocking.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[impact-reader-refusal]`: The Architecture reader-refusal matrix and `## Testing` require a direct boundary test and applicable CLI-view test for each refusal, but Step 4\u2019s `## Tests` covers version-2 behavior and schema validation without requiring the impact outcomes themselves. `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view` need explicit legacy-record tests for `invalid`, no route or publication, and redacted view output.\n  - Fix: Add direct runner and inspection refusal tests plus an impact-analysis-view test that prove the documented fail-closed outcomes for unarchived version-1 evidence.\n  - Address: `plan-tool completeness-apply retire-roadmap-v1-evidence --anchor impact-reader-refusal`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-2830a839]`: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-3a9368c3]`: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit retire-roadmap-v1-evidence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Retire Roadmap V1 Evidence\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `257ce73b25141c53c5e9f91ad40f83e3b9f654b65862c87d866fda9960f133a5`\n- **Detail bundle digest:** `a8f2de94a3ff095ef4acdd63f863287a92bef949421759b8eef42aadd295295b`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[retirement-blocking-gate]`: Step 1\u2019s Architecture rule says \u201cRetirement proceeds only when no blocking record remains,\u201d but its `verify_blocking_gate` only records that decision; the frontmatter gives step 2 only `depends_on: [1]` and no advancement gate. `plan_tool/launcher.py:mark_done_and_advance` and `plan_tool/schema.py:Plan.next_runnable_step` advance a completed step\u2019s dependent without reading the release record, so a documented blocker can still lead to version-1 reader removal.\n- MEDIUM `[impact-reader-refusal]`: Architecture says \u201cEach matrix entry receives a direct boundary test and its CLI-view test where applicable,\u201d and Testing requires refusal for impact publication, impact inspection, and its CLI view; Step 4\u2019s Files section instead says `tests/test_roadmap_impact_run.py` uses \u201cversion-2 receipt fixtures throughout\u201d and `tests/cli/test_roadmap_cmd.py` has \u201cno legacy-version fixtures or names.\u201d Its Tests section names no legacy refusal tests for `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, or `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view`, leaving the required `invalid` / no-route / no-publication result unprotected.\n- HIGH `[reissue-route-cutover]`: Step 1 promises no project loses a usable route, but its reissue rule and `verify_reissue_chain` only validate replacement final names. `plan_tool/roadmap_impact_run.py:_load_requested_receipt` and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` consume exact final names and provide no redirect, so a workflow still naming the version-1 receipt or pair loses its route when the original leaves the active namespace.\n\n### Files coherence\n\n- INFO: step 2 detail cites `plan_tool/roadmap_impact_run.py` resembling declared `plan_tool/roadmap_impact_analysis.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/roadmap_structural_revision.py` resembling declared `plan_tool/roadmap_structural_revision_run.py` (typo/stale path?)\n- INFO: step 5 detail cites `plan_tool/roadmap_structural_operations.py` resembling declared `plan_tool/roadmap_structural_revision.py` (typo/stale path?)\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[impact-reader-refusal]`: The Architecture reader-refusal matrix and `## Testing` require a direct boundary test and applicable CLI-view test for each refusal, but Step 4\u2019s `## Tests` covers version-2 behavior and schema validation without requiring the impact outcomes themselves. `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view` need explicit legacy-record tests for `invalid`, no route or publication, and redacted view output.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `evidence_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `schema_version`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit retire-roadmap-v1-evidence` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-038faca3",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1\u2019s Architecture rule says \u201cRetirement proceeds only when no blocking record remains,\u201d but its `verify_blocking_gat",
+      "body": "Step 1\u2019s Architecture rule says \u201cRetirement proceeds only when no blocking record remains,\u201d but its `verify_blocking_gate` only records that decision; the frontmatter gives step 2 only `depends_on: [1]` and no advancement gate. `plan_tool/launcher.py:mark_done_and_advance` and `plan_tool/schema.py:Plan.next_runnable_step` advance a completed step\u2019s dependent without reading the release record, so a documented blocker can still lead to version-1 reader removal.",
+      "suggested_action": "make a zero-blocker retirement-ready decision an explicit precondition for completing step 1 and advancing steps 2\u20135.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "retirement-blocking-gate",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-aa36a66f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says \u201cEach matrix entry receives a direct boundary test and its CLI-view test where applicable,\u201d and Testin",
+      "body": "Architecture says \u201cEach matrix entry receives a direct boundary test and its CLI-view test where applicable,\u201d and Testing requires refusal for impact publication, impact inspection, and its CLI view; Step 4\u2019s Files section instead says `tests/test_roadmap_impact_run.py` uses \u201cversion-2 receipt fixtures throughout\u201d and `tests/cli/test_roadmap_cmd.py` has \u201cno legacy-version fixtures or names.\u201d Its Tests section names no legacy refusal tests for `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, or `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view`, leaving the required `invalid` / no-route / no-publication result unprotected.",
+      "suggested_action": "retain one scoped legacy wire fixture in step 4 and test all three impact-reader boundaries for the documented fail-closed result.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "impact-reader-refusal",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-dff9cb20",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 promises no project loses a usable route, but its reissue rule and `verify_reissue_chain` only validate replaceme",
+      "body": "Step 1 promises no project loses a usable route, but its reissue rule and `verify_reissue_chain` only validate replacement final names. `plan_tool/roadmap_impact_run.py:_load_requested_receipt` and `plan_tool/roadmap_structural_revision.py:load_structural_revision_preflight` consume exact final names and provide no redirect, so a workflow still naming the version-1 receipt or pair loses its route when the original leaves the active namespace.",
+      "suggested_action": "Require each reissue record to identify and verify every named consumer\u2019s cutover to its replacement before the original can become non-blocking.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reissue-route-cutover",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-aa36a66f",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture reader-refusal matrix and `## Testing` require a direct boundary test and applicable CLI-view test for ",
+      "body": "The Architecture reader-refusal matrix and `## Testing` require a direct boundary test and applicable CLI-view test for each refusal, but Step 4\u2019s `## Tests` covers version-2 behavior and schema validation without requiring the impact outcomes themselves. `plan_tool/roadmap_impact_run.py:run_roadmap_impact_analysis`, `current_impact_analysis`, and `plan_tool/cli/roadmap_cmd.py:_cmd_roadmap_impact_analyses_view` need explicit legacy-record tests for `invalid`, no route or publication, and redacted view output.",
+      "suggested_action": "Add direct runner and inspection refusal tests plus an impact-analysis-view test that prove the documented fail-closed outcomes for unarchived version-1 evidence.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "impact-reader-refusal",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "257ce73b25141c53c5e9f91ad40f83e3b9f654b65862c87d866fda9960f133a5",
+      "detail_bundle_digest": "a8f2de94a3ff095ef4acdd63f863287a92bef949421759b8eef42aadd295295b",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/01-inventory-live-evidence-reissue.md",
+          "state": "present",
+          "digest": "6cca24d074139f06a7ed32c655af4d0ab1ed6a08b4f53fead7aaf052f2b0ba49"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/02-make-version-only-legal-roadmap.md",
+          "state": "present",
+          "digest": "4b72dd822914ac1f883258e591e608845c4cb9727c038a81db3557c0b2552845"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/03-remove-unreachable-version-dispatch.md",
+          "state": "present",
+          "digest": "a0af7f253e86ab0e7f054efea4c8a054ecf1c49f03de58ed9c58d2f6cad5c421"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/04-remove-unreachable-version-dispatch.md",
+          "state": "present",
+          "digest": "e18795ca740886dc457f262ecc8fd058b5772a47c3a0c856c7026daea58b3191"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/retire-roadmap-v1-evidence/05-remove-legacy-structural-preflight.md",
+          "state": "present",
+          "digest": "2292834701173b11a8e89ff87dbaab89225e51195c8b87020c340ac04d199563"
+        }
+      ],
+      "source_seed_digest": "e172f91558bd4743f14218cf48d468bda4b6632e3d55b00e07a521bc2edcc60b",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 76296,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

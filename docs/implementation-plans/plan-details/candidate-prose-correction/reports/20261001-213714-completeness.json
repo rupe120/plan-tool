@@ -1,0 +1,183 @@
+{
+  "version": 4,
+  "plan_slug": "candidate-prose-correction",
+  "plan_path": "docs/implementation-plans/2-candidate-prose-correction.md",
+  "created_at": "2026-10-01T21:37:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4fac286e37d4e33868a6c9e3003266a4c817c0cdae9e0f98ff8460d04ec41f29",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "48aee96c2f26a5c4a0369ca7b53699474d7de9a8f7353d5fd75d6c6f16a230ff",
+    "ROADMAP_FORMAT.md": "e074ace041906fae15d91c6e7436fa827b4b68f78407cebc887bdfe9ea78814c",
+    "plan_tool/cli/roadmap_cmd.py": "375334e1e6467b135abb1245be490f8a198701117c565a96dc6ef96c2dc5a60a",
+    "plan_tool/prompts/roadmap-candidate-delta.md": "11a36ca8344dd704e30e2f57616523321489df1f5f8ba600b30151608b691fbb",
+    "plan_tool/roadmap_candidate.py": "935bb51d5e61f75a830a538462d03df5a96e011dd76f27a3cf0ef02983b2b8d6",
+    "plan_tool/roadmap_candidate_context.py": "9f162b8136ba4b65c4a227b78060c372c35a432f0a56156e376057fdb9b70818",
+    "plan_tool/roadmap_candidate_review.py": "126012a2052fa25c21f92ac801d625e8de6d14bb86f2fcbfec507a9626076b8d",
+    "plan_tool/roadmap_candidate_run.py": "3919a5da38a5d5087d1e0b97d75f24291d43ebac27573ddf384e09f284905b71",
+    "plan_tool/roadmap_compare.py": "7bc97fd64f913191619469a6866c1469b59bf674201a46b7163497c1176cd06c",
+    "plan_tool/roadmap_compare_render.py": "5354da4ef701349915b50d8658cb31309f51d644ca64317ca44b3434f9708a30",
+    "plan_tool/roadmap_compare_run.py": "0da4484db3481a5e679c4cedfe1ee69ab9c1467a9590ebac82d3f475a1861cd5",
+    "plan_tool/roadmap_revision.py": "941e651f7eb2be3f426d0026b3b6c75de1d9815930f37f7ee85415aba9e6aa06",
+    "plan_tool/roadmap_revision_patch.py": "f579998564a2012ea3ff28e02765d4c38c14aa7c5df0253752eaaed4c7dfadf1",
+    "tests/cli/test_roadmap_cmd.py": "2df2ea898ac0e5e8b0fbd49d4995b708704245121e5746a1605f552380a7ada9",
+    "tests/test_roadmap_candidate.py": "1632254c78f96f7c2ffc410523cd04d6a4681fbd32d3f11590ddcac2bf1e9124",
+    "tests/test_roadmap_candidate_context.py": "8a9340a0a50cbed29e2d72ae2632685ba2ff0c1529585685ffe23ed2bf40b2f6",
+    "tests/test_roadmap_candidate_review.py": "6c9a6efe1d3b599d7719f1d79d69ec18fe47fb7338950be4dabb38c77fc2d305",
+    "tests/test_roadmap_candidate_run.py": "a63f0f704e02f84664e5714b6dc729c1873e604c1dd85e9358073c27f06b222f",
+    "tests/test_roadmap_compare_render.py": "80bb6a2de5f044e33d36e756b6d0a2cb507d53945f245335978d2cf6df55ffbe",
+    "tests/test_roadmap_compare_run.py": "340befa0ee89666fc773fb4f67f1f882ee29be70ab5385a8f3b1680d8ff78c6b",
+    "tests/test_roadmap_revision.py": "1d1cc7dfd2bfdb212bc0b4a6b7c51fc50adfa01ed70e258c8fc4e34ad0cf5048",
+    "tests/test_roadmap_revision_patch.py": "786dad25c23c07d30bcda0e4531f9336eed49442ac178d713b9d66b52dd89e02"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md": "42a86d6aed76ea5f3df3953589ee75f7516819452e7243379910489c8ccf5ed9",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md": "0a48b18cee9a5b781652c17197afcadd6df428c4baa828f0dfb157f74d8471d1",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md": "f64f1540dc81c8a6721454867216c809e652baa4601e7721984302beece66f5c",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md": "b1d4666f493708184519d6b496a9a83a5e409cf8e88301457875b1524f1bbae4",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md": "4ef917daa692b467b6fcee0d3ebcdc4ff39f414be3f5ad8596329be7998b8c98",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/08-bind-correction-before-after-records.md": "b0c68ca4d99b6c629f9c3c5766192dc707f3b2efc6e9470368f253de06e3aec4",
+    "docs/implementation-plans/plan-details/candidate-prose-correction/09-sync-roadmap-format-md-landed-symbols.md": "5d34b2053266ff67a601a655cf3d2571ef79ab000badd0a31fda925d838776cb"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Candidate Prose Correction\n\n`candidate-prose-correction` \u00b7 generated 2026-10-01T21:37:13Z \u00b7 mode: iterate \u00b7 loop stopped: all_auto_apply_findings_deferred after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4366da051954da39c4ee4185a16230d62c0d2b1e9b7db78062883525569a18f8`\n- **Detail bundle digest:** `c530bc809d923e79bbbf7832e58a737e55d86e50fe8555edccefb581a61514c7`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 1 (0 missing-concept-link, 1 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 9 (+0 vs. first audit)\n- **Detail-bundle size:** 115745 bytes (+115745 vs. first audit)\n- **Keystone fan-out:** 0.38\n- **Satellite ratio:** 0.22\n- **Inert-step ratio:** 0.29\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[owning-set-vs-added-row-reference]` [confidence: limited]: The plan's refusal rule and its post-correction rule can be read as conflicting about which added rows a correction may touch. Plan \"Interaction with typed-row operations\" says \"A correction is refused when the same candidate adds, edits, or removes any row in its owning set.\" Plan \"Post-correction validity\" says \"a correction may name a row that candidate adds; step 1 names it exactly.\" The two rules fit together only if the owning set is fixed from the predecessor's live rows. Under that reading, a row the candidate adds is never in the owning set, so naming it in the replacement text is allowed. Neither the plan body nor the visible parts of step 1 and step 4 state this. An implementer could therefore refuse a correction that merely names an added row, or accept one whose block already names an id the candidate re-adds. Step 1 (`ROADMAP_FORMAT.md` contract), step 4 (refusal list and gate state) and step 6 (replay) would all have to pick the same reading.\n  - Fix: State in step 1's contract that the owning set is computed from the predecessor's live rows only. Then say that naming a row the same candidate adds is allowed, and that adding a row already in the owning set is refused. Have steps 4 and 6 follow that wording.\n\n## Deferred \u2014 structural diagnostics (resolve directly)\n\n_Structural diagnostics. `apply_finding` edits plan/detail prose; it cannot create a file, rewrite `step.files`, author a missing detail file, or write lessons \u2014 so dispatching these only returns NOT-APPLICABLE. Resolve them directly (fix the declared path, run `plan-tool detail`, author the lessons file)._\n\n- INFO `[step4-files-coherence-655af064]` [confidence: limited]: The detail body for step 4 cites `plan_tool/roadmap_candidate_run.py`, which isn't in the step's `files:` array but closely resembles the declared `plan_tool/roadmap_candidate.py`. Likely a typo or a stale/moved path that drifted from the machine-readable manifest.\n\n## Suggested next steps\n\n- Close 1 conceptual-correctness gap(s) through a session-directed edit first (design gaps; not auto-applied under #85).\n- `plan-tool completeness-apply candidate-prose-correction` also clears these deterministically (no claude): it adds the cited path(s) that resolve to real files to the step's `allowed_mentions:`. Citations that don't resolve to a file are likely typos \u2014 fix those in the detail prose. (1 files-coherence drift(s)).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Candidate Prose Correction\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `4366da051954da39c4ee4185a16230d62c0d2b1e9b7db78062883525569a18f8`\n- **Detail bundle digest:** `c530bc809d923e79bbbf7832e58a737e55d86e50fe8555edccefb581a61514c7`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[owning-set-vs-added-row-reference]` [confidence: limited]: The plan's refusal rule and its post-correction rule can be read as conflicting about which added rows a correction may touch. Plan \"Interaction with typed-row operations\" says \"A correction is refused when the same candidate adds, edits, or removes any row in its owning set.\" Plan \"Post-correction validity\" says \"a correction may name a row that candidate adds; step 1 names it exactly.\" The two rules fit together only if the owning set is fixed from the predecessor's live rows. Under that reading, a row the candidate adds is never in the owning set, so naming it in the replacement text is allowed. Neither the plan body nor the visible parts of step 1 and step 4 state this. An implementer could therefore refuse a correction that merely names an added row, or accept one whose block already names an id the candidate re-adds. Step 1 (`ROADMAP_FORMAT.md` contract), step 4 (refusal list and gate state) and step 6 (replay) would all have to pick the same reading.\n\n### Files coherence\n\n- INFO: step 4 detail cites `plan_tool/roadmap_candidate_run.py` resembling declared `plan_tool/roadmap_candidate.py` (typo/stale path?)\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk candidate-prose-correction` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-21857083",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The plan's refusal rule and its post-correction rule can be read as conflicting about which added rows a correction may ",
+      "body": "The plan's refusal rule and its post-correction rule can be read as conflicting about which added rows a correction may touch. Plan \"Interaction with typed-row operations\" says \"A correction is refused when the same candidate adds, edits, or removes any row in its owning set.\" Plan \"Post-correction validity\" says \"a correction may name a row that candidate adds; step 1 names it exactly.\" The two rules fit together only if the owning set is fixed from the predecessor's live rows. Under that reading, a row the candidate adds is never in the owning set, so naming it in the replacement text is allowed. Neither the plan body nor the visible parts of step 1 and step 4 state this. An implementer could therefore refuse a correction that merely names an added row, or accept one whose block already names an id the candidate re-adds. Step 1 (`ROADMAP_FORMAT.md` contract), step 4 (refusal list and gate state) and step 6 (replay) would all have to pick the same reading.",
+      "suggested_action": "State in step 1's contract that the owning set is computed from the predecessor's live rows only. Then say that naming a row the same candidate adds is allowed, and that adding a row already in the owning set is refused. Have steps 4 and 6 follow that wording.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "owning-set-vs-added-row-reference",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "4366da051954da39c4ee4185a16230d62c0d2b1e9b7db78062883525569a18f8",
+      "detail_bundle_digest": "c530bc809d923e79bbbf7832e58a737e55d86e50fe8555edccefb581a61514c7",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/01-settle-shared-narrative-correction.md",
+          "state": "present",
+          "digest": "42a86d6aed76ea5f3df3953589ee75f7516819452e7243379910489c8ccf5ed9"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/02-extract-exact-span-splice-overlap.md",
+          "state": "present",
+          "digest": "ca3c8cd95fbe61deac2b2b132ea43a46152cc07757db4460d87f857714767550"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/03-widen-candidate-span-issuance-project.md",
+          "state": "present",
+          "digest": "4575f7a540dae59b6e36f8c011dba435703e48a65fdc3905df522a5245231e66"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/04-standalone-existing-prose-correction.md",
+          "state": "present",
+          "digest": "0a48b18cee9a5b781652c17197afcadd6df428c4baa828f0dfb157f74d8471d1"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/05-teach-roadmap-candidate-delta-md-batch.md",
+          "state": "present",
+          "digest": "f64f1540dc81c8a6721454867216c809e652baa4601e7721984302beece66f5c"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/06-persist-replay-correction-operations.md",
+          "state": "present",
+          "digest": "b1d4666f493708184519d6b496a9a83a5e409cf8e88301457875b1524f1bbae4"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/07-show-exact-before-after-correction.md",
+          "state": "present",
+          "digest": "4ef917daa692b467b6fcee0d3ebcdc4ff39f414be3f5ad8596329be7998b8c98"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/08-bind-correction-before-after-records.md",
+          "state": "present",
+          "digest": "b0c68ca4d99b6c629f9c3c5766192dc707f3b2efc6e9470368f253de06e3aec4"
+        },
+        {
+          "step_id": 9,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/candidate-prose-correction/09-sync-roadmap-format-md-landed-symbols.md",
+          "state": "present",
+          "digest": "5d34b2053266ff67a601a655cf3d2571ef79ab000badd0a31fda925d838776cb"
+        }
+      ],
+      "source_seed_digest": "05abece707d1ddece8c5835beb777b5a9460f600fbce63bcee5b1ccfc1daa568",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 9,
+    "detail_bundle_bytes": 115745,
+    "keystone_fan_out": 0.375,
+    "satellite_ratio": 0.2222222222222222,
+    "inert_step_ratio": 0.2857142857142857,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

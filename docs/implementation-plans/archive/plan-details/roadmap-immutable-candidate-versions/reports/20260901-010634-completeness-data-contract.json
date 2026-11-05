@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step5-data-contract-ea8aaf87": {
+      "code_anchor": "plan_tool/roadmap_impact_snapshot.py:CompleteRoadmapGateInput",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md",
+      "reason": "code anchor `plan_tool/roadmap_impact_snapshot.py:CompleteRoadmapGateInput` does not resolve in HEAD",
+      "step_id": 5,
+      "target": "plan-detail"
+    },
+    "step8-data-contract-6933611a": {
+      "code_anchor": "plan_tool/roadmap_impact_snapshot.py:CompleteRoadmapGateInput",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-review-seal-exact.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-review-seal-exact.md",
+      "reason": "code anchor `plan_tool/roadmap_impact_snapshot.py:CompleteRoadmapGateInput` does not resolve in HEAD",
+      "step_id": 8,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260901-010634-completeness"
+}

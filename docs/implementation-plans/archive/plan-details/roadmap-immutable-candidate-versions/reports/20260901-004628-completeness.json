@@ -1,0 +1,196 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-immutable-candidate-versions",
+  "plan_path": "docs/implementation-plans/2-roadmap-immutable-candidate-versions.md",
+  "created_at": "2026-09-01T00:46:28Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "e0807d6bcff207776ebfe9ff8f60a6bb0be198b1b12c172b1e1c9ff9c5815bae",
+  "code_fingerprint": {
+    "BACKLOG.md": "bc10798b3fd3d15deb2a9aeee5b393d42dec8f07fafbe8906f30be1745e1c10d",
+    "CAPABILITIES.md": "e9a842fb50858d4dcb315779dc2934975b711fe086dbac60248ba5335c30ebc0",
+    "CLAUDE.md": "b788c7ca9b3aa5415ffe7c0b069e40e9e5fb561af4f7e77f0af8efd9f7a6575b",
+    "ROADMAP_FORMAT.md": "33ad5d860d12609dcb1667738dafe31ee8ef11463e154d5346eeb0740bbd0800",
+    "TESTING.md": "3bec00214c517c6badfcf3c73cefe4956aa7706f3a57344da351cb679cf5f41f",
+    "plan_tool/cli/roadmap_cmd.py": "86772212d4cbad2b1905064ae220ea1d432d14ce20006348326f28065e088a3f",
+    "plan_tool/roadmap.py": "4c1f21aa88b5b518579f0b45bbb177e26260d284e80beb883b81524fee8c0b1f",
+    "plan_tool/roadmap_feedback_reopen.py": "bf57464daccb221b0ebf76423773ba78db963244bfced0ec5616b24f0ef1d30c",
+    "plan_tool/roadmap_impact_snapshot.py": "cbb751d933a307d246120003686f6d9b4325739ae3f3b9511e512d9e9c0ac9da",
+    "plan_tool/roadmap_revision_publish.py": "f46f41ed1852392dd83402ff16f22e0a578be4a3bfaca6f05c88939d93cc46b1",
+    "plan_tool/roadmap_revision_run.py": "dda8a8added6a241baa07e04c89fcd9951af55d451040dab9a13ad9780c01be9",
+    "plan_tool/roadmap_structural_revision_run.py": "df0283b5a7c6de1d4d1c0af43ee580b68874f022754d1ffbf06f16492e5573b4",
+    "plan_tool/roadmap_view.py": "64311d5eb38b9f064c7c2908dafdc45e13c992e0dd011bbabd1566ebb085d7cf",
+    "tests/cli/test_roadmap_cmd.py": "ec9d60c19678d080cce92979e8ea5babfeeb0e9077a86f13afffed80b0f418f3",
+    "tests/test_roadmap.py": "ccea2b20b3ca4f2e203e807eae4c4de8b7adad8b603920153998e448c787d589",
+    "tests/test_roadmap_feedback_reopen.py": "6ce45a444965621c356dc368658274bf5a5f6322e2696fa10c5e6bf2985544b5",
+    "tests/test_roadmap_format.py": "5bdb71dcc4ad12cc3f1bc48aec3551df325977f8f68593ad2982be4a93427e77",
+    "tests/test_roadmap_impact_run.py": "b90b329327f3bfdb0bfcddbe6db995ed1c409d62d5a3a4afdaff2388588e6bc9",
+    "tests/test_roadmap_impact_snapshot.py": "06341c489709ca3ef428869cb8499bc31eecc0b50b950e3022343458f5d47aa8",
+    "tests/test_roadmap_revision_publish.py": "7b6f082bf3dddace8c0e7787945d79a057bc2a408a5dd32d837b83221ae765c8",
+    "tests/test_roadmap_revision_run.py": "f86f4afb6bc63a23f890e9e7df69d5c9ac322b5a02e46f693783253acdad1936",
+    "tests/test_roadmap_structural_revision_run.py": "f07286d45200cfcac80ecc6a38ccce48e16008239369407a3ab790684adc63b7",
+    "tests/test_roadmap_view.py": "38b33d60f3eafb026c615c237b2fa4e50688f33d44dc173b1c31de2627d8873e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md": "dcd8891ed7b685a6be2b8882a60240d984b1821cc3417136245130d98df1e76d",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md": "810f61e9e5535d3601fcd5f3c04c55b5f971432185502baf0960b9593f4b0da9",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-enroll-exact-immutable-root-roll-back.md": "c83a0b9fdf9aa34ff9ee5fb189ed9af92e15e4be82a0ea9d7ef57145a9c6670b",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-build-one-lineage-bounded-candidate.md": "90ac34373b924bcc332ac9353e8b0a71b68c101ec12fab665a51b6989c04647b",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md": "a859efb64f649d251d02de48d6fb4b02026f0c8edbabd4fe59903ea59b3927ef",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-run-initial-bounded-candidate-proposal.md": "e56366fce14d57b42f739d47ccb2cb043be0bb0dac48c2fea2433b1c4dd51927",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-generate-diff-anchored-questions-record.md": "992411ec55b07c847a5273adc16b0ce83b25792ca345da15fcfa50501860abeb",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-review-seal-exact.md": "fe47f1100835a9f0dfb879a5ae02f209dfd8b541a80f53c0da1dad6fa4d781b2",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-route-roadmap-views-through-accepted.md": "0c2b0baa45350b2c5cce2a83f023cc3a6be5e7fc5bbb525f31e22f2ea3a73150",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-refuse-enrolled-roadmaps-before-legacy.md": "076dc7aa919832769d7758bf4820b6350203cf8d676018a7c4ad9be54f3f8eb2",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md": "01c48f18e7816d8a858bb03f36692ffa611a4164d20884c5aee863fde0014d29",
+    "docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md": "2479ae104528003b911254ad2f4f877e8499a58830a39805aa305c7c640155eb"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Immutable Candidate Versions\n\n`roadmap-immutable-candidate-versions` \u00b7 generated 2026-09-01T00:46:28Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply roadmap-immutable-candidate-versions   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[complete-candidate-gate-bundle]` [confidence: limited]: Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) says `check_full_roadmap_gates()` accepts an optional `CandidateSubstitution` and that \u201cA candidate must replace only the captured artifact at its selected index\u201d; at HEAD, `CandidateSubstitution` carries one `stage_index` and one `artifact`. Step 5 (`Apply capsule-authorized deltas into complete gate-checked candidates and bind their deterministic diffs`) instead requires \u201cthe assembled four-artifact candidate\u201d to pass as \u201cone complete bundle,\u201d and step 8 (`Promote only a review seal's exact candidate by replacing the accepted-head selector while preserving every version file`) repeats that recheck. A delta changing two artifacts has no defined valid gate input, so one changed artifact can be validated against predecessor content.\n  - Fix: define one shared complete-candidate gate input with matched evidence for every stage, then require and test its use in materialization and promotion.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-immutable-candidate-versions` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Immutable Candidate Versions\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[complete-candidate-gate-bundle]` [confidence: limited]: Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) says `check_full_roadmap_gates()` accepts an optional `CandidateSubstitution` and that \u201cA candidate must replace only the captured artifact at its selected index\u201d; at HEAD, `CandidateSubstitution` carries one `stage_index` and one `artifact`. Step 5 (`Apply capsule-authorized deltas into complete gate-checked candidates and bind their deterministic diffs`) instead requires \u201cthe assembled four-artifact candidate\u201d to pass as \u201cone complete bundle,\u201d and step 8 (`Promote only a review seal's exact candidate by replacing the accepted-head selector while preserving every version file`) repeats that recheck. A delta changing two artifacts has no defined valid gate input, so one changed artifact can be validated against predecessor content.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk roadmap-immutable-candidate-versions` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-5ed7267a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) says `check",
+      "body": "Step 1 (`Put full-roadmap gate checks behind one complete-bundle boundary without changing current results`) says `check_full_roadmap_gates()` accepts an optional `CandidateSubstitution` and that \u201cA candidate must replace only the captured artifact at its selected index\u201d; at HEAD, `CandidateSubstitution` carries one `stage_index` and one `artifact`. Step 5 (`Apply capsule-authorized deltas into complete gate-checked candidates and bind their deterministic diffs`) instead requires \u201cthe assembled four-artifact candidate\u201d to pass as \u201cone complete bundle,\u201d and step 8 (`Promote only a review seal's exact candidate by replacing the accepted-head selector while preserving every version file`) repeats that recheck. A delta changing two artifacts has no defined valid gate input, so one changed artifact can be validated against predecessor content.",
+      "suggested_action": "define one shared complete-candidate gate input with matched evidence for every stage, then require and test its use in materialization and promotion.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "complete-candidate-gate-bundle",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "20d5a03a069803ba8e3356e346cb1af7d82637677a9139f13f13dea787595952",
+    "detail_bundle_digest": "2ccffad648d989c34f8d106ee944fa438af3589358cfcdf281c619e7fb85f056",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/01-put-full-roadmap-gate-checks-behind-one.md",
+        "state": "present",
+        "digest": "dcd8891ed7b685a6be2b8882a60240d984b1821cc3417136245130d98df1e76d"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/02-expose-journaled-roadmap-publication.md",
+        "state": "present",
+        "digest": "810f61e9e5535d3601fcd5f3c04c55b5f971432185502baf0960b9593f4b0da9"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/03-enroll-exact-immutable-root-roll-back.md",
+        "state": "present",
+        "digest": "c83a0b9fdf9aa34ff9ee5fb189ed9af92e15e4be82a0ea9d7ef57145a9c6670b"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/04-build-one-lineage-bounded-candidate.md",
+        "state": "present",
+        "digest": "90ac34373b924bcc332ac9353e8b0a71b68c101ec12fab665a51b6989c04647b"
+      },
+      {
+        "step_id": 5,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/05-apply-capsule-authorized-deltas.md",
+        "state": "present",
+        "digest": "a859efb64f649d251d02de48d6fb4b02026f0c8edbabd4fe59903ea59b3927ef"
+      },
+      {
+        "step_id": 6,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/06-run-initial-bounded-candidate-proposal.md",
+        "state": "present",
+        "digest": "e56366fce14d57b42f739d47ccb2cb043be0bb0dac48c2fea2433b1c4dd51927"
+      },
+      {
+        "step_id": 7,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/07-generate-diff-anchored-questions-record.md",
+        "state": "present",
+        "digest": "992411ec55b07c847a5273adc16b0ce83b25792ca345da15fcfa50501860abeb"
+      },
+      {
+        "step_id": 8,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/08-promote-only-review-seal-exact.md",
+        "state": "present",
+        "digest": "fe47f1100835a9f0dfb879a5ae02f209dfd8b541a80f53c0da1dad6fa4d781b2"
+      },
+      {
+        "step_id": 9,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/09-route-roadmap-views-through-accepted.md",
+        "state": "present",
+        "digest": "0c2b0baa45350b2c5cce2a83f023cc3a6be5e7fc5bbb525f31e22f2ea3a73150"
+      },
+      {
+        "step_id": 10,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/10-refuse-enrolled-roadmaps-before-legacy.md",
+        "state": "present",
+        "digest": "076dc7aa919832769d7758bf4820b6350203cf8d676018a7c4ad9be54f3f8eb2"
+      },
+      {
+        "step_id": 11,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/11-expose-enrollment-candidate-review.md",
+        "state": "present",
+        "digest": "01c48f18e7816d8a858bb03f36692ffa611a4164d20884c5aee863fde0014d29"
+      },
+      {
+        "step_id": 12,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1/docs/implementation-plans/plan-details/roadmap-immutable-candidate-versions/12-document-version-authority-record.md",
+        "state": "present",
+        "digest": "2479ae104528003b911254ad2f4f877e8499a58830a39805aa305c7c640155eb"
+      }
+    ],
+    "source_seed_digest": "6e60306f6c8183a9c60eb6c96cae1350825c2b25a47f2323a59d55c1d0e62058",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

@@ -1,0 +1,190 @@
+{
+  "version": 4,
+  "plan_slug": "plan-quota-recovery",
+  "plan_path": "docs/implementation-plans/2-plan-quota-recovery.md",
+  "created_at": "2026-08-20T16:34:17Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "4e07624bf9ca8bcf74cba5605bd617167ccf79be858cecd8d9872dfcee448dac",
+  "code_fingerprint": {
+    "BACKLOG.md": "0b42df85b62ab05af185f043300744bac54efd474e09ec1a327aacd2a2f2b28b",
+    "BUG_BACKLOG.md": "48f0f1b18b3777e5d08ec51b033ce055af0927d878608ab68d7e348f9e88e962",
+    "DATA_CONTRACT.md": "b75be36ff31ad1457c7720afcce2e2fd528d12c96d53efb3b948cbeb646a48ba",
+    "README.md": "563c3db41825d122d8b2b6b5a4b8f9376ada5e1f3ff98856dbc87548160d2174",
+    "RUNBOOK.md": "6f4e15df2df7831ae5ae30e9395dd3663b1bd2e65451630e480160d375e45be2",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "docs/AUDIT_FLOW.md": "3b595fdc86b715e8c1f2de7be4de820ce17988a711a5544accea016456d0c6cf",
+    "docs/CODEX_CLI_CONTRACT.md": "1246773cba681feba6e113fbb907edb460d1b7ab2f7c43b5196a410ff297a329",
+    "docs/CURSOR_AGENT_CLI_CONTRACT.md": "8506e63bbc7ff241d163c82309e236b6ac2065439ba5cff90ebac2be75e838b3",
+    "docs/ROADMAP_DEMO_ORCHESTRATION.md": "59ce4c96c379f2dd95ef307e78471b9215fbb4a77aaeab421a32df05e7c738f1",
+    "docs/RUN_FLOW.md": "796c233e048003c8451a74a585f349a94406bc2f2d5df10517cc9d092ead6560",
+    "docs/cli/completeness-audit.md": "6860b4d743f52a21d841f0bd0fd4f9df8b130b0c4ad4289260b68677edf2e78b",
+    "docs/design-plans/BACKEND_SELECTION.md": "5fa4cb56f8c04c420252fa4a6936693ca19dad68cfa8430b6dd891816901bc9a",
+    "docs/implementation-plans/backlog-arcs/bug-backlog-draining-arc.md": "67df10be2cd1bbe3f5e6691dd895d5b5b3f2e16396811da7bc4b565f5869cb37",
+    "integrations/claude/SKILL.md": "28ae3c91738bd7c2c4c54857cf0db04066b1fcc925486403810714fddee4315c",
+    "integrations/codex/SKILL.md": "0041b167b573fe21a9fc3e3d08a2b095ce25e1296a77b2a4c0acadd5d6da178d",
+    "integrations/cursor/backend.json": "bbe66667ae8eae7c6a44d9056c8f3d2c291c8bfadcf81fc7e5e38a7423dc1223",
+    "plan_tool/backend.py": "31819cb12d9d272943f20516d19e858e0415a0ff44e6d2245de09cae027d5e55",
+    "plan_tool/claude_errors.py": "b01ad1375824dda471062b6b5393f2cbf33bc207610a65fc7b3e45dd6fb116c1",
+    "plan_tool/cli/completeness_cmd.py": "8fb5db92b56b76b87707b75f0057ff4f727bcab4ab3193caa0a81e038eb9142f",
+    "plan_tool/cli/completeness_phases.py": "0b1c6f84d4c8143f79b1a53e4c3ce1bbd8623c84f168784f57898e8d908e8ab5",
+    "plan_tool/launcher.py": "7d130fe6d4468526a1abb95ea24623ac951e0d0651de0e07b293e2d8f28abddf",
+    "plan_tool/rate_limit_loop.py": "0c3b4a4f0e058849f0606319c4d07c7f8030e9874924dbbfadcae8956d33cd34",
+    "plan_tool/review.py": "5852d3eabd1e85a496d6c6f644b34cbdd9c03e2df7d2555d06e7755dc2411846",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde",
+    "plan_tool/shell.py": "4bec3489eb721349f515ba862a9d70761fc4519ed6a01068e7d43937380b1d6b",
+    "tests/cli/test_completeness_cmd.py": "601ef6f7cba42762c84185f8c19c7aebaa78826ffc5e6a5f1049c8a598265090",
+    "tests/test_backend.py": "13344d689bdaa18e38c9b69330620b84a6dd9e0fca5ed5a68c577817539ac186",
+    "tests/test_claude_errors.py": "ed8f7fb0a00ecf1ac7b80829d6d09e1a8d7ccd1e3806cd5e624caa90506ffd08",
+    "tests/test_convergence.py": "ea5bb91397840ca41dfa2b35b3515c717576dd5efbe3a134b14c92abc4ea8424",
+    "tests/test_data_contract.py": "e3f074d0d926b45a816ee06f0382ec760d21ab3cbdb2b12d7f4d19cde39b8a7a",
+    "tests/test_launcher.py": "2fed0adf766024d0486edc559299396303c7625d9b7b0816947270b317ea7ed5",
+    "tests/test_rate_limit_loop.py": "1584b07cb934572cc280fa1b92e637892ceecd9d19f045020589eeffb0a38de4",
+    "tests/test_review.py": "113f8a421fcdcb8a2c58779e1ec7c4085f75e411ff084003c7badb5f5df69d79",
+    "tests/test_review_persistence.py": "e6d127bb663994902f85b02ff12f9363a02686a1da41751135eac0428600e716",
+    "tests/test_shell.py": "04d7f06cfa1f3b764d39fac90c5d402a6b4a6b7660939bd46edef9bf32181076"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/plan-quota-recovery/01-provider-scoped-plan-quota-detection.md": "0473f8b7c57ed500396e6d8768186f275554948b3f0b8da5e5385d89f10d8882",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/02-return-explicit-plan-quotas-terminal.md": "60439fc41c23320eab70ad7dba2b3cc0faa91fb1c4af6ba3d0486678acb4ea30",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/03-stop-conceptual-audit-after-plan-quota.md": "8be02114febec40b77283014f28a03bb6929a3fa13bfd4ec22912d177de25d85",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/04-update-quota-recovery-references.md": "77b8ed4cf988f156c1d0bd5a0f28d4f51abd72673b8c44663f93494a27b41e69",
+    "docs/implementation-plans/plan-details/plan-quota-recovery/05-remove-resolved-quota-bug-refresh-its.md": "54d084a490052e4dc802358a34c89eaea3e571c99c793737c5505ea29fca2bed"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Plan Quota Recovery\n\n`plan-quota-recovery` \u00b7 generated 2026-08-20T16:34:16Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `08c415385ec33ca954a1016da4b93350fae0cf6eeb9794dcb26dfac625895e99`\n- **Detail bundle digest:** `20efb0139564921d686d4c71ef4b3ce8d9f17ea5424669d9dec5bdc12b016595`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 58329 bytes (+58329 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply plan-quota-recovery   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[review-invocation-outcome]`: Step 3 changes `plan_tool/review.py:shell_review_invoker` to return a typed outcome, but `plan_tool/review.py:_make_reporting_invoker` and `audit_plan_until_stable`\u2019s `_error_tracking_invoker` unpack and return only `(rc, stdout)` before `plan_tool/review.py:check_plan_audit` can read `failure_kind`. `plan_tool/review.py:review_plan_full` and `extract_and_append_review_lessons` also use that invoker as a tuple, so ordinary review can fail or discard the plan-quota signal.\n  - Fix: preserve the typed outcome through every named audit wrapper or limit it to a completeness-audit-specific adapter while keeping standard review\u2019s tuple contract intact.\n- MEDIUM `[quota-recovery-documentation]`: Step 4\u2019s Summary says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says it will \u201cchoose the default response when a backend hits a rate limit\u201d and presents wait, switch, stop, and ask without a plan-quota exception. The step\u2019s documentation file list omits this maintained operator-facing help, leaving it inconsistent with the terminal-bypass contract in Architecture and Step 4.\n  - Fix: include CLI help and any reference it feeds in the documentation sweep, stating the terminal plan-quota exception wherever rate-limit policy is described.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[quota-recovery-documentation]`: Step 4 (`Update quota recovery references for providers and operators`) says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says \u201cchoose the default response when a backend hits a rate limit\u201d and describes `--fallback-backend` as retrying \u201cthe current rate-limited call.\u201d Those public `--help` strings still imply the policy applies to the terminal `PLAN_QUOTA` outcome; step 4\u2019s file list, wording sweep, acceptance criteria, and verification omit them.\n  - Fix: Include the global rate-limit CLI help in step 4\u2019s documentation sweep and verify it limits policy actions and fallback retries to ordinary short rate limits.\n  - Address: `plan-tool completeness-apply plan-quota-recovery --anchor quota-recovery-documentation`\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Add provider-scoped plan-quota detection and date-only reset context\" touches 2 unrelated areas: `integrations`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply plan-quota-recovery` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85), then the completeness gaps.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Plan Quota Recovery\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `08c415385ec33ca954a1016da4b93350fae0cf6eeb9794dcb26dfac625895e99`\n- **Detail bundle digest:** `20efb0139564921d686d4c71ef4b3ce8d9f17ea5424669d9dec5bdc12b016595`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[review-invocation-outcome]`: Step 3 changes `plan_tool/review.py:shell_review_invoker` to return a typed outcome, but `plan_tool/review.py:_make_reporting_invoker` and `audit_plan_until_stable`\u2019s `_error_tracking_invoker` unpack and return only `(rc, stdout)` before `plan_tool/review.py:check_plan_audit` can read `failure_kind`. `plan_tool/review.py:review_plan_full` and `extract_and_append_review_lessons` also use that invoker as a tuple, so ordinary review can fail or discard the plan-quota signal.\n- MEDIUM `[quota-recovery-documentation]`: Step 4\u2019s Summary says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says it will \u201cchoose the default response when a backend hits a rate limit\u201d and presents wait, switch, stop, and ask without a plan-quota exception. The step\u2019s documentation file list omits this maintained operator-facing help, leaving it inconsistent with the terminal-bypass contract in Architecture and Step 4.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[quota-recovery-documentation]`: Step 4 (`Update quota recovery references for providers and operators`) says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says \u201cchoose the default response when a backend hits a rate limit\u201d and describes `--fallback-backend` as retrying \u201cthe current rate-limited call.\u201d Those public `--help` strings still imply the policy applies to the terminal `PLAN_QUOTA` outcome; step 4\u2019s file list, wording sweep, acceptance criteria, and verification omit them.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Add provider-scoped plan-quota detection and date-only reset context\" touches 2 unrelated areas: `integrations`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk plan-quota-recovery` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply plan-quota-recovery` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-bb8a4679",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 3 changes `plan_tool/review.py:shell_review_invoker` to return a typed outcome, but `plan_tool/review.py:_make_repo",
+      "body": "Step 3 changes `plan_tool/review.py:shell_review_invoker` to return a typed outcome, but `plan_tool/review.py:_make_reporting_invoker` and `audit_plan_until_stable`\u2019s `_error_tracking_invoker` unpack and return only `(rc, stdout)` before `plan_tool/review.py:check_plan_audit` can read `failure_kind`. `plan_tool/review.py:review_plan_full` and `extract_and_append_review_lessons` also use that invoker as a tuple, so ordinary review can fail or discard the plan-quota signal.",
+      "suggested_action": "preserve the typed outcome through every named audit wrapper or limit it to a completeness-audit-specific adapter while keeping standard review\u2019s tuple contract intact.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "review-invocation-outcome",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-0ec96b72",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4\u2019s Summary says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.p",
+      "body": "Step 4\u2019s Summary says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says it will \u201cchoose the default response when a backend hits a rate limit\u201d and presents wait, switch, stop, and ask without a plan-quota exception. The step\u2019s documentation file list omits this maintained operator-facing help, leaving it inconsistent with the terminal-bypass contract in Architecture and Step 4.",
+      "suggested_action": "include CLI help and any reference it feeds in the documentation sweep, stating the terminal plan-quota exception wherever rate-limit policy is described.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "quota-recovery-documentation",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-0ec96b72",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Update quota recovery references for providers and operators`) says \u201c`--on-rate-limit` remains the policy for o",
+      "body": "Step 4 (`Update quota recovery references for providers and operators`) says \u201c`--on-rate-limit` remains the policy for ordinary short rate limits,\u201d but `plan_tool/cli/parser.py:make_base_parser` says \u201cchoose the default response when a backend hits a rate limit\u201d and describes `--fallback-backend` as retrying \u201cthe current rate-limited call.\u201d Those public `--help` strings still imply the policy applies to the terminal `PLAN_QUOTA` outcome; step 4\u2019s file list, wording sweep, acceptance criteria, and verification omit them.",
+      "suggested_action": "Include the global rate-limit CLI help in step 4\u2019s documentation sweep and verify it limits policy actions and fallback retries to ordinary short rate limits.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "quota-recovery-documentation",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "08c415385ec33ca954a1016da4b93350fae0cf6eeb9794dcb26dfac625895e99",
+      "detail_bundle_digest": "20efb0139564921d686d4c71ef4b3ce8d9f17ea5424669d9dec5bdc12b016595",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/01-provider-scoped-plan-quota-detection.md",
+          "state": "present",
+          "digest": "0473f8b7c57ed500396e6d8768186f275554948b3f0b8da5e5385d89f10d8882"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/02-return-explicit-plan-quotas-terminal.md",
+          "state": "present",
+          "digest": "60439fc41c23320eab70ad7dba2b3cc0faa91fb1c4af6ba3d0486678acb4ea30"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/03-stop-conceptual-audit-after-plan-quota.md",
+          "state": "present",
+          "digest": "8be02114febec40b77283014f28a03bb6929a3fa13bfd4ec22912d177de25d85"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/04-update-quota-recovery-references.md",
+          "state": "present",
+          "digest": "77b8ed4cf988f156c1d0bd5a0f28d4f51abd72673b8c44663f93494a27b41e69"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/plan-quota-recovery/05-remove-resolved-quota-bug-refresh-its.md",
+          "state": "present",
+          "digest": "54d084a490052e4dc802358a34c89eaea3e571c99c793737c5505ea29fca2bed"
+        }
+      ],
+      "source_seed_digest": "49862b66b179cccccd813b00e712d383c82655902039129993091f533ab4acc4",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 58329,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

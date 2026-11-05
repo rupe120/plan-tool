@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-2c6a63c0": {
+      "code_anchor": null,
+      "field_or_key": "recommendations",
+      "location": "docs/implementation-plans/plan-details/convergence-non-severity-advisories/01-carry-impact-field-through-runfinding.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": "SavedReview",
+      "path": "docs/implementation-plans/plan-details/convergence-non-severity-advisories/01-carry-impact-field-through-runfinding.md",
+      "reason": "`SavedReview.recommendations` lacks a matching HEAD code-location anchor",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260811-104945-completeness"
+}

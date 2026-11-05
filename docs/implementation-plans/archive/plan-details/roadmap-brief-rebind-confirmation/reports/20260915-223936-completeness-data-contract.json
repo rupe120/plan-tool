@@ -1,0 +1,17 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-eceb03a7": {
+      "code_anchor": "plan_tool/roadmap.py:RoadmapResult.baseline_rebound",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-brief-rebind-confirmation/01-require-confirmation-before-replacing.md",
+      "reason": "code anchor `plan_tool/roadmap.py:RoadmapResult.baseline_rebound` does not resolve in HEAD",
+      "step_id": 1,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260915-223936-completeness"
+}

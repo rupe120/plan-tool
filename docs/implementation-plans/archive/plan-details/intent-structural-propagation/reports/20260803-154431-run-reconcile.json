@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "plan_slug": "intent-structural-propagation",
+  "plan_path": "docs/implementation-plans/2-intent-structural-propagation.md",
+  "created_at": "2026-08-03T15:44:31Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "e6a3ba9574e30c19efc8464e79fd782d2b8fa591718ee3143b250d2640e49a4c",
+  "code_fingerprint": {
+    "PLAN_FORMAT.md": "c375bd32e3252bb9aa74fe8473431e77ef93274fda3b42ea69515b973aa46999",
+    "docs/implementation-plans/archive/2-intent-scope-fence.md": "1e940474f60ab2b15d8200863449595db91c9dc3c1b068aa99b93baebfb7a4dc",
+    "plan_tool/detail.py": "5cf36db7438ac7beba8a6626c8a8f9f95faac73e25b9f1a2d0fe08efbba2527b",
+    "plan_tool/prompts/plan-audit.md": "2b3dbae8620e782e5f8344ddad810722043ef5d3ad7c2bdf055545628fca2da3",
+    "plan_tool/reground.py": "298f6ca17b2a9328b09c15c116104b9670d2380c9e96ff6f2154b25329a2eb60",
+    "plan_tool/review.py": "6bc343053dbfcc5a7ff486e77b220629a64bf494b0bc32f47e444af74b6d940a",
+    "plan_tool/scope_out.py": "b766c916cad5d1e57898bac7c73b7f9f8c462fb83da7c652b51deb437efde7a4",
+    "tests/test_create.py": "0051120c91819fe5504867a6f8f6d4c9dada8653a64b1b078b790e448ecea81c",
+    "tests/test_detail.py": "ab4eec061ec9b72c48aa22b90a01329d165c021d61217f46867c86fb467c6ebe",
+    "tests/test_reground.py": "75f93a823341a46e9f1f966e87d0dc9387e81e1b24e49bb9c4ae8bbb1c68b912",
+    "tests/test_review.py": "ac676fa25eb76d126a02d6a14df362f3869396d9991033157be0c0653afe0c51",
+    "tests/test_scope_out.py": "55798e165acfbfe3f9944a23feb0015c22826a14e62ec39c6979785f7fbf0317"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits",
+  "recommendations": [],
+  "annotations": {}
+}

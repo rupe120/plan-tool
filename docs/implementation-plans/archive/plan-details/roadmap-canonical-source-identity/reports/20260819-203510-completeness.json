@@ -1,0 +1,208 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-canonical-source-identity",
+  "plan_path": "docs/implementation-plans/2-roadmap-canonical-source-identity.md",
+  "created_at": "2026-08-19T20:35:10Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9ce3cf88db331189549b318c1e4dd18564e37e65a98d5180c0dfd52f653afe9f",
+  "code_fingerprint": {
+    "BUG_BACKLOG.md": "02d73f52861ff8ef69fa28f4f45dfd33075f8f1f6d1d2fc1d973c804ed934554",
+    "CLAUDE.md": "2c11080365c02c04af88915140d648f3e8367151243db7f84d47e6fc18f3f2cd",
+    "DATA_CONTRACT.md": "9d2d6982fba5c01e190c6a59aef0d7b3da5eb8c2ed760b2f142c05b1eae75ddc",
+    "README.md": "2ce65273752d3ef08302dc7acc9984935e97606d3227ff605a949522e0dc3ae9",
+    "ROADMAP_FORMAT.md": "358f53a9195aa137eb73bb6b3f0c4ea028cc3b5e3b67beaca7f88bf8437e71fa",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/cli/roadmap_cmd.py": "877684a5763da57966d39973b35e730b16eb7c5793d65afb073810b3a646464d",
+    "plan_tool/roadmap.py": "b6374ee054911778e909b0c417beeaf746f5301304bcaf4322b78d4fe124cbcb",
+    "plan_tool/roadmap_escalation.py": "be689ed911ecf6642e2aa61faf8c0abb0201268fd279f7e0d90b79ee55878993",
+    "plan_tool/roadmap_escalation_run.py": "f9400c496e2d69fc11182d67bf5906f1b50f23a7cfc9b7eff92f20653e322d6b",
+    "plan_tool/roadmap_escalation_selection.py": "daff136e8666d827652776b462568588208a5dc77c47a1396921c0bf273f0539",
+    "plan_tool/roadmap_impact_analysis.py": "625484680c662b52e58cf5189a2fa1e3b62020059371d5e2494e4d54d729064e",
+    "plan_tool/roadmap_impact_run.py": "da5f78e47fe8d00e4e1cfa820a7d492f277b3c13f7c2a30aae35d338a1621e7c",
+    "plan_tool/roadmap_impact_snapshot.py": "54c1a584d99dfe402441efbd498ccfa92e598028893bd89d80f7ec73f10a1f9c",
+    "plan_tool/roadmap_revision.py": "ee71e7e0b1ff835a0293cc6b99118fc18d5c846b071c911d78ef60740e7ff1dd",
+    "plan_tool/roadmap_revision_publish.py": "98eb23f964798dff71269081c4d81a8090d7b8c506ce34c47b283f3b3c36e86e",
+    "plan_tool/roadmap_revision_run.py": "fd8c06bbffa0eba872a6d81f79d981513ce2eacc43c73bde206f9a04e5a13f18",
+    "plan_tool/roadmap_structural_revision.py": "2a60e9e4684669f1fc6b4de2e64a52b5ec5f4496314f7a1cd274ac922cb82893",
+    "plan_tool/roadmap_structural_revision_run.py": "6871aab3e199919b7209d20cff38d8d19e63b1b5cb2c987bae8e771874d8778b",
+    "plan_tool/run_log.py": "a183914250325cd1c5489e893361454cb07fbb1ca3a7738704bda3dafe184694",
+    "tests/cli/test_roadmap_cmd.py": "c3dd42542f4a60148726820fd85c6499457ed07edfbd77700b103630cc0d2ad2",
+    "tests/test_data_contract.py": "529484802115f663123f5d701874f8fed5e005ff1fb18abb90ccd40f31a1f242",
+    "tests/test_roadmap.py": "740b938e9b7284ca3e0fbbae4868f498e9c0fb0df6cd599e47e8ec419bbfa631",
+    "tests/test_roadmap_escalation.py": "2369b143c063f5c12b01cdab70c2b373b7bdf0972004625e53a9fe77f51c85dd",
+    "tests/test_roadmap_escalation_run.py": "6a6248ebac7780cddbd418d83483aac7655d5d575728c12713e0b235c8b9c067",
+    "tests/test_roadmap_escalation_selection.py": "185eae397905f04345fec7c70607b5267faacdfbd8d72ff1eff0c7c308c81004",
+    "tests/test_roadmap_format.py": "39cf0b84b34c1c1053d30ccfebece04d2a53310adcf735f5f4b8668f4b225b52",
+    "tests/test_roadmap_impact_analysis.py": "a19fe79ebe3712d3bfe8b8c477d56283550f83969b62b09e7cf32ac8d4fc1aaa",
+    "tests/test_roadmap_impact_run.py": "3b16e8e16cbe39088f6485926b386db1d973bb6aac8474dc7bafce4e29f97189",
+    "tests/test_roadmap_impact_snapshot.py": "d48a12c074215dde4a9bfe6e0cc6afaf22f12af142bb4e89f55ec252921b640f",
+    "tests/test_roadmap_revision.py": "3483c89ef2e32d93cee9aacaf5071e402ad3bfe09adadf05c013b38d8d6afd35",
+    "tests/test_roadmap_revision_publish.py": "afd192ea907b84ed1a6ab2573fe75c65f0f8730845db20aa1d397c8297dd39b5",
+    "tests/test_roadmap_revision_run.py": "948cd355d0c91788645ccdde3fc002adf45095e06c3753ec95a3c723ffb031c9",
+    "tests/test_roadmap_structural_revision.py": "a937f5778121a05c14fb0af16cabfe2da9ce14e19033bb4855b70dce985e8958",
+    "tests/test_roadmap_structural_revision_run.py": "01f10c46cf76cacd8331f96a6290ad07c062bde43af2b8dcb5468306abedf24e",
+    "tests/test_run_log.py": "db44ec5e7b00d8118504d70f5e96e2639a85db781fdbacb1ee02de66c7bb77cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/01-define-versioned-baseline-storage.md": "fd09a7717abe78e74502a82df14bb425de257f52e7ac347c47b1457fb6853bb2",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/02-publish-recoverable-artifact-baseline.md": "60e41fa30935a10982981dfa0de051c0de5e2abc1ab6482e728eacb4b8d2fc62",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/03-initialize-legacy-baselines-only.md": "73d0dddf686b6311b1411e9e7a106cc97360f30bab3cb619dd0ac0cd0daeb609",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/04-use-one-full-baseline-checked-source.md": "9c3d3b3620fecd98d1ae628ba20e2e7887796d8aaf0e975ddaf52e849025b37e",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/05-version-baseline-bound-receipts.md": "22376ce419209fbfa2e40c1ccac4b3ae877c8cd7f24fc74d52d7988181f834d9",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/06-report-both-source-identities-while.md": "0513d4d020549c30d30221cd266262fd18095fc0dacf0b4c7570994bc6424089",
+    "docs/implementation-plans/plan-details/roadmap-canonical-source-identity/07-document-baseline-initialization-dual.md": "2b86044440f345b6060f6fcf851d52fb055e1f57b5a230fc55665ebebd38247d"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Canonical Source Identity\n\n`roadmap-canonical-source-identity` \u00b7 generated 2026-08-19T20:35:09Z \u00b7 mode: iterate \u00b7 loop stopped: terminal_hand_apply after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ce3cf88db331189549b318c1e4dd18564e37e65a98d5180c0dfd52f653afe9f`\n- **Detail bundle digest:** `48514481ca2ff28ae30cad84f34ddd925c2c3ac5544ea093ca55589243e7c99d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.29\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply roadmap-canonical-source-identity   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk roadmap-canonical-source-identity  # alternative interactive review/apply\n\n- HIGH `[pending-pair-recovery-owner]`: Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`) says \u201cA later writer recovers the pair before it reads or writes the roadmap,\u201d while the preceding Architecture paragraph names only ordinary roadmap, local-revision, and structural-revision writers; `roadmap_impact_run.run_roadmap_impact_analysis` is also a guarded writer that reads the snapshot but currently promises not to change roadmap artifacts. The plan does not say whether `--impact-analysis` repairs a pending pair or refuses it, so an evidence command can either mutate source or report it unavailable.\n  - Fix: assign pair-recovery authority to named command families and require every other authoritative reader or evidence writer to refuse without source mutation\n- MEDIUM `[initial-pair-recovery]`: Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`), Architecture\u2019s migration rule, and `roadmap._write_artifact` cover a first publication whose old artifact and baseline are both absent. Architecture\u2019s pair protocol, Testing, and the incomplete-generation acceptance criterion define recorded old, new, and mixed pairs but never define absence as a recorded generation: recovery must remove a lone newly written member to restore that old state, and clear an all-absent old pair. Without this, a first-publication crash can leave recovery stuck or an incomplete pair behind.\n  - Fix: define absence as a valid recorded old pair and require all-absent and one-member first-publication recovery outcomes across the protocol, tests, and acceptance criteria\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[initial-pair-recovery]`: Step 2\u2019s recovery states cover recorded old, new, and mixed pairs, but Architecture\u2019s migration rule says an absent later-stage suffix first gains both artifact and baseline from its ordinary writer. A crash during that first publication has an absent old generation, and Testing plus Acceptance criteria never require recovery to restore or complete that state, so a normal first-stage crash can leave a partial artifact with no defined recovery result.\n  - Fix: include an absent-to-new pair in the recovery contract and acceptance coverage, preserving the refusal for unknown bytes\n\n## Suggested next steps\n\n- `plan-tool completeness-apply roadmap-canonical-source-identity` \u2014 apply the 2 conceptual-correctness gap(s) now (design gaps; not auto-applied under #85); completeness gaps stay informational until a complete detail bundle exists.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Canonical Source Identity\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ce3cf88db331189549b318c1e4dd18564e37e65a98d5180c0dfd52f653afe9f`\n- **Detail bundle digest:** `48514481ca2ff28ae30cad84f34ddd925c2c3ac5544ea093ca55589243e7c99d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 7 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[pending-pair-recovery-owner]`: Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`) says \u201cA later writer recovers the pair before it reads or writes the roadmap,\u201d while the preceding Architecture paragraph names only ordinary roadmap, local-revision, and structural-revision writers; `roadmap_impact_run.run_roadmap_impact_analysis` is also a guarded writer that reads the snapshot but currently promises not to change roadmap artifacts. The plan does not say whether `--impact-analysis` repairs a pending pair or refuses it, so an evidence command can either mutate source or report it unavailable.\n- MEDIUM `[initial-pair-recovery]`: Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`), Architecture\u2019s migration rule, and `roadmap._write_artifact` cover a first publication whose old artifact and baseline are both absent. Architecture\u2019s pair protocol, Testing, and the incomplete-generation acceptance criterion define recorded old, new, and mixed pairs but never define absence as a recorded generation: recovery must remove a lone newly written member to restore that old state, and clear an all-absent old pair. Without this, a first-publication crash can leave recovery stuck or an incomplete pair behind.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[initial-pair-recovery]`: Step 2\u2019s recovery states cover recorded old, new, and mixed pairs, but Architecture\u2019s migration rule says an absent later-stage suffix first gains both artifact and baseline from its ordinary writer. A crash during that first publication has an absent old generation, and Testing plus Acceptance criteria never require recovery to restore or complete that state, so a normal first-stage crash can leave a partial artifact with no defined recovery result.\n\n### Suggested next steps\n\n- `plan-tool completeness-apply roadmap-canonical-source-identity` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-d397fe0e",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`) says \u201cA later writer recov",
+      "body": "Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`) says \u201cA later writer recovers the pair before it reads or writes the roadmap,\u201d while the preceding Architecture paragraph names only ordinary roadmap, local-revision, and structural-revision writers; `roadmap_impact_run.run_roadmap_impact_analysis` is also a guarded writer that reads the snapshot but currently promises not to change roadmap artifacts. The plan does not say whether `--impact-analysis` repairs a pending pair or refuses it, so an evidence command can either mutate source or report it unavailable.",
+      "suggested_action": "assign pair-recovery authority to named command families and require every other authoritative reader or evidence writer to refuse without source mutation",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "pending-pair-recovery-owner",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-56a9aec4",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`), Architecture\u2019s migration ",
+      "body": "Step 2 (`Publish recoverable artifact-baseline pairs under the existing reader/writer guard`), Architecture\u2019s migration rule, and `roadmap._write_artifact` cover a first publication whose old artifact and baseline are both absent. Architecture\u2019s pair protocol, Testing, and the incomplete-generation acceptance criterion define recorded old, new, and mixed pairs but never define absence as a recorded generation: recovery must remove a lone newly written member to restore that old state, and clear an all-absent old pair. Without this, a first-publication crash can leave recovery stuck or an incomplete pair behind.",
+      "suggested_action": "define absence as a valid recorded old pair and require all-absent and one-member first-publication recovery outcomes across the protocol, tests, and acceptance criteria",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "initial-pair-recovery",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-56a9aec4",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 2\u2019s recovery states cover recorded old, new, and mixed pairs, but Architecture\u2019s migration rule says an absent late",
+      "body": "Step 2\u2019s recovery states cover recorded old, new, and mixed pairs, but Architecture\u2019s migration rule says an absent later-stage suffix first gains both artifact and baseline from its ordinary writer. A crash during that first publication has an absent old generation, and Testing plus Acceptance criteria never require recovery to restore or complete that state, so a normal first-stage crash can leave a partial artifact with no defined recovery result.",
+      "suggested_action": "include an absent-to-new pair in the recovery contract and acceptance coverage, preserving the refusal for unknown bytes",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "initial-pair-recovery",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "bare",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 2,
+      "detail_grade": "run",
+      "plan_digest": "9ce3cf88db331189549b318c1e4dd18564e37e65a98d5180c0dfd52f653afe9f",
+      "detail_bundle_digest": "48514481ca2ff28ae30cad84f34ddd925c2c3ac5544ea093ca55589243e7c99d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/01-define-versioned-baseline-storage.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/02-publish-recoverable-artifact-baseline.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/03-initialize-legacy-baselines-only.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/04-use-one-full-baseline-checked-source.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/05-version-baseline-bound-receipts.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 6,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/06-report-both-source-identities-while.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 7,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/github/rupe120/plan-tool/docs/implementation-plans/plan-details/roadmap-canonical-source-identity/07-document-baseline-initialization-dual.md",
+          "state": "missing",
+          "digest": null
+        }
+      ],
+      "source_seed_digest": "f3ed59fc7a04c0d1de25ea464358b2f94be502c81fc1f5d055b0171ec1e00071"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.2857142857142857,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

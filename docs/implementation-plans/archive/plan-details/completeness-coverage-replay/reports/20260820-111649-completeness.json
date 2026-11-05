@@ -1,0 +1,199 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-coverage-replay",
+  "plan_path": "docs/implementation-plans/2-completeness-coverage-replay.md",
+  "created_at": "2026-08-20T11:16:49Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "dde47c97689a90b4e90b03f1f0b9fe1add6f78a817a2459888d5712ed61c1387",
+  "code_fingerprint": {
+    "BACKLOG.md": "46206a3ddc88d2df17c58b821cb86ae50c50554873bbb6b5864973022b403b7d",
+    "TESTING.md": "73e48f404411f8303a05b94011a3aef88986d35dca7e5348674f2df76024be7f",
+    "docs/ARCHITECTURE.md": "5937839ffc1d10e8e65034798841f0da6513c01b0fac872ba2c3e32fa116001d",
+    "plan_tool/fingerprint.py": "e6fb50927efe652de859298e6550bc571bc52cc20afaeb54ece804e50e4c6eb6",
+    "plan_tool/review.py": "1e70bae9730d0d418dc665499107c6ca06d60adec9dc70a34de65f4a13b0e15b",
+    "plan_tool/review_persistence.py": "eeb8d8a6262a00ed84bf6b02d32f0d0cc54ec74973504ea304a2d619ad3dbdde"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md": "627ca328c8fa4221358c9e6c710c4be1de8252f479855ba096b0ba4b6552526f",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md": "89a4d3ece08b76619dd4abeb5181fd31c7437e23171d8b8485444157efdaa9dd",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md": "b7707a3ac2406f7d7f16d1fa448bfa51dd73a6763372a977f827f773ecc4f800",
+    "docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md": "441ca1efdd4f1e78ee49335a927d59126e8f5f2dec8d332d07e61d009affc1fd"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Coverage Replay\n\n`completeness-coverage-replay` \u00b7 generated 2026-08-20T11:16:49Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a88cd4853abe80ba807c8a5e8328618f19c9b4a9ca622c0ecfe085154d3f14a6`\n- **Detail bundle digest:** `1cde54ea3222d09dbefd7f36e095c9e5e1a4cf3087626fb68aa02137cc00f1c3`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 51051 bytes (+51051 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply completeness-coverage-replay   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[audit-prompt-series-identity]`: The Architecture and step 1 (`Build a versioned replay corpus from existing audit snapshots and predeclare schedules`) record one rendered-prompt identity, and step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) preserves the same singular identity. At HEAD, `review.py:render_plan_audit_prompt` changes with `carried_findings`, `review.py:audit_plan_until_stable` rebuilds that state each pass, and `review.py:check_plan_audit` can send `_PLAN_AUDIT_REPROMPT_SUFFIX`; `AuditInputSnapshot.revision` contains no attempt series. A multi-pass or retried fresh label set therefore has model-visible inputs the corpus does not identify.\n  - Fix: require an ordered identity and outcome for every prompt attempt in a fresh-discovery run, or exclude runs outside a documented single-attempt boundary, with carried-context and retry coverage.\n- HIGH `[fresh-discovery-authority]`: The Architecture calls fresh labels authoritative, but step 1\u2019s audit-observation/admission contract and tests only retain pass outcome as provenance; step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) records that outcome while treating every snapshot as authoritative; and step 2 (`Replay schedules read-only and report every exclusion and missed label`) uses fresh labels as its only loss rule. At HEAD, `review.py:_AuditSampleEvidence` distinguishes `skipped` and `failed_or_malformed`, while `review.py:audit_plan_until_stable` also reports failed-pass counts and `budget_limited`; the bundle never states which of these can supply labels. An empty or partial failed observation can therefore look like a safe empty label set.\n  - Fix: define the required completed audit outcome and coverage for authoritative labels, and turn every other outcome into an explicit exclusion or unresolved comparison before replay.\n- HIGH `[scan-slot-reuse-boundary]`: The Architecture carries labels for an \u201cunchanged, reuse-eligible slot\u201d; step 1 defines per-slot identities; and step 2 carries labels when a slot identity is unchanged, but candidates declare only interval, terminal confirmation, and rank. At HEAD, `review.py:render_plan_audit_prompt` sends one whole plan/detail/seed/context prompt, while `review.py:_AuditTagObservation` only records a finding\u2019s target step. The bundle never defines whether reuse equality covers the whole prompt or only an attributed slot, so different evaluators can select different cadences from the same corpus without proving #173\u2019s reuse safety.\n  - Fix: define one observation-unit and reuse-key contract that includes every prompt influence, distinguishes attribution from an independent scan, and bind every candidate and replay result to it.\n- MEDIUM `[scratch-report-cleanliness]`: Step 3 requires a clean worktree before each fresh audit and ordered multi-snapshot trajectories, but its scratch-report rule removes generated reports only after evidence transfer and before worktree removal. `cli/completeness_phases.py` writes a completeness report after conceptual audit through `completeness_report.write_completeness_report`, whose destination is `review_persistence.plan_reports_dir`; the first snapshot can therefore leave untracked reports in the trajectory worktree before the next snapshot.\n  - Fix: require per-snapshot evidence transfer and generated-report cleanup before the next commit or clean-worktree preflight, while retaining the final inventory check.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[step1-granularity-split-e14bf057]`: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply completeness-coverage-replay` \u2014 apply the 4 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Coverage Replay\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `a88cd4853abe80ba807c8a5e8328618f19c9b4a9ca622c0ecfe085154d3f14a6`\n- **Detail bundle digest:** `1cde54ea3222d09dbefd7f36e095c9e5e1a4cf3087626fb68aa02137cc00f1c3`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[audit-prompt-series-identity]`: The Architecture and step 1 (`Build a versioned replay corpus from existing audit snapshots and predeclare schedules`) record one rendered-prompt identity, and step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) preserves the same singular identity. At HEAD, `review.py:render_plan_audit_prompt` changes with `carried_findings`, `review.py:audit_plan_until_stable` rebuilds that state each pass, and `review.py:check_plan_audit` can send `_PLAN_AUDIT_REPROMPT_SUFFIX`; `AuditInputSnapshot.revision` contains no attempt series. A multi-pass or retried fresh label set therefore has model-visible inputs the corpus does not identify.\n- HIGH `[fresh-discovery-authority]`: The Architecture calls fresh labels authoritative, but step 1\u2019s audit-observation/admission contract and tests only retain pass outcome as provenance; step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) records that outcome while treating every snapshot as authoritative; and step 2 (`Replay schedules read-only and report every exclusion and missed label`) uses fresh labels as its only loss rule. At HEAD, `review.py:_AuditSampleEvidence` distinguishes `skipped` and `failed_or_malformed`, while `review.py:audit_plan_until_stable` also reports failed-pass counts and `budget_limited`; the bundle never states which of these can supply labels. An empty or partial failed observation can therefore look like a safe empty label set.\n- HIGH `[scan-slot-reuse-boundary]`: The Architecture carries labels for an \u201cunchanged, reuse-eligible slot\u201d; step 1 defines per-slot identities; and step 2 carries labels when a slot identity is unchanged, but candidates declare only interval, terminal confirmation, and rank. At HEAD, `review.py:render_plan_audit_prompt` sends one whole plan/detail/seed/context prompt, while `review.py:_AuditTagObservation` only records a finding\u2019s target step. The bundle never defines whether reuse equality covers the whole prompt or only an attributed slot, so different evaluators can select different cadences from the same corpus without proving #173\u2019s reuse safety.\n- MEDIUM `[scratch-report-cleanliness]`: Step 3 requires a clean worktree before each fresh audit and ordered multi-snapshot trajectories, but its scratch-report rule removes generated reports only after evidence transfer and before worktree removal. `cli/completeness_phases.py` writes a completeness report after conceptual audit through `completeness_report.write_completeness_report`, whose destination is `review_persistence.plan_reports_dir`; the first snapshot can therefore leave untracked reports in the trajectory worktree before the next snapshot.\n\n### Files coherence\n\n- INFO: step 1 detail cites `benchmarks/corpus/completeness-coverage/cases.json` resembling declared `benchmarks/corpus/completeness-coverage/manifest.json` (typo/stale path?)\n- INFO: step 1 detail cites `plan_tool/completeness_coverage_replay.py` resembling declared `plan_tool/completeness_coverage_corpus.py` (typo/stale path?)\n- INFO: step 1 detail cites `tests/test_completeness_coverage_replay.py` resembling declared `tests/test_completeness_coverage_corpus.py` (typo/stale path?)\n- INFO: step 2 detail cites `plan_tool/completeness_coverage_corpus.py` resembling declared `plan_tool/completeness_coverage_replay.py` (typo/stale path?)\n- INFO: step 3 detail cites `benchmarks/corpus/completeness-coverage/manifest.json` resembling declared `benchmarks/corpus/completeness-coverage/cases.json` (typo/stale path?)\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture]`: docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.\n- MEDIUM `[data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture]`: docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: Step 1 \"Build a versioned replay corpus from existing audit snapshots and predeclare schedules\" touches 2 unrelated areas: `benchmarks`, `plan_tool`.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-coverage-replay --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-1dff3ab2",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture and step 1 (`Build a versioned replay corpus from existing audit snapshots and predeclare schedules`) r",
+      "body": "The Architecture and step 1 (`Build a versioned replay corpus from existing audit snapshots and predeclare schedules`) record one rendered-prompt identity, and step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) preserves the same singular identity. At HEAD, `review.py:render_plan_audit_prompt` changes with `carried_findings`, `review.py:audit_plan_until_stable` rebuilds that state each pass, and `review.py:check_plan_audit` can send `_PLAN_AUDIT_REPROMPT_SUFFIX`; `AuditInputSnapshot.revision` contains no attempt series. A multi-pass or retried fresh label set therefore has model-visible inputs the corpus does not identify.",
+      "suggested_action": "require an ordered identity and outcome for every prompt attempt in a fresh-discovery run, or exclude runs outside a documented single-attempt boundary, with carried-context and retry coverage.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "audit-prompt-series-identity",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-cb0be44a",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture calls fresh labels authoritative, but step 1\u2019s audit-observation/admission contract and tests only reta",
+      "body": "The Architecture calls fresh labels authoritative, but step 1\u2019s audit-observation/admission contract and tests only retain pass outcome as provenance; step 3 (`Capture and label fresh cases in disposable worktrees, preserve source histories, and delete scratch reports`) records that outcome while treating every snapshot as authoritative; and step 2 (`Replay schedules read-only and report every exclusion and missed label`) uses fresh labels as its only loss rule. At HEAD, `review.py:_AuditSampleEvidence` distinguishes `skipped` and `failed_or_malformed`, while `review.py:audit_plan_until_stable` also reports failed-pass counts and `budget_limited`; the bundle never states which of these can supply labels. An empty or partial failed observation can therefore look like a safe empty label set.",
+      "suggested_action": "define the required completed audit outcome and coverage for authoritative labels, and turn every other outcome into an explicit exclusion or unresolved comparison before replay.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "fresh-discovery-authority",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-d270936f",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture carries labels for an \u201cunchanged, reuse-eligible slot\u201d; step 1 defines per-slot identities; and step 2 ",
+      "body": "The Architecture carries labels for an \u201cunchanged, reuse-eligible slot\u201d; step 1 defines per-slot identities; and step 2 carries labels when a slot identity is unchanged, but candidates declare only interval, terminal confirmation, and rank. At HEAD, `review.py:render_plan_audit_prompt` sends one whole plan/detail/seed/context prompt, while `review.py:_AuditTagObservation` only records a finding\u2019s target step. The bundle never defines whether reuse equality covers the whole prompt or only an attributed slot, so different evaluators can select different cadences from the same corpus without proving #173\u2019s reuse safety.",
+      "suggested_action": "define one observation-unit and reuse-key contract that includes every prompt influence, distinguishes attribution from an independent scan, and bind every candidate and replay result to it.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "scan-slot-reuse-boundary",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-26475f1f",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 3 requires a clean worktree before each fresh audit and ordered multi-snapshot trajectories, but its scratch-report",
+      "body": "Step 3 requires a clean worktree before each fresh audit and ordered multi-snapshot trajectories, but its scratch-report rule removes generated reports only after evidence transfer and before worktree removal. `cli/completeness_phases.py` writes a completeness report after conceptual audit through `completeness_report.write_completeness_report`, whose destination is `review_persistence.plan_reports_dir`; the first snapshot can therefore leave untracked reports in the trajectory worktree before the next snapshot.",
+      "suggested_action": "require per-snapshot evidence transfer and generated-report cleanup before the next commit or clean-worktree preflight, while retaining the final inventory check.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "scratch-report-cleanliness",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-39cbc448",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `plan_tool/review_persistence.py:AuditInputSnapshot.capture`",
+      "body": "docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture",
+      "target_signature": null
+    },
+    {
+      "id": "step3-data-contract-5440c24a",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `plan_tool/review_persistence.py:AuditInputSnapshot.capture`",
+      "body": "docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md:## Input cites `plan_tool/review_persistence.py:AuditInputSnapshot.capture`, but code anchor `plan_tool/review_persistence.py:AuditInputSnapshot.capture` does not resolve in HEAD.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-plan-tool-review-persistence-py:auditinputsnapshot-capture",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "a88cd4853abe80ba807c8a5e8328618f19c9b4a9ca622c0ecfe085154d3f14a6",
+      "detail_bundle_digest": "1cde54ea3222d09dbefd7f36e095c9e5e1a4cf3087626fb68aa02137cc00f1c3",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/01-build-versioned-replay-corpus-existing.md",
+          "state": "present",
+          "digest": "627ca328c8fa4221358c9e6c710c4be1de8252f479855ba096b0ba4b6552526f"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/02-replay-schedules-read-only-report-every.md",
+          "state": "present",
+          "digest": "89a4d3ece08b76619dd4abeb5181fd31c7437e23171d8b8485444157efdaa9dd"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/03-capture-label-fresh-cases-disposable.md",
+          "state": "present",
+          "digest": "b7707a3ac2406f7d7f16d1fa448bfa51dd73a6763372a977f827f773ecc4f800"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-coverage-replay/04-publish-replay-result-update-299-173.md",
+          "state": "present",
+          "digest": "441ca1efdd4f1e78ee49335a927d59126e8f5f2dec8d332d07e61d009affc1fd"
+        }
+      ],
+      "source_seed_digest": "c0b03cfc0c3c7de3e7f6420f601d37785ca4561b4941887272262080d862c59f",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 51051,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

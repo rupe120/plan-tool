@@ -1,0 +1,28 @@
+{
+  "kind": "data-contract",
+  "payloads": {
+    "step1-data-contract-7f76e820": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-04-plan-derivation/01-04-roadmap-md-artifact-contract-plan.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-04-plan-derivation/01-04-roadmap-md-artifact-contract-plan.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 1,
+      "target": "plan-detail"
+    },
+    "step3-data-contract-0801ab73": {
+      "code_anchor": "create.py",
+      "field_or_key": null,
+      "location": "docs/implementation-plans/plan-details/roadmap-04-plan-derivation/03-stage-relation-gates-run-plans-gates.md:## Input",
+      "operation": "validate-input-reference",
+      "owner": null,
+      "path": "docs/implementation-plans/plan-details/roadmap-04-plan-derivation/03-stage-relation-gates-run-plans-gates.md",
+      "reason": "code anchor path `create.py` does not exist",
+      "step_id": 3,
+      "target": "plan-detail"
+    }
+  },
+  "review_id": "20260805-233712-completeness"
+}

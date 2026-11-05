@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "plan_slug": "refactor-plan-altitude",
+  "plan_path": "docs/implementation-plans/2-refactor-plan-altitude.md",
+  "created_at": "2026-08-18T11:58:55Z",
+  "kind": "run-reconcile",
+  "step_id": 1,
+  "plan_fingerprint": "cd04d50065174875635d76b72dc706631f2d9b41c8d16d6f04af93bbee1ba303",
+  "code_fingerprint": {
+    "BACKLOG.md": "09807363e6eba9ddc5107ba2dfcf35758a214758074dc9cfee8d4684eba37e83",
+    "plan_tool/create.py": "f2b0b6fe4b420832c5d26da47ee6b3775dae869b4b78e97345df52c114597486",
+    "plan_tool/prompts/synthesize-body.md": "db8f3e108513880deda24a9e5a7e2f0ba362051901044d020dfb28fa545f81b8",
+    "tests/test_create.py": "a6cedd226eb2675dc4d2c5dde5705597458299665606a864b4838926b191f04d"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {},
+  "detail_bundle_fingerprint_present": false,
+  "outcome_evidence_valid": null,
+  "report_md": "Step 1 \u2014 0 critical / 0 high / 0 medium / 0 nits\n\nCompleted-sibling context: considered 1 completed sibling step(s); 1 supplied non-shared declared paths.\n\nSelected-step outcome: clean \u2014 no selected-step drift was reported.",
+  "recommendations": [],
+  "annotations": {}
+}

@@ -1,0 +1,155 @@
+{
+  "version": 4,
+  "plan_slug": "audit-pass-persistence",
+  "plan_path": "docs/implementation-plans/2-audit-pass-persistence.md",
+  "created_at": "2026-08-31T17:07:31Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "a9028397539a0c5e36137410ae5f26d67f4c6ca79aba903c6d88186c09b5c73a",
+  "code_fingerprint": {
+    "BACKLOG.md": "f35641c13def7df54a6fb30c4e1c655e6beaadde3f2920467b2ecf43d0fcc978",
+    "DATA_CONTRACT.md": "f61cb2ec0154bfdde6ecd2148e344de111ca8f09984ca17fee8a2c59261216ee",
+    "docs/AUDIT_FLOW.md": "3226b66ac93154285746c62186b078bc8a546212796ac21c9e52064b4f49575c",
+    "docs/AUDIT_RESUME_FLOW.md": "3ba62e6fc769d711c89366ecba762a9c285f506de34742f72b56d764f1662f37",
+    "plan_tool/cli/completeness_cmd.py": "fdbf0c46ddbb7bd93ab4d14a711904457ec24bf94dbcf934b76610fd7ec87542",
+    "plan_tool/cli/completeness_phases.py": "af6300a3344149d6d2429bbd2c2a2b2e3b402565aaaf675b93e5148f9bc7e550",
+    "plan_tool/cli/data_contract_cmd.py": "6d0d056c9e42feacf68fd8a8709fb5416334b897932c766533e77b1c00b9628f",
+    "plan_tool/cli/review_cmd.py": "8abbab65a0d9cec35e4399e7e61b05cd3cc26a8f6720c39ca49b1d2c676d4973",
+    "plan_tool/completeness_report.py": "67d407b72c875c1bf2388c47db26055ac9c48ab28ef644f61b79d8785dce2620",
+    "plan_tool/convergence_diagnosis.py": "bb72d106c27083c02b1801d962340985fadd9f567317c95e20bd0cbfea06856c",
+    "plan_tool/data_contract.py": "dc9944892c89e0d4afe723c24306b08b6cffafa392db428b18ce6c36c87efe00",
+    "plan_tool/review.py": "3aabbd042574e4076e436656ad940e50bfe82df0d3f615fc7978157b6a34332e",
+    "plan_tool/review_persistence.py": "211ab2cac376869e1937ce07faf49b51abbf959963c515125c8e794d2b57e5f7",
+    "tests/cli/test_completeness_cmd.py": "e59e11ae9299e006343d2d65b7650b1e7d84fce983c76055a35cd9fe773702a3",
+    "tests/test_completeness_report.py": "e40cd2092072ff8f8aebfb36abbfeb0ceeafdbfa6a340a8b31076b5114f56667",
+    "tests/test_convergence_diagnosis.py": "b04b6ed4803b981ae29f88761fb1b17bf23ced1e2b89bd2e07949ef45efdae52",
+    "tests/test_data_contract.py": "9101fdd460e823315fb1ea6dfe3795e52a869512a3eb96b517528b3fcacda897",
+    "tests/test_review.py": "12a73e4316005597f3bcac6508972921976f5cdb029c0ea12929433e084d4978",
+    "tests/test_review_persistence.py": "c84058998b6b7c8c84069f7915c3c5cc44162ea5fbb8648a90a8cf92f91a1ae2"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md": "3eb8fca712beebe9f583deaa8c4cb0b68dd6331adf3d102bb8e4b5e718471a2c",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-every.md": "670273158d199c18201c4ef652f087865ef73ce62a837ac7013c8c3311c85f0d",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md": "42a9ca658b0d5f03b830bfd4f735d038ed9aaf6b51fd1160af4cbb59ddec3f4e",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/04-name-progress-state-audit-evidence.md": "4e24a40a45a334613cdc4445565ec8ee4b71ab7400369e28f5a308c920c3b63d",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/05-report-resumed-audit-provenance-only.md": "ce5596e6c508d07ad47a6a5368324f03c242034b874dfac1f120116bd45e5b8f",
+    "docs/implementation-plans/plan-details/audit-pass-persistence/06-document-resume-decline-discard-audit.md": "8a377d831f33f7351f773421fc0d335ef35c95b1d120af0ea4dcb59e762afe99"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Audit Pass Persistence\n\n`audit-pass-persistence` \u00b7 generated 2026-08-31T17:07:31Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply audit-pass-persistence   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk audit-pass-persistence  # alternative interactive review/apply\n\n- HIGH `[in-progress-checkpoint-ledger-visibility]` [confidence: limited]: The plan commits to two things about the new in-progress checkpoint that contradict each other in the code as it exists today. Step 1 requires the artifact to be \"excluded from the saved-review listing and the reserved report stems,\" and the Architecture \u00a7 \"The fail-closed invariant\u2026\" says its filename \"must fall outside the `<ts>-completeness.json` namespace\" (confirmed: `_reserve_report_timestamp`/`_report_artifact_paths` in `completeness_report.py:2185-2205` only reserve the shared `<ts>-completeness.{md,json,-data-contract.json}` stem, and a stable, non-timestamped name naturally never collides with it). Step 4 then requires the opposite: \"Name the in-progress state in the audit-evidence ledger,\" and the Testing section requires \"The ledger row additionally asserts the state is named as in-progress.\" But `convergence_diagnosis.py:load_audit_evidence_ledger` (`plan_tool/convergence_diagnosis.py:316-321`) builds its only row-producing `artifacts` dict by filtering `artifact_paths` strictly on `path.name.endswith(COMPLETENESS_SIDECAR_SUFFIX)` (`\"-completeness.json\"`) or `COMPLETENESS_REPORT_SUFFIX` (`\"-completeness.md\"`) \u2014 nothing else populates that dict, and nothing else produces a ledger row. A stable-named artifact deliberately kept outside that exact suffix (as step 1 and the fail-closed invariant both require) is therefore never added to `artifacts` and never produces a row at all \u2014 not \"named truthfully,\" not present as `AUDIT_EVIDENCE_CHECKPOINT`/a new state, simply invisible to the ledger. The plan's own risk note (\"keeps the ledger from filling with partial rows\") assumes visibility with the right label, which the current pairing logic cannot deliver for an artifact of a different filename shape. This isn't a deferrable delivery-mechanism choice: it's a structural fact about existing code that the plan's stated architecture, step 4, and the testing/acceptance criteria all depend on, and no step names the actual required work.\n  - Fix: add to the Architecture (and step 4) an explicit third-artifact-type branch for `load_audit_evidence_ledger`'s row construction \u2014 a stable-named in-progress checkpoint that stands alone (no paired report) and is recognized and classified without relying on the `-completeness.{json,md}` stem pairing the other two producer states use.\n- MEDIUM `[direct-walk-review-vs-annotate-verb]` [confidence: limited]: Step 4's title says \"prove every final-eligibility reader still rejects it, including the annotate-in-place walk,\" but no code path named \"annotate\" reads saved-review sidecars at all \u2014 `plan_tool/annotate.py` (the actual `plan-tool annotate` forward-seed-bridge verb, documented in `CLAUDE.md` as a distinct pipeline stage that \"never mutat[es] its source except the opt-in `--archive` move\") has zero references to `review_persistence`, `SavedReview`, or `load_review`, and it is not in this plan's declared In-scope module list. The reader this sentence actually means is almost certainly `cli/review_cmd.py`'s interactive saved-review walk gated by `_direct_walk_role_ineligibility`/`_direct_walk_ineligibility` (`plan_tool/cli/review_cmd.py:161-187`, consumed at lines 927/955) \u2014 which the plan's own Architecture section elsewhere calls \"direct saved-review walks,\" not \"annotate.\" Because `annotate` already names a specific, differently-scoped, well-documented CLI verb in this codebase, a detail author following step 4 literally could be sent to the wrong (out-of-scope) module, or conversely fail to recognize which reader is meant.\n  - Fix: replace \"annotate-in-place walk\" in step 4 with the term the plan already uses elsewhere (\"direct saved-review walk,\" `cli/review_cmd.py:_direct_walk_role_ineligibility`) so the two phrasings for the same reader don't diverge.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-572084d9]` [confidence: limited]: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]` [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-fab61539]` [confidence: limited]: The plan's `## Acceptance criteria` names `dry_rounds`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-cd50a855]` [confidence: limited]: The plan's `## Acceptance criteria` names `max_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-8aa2212b]` [confidence: limited]: The plan's `## Acceptance criteria` names `new_threshold`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-af3d017c]` [confidence: limited]: The plan's `## Acceptance criteria` names `qualified_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step2-granularity-merge-03c4c638]` [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/review.py', 'tests/test_review.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit audit-pass-persistence` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Audit Pass Persistence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 6 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[in-progress-checkpoint-ledger-visibility]` [confidence: limited]: The plan commits to two things about the new in-progress checkpoint that contradict each other in the code as it exists today. Step 1 requires the artifact to be \"excluded from the saved-review listing and the reserved report stems,\" and the Architecture \u00a7 \"The fail-closed invariant\u2026\" says its filename \"must fall outside the `<ts>-completeness.json` namespace\" (confirmed: `_reserve_report_timestamp`/`_report_artifact_paths` in `completeness_report.py:2185-2205` only reserve the shared `<ts>-completeness.{md,json,-data-contract.json}` stem, and a stable, non-timestamped name naturally never collides with it). Step 4 then requires the opposite: \"Name the in-progress state in the audit-evidence ledger,\" and the Testing section requires \"The ledger row additionally asserts the state is named as in-progress.\" But `convergence_diagnosis.py:load_audit_evidence_ledger` (`plan_tool/convergence_diagnosis.py:316-321`) builds its only row-producing `artifacts` dict by filtering `artifact_paths` strictly on `path.name.endswith(COMPLETENESS_SIDECAR_SUFFIX)` (`\"-completeness.json\"`) or `COMPLETENESS_REPORT_SUFFIX` (`\"-completeness.md\"`) \u2014 nothing else populates that dict, and nothing else produces a ledger row. A stable-named artifact deliberately kept outside that exact suffix (as step 1 and the fail-closed invariant both require) is therefore never added to `artifacts` and never produces a row at all \u2014 not \"named truthfully,\" not present as `AUDIT_EVIDENCE_CHECKPOINT`/a new state, simply invisible to the ledger. The plan's own risk note (\"keeps the ledger from filling with partial rows\") assumes visibility with the right label, which the current pairing logic cannot deliver for an artifact of a different filename shape. This isn't a deferrable delivery-mechanism choice: it's a structural fact about existing code that the plan's stated architecture, step 4, and the testing/acceptance criteria all depend on, and no step names the actual required work.\n- MEDIUM `[direct-walk-review-vs-annotate-verb]` [confidence: limited]: Step 4's title says \"prove every final-eligibility reader still rejects it, including the annotate-in-place walk,\" but no code path named \"annotate\" reads saved-review sidecars at all \u2014 `plan_tool/annotate.py` (the actual `plan-tool annotate` forward-seed-bridge verb, documented in `CLAUDE.md` as a distinct pipeline stage that \"never mutat[es] its source except the opt-in `--archive` move\") has zero references to `review_persistence`, `SavedReview`, or `load_review`, and it is not in this plan's declared In-scope module list. The reader this sentence actually means is almost certainly `cli/review_cmd.py`'s interactive saved-review walk gated by `_direct_walk_role_ineligibility`/`_direct_walk_ineligibility` (`plan_tool/cli/review_cmd.py:161-187`, consumed at lines 927/955) \u2014 which the plan's own Architecture section elsewhere calls \"direct saved-review walks,\" not \"annotate.\" Because `annotate` already names a specific, differently-scoped, well-documented CLI verb in this codebase, a detail author following step 4 literally could be sent to the wrong (out-of-scope) module, or conversely fail to recognize which reader is meant.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `audit_coverage`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `dry_rounds`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `max_passes`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `new_threshold`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `qualified_result`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Steps 2 and 3 are dependency-adjacent and touch the identical file set (['plan_tool/review.py', 'tests/test_review.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-apply audit-pass-persistence` \u2014 walk the 2 conceptual-correctness gap(s) and apply the edits (plan-body design gaps; the completeness gaps stay informational until a detail bundle exists)\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-b4710682",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The plan commits to two things about the new in-progress checkpoint that contradict each other in the code as it exists ",
+      "body": "The plan commits to two things about the new in-progress checkpoint that contradict each other in the code as it exists today. Step 1 requires the artifact to be \"excluded from the saved-review listing and the reserved report stems,\" and the Architecture \u00a7 \"The fail-closed invariant\u2026\" says its filename \"must fall outside the `<ts>-completeness.json` namespace\" (confirmed: `_reserve_report_timestamp`/`_report_artifact_paths` in `completeness_report.py:2185-2205` only reserve the shared `<ts>-completeness.{md,json,-data-contract.json}` stem, and a stable, non-timestamped name naturally never collides with it). Step 4 then requires the opposite: \"Name the in-progress state in the audit-evidence ledger,\" and the Testing section requires \"The ledger row additionally asserts the state is named as in-progress.\" But `convergence_diagnosis.py:load_audit_evidence_ledger` (`plan_tool/convergence_diagnosis.py:316-321`) builds its only row-producing `artifacts` dict by filtering `artifact_paths` strictly on `path.name.endswith(COMPLETENESS_SIDECAR_SUFFIX)` (`\"-completeness.json\"`) or `COMPLETENESS_REPORT_SUFFIX` (`\"-completeness.md\"`) \u2014 nothing else populates that dict, and nothing else produces a ledger row. A stable-named artifact deliberately kept outside that exact suffix (as step 1 and the fail-closed invariant both require) is therefore never added to `artifacts` and never produces a row at all \u2014 not \"named truthfully,\" not present as `AUDIT_EVIDENCE_CHECKPOINT`/a new state, simply invisible to the ledger. The plan's own risk note (\"keeps the ledger from filling with partial rows\") assumes visibility with the right label, which the current pairing logic cannot deliver for an artifact of a different filename shape. This isn't a deferrable delivery-mechanism choice: it's a structural fact about existing code that the plan's stated architecture, step 4, and the testing/acceptance criteria all depend on, and no step names the actual required work.",
+      "suggested_action": "add to the Architecture (and step 4) an explicit third-artifact-type branch for `load_audit_evidence_ledger`'s row construction \u2014 a stable-named in-progress checkpoint that stands alone (no paired report) and is recognized and classified without relying on the `-completeness.{json,md}` stem pairing the other two producer states use.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "in-progress-checkpoint-ledger-visibility",
+      "target_signature": null,
+      "confidence": "limited"
+    },
+    {
+      "id": "plan-plan-correctness-21a8513a",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4's title says \"prove every final-eligibility reader still rejects it, including the annotate-in-place walk,\" but n",
+      "body": "Step 4's title says \"prove every final-eligibility reader still rejects it, including the annotate-in-place walk,\" but no code path named \"annotate\" reads saved-review sidecars at all \u2014 `plan_tool/annotate.py` (the actual `plan-tool annotate` forward-seed-bridge verb, documented in `CLAUDE.md` as a distinct pipeline stage that \"never mutat[es] its source except the opt-in `--archive` move\") has zero references to `review_persistence`, `SavedReview`, or `load_review`, and it is not in this plan's declared In-scope module list. The reader this sentence actually means is almost certainly `cli/review_cmd.py`'s interactive saved-review walk gated by `_direct_walk_role_ineligibility`/`_direct_walk_ineligibility` (`plan_tool/cli/review_cmd.py:161-187`, consumed at lines 927/955) \u2014 which the plan's own Architecture section elsewhere calls \"direct saved-review walks,\" not \"annotate.\" Because `annotate` already names a specific, differently-scoped, well-documented CLI verb in this codebase, a detail author following step 4 literally could be sent to the wrong (out-of-scope) module, or conversely fail to recognize which reader is meant.",
+      "suggested_action": "replace \"annotate-in-place walk\" in step 4 with the term the plan already uses elsewhere (\"direct saved-review walk,\" `cli/review_cmd.py:_direct_walk_role_ineligibility`) so the two phrasings for the same reader don't diverge.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "direct-walk-review-vs-annotate-verb",
+      "target_signature": null,
+      "confidence": "limited"
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "a9028397539a0c5e36137410ae5f26d67f4c6ca79aba903c6d88186c09b5c73a",
+    "detail_bundle_digest": "1aaaba4ca08f50f57f01d361775d1a243579843063d1675eec653875e9256ead",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/01-progress-sampler-checkpoint-role-review.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/02-write-replace-progress-checkpoint-every.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/03-resume-sampler-next-un-run-pass-on.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/04-name-progress-state-audit-evidence.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/05-report-resumed-audit-provenance-only.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 6,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/audit-pass-persistence/06-document-resume-decline-discard-audit.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "ab009008832e621fb804d31aa172b7e1422df9fec7115250e3ac0cc219dc3047",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

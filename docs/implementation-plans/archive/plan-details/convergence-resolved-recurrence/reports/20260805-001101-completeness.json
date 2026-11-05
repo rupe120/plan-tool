@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "plan_slug": "convergence-resolved-recurrence",
+  "plan_path": "docs/implementation-plans/2-convergence-resolved-recurrence.md",
+  "created_at": "2026-08-05T00:11:01Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6a3b5abc7a56daaa91bbb95dd0202afba107637c2b064fb58f14c01288ed9199",
+  "code_fingerprint": {
+    "BACKLOG.md": "af6865a24225fbe3c1bbc0c503fd0107ae44b97954a676a9633876ec381b096d",
+    "BUG_BACKLOG.md": "1615d42d494b587e4fb971aef4987d8cf22ba91cc62f45a75c69aedcb74ec820",
+    "docs/ARCHITECTURE.md": "51ee624b09b4e5d428360c2336877385458fd9a39b5c7dfec7d20256efc1031f",
+    "plan_tool/convergence_diagnosis.py": "06ff9d0bf2ac1694b3320aeabd258a94c64ca71b95ca33adc1d54f2a854e67a9",
+    "plan_tool/split_criteria.py": "cef55de1fdeeebb7412bd800d76cb535e41f9bb3f6c8eb02783597ca9c87c8b3",
+    "tests/cli/test_convergence_cmd.py": "70e17a3104cd7485340262371140876426661c60a7a320fad9a5a944bcbb453b",
+    "tests/test_convergence_diagnosis.py": "407d10d0fe1177c5402ac177db1a8d247fd23e1b160f3df4ae1ca1edd862c81f",
+    "tests/test_split_criteria.py": "e2eed9f378ca7c2718f40af87313e806a231c9765243e501098f6d86326d3b56"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/01-make-missing-latest-finding-end.md": "f92a6ad24f58b737b360e1b774a41a6ebc81d208ac65546d4244ae6dafbc3ddb",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/02-limit-re-decompose-advice-structural.md": "ae271fa7ba5c9ca0eea20abd7e9640498472b15b1d0ffd22fb20305ca3503f80",
+    "docs/implementation-plans/plan-details/convergence-resolved-recurrence/03-clear-fixed-convergence-risk-backlogs.md": "94a5b80592c1f6c485212561b9c7fced882dc43fd94ac12b247c231236a29919"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Convergence Resolved Recurrence\n\n`convergence-resolved-recurrence` \u00b7 generated 2026-08-05T00:11:01Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply convergence-resolved-recurrence   # walk + apply each correctness gap, then the completeness gaps\n\n- MEDIUM `[applied-latest-cli]`: Step 1 (`Make an absent or applied latest finding end recurrence`) assigns `test_applied_latest_finding_converges_without_redecompose_command` \u201cReal structural sidecars\u201d while retaining the existing recurrence scope; at HEAD, `recurring_regions()` excludes structural sources before the new applied-state rule runs, so this CLI test passes even if `applied` does not end recurrence.\n  - Fix: Use currently apply-eligible evidence for step 1\u2019s applied-latest CLI regression, then transition it to structural evidence only when step 2\u2019s source boundary lands.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply convergence-resolved-recurrence` \u2014 apply the 1 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Convergence Resolved Recurrence\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[applied-latest-cli]`: Step 1 (`Make an absent or applied latest finding end recurrence`) assigns `test_applied_latest_finding_converges_without_redecompose_command` \u201cReal structural sidecars\u201d while retaining the existing recurrence scope; at HEAD, `recurring_regions()` excludes structural sources before the new applied-state rule runs, so this CLI test passes even if `applied` does not end recurrence.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk convergence-resolved-recurrence` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-d68a10c9",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Make an absent or applied latest finding end recurrence`) assigns `test_applied_latest_finding_converges_withou",
+      "body": "Step 1 (`Make an absent or applied latest finding end recurrence`) assigns `test_applied_latest_finding_converges_without_redecompose_command` \u201cReal structural sidecars\u201d while retaining the existing recurrence scope; at HEAD, `recurring_regions()` excludes structural sources before the new applied-state rule runs, so this CLI test passes even if `applied` does not end recurrence.",
+      "suggested_action": "Use currently apply-eligible evidence for step 1\u2019s applied-latest CLI regression, then transition it to structural evidence only when step 2\u2019s source boundary lands.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "applied-latest-cli",
+      "target_signature": null
+    }
+  ],
+  "annotations": {}
+}

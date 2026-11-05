@@ -1,0 +1,184 @@
+{
+  "version": 4,
+  "plan_slug": "create-default-test-command",
+  "plan_path": "docs/implementation-plans/2-create-default-test-command.md",
+  "created_at": "2026-08-18T18:03:25Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "9ca84a4ae594cb06e40de4691854b59018fa201c72456e5cf454810ccfa1d4fa",
+  "code_fingerprint": {
+    "BACKLOG.md": "b7ce7a0b815fd5c9f2bfeb74b89a2f6c17d3fa9e30547fd8eaaef149765926c0",
+    "PLAN_FORMAT.md": "ccc6d663a261b275c8c171b02d9e970b5d251da52c7e7911abe9dfcc1fcc0c37",
+    "RUNBOOK.md": "0d2d0c65d6a928173616a12e5de72d0036b657b2125b08ec25f01e72843d87ea",
+    "docs/ARCHITECTURE.md": "0245b81856fe7b8e4cbf90aab3136c947794796f920c395f83a3e14668050b8a",
+    "docs/BENCHMARK_DESIGN.md": "65b7add721b08478f754e6448e1bce7efbff90621d6dc15bc611eed98e979d52",
+    "docs/CREATE_FROM_EXISTING_FLOW.md": "1b6db4ac36e727f9eee02b94ade998d557c9bbcf5c61415013a514d863a6094e",
+    "plan_tool/create.py": "3a93f5a66374b8c6ef27231a5aa1cb532b0c2e6d18d912ef965dfd17feaae5df",
+    "tests/test_create.py": "383db86613db8f3fe59746604ea30ed4f4ce4fdd12ebf0e98c490bea15e4e1c8"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md": "9a0e2fc6c19ed1ddadd59f5e8e1984df168e97f9fdecccab06cf2fb7fb029648",
+    "docs/implementation-plans/plan-details/create-default-test-command/02-conservative-marker-table-module-that.md": "42b4054769f56a53da9b21f80ac1e9b8ec8935225678f7ee9a9f0567bc2b259a",
+    "docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md": "cd1e927d6965d5babf94c889ca8d14b4627bc9b20590e7e0c6a7d62f3ef8c95c",
+    "docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md": "22e4b0dc76ab24110bf578180e062c290fd07ea24ba80243d937440efaa87401",
+    "docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md": "efe32cadc4eec8e83c792fb19dc823d7673df71e4682aaf0c4b8d50f233a79e7"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Create Default Test Command\n\n`create-default-test-command` \u00b7 generated 2026-08-18T18:03:24Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ca84a4ae594cb06e40de4691854b59018fa201c72456e5cf454810ccfa1d4fa`\n- **Detail bundle digest:** `f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 5 (+0 vs. first audit)\n- **Detail-bundle size:** 0 bytes (+0 vs. first audit)\n- **Keystone fan-out:** 0.25\n- **Satellite ratio:** 0.20\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks the correctness gaps only on a bare plan \u2014 completeness gaps below stay informational until a detail bundle exists. Address them with:\n\n    plan-tool completeness-apply create-default-test-command   # walk + apply each correctness gap\n    plan-tool reconcile-plan-walk create-default-test-command  # alternative interactive review/apply\n\n- MEDIUM `[test-command-emission-sources]`: The Architecture says the field is present after \u201cthe closed row matches or an operator supplies a non-empty answer,\u201d and step 4, Testing, and Acceptance criteria require that answer to persist, but **Allowed behavior changes** permits a new `test_command` only \u201cwhen the closed row matches.\u201d The `Only these` fence can therefore forbid the operator-supplied write that step 4 requires.\n  - Fix: State that a non-empty interactive operator answer is the second authorized source of `test_command` everywhere the emission rule is defined.\n- MEDIUM `[test-command-documentation-target]`: Step 1, Overview, Problem statement, Architecture\u2019s **Lever (b)**, Testing, and Acceptance criteria say `PLAN_FORMAT.md:82` holds the \u201c24-minute full-suite run\u201d claim, but that location is the `lessons` entry; the stale claim is in the `test_command` entry and the pairing statement is in `enforce_step_tests`. The current acceptance wording can pass without changing the stale text.\n  - Fix: Replace the line-based documentation claims with the `test_command` and `enforce_step_tests` field anchors, and make the criterion verify the stale wording is removed and the pairing remains stated.\n- MEDIUM `[operator-command-checkpoint-lifecycle]`: Step 4 (`Ask the operator for a test command when detection is unknown, and skip it with a note when unattended`), Architecture\u2019s **Unknown detection degrades to asking, then to omitting**, Testing, and Acceptance criteria require a saved non-empty answer to win on `--resume`, but do not define its matching inputs, `--no-resume` behavior, or cleanup after successful creation. `create.py:_finalize_create_plan` clears only its listed create checkpoint kinds, so an added answer checkpoint can survive completion and later inject an old command for the same slug.\n  - Fix: Define the answer checkpoint\u2019s resume identity and end-of-create cleanup, including `--no-resume`, and cover those cases in the step\u2019s acceptance tests.\n- MEDIUM `[operator-command-placeholder-policy]`: Architecture says a non-empty operator answer is checkpointed and emitted, but also says `_(TODO)_` must never be emitted; **The binary observable**, step 4, Testing, and Acceptance criteria cover only blank or whitespace input. `plan_tool.schema:Plan` currently accepts arbitrary non-empty strings and `launcher.py:run_step` executes truthy values, so a literal placeholder has no defined prompt outcome.\n  - Fix: choose and test the interactive treatment of placeholder input so it never serializes or reaches a resumed plan\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[operator-command-checkpoint-lifecycle]`: Step 4 and Architecture require a checkpointed operator command to win on `--resume`, but do not define its terminal lifecycle. `create.py:_finalize_create_plan` clears only listed create checkpoint kinds after normal creation, so an added answer checkpoint can survive a completed create and make a later fresh create reuse an old command instead of prompting or issuing the required omission note.\n  - Fix: Define the operator-command checkpoint\u2019s matching, reuse, and normal-completion cleanup rules, and add acceptance coverage for a fresh create after a successful one.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-9ffa3e49]`: The plan's `## Acceptance criteria` names `:84`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-31ba3b96]`: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-c115c068]`: The plan's `## Acceptance criteria` names `plan_format.md:82`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[plan-claim-vs-delivery-f17b1bd7]`: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-merge-16354dcc]`: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n## Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Create Default Test Command\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `bare`\n- **Plan digest:** `9ca84a4ae594cb06e40de4691854b59018fa201c72456e5cf454810ccfa1d4fa`\n- **Detail bundle digest:** `f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[test-command-emission-sources]`: The Architecture says the field is present after \u201cthe closed row matches or an operator supplies a non-empty answer,\u201d and step 4, Testing, and Acceptance criteria require that answer to persist, but **Allowed behavior changes** permits a new `test_command` only \u201cwhen the closed row matches.\u201d The `Only these` fence can therefore forbid the operator-supplied write that step 4 requires.\n- MEDIUM `[test-command-documentation-target]`: Step 1, Overview, Problem statement, Architecture\u2019s **Lever (b)**, Testing, and Acceptance criteria say `PLAN_FORMAT.md:82` holds the \u201c24-minute full-suite run\u201d claim, but that location is the `lessons` entry; the stale claim is in the `test_command` entry and the pairing statement is in `enforce_step_tests`. The current acceptance wording can pass without changing the stale text.\n- MEDIUM `[operator-command-checkpoint-lifecycle]`: Step 4 (`Ask the operator for a test command when detection is unknown, and skip it with a note when unattended`), Architecture\u2019s **Unknown detection degrades to asking, then to omitting**, Testing, and Acceptance criteria require a saved non-empty answer to win on `--resume`, but do not define its matching inputs, `--no-resume` behavior, or cleanup after successful creation. `create.py:_finalize_create_plan` clears only its listed create checkpoint kinds, so an added answer checkpoint can survive completion and later inject an old command for the same slug.\n- MEDIUM `[operator-command-placeholder-policy]`: Architecture says a non-empty operator answer is checkpointed and emitted, but also says `_(TODO)_` must never be emitted; **The binary observable**, step 4, Testing, and Acceptance criteria cover only blank or whitespace input. `plan_tool.schema:Plan` currently accepts arbitrary non-empty strings and `launcher.py:run_step` executes truthy values, so a literal placeholder has no defined prompt outcome.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[operator-command-checkpoint-lifecycle]`: Step 4 and Architecture require a checkpointed operator command to win on `--resume`, but do not define its terminal lifecycle. `create.py:_finalize_create_plan` clears only listed create checkpoint kinds after normal creation, so an added answer checkpoint can survive a completed create and make a later fresh create reuse an old command instead of prompting or issuing the required omission note.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO: The plan's `## Acceptance criteria` names `:84`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `backlog.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `plan_format.md:82`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: The plan's `## Acceptance criteria` names `test_command`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO: Steps 3 and 4 are dependency-adjacent and touch the identical file set (['plan_tool/create.py', 'tests/test_create.py']).\n\n### Suggested next steps\n\n- `plan-tool completeness-audit create-default-test-command` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-a98f457c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture says the field is present after \u201cthe closed row matches or an operator supplies a non-empty answer,\u201d an",
+      "body": "The Architecture says the field is present after \u201cthe closed row matches or an operator supplies a non-empty answer,\u201d and step 4, Testing, and Acceptance criteria require that answer to persist, but **Allowed behavior changes** permits a new `test_command` only \u201cwhen the closed row matches.\u201d The `Only these` fence can therefore forbid the operator-supplied write that step 4 requires.",
+      "suggested_action": "State that a non-empty interactive operator answer is the second authorized source of `test_command` everywhere the emission rule is defined.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "test-command-emission-sources",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-4fe7ecfc",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1, Overview, Problem statement, Architecture\u2019s **Lever (b)**, Testing, and Acceptance criteria say `PLAN_FORMAT.md:",
+      "body": "Step 1, Overview, Problem statement, Architecture\u2019s **Lever (b)**, Testing, and Acceptance criteria say `PLAN_FORMAT.md:82` holds the \u201c24-minute full-suite run\u201d claim, but that location is the `lessons` entry; the stale claim is in the `test_command` entry and the pairing statement is in `enforce_step_tests`. The current acceptance wording can pass without changing the stale text.",
+      "suggested_action": "Replace the line-based documentation claims with the `test_command` and `enforce_step_tests` field anchors, and make the criterion verify the stale wording is removed and the pairing remains stated.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "test-command-documentation-target",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-7aadf55c",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 (`Ask the operator for a test command when detection is unknown, and skip it with a note when unattended`), Archi",
+      "body": "Step 4 (`Ask the operator for a test command when detection is unknown, and skip it with a note when unattended`), Architecture\u2019s **Unknown detection degrades to asking, then to omitting**, Testing, and Acceptance criteria require a saved non-empty answer to win on `--resume`, but do not define its matching inputs, `--no-resume` behavior, or cleanup after successful creation. `create.py:_finalize_create_plan` clears only its listed create checkpoint kinds, so an added answer checkpoint can survive completion and later inject an old command for the same slug.",
+      "suggested_action": "Define the answer checkpoint\u2019s resume identity and end-of-create cleanup, including `--no-resume`, and cover those cases in the step\u2019s acceptance tests.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "operator-command-checkpoint-lifecycle",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-3acb3bef",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Architecture says a non-empty operator answer is checkpointed and emitted, but also says `_(TODO)_` must never be emitte",
+      "body": "Architecture says a non-empty operator answer is checkpointed and emitted, but also says `_(TODO)_` must never be emitted; **The binary observable**, step 4, Testing, and Acceptance criteria cover only blank or whitespace input. `plan_tool.schema:Plan` currently accepts arbitrary non-empty strings and `launcher.py:run_step` executes truthy values, so a literal placeholder has no defined prompt outcome.",
+      "suggested_action": "choose and test the interactive treatment of placeholder input so it never serializes or reaches a resumed plan",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "operator-command-placeholder-policy",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-7aadf55c",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 4 and Architecture require a checkpointed operator command to win on `--resume`, but do not define its terminal lif",
+      "body": "Step 4 and Architecture require a checkpointed operator command to win on `--resume`, but do not define its terminal lifecycle. `create.py:_finalize_create_plan` clears only listed create checkpoint kinds after normal creation, so an added answer checkpoint can survive a completed create and make a later fresh create reuse an old command instead of prompting or issuing the required omission note.",
+      "suggested_action": "Define the operator-command checkpoint\u2019s matching, reuse, and normal-completion cleanup rules, and add acceptance coverage for a fresh create after a successful one.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "operator-command-checkpoint-lifecycle",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "bare",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 1,
+      "detail_grade": "run",
+      "plan_digest": "9ca84a4ae594cb06e40de4691854b59018fa201c72456e5cf454810ccfa1d4fa",
+      "detail_bundle_digest": "f99bd37a4de35eda5cebc96964718349c92bf8af89ebcd68d0bcce37e6b4684d",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/01-correct-plan-format-md-stale-24-minute.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 2,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/02-conservative-marker-table-module-that.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 3,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/03-write-detected-test-command-plan-create.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 4,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/04-ask-operator-test-command-when.md",
+          "state": "missing",
+          "digest": null
+        },
+        {
+          "step_id": 5,
+          "resolution": "canonical",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/create-default-test-command/05-document-create-new-test-command.md",
+          "state": "missing",
+          "digest": null
+        }
+      ]
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 5,
+    "detail_bundle_bytes": 0,
+    "keystone_fan_out": 0.25,
+    "satellite_ratio": 0.2,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "bare"
+}

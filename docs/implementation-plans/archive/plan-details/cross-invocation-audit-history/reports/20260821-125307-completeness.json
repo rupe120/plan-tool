@@ -1,0 +1,219 @@
+{
+  "version": 4,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T12:53:07Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "25f44868d8c124c52b4c28f33e319271098ee613dbdc0fabb002d6b04f7c08d7",
+  "code_fingerprint": {
+    "BACKLOG.md": "d551256a49299f4d352b8ee42aea95387c5c1934373390cb9fe834e97f59f2f9",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "65c7105760386d84e1459d090d81322a130513a62ffebe4353b990bb2d75ec8b",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md": "d1b35e9c075100cac3790c7775b3210b0a0dabeaa6c3a4c9b54b938f236999bf",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md": "bec085e1f8f39326a0aad7ac8397b758c1a22e9314d69d3f97a4b268928ce02d",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md": "fecbb726892aab03430a4f8892829af96c6364c7407ffddb9cd6c2e42828529d",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md": "78482e5a5c35ea72709e887bbb830ac1339d5e89941799b2913c035fe7cd1e92"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Saved Audit Evidence Ledger\n\n`cross-invocation-audit-history` \u00b7 generated 2026-08-21T12:53:07Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d51d949890a3a0dfa768abaeb002f353989f8004da1de697bc8837fbce2c43ba`\n- **Detail bundle digest:** `ab68e14b76b2962e864051e3a1f8e255579bcc5e6befdb980d664d0f03056534`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (-1 vs. first audit)\n- **Detail-bundle size:** 39033 bytes (+39033 vs. first audit)\n- **Keystone fan-out:** 0.33\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply cross-invocation-audit-history   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[malformed-sidecar-totality]`: The Architecture and step 1 classify unreadable or parser-rejected sidecars as visible opaque evidence, while step 2 preserves `cmd_convergence`\u2019s zero-exit path; but `review_persistence.load_review` lets invalid UTF-8 and `annotations: null` escape as `UnicodeDecodeError` or `AttributeError`, and `convergence_diagnosis.load_report_history` runs before the new reader and catches only `ReviewLoadError`. One such saved JSON file therefore aborts `cmd_convergence` instead of being skipped by history and rendered under the ledger\u2019s precedence rule.\n  - Fix: Define a total saved-sidecar failure boundary shared by history and the ledger, then cover paired and orphan decode/shape failures plus the command\u2019s zero-exit path.\n- MEDIUM `[no-qualified-result-action]`: The Architecture sends a `saved-final` with \u201ca known qualified result\u201d to its report, but `review_persistence._QUALIFIED_RESULT_HEADLINES` includes the valid `no-qualified-current-evidence` headline, which `completeness_report.suggested_next_steps` routes to a fresh audit. Step 1\u2019s saved-result projection, step 2\u2019s \u201cGive every state one action\u201d and unknown-result test, and step 3\u2019s state-action documentation do not choose whether that valid no-evidence headline gets the known-result action or the fresh-audit-if-needed action.\n  - Fix: Define and test the state-specific action for a well-formed `no-qualified-current-evidence` result, then carry it into the operator documentation.\n\n## Suggested next steps\n\n- `plan-tool completeness-apply cross-invocation-audit-history` \u2014 apply the 2 conceptual-correctness gap(s) first (design gaps; not auto-applied under #85).\n\n---\n\n## Full grouped report\n\n## Plan completeness: Saved Audit Evidence Ledger\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `d51d949890a3a0dfa768abaeb002f353989f8004da1de697bc8837fbce2c43ba`\n- **Detail bundle digest:** `ab68e14b76b2962e864051e3a1f8e255579bcc5e6befdb980d664d0f03056534`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[malformed-sidecar-totality]`: The Architecture and step 1 classify unreadable or parser-rejected sidecars as visible opaque evidence, while step 2 preserves `cmd_convergence`\u2019s zero-exit path; but `review_persistence.load_review` lets invalid UTF-8 and `annotations: null` escape as `UnicodeDecodeError` or `AttributeError`, and `convergence_diagnosis.load_report_history` runs before the new reader and catches only `ReviewLoadError`. One such saved JSON file therefore aborts `cmd_convergence` instead of being skipped by history and rendered under the ledger\u2019s precedence rule.\n- MEDIUM `[no-qualified-result-action]`: The Architecture sends a `saved-final` with \u201ca known qualified result\u201d to its report, but `review_persistence._QUALIFIED_RESULT_HEADLINES` includes the valid `no-qualified-current-evidence` headline, which `completeness_report.suggested_next_steps` routes to a fresh audit. Step 1\u2019s saved-result projection, step 2\u2019s \u201cGive every state one action\u201d and unknown-result test, and step 3\u2019s state-action documentation do not choose whether that valid no-evidence headline gets the known-result action or the fresh-audit-if-needed action.\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-savedreview-is-pre-apply-checkpoint]`: docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.is_pre_apply_checkpoint`, but `SavedReview.is_pre_apply_checkpoint` lacks a matching HEAD code-location anchor.\n- MEDIUM `[data-contract-input-savedreview-qualified-result]`: docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.qualified_result`, but `SavedReview.qualified_result` is not a registered persisted field or alias.\n- MEDIUM `[data-contract-input-savedreview-audit-revision]`: docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.audit_revision`, but `SavedReview.audit_revision` is not a registered persisted field or alias.\n- MEDIUM `[data-contract-input-savedreview-audit-stage]`: docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.audit_stage`, but `SavedReview.audit_stage` lacks a matching HEAD code-location anchor.\n- MEDIUM `[data-contract-input-savedreview-created-at]`: docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.created_at`, but `SavedReview.created_at` lacks a matching HEAD code-location anchor.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit cross-invocation-audit-history --iterate` \u2014 re-run with the convergence loop to auto-apply the deterministic/correctness finding(s) above.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-c6871b73",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The Architecture and step 1 classify unreadable or parser-rejected sidecars as visible opaque evidence, while step 2 pre",
+      "body": "The Architecture and step 1 classify unreadable or parser-rejected sidecars as visible opaque evidence, while step 2 preserves `cmd_convergence`\u2019s zero-exit path; but `review_persistence.load_review` lets invalid UTF-8 and `annotations: null` escape as `UnicodeDecodeError` or `AttributeError`, and `convergence_diagnosis.load_report_history` runs before the new reader and catches only `ReviewLoadError`. One such saved JSON file therefore aborts `cmd_convergence` instead of being skipped by history and rendered under the ledger\u2019s precedence rule.",
+      "suggested_action": "Define a total saved-sidecar failure boundary shared by history and the ledger, then cover paired and orphan decode/shape failures plus the command\u2019s zero-exit path.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "malformed-sidecar-totality",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-65960420",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Architecture sends a `saved-final` with \u201ca known qualified result\u201d to its report, but `review_persistence._QUALIFIED",
+      "body": "The Architecture sends a `saved-final` with \u201ca known qualified result\u201d to its report, but `review_persistence._QUALIFIED_RESULT_HEADLINES` includes the valid `no-qualified-current-evidence` headline, which `completeness_report.suggested_next_steps` routes to a fresh audit. Step 1\u2019s saved-result projection, step 2\u2019s \u201cGive every state one action\u201d and unknown-result test, and step 3\u2019s state-action documentation do not choose whether that valid no-evidence headline gets the known-result action or the fresh-audit-if-needed action.",
+      "suggested_action": "Define and test the state-specific action for a well-formed `no-qualified-current-evidence` result, then carry it into the operator documentation.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "no-qualified-result-action",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-47983148",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `SavedReview.is_pre_apply_checkpoint`",
+      "body": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.is_pre_apply_checkpoint`, but `SavedReview.is_pre_apply_checkpoint` lacks a matching HEAD code-location anchor.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-savedreview-is-pre-apply-checkpoint",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-49ba2b3b",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `SavedReview.qualified_result`",
+      "body": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.qualified_result`, but `SavedReview.qualified_result` is not a registered persisted field or alias.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-savedreview-qualified-result",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-f79cc3f9",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `SavedReview.audit_revision`",
+      "body": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.audit_revision`, but `SavedReview.audit_revision` is not a registered persisted field or alias.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-savedreview-audit-revision",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-6010832d",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `SavedReview.audit_stage`",
+      "body": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.audit_stage`, but `SavedReview.audit_stage` lacks a matching HEAD code-location anchor.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-savedreview-audit-stage",
+      "target_signature": null
+    },
+    {
+      "id": "step1-data-contract-0d9f9c41",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 1,
+      "title": "Stale Input contract reference `SavedReview.created_at`",
+      "body": "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md:## Input cites `SavedReview.created_at`, but `SavedReview.created_at` lacks a matching HEAD code-location anchor.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-savedreview-created-at",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 2,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 2,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "d51d949890a3a0dfa768abaeb002f353989f8004da1de697bc8837fbce2c43ba",
+      "detail_bundle_digest": "ab68e14b76b2962e864051e3a1f8e255579bcc5e6befdb980d664d0f03056534",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+          "state": "present",
+          "digest": "d1b35e9c075100cac3790c7775b3210b0a0dabeaa6c3a4c9b54b938f236999bf"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md",
+          "state": "present",
+          "digest": "bec085e1f8f39326a0aad7ac8397b758c1a22e9314d69d3f97a4b268928ce02d"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md",
+          "state": "present",
+          "digest": "fecbb726892aab03430a4f8892829af96c6364c7407ffddb9cd6c2e42828529d"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md",
+          "state": "present",
+          "digest": "78482e5a5c35ea72709e887bbb830ac1339d5e89941799b2913c035fe7cd1e92"
+        }
+      ],
+      "source_seed_digest": "2f914d4b2a1003c4e6ec58fc89d9a7eea971e0c7091bbd40a249748053ac2658",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 39033,
+    "keystone_fan_out": 0.3333333333333333,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}

@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "plan_slug": "structural-remedy-vocabulary",
+  "plan_path": "docs/implementation-plans/2-structural-remedy-vocabulary.md",
+  "created_at": "2026-06-24T18:37:51Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "418f15b8b32b18944ee3588012efb743023110ae2a65ca7b116ab59e3a771160",
+  "code_fingerprint": {
+    "BACKLOG.md": "59ba3da4bbfac2f8f0719255055fdf4fe02c24c627f524fe8f090e4389d08589",
+    "CLAUDE.md": "ed890990e96b8d9baf3b2bd470f12e99382ea000ab639fd45c65c6d3e814a0f8",
+    "RUNBOOK.md": "29823edaacd9851889949d8e9622cca3abe0c793143ff2b17323d14a3b0d49cb",
+    "plan_tool/convergence_diagnosis.py": "0291aadecb5422e7b4f9bd7e78b1aa9cecad2b3f2252faa6013e4f21fb1118b1",
+    "plan_tool/review.py": "20651f7668434339cb1dcc1b5eb68553d19df3a4ba11a2a3ac2e0b2730e38b28",
+    "tests/test_convergence_diagnosis.py": "830d4e878f62d1c9f60cd7c911cc3d53c8a12a0fbbeb704cb61a4344bf71a26a",
+    "tests/test_review.py": "97a15795a44dc6c4dce3b22e912727cf96cdc8e53782aeafa5db57a83b5da936"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/structural-remedy-vocabulary/01-prose-only-scope-out-fork-arm-localized.md": "84048d0da497c4363bd759c9b4cdae14476e0cac9b30ea246edfd5e4bacf085e",
+    "docs/implementation-plans/plan-details/structural-remedy-vocabulary/02-emit-code-grounded-re-ground-finding.md": "300deac2d75f0d19dc88bfed83c314c308dc6f5cdf38413a40414454f897915c",
+    "docs/implementation-plans/plan-details/structural-remedy-vocabulary/03-document-four-remedies-one-altitude.md": "b0a798d5e8c2cdca874cd1e03e8e45e8e0d916745fd0c5ca58d103e1f938dee1"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "report_md": "# Completeness report: Structural Remedy Vocabulary\n\n`structural-remedy-vocabulary` \u00b7 generated 2026-06-24T18:37:51Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 4\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Open (not reached):** 4\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The `--iterate` convergence loop auto-applies these; they are listed here because it did not apply them this run (it halted, was budget-limited, or the audit ran read-only). Address them with:\n\n    plan-tool completeness-audit structural-remedy-vocabulary --iterate   # auto-apply the correctness fixes\n    plan-tool reconcile-plan-walk structural-remedy-vocabulary            # review/apply each one interactively\n\n- HIGH `[scope-out-severity-trigger]`: `scope-out` severity trigger conflicts across the bundle: Architecture decision 1 and step 1 specify `region.last_severity \u2265 high` and explicitly exclude a recovered spike, but the plan Acceptance criteria, Deferred telemetry note, and step 3 (`Document the four remedies...`) tell docs/telemetry to use `max_severity \u2265 high`. That would reintroduce the already-rejected recovered-spike behavior and make docs/tests disagree with the intended predicate.\n- HIGH `[scope-out-multi-region]`: step 1 (`Add prose-only scope-out fork-arm...`) contradicts the plan\u2019s co-located-region trigger: Architecture says \u201cThe `FORK_LOCALIZED` fork can resolve several `RegionTrend`s onto one over-packed step\u201d and \u201cany co-located region\u201d can fire scope-out, and step 1\u2019s tests include `test_classify_scope_out_any_co_located_region_trips`; but step 1 Implementation/Acceptance says \u201cMulti-step / multi-region ... evidence still returns `FORK_STRUCTURAL`\u201d and \u201cmulti-step / multi-region evidence never reaches it.\u201d That would incorrectly route several regions on the same resolved step to re-seed instead of the intended scope-out arm.\n- HIGH `[granularity-merge-triage-overload]`: step 2 (`Emit a code-grounded re-ground finding...`) makes `triage_reason` key only on `rec.source == _GRANULARITY_MERGE_SOURCE` and return a re-ground message like \"code already implements this set \u2014 re-baseline / mark done\", but `plan_tool/granularity.py:_merge_rec` already emits the same `granularity-merge` source for plan-structure findings titled \"Steps {lo_id} and {hi_id} may be a single step\" with `suggested_action=\"Consider merging...\"`. That source-only branch would mislabel existing granularity advisor merge findings as already-built-code re-ground findings, violating the plan's \"granularity advisor ... behave as before\" criterion.\n- MEDIUM `[backlog-67-remainder]`: step 3 (`Document the four remedies...`) overstates the BACKLOG edit target: its Summary says \u201c`BACKLOG.md` #70/#67 read as actuator-only remainders pointing at the follow-up plan,\u201d but its Implementation says #67 retains \u201ccode-reality-reveals-a-split detection\u201d plus an \u201cautomatic bridge,\u201d and `BACKLOG.md` at HEAD has #67 absorbed inside #70 (\u201cabsorbs former #67\u201d) rather than a separate #67 entry. An implementer cannot make a separate actuator-only #67 entry point at `scope-out-executor` without dropping the unshipped split-detection advisory remainder.\n\n## Suggested next steps\n\n- `plan-tool reconcile-plan structural-remedy-vocabulary` \u2014 code changed under the plan since its last audit; it may be stale against current code. Rebase, then re-audit, before running.\n- `plan-tool completeness-audit structural-remedy-vocabulary --iterate --max-iterations N` \u2014 4 eligible finding(s) weren't reached before the loop stopped.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Structural Remedy Vocabulary\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct and complete, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated \u2014 new findings are tapering (2\u21921\u21921) \u2014 rerun with --audit-passes 5 for headroom to converge.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[scope-out-severity-trigger]`: `scope-out` severity trigger conflicts across the bundle: Architecture decision 1 and step 1 specify `region.last_severity \u2265 high` and explicitly exclude a recovered spike, but the plan Acceptance criteria, Deferred telemetry note, and step 3 (`Document the four remedies...`) tell docs/telemetry to use `max_severity \u2265 high`. That would reintroduce the already-rejected recovered-spike behavior and make docs/tests disagree with the intended predicate.\n- HIGH `[scope-out-multi-region]`: step 1 (`Add prose-only scope-out fork-arm...`) contradicts the plan\u2019s co-located-region trigger: Architecture says \u201cThe `FORK_LOCALIZED` fork can resolve several `RegionTrend`s onto one over-packed step\u201d and \u201cany co-located region\u201d can fire scope-out, and step 1\u2019s tests include `test_classify_scope_out_any_co_located_region_trips`; but step 1 Implementation/Acceptance says \u201cMulti-step / multi-region ... evidence still returns `FORK_STRUCTURAL`\u201d and \u201cmulti-step / multi-region evidence never reaches it.\u201d That would incorrectly route several regions on the same resolved step to re-seed instead of the intended scope-out arm.\n- HIGH `[granularity-merge-triage-overload]`: step 2 (`Emit a code-grounded re-ground finding...`) makes `triage_reason` key only on `rec.source == _GRANULARITY_MERGE_SOURCE` and return a re-ground message like \"code already implements this set \u2014 re-baseline / mark done\", but `plan_tool/granularity.py:_merge_rec` already emits the same `granularity-merge` source for plan-structure findings titled \"Steps {lo_id} and {hi_id} may be a single step\" with `suggested_action=\"Consider merging...\"`. That source-only branch would mislabel existing granularity advisor merge findings as already-built-code re-ground findings, violating the plan's \"granularity advisor ... behave as before\" criterion.\n- MEDIUM `[backlog-67-remainder]`: step 3 (`Document the four remedies...`) overstates the BACKLOG edit target: its Summary says \u201c`BACKLOG.md` #70/#67 read as actuator-only remainders pointing at the follow-up plan,\u201d but its Implementation says #67 retains \u201ccode-reality-reveals-a-split detection\u201d plus an \u201cautomatic bridge,\u201d and `BACKLOG.md` at HEAD has #67 absorbed inside #70 (\u201cabsorbs former #67\u201d) rather than a separate #67 entry. An implementer cannot make a separate actuator-only #67 entry point at `scope-out-executor` without dropping the unshipped split-detection advisory remainder.\n\n### Files coherence\n\n- NIT: step 3 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk structural-remedy-vocabulary` \u2014 interactively review the finding(s) the iterate loop left open.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-d2eede1c",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "`scope-out` severity trigger conflicts across the bundle: Architecture decision 1 and step 1 specify `region.last_severi",
+      "body": "`scope-out` severity trigger conflicts across the bundle: Architecture decision 1 and step 1 specify `region.last_severity \u2265 high` and explicitly exclude a recovered spike, but the plan Acceptance criteria, Deferred telemetry note, and step 3 (`Document the four remedies...`) tell docs/telemetry to use `max_severity \u2265 high`. That would reintroduce the already-rejected recovered-spike behavior and make docs/tests disagree with the intended predicate.",
+      "suggested_action": "make every plan, docs, acceptance, and telemetry-threshold reference use current severity (`last_severity \u2265 high`) rather than peak severity (`max_severity \u2265 high`).",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "scope-out-severity-trigger"
+    },
+    {
+      "id": "plan-plan-correctness-8491e7fe",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 1 (`Add prose-only scope-out fork-arm...`) contradicts the plan\u2019s co-located-region trigger: Architecture says \u201cThe",
+      "body": "step 1 (`Add prose-only scope-out fork-arm...`) contradicts the plan\u2019s co-located-region trigger: Architecture says \u201cThe `FORK_LOCALIZED` fork can resolve several `RegionTrend`s onto one over-packed step\u201d and \u201cany co-located region\u201d can fire scope-out, and step 1\u2019s tests include `test_classify_scope_out_any_co_located_region_trips`; but step 1 Implementation/Acceptance says \u201cMulti-step / multi-region ... evidence still returns `FORK_STRUCTURAL`\u201d and \u201cmulti-step / multi-region evidence never reaches it.\u201d That would incorrectly route several regions on the same resolved step to re-seed instead of the intended scope-out arm.",
+      "suggested_action": "define co-located multi-region evidence as eligible for scope-out when all regions resolve to one step, and reserve the structural fallback only for distinct-step or unresolvable evidence.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "scope-out-multi-region"
+    },
+    {
+      "id": "plan-plan-correctness-39c0d6bc",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "step 2 (`Emit a code-grounded re-ground finding...`) makes `triage_reason` key only on `rec.source == _GRANULARITY_MERGE",
+      "body": "step 2 (`Emit a code-grounded re-ground finding...`) makes `triage_reason` key only on `rec.source == _GRANULARITY_MERGE_SOURCE` and return a re-ground message like \"code already implements this set \u2014 re-baseline / mark done\", but `plan_tool/granularity.py:_merge_rec` already emits the same `granularity-merge` source for plan-structure findings titled \"Steps {lo_id} and {hi_id} may be a single step\" with `suggested_action=\"Consider merging...\"`. That source-only branch would mislabel existing granularity advisor merge findings as already-built-code re-ground findings, violating the plan's \"granularity advisor ... behave as before\" criterion.",
+      "suggested_action": "specify a producer-neutral `granularity-merge` triage message that covers both structural merge and reconcile re-ground, or define a way to distinguish the reconcile re-ground producer without changing existing granularity-merge skip text.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "granularity-merge-triage-overload"
+    },
+    {
+      "id": "plan-plan-correctness-d1671ebd",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "step 3 (`Document the four remedies...`) overstates the BACKLOG edit target: its Summary says \u201c`BACKLOG.md` #70/#67 read",
+      "body": "step 3 (`Document the four remedies...`) overstates the BACKLOG edit target: its Summary says \u201c`BACKLOG.md` #70/#67 read as actuator-only remainders pointing at the follow-up plan,\u201d but its Implementation says #67 retains \u201ccode-reality-reveals-a-split detection\u201d plus an \u201cautomatic bridge,\u201d and `BACKLOG.md` at HEAD has #67 absorbed inside #70 (\u201cabsorbs former #67\u201d) rather than a separate #67 entry. An implementer cannot make a separate actuator-only #67 entry point at `scope-out-executor` without dropping the unshipped split-detection advisory remainder.",
+      "suggested_action": "define the #67 edit as updating #70\u2019s \u201cwas #67\u201d subsection, with split-detection kept as an advisory remainder and only #70\u2019s scope-out actuator pointing at `scope-out-executor`.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "file_path": null,
+      "anchor": "backlog-67-remainder"
+    }
+  ],
+  "annotations": {}
+}

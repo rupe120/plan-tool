@@ -1,0 +1,174 @@
+{
+  "version": 4,
+  "plan_slug": "completeness-next-step-verdict-finish",
+  "plan_path": "docs/implementation-plans/2-completeness-next-step-verdict-finish.md",
+  "created_at": "2026-10-10T18:32:36Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "acfd88f1745e092a6e258ea02557ddb481e2b1dfa52fc64681b312e3bfcbb1c7",
+  "code_fingerprint": {
+    "BACKLOG.md": "59e7fb34f8ef0cae377b001b376f74019182b5a019ad5f3b8dc16b116b1fcb6c",
+    "docs/how-to/pipeline/audit.md": "63da6ef85a841fed969d97bf873ae8ba1397c41caa0068b3a390b7c8a9385b7b",
+    "plan_tool/cli/authoring.py": "42fbf506995eb58e606d70d05b77233bcc48331731ba675f43017be77f026c92",
+    "plan_tool/cli/completeness_cmd.py": "7ad672c188c6b8ad99b8a222b4c10c40f285b2c403906bd1722ff550bd19bfb0",
+    "plan_tool/cli/completeness_phases.py": "fc6922d176fbf2f6b62a2b1da1d0e34ae82c271535995d75cd3137cabf0cedf4",
+    "plan_tool/completeness_report.py": "5a5eb6ce70510e6772e54eda1f9600ce5068ec835b796f36bfdd2ca0af1bf467",
+    "tests/cli/test_authoring_cmds.py": "62631ed2cf90f5769454bc8bae447e9c50961226e6ed735dd82d692dd077f52b",
+    "tests/cli/test_completeness_cmd.py": "47808d319600b64c66a36b452eb93e775e667b7a1e1b92268402f3f0b71a4b4e",
+    "tests/test_completeness_report.py": "09764325190730b50d75f6a7be0e3752377faa87b60632bba28ffb249d743710"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md": "8572690f6dd85792f201dd7e50493f2d0b0ad77b070bfb718af30731e5239e7c",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md": "45dedcb276e8eac3d74ae96a3afec8c54f19dd0a57dd55389897010a73d3e30a",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md": "e8cc2a9f6619f94af4fb28e890c8b3ecc9b25ad5e194fad8091cfe4fd9b9fb09",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md": "6c3a20e98fe4e1657d64c6c45ae4fc77f86cbba768ad9bdceb6ba0deedb7a258",
+    "docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md": "d3bfc636565e9872aeba80f8359c2cce61f538bdcbc67b0f3e5877b94157ef92"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Completeness Next Step Verdict Finish\n\n`completeness-next-step-verdict-finish` \u00b7 generated 2026-10-10T18:32:36Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 2\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Completeness gaps below stay informational until a detail bundle exists.\n\n    plan-tool reconcile-plan-walk completeness-next-step-verdict-finish  # optional interactive review of the saved findings\n\n- HIGH `[untrusted-cause-precedence]` [confidence: limited]: Steps 1 and 2 never say which cause wins when one result carries several. The plan says: `Transient covers max_iterations, deadline_exceeded, and no_progress, and its action is to re-audit.` and `An incomplete audit's blocking ids are named by every reader`, while `A stale revision never has its saved gaps named as text to close.` At HEAD, `_verdict_untrusted_cause` in `cli/completeness_cmd.py` returns persistent for `audit_incomplete` or `no-qualified-current-evidence` before it looks at `stop_reason`. A budget-limited audit that stopped on `max_iterations` is therefore both \"a stop a plain re-audit would continue\" (step 1) and \"incomplete, names ids, offers no stage\" (step 2). A budget-limited audit on a stale revision hits step 2's \"names blocking ids\" against the acceptance rule that a stale revision never has gaps named as text to close. Two implementers can choose different next commands and close lists for the same result, and the plan's test list only covers each case alone.\n  - Fix: State one ordered precedence among stale revision, incomplete/budget-limited, and transient stop. Say whether an incomplete audit's retained ids are listed as blocking on a stale revision, and add a combined-case acceptance bullet and test row for each ordered pair.\n- MEDIUM `[stale-revision-cause-source]` [confidence: limited]: Step 1 says a stale revision \"gets the fresh-audit answer\", but `_verdict_untrusted_cause` takes only `audit_incomplete`, `stop_reason`, `qualified_headline` and `blocking_set_nonempty`. Staleness lives in `QualifiedAuditResult.revision_status`. The plan's stated rule, \"The cause comes from what `classify_qualified_audit_result` actually produces\", does not say which output field marks stale. It also does not say whether stale applies only under `no-qualified-current-evidence` or to any headline. The acceptance criterion \"never has its saved gaps named\" therefore has no single trigger.\n  - Fix: Name the observable that identifies a stale revision (the `revision_status` value and the headlines it applies to) so the classifier, readers and test agree on the trigger.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas are reported for visibility in this bare-plan audit. Apply actions for this axis are withheld until a complete detail bundle exists, so these findings are informational for now.\n\n- MEDIUM `[incomplete-ids-reader-set]` [confidence: limited]: Acceptance says `An incomplete audit's blocking ids are named by every reader`, but step 2 only covers the id source (`_conceptual_bar_from_audit_recs`). It does not say how ids that were never in a finalize bool reach the verdict's close list, or how `blocking N` in the console is derived once the arm is incomplete. Step 4 mentions the console count only in terms of \"real ids\" and labelling `incomplete`. No criterion or test pins that `--json` `has_blocking_findings` and exit codes stay identical with ids present, beyond one line in Testing. Step 4 should explicitly consume step 2's ids, and the ordering step 2 \u2192 step 4 should be stated.\n  - Fix: Add a dependency and acceptance bullet tying step 4's readers to step 2's retained ids. Add a gate-bool-unchanged assertion for an incomplete audit with ids across `--json`, `--fail-on-findings` and the exit code.\n- MEDIUM `[reader-enumeration-deliverable]` [confidence: limited]: The Risks section requires readers to be \"enumerated by identifier and by vocabulary before editing any\". No step or acceptance criterion makes that enumeration a recorded deliverable, so closure of \"each at every reader that shares it\" is not checkable.\n  - Fix: Add a line to step 4 and the acceptance criteria requiring the reader list (identifier and vocabulary searches) to be written into the handoff before editing.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Completeness Next Step Verdict Finish\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 5 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[untrusted-cause-precedence]` [confidence: limited]: Steps 1 and 2 never say which cause wins when one result carries several. The plan says: `Transient covers max_iterations, deadline_exceeded, and no_progress, and its action is to re-audit.` and `An incomplete audit's blocking ids are named by every reader`, while `A stale revision never has its saved gaps named as text to close.` At HEAD, `_verdict_untrusted_cause` in `cli/completeness_cmd.py` returns persistent for `audit_incomplete` or `no-qualified-current-evidence` before it looks at `stop_reason`. A budget-limited audit that stopped on `max_iterations` is therefore both \"a stop a plain re-audit would continue\" (step 1) and \"incomplete, names ids, offers no stage\" (step 2). A budget-limited audit on a stale revision hits step 2's \"names blocking ids\" against the acceptance rule that a stale revision never has gaps named as text to close. Two implementers can choose different next commands and close lists for the same result, and the plan's test list only covers each case alone.\n- MEDIUM `[stale-revision-cause-source]` [confidence: limited]: Step 1 says a stale revision \"gets the fresh-audit answer\", but `_verdict_untrusted_cause` takes only `audit_incomplete`, `stop_reason`, `qualified_headline` and `blocking_set_nonempty`. Staleness lives in `QualifiedAuditResult.revision_status`. The plan's stated rule, \"The cause comes from what `classify_qualified_audit_result` actually produces\", does not say which output field marks stale. It also does not say whether stale applies only under `no-qualified-current-evidence` or to any headline. The acceptance criterion \"never has its saved gaps named\" therefore has no single trigger.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[incomplete-ids-reader-set]` [confidence: limited]: Acceptance says `An incomplete audit's blocking ids are named by every reader`, but step 2 only covers the id source (`_conceptual_bar_from_audit_recs`). It does not say how ids that were never in a finalize bool reach the verdict's close list, or how `blocking N` in the console is derived once the arm is incomplete. Step 4 mentions the console count only in terms of \"real ids\" and labelling `incomplete`. No criterion or test pins that `--json` `has_blocking_findings` and exit codes stay identical with ids present, beyond one line in Testing. Step 4 should explicitly consume step 2's ids, and the ordering step 2 \u2192 step 4 should be stated.\n- MEDIUM `[reader-enumeration-deliverable]` [confidence: limited]: The Risks section requires readers to be \"enumerated by identifier and by vocabulary before editing any\". No step or acceptance criterion makes that enumeration a recorded deliverable, so closure of \"each at every reader that shares it\" is not checkable.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit completeness-next-step-verdict-finish --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-34a8293d",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Steps 1 and 2 never say which cause wins when one result carries several. The plan says: `Transient covers max_iteration",
+      "body": "Steps 1 and 2 never say which cause wins when one result carries several. The plan says: `Transient covers max_iterations, deadline_exceeded, and no_progress, and its action is to re-audit.` and `An incomplete audit's blocking ids are named by every reader`, while `A stale revision never has its saved gaps named as text to close.` At HEAD, `_verdict_untrusted_cause` in `cli/completeness_cmd.py` returns persistent for `audit_incomplete` or `no-qualified-current-evidence` before it looks at `stop_reason`. A budget-limited audit that stopped on `max_iterations` is therefore both \"a stop a plain re-audit would continue\" (step 1) and \"incomplete, names ids, offers no stage\" (step 2). A budget-limited audit on a stale revision hits step 2's \"names blocking ids\" against the acceptance rule that a stale revision never has gaps named as text to close. Two implementers can choose different next commands and close lists for the same result, and the plan's test list only covers each case alone.",
+      "suggested_action": "State one ordered precedence among stale revision, incomplete/budget-limited, and transient stop. Say whether an incomplete audit's retained ids are listed as blocking on a stale revision, and add a combined-case acceptance bullet and test row for each ordered pair.",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "untrusted-cause-precedence",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-correctness-37becf51",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 says a stale revision \"gets the fresh-audit answer\", but `_verdict_untrusted_cause` takes only `audit_incomplete`",
+      "body": "Step 1 says a stale revision \"gets the fresh-audit answer\", but `_verdict_untrusted_cause` takes only `audit_incomplete`, `stop_reason`, `qualified_headline` and `blocking_set_nonempty`. Staleness lives in `QualifiedAuditResult.revision_status`. The plan's stated rule, \"The cause comes from what `classify_qualified_audit_result` actually produces\", does not say which output field marks stale. It also does not say whether stale applies only under `no-qualified-current-evidence` or to any headline. The acceptance criterion \"never has its saved gaps named\" therefore has no single trigger.",
+      "suggested_action": "Name the observable that identifies a stale revision (the `revision_status` value and the headlines it applies to) so the classifier, readers and test agree on the trigger.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stale-revision-cause-source",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-3d5f1232",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Acceptance says `An incomplete audit's blocking ids are named by every reader`, but step 2 only covers the id source (`_",
+      "body": "Acceptance says `An incomplete audit's blocking ids are named by every reader`, but step 2 only covers the id source (`_conceptual_bar_from_audit_recs`). It does not say how ids that were never in a finalize bool reach the verdict's close list, or how `blocking N` in the console is derived once the arm is incomplete. Step 4 mentions the console count only in terms of \"real ids\" and labelling `incomplete`. No criterion or test pins that `--json` `has_blocking_findings` and exit codes stay identical with ids present, beyond one line in Testing. Step 4 should explicitly consume step 2's ids, and the ordering step 2 \u2192 step 4 should be stated.",
+      "suggested_action": "Add a dependency and acceptance bullet tying step 4's readers to step 2's retained ids. Add a gate-bool-unchanged assertion for an incomplete audit with ids across `--json`, `--fail-on-findings` and the exit code.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "incomplete-ids-reader-set",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-0181daff",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The Risks section requires readers to be \"enumerated by identifier and by vocabulary before editing any\". No step or acc",
+      "body": "The Risks section requires readers to be \"enumerated by identifier and by vocabulary before editing any\". No step or acceptance criterion makes that enumeration a recorded deliverable, so closure of \"each at every reader that shares it\" is not checkable.",
+      "suggested_action": "Add a line to step 4 and the acceptance criteria requiring the reader list (identifier and vocabulary searches) to be written into the handoff before editing.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "reader-enumeration-deliverable",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "acfd88f1745e092a6e258ea02557ddb481e2b1dfa52fc64681b312e3bfcbb1c7",
+    "detail_bundle_digest": "c2e87c29b9802137a8c4df304eda27517642028200aa53dd00d4290539d2d492",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/01-split-untrusted-verdict-cause-transient.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/02-keep-incomplete-budget-limited-audit.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/03-give-finalize-blockingverdict-its.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/04-make-grouped-report-prose-console.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 5,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/completeness-next-step-verdict-finish/05-update-audit-how-verdict-guidance.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "d3ad2373cec38bb40436faa604b3e13653eedc1a7374e5e87a3528fb813796a7",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}

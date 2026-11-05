@@ -1,0 +1,159 @@
+{
+  "version": 4,
+  "plan_slug": "cross-invocation-audit-history",
+  "plan_path": "docs/implementation-plans/2-cross-invocation-audit-history.md",
+  "created_at": "2026-08-21T13:29:43Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "70ad6caf9072fdaaf325eabea8d1f300fd07f79bcaf35cfb73544bb7f0c65b3f",
+  "code_fingerprint": {
+    "BACKLOG.md": "d551256a49299f4d352b8ee42aea95387c5c1934373390cb9fe834e97f59f2f9",
+    "docs/ARCHITECTURE.md": "6ff399a10567d8f1ab501b4eb7c6c24b622642cdec65499de0e15068d0c6e881",
+    "docs/AUDIT_FLOW.md": "79e6b9bc6ea799412a7b5634c906a868c56109f77b627eaaeb1a66600e3331a6",
+    "docs/cli/convergence.md": "f6b9eb6a360fe09060a3a3b50e22dc2c87abc27ee6b8cd71aa5a003befded3d2",
+    "docs/implementation-plans/backlog-arcs/backlog-arc-convergence-evidence.md": "65c7105760386d84e1459d090d81322a130513a62ffebe4353b990bb2d75ec8b",
+    "plan_tool/cli/convergence_cmd.py": "552d16deabe717ddaaabe7fb123b25ea3f9d67bf659abba312ab800bbeb058f4",
+    "plan_tool/convergence_diagnosis.py": "530b1f3e185846ab8763cb715471438bdffb3eba007f5485e97f432c65a7c0d0",
+    "plan_tool/review_persistence.py": "cbc0915c1db58334a87e71ef189f7b01ad75b90c1bdd5b2148dc0e40c84fa93c",
+    "tests/cli/test_convergence_cmd.py": "1eb94c789a450b6ee82968fff463deb9e1500d55bb3ac21dd3e861ffec1978ad",
+    "tests/test_convergence_diagnosis.py": "fee3439cec6078012910a8a802a7ee3b0fc27df24fc2a6be668b60fb7e10f275",
+    "tests/test_review_persistence.py": "17c89e515e0e1f182a337b2f20eb26cfd0a0389c243648d0b1f1abe45e9134cb"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md": "e78a3bf2080bafe7b2cef20c4b0a95434865ef3ba4eae2069b1cb2266f630f92",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md": "bad42836b5cd8d0bc42c22858f8c20c48d6f67793c6bb346384936d1b14a2b7c",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md": "06f117c9d4e787de3168298be239b718ad62a0541f52ac17305559b688b35cdb",
+    "docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md": "78482e5a5c35ea72709e887bbb830ac1339d5e89941799b2913c035fe7cd1e92"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Saved Audit Evidence Ledger\n\n`cross-invocation-audit-history` \u00b7 generated 2026-08-21T13:29:43Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 3\n- **Conceptual completeness (advisory, not auto-applied):** 1\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): the paired apply verb walks them first, before the completeness gaps. Address them with:\n\n    plan-tool completeness-apply cross-invocation-audit-history   # walk + apply each correctness gap, then the completeness gaps\n\n- HIGH `[optional-metadata-totality]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) says malformed optional metadata displays as `unknown`, and step 2 (`Render the separate ledger and preserve the convergence diagnosis's meaning`) must keep `cmd_convergence` on its zero-exit path. But `review_persistence.normalize_qualified_result` and `normalize_audit_coverage`, called by `load_review`, can raise `TypeError` for JSON list values before `ReviewLoadError`; `load_report_history` and `cmd_convergence` can then abort instead of rendering the row.\n  - Fix: make optional saved-metadata projection total, preserving valid rows with unknown fields, and test malformed qualified-result and coverage values through both reader and command paths\n- HIGH `[malformed-sidecar-totality]`: The malformed-sidecar guarantee remains narrower than the plan\u2019s `## Architecture`, `## Risks`, and acceptance criteria: step 1 only requires normalization for UTF-8, annotations, and `kind`, while step 2 still diagnoses saved history before printing the ledger. At HEAD, `Recommendation(**r)` accepts an invalid `severity` shape, and `convergence_diagnosis._latest_blocking` later calls `.lower()` on it, so a paired malformed completeness sidecar can still terminate `cmd_convergence` rather than render as `malformed-sidecar`.\n  - Fix: Define one parser boundary that rejects every persisted field shape consumed by convergence history or diagnosis, then test that malformed rows remain visible and the command exits zero.\n- MEDIUM `[saved-created-at-display]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) promises saved `created_at` or `invalid`, but its tests name filename-time ordering and general metadata projection without a malformed saved-`created_at` case. `review_persistence.SavedReview.created_at` accepts arbitrary saved values today, while `convergence_diagnosis._created_at_sort_key` only protects history ordering, so the ledger\u2019s required display value remains unpinned.\n  - Fix: Define and test the saved-`created_at` validation and display rule separately from filename-timestamp ordering.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Walk and apply them with the paired subcommand:\n\n    plan-tool completeness-apply <plan>                # interactive walk over every gap\n    plan-tool completeness-apply <plan> --anchor <slug> # address one gap by its `[slug]`\n\nEach finding below carries the exact `--anchor` value plus the command pre-filled \u2014 copy-paste to address it.\n\n- MEDIUM `[saved-created-at-display]`: Step 1 requires each readable row to show saved `created_at` or `invalid`, but its tests name invalid filename-time ordering and generic metadata projection only. `review_persistence.SavedReview.created_at` accepts malformed saved dates today, and `convergence_diagnosis._created_at_sort_key` only sorts them last, so the renderer could expose a bad value instead of `invalid` without a focused check.\n  - Fix: define the invalid saved-`created_at` projection and add a ledger fixture/assertion that distinguishes it from an unknown filename timestamp.\n  - Address: `plan-tool completeness-apply cross-invocation-audit-history --anchor saved-created-at-display`\n\n## Suggested next steps\n\n- `plan-tool completeness-audit cross-invocation-audit-history` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Saved Audit Evidence Ledger\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- HIGH `[optional-metadata-totality]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) says malformed optional metadata displays as `unknown`, and step 2 (`Render the separate ledger and preserve the convergence diagnosis's meaning`) must keep `cmd_convergence` on its zero-exit path. But `review_persistence.normalize_qualified_result` and `normalize_audit_coverage`, called by `load_review`, can raise `TypeError` for JSON list values before `ReviewLoadError`; `load_report_history` and `cmd_convergence` can then abort instead of rendering the row.\n- HIGH `[malformed-sidecar-totality]`: The malformed-sidecar guarantee remains narrower than the plan\u2019s `## Architecture`, `## Risks`, and acceptance criteria: step 1 only requires normalization for UTF-8, annotations, and `kind`, while step 2 still diagnoses saved history before printing the ledger. At HEAD, `Recommendation(**r)` accepts an invalid `severity` shape, and `convergence_diagnosis._latest_blocking` later calls `.lower()` on it, so a paired malformed completeness sidecar can still terminate `cmd_convergence` rather than render as `malformed-sidecar`.\n- MEDIUM `[saved-created-at-display]`: Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) promises saved `created_at` or `invalid`, but its tests name filename-time ordering and general metadata projection without a malformed saved-`created_at` case. `review_persistence.SavedReview.created_at` accepts arbitrary saved values today, while `convergence_diagnosis._created_at_sort_key` only protects history ordering, so the ledger\u2019s required display value remains unpinned.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[saved-created-at-display]`: Step 1 requires each readable row to show saved `created_at` or `invalid`, but its tests name invalid filename-time ordering and generic metadata projection only. `review_persistence.SavedReview.created_at` accepts malformed saved dates today, and `convergence_diagnosis._created_at_sort_key` only sorts them last, so the renderer could expose a bad value instead of `invalid` without a focused check.\n\n### Suggested next steps\n\n- `plan-tool reconcile-plan-walk cross-invocation-audit-history` \u2014 interactively review the finding(s) the iterate loop left open.\n- `plan-tool completeness-apply cross-invocation-audit-history` \u2014 walk the 1 conceptual-completeness gap(s) and apply gap-closing edits (reuses this audit's saved findings; no re-audit).\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-86843f22",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) says malformed optional metadata displays as ",
+      "body": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) says malformed optional metadata displays as `unknown`, and step 2 (`Render the separate ledger and preserve the convergence diagnosis's meaning`) must keep `cmd_convergence` on its zero-exit path. But `review_persistence.normalize_qualified_result` and `normalize_audit_coverage`, called by `load_review`, can raise `TypeError` for JSON list values before `ReviewLoadError`; `load_report_history` and `cmd_convergence` can then abort instead of rendering the row.",
+      "suggested_action": "make optional saved-metadata projection total, preserving valid rows with unknown fields, and test malformed qualified-result and coverage values through both reader and command paths",
+      "impact": "high",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "optional-metadata-totality",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-c6871b73",
+      "source": "plan-correctness",
+      "severity": "high",
+      "step_id": null,
+      "title": "The malformed-sidecar guarantee remains narrower than the plan\u2019s `## Architecture`, `## Risks`, and acceptance criteria:",
+      "body": "The malformed-sidecar guarantee remains narrower than the plan\u2019s `## Architecture`, `## Risks`, and acceptance criteria: step 1 only requires normalization for UTF-8, annotations, and `kind`, while step 2 still diagnoses saved history before printing the ledger. At HEAD, `Recommendation(**r)` accepts an invalid `severity` shape, and `convergence_diagnosis._latest_blocking` later calls `.lower()` on it, so a paired malformed completeness sidecar can still terminate `cmd_convergence` rather than render as `malformed-sidecar`.",
+      "suggested_action": "Define one parser boundary that rejects every persisted field shape consumed by convergence history or diagnosis, then test that malformed rows remain visible and the command exits zero.",
+      "impact": "high",
+      "complexity": "medium",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "malformed-sidecar-totality",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-correctness-ae3381bb",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) promises saved `created_at` or `invalid`, but",
+      "body": "Step 1 (`Read saved completeness artifacts as an ordered evidence ledger`) promises saved `created_at` or `invalid`, but its tests name filename-time ordering and general metadata projection without a malformed saved-`created_at` case. `review_persistence.SavedReview.created_at` accepts arbitrary saved values today, while `convergence_diagnosis._created_at_sort_key` only protects history ordering, so the ledger\u2019s required display value remains unpinned.",
+      "suggested_action": "Define and test the saved-`created_at` validation and display rule separately from filename-timestamp ordering.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-created-at-display",
+      "target_signature": null
+    },
+    {
+      "id": "plan-plan-completeness-ae3381bb",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 1 requires each readable row to show saved `created_at` or `invalid`, but its tests name invalid filename-time orde",
+      "body": "Step 1 requires each readable row to show saved `created_at` or `invalid`, but its tests name invalid filename-time ordering and generic metadata projection only. `review_persistence.SavedReview.created_at` accepts malformed saved dates today, and `convergence_diagnosis._created_at_sort_key` only sorts them last, so the renderer could expose a bad value instead of `invalid` without a focused check.",
+      "suggested_action": "define the invalid saved-`created_at` projection and add a ledger fixture/assertion that distinguishes it from an unknown filename timestamp.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "saved-created-at-display",
+      "target_signature": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "4c0d165a3cbbbb101fac51fd0b2d1d35cd7e4672600c4c03ff8e2f3bfbf76897",
+    "detail_bundle_digest": "ea5bf641ac2baf8c4ba724eb03892571166bd09c62ec3812cb592b4bd7138ab2",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/01-read-saved-completeness-artifacts.md",
+        "state": "present",
+        "digest": "e78a3bf2080bafe7b2cef20c4b0a95434865ef3ba4eae2069b1cb2266f630f92"
+      },
+      {
+        "step_id": 2,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/02-render-separate-ledger-preserve.md",
+        "state": "present",
+        "digest": "bad42836b5cd8d0bc42c22858f8c20c48d6f67793c6bb346384936d1b14a2b7c"
+      },
+      {
+        "step_id": 3,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/03-document-audit-evidence-ledger-its.md",
+        "state": "present",
+        "digest": "06f117c9d4e787de3168298be239b718ad62a0541f52ac17305559b688b35cdb"
+      },
+      {
+        "step_id": 4,
+        "resolution": "pointer",
+        "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/cross-invocation-audit-history/04-record-reoriented-247-delivery-defer.md",
+        "state": "present",
+        "digest": "78482e5a5c35ea72709e887bbb830ac1339d5e89941799b2913c035fe7cd1e92"
+      }
+    ],
+    "source_seed_digest": "2f914d4b2a1003c4e6ec58fc89d9a7eea971e0c7091bbd40a249748053ac2658",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "detail"
+}

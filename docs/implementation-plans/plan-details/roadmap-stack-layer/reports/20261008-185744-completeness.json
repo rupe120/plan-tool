@@ -1,0 +1,217 @@
+{
+  "version": 4,
+  "plan_slug": "roadmap-stack-layer",
+  "plan_path": "docs/implementation-plans/2-roadmap-stack-layer.md",
+  "created_at": "2026-10-08T18:57:44Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6d2b81daee0908d2f6f2a07b8d348c5c462b28a046133e94886d5bf759e5a7ef",
+  "code_fingerprint": {
+    "BACKLOG.md": "19e3f51e692f6bd341a0c579f150c8ced45ddd80fa2b983dc032639ece6bf248",
+    "ROADMAP_FEEDBACK_FORMAT.md": "16d34b75a72cf798d61e7edf7693aaf61c6d8bcafc30fe5e738f35251c4c227a",
+    "ROADMAP_FORMAT.md": "e5d216231f690b8a1986e0fe8ace8dda8c672058f546080d9e750873d264cd3e",
+    "docs/ARCHITECTURE.md": "546923bf2fbba21cea2193897fb1afdb23033bf8a5cd2f244dc8abb9fe45ddae",
+    "plan_tool/cli/roadmap_cmd.py": "2cbb1f53d1704b5586d1a74d9561e4b07ec3f1db7f83d0c4c341ac8e3c548536",
+    "plan_tool/prompts/roadmap-candidate-delta-selector.md": "b1120ba10b0913dbdbbdfcbd8e33f09cc005c5293f3fa30844935f4c47db2699",
+    "plan_tool/prompts/roadmap-constraints.md": "0cf29b81d0f185b30bedff5bf1c295966d16b8df5dd7e567e4d65aa87529f7d8",
+    "plan_tool/prompts/roadmap-seed.md": "62732feb8a3799b1fd42dd3ec4db907d38d0cc93446f7ea31cc4a823b85fd51a",
+    "plan_tool/roadmap.py": "b1186c64c68741c6dc327171ca50d99cc8ef8f291b1179e6f747dbf4e18b838d",
+    "plan_tool/roadmap_artifacts.py": "2a46b43c85db5be65a8a779d6b4ae0914817b0c1aef414305ef8f2ff7114a199",
+    "plan_tool/roadmap_candidate.py": "453b14ffb3ee59aabd8275eb677f6ab2a1cd4d554c7f24021ded5fa34c39ceab",
+    "plan_tool/roadmap_candidate_context.py": "b36427a7a170912a6595c3abcc22c90cc6770c4e523de73a8c53f4e3cb871260",
+    "plan_tool/roadmap_candidate_run.py": "a537917e5091325e0e959bf51d66fadd6003d0a30f19d038aa82da70f326d10e",
+    "plan_tool/roadmap_gates.py": "88e2e0c36ef6b56853472e5cefcc110b1a3abcd321e69dffbc1a65f8cd921b75",
+    "plan_tool/roadmap_index.py": "640a02436cae234a918b9991117d8ed88bdd77e741c2e3c5324ad98f90b4cb25",
+    "plan_tool/roadmap_revision.py": "d088077bf6aa0147305311e3d14963efbcd431a564e64b242299b60fb5598c31",
+    "plan_tool/roadmap_revision_patch.py": "90d82d676fc0dd13fd9f54302a7b23fae371883bc328ebb49df23f4c1b137086",
+    "tests/cli/test_roadmap_cmd.py": "00f006c0ee2f0b8e38d2478a233eed281afec0a843b2c54fd171b1563b8807d2",
+    "tests/test_roadmap.py": "44e3c598f1fe5bbb0b29c573ab0f75578a6931a9a36247c065fe0fdeb373f586",
+    "tests/test_roadmap_artifacts.py": "b294c139e0fd478295410c4b6f822a0706a443b050d6900ae60ddd2f56190312",
+    "tests/test_roadmap_candidate.py": "db14387fc6d5f710a54e8dcf06d5ba76e510cc8324ecfa95dda9bb065418797f",
+    "tests/test_roadmap_candidate_review.py": "e81026ea261e1732fc12effd251df4375c58a6d9c802252354d84f6be96318df",
+    "tests/test_roadmap_candidate_run.py": "761b007e4bd4518ad6afd1fdba0dec51e0270cd1d757f79ba80dc4dc70d6b730",
+    "tests/test_roadmap_format.py": "a382c8410679ee0004618bcbb5cfe2616c3029c01b7c5de5b2083e18dfc493ae",
+    "tests/test_roadmap_gates.py": "5cad614a4f0953e3315203709d7e7fbea0b81c215c8e6f9083b8e6af2207232b",
+    "tests/test_roadmap_index.py": "1510f605f757511864168ef9e86275fb1e7e749186583bd1b6d8559d79d3fce5",
+    "tests/test_roadmap_revision.py": "7490c59deaa459f1bd5137ceb7127ddb2c3245841297e1a75f78aa1cab509719",
+    "tests/test_roadmap_revision_patch.py": "f1721184ca1c11a0932832c8e5ecf20a8b2b55b814a742e870e1c0b9499806f4",
+    "tests/test_roadmap_seed_manifest.py": "ae00ee46e7d20b914652439cba10095b188a166866071b158030df9b6bb250e2"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/01-stack-collection-02-constraints-md.md": "af5d971255850fd8559e5dac46196a2be9eb946b9d889524917c3faef23e7f07",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/02-stack-gates-totality-over-three.md": "fd6f8eb2fc2f3d18e32473cc042d6299e921e4244b48eb90216ccd89a4cef441",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/03-make-stack-rows-feedback-targets.md": "bd4b5df20fd5a8d935f8b92d86bd9d9dfa9a8c2debb933ca97c399fec76e0148",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/04-teach-constraints-stage-prompt-author.md": "2bc4a2dcffc70412dec65a9900447e5a4c44073e302d58914c9803a2564225ea",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/05-show-full-stack-open-pending-concerns.md": "a7d96a6bee197a68de46a4d7c40b283c5b0fe8a7fca195693607acd2f297aae5",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/06-show-current-stack-stack-rows-candidate.md": "cc2a1e468c95a16d9419a5fc9ec57db535b009e81f2da1d57e3111e27d57dffc",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/07-render-stack-collection-materialized.md": "78587d34034e0b87c57932f67050b5d57791e393dd07a9f6add6334be667451f",
+    "docs/implementation-plans/plan-details/roadmap-stack-layer/08-document-stack-collection-its-gates-its.md": "b1d14aa859846fa0999883291afd5a8592a245ab76de51a435f97abf87e09c69"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Roadmap Stack Layer\n\n`roadmap-stack-layer` \u00b7 generated 2026-10-08T18:57:43Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `762b9ae6182244b735fe9090689dc785f4c67fa4c1be2a70658d6e2af132e516`\n- **Detail bundle digest:** `5ea2889c5df902bbb7b9522caccb1ea0e587ebe39aa87efb725627362fa02b6e`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 2\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 8 (+0 vs. first audit)\n- **Detail-bundle size:** 112307 bytes (+112307 vs. first audit)\n- **Keystone fan-out:** 0.29\n- **Satellite ratio:** 0.00\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps, addressed before the completeness gaps below. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body, then commit and re-audit the changed snapshot.\n\n- MEDIUM `[seed-renderer-prerequisite]` [confidence: limited]: Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer exists, but the plan never says what happens to steps 7 and 8 if that renderer has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". Step 8 (Document the stack collection) depends on every earlier step, including step 7. The Acceptance criteria's Verification line gates seed rendering with \"once #460's step 1 has landed\". A run reaching step 7 early could stall, skip the step, or ship steps 1\u20136 and 8 with the seed claim undocumented. The plan does not pick one, and the BACKLOG #461 rule (\"removed only after full shipment\") depends on the answer.\n  - Fix: State once in the Architecture \"Seed rendering\" paragraph, and mirror it in step 8's scope, whether execution halts before step 7 until #460 lands or steps 1\u20136 and 8 ship first, leaving #461 plan-authored with the seed-rendering follow-up recorded.\n\n## Conceptual completeness \u2014 reported, not auto-applied\n\nCoverage gaps in the plan's own ideas (orphaned concepts, uncovered risks, dangling criteria, missing edge cases). Each is a scoping judgment call, so the audit's iterate loop does **not** touch them \u2014 chasing every newly-surfaced gap would never converge. Read each finding below and close it through a session-directed edit, then commit and re-audit the changed snapshot. Each finding carries its `[anchor-slug]` so you can refer to one precisely.\n\n- MEDIUM `[seed-renderer-prerequisite]` [confidence: limited]: Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer lands, and the plan never says what the plan's end state is if it has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". It does not say whether steps 1\u20136 may ship alone, or what step 8 (Document the stack collection\u2026) and the `BACKLOG.md` #461 reconciliation do in that case. Step 8 documents seed rendering and removes the #461 entry only \"once the whole plan has shipped\", so a blocked step 7 leaves step 8 and the #461 removal with no defined path. Step 8's detail says \"stop and surface it\" when an earlier step is missing. That is a per-step stop, not a plan-level rule. The Acceptance criteria's \"a materialized draft seed renders the stack once #460's step 1 has landed\" is conditional, so it cannot fail while #460 is absent. Two readers could therefore ship steps 1\u20136 and 8 and call the plan complete, or hold everything until #460 lands.\n  - Fix: State once in the plan body whether steps 1\u20136 may ship before #460's step 1, and, if so, that step 8 documents seed rendering as pending and that #461 stays plan-authored with step 7 recorded as its remaining follow-up until step 7 ships.\n- MEDIUM `[stack-section-heading-collision]` [confidence: limited]: The shipped `## Stack` section in `plan_tool/roadmap.py` has `### Hosting` and `### Stores` sub-headings. The plan names the new collection \"stack\" and the new seed content \"the stack collection\", with no sub-heading or wording to tell it apart from the section it joins. Step 7 detail speaks of a \"stack lines\" block inside `## Stack` but does not name the sub-heading (for example `### Technology stack`) or the exact \"stack not recorded\" and `open` line wording. Two implementers could place it under different headings, and `roadmap-seed.md` would then describe it differently. This is wording drift only.\n  - Fix: Name the sub-heading and the line wording for chosen, `open`, and \"stack not recorded\" concerns once in step 7, and use it in the plan's Seed rendering paragraph and the draft-seed test.\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-4f735902]` [confidence: limited]: The plan's `## Acceptance criteria` names `index.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit roadmap-stack-layer` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Roadmap Stack Layer\n\n### Audit result\n\n- **Result:** `no-qualified-current-evidence`\n- **Coverage:** `unconfirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `762b9ae6182244b735fe9090689dc785f4c67fa4c1be2a70658d6e2af132e516`\n- **Detail bundle digest:** `5ea2889c5df902bbb7b9522caccb1ea0e587ebe39aa87efb725627362fa02b6e`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n> **Coverage unconfirmed:** this audit was budget-limited at 3 pass(es) (still discovering at the pass cap) \u2014 a clean/`converging` verdict here is not fully validated.\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- MEDIUM `[seed-renderer-prerequisite]` [confidence: limited]: Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer exists, but the plan never says what happens to steps 7 and 8 if that renderer has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". Step 8 (Document the stack collection) depends on every earlier step, including step 7. The Acceptance criteria's Verification line gates seed rendering with \"once #460's step 1 has landed\". A run reaching step 7 early could stall, skip the step, or ship steps 1\u20136 and 8 with the seed claim undocumented. The plan does not pick one, and the BACKLOG #461 rule (\"removed only after full shipment\") depends on the answer.\n\n### Conceptual completeness\n\n_Coverage gaps in the plan's own ideas that the detail bundle and code at HEAD don't already resolve: orphaned concepts, uncovered risks, dangling acceptance criteria, missing edge cases._\n\n- MEDIUM `[seed-renderer-prerequisite]` [confidence: limited]: Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer lands, and the plan never says what the plan's end state is if it has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". It does not say whether steps 1\u20136 may ship alone, or what step 8 (Document the stack collection\u2026) and the `BACKLOG.md` #461 reconciliation do in that case. Step 8 documents seed rendering and removes the #461 entry only \"once the whole plan has shipped\", so a blocked step 7 leaves step 8 and the #461 removal with no defined path. Step 8's detail says \"stop and surface it\" when an earlier step is missing. That is a per-step stop, not a plan-level rule. The Acceptance criteria's \"a materialized draft seed renders the stack once #460's step 1 has landed\" is conditional, so it cannot fail while #460 is absent. Two readers could therefore ship steps 1\u20136 and 8 and call the plan complete, or hold everything until #460 lands.\n- MEDIUM `[stack-section-heading-collision]` [confidence: limited]: The shipped `## Stack` section in `plan_tool/roadmap.py` has `### Hosting` and `### Stores` sub-headings. The plan names the new collection \"stack\" and the new seed content \"the stack collection\", with no sub-heading or wording to tell it apart from the section it joins. Step 7 detail speaks of a \"stack lines\" block inside `## Stack` but does not name the sub-heading (for example `### Technology stack`) or the exact \"stack not recorded\" and `open` line wording. Two implementers could place it under different headings, and `roadmap-seed.md` would then describe it differently. This is wording drift only.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `index.md`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit roadmap-stack-layer` \u2014 run a fresh audit before reusing or applying saved findings.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-62540025",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer exists, ",
+      "body": "Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer exists, but the plan never says what happens to steps 7 and 8 if that renderer has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". Step 8 (Document the stack collection) depends on every earlier step, including step 7. The Acceptance criteria's Verification line gates seed rendering with \"once #460's step 1 has landed\". A run reaching step 7 early could stall, skip the step, or ship steps 1\u20136 and 8 with the seed claim undocumented. The plan does not pick one, and the BACKLOG #461 rule (\"removed only after full shipment\") depends on the answer.",
+      "suggested_action": "State once in the Architecture \"Seed rendering\" paragraph, and mirror it in step 8's scope, whether execution halts before step 7 until #460 lands or steps 1\u20136 and 8 ship first, leaving #461 plan-authored with the seed-rendering follow-up recorded.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-renderer-prerequisite",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-62540025",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer lands, a",
+      "body": "Step 7 (Render the stack collection in materialized draft seeds) cannot start until #460's step 1 seed renderer lands, and the plan never says what the plan's end state is if it has not landed when steps 1\u20136 finish. The Architecture \"Seed rendering\" paragraph says \"until that renderer exists, step 7 has nothing to extend and is not started\". It does not say whether steps 1\u20136 may ship alone, or what step 8 (Document the stack collection\u2026) and the `BACKLOG.md` #461 reconciliation do in that case. Step 8 documents seed rendering and removes the #461 entry only \"once the whole plan has shipped\", so a blocked step 7 leaves step 8 and the #461 removal with no defined path. Step 8's detail says \"stop and surface it\" when an earlier step is missing. That is a per-step stop, not a plan-level rule. The Acceptance criteria's \"a materialized draft seed renders the stack once #460's step 1 has landed\" is conditional, so it cannot fail while #460 is absent. Two readers could therefore ship steps 1\u20136 and 8 and call the plan complete, or hold everything until #460 lands.",
+      "suggested_action": "State once in the plan body whether steps 1\u20136 may ship before #460's step 1, and, if so, that step 8 documents seed rendering as pending and that #461 stays plan-authored with step 7 recorded as its remaining follow-up until step 7 ships.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "seed-renderer-prerequisite",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    },
+    {
+      "id": "plan-plan-completeness-1f82157a",
+      "source": "plan-completeness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "The shipped `## Stack` section in `plan_tool/roadmap.py` has `### Hosting` and `### Stores` sub-headings. The plan names",
+      "body": "The shipped `## Stack` section in `plan_tool/roadmap.py` has `### Hosting` and `### Stores` sub-headings. The plan names the new collection \"stack\" and the new seed content \"the stack collection\", with no sub-heading or wording to tell it apart from the section it joins. Step 7 detail speaks of a \"stack lines\" block inside `## Stack` but does not name the sub-heading (for example `### Technology stack`) or the exact \"stack not recorded\" and `open` line wording. Two implementers could place it under different headings, and `roadmap-seed.md` would then describe it differently. This is wording drift only.",
+      "suggested_action": "Name the sub-heading and the line wording for chosen, `open`, and \"stack not recorded\" concerns once in step 7, and use it in the plan's Seed rendering paragraph and the draft-seed test.",
+      "impact": "low",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "stack-section-heading-collision",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": true,
+    "passes_used": 3,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 3,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "no-qualified-current-evidence",
+    "stage": "detail",
+    "coverage": "unconfirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "762b9ae6182244b735fe9090689dc785f4c67fa4c1be2a70658d6e2af132e516",
+      "detail_bundle_digest": "5ea2889c5df902bbb7b9522caccb1ea0e587ebe39aa87efb725627362fa02b6e",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/01-stack-collection-02-constraints-md.md",
+          "state": "present",
+          "digest": "af5d971255850fd8559e5dac46196a2be9eb946b9d889524917c3faef23e7f07"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/02-stack-gates-totality-over-three.md",
+          "state": "present",
+          "digest": "fd6f8eb2fc2f3d18e32473cc042d6299e921e4244b48eb90216ccd89a4cef441"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/03-make-stack-rows-feedback-targets.md",
+          "state": "present",
+          "digest": "bd4b5df20fd5a8d935f8b92d86bd9d9dfa9a8c2debb933ca97c399fec76e0148"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/04-teach-constraints-stage-prompt-author.md",
+          "state": "present",
+          "digest": "2bc4a2dcffc70412dec65a9900447e5a4c44073e302d58914c9803a2564225ea"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/05-show-full-stack-open-pending-concerns.md",
+          "state": "present",
+          "digest": "a7d96a6bee197a68de46a4d7c40b283c5b0fe8a7fca195693607acd2f297aae5"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/06-show-current-stack-stack-rows-candidate.md",
+          "state": "present",
+          "digest": "cc2a1e468c95a16d9419a5fc9ec57db535b009e81f2da1d57e3111e27d57dffc"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/07-render-stack-collection-materialized.md",
+          "state": "present",
+          "digest": "78587d34034e0b87c57932f67050b5d57791e393dd07a9f6add6334be667451f"
+        },
+        {
+          "step_id": 8,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/roadmap-stack-layer/08-document-stack-collection-its-gates-its.md",
+          "state": "present",
+          "digest": "b1d14aa859846fa0999883291afd5a8592a245ab76de51a435f97abf87e09c69"
+        }
+      ],
+      "source_seed_digest": "d6cd854ce17a4b7dac297f5747b7d64b324c63e5e11f2f9d6a2cd1a153704c39",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 8,
+    "detail_bundle_bytes": 112307,
+    "keystone_fan_out": 0.2857142857142857,
+    "satellite_ratio": 0.0,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
