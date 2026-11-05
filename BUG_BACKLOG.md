@@ -679,6 +679,26 @@ Durable re-open conditions for retired items are recorded in
   are also near-identical and could share one scoped helper; that consolidation needs AST-verified
   identity before anyone merges them.
 
+### Run IDs can collide within one second because their random suffix has only 24 bits
+
+- **Files:** `plan_tool/run_log.py:new_run_id`,
+  `tests/test_run_log.py:test_new_run_id_is_unique_per_call`.
+- **Symptom / evidence:** a full parallel suite on 2026-11-04, worker `gw8`,
+  produces only 99 distinct IDs from 100 calls. IDs share the seconds-precision
+  prefix; `secrets.token_hex(3)` supplies just six hex characters. Both the
+  generator and test are unchanged by the feature-field diagnostic branch.
+- **Fix:** increase collision resistance while preserving filename safety and
+  existing run-log readers. Replace a probabilistic-only regression check with
+  deterministic coverage of the selected generation contract; do not suppress
+  the observed collision by weakening the uniqueness assertion alone.
+- **Approach:** direct; select the narrow generation remedy and verify its
+  consumers and filename contract before implementation.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** post-Claude feature-field diagnostic validation,
+  `/private/tmp/feature-field-diagnostics.claude-final-tests.log`: 1 failed,
+  14,725 passed, 67 skipped in 70.48 seconds. The trace records
+  `assert 99 == 100` at `tests/test_run_log.py:161`.
+
 ## MINOR
 
 ### `_append_added_row_prose` copies its artifacts mapping even though both call sites hand it an already-fresh, about-to-be-reassigned dict

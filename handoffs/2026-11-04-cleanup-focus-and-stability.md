@@ -160,3 +160,47 @@ the resolved bug entry is removed.
 
 Branch: `fix/feature-field-diagnostics`. Transient validation and review logs
 use `/private/tmp/feature-field-diagnostics.*`.
+
+### Claude Code review follow-through
+
+Both reviews use the personal Claude Code configuration, model
+`claude-sonnet-5-5`, high effort, report-only local-diff form, and explicitly
+invoke the `engineering:code-review` skill. The prior Codex review is additional
+evidence; it does not stand in for these Claude skill reviews.
+
+| Round | Reviewed range | Finding and disposition |
+| --- | --- | --- |
+| 1 | `949ce72e3..d3f577558` | No correctness defects; one low optional test gap at the feature error assertion: a trailing placement hint can escape its prefix/key checks. Fixed at `d11e350c0` with an end-of-message assertion. |
+| 2 | `949ce72e3..d11e350c0` | Approve, no actionable findings. Confirms the low finding is closed and no new issues appear. |
+
+The finding's class is an unasserted diagnostic suffix. Identifier and
+vocabulary searches cover the feature diagnostic return, its sole regression
+test, allowed keys, and placement hints. The suffix assertion applies to all
+four parametrized fields. Temporarily appending placement advice to the feature
+message makes all four cases fail at the new assertion. The source is restored
+immediately; all 473 parser tests then pass. No runtime change follows the
+Claude reviews.
+
+Coverage limits remain explicit: round 1 uses static review and ad-hoc probes,
+without pytest or mutation runs; round 2 runs the four focused cases but relies
+on the session's parser/full-suite and mutation evidence. Other nested-model
+diagnostics and currently unreachable deeper feature locations remain outside
+this fix. Round 2 notes a hypothetical suffix ending in `)` as non-actionable;
+no additional hardening follows. Cosmetic docstring wording is declined as
+non-actionable. Transient review captures are
+`/private/tmp/feature-field-diagnostics.claude-review-1.log` and
+`/private/tmp/feature-field-diagnostics.claude-review-2.log`.
+
+Post-review full validation first reports 1 failed, 14,725 passed, 67 skipped in
+70.48 seconds: `test_new_run_id_is_unique_per_call` on worker `gw8` produces 99
+IDs from 100 calls. `new_run_id` and its tests are unchanged by this branch;
+the seconds prefix plus `secrets.token_hex(3)` admits random collisions. The
+observed bug is filed separately in `BUG_BACKLOG.md` under RISK. No run-ID
+implementation or test change accompanies the feature diagnostic fix.
+
+The isolated run-ID test plus all parser tests pass (474 tests). The standalone
+full-suite rerun passes: 14,726 passed, 67 skipped in 62.89 seconds. This is the
+final regression evidence after the review correction; it does not establish
+that the separately tracked run-ID collision is fixed. The failed run and its
+scope disposition remain above. No runtime source change follows the clean
+Claude confirmation review.
