@@ -15,6 +15,8 @@ These records support decisions; they do not replace the operating contracts.
 
 ## Generic integration references
 
+**Naming.** "Integration" in this repository names an external application that consumes `plan-tool`. Paths and commits cited for it, such as `<integration-consumer-root>`, belong to that application's own repository and are not in this one. Entries that mention it are kept as dated provenance.
+
 Integration examples use generic project, client and service names, fixture
 names and source paths. Assessment, labor-data and advice services remain
 distinct examples; generic application namespaces replace client identifiers.

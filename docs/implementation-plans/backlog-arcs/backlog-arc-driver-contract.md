@@ -59,8 +59,7 @@ push automatically; push only when the user explicitly requests it.
 
 The arc is done when each item is shipped, closed as already handled, or closed
 by its recorded decision. A new driver-facing gap is filed against this arc
-rather than opening another. Integration's findings ledger
-(`backlog-arc-integration-mvp.md`) points here for these items and owns none of them.
+rather than opening another.
 
 ## Out of scope
 

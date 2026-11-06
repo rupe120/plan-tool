@@ -10,7 +10,7 @@ Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
 then clone the selected source:
 
 ```bash
-git clone git@bitbucket.org:protagona/plan-tool.git
+git clone https://github.com/rupe120/plan-tool.git
 cd plan-tool
 uv tool install --editable .
 plan-tool --version

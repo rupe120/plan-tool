@@ -48,10 +48,10 @@ completed, archived scope — never to a separate "vetting" arc: continuous
 real usage has no terminal exit condition, so tracking it as its own arc
 would never converge. This section is a pointer, not a new backlog owner.
 
-The **Integration MVP delivery** itself — which does have an exit — is routed by
-[the Integration MVP arc](backlog-arc-integration-mvp.md): the standing assessment
-of the Integration roadmap, the milestone commands, and a findings ledger whose
-entries point back here or to the bug files. That arc does not own tool work.
+Delivery of an external application built on the `roadmap` verb is tracked in
+that application's own repository; a `plan-tool` finding it surfaces is filed
+here or in the bug files like any other. (The runbook that once routed it was
+removed 2026-11-05.)
 
 On 2026-08-31, Integration's `project-workspace-membership-proof` run supplied a
 separate, direct operator-workflow finding: the long-running `roadmap` command

@@ -73,7 +73,7 @@ else (file it per #378's own rule instead). Do not choose this arc for
 `roadmap`-verb capability or evidence work (`backlog-arc-roadmap.md`'s
 territory, even though #383/#384 are exactly the kind of content the shipped
 `DIRECTIVES.md` roadmap relocation — formerly #370's step 1 — now carries) or
-for a Integration-specific delivery decision (`backlog-arc-integration-mvp.md`'s).
+for a delivery decision specific to an external consuming application.
 
 ## Delivery cadence
 
