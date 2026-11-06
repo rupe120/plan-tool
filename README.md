@@ -1,22 +1,15 @@
-# plan-tool
+# plan-tool - audited plans your coding assistant can carry out
 
-**plan-tool helps you plan, carry out, and verify substantial work with a coding
-assistant.** It keeps the agreed intent, implementation steps, audit findings,
-and progress in your repository so the work is easier to review, resume, and
-hand off.
+plan-tool turns a rough idea into an implementation plan, audits it before any
+code is written, then runs it step by step with Claude Code, Codex or Cursor.
+The plan, its audits and its progress live in your repository, so the work can
+be reviewed, resumed and handed off.
 
 [![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue)](https://github.com/rupe120/plan-tool/releases/latest)
 [![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green)](LICENSE)
 
-Use the **plan-tool skill** to guide your assistant through the workflow:
-ground the plan in your codebase, surface missing decisions before
-implementation, execute reviewed steps or export Jira stories, and check the
-resulting code against the plan.
-
-It is most useful when work spans dependent changes, multiple sessions, or team
-handoffs. Small, straightforward edits can skip plan-tool.
-
-The mission and the grounding principles the codebase is built to obey live in [`MISSION.md`](MISSION.md). New here, or unsure whether your work is a good fit? [`docs/how-to/use-cases.md`](docs/how-to/use-cases.md) is the situation-first guide — when to use the tool and which path to take.
+It suits work that spans dependent changes, several sessions or a handoff;
+small edits can skip it.
 
 ## Start here
 
@@ -28,6 +21,7 @@ guides when you want to operate individual stages yourself.
 | Use plan-tool with my coding assistant | [Use with your assistant](#use-with-your-assistant) | [Install the CLI and skill](#install), then ask for [your first plan](#your-first-plan). |
 | Explore or present a demo | [Demonstrations](docs/demos/README.md) | Choose an example and check its preparation status. |
 | Choose a planning starting point | [Use cases](docs/how-to/use-cases.md) | Describe your idea, existing draft or project concept to the assistant. |
+| Understand the design principles | [Mission](MISSION.md) | The rules the codebase is built to obey. |
 | Run, recover, or operate a plan | [How-to guides](docs/how-to/README.md) | Use the [Runbook](RUNBOOK.md) for a failed or surprising result. |
 | Look up a command, format, or exact rule | [Reference](docs/reference/README.md) | Use the generated [CLI reference](docs/cli/README.md) for every option. |
 | Develop plan-tool itself | [New contributor path](CONTRIBUTING.md#new-contributor-path) | Read the [architecture reference](docs/ARCHITECTURE.md) when the change needs it. |
