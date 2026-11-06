@@ -8,8 +8,8 @@ be reviewed, resumed and handed off.
 [![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue)](https://github.com/rupe120/plan-tool/releases/latest)
 [![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green)](LICENSE)
 
-It suits work that spans dependent changes, several sessions or a handoff;
-small edits can skip it.
+Use it when the work has dependent changes, spans several sessions, or will be
+handed off. For a small edit, skip it and just make the change.
 
 ## Start here
 
