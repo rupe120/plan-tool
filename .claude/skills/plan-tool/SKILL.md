@@ -100,6 +100,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 
 | User says | Run |
 |---|---|
+| "set up plan-tool in this repo" / the first plan in a repo with no `.plan-tool/project.json` | Offer project setup; it is optional and never blocks `create`. If accepted, ask for the intent, non-goals and decisions, read back the exact text, then run `plan-tool init` — see DIRECTIVES.md's "Setting up a repository" |
 | "work on plan X" / "continue X" | `plan-tool status X`, then `plan-tool run X` |
 | "show me what's in progress" | `plan-tool list` |
 | "what's left on X?" | `plan-tool status X` |
@@ -144,7 +145,7 @@ directives for judged corrections, user review and continuation.
 |---|---|---|
 | **Roadmap** (project-altitude, above the pipeline) | `roadmap <slug> --from-existing <concept.md>` [`--apply` [`-y`]] [`--view ...`] [`--compare`] — see DIRECTIVES.md | Yes (`--apply`, `--view`, `--compare`: no) |
 | **Discovery** | `list`, `list --status` (cached annotate rollup), `status <name>`, `validate <name>` | No |
-| **Project context** | `init --intent "…" [--non-goal "…"] [--decision "…"]` — create the tracked, operator-confirmed `.plan-tool/project.json` profile before scope-bearing authoring and audit prompts. Revise it by editing the file and committing the change. | No |
+| **Project context** | `init --intent '…' [--non-goal '…'] [--decision '…']` — create the tracked, operator-confirmed `.plan-tool/project.json` profile before scope-bearing authoring and audit prompts. Revise it by editing the file and committing the change. | No |
 | **Authoring** | `create <slug>`, `detail <name>`, `split <name> --step N --into "..." --into "..."` (split one step into named sub-steps, author them, re-audit), `merge <name> --steps N --steps M` (fold a contiguous set of steps into one, re-author it, re-audit), `scope-out <name> --step N` (carve an over-packed step out into a `create --from-existing` forward-seed and narrow the plan; recommend-only, `--apply` to mutate) | Yes |
 | **Annotate** (forward seed) | `annotate <path-or-glob>...` — judge old plans against current code, emit `<stem>.annotated.md` (verbatim + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED/NEEDS-REVIEW plus grounding) and a carryover `<stem>.seed.md` for the next `create --from-existing`; batch runs end with a coverage/grounding summary table; read-only on sources except opt-in `--archive` (numbered on archive collisions). `--iterate` is rejected; iterate the follow-up `create`, not annotate. | Yes |
 | **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip claude on no drift) | Yes (walk/refresh-no-drift: no) |

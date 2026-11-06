@@ -1,10 +1,12 @@
 """plan-tool command-line entry point.
 
+New here? Run plan-tool with no arguments for the core path.
+
 Subcommands are organized by **intent** — what user problem each one
 solves. New subcommands add a per-intent command module exposing
 register(subparsers) and append it to COMMAND_MODULES in
-plan_tool/cli/app.py; keep this catalog and the SKILL.md "Subcommands
-at a glance" section in sync.
+plan_tool/cli/app.py; keep this catalog, START_HERE in app.py, and the
+SKILL.md "Subcommands at a glance" section in sync.
 
 Discovery & inspection — read plan state; never call claude.
   plan-tool list                           Enumerate plan-tool-compatible plans.
@@ -12,7 +14,7 @@ Discovery & inspection — read plan state; never call claude.
   plan-tool validate <name>                Schema-check a plan's frontmatter.
 
 Project setup — capture repo-owned metadata; never infer it or call claude.
-  plan-tool init --intent "..." [--non-goal "..."] [--decision "..."]  Initialize a tracked project profile once; requires operator-supplied content and refuses to overwrite it.
+  plan-tool init --intent '...' [--non-goal '...'] [--decision '...']  Initialize a tracked project profile once; requires operator-supplied content and refuses to overwrite it.
 
 Roadmap — turn a concept brief into staged architecture artifacts, one rung above `create`.
   plan-tool roadmap <slug> [--from-existing <concept.md>] Non-interactively stage a concept brief into the four gated architecture artifacts (domain, constraints, components, roadmap), plus draft seeds, and publish them as one immutable version under docs/implementation-plans/roadmaps/<slug>/; the accepted head is written last. A failed run holds its gate-clean stages and the next run with the same brief resumes from them; a changed brief is refused with its remedy, and a roadmap that already has an accepted head refuses a stage run. Deterministic gates retry each stage's claude call before writing; exits non-zero only when a stage exhausts its retry budget.

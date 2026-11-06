@@ -105,6 +105,7 @@ see DIRECTIVES.md's "When a `run` step's own tests fail".
 
 | User says | Run |
 |---|---|
+| "set up plan-tool in this repo" / the first plan in a repo with no `.plan-tool/project.json` | Offer project setup; it is optional and never blocks `create`. If accepted, ask for the intent, non-goals and decisions, read back the exact text, then run `plan-tool init` — see DIRECTIVES.md's "Setting up a repository" |
 | "work on plan X" / "continue X" | `plan-tool status X`, then `plan-tool run X` |
 | "show me what's in progress" | `plan-tool list` |
 | "what's left on X?" | `plan-tool status X` |
@@ -159,7 +160,7 @@ directives for judged corrections, user review and continuation.
 | **Integration** | `jira <name>`, `jira config`, `jira --lint` (read-only artifact lint; no agent / no epic assignment) | jira yes (`--lint`: no) |
 | **State** | `checkpoint {list\|show\|clear}`, `runs {list\|show\|diff\|clear}`, `register`, `deregister`, `sweep`, `withdraw <name> --reason "..."` (archive an *abandoned* plan — reason required, distinct from `sweep`'s completion path), `attach-branch <plan> <branch>`, `detach-branch <plan>` (ad-hoc branch binding; pure git-config writes; refuse unless branch-awareness is enabled) | No |
 | **Setup** | `install-skill [--user\|--copy\|--root .claude\|.agents]` — install this bundled skill so an agent can drive plan-tool (opt-in; the CLI is standalone) | No |
-| **Project setup** | `init --intent "…" [--non-goal "…"] [--decision "…"]` (writes one tracked, operator-confirmed project profile; decisions are one uncategorized list; no inference or backend call) | No |
+| **Project setup** | `init --intent '…' [--non-goal '…'] [--decision '…']` (writes one tracked, operator-confirmed project profile; decisions are one uncategorized list; no inference or backend call) | No |
 
 The three audit verbs answer different questions: `validate` = schema only
 (no agent); `completeness-audit` = deterministic authoring gaps (sections/detail/
