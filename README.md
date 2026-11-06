@@ -5,8 +5,8 @@ code is written, then runs it step by step with Claude Code, Codex or Cursor.
 The plan, its audits and its progress live in your repository, so the work can
 be reviewed, resumed and handed off.
 
-[![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue)](https://github.com/rupe120/plan-tool/releases/latest)
-[![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green)](LICENSE)
+[![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue&style=flat)](https://github.com/rupe120/plan-tool/releases/latest)
+[![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green&style=flat)](LICENSE)
 
 Use it when the work has dependent changes, spans several sessions, or will be
 handed off. For a small edit, skip it and just make the change.
