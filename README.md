@@ -461,12 +461,19 @@ plan-tool is one take; it is not the only reasonable one.
   ([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows), MIT-0)
   that steers your coding assistant through structured phases with human approval
   gates. It is a good alternative, and the two projects can learn from each other.
-  - **How it compares:** both work through your coding assistant. plan-tool adds
-    a CLI underneath its skill that keeps plans as machine-readable frontmatter
-    and runs audits on them; AI-DLC delivers its workflow as steering rules.
+  - **How it compares:** both work through your coding assistant and back their
+    prompts with deterministic code. AI-DLC pairs steering rules with an engine
+    and hooks that enforce stage order and plan approval, and it covers the
+    lifecycle through operation. plan-tool focuses on the plan: machine-readable
+    frontmatter, audits iterated to convergence before anything runs, and
+    reconciliation between plan and code in both directions.
   - **They compose:** an orchestration layer can drive both
     ([details](docs/integrations/aidlc-integration.md)).
-  - No feature-by-feature comparison has been done.
+  - Compared from each project's documentation on 2026-11-06, not line by line.
+- **Other spec-driven tools.** GitHub's
+  [Spec Kit](https://github.com/github/spec-kit) and
+  [OpenSpec](https://github.com/Fission-AI/OpenSpec) take lighter-weight
+  approaches to the same problem and support many more assistants.
 - **An example governance policy.** The
   [AI-assisted development policy](docs/reference/ai-assisted-development-policy.md)
   (also available as [`AI_SDLC_POLICY.pdf`](AI_SDLC_POLICY.pdf)) shows what a team
