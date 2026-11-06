@@ -91,6 +91,15 @@ label.
    the remote target. Existing matching tags, including lightweight tags, are
    preserved as they are. Preparation never publishes a tag.
 
+   For a GitHub destination (a `github.com` push URL), publication then
+   creates the tag's GitHub release with `gh`, titled `vX.Y.Z`, with that
+   version's `CHANGELOG.md` section as its notes. An existing release is left
+   as it is. If the tag is pushed but the release step fails (for example, `gh`
+   is missing or not signed in to the repository's owner), the tag stays
+   published and re-running `--publish` creates only the missing release; the
+   error also names the manual `gh release create` command. Other destinations
+   get no release step.
+
    Publication requires a clean `main` matching the destination's remote main,
    matching package/lock/changelog versions, and no pending fragments. Existing
    tags at another commit are refused; matching published tags are an idempotent
