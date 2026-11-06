@@ -162,8 +162,7 @@ Two citations in `docs/implementation-plans/2-roadmap-source-baseline-recovery.m
 which no longer exists. The plan is deferred and its saved reports pin its text,
 so the citations stay. Use the retained summary in
 [the roadmap arc](../docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md) (the #242
-"Paused" entry). Three frozen archive files (`docs/implementation-plans/archive/2-authored-artifact-format-version.md` and its step-7 detail) and the id-guard ledger cite the old `handoffs/` path of the authored-artifact record, now [the authored-artifact evidence](../docs/evidence/authored-artifact-structure-versioning.md); use that retained replacement while frozen citations stay as written. Citations of `handoffs/2026-09-08-aidlc-authoring-route.md` in
-`backlog-arc-integration-mvp.md` name Integration's own handoff, not a file in this repository. Use Integration's owning repository when continuing that work. The [selection record](../docs/evidence/public-release-content-snapshot.md) summarizes the decisions relevant to this repository.
+"Paused" entry). Three frozen archive files (`docs/implementation-plans/archive/2-authored-artifact-format-version.md` and its step-7 detail) and the id-guard ledger cite the old `handoffs/` path of the authored-artifact record, now [the authored-artifact evidence](../docs/evidence/authored-artifact-structure-versioning.md); use that retained replacement while frozen citations stay as written. Citations of `handoffs/2026-09-08-aidlc-authoring-route.md` name an external application's own handoff, not a file in this repository. The [selection record](../docs/evidence/public-release-content-snapshot.md) summarizes the decisions relevant to this repository.
 
 ## 2026-09-08 consolidation record
 

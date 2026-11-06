@@ -2008,3 +2008,21 @@ not include them.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** `/code-review high` of `fix/accept-seed-write-order`, 2026-10-10.
+
+### The test-authoring gate passes when the step's new tests could not run
+
+- **Severity:** RISK
+- **Files:** `plan_tool/launcher.py` (the test-authoring gate); owning symbol not yet located.
+- **Symptom:** a step reports green while its own report says some of its new tests did not execute. Seen once with 16 tests skipped because the executor's sandbox had no browser. Not reproduced here.
+- **Fix:** decide first whether "authored but not executed" is a gate failure or a visible warning on the step result. The gate's one checked claim stays "a test file was created or modified", so this must not become a judgment about test quality.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** an external consuming application's plan runs, 2026-10-13; carried here when its runbook was removed, 2026-11-05.
+
+### `--debug` is rejected after the subcommand
+
+- **Severity:** MINOR
+- **Files:** `plan_tool/cli/parser.py` (`--debug` is a top-level flag).
+- **Symptom:** `plan-tool run <plan> --debug` fails with an argparse "unrecognized arguments" error; the flag works only before the subcommand (`plan-tool --debug run <plan>`).
+- **Fix:** accept the flag after the subcommand too, or print a one-line hint naming the correct position in the error.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** an external consuming application's plan runs, 2026-10-13; carried here when its runbook was removed, 2026-11-05.

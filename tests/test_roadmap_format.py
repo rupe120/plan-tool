@@ -91,7 +91,6 @@ _DOC = Path(__file__).resolve().parents[1] / "ROADMAP_FORMAT.md"
 _REPO_ROOT = _DOC.parent
 _BACKLOG = _REPO_ROOT / "BACKLOG.md"
 _ROADMAP_ARC = _REPO_ROOT / "docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md"
-_INTEGRATION_MVP_ARC = _REPO_ROOT / "docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md"
 _CLAUDE_DOC = _REPO_ROOT / "CLAUDE.md"
 _ROADMAP_COMPARISON_GUIDES = {
     "ROADMAP_FORMAT.md": _DOC,
@@ -598,12 +597,10 @@ def test_candidate_policy_retirement_reconciles_backlog_and_arcs() -> None:
     """Keep the delivered candidate policy out of active backlog ownership."""
     backlog = _BACKLOG.read_text(encoding="utf-8")
     roadmap_arc = _ROADMAP_ARC.read_text(encoding="utf-8")
-    integration_arc = _INTEGRATION_MVP_ARC.read_text(encoding="utf-8")
 
     assert "#354" not in backlog
-    for arc in (roadmap_arc, integration_arc):
-        assert "#354" not in arc
-        assert "until it ships" not in arc.lower()
+    assert "#354" not in roadmap_arc
+    assert "until it ships" not in roadmap_arc.lower()
 
 
 def test_version_authority_reference_lists_exactly_the_deferred_direct_readers() -> None:

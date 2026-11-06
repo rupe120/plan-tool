@@ -63,10 +63,9 @@ How to use it:
   lead does not promote its items to Jira. They are the items
   [`backlog-arc-roadmap.md`](docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md)
   routes (listed under § "Execution-routing arcs"), plus any entry whose
-  **Arc assignment** names `backlog-arc-roadmap`. Integration's runbook,
-  `backlog-arc-integration-mvp.md`, routes no items of its own: a plan-tool finding
-  Integration surfaces is an ordinary entry, and the lead can promote it unless it is
-  roadmap-owned. See [`docs/TRACKING.md`](docs/TRACKING.md#roadmap-boundary).
+  **Arc assignment** names `backlog-arc-roadmap`. A plan-tool finding that an
+  external consuming application surfaces is an ordinary entry, and the lead can
+  promote it unless it is roadmap-owned. See [`docs/TRACKING.md`](docs/TRACKING.md#roadmap-boundary).
 - **Add new candidates** as they surface. A useful entry has at
   minimum: a one-line description, an effort estimate, the main
   risks or test-fallout you'd hit, any blocking dependencies on
@@ -170,21 +169,11 @@ names the experience the work needs.
 - [`backlog-arc-tier-t4.md`](docs/implementation-plans/backlog-arcs/backlog-arc-tier-t4.md) — P3, grounding/workflow refinements + blocked.
 - [`backlog-arc-tier-t5.md`](docs/implementation-plans/backlog-arcs/backlog-arc-tier-t5.md) — export leg / UX / hygiene / cosmetic, the lowest band.
 
-**Project runbooks** — not a priority router at all; a live operational
-playbook for driving one specific external project through `plan-tool`. Do
-not read these looking for "what's next in the backlog" — they route to the
-feature arcs and `BUG_BACKLOG.md`/`BACKLOG.md` for any tool-side finding
-instead of owning tool work themselves:
-
-- [`backlog-arc-integration-mvp.md`](docs/implementation-plans/backlog-arcs/backlog-arc-integration-mvp.md)
-  — driving the Integration MVP through the roadmap → seeds → plan → run pipeline on
-  the first real project that exercises the `roadmap` verb; the standing
-  assessment of the Integration roadmap, the milestone commands, and the ledger of
-  tool findings Integration surfaces (each routed to its owning file, never fixed
-  in the arc). **The sequence it serves is Integration's**, in that repository's
-  `handoffs/README.md` order of operations (settled 2026-09-09); this file
-  supplies the operating detail each of its steps needs and carries no
-  competing route.
+**Project runbooks** — *(none)*. A project runbook would be a live operational
+playbook for driving one specific external project through `plan-tool`, not a
+priority router. The only one, for an external consuming application, was
+removed on 2026-11-05 when the repository went public; that application's
+findings are filed as ordinary entries in the owning backlog file.
 
 **Archived** — complete, historical, kept only to confirm what shipped and
 stop re-litigation. Never a routing target:
@@ -5024,9 +5013,9 @@ separate)**
     § "Stop / defer during create, detail, completeness, and implementation"
     including 3a, and "a finding that only lives in chat or `.tmp/` hasn't
     been filed"); `CLAUDE.md` § "Authoring hygiene and anti-creep" (file a
-    consolidation opportunity; migrate a findings stub); and
-    `backlog-arc-integration-mvp.md` (a `plan-tool` defect found while driving
-    another project goes to the file that owns its subsystem, when observed).
+    consolidation opportunity; migrate a findings stub). A `plan-tool` defect
+    found while driving another project goes to the file that owns its
+    subsystem, when observed.
   - **Measured.** All 9 distinct `[out-of-scope-deferred]` findings in this
     repo's saved reports (6 plans, 2026-08-03 to 2026-08-27) reached an entry,
     a seed, or an existing record — for example the `depends_on_notes`
