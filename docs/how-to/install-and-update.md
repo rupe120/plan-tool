@@ -26,7 +26,7 @@ A symlinked skill points into uv's tool environment. It survives
 
 ## Install from source
 
-Use a clone when you are changing plan-tool itself.
+Use a clone when you are developing plan-tool.
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
 then clone the selected source:

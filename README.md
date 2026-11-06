@@ -57,7 +57,7 @@ uv tool upgrade plan-tool                                  # later, to update
 Run `plan-tool` with no arguments to see the core path, and
 `plan-tool --help` for every subcommand.
 
-To change plan-tool itself, install from a clone instead
+To develop plan-tool, install from a clone instead
 (`uv tool install --editable .`); see [Contributing](CONTRIBUTING.md). See
 [Install and update](docs/how-to/install-and-update.md) for pinning a release
 tag, the clone install and the complete update procedure.
