@@ -15,8 +15,8 @@ deferred and does not block that work.
 | Version | 1.0.0 in package metadata and lockfile; changelog entry present; PR #130 merged |
 | GitHub mirror main | `03cbb6882696edd5114b3d739517a56919400025` — sanitized v0.2.0 release; behind Bitbucket |
 | Release tags | `v0.2.0` exists on both hosts; `v1.0.0` is not present in the checked refs |
-| CLI/sync clone | `/Users/joshrusso/bitbucket/protagona/plan-tool`, clean on Bitbucket main `d90b84ef2`; global `plan-tool --version` reports 1.0.0 |
-| Working clone | `/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2`; current handoff branch `docs/release-handoff-current`, based on merged Bitbucket main |
+| CLI/sync clone | `<sync-clone>`, clean on Bitbucket main `d90b84ef2`; global `plan-tool --version` reports 1.0.0 |
+| Working clone | `<working-clone>`; current handoff branch `docs/release-handoff-current`, based on merged Bitbucket main |
 | Bitbucket protection | Restored according to the owner; independent branch-restriction reads return 403 for missing token scopes |
 | Demo branches | All four names on both hosts point to the shared needs-updating notice; content refresh remains deferred |
 
@@ -68,7 +68,7 @@ remain outside the current release route.
 ## Recovery and local conventions
 
 - Private recovery directory:
-  `/Users/joshrusso/.local/share/plan-tool/release-backups/2026-10-21-pr129`.
+  `<release-backup-dir>/2026-10-21-pr129`.
   It contains verified host and local-ref bundles, the published candidate,
   exact operation plan, successful results and previous installed skill copies.
 - `archive/pre-sanitization-main-20261021` branches and other former-history
