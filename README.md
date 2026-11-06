@@ -5,6 +5,9 @@ assistant.** It keeps the agreed intent, implementation steps, audit findings,
 and progress in your repository so the work is easier to review, resume, and
 hand off.
 
+[![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue)](https://github.com/rupe120/plan-tool/releases/latest)
+[![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green)](LICENSE)
+
 Use the **plan-tool skill** to guide your assistant through the workflow:
 ground the plan in your codebase, surface missing decisions before
 implementation, execute reviewed steps or export Jira stories, and check the
