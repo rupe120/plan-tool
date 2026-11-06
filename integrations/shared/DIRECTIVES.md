@@ -101,8 +101,10 @@ up through conversation:
    wait for the user to confirm it. Pass only confirmed values.
 4. **Run it.** `plan-tool init --intent '…' [--non-goal '…']… [--decision '…']…`.
    Pass each value in single quotes, writing a single quote inside it as
-   `'\''`, so the shell cannot expand `$`, backticks or `!` in it. Then read
-   `.plan-tool/project.json` back and check it against the confirmed text.
+   `'\''`, so the shell cannot expand `$`, backticks or `!` in it. Then parse
+   `.plan-tool/project.json` as JSON and check each value against the confirmed
+   text; `init` collapses each run of whitespace to one space, so compare after
+   doing the same.
    `init` refuses an existing profile (revise that file and commit the change
    instead) and a gitignored one.
 5. **Commit it.** The profile is meant to be committed; commit it under the

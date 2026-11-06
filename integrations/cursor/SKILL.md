@@ -160,7 +160,7 @@ directives for judged corrections, user review and continuation.
 | **Integration** | `jira <name>`, `jira config`, `jira --lint` (read-only artifact lint; no agent / no epic assignment) | jira yes (`--lint`: no) |
 | **State** | `checkpoint {list\|show\|clear}`, `runs {list\|show\|diff\|clear}`, `register`, `deregister`, `sweep`, `withdraw <name> --reason "..."` (archive an *abandoned* plan — reason required, distinct from `sweep`'s completion path), `attach-branch <plan> <branch>`, `detach-branch <plan>` (ad-hoc branch binding; pure git-config writes; refuse unless branch-awareness is enabled) | No |
 | **Setup** | `install-skill [--user\|--copy\|--root .claude\|.agents]` — install this bundled skill so an agent can drive plan-tool (opt-in; the CLI is standalone) | No |
-| **Project setup** | `init --intent "…" [--non-goal "…"] [--decision "…"]` (writes one tracked, operator-confirmed project profile; decisions are one uncategorized list; no inference or backend call) | No |
+| **Project setup** | `init --intent '…' [--non-goal '…'] [--decision '…']` (writes one tracked, operator-confirmed project profile; decisions are one uncategorized list; no inference or backend call) | No |
 
 The three audit verbs answer different questions: `validate` = schema only
 (no agent); `completeness-audit` = deterministic authoring gaps (sections/detail/

@@ -567,13 +567,13 @@ Most people drive it through the installed assistant skill. The core path,
 in order:
 
 Start here:
-  plan-tool install-skill --integration claude --user     Install the skill once per machine.
-  plan-tool create <slug> --from-existing <seed.md>       Write a plan from a seed file.
-  plan-tool completeness-audit <name> --iterate --commit  Audit the plan before detail.
-  plan-tool detail <name> --commit                        Write each step's detail file.
-  plan-tool completeness-audit <name> --iterate --commit  Audit again, now detail-grounded.
-  plan-tool run <name> --all --commit                     Run every remaining step.
-  plan-tool reconcile-code <name> --all                   Check the code against the plan.
+  plan-tool install-skill --integration claude --user     Once per machine.
+  plan-tool create <slug> --from-existing <seed.md>       Plan from a seed.
+  plan-tool completeness-audit <name> --iterate --commit  Audit before detail.
+  plan-tool detail <name> --commit                        Write step details.
+  plan-tool completeness-audit <name> --iterate --commit  Audit after detail.
+  plan-tool run <name> --all --commit                     Run every step.
+  plan-tool reconcile-code <name> --all                   Check code vs plan.
 
 For Codex or Cursor, install with --integration codex or --integration cursor.
 To set up a repository, ask your assistant: it asks for the project's intent,
@@ -590,10 +590,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     if argv is None:
         argv = sys.argv[1:]
     if not argv:
-        # Exit 0 only for a person at a terminal; a script whose subcommand
-        # variable expanded to nothing keeps the old non-zero exit.
-        print(START_HERE, end="")
-        return 0 if sys.stdout.isatty() else 2
+        # A missing subcommand stays a usage error (stderr, exit 2) so a script
+        # whose subcommand expanded to nothing still fails; only the text is new.
+        print(START_HERE, end="", file=sys.stderr)
+        return 2
     parser, dispatch = assemble(cli.__doc__, COMMAND_MODULES)
     args = parser.parse_args(argv)
     rate_limit_policy = _resolve_on_rate_limit_policy(args, parser)

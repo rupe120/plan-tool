@@ -94,7 +94,7 @@ same brief content. See
 
 | Run | …to |
 | --- | --- |
-| `plan-tool init --intent "…" [--non-goal "…"] [--decision "…"]` | Create the tracked, operator-confirmed project profile consumed by authoring and audit prompts |
+| `plan-tool init --intent '…' [--non-goal '…'] [--decision '…']` | Create the tracked, operator-confirmed project profile consumed by authoring and audit prompts |
 | Edit `.plan-tool/project.json`, then commit | Revise the confirmed project intent, non-goals, or decisions |
 
 **Authoring**

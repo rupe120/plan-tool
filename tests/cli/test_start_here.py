@@ -1,9 +1,8 @@
-"""Bare ``plan-tool`` prints a short core path instead of a usage error."""
+"""Bare ``plan-tool`` prints a short core path as its usage error."""
 
 from __future__ import annotations
 
 import shlex
-import sys
 
 import pytest
 
@@ -22,33 +21,41 @@ def _command_lines() -> list[str]:
     ]
 
 
-def test_bare_invocation_at_a_terminal_prints_the_core_path_and_exits_zero(
-    capsys, monkeypatch
-) -> None:
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
-
-    assert main([]) == 0
-
-    assert capsys.readouterr().out == START_HERE
-
-
-def test_bare_invocation_from_a_script_still_exits_nonzero(capsys) -> None:
-    """A wrapper whose subcommand variable expanded to nothing must still fail."""
+def test_bare_invocation_prints_the_core_path_as_a_usage_error(capsys) -> None:
+    """A missing subcommand stays exit 2, so a script with an empty one fails."""
     assert main([]) == 2
 
-    assert capsys.readouterr().out == START_HERE
+    captured = capsys.readouterr()
+    assert captured.err == START_HERE
+    assert captured.out == ""
 
 
 def test_every_start_here_command_parses_against_the_real_parser() -> None:
     parser, dispatch = assemble(cli.__doc__, COMMAND_MODULES)
-    lines = _command_lines()
-    assert len(lines) == 7
 
-    for line in lines:
+    for line in _command_lines():
         tokens = shlex.split(line)[1:]
         tokens = [_PLACEHOLDERS.get(token, token) for token in tokens]
         args = parser.parse_args(tokens)
         assert args.command in dispatch
+
+
+def test_start_here_lines_fit_an_80_column_terminal() -> None:
+    assert max(len(line) for line in START_HERE.splitlines()) <= 80
+
+
+def test_core_path_follows_the_pipeline_order() -> None:
+    commands = [line.split()[1] for line in _command_lines()]
+
+    assert commands == [
+        "install-skill",
+        "create",
+        "completeness-audit",
+        "detail",
+        "completeness-audit",
+        "run",
+        "reconcile-code",
+    ]
 
 
 def test_core_path_runs_every_step_and_ends_with_the_reconcile_tail() -> None:
@@ -64,10 +71,13 @@ def test_init_is_left_to_the_skill_rather_than_shown_as_a_command() -> None:
     assert "runs plan-tool init" in START_HERE
 
 
-def test_skill_install_names_the_other_integrations() -> None:
-    assert "plan-tool install-skill --integration claude --user" in _command_lines()
-    assert "--integration codex" in START_HERE
-    assert "--integration cursor" in START_HERE
+@pytest.mark.parametrize("integration", ("codex", "cursor"))
+def test_skill_install_advice_for_other_integrations_parses(integration: str) -> None:
+    parser, _ = assemble(cli.__doc__, COMMAND_MODULES)
+
+    assert f"--integration {integration}" in START_HERE
+    args = parser.parse_args(["install-skill", "--integration", integration, "--user"])
+    assert args.integration == integration
 
 
 def test_global_flags_without_a_subcommand_still_report_the_usage_error() -> None:
