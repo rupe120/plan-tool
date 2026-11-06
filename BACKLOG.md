@@ -13733,6 +13733,30 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Dependencies:** #514 (distribution decisions).
 - **Origin:** 2026-11-06, an assessment of whether to publish at public launch.
 
+**#524 — plan-tool drives only three CLIs as backends, so Gemini, Kiro, Copilot and OpenCode users cannot run it**
+
+- **What:** the registered backends are `claude`, `codex` and `cursor`. Other common coding CLIs have a headless JSON mode and could be driven the same way. An unregistered name already works as a provisional backend (`[binary, prompt]`, the claude parser, generic failure patterns, extra flags from `.plan-tool/backends.json`), which is best-effort for plain-text CLIs in batch mode and gives no streaming progress or real error classification.
+- **Route:** plan (one plan per backend; the first also settles the capture template) · **Readiness:** decision-needed (which CLI goes first: Kiro is the cheapest capture and settles the template, Gemini has the largest demand; capture needs the CLI installed and an authenticated account) · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Arc assignment:** `backlog-arc-installed-skill`.
+- **Effort:** about 1–2 days per CLI, mostly capturing real transcripts and failure copy; about a day for the capture template first. Measured 2026-11-06: a backend is a manifest (`integrations/<name>/backend.json`, about 40 lines), a stream-line parser registered in `_PARSER_REGISTRY` when its event schema differs (cursor's is about 120 lines in `plan_tool/backend.py`), a contract document with fixtures (cursor 150 lines, codex 434), tests, and a skill variant.
+- **Candidates:**
+  - **Kiro CLI.** Verified from the real binary's help (kiro-cli 2.37.0, 2026-11-06): `kiro-cli chat --output-format stream-json` writes the run's ACP events as JSON Lines, one self-describing event per line, and implies `--no-interactive`; `--trust-all-tools` auto-approves tools and `--model` selects a model. It has two engines (`--v2`, `--v3`) and `--trust-workspace` is V3 only, so capture both engines or pin one. It is the only candidate installed on the maintainer's machine, so it is the cheapest capture and the natural first backend for settling the capture template. Login status was not checked.
+  - **Gemini CLI.** Headless `gemini -p --output-format stream-json`. A `gemini-*` model-family stub already exists (`plan_tool/model_specs.py`) and `docs/BACKENDS.md` says it selects a provisional backend until a packaged integration exists. Largest demand.
+  - **OpenCode.** `opencode run --format json`. Its event structure is not documented, so pin a version. One backend reaches many providers.
+  - **GitHub Copilot CLI.** `copilot -p --output-format json` (JSONL). Do it when someone asks.
+- **Evidence status:** the Kiro flags are read from the installed binary's help, but no transcript has been captured yet. The Gemini, Copilot and OpenCode flags come from one secondary source (a DEV Community comparison of headless modes, 2026-11-06) and are unverified; capture each against the real binary and record the version, as `docs/reference/contracts/cursor-agent-cli.md` does. Amp, Goose and Aider were not researched; Aider is plain text, so the provisional route may already cover it.
+- **Risks / fallout:** each backend is permanent surface and pins one CLI version's output (the cursor contract warns that drift is likely). Real rate-limit, quota and auth failure copy cannot be captured without hitting those limits, so start from the generic patterns and mark the new patterns provisional. Assistants read skills from different places (Codex needed `.agents` and copies, not symlinks), so check each. No evidence yet that plan-tool's prompts work as well on other models.
+- **Outcome:** `plan-tool --backend <name> run` completes a step end to end for each added CLI, with streaming progress and failure classification taken from captured behavior, and `install-skill --integration <name>` installs a skill its assistant reads.
+- **In scope:** for each chosen CLI: the manifest, the parser if needed, captured fixtures and a contract document, tests, a skill variant and its install location, the model-family mapping, and the `docs/BACKENDS.md` and README tables. First, a capture checklist and contract-document template drawn from the cursor and codex contracts.
+- **Out of scope / Non-goals:** automatic model routing; a quality or cost comparison of the new backends (the backend-recommendations benchmark is separate); backends with no headless mode; the Kiro IDE launcher (`kiro`), a different tool from `kiro-cli`; changing the provisional synthesized route; Amp, Goose, Aider and any CLI not listed until someone asks.
+- **Allowed behavior changes:** new registered backends and `--integration` choices only; the existing three keep their behavior.
+- **Allowed reorganization:** only the smallest relocation needed for this outcome; no unrelated restructuring.
+- **Verification:** per backend, parser tests over fixtures captured from the real binary; the manifest round-trip golden; classification tests for every pattern whose copy was captured, with the rest marked provisional; `install-skill --integration <name>` accepts it; one bounded `run` step completes on a scratch plan; mutation checks on the parser and each classification pattern.
+- **Stop / defer:** file adjacent work separately; stop and report if a CLI has no headless mode or no capturable event stream rather than writing a parser from documentation alone.
+- **Dependencies:** #389 (promoted to IPPT-7), the hard-coded `install-skill --integration` list (`choices=("claude", "codex", "cursor")` in `plan_tool/cli/skill_cmd.py`). Do it first or as the first backend's step, so later backends need no edit there.
+- **Origin:** 2026-11-06, an estimate of what supporting other common CLIs would take.
+
 ## Adding a new entry
 
 The rules for this live in [`docs/TRACKING.md` § "Adding a new entry"](docs/TRACKING.md#adding-a-new-entry).
