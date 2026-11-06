@@ -5,7 +5,8 @@
     uv run scripts/release.py --publish [--remote NAME] [--dry-run]
 
 Runs the release-commit step of docs/RELEASING.md; --publish tags and pushes
-an already merged release on main. Release preparation restores its four paths
+an already merged release on main and, for a GitHub destination, creates the
+tag's GitHub release from its changelog section. Release preparation restores its four paths
 to HEAD on failure before the commit. Publication preserves local tags on failure.
 
 The fragment parse mirrors scriv's markdown parser because scriv consumes the
@@ -20,6 +21,7 @@ import argparse
 import re
 import subprocess
 import sys
+import tempfile
 import tomllib
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -33,6 +35,9 @@ VERSION_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 VERSION_LINE_RE = re.compile(r'^version\s*=\s*"[^"]*"\s*(?:#.*)?$')
 TABLE_RE = re.compile(r"^\[\[?[A-Za-z0-9_.-]+\]\]?\s*(?:#.*)?$")
 ANCHOR_RE = re.compile(r"^<a id='changelog-[^']*'></a>$")
+GITHUB_URL_RE = re.compile(
+    r"^(?:git@github\.com:|ssh://git@github\.com/|https://github\.com/)([^/]+/[^/]+?)(?:\.git)?/?$"
+)
 
 ToolRunner = Callable[[Sequence[str], Path], None]
 
@@ -138,6 +143,61 @@ def set_project_version(text: str, new: str) -> str:
             lines[i] = re.sub(r'"[^"]*"', f'"{new}"', line, count=1)
             return "".join(lines)
     raise ReleaseError('no `version = "..."` line under [project] in pyproject.toml')
+
+
+def github_repository(destination: str) -> str | None:
+    """`owner/repo` for a github.com push URL, else None (no GitHub release step)."""
+    match = GITHUB_URL_RE.match(destination)
+    return match.group(1) if match else None
+
+
+def release_notes(changelog: str, version: str) -> str:
+    """The body of `version`'s changelog section, without its anchor and heading."""
+    lines = changelog.splitlines()
+    try:
+        start = lines.index(f"<a id='changelog-{version}'></a>")
+    except ValueError:
+        raise ReleaseError(f"CHANGELOG.md has no `changelog-{version}` section") from None
+    body: list[str] = []
+    for line in lines[start + 2 :]:
+        if ANCHOR_RE.match(line):
+            break
+        body.append(line)
+    return "\n".join(body).strip() + "\n"
+
+
+def _gh(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(["gh", *args], cwd=root, capture_output=True, text=True)
+    except FileNotFoundError:
+        raise ReleaseError("'gh' is not on PATH") from None
+
+
+def ensure_github_release(root: Path, repository: str, tag: str, notes: str, *, dry_run: bool) -> None:
+    """Create `tag`'s GitHub release once; an existing release is left as it is."""
+    manual = f"gh release create {tag} -R {repository} --title {tag} --notes-file <notes> --verify-tag"
+    if dry_run:
+        print(f"Ensure GitHub release {tag} on {repository}")
+        return
+    try:
+        if _gh(root, "release", "view", tag, "-R", repository).returncode == 0:
+            print(f"GitHub release {tag} already exists on {repository}")
+            return
+        with tempfile.NamedTemporaryFile("w", suffix=".md", encoding="utf-8") as handle:
+            handle.write(notes)
+            handle.flush()
+            created = _gh(
+                root, "release", "create", tag, "-R", repository,
+                "--title", tag, "--notes-file", handle.name, "--verify-tag",
+            )
+    except ReleaseError as exc:
+        raise ReleaseError(f"{tag} is published but its GitHub release is not ({exc}); run: {manual}") from None
+    if created.returncode != 0:
+        raise ReleaseError(
+            f"{tag} is published but creating its GitHub release failed: {created.stderr.strip()}; "
+            f"fix the cause and re-run --publish, or run: {manual}"
+        )
+    print(f"Created GitHub release {tag} on {repository}")
 
 
 def collected_titles(changelog: str, version: str) -> list[str]:
@@ -294,13 +354,19 @@ def publish(root: Path, *, remote: str, dry_run: bool) -> int:
         reversed(line.split()) for line in _git(root, "ls-remote", destination, ref, f"{ref}^{{}}").splitlines()
     )
     target = existing.get(f"{ref}^{{}}", existing.get(ref))
+    repository = github_repository(destination)
     if target is not None:
         if target != head:
             raise ReleaseError(f"remote {tag} points elsewhere; no tag is overwritten")
         print(f"{tag} already published at {head}")
+        # A retry after the tag pushed but the release step failed completes it.
+        if repository is not None:
+            ensure_github_release(root, repository, tag, release_notes(notes, current), dry_run=dry_run)
         return 0
     print(f"Publish {tag} at {head} to {remote}")
     if dry_run:
+        if repository is not None:
+            ensure_github_release(root, repository, tag, release_notes(notes, current), dry_run=True)
         return 0
     if not _git_ok(root, "show-ref", "--verify", "--quiet", ref):
         _git(root, "tag", "-a", tag, head, "-m", f"plan-tool {current}")
@@ -312,12 +378,18 @@ def publish(root: Path, *, remote: str, dry_run: bool) -> int:
     if published.get(f"{ref}^{{}}", published.get(ref)) != head:
         raise ReleaseError(f"cannot verify remote {tag}; inspect the destination before retrying")
     print(f"Verified {tag} at {head} on {remote}")
+    if repository is not None:
+        ensure_github_release(root, repository, tag, release_notes(notes, current), dry_run=False)
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Prepare a release commit or publish a merged release tag.")
-    parser.add_argument("--publish", action="store_true", help="tag and push the merged current release on main")
+    parser.add_argument(
+        "--publish",
+        action="store_true",
+        help="tag and push the merged current release on main; on a GitHub remote, also create its GitHub release",
+    )
     parser.add_argument("--remote", default=None, help="publication remote (default: origin)")
     parser.add_argument("--minor", action="store_true", help="raise a patch bump to a minor bump")
     parser.add_argument("--dry-run", action="store_true", help="preview preparation or publication without changing anything")

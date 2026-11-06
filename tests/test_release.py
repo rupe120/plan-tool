@@ -820,3 +820,133 @@ def test_publish_reports_failed_readback_and_preserves_local_tag(publication, mo
     with pytest.raises(release.ReleaseError, match="cannot verify remote"):
         release.publish(repo.path, remote="origin", dry_run=False)
     assert repo.git("rev-parse", "v0.1.0^{}").strip() == repo.head()
+
+
+@pytest.mark.parametrize(
+    ("destination", "expected"),
+    [
+        ("git@github.com:owner/plan-tool.git", "owner/plan-tool"),
+        ("git@github.com:owner/plan-tool", "owner/plan-tool"),
+        ("https://github.com/owner/plan-tool.git", "owner/plan-tool"),
+        ("ssh://git@github.com/owner/plan-tool.git", "owner/plan-tool"),
+        ("git@ssh.bitbucket.org:team/plan-tool.git", None),
+        ("/tmp/remote.git", None),
+    ],
+)
+def test_github_repository_is_recognized_only_for_github_push_urls(destination, expected) -> None:
+    assert release.github_repository(destination) == expected
+
+
+def test_release_notes_are_the_versions_section_without_its_heading() -> None:
+    changelog = (
+        "# Changelog\n\n<a id='changelog-0.2.0'></a>\n## 0.2.0 — 2026-11-06\n\n"
+        "### Added\n\n- New.\n\n<a id='changelog-0.1.0'></a>\n## 0.1.0\n\n- Old.\n"
+    )
+
+    assert release.release_notes(changelog, "0.2.0") == "### Added\n\n- New.\n"
+
+
+class _FakeGh:
+    """Records gh calls; `existing` says whether `release view` finds a release."""
+
+    def __init__(self, *, existing: bool = False, create_rc: int = 0) -> None:
+        self.existing = existing
+        self.create_rc = create_rc
+        self.calls: list[tuple[str, ...]] = []
+        self.notes: str | None = None
+
+    def __call__(self, root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+        self.calls.append(args)
+        if args[:2] == ("release", "view"):
+            return subprocess.CompletedProcess(args, 0 if self.existing else 1, "", "")
+        if args[:2] == ("release", "create"):
+            self.notes = Path(args[args.index("--notes-file") + 1]).read_text(encoding="utf-8")
+            return subprocess.CompletedProcess(args, self.create_rc, "", "boom" if self.create_rc else "")
+        raise AssertionError(f"unexpected gh call {args}")
+
+    def created(self) -> list[tuple[str, ...]]:
+        return [call for call in self.calls if call[:2] == ("release", "create")]
+
+
+@pytest.fixture
+def github_publication(publication, monkeypatch):
+    repo, remote = publication
+    repo.write(
+        "CHANGELOG.md",
+        CHANGELOG + "\n<a id='changelog-0.1.0'></a>\n## 0.1.0\n\n### Added\n\n- First.\n",
+    )
+    repo.commit_all("Release notes")
+    repo.git("push", "origin", "main")
+    monkeypatch.setattr(
+        release,
+        "github_repository",
+        lambda destination: "owner/plan-tool" if destination == str(remote) else None,
+    )
+    return repo, remote
+
+
+def test_publish_to_github_creates_the_release_from_the_changelog_section(github_publication, monkeypatch):
+    repo, remote = github_publication
+    gh = _FakeGh()
+    monkeypatch.setattr(release, "_gh", gh)
+
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+
+    assert repo.git("ls-remote", str(remote), "refs/tags/v0.1.0^{}").split()[0] == repo.head()
+    (create,) = gh.created()
+    assert create[2:5] == ("v0.1.0", "-R", "owner/plan-tool")
+    assert "--verify-tag" in create
+    assert gh.notes == "### Added\n\n- First.\n"
+
+
+def test_a_retry_after_the_tag_published_creates_the_missing_release(github_publication, monkeypatch):
+    repo, _ = github_publication
+    failing = _FakeGh(create_rc=1)
+    monkeypatch.setattr(release, "_gh", failing)
+    with pytest.raises(release.ReleaseError, match="is published but creating its GitHub release failed"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+
+    gh = _FakeGh()
+    monkeypatch.setattr(release, "_gh", gh)
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+    assert len(gh.created()) == 1
+
+
+def test_an_existing_github_release_is_left_as_it_is(github_publication, monkeypatch):
+    repo, _ = github_publication
+    gh = _FakeGh(existing=True)
+    monkeypatch.setattr(release, "_gh", gh)
+
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+    assert gh.created() == []
+
+
+def test_publish_dry_run_makes_no_gh_call(github_publication, monkeypatch, capsys):
+    repo, _ = github_publication
+    gh = _FakeGh()
+    monkeypatch.setattr(release, "_gh", gh)
+
+    assert release.publish(repo.path, remote="origin", dry_run=True) == 0
+    assert gh.calls == []
+    assert "Ensure GitHub release v0.1.0 on owner/plan-tool" in capsys.readouterr().out
+
+
+def test_a_missing_gh_leaves_the_tag_published_and_names_the_manual_command(github_publication, monkeypatch):
+    repo, remote = github_publication
+
+    def no_gh(root, *args):
+        raise release.ReleaseError("'gh' is not on PATH")
+
+    monkeypatch.setattr(release, "_gh", no_gh)
+    with pytest.raises(release.ReleaseError, match="gh release create v0.1.0 -R owner/plan-tool"):
+        release.publish(repo.path, remote="origin", dry_run=False)
+    assert repo.git("ls-remote", str(remote), "refs/tags/v0.1.0^{}").split()[0] == repo.head()
+
+
+def test_publish_to_a_non_github_remote_makes_no_gh_call(publication, monkeypatch):
+    repo, _ = publication
+    gh = _FakeGh()
+    monkeypatch.setattr(release, "_gh", gh)
+
+    assert release.publish(repo.path, remote="origin", dry_run=False) == 0
+    assert gh.calls == []
