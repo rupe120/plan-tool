@@ -332,14 +332,18 @@ CI, and merge-queue settings.
 [rupe120/plan-tool](https://github.com/rupe120/plan-tool). The maintainers review
 and merge on an internal Bitbucket host and mirror `main` to GitHub
 ([`docs/RELEASING.md`](docs/RELEASING.md#keep-bitbucket-and-github-synchronized)),
-so a GitHub pull request is carried across by a maintainer. There is no CD/
-deployment pipeline; the tool is installed by `git clone` plus an editable
-`uv tool install` (see [Which `plan-tool` is running?](#which-plan-tool-is-running)),
-not published; a release is a tagged commit with a changelog entry
-([`docs/RELEASING.md`](docs/RELEASING.md)). The
-[`bitbucket-pipelines.yml`](bitbucket-pipelines.yml) pipeline runs the suite on
-every internal pull request and on `main`; GitHub runs no CI today, so run
-`uv run pytest tests/ -q -n auto` before opening a pull request.
+so a GitHub pull request is carried across by a maintainer. GitHub Actions
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the suite on every
+pull request on Python 3.13 and 3.14, and the
+[`bitbucket-pipelines.yml`](bitbucket-pipelines.yml) pipeline runs it on internal
+pull requests and on `main`; run `uv run pytest tests/ -q -n auto` before you open
+a pull request. There is no CD/deployment pipeline. Users install with
+`uv tool install git+https://github.com/rupe120/plan-tool` and contributors with a
+clone plus an editable `uv tool install` (see
+[Which `plan-tool` is running?](#which-plan-tool-is-running)); the tool is not on
+PyPI. A release is a tagged commit with a changelog entry and a GitHub release
+([`docs/RELEASING.md`](docs/RELEASING.md)). Report a security problem through
+[`SECURITY.md`](SECURITY.md), and ask a question through [`SUPPORT.md`](SUPPORT.md).
 **Deliberately not yet decided:** the required-approval count and the
 merge-queue setting on `main` — both are branch-restriction settings on the
 hosts, not something a tracked file can hold.

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/rupe120/plan-tool/security/advisories/new
+    about: Report it privately. Do not open a public issue for a vulnerability.
+  - name: Read the docs first
+    url: https://github.com/rupe120/plan-tool#start-here
+    about: The README routes by task, and the how-to guides cover common workflows.

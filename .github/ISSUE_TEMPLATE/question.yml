@@ -1,0 +1,20 @@
+name: Question
+description: Ask how to do something, or whether plan-tool fits your work.
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The [README](https://github.com/rupe120/plan-tool/blob/main/README.md) and the [use cases guide](https://github.com/rupe120/plan-tool/blob/main/docs/how-to/use-cases.md) answer the common ones.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What you are trying to do, and what you have already tried.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: plan-tool version
+      description: Output of `plan-tool --version`, if your question is about a command.

@@ -8564,7 +8564,21 @@ def test_shell_invoker_rate_limit_menu_stop_returns_failed_call(
     assert sleeps == []
 
 
+@pytest.fixture
+def switch_target_on_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Make the SWITCH policy's fallback binary look installed.
+
+    The policy preflights its fallback with ``shutil.which``. Without this, a
+    test passes only on a machine where that CLI (codex) is installed, and
+    elsewhere falls back to a real rate-limit wait until the test timeout.
+    """
+    from plan_tool import launcher
+
+    monkeypatch.setattr(launcher.shutil, "which", lambda _binary: "/usr/bin/tool")
+
+
 def test_shell_invoker_rate_limit_menu_switch_reselects_backend(
+    switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -8645,6 +8659,7 @@ def test_shell_invoker_rate_limit_menu_switch_reselects_backend(
 
 
 def test_shell_invoker_switch_policy_switches_without_prompt(
+    switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
@@ -8953,6 +8968,7 @@ def test_shell_invoker_switch_to_active_backend_does_not_hot_loop(
 
 
 def test_shell_invoker_rate_limit_switch_resets_wait_budget(
+    switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from contextlib import contextmanager
@@ -9046,6 +9062,7 @@ def test_shell_invoker_rate_limit_switch_resets_wait_budget(
 
 
 def test_shell_invoker_switch_policy_restores_after_fallback_rate_limit(
+    switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from contextlib import contextmanager
@@ -9116,6 +9133,7 @@ def test_shell_invoker_switch_policy_restores_after_fallback_rate_limit(
 
 
 def test_shell_invoker_parallel_switches_are_isolated(
+    switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     from contextlib import contextmanager

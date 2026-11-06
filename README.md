@@ -5,8 +5,9 @@ code is written, then runs it step by step with Claude Code, Codex or Cursor.
 The plan, its audits and its progress live in your repository, so the work can
 be reviewed, resumed and handed off.
 
-[![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue)](https://github.com/rupe120/plan-tool/releases/latest)
-[![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green)](LICENSE)
+[![version](https://img.shields.io/github/v/release/rupe120/plan-tool?label=version&color=blue&style=flat)](https://github.com/rupe120/plan-tool/releases/latest)
+[![license](https://img.shields.io/github/license/rupe120/plan-tool?color=green&style=flat)](LICENSE)
+[![tests](https://github.com/rupe120/plan-tool/actions/workflows/ci.yml/badge.svg)](https://github.com/rupe120/plan-tool/actions/workflows/ci.yml)
 
 Use it when the work has dependent changes, spans several sessions, or will be
 handed off. For a small edit, skip it and just make the change.
@@ -480,6 +481,12 @@ plan-tool is one take; it is not the only reasonable one.
 If you are building something in this space, issues and pull requests on the
 GitHub repository are welcome, including corrections to how another project is
 described here.
+
+## Contributing
+
+Issues and pull requests are welcome. [CONTRIBUTING](CONTRIBUTING.md) explains how
+changes are reviewed, [SUPPORT](SUPPORT.md) says where to ask questions, and
+[SECURITY](SECURITY.md) says how to report a vulnerability privately.
 
 ## License
 

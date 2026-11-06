@@ -1,0 +1,48 @@
+# Runs the test suite on every pull request and on pushes to main.
+#
+# Mirrors bitbucket-pipelines.yml, which stays the check for the internal
+# review host. No secrets or credentials: the suite is hermetic
+# (tests/conftest.py raises if a test spawns a real backend binary or reaches
+# the real network), and the token is read-only.
+#
+# The matrix covers the declared minimum (3.13) and the version the repository
+# pins for development (.python-version, 3.14). setup-uv's python-version sets
+# UV_PYTHON, which takes precedence over .python-version.
+#
+# Actions are pinned to full commit SHAs; the comment names the release each
+# one is. Bump them deliberately.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      # --locked fails when uv.lock does not match pyproject.toml.
+      - run: uv sync --locked
+
+      - run: uv run pytest tests/ -q -n auto
