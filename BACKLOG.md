@@ -5824,8 +5824,8 @@ separate)**
 **#366 — Survey aidlc-workflows's multi-harness patterns (core/adapter split, provider-agnostic tier aliasing, build-determinism guard) for plan-tool applicability**
 
 - **Principle:** `untriaged` — a survey that may close with no action.
-- **What:** plan-tool and the sibling project `aidlc-workflows`
-  (`<methodology-root>`) solve a similar
+- **What:** plan-tool and the AWS Labs project
+  [`awslabs/aidlc-workflows`](https://github.com/awslabs/aidlc-workflows) solve a similar
   shape of problem — one authored behavior projected into multiple
   heterogeneous CLI backends (aidlc: Claude Code, Codex, Kiro, Cursor,
   opencode, Copilot; plan-tool: its own multi-backend `--backend` /
@@ -5886,7 +5886,7 @@ separate)**
   concrete gap for it.
 - **Origin:** 2026-09-10 — raised while producing a report on
   `aidlc-workflows`'s Claude Code / Codex hook integration
-  (`aidlc-workflows-rupe120/tmp/2026-09-10-claude-codex-hooks-report.md`);
+  (a local note, not tracked in this repository);
   not yet compared against plan-tool's own architecture in either
   direction.
 - **Status:** not started.

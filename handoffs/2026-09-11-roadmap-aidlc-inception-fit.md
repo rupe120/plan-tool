@@ -19,8 +19,8 @@ The evidence base has two parts, kept separate on purpose:
   Every one of them was seeded by a hand-written concept brief. None had a
   structured upstream.
 - **What will cross the seam** comes from the framework's own stage
-  definitions and protocols, read at `aidlc-workflows-rupe120` commit
-  `6849b31d`, and from the first real corpus the AI-DLC runtime produced for
+  definitions and protocols, read at commit `6849b31d` of a fork of
+  `awslabs/aidlc-workflows`, and from the first real corpus the AI-DLC runtime produced for
   Integration intent `260909-integration-mvp`. Verification Gate 1 is complete and the
   runtime is parked at the first Inception boundary without producing an
   Inception artifact. Integration commit `0527be7` corrects four prose sites after

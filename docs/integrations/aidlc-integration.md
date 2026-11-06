@@ -1,26 +1,28 @@
 # AI-DLC integration
 
-How `plan-tool`'s `roadmap` verb relates to the AI-DLC workflow framework and
-Integration, the runtime that drives a project through it: the boundary the two
-systems keep, where they actually touch, and what's shipped versus still
-open. Not for backend-CLI integrations (Claude Code, Codex, Cursor) — that's
-the top-level `integrations/` directory. This page is the read-first entry
-point; the full design and its provenance live in the handoffs and evidence
-doc linked throughout.
+How `plan-tool`'s `roadmap` verb relates to the AI-DLC framework and the
+orchestration layer above it: the boundary, where they touch, and what's
+shipped. For backend CLIs (Claude Code, Codex, Cursor), see `integrations/`.
+Full design and provenance are in the handoffs linked below.
 
-## What AI-DLC and Integration are
+## What AI-DLC and the orchestration layer are
 
-**AI-DLC** is an external, named workflow framework (governed by
-`aidlc-workflows-rupe120`) with phases **Ideation → Inception →
-Construction → Operations**. Each phase is built of stages with typed
-artifacts, epistemic tags on claims (`[assumption]`, open questions, etc.),
-and gated approval.
+**AI-DLC** is an external workflow framework from AWS Labs
+([awslabs/aidlc-workflows](https://github.com/awslabs/aidlc-workflows)) with five
+phases: **Initialization → Ideation → Inception → Construction → Operation**.
+Each phase is built of stages with typed artifacts, epistemic tags on claims
+(`[assumption]`, open questions, etc.), and gated approval.
 
-**Integration** is a sibling product: the actual AI-DLC *runtime*. It runs a real
-project (an "intent") through the framework, produces the framework's
-artifacts, and owns the **connector** — the layer that maps those artifacts
-onto `plan-tool`'s generic vocabulary. `plan-tool` never has a connector of
-its own; that mapping is entirely Integration's.
+An **orchestration layer** sits above `plan-tool`. It runs a real project (an
+"intent") through the framework, produces the framework's artifacts, and owns
+the **connector** — the layer that maps those artifacts onto `plan-tool`'s
+generic vocabulary. `plan-tool` never has a connector of its own; that mapping
+is entirely the orchestration layer's.
+
+`plan-tool` depends on no orchestration layer and works standalone, but it is
+built to be driven from above: any caller can use its documented interfaces —
+[headless operation](../OPERATIONS.md#running-headlessly), plan frontmatter,
+saved reports, and exit codes.
 
 `plan-tool`'s `roadmap` verb is the Inception-stage engine: it writes
 `01-domain.md` → `02-constraints.md` → `03-components.md` →
@@ -33,15 +35,15 @@ record paths.
 
 | Layer | What it is | Who owns the mapping |
 | --- | --- | --- |
-| Framework semantics | Artifact kinds, epistemic conventions, question/review shapes, phase-boundary checks | AI-DLC's workflow profile and Integration's connector |
-| Runtime layout | Record paths under `aidlc/spaces/<space>/intents/<dir>/`, hooks, audit shards | Integration's AI-DLC connector only |
+| Framework semantics | Artifact kinds, epistemic conventions, question/review shapes, phase-boundary checks | AI-DLC's workflow profile and the orchestration layer's connector |
+| Runtime layout | Record paths under `aidlc/spaces/<space>/intents/<dir>/`, hooks, audit shards | The orchestration layer's AI-DLC connector only |
 | Engine contract | What `roadmap` accepts, produces, and gates | `plan-tool` |
 
 `roadmap` learns **generic concepts** the framework happens to need — typed
 input roles, inherited-versus-derived decisions, open questions,
 obligations, coverage output, and a shared frame for the model requests that
 can change what artifacts mean — never AI-DLC's own names for them. A
-connector mapping can change with a Integration workflow profile without a
+connector mapping can change with an orchestration-layer workflow profile without a
 `plan-tool` release, and a `plan-tool` role can serve a non-AI-DLC producer
 just as well.
 
@@ -49,7 +51,7 @@ just as well.
 
 ### 1. Input roles — the source-material touchpoint
 
-This is the actual seam: the typed roles `roadmap` accepts, and how Integration's
+This is the actual seam: the typed roles `roadmap` accepts, and how the
 connector maps AI-DLC artifacts onto them.
 
 | Role | Carries | Reaches | Class |
@@ -65,7 +67,7 @@ connector maps AI-DLC artifacts onto them.
 | `approval-evidence` | Approval memo, decision log, phase check | Nowhere — provenance only | provenance only |
 | `judgment` | Proto-decomposition (e.g. a prioritized backlog), the stakeholder map | Nowhere — never rendered into a stage prompt | review-time only |
 
-Integration's connector maps `intent-statement` → `intent`, `scope-document` →
+The connector maps `intent-statement` → `intent`, `scope-document` →
 `scope`, the feasibility/constraint artifacts → `constraints`, `wireframes`/
 `user-flow` → `experience`, question files and rule layers' `Decided`
 entries → `decisions`, each artifact's open entries → `open-questions`, the
@@ -84,7 +86,7 @@ write: a content digest per source plus a root digest over the set, bound
 via `roadmap_source_identity.py`. On drift, behavior follows a declared
 policy — `strict` refuses and names the two supported routes (feedback rows
 or a successor lineage); `relaxed` records the change, announces it, and
-continues. Integration's connector also passes the upstream approval receipt as
+continues. The connector also passes the upstream approval receipt as
 provenance, so the set is provably the approved snapshot.
 
 ### 3. Citation snapshots — finer-grained, item-level checking
@@ -133,8 +135,8 @@ does today.
 ### 7. Coverage output — the Inception → Construction boundary
 
 A machine-readable coverage projection, per source item: `covered`,
-`deferred`, `not-applicable`, `gap`, or `stale`. Integration's connector maps this
-onto the framework's phase check — the evidence its MVP proof needs for
+`deferred`, `not-applicable`, `gap`, or `stale`. The connector maps this
+onto the framework's phase check — the evidence it needs for
 "explicit coverage or an explicit skip for every step in the selected
 scope."
 
@@ -151,9 +153,9 @@ design" as "shipped code" — they're tracked separately below.
 | Changed-brief rebind confirmation (`BACKLOG` #367) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Carried settled decisions with citations (`BACKLOG` #384) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Per-stage supplementary sources with declared roles (`BACKLOG` #383) | **Held** — waiting on a comparison-proven per-stage grounding gap, not scheduled | `BACKLOG.md`, entry #383 |
-| `roadmap --view status --json` (`BACKLOG` #385) | **Held** — evidence-gated on Integration having a concrete connector consumer | `BACKLOG.md`, entry #385 |
+| `roadmap --view status --json` (`BACKLOG` #385) | **Held** — evidence-gated on an orchestration layer having a concrete connector consumer | `BACKLOG.md`, entry #385 |
 | Citation snapshots, obligations, the seam frame, coverage projection (touchpoints 3, 5, 6, 7) | Settled design; not yet built as running code | Same handoff, § "The design" |
-| A Integration `roadmap` run against the real AI-DLC corpus | **Has never happened** | Both 2026-09-11 and 2026-09-14 handoffs state this explicitly |
+| An orchestrated `roadmap` run against the real AI-DLC corpus | **Has never happened** | Both 2026-09-11 and 2026-09-14 handoffs state this explicitly |
 
 **Explicitly still open** (not decided; don't treat any of these as settled).
 Only the source carrier has been decided, for now: #384 ships on the single
@@ -163,8 +165,8 @@ brief and #383 stays held. The rest wait on an evidence trigger:
   open-question default mode wait on the unbuilt obligations and settle-once
   questions capabilities.
 - Framework requirement IDs and the Inception-step coverage decision (does
-  `roadmap` take on requirements analysis, or does Integration's workflow profile
-  explicitly skip it) wait on Integration's workflow profile and connector.
+  `roadmap` take on requirements analysis, or does the orchestration layer's
+  workflow profile explicitly skip it) wait on that workflow profile and connector.
 - Frame reach, size, scope-list rendering, and fit review are parked with the
   shared seam frame, which is selected only when a revision route changes
   meaning outside the proven box.
@@ -174,13 +176,13 @@ The list, its options, and dependencies live in
 
 ## What stays out of scope for `plan-tool`
 
-- Running AI-DLC, mutating Integration, or starting a `roadmap` run against the
-  Integration corpus.
+- Running AI-DLC, mutating the orchestration layer, or starting a `roadmap` run
+  against its corpus.
 - The connector mapping itself, rule selection, and question presentation —
-  Integration application work, recorded here only as the other half of each
+  orchestration-layer application work, recorded here only as the other half of each
   touchpoint.
 - AI-DLC runtime paths, intent directories, stage slugs, hooks, audit
-  shards, and approval-receipt storage — Integration's layer entirely.
+  shards, and approval-receipt storage — the orchestration layer's entirely.
 
 ## Where the full detail lives
 
@@ -190,9 +192,9 @@ The list, its options, and dependencies live in
   delivery record: what shipped, the seam contract, and the ordered
   delivery path.
 - `handoffs/2026-09-11-integration-seam-resume-order.md` — the cross-repository
-  checkpoint and Integration-side execution fence.
+  checkpoint and orchestration-side execution fence.
 - `docs/evidence/roadmap-aidlc-intake-comparison-20260916.md` — the
-  controlled comparison against Integration's real, approval-bound Gate-1 corpus
+  controlled comparison against a real, approval-bound Gate-1 corpus
   that confirmed #384 and continues to hold #383.
 - `docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md` — the
   canonical order of remaining work: corpus comparison → #384 → #383;
