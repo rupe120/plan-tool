@@ -343,7 +343,8 @@ clone plus an editable `uv tool install` (see
 [Which `plan-tool` is running?](#which-plan-tool-is-running)); the tool is not on
 PyPI. A release is a tagged commit with a changelog entry and a GitHub release
 ([`docs/RELEASING.md`](docs/RELEASING.md)). Report a security problem through
-[`SECURITY.md`](SECURITY.md), and ask a question through [`SUPPORT.md`](SUPPORT.md).
+[`SECURITY.md`](SECURITY.md), ask a question through [`SUPPORT.md`](SUPPORT.md), and
+follow the [code of conduct](CODE_OF_CONDUCT.md) in every project space.
 **Deliberately not yet decided:** the required-approval count and the
 merge-queue setting on `main` — both are branch-restriction settings on the
 hosts, not something a tracked file can hold.
