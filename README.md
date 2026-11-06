@@ -485,8 +485,9 @@ described here.
 ## Contributing
 
 Issues and pull requests are welcome. [CONTRIBUTING](CONTRIBUTING.md) explains how
-changes are reviewed, [SUPPORT](SUPPORT.md) says where to ask questions, and
-[SECURITY](SECURITY.md) says how to report a vulnerability privately.
+changes are reviewed, [SUPPORT](SUPPORT.md) says where to ask questions,
+[SECURITY](SECURITY.md) says how to report a vulnerability privately, and the
+[code of conduct](CODE_OF_CONDUCT.md) sets the expectations for everyone taking part.
 
 ## License
 

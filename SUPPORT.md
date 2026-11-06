@@ -9,6 +9,7 @@
 - **An idea:** [request a feature](https://github.com/rupe120/plan-tool/issues/new?template=feature_request.yml)
   and describe the problem before the solution.
 - **A security problem:** do not open an issue. Follow [SECURITY.md](SECURITY.md).
+- **A conduct problem:** follow the [code of conduct](CODE_OF_CONDUCT.md).
 
 plan-tool is maintained on a best-effort basis, so there is no guaranteed
 response time.
