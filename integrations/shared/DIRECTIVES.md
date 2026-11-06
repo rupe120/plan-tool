@@ -83,6 +83,28 @@ The `<N>-` tier prefix on the plan filename is **added by the tool** — pass a
 bare slug to `create`, or you get `2-2-<slug>.md` and a detail directory whose
 name breaks the convention every other plan follows.
 
+## Setting up a repository: the project profile
+
+`plan-tool init` writes `.plan-tool/project.json`, the tracked profile whose
+intent, non-goals and decisions reach the scope-bearing prompts in `create`,
+`detail` and `completeness-audit`. Its content is operator-confirmed by
+contract: `init` rejects blank values and never infers them. A session sets it
+up through conversation:
+
+1. **Offer it** when the user asks to set up plan-tool in a repository, or
+   before the first `create` in a repository with no `.plan-tool/project.json`.
+   Offer, don't require: authoring works without a profile.
+2. **Ask for the content.** Ask for the project's intent in a sentence or two,
+   then for any non-goals and settled decisions. Ask; don't draft the intent
+   from the code. Tightening the user's own wording is fine.
+3. **Confirm the exact text.** Read back each value as it will be written and
+   wait for the user to confirm it. Pass only confirmed values.
+4. **Run it.** `plan-tool init --intent "…" [--non-goal "…"]… [--decision "…"]…`.
+   It refuses an existing profile (revise that file and commit the change
+   instead) and a gitignored one.
+5. **Commit it.** The profile is meant to be committed; commit it under the
+   repository's commit rules or tell the user to.
+
 ## Running from chat / automation (no TTY)
 
 Treat every assistant-driven run as **headless**: close stdin and pass `-y`.
