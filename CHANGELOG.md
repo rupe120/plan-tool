@@ -6,6 +6,22 @@ Release notes for plan-tool. Unreleased changes wait as fragments in
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-1.3.0'></a>
+## 1.3.0 — 2026-11-06
+
+### Changed
+
+- Running `plan-tool` with no arguments prints a short core path (skill
+  install, plan, both audits, detail, run, reconcile) before its usage error,
+  instead of the full usage block (BACKLOG #521). It still prints to stderr
+  and exits 2. `plan-tool --help` still lists every subcommand.
+- The installed skill now offers to set up a repository's project profile,
+  asking for the intent and confirming the wording before it runs
+  `plan-tool init`.
+
+- plan-tool's wheel and source distribution now include a `NOTICE` file
+  alongside the Apache-2.0 `LICENSE`, naming the copyright holder.
+
 <a id='changelog-1.2.0'></a>
 ## 1.2.0 — 2026-11-05
 
