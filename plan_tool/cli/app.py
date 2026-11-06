@@ -559,9 +559,34 @@ def _resolve_on_rate_limit_policy(
     return OnRateLimitPolicy(action=action, fallback_backend=fallback_backend)
 
 
+# Printed for a bare ``plan-tool``; tests parse every command line in it.
+START_HERE = """\
+plan-tool turns a rough idea into an audited implementation plan, then runs it.
+Most people drive it through the installed assistant skill. The core path,
+in order:
+
+Start here:
+  plan-tool install-skill --user                               Install the skill once per machine.
+  plan-tool init --intent "..."                                Your assistant asks for the intent, then runs this.
+  plan-tool create <slug> --from-existing <seed.md>            Write a plan from a seed file.
+  plan-tool completeness-audit <name> --iterate --commit       Audit the plan before detail.
+  plan-tool detail <name> --commit                             Write each step's detail file.
+  plan-tool completeness-audit <name> --iterate --commit       Audit again, now detail-grounded.
+  plan-tool run <name> --commit                                Run the plan step by step.
+
+Every subcommand:     plan-tool --help
+One command's flags:  plan-tool <command> --help
+"""
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     from plan_tool import cli
 
+    if argv is None:
+        argv = sys.argv[1:]
+    if not argv:
+        print(START_HERE, end="")
+        return 0
     parser, dispatch = assemble(cli.__doc__, COMMAND_MODULES)
     args = parser.parse_args(argv)
     rate_limit_policy = _resolve_on_rate_limit_policy(args, parser)

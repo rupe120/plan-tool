@@ -56,6 +56,9 @@ cd plan-tool
 uv tool install --editable .     # puts `plan-tool` on PATH (uv's bin dir)
 ```
 
+Run `plan-tool` with no arguments to see the core path, and
+`plan-tool --help` for every subcommand.
+
 Keep the clone: `--editable` reads its source directly. Source updates take
 effect immediately; refresh the tool environment when dependencies or metadata
 change, and refresh copied skills separately. See

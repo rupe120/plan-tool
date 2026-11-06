@@ -1,5 +1,7 @@
 """plan-tool command-line entry point.
 
+New here? Run plan-tool with no arguments for the core path.
+
 Subcommands are organized by **intent** — what user problem each one
 solves. New subcommands add a per-intent command module exposing
 register(subparsers) and append it to COMMAND_MODULES in
