@@ -2,6 +2,8 @@
 
 ## Purpose
 
+**Naming.** "Integration" in this repository names an external application that consumes `plan-tool`. Paths and commits cited for it, such as `<integration-consumer-root>`, belong to that application's own repository and are not in this one. Entries that mention it are kept as dated provenance.
+
 This document is the forward-looking backlog for the plan-tool skill.
 It catalogs candidate features and improvements that have been
 considered but not yet implemented, with enough context per item to

@@ -244,7 +244,7 @@ from ignored `.claude/local/project-context.json`; initialize it from
 example project key, not a configured target.
 
 - **Scope:** one project for the team's part of plan-tool. The `roadmap`
-  verb and Integration are owner-tracked experimental work and stay off the board
+  verb and the external application built on it are owner-tracked experimental work and stay off the board
   ([Roadmap boundary](#roadmap-boundary)).
 - **Kanban**, with four statuses: To Do, In Progress, In Review, and Done. The
   lead orders To Do, and the top ticket is next. The board stays thin on
@@ -440,7 +440,7 @@ missing status or field is a decision and not an oversight.
 
 ### Roadmap boundary
 
-The `roadmap` verb and Integration are owner-tracked experimental work. The team's
+The `roadmap` verb and the external application built on it are owner-tracked experimental work. The team's
 queue excludes them, and the boundary is marked in
 each place work is tracked:
 
@@ -471,7 +471,7 @@ each place work is tracked:
   code is team work. Request the owner's review explicitly for its roadmap part.
 - **Team work that needs a roadmap change hands up.** The ticket links to the
   owner's item and does not fold the change in.
-- **Integration** is tracked in its own repository. A plan-tool finding Integration surfaces
+- **The external application** is tracked in its own repository. A plan-tool finding it surfaces
   is filed like any other entry and is team work unless it is roadmap-owned.
 
 ## Which file does my entry go in?

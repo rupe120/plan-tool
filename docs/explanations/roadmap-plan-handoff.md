@@ -2,6 +2,8 @@
 
 *Part of the plan-tool developer docs. Start at [Contributing](../../CONTRIBUTING.md).*
 
+> **Naming.** "Integration" in this repository names an external application that consumes `plan-tool`. Paths and commits cited for it, such as `<integration-consumer-root>`, belong to that application's own repository and are not in this one. Entries that mention it are kept as dated provenance.
+
 Use a short, source-linked composition record before deriving a plan when an
 accepted outcome spans a harness, methodology tool and application adapter.
 For the selected Integration owner-answer journey, existing seed and plan prose can
