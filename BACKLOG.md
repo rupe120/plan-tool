@@ -13710,6 +13710,40 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 
 ---
 
+**#521 — A new user sees every subcommand at once, with no short happy path through `--help`**
+
+- **What:** `plan-tool --help` lists every subcommand, grouped by intent, before a newcomer has run one. OpenSpec ships four default commands (`explore`, `propose`, `apply`, `archive`) and puts the rest behind an opt-in expanded profile; a comparable short view of the core path (`create` → `completeness-audit` → `detail` → `run`) would let a first-time user start without reading the whole catalog.
+- **Route:** direct · **Readiness:** decision-needed (which commands the short view names, and whether it is the default or an opt-in) · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Arc assignment:** `backlog-arc-operator-workflow`.
+- **Effort:** small–medium. Help-text and parser presentation only, plus the generated CLI reference and its drift test.
+- **Risks / fallout:** `docs/cli/` regeneration and `tests/cli/test_cli_reference.py`; the SKILL.md "Subcommands at a glance" section must stay in sync with the catalog.
+- **Outcome:** A first-time user can see the core path in one short screen and still reach every subcommand from it.
+- **In scope:** A short happy-path view of `--help` (default or flag), a pointer from it to the full catalog, and the matching README and skill-router wording.
+- **Out of scope / Non-goals:** removing, renaming or hiding any subcommand from the full catalog; new commands; a profile or plugin system; changing any command's behavior.
+- **Allowed behavior changes:** help output only.
+- **Allowed reorganization:** only the smallest relocation needed for this outcome; no unrelated restructuring.
+- **Verification:** the short view lists exactly the chosen commands and names how to see the rest; the full catalog is unchanged; the CLI reference drift test passes after regeneration.
+- **Stop / defer:** file adjacent work separately; resolve the short-view decision with the owner before implementation.
+- **Origin:** 2026-11-06, a comparison of plan-tool with other spec-driven tools from their own documentation (OpenSpec's default and expanded profiles: https://github.com/Fission-AI/OpenSpec).
+
+**#522 — Setting plan-tool up in a repository takes four separate commands, so the first hour is spent on installation**
+
+- **What:** a new user clones the tool, runs `uv tool install --editable .`, runs `plan-tool install-skill`, then runs `plan-tool init` in the target repository. Spec Kit (`specify init --here`) and OpenSpec (`openspec init`) set up a repository and install the assistant files in one step. One bootstrap command for an already-installed `plan-tool`, which installs the skill and initializes the project profile, would remove most of that friction.
+- **Route:** direct · **Readiness:** decision-needed (the command's name, and how it handles `init`'s required operator-supplied intent) · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Arc assignment:** `backlog-arc-operator-workflow`.
+- **Effort:** medium. One new command composing two existing ones, with their tests and the onboarding docs.
+- **Risks / fallout:** `init` refuses to infer project content, so the bootstrap must prompt for or require the intent rather than invent one; installer destination and overwrite semantics must stay as #511 describes them.
+- **Outcome:** after installing `plan-tool`, a user prepares a repository for use with one command and is told the next action.
+- **In scope:** one command that runs skill installation and project initialization with their existing semantics, its success output, and the README and install-guide wording.
+- **Out of scope / Non-goals:** changing the supported clone plus editable install (#510 retains it), PyPI or `uvx` distribution (a separate decision under #514), automatic updates, and inferring project intent.
+- **Allowed behavior changes:** one new command; the existing commands keep their behavior.
+- **Allowed reorganization:** only the smallest relocation needed for this outcome; no unrelated restructuring.
+- **Verification:** in a fresh consuming repository, the command installs the skill and writes the project profile exactly as the two separate commands do; tests pin that it refuses without an operator-supplied intent.
+- **Stop / defer:** file adjacent work separately; take the distribution question to #514 rather than widening this entry.
+- **Origin:** 2026-11-06, a comparison of plan-tool with other spec-driven tools from their own documentation (Spec Kit: https://github.com/github/spec-kit; OpenSpec: https://github.com/Fission-AI/OpenSpec).
+
 ## Adding a new entry
 
 The rules for this live in [`docs/TRACKING.md` § "Adding a new entry"](docs/TRACKING.md#adding-a-new-entry).
