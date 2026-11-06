@@ -51,7 +51,7 @@ The table checks preservation of rules, not semantic equivalence by word count.
 
 The initial controller baseline is commit
 `5ec159791f20070c9db890fe021deafc673e1bb1` in
-`/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-1`.
+`<controller-clone>`.
 Record the experiment-definition commit separately. This result applies to
 that baseline's guidance, which can differ from the main development checkout.
 

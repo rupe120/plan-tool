@@ -113,7 +113,7 @@ uv run pytest tests/test_review.py::TestSomething -q   # single test/class
 `claude-opus-5-5`) and the working tier for audit, implementation, and validation
 (Codex `gpt-5.6-terra`; Claude `claude-sonnet-5-5`). Cursor passes no `--model`
 and uses Auto.** The general
-rule and its rationale live in `~/.claude/CLAUDE.md` § "Spend the stronger model
+rule and its rationale live in the owner's personal user-level `CLAUDE.md` (not in this repository) § "Spend the stronger model
 where a mistake compounds"; the per-subcommand mapping lives in
 [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md) §
 "Which model to run a subcommand with" (short version: strongest tier for `create` and
@@ -540,7 +540,7 @@ part of the conversation; we cannot validate more than that it is there."
 
 ## Machine-parsed finding annotations are heading-anchored sub-blocks, not inline trailing markers
 
-**When a `Recommendation`-producing prompt needs an optional annotation on a finding (a targeted fix, a restatement, a redirect), give it its own heading-anchored sub-block — `### <Name>`, immediately after the bullet, mirroring the existing `## Redirect` convention (`parse_redirect_block`) — never an inline trailing marker (`→ label: …`) parsed by position.** This is the project-local record of `~/.claude/CLAUDE.md`'s general "mark the boundary structurally, not positionally" rule; that file carries the principle and the measurement, this entry carries the local specifics.
+**When a `Recommendation`-producing prompt needs an optional annotation on a finding (a targeted fix, a restatement, a redirect), give it its own heading-anchored sub-block — `### <Name>`, immediately after the bullet, mirroring the existing `## Redirect` convention (`parse_redirect_block`) — never an inline trailing marker (`→ label: …`) parsed by position.** This is the project-local record of the owner's personal user-level `CLAUDE.md`'s general "mark the boundary structurally, not positionally" rule; that file carries the principle and the measurement, this entry carries the local specifics.
 
 plan-audit.md's bare-step restatement (`### Restated` / `### Fix`, parsed by `_split_audit_restated_and_fix` in `review.py`) is the shipped example. It replaced an inline `→ restated:`/`→ fix:` design that two code-review rounds broke in succession, because nothing in an inline marker is distinguishable from ordinary prose except its position; a heading that must start its own line cannot be produced by *inline* quoted prose.
 

@@ -71,7 +71,7 @@ branches in the demo-refresh handoff are not publication targets.
 
 Verified recovery bundles and the captured host ref map are in:
 
-`/Users/joshrusso/.local/share/plan-tool/release-backups/2026-10-21-pr129`
+`<release-backup-dir>/2026-10-21-pr129`
 
 - `public-release-publication-backup.bundle` covers every advertised current
   branch and tag from both hosts in separate host namespaces.
@@ -92,7 +92,7 @@ Public visibility and organization transfer are separate operations.
 The 2026-10-21 cutover aligns both local main branches with the initial
 sanitized release `03cbb6882696edd5114b3d739517a56919400025`. Current heads
 and installed versions are tracked in the release pickup. The designated clone is
-`/Users/joshrusso/bitbucket/protagona/plan-tool`; its Bitbucket and GitHub push
+`<sync-clone>`; its Bitbucket and GitHub push
 URLs remain configured. Ignored sync scripts and reminder files retain their
 bytes. Cutover checks confirm its editable 0.2.0 installation and matching
 user-level Codex SKILL.md and DIRECTIVES.md against that bundled source. Previous installed
