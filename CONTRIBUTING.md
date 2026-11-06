@@ -46,7 +46,7 @@ and authenticate for repository access before cloning. See
 [Install and update](docs/how-to/install-and-update.md) for source/version options.
 
 ```bash
-git clone git@bitbucket.org:protagona/plan-tool.git
+git clone https://github.com/rupe120/plan-tool.git
 cd plan-tool
 uv sync
 uv run pytest tests/ -q -n auto                  # the full suite, in parallel (a minute or two)
@@ -328,16 +328,21 @@ requested review has a disposition, and any remaining work has a visible
 owner or backlog entry. The remote's policy decides its required approval,
 CI, and merge-queue settings.
 
-**Remote of record: Bitbucket.** There is no CD/
+**Public home: GitHub.** Issues and pull requests are welcome at
+[rupe120/plan-tool](https://github.com/rupe120/plan-tool). The maintainers review
+and merge on an internal Bitbucket host and mirror `main` to GitHub
+([`docs/RELEASING.md`](docs/RELEASING.md#keep-bitbucket-and-github-synchronized)),
+so a GitHub pull request is carried across by a maintainer. There is no CD/
 deployment pipeline; the tool is installed by `git clone` plus an editable
 `uv tool install` (see [Which `plan-tool` is running?](#which-plan-tool-is-running)),
 not published; a release is a tagged commit with a changelog entry
 ([`docs/RELEASING.md`](docs/RELEASING.md)). The
 [`bitbucket-pipelines.yml`](bitbucket-pipelines.yml) pipeline runs the suite on
-every pull request and on `main`. **Deliberately not yet decided:** the
-required-approval count and the merge-queue setting on `main` — both are
-branch-restriction settings in the Bitbucket repository, not something a
-tracked file can hold.
+every internal pull request and on `main`; GitHub runs no CI today, so run
+`uv run pytest tests/ -q -n auto` before opening a pull request.
+**Deliberately not yet decided:** the required-approval count and the
+merge-queue setting on `main` — both are branch-restriction settings on the
+hosts, not something a tracked file can hold.
 
 ### Review plan artifacts apart from code
 
@@ -369,8 +374,8 @@ A plan-route ticket has two review moments:
    saved reports. Run `scripts/split_pr.py IPPT-123` (`--dry-run` previews the
    file counts). It builds `IPPT-123-plan` and `IPPT-123-code` from the
    branch's total change since its merge-base with `origin/main`, one snapshot
-   commit each. Push both, open a pull request for each with `bkt pr create`
-   ([`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-bitbucket-pull-requests-with-bkt)),
+   commit each. Push both, open a pull request for each with `gh pr create` (or `bkt pr create` on
+   Bitbucket; see [`DIRECTIVES.md`](integrations/shared/DIRECTIVES.md#opening-bitbucket-pull-requests-with-bkt)),
    and lead both titles with the ticket key. The pre-push hook runs the suite on each push.
 
 Merge the code pull request first when the plan branch marks steps done, so

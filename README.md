@@ -51,7 +51,7 @@ then keep a dedicated clone for the CLI that the skill invokes. `uv` manages
 the Python runtime:
 
 ```bash
-git clone git@bitbucket.org:protagona/plan-tool.git
+git clone https://github.com/rupe120/plan-tool.git
 cd plan-tool
 uv tool install --editable .     # puts `plan-tool` on PATH (uv's bin dir)
 ```

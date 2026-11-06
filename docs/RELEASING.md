@@ -154,6 +154,8 @@ version: `v0.1.0` or a later one.
 
 ## Keep Bitbucket and GitHub synchronized
 
+GitHub is the public home; Bitbucket is the internal review host where `main` is protected. This procedure keeps the two `main` branches identical.
+
 Use one designated integration clone to synchronize `main` on both hosts.
 Working clones can push review branches to the review host. Fetch both hosts
 before integrating changes so reviewed work from either host joins the same
