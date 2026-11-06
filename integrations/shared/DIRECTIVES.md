@@ -99,8 +99,11 @@ up through conversation:
    from the code. Tightening the user's own wording is fine.
 3. **Confirm the exact text.** Read back each value as it will be written and
    wait for the user to confirm it. Pass only confirmed values.
-4. **Run it.** `plan-tool init --intent "…" [--non-goal "…"]… [--decision "…"]…`.
-   It refuses an existing profile (revise that file and commit the change
+4. **Run it.** `plan-tool init --intent '…' [--non-goal '…']… [--decision '…']…`.
+   Pass each value in single quotes, writing a single quote inside it as
+   `'\''`, so the shell cannot expand `$`, backticks or `!` in it. Then read
+   `.plan-tool/project.json` back and check it against the confirmed text.
+   `init` refuses an existing profile (revise that file and commit the change
    instead) and a gitignored one.
 5. **Commit it.** The profile is meant to be committed; commit it under the
    repository's commit rules or tell the user to.

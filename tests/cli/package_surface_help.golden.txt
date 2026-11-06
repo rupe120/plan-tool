@@ -14,8 +14,8 @@ New here? Run plan-tool with no arguments for the core path.
 Subcommands are organized by **intent** — what user problem each one
 solves. New subcommands add a per-intent command module exposing
 register(subparsers) and append it to COMMAND_MODULES in
-plan_tool/cli/app.py; keep this catalog and the SKILL.md "Subcommands
-at a glance" section in sync.
+plan_tool/cli/app.py; keep this catalog, START_HERE in app.py, and the
+SKILL.md "Subcommands at a glance" section in sync.
 
 Discovery & inspection — read plan state; never call claude.
   plan-tool list                           Enumerate plan-tool-compatible plans.

@@ -553,13 +553,15 @@ Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 
 ### #521 — A short core path for newcomers
 
-Shipped 2026-11-06. A bare `plan-tool` prints the core path (`install-skill
---user`, `init`, create, both audits, detail, run) and exits 0; a test parses every command line in it
-against the real parser. `--help` deliberately stays the full catalog, with
-one pointer line to the short screen, because the skill and directives cite
-`--help` as the catalog. Global flags without a subcommand still exit 2. The screen leads with the
-README's recommended user-level skill install, because the skill then collects
-and confirms the intent and runs `init` (#522).
+Shipped 2026-11-06. A bare `plan-tool` prints the core path (user-level skill
+install, create, both audits, detail, `run --all`, `reconcile-code --all`); a
+test parses every command line in it against the real parser. It exits 0 at
+a terminal and 2 otherwise, so a script whose subcommand expanded to nothing
+still fails. `--help` deliberately stays the full catalog, with one pointer
+line to the short screen, because the skill and directives cite `--help` as
+the catalog. `init` is deliberately not a command line on the screen: a
+copied placeholder intent would be written as the real one, and setup runs
+through the skill instead (#522).
 
 ### #522 — One-command repository setup
 

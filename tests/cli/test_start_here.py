@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shlex
+import sys
 
 import pytest
 
@@ -21,15 +22,21 @@ def _command_lines() -> list[str]:
     ]
 
 
-def test_bare_invocation_prints_the_core_path_and_exits_zero(capsys) -> None:
+def test_bare_invocation_at_a_terminal_prints_the_core_path_and_exits_zero(
+    capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+
     assert main([]) == 0
 
-    out = capsys.readouterr().out
-    assert out == START_HERE
-    assert "plan-tool --help" in out
-    # The skill is installed machine-wide first, because the skill is what
-    # collects and confirms the intent before running `init`.
-    assert "plan-tool install-skill --user" in out
+    assert capsys.readouterr().out == START_HERE
+
+
+def test_bare_invocation_from_a_script_still_exits_nonzero(capsys) -> None:
+    """A wrapper whose subcommand variable expanded to nothing must still fail."""
+    assert main([]) == 2
+
+    assert capsys.readouterr().out == START_HERE
 
 
 def test_every_start_here_command_parses_against_the_real_parser() -> None:
@@ -42,6 +49,25 @@ def test_every_start_here_command_parses_against_the_real_parser() -> None:
         tokens = [_PLACEHOLDERS.get(token, token) for token in tokens]
         args = parser.parse_args(tokens)
         assert args.command in dispatch
+
+
+def test_core_path_runs_every_step_and_ends_with_the_reconcile_tail() -> None:
+    lines = _command_lines()
+
+    assert "plan-tool run <name> --all --commit" in lines
+    assert lines[-1] == "plan-tool reconcile-code <name> --all"
+
+
+def test_init_is_left_to_the_skill_rather_than_shown_as_a_command() -> None:
+    """A copied placeholder intent would be written as the real profile."""
+    assert not any(line.startswith("plan-tool init") for line in _command_lines())
+    assert "runs plan-tool init" in START_HERE
+
+
+def test_skill_install_names_the_other_integrations() -> None:
+    assert "plan-tool install-skill --integration claude --user" in _command_lines()
+    assert "--integration codex" in START_HERE
+    assert "--integration cursor" in START_HERE
 
 
 def test_global_flags_without_a_subcommand_still_report_the_usage_error() -> None:
