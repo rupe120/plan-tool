@@ -551,6 +551,27 @@ Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 [handoff-content trace](../evidence/roadmap-handoff-content-trace.md) and the
 [testing handoff](../../handoffs/2026-10-16-roadmap-business-logic-base-plan-loop.md).
 
+### #521 — A short core path for newcomers
+
+Shipped 2026-11-06. A bare `plan-tool` prints the core path (`install-skill
+--user`, `init`, create, both audits, detail, run) and exits 0; a test parses every command line in it
+against the real parser. `--help` deliberately stays the full catalog, with
+one pointer line to the short screen, because the skill and directives cite
+`--help` as the catalog. Global flags without a subcommand still exit 2. The screen leads with the
+README's recommended user-level skill install, because the skill then collects
+and confirms the intent and runs `init` (#522).
+
+### #522 — One-command repository setup
+
+Superseded 2026-11-06 before shipping: repository setup runs through the
+skill instead (DIRECTIVES.md § "Setting up a repository: the project
+profile"), which asks for the intent, confirms the exact text and runs `init`.
+An `init --install-skill` flag was built and withdrawn unshipped: once setup
+runs through the skill, the skill is already installed, and the flag's Claude
+and Cursor installs were project symlinks that work only on the machine that
+made them. Do not reintroduce it for the skill route. PyPI or `uvx`
+distribution remains #514's decision.
+
 ## Closed decisions
 
 ### #117 — Keep and instrument the code-reveals-a-split detector
