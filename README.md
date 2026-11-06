@@ -47,23 +47,20 @@ selection and compatibility across Claude Code, Codex, and Cursor.
 ## Install
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
-then keep a dedicated clone for the CLI that the skill invokes. `uv` manages
-the Python runtime:
+then install the CLI straight from GitHub. `uv` manages the Python runtime:
 
 ```bash
-git clone https://github.com/rupe120/plan-tool.git
-cd plan-tool
-uv tool install --editable .     # puts `plan-tool` on PATH (uv's bin dir)
+uv tool install git+https://github.com/rupe120/plan-tool   # puts `plan-tool` on PATH
+uv tool upgrade plan-tool                                  # later, to update
 ```
 
 Run `plan-tool` with no arguments to see the core path, and
 `plan-tool --help` for every subcommand.
 
-Keep the clone: `--editable` reads its source directly. Source updates take
-effect immediately; refresh the tool environment when dependencies or metadata
-change, and refresh copied skills separately. See
-[Install and update](docs/how-to/install-and-update.md) for release-tag versus
-`main` selection, access requirements and the complete update procedure.
+To develop plan-tool, install from a clone instead
+(`uv tool install --editable .`); see [Contributing](CONTRIBUTING.md). See
+[Install and update](docs/how-to/install-and-update.md) for pinning a release
+tag, the clone install and the complete update procedure.
 
 <a id="optional-the-agent-skill"></a>
 

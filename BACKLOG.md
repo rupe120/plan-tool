@@ -13657,12 +13657,16 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   possibly transferring to the Protagona organization later. Start public history
   with one fresh sanitized root shared by Bitbucket and GitHub. Maintain the same
   ancestry on both hosts and reconcile changes locally in one designated clone.
-  License file and package declaration are present. Publication, transfer and remote changes remain
+  License file and package declaration are present. Owner decision, 2026-11-06:
+  the user installation is `uv tool install git+https://github.com/rupe120/plan-tool`
+  (verified to install, upgrade with `uv tool upgrade` and pin a tag); the clone
+  plus editable install remains the contributor route. PyPI stays out of scope
+  here and is #523. Publication, transfer and remote changes remain
   separate actions. Future sync uses the shared sanitized base; do not merge
   pre-snapshot branches into it.
 - **Outcome:** A reviewed release decision names the license, accessible source URL,
   supported installation/update path and public Git-history boundary.
-- **In scope:** Retain clone plus uv editable install; retain Apache-2.0, choose the exact public HTTPS
+- **In scope:** Retain the Git install for users and clone plus uv editable install for contributors; retain Apache-2.0, choose the exact public HTTPS
   source and release-tag/main guidance; explain keeping the clone, dependency refresh
   and copied-skill refresh; prepare the selected fresh sanitized snapshot and
   inspect it for client material and credentials. Define shared-base synchronization
@@ -13709,6 +13713,25 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   before dependent implementation.
 
 ---
+
+**#523 — plan-tool is not on PyPI, so installing it needs a Git URL**
+
+- **What:** users install with `uv tool install git+https://github.com/rupe120/plan-tool`. Publishing to PyPI would shorten that to `uv tool install plan-tool`, make the tool findable on PyPI, and give it versioned releases. The name `plan-tool` was unclaimed on PyPI on 2026-11-06.
+- **Route:** direct · **Readiness:** deferred until triggered · **Tier:** architect.
+- **Principle:** write-for-the-human.
+- **Arc assignment:** `backlog-arc-public-release`.
+- **Effort:** about a day. Measured 2026-11-06: the wheel already bundles `integrations/`, the prompts, LICENSE and NOTICE, and an installed wheel ran `--version`, `install-skill --copy` and the start screen outside the clone.
+- **Trigger:** outside users asking for a PyPI install, a need for versioned releases, or a risk to the `plan-tool` name. Deliberately not done at launch (owner decision, 2026-11-06): the Git install removes the clone step, and every PyPI version is a permanent public release while the tool is still changing quickly.
+- **Risks / fallout:** published versions cannot be replaced; release steps become user-visible; a symlinked skill points into uv's tool environment, whose path includes the Python version.
+- **Outcome:** `uv tool install plan-tool` installs a released version, and each release is published from a tagged commit.
+- **In scope:** trim the source distribution (it was 23 MB and 8,344 files on 2026-11-06, mostly the captured reports) with a hatch sdist include list; give PyPI a description whose links resolve (the README has 64 relative links); add authors, project URLs, classifiers and keywords; a GitHub Actions workflow that tests and publishes on a version tag through Trusted Publishing; install-guide and RELEASING.md updates.
+- **Out of scope / Non-goals:** automatic updates, an internal package index, changing the Git install, and publishing anything before the owner approves the first release.
+- **Allowed behavior changes:** packaging metadata, CI, and documentation; no CLI behavior.
+- **Allowed reorganization:** only the smallest relocation needed for this outcome; no unrelated restructuring.
+- **Verification:** `uv build` produces a small sdist and the wheel; the wheel installs in a fresh environment and runs `--version`, `install-skill --copy` and the start screen; a TestPyPI publish from the workflow succeeds before the real one.
+- **Stop / defer:** file adjacent work separately; the first real publish needs the owner's explicit go-ahead.
+- **Dependencies:** #514 (distribution decisions).
+- **Origin:** 2026-11-06, an assessment of whether to publish at public launch.
 
 ## Adding a new entry
 

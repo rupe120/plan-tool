@@ -1,10 +1,32 @@
 # Install and update plan-tool
 
-Keep a dedicated source clone for the installed CLI. An editable installation
-reads code from that directory, so keep the clone at a stable path and use a
-separate clone for development that should not immediately change your CLI.
+Most users install from GitHub with uv and need no clone. Contributors install
+from a source clone instead: an editable installation reads code from that
+directory, so keep that clone at a stable path and use a separate clone for
+development that should not immediately change your CLI.
+
+## Install from GitHub
+
+The usual installation needs no clone:
+
+```bash
+uv tool install git+https://github.com/rupe120/plan-tool
+plan-tool --version
+```
+
+To pin a release, add its tag: `git+https://github.com/rupe120/plan-tool@vX.Y.Z`.
+Update with `uv tool upgrade plan-tool`, which fetches the newest commit of the
+branch you installed (a pinned tag stays put; reinstall with a new tag and
+`--force` to move it). Then refresh skills as in step 3 of
+[Update the CLI and skill](#update-the-cli-and-skill).
+
+A symlinked skill points into uv's tool environment. It survives
+`uv tool upgrade`, but that path includes the Python version, so re-run
+`install-skill` after a reinstall that changes Python, or install with `--copy`.
 
 ## Install from source
+
+Use a clone when you are developing plan-tool.
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Git,
 then clone the selected source:
@@ -46,7 +68,9 @@ Preserve optional extras when reinstalling, for example
 
 ## Update the CLI and skill
 
-Start with a clean installation clone. Finish or preserve local edits before
+For a GitHub installation, steps 1 and 2 are one command,
+`uv tool upgrade plan-tool`; then do steps 3 and 4. For a clone installation,
+start with a clean installation clone. Finish or preserve local edits before
 switching versions; a failed fast-forward requires inspection.
 
 1. Select the next version. For `main`, run:
