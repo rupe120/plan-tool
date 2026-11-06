@@ -575,13 +575,16 @@ Start here:
   plan-tool run <name> --all --commit                     Run every step.
   plan-tool reconcile-code <name> --all                   Check code vs plan.
 
-For Codex or Cursor, install with --integration codex or --integration cursor.
+For Codex or Cursor, use --integration codex or --integration cursor in place
+of claude; Cursor shares Claude's skill folder, so install only one of them.
 To set up a repository, ask your assistant: it asks for the project's intent,
 confirms the wording with you, and runs plan-tool init.
 
 Every subcommand:     plan-tool --help
 One command's flags:  plan-tool <command> --help
 """
+
+MISSING_COMMAND_ERROR = "plan-tool: error: the following arguments are required: command"
 
 
 def main(argv: Optional[list[str]] = None) -> int:
@@ -593,6 +596,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         # A missing subcommand stays a usage error (stderr, exit 2) so a script
         # whose subcommand expanded to nothing still fails; only the text is new.
         print(START_HERE, end="", file=sys.stderr)
+        print(f"\n{MISSING_COMMAND_ERROR}", file=sys.stderr)
         return 2
     parser, dispatch = assemble(cli.__doc__, COMMAND_MODULES)
     args = parser.parse_args(argv)

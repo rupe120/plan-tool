@@ -99,12 +99,13 @@ up through conversation:
    from the code. Tightening the user's own wording is fine.
 3. **Confirm the exact text.** Read back each value as it will be written and
    wait for the user to confirm it. Pass only confirmed values.
-4. **Run it.** `plan-tool init --intent '…' [--non-goal '…']… [--decision '…']…`.
-   Pass each value in single quotes, writing a single quote inside it as
-   `'\''`, so the shell cannot expand `$`, backticks or `!` in it. Then parse
-   `.plan-tool/project.json` as JSON and check each value against the confirmed
-   text; `init` collapses each run of whitespace to one space, so compare after
-   doing the same.
+4. **Run it.** `plan-tool init --intent='…' [--non-goal='…']… [--decision='…']…`.
+   Join each flag to its value with `=` so a value starting with `-` is not
+   read as an option, and single-quote the value, writing a single quote
+   inside it as `'\''`, so the shell cannot expand `$`, backticks or `!`.
+   Then parse `.plan-tool/project.json` as JSON and check each value against
+   the confirmed text after normalizing it as `init` does: trim the ends and
+   collapse each run of whitespace to one space.
    `init` refuses an existing profile (revise that file and commit the change
    instead) and a gitignored one.
 5. **Commit it.** The profile is meant to be committed; commit it under the

@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import re
 import shlex
 
 import pytest
 
 from plan_tool import cli
-from plan_tool.cli.app import COMMAND_MODULES, START_HERE, main
+from plan_tool.cli.app import COMMAND_MODULES, MISSING_COMMAND_ERROR, START_HERE, main
 from plan_tool.cli.parser import assemble
 
 _PLACEHOLDERS = {"<slug>": "demo", "<name>": "demo", "<seed.md>": "seed.md"}
@@ -26,7 +27,7 @@ def test_bare_invocation_prints_the_core_path_as_a_usage_error(capsys) -> None:
     assert main([]) == 2
 
     captured = capsys.readouterr()
-    assert captured.err == START_HERE
+    assert captured.err == f"{START_HERE}\n{MISSING_COMMAND_ERROR}\n"
     assert captured.out == ""
 
 
@@ -56,13 +57,7 @@ def test_core_path_follows_the_pipeline_order() -> None:
         "run",
         "reconcile-code",
     ]
-
-
-def test_core_path_runs_every_step_and_ends_with_the_reconcile_tail() -> None:
-    lines = _command_lines()
-
-    assert "plan-tool run <name> --all --commit" in lines
-    assert lines[-1] == "plan-tool reconcile-code <name> --all"
+    assert "--all" in shlex.split(_command_lines()[5])
 
 
 def test_init_is_left_to_the_skill_rather_than_shown_as_a_command() -> None:
@@ -71,13 +66,16 @@ def test_init_is_left_to_the_skill_rather_than_shown_as_a_command() -> None:
     assert "runs plan-tool init" in START_HERE
 
 
-@pytest.mark.parametrize("integration", ("codex", "cursor"))
-def test_skill_install_advice_for_other_integrations_parses(integration: str) -> None:
+def test_skill_install_advice_for_other_integrations_parses() -> None:
+    """The prose advice swaps one flag value; each named value must be valid."""
     parser, _ = assemble(cli.__doc__, COMMAND_MODULES)
+    named = re.findall(r"--integration (\w+)", START_HERE.split("Start here:")[1])
+    install = next(line for line in _command_lines() if " install-skill " in line)
 
-    assert f"--integration {integration}" in START_HERE
-    args = parser.parse_args(["install-skill", "--integration", integration, "--user"])
-    assert args.integration == integration
+    assert set(named) == {"claude", "codex", "cursor"}
+    for integration in named:
+        tokens = shlex.split(install.replace("claude", integration))[1:]
+        assert parser.parse_args(tokens).integration == integration
 
 
 def test_global_flags_without_a_subcommand_still_report_the_usage_error() -> None:

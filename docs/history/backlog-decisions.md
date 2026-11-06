@@ -555,14 +555,14 @@ Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 
 Shipped 2026-11-06. A bare `plan-tool` prints the core path (user-level skill
 install, create, both audits, detail, `run --all`, `reconcile-code --all`); a
-test parses every command line in it against the real parser. It stays a
-usage error, printed to stderr with exit 2, so a script whose subcommand
-expanded to nothing still fails; a terminal check was tried and dropped
-because it cannot tell a script from a person. `--help` deliberately stays the full catalog, with one pointer
-line to the short screen, because the skill and directives cite `--help` as
-the catalog. `init` is deliberately not a command line on the screen: a
-copied placeholder intent would be written as the real one, and setup runs
-through the skill instead (#522).
+test parses every command line in it against the real parser. It stays a usage
+error, printed to stderr with exit 2, so a script whose subcommand expanded to
+nothing still fails; a terminal check was tried and dropped because it cannot
+tell a script from a person. `--help` deliberately stays the full catalog,
+with one pointer line to the short screen, because the skill and directives
+cite `--help` as the catalog. `init` is deliberately not a command line on the
+screen: a copied placeholder intent would be written as the real one, and
+setup runs through the skill instead (#522).
 
 ### #522 — One-command repository setup
 
