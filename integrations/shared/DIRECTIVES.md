@@ -1338,6 +1338,26 @@ the finding itself cannot be closed without the broader change.
 
 ---
 
+# Smallest proof first
+
+Before a seed or plan is decomposed, identify one concrete end-to-end proof of the
+user's requested result using existing code, commands and platform behavior.
+Require a current requirement and concrete code or platform evidence before
+adding an abstraction, process boundary, persisted record, lifecycle or
+configuration surface that unchanged reuse or a direct call could avoid. Future
+reuse, symmetry, generic robustness and a clean completeness audit are not proof
+that the machinery is needed.
+
+Carry that burden through detail and execution. Audit unnecessary expansion as
+well as missing behavior. Preserve required safety, compatibility, authority and
+audit properties and explicit owner decisions; an approved overlarge contract
+needs a surfaced scope decision, never silent weakening. Unknown evidence stays
+unknown rather than authorizing both speculative designs. Explain the selected
+path and necessary departures in existing artifacts and review output. Do not
+add a size heuristic, semantic minimality gate, extra model pass or proof ledger.
+Prompt delivery and contract tests establish that the instruction reaches the
+model; they do not certify the semantic quality of a generated design.
+
 # Authoring hygiene
 
 **Feed `create` a seed file via `--from-existing <path>`, not an inline `--from`

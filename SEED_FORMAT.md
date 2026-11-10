@@ -37,6 +37,17 @@ must mention it. A seed that accretes side-concerns produces a plan that
 audits as over-packed and ends up carved apart by `scope-out`; keep the
 carving out of the seed instead.
 
+**Smallest proof before architecture.** Start from the user's concrete result,
+not a complete capability platform. Identify one end-to-end proof and the existing
+commands, owners or platform features it reuses. Add a mechanism only for a
+current requirement that this direct path cannot satisfy, with code or platform
+evidence of that limitation. Required safety, compatibility, authority and audit
+properties still apply; they do not automatically require a new process, store,
+broker, lifecycle or generalized policy layer. Keep unknowns visible and preserve
+explicit owner choices. If the seed makes a larger design mandatory, surface that
+scope decision before elaborating it. Use the existing Architecture and scope
+sections, not an extra checklist or persisted proof artifact.
+
 **Destinations, not turn-by-turn.** The seed names the destinations and the order of
 travel — what capabilities exist when it ships, what depends on what, which
 stage of a group it is — not the turn-by-turn construction. Function

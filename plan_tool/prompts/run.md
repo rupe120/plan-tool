@@ -18,6 +18,20 @@ ${step_files}
 ${scope_fence_block}
 ## What to do
 
+**Smallest proof first.**
+
+Implement the shortest end-to-end path that satisfies the approved step using
+existing commands, owners and platform behavior. A new abstraction, process
+boundary, persisted record, lifecycle or configuration surface must close a
+current requirement that unchanged reuse or a direct call cannot satisfy; name
+that requirement and the concrete blocker before adding it. Future reuse,
+symmetry and generic robustness are not sufficient. Keep required safety,
+compatibility, authority and audit properties and explicit owner decisions.
+If satisfying the approved contract requires disproportionate machinery, surface
+the scope tradeoff instead of silently expanding or weakening the contract.
+Record a necessary departure in the existing Validation/Summary output; do not
+create a separate proof framework or mandatory document.
+
 Implement this step against the current codebase. Follow the project's
 conventions (see `README.md` and the files you touch for local
 patterns). Do not consult LLM-specific guidance files (e.g. CLAUDE.md,

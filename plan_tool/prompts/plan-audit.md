@@ -16,6 +16,28 @@ This is distinct from one check that runs elsewhere:
 **Read/Grep only — do not edit any file.** Report findings; a separate
 apply pass acts on them.
 
+## Smallest proof first — challenge necessity before elaborating machinery
+
+First compare the intended outcome with one concrete end-to-end path through
+existing code, commands and platform behavior. Challenge the plan's proposed
+abstractions, process boundaries, persisted records, lifecycles and configuration
+surfaces: which current requirement fails without each one, and what concrete
+code or platform evidence rules out unchanged reuse or a direct call? A mechanism
+is not necessary merely because the generated plan or detail already promises it.
+Future reuse, symmetry, generic robustness and internal consistency do not
+establish necessity. An internally consistent design can still overbuild the
+requested proof.
+
+Where repository evidence establishes a narrower path that preserves the stated
+outcome and required safety, compatibility, authority and audit properties,
+report the unnecessary expansion as a scoped design finding with that evidence
+and the smaller remedy. Distinguish an author-added mechanism from an explicit
+owner constraint: preserve settled choices and route a conflict with them to an
+owner scope decision. Do not infer excess from word counts, file counts or named
+patterns alone, weaken required properties, or fabricate an alternative when the
+evidence is unavailable. Use the existing finding contract and judgment rules;
+this adds no deterministic minimality score, finding type or automatic rewrite.
+
 ## Method — audit commitments, not sites
 
 A real defect is almost never a fact about the one sentence where you

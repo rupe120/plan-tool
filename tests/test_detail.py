@@ -8224,6 +8224,10 @@ class TestExtractPlanGuardrails:
         assert "Do not add an export gate." in prompt
         assert "_no plan-level guardrails or scope fence_" not in prompt
         assert "Keep the detail proportional to the plan." in prompt
+        assert "**Smallest proof first.**" in prompt
+        assert "current requirement that fails" in prompt
+        assert "not permission to build both possible designs" in prompt
+        assert "do not silently weaken it" in prompt
 
 
 # A plan carrying intent at both altitudes, with per-step intents that differ

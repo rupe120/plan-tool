@@ -17212,6 +17212,11 @@ class TestDetailBundleStatus:
         normalized_prompt = " ".join(prompt.split())
 
         assert "Keep findings proportional to that intent." in prompt
+        assert "challenge necessity before elaborating machinery" in prompt
+        assert "internally consistent design can still overbuild" in normalized_prompt
+        assert "not necessary merely because the generated plan" in normalized_prompt
+        assert "preserve settled choices" in normalized_prompt
+        assert "adds no deterministic minimality score" in normalized_prompt
         assert (
             "more general abstraction, adjacent workflow, or future capability"
             in normalized_prompt

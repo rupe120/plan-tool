@@ -27,6 +27,19 @@ fetched", synthesize from the seed and any local repository evidence below.
 
 ${reference_docs_block}
 
+## Smallest proof first
+
+In Architecture, identify one concrete end-to-end proof using existing commands,
+owners and platform behavior before describing new machinery. Each added
+abstraction, process boundary, persisted record, lifecycle or configuration
+surface needs a current requirement that fails without it and a concrete reason
+unchanged reuse or a direct call cannot meet that requirement. Future reuse,
+symmetry and generic robustness do not establish necessity. Keep required
+safety, compatibility, authority and audit properties intact. Preserve explicit
+owner choices; surface an oversized fixed step-list for owner review rather
+than inventing justification or silently changing it. Use existing sections and
+response keys, not a new proof document or framework.
+
 ## Dependency cohesion
 
 This plan's steps are already fixed. These `depends_on` edges connect two
