@@ -294,6 +294,20 @@ the ToC entry when the step has no contract input.
 
 ## Constraints
 
+**Smallest proof first.**
+
+Before expanding this step, trace its shortest concrete path through existing
+code to the required observable result. Prefer unchanged reuse, a direct call
+or a fixed check. For every new abstraction, process boundary, persisted record,
+lifecycle or configuration surface, identify the current requirement that fails
+without it and the code or platform evidence that rules out the narrower path.
+Future reuse, symmetry and generic robustness are not evidence. Unknown facts
+remain explicit uncertainties, not permission to build both possible designs.
+Keep required safety, compatibility, authority and audit properties and explicit
+owner choices intact. If the approved contract itself prevents a smaller proof,
+surface that scope decision; do not silently weaken it. Put this reasoning in
+the existing Implementation section; do not add a required artifact or section.
+
 - **Treat every author-supplied plan guardrail above as a constraint on this
   step.** Do not relax, contradict, replace, or silently omit it while
   translating the plan into implementation detail. Apply only the portion that

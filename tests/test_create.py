@@ -22021,6 +22021,11 @@ class TestRenderFromPromptABMode:
             assert "smallest end-to-end proof" in prompt
             assert "adjacent workflow, cleanup, generalization, or future" in prompt
             assert "Keep the step list at plan altitude" in prompt
+            assert "Smallest proof first, before decomposition." in prompt
+            assert prompt.index("Smallest proof first") < prompt.index("1. Use Glob/Read")
+            assert "name the current requirement that fails without it" in prompt
+            assert "explicit owner choices" in prompt
+            assert "add no new response fields or mandatory review artifact" in prompt
 
     def test_create_prompt_states_all_three_mechanism_reach_routes(self) -> None:
         for arm in ({}, {"omit_foundational_item": True}):
@@ -22038,6 +22043,9 @@ class TestRenderFromPromptABMode:
         assert "smallest local adapter or bounded additive extension" in prompt
         assert "required shared semantic change out of the focused plan" in prompt
         assert "do not add a route field or a new body section" in prompt
+        assert "## Smallest proof first" in prompt
+        assert "current requirement that fails without it" in prompt
+        assert "rather than inventing justification or silently changing it" in " ".join(prompt.split())
         assert "## Mechanism reach" not in prompt
         assert '"route"' not in prompt
 

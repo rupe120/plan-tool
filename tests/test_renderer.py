@@ -174,6 +174,17 @@ steps:
 
 
 class TestRenderRunPrompt:
+    def test_run_prompt_requires_a_concrete_need_for_new_machinery(self, tmp_path: Path) -> None:
+        plan = _plan()
+        prompt = render_prompt(plan, plan.step_by_id(2), repo_root=tmp_path, mode="run")
+        text = " ".join(prompt.split())
+        assert "**Smallest proof first.**" in prompt
+        assert "current requirement that unchanged reuse or a direct call cannot satisfy" in text
+        assert "concrete blocker before adding it" in text
+        assert "explicit owner decisions" in text
+        assert "instead of silently expanding or weakening the contract" in text
+        assert "do not create a separate proof framework or mandatory document" in text
+
     def test_retired_jira_detail_reader_is_not_exposed(self) -> None:
         import plan_tool.renderer as renderer
 
