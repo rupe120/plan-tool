@@ -49,3 +49,7 @@ docs/standards/*.pdf
 
 # Machine-local organization context and contributor identity mappings.
 .claude/local/
+
+# AI-DLC workflow hook state (heartbeat files under aidlc/spaces/*/intents/
+# .aidlc-engine/); machine-local, not repo content.
+aidlc/
