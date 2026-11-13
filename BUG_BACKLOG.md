@@ -587,8 +587,9 @@ Durable re-open conditions for retired items are recorded in
   tell the reader to follow the current directives directly above a recipe that
   skips Gate 1.
 - **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
-  after `create` in each block, as each entry is next touched. Deliberately not
-  done: a script that rewrites the queue, because the recipes are part of
+  after `create` in each block, as each entry is next touched, with the routers'
+  caveat to commit the plan first (`--commit` refuses a dirty working tree).
+  Deliberately not done: a script that rewrites the queue, because the recipes are part of
   entries that are edited when picked up.
 - **Approach:** `direct` — documentation only.
 - **Verification:** no `BACKLOG.md` recipe block has a `plan-tool detail` line

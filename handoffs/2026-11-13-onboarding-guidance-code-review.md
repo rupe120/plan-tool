@@ -11,7 +11,7 @@ in [`bug-backlog-drain.md`](bug-backlog-drain.md).
 | Item | State |
 | --- | --- |
 | Review range | `origin/main..HEAD` at each pass's head. The branch also carries two housekeeping commits (the handoff trim `8b40cdbb0` and the ledger move `2c3e829aa`) |
-| Heads reviewed | Pass 1: `6f78a5eb6`. Pass 2: `c8dc895b7`. Pass 3: `881047f62`. Corrections to pass 3: `9bb43e535`, `71a053ece`, `3a6b9a773`, then this ledger revision (the next commit) |
+| Heads reviewed | Pass 1: the head before `9ca3bb6b3` (that commit was amended before the first push, so the pre-amend hash is not cited). Pass 2: `c8dc895b7`. Pass 3: `881047f62`. Corrections to pass 3: `9bb43e535`, `71a053ece`, `3a6b9a773`, then this ledger revision (the next commit) |
 | Checks | Full suite 14,916 passed, 66 skipped, 2026-11-13, after the last change; documentation and backlog only, no code. The reviewers read the repo and git history but could not run scripts, so the 24-hit sweep breakdown was re-derived by hand in pass 3 |
 | Reviewer | Headless sessions on `claude-sonnet-5-5`. Findings files and stream logs are local scratch (`.tmp/onboarding-docs-entry-code-review-N.*`, gitignored); findings and dispositions are recorded here |
 | Disposition | **Stopped at exit 2, 2026-11-13: neither converged nor clean.** See Closure |
