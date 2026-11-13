@@ -552,13 +552,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
 
-### Files-coherence checking cannot recognize declared extensionless Dockerfile citations
-
-- **Files:** `plan_tool/detail.py:extract_path_mentions`, `extract_filename_mentions`, and `plan_tool/review.py:check_files_coherence`.
-- **Symptom:** an explicitly declared `engine_worker/Dockerfile` is reported as not mentioned even when the detail names it in Files, Implementation and a Markdown reference. Both mention extractors require a known dot extension, so no spelling of the real extensionless path can satisfy the check. Loom async-engine-startup detail audit `20261104-230108-completeness` reproduced one false nit and an awaiting-human-action result despite zero conceptual findings. Source inspection later established that the Dockerfile was read-only context, so the Loom footprint was legitimately narrowed; the extractor defect remains for efforts that really edit Dockerfiles.
-- **Fix:** recognize supported extensionless filenames while preserving exact-path matching and avoiding arbitrary identifier matches. Do not require invented filenames or remove a real edit from a plan merely to suppress the diagnostic.
-- **Approach:** direct, with focused regressions for a declared Dockerfile cited as a path, an actually missing Dockerfile citation, and nearby bare prose that is not a filename.
-
 ### The plan audit can emit a "no gap here" confirmation as a medium finding, and it blocks convergence
 
 - **Files:** `plan_tool/prompts/plan-audit.md` (the output contract at
