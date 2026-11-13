@@ -14,8 +14,8 @@ home first.
    holds the brief.
 3. Skip the `## ROADMAP` section: it is owner-tracked and not part of the
    drain.
-4. Order across files follows `docs/TRACKING.md` § "Choosing what to promote
-   next"; this handoff adds no priority rule of its own.
+4. This handoff drains `BUG_BACKLOG.md` only. Ordering across files, and
+   Jira promotion, are the lead's call (`docs/TRACKING.md`).
 5. Take an entry only when its Route is `direct` and its Readiness is `ready`
    (labels: `docs/TRACKING.md` § "Labels every entry carries"). Surface every
    other entry to the user instead of picking it up: `Route: plan` (use
@@ -47,7 +47,9 @@ home first.
    missed site.
 6. **Review the complete diff** for sibling call sites, docs, and error
    outcomes the fix implies. Run `/code-review` at `high` after committing, and
-   iterate until a round is clean or low-yield.
+   stop under `CLAUDE.md` § "Severity-aware conceptual-audit stopping rule":
+   two consecutive low-yield passes (`handoffs/README.md` § Retention defines
+   converged), or one of its three exits.
 7. **Remove only the fulfilled entry** (or its promotion stub) and any obsolete
    references. Do not describe a retired risk as fixed; a retirement is
    recorded in
@@ -74,7 +76,9 @@ Record each drained entry as one dated line: entry heading, disposition
 `tracked <backlog id>`, or `pending`), and the commit that removed the entry.
 A change that goes through a review loop keeps its pass-by-pass record in its
 own ledger (`handoffs/README.md` § "Review ledgers"); the line here points to it.
-Drop a line once its change has merged to `main`; keep `pending` lines until
+Drop a `fixed` line once its change has merged to `main`, and a `refuted`,
+`declined`, or `tracked` line once its evidence lives in `BUG_BACKLOG.md`,
+`BACKLOG.md`, or `docs/history/backlog-decisions.md`; keep `pending` lines until
 they resolve.
 
 - 2026-11-13 — `create --from-existing` records `source_seed` as the seed it
@@ -93,10 +97,12 @@ they resolve.
   `evidence-gated`. Not reproduced at 1.3.1 with the entry's nine-heading seed
   and a stubbed distill; the original distill response is not retained. No
   code or test change: the scratch test was discarded because it could not be
-  shown to fail under the old behavior.
+  shown to fail under the old behavior. A repeated non-canonical heading in a
+  direct-ready seed does crash with the same message; it is filed as its own
+  `ready` entry.
 - 2026-11-13 — Multiline concept decisions can create document headings
   outside their owned section: `fixed a0cda5b53`, entry removed in
-  `436b812d7`. Review record and open status:
+  `436b812d7`. Review record:
   [`2026-11-13-multiline-concept-decisions-code-review.md`](2026-11-13-multiline-concept-decisions-code-review.md).
 
 ## Deliberately not in this handoff

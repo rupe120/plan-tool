@@ -57,7 +57,7 @@ compressing or retiring a handoff.
 
 - [Bug backlog drain](bug-backlog-drain.md) — standing procedure, queue order, stop conditions, and session log for draining `BUG_BACKLOG.md`.
 
-- [Multiline concept decisions review](2026-11-13-multiline-concept-decisions-code-review.md) — review ledger for the one-line concept decision rendering fix: settled decisions, per-pass findings and dispositions, and the open pass.
+- [Multiline concept decisions review](2026-11-13-multiline-concept-decisions-code-review.md) — review ledger for the one-line concept decision rendering fix: settled decisions and per-pass findings and dispositions.
 
 - [Overengineering checkpoints](2026-11-12-overengineering-checkpoints.md) — merged checkpoints, instruction refresh after project model selection, behavioral-test limits, and observation on the next real task.
 

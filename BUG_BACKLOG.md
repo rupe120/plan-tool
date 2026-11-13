@@ -368,8 +368,9 @@ Durable re-open conditions for retired items are recorded in
 ### `create --from-existing` records `source_seed` as the seed path it then archives; for a roadmap-published seed the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
 - **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1677`) and the
-  seed archive on the superseded-by-new-plan path (`ARCHIVE_DIRNAME`,
-  `REPLACED_SUFFIX`, `:493`, `:503`).
+  seed archive on the superseded-by-new-plan path (`archive_existing_source`,
+  `_archive_targets`; the `ARCHIVE_DIRNAME` and `REPLACED_SUFFIX` constants at
+  `:493`, `:503`).
 - **Verified 2026-11-13 (plain `plan-seeds/` seed only):** one throwaway
   `create --from-existing` plus one single-pass bare audit did **not**
   reproduce the HIGH. `source_seed` stayed `plan-seeds/greeter.md` after the
@@ -467,12 +468,12 @@ Durable re-open conditions for retired items are recorded in
 
 ### `plan-tool create --from-existing` crashes with "concept scope contains duplicate IDs" on a seed that has some but not all of the standard section headings
 
-- **Files:** `plan_tool/create.py` (`_review_create_concepts` at line 7833, which
-  builds the scope list at line 7871; the concept tree is built at about line
-  9648 from `parse_body_sections(concept_source, ignore_fenced_code=True)`),
-  `plan_tool/concept_review.py:_validate_request` (line 61, the duplicate-ID
-  check), `plan_tool/concept_tree.py:concept_id` (line 77, the ID is a hash of
-  the section title).
+- **Files:** `plan_tool/create.py` (`_review_create_concepts`, which builds the
+  scope list; the concept tree is built in `create_plan` from
+  `parse_body_sections(concept_source, ignore_fenced_code=True)`),
+  `plan_tool/concept_review.py:_validate_request` (the duplicate-ID check),
+  `plan_tool/concept_tree.py:concept_id` (the ID is a hash of the section
+  title).
 - **Symptom:** confirmed by running the command twice. On plan-tool 0.1.0,
   `plan-tool create milestone-3-diff-plan --from-existing
   plan-seeds/milestone-3-diff-plan.md --output-dir docs/implementation-plans -y
@@ -500,19 +501,19 @@ Durable re-open conditions for retired items are recorded in
   sections twice. The report's inference was that the distilled body is joined
   with the original seed's own canonical sections when the seed has some of
   the standard headings but not all of them; **Checked** below records what
-  the code at 1.3.1 does. Fix it where the duplicates are introduced, and also make
-  `_review_create_concepts` report the repeated section name instead of the
-  hash-based "duplicate IDs" crash, since no user can act on that message.
+  the code at 1.3.1 does. Fix it where the duplicates are introduced. The
+  unactionable message is a separate, reproduced defect with its own entry
+  below.
 - **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
   reproduced. A test seeded with the nine headings above (no Overview, no
   Problem statement), a stubbed distill returning the eight canonical
   sections, and `yes=True` wrote its plan without error. The model-written
   distill response from the original crash is not retained here, so this
-  cannot exclude a response shape the stub does not produce. The same-day
-  throwaway run (some canonical headings, real models) also succeeded.
-  `parse_body_sections` does return repeated headings unchanged, so a body
-  that repeats a title still reaches `bootstrap_concepts`; whether the
-  "duplicate IDs" message then surfaces unactionably is unverified. On the
+  cannot exclude a response shape the stub does not produce. A one-step
+  real-model throwaway run at 1.3.1 (a seed with Outcome, Scope contract,
+  Deferred, Risks and References) also succeeded. `parse_body_sections` does
+  return repeated headings unchanged, and a repeated heading does reach the
+  crash on another route (next entry). On the
   normalized route the distilled body comes from `_render_distilled_markdown`,
   which emits each canonical or recognized optional section once and never
   `References`; the only raw-seed text appended afterwards is the seed's own
@@ -536,6 +537,35 @@ Durable re-open conditions for retired items are recorded in
   seed for its milestone 3 plan, 2026-10-17. Not checked against the existing
   tests for `create`, so a test that pins the current joining behavior may
   exist.
+
+### `create --from-existing` crashes with "concept scope contains duplicate IDs" when a seed repeats any `## Heading`
+
+- **Files:** `plan_tool/create.py` (`_review_create_concepts`; the concept tree
+  built in `create_plan` from `parse_body_sections(concept_source,
+  ignore_fenced_code=True)`), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
+  `plan_tool/concept_review.py:_validate_request`.
+- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 with no model call
+  beyond a stubbed split assessment. A direct-ready file seed
+  (`tests/test_create.py::_direct_ready_file_source`: each canonical heading
+  once, a `## Steps` block, one `## References`) that also holds two
+  `## Notes` sections stops `create` with `InvalidConceptScopeError: concept
+  scope contains duplicate IDs`; the same seed with `## Notes` once writes its
+  plan. `parse_body_sections` returns repeated headings unchanged and
+  `bootstrap_concepts` derives each id from the section name, so two sections
+  with one name get one id. The message names no heading, so the author cannot
+  tell which one to rename. Two cases (control and repeat); the seed shape is
+  an extra non-canonical heading, not the report in the entry above.
+- **Fix:** refuse before the concept review with a `CreateError` that names the
+  repeated heading and says to rename or merge it, like the other
+  `--from-existing` source refusals (`classify_file_backed_source` already reads
+  `extract_h2_section_occurrences`; check it for a seam before adding a new
+  check). Deliberately not done: merging or renaming duplicate sections
+  automatically (that edits the author's body) and changing concept ids.
+- **Approach:** `direct` — a regression test with the two cases above (the
+  control must stay green) and one pre-review check.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-13, found while checking the entry above; same message,
+  different route.
 
 ### Create body-patch helpers can normalize existing plan body newlines
 
