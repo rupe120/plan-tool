@@ -285,6 +285,11 @@ does not choose the execution backend. `--backend` selects the backend while
 retaining its configured model defaults; `--model` overrides model defaults,
 including every configured command model. Only an explicit `--model` can infer
 a backend from its model family; configured models never change the backend.
+The rule keys on the file existing, not on what it configures (deliberately:
+one checkable fact). A file that sets neither `default_backend` nor a model for
+`create`/`roadmap` leaves those commands on the backend's own default model; pass
+`--model` explicitly when the strongest tier is wanted there.
+
 See `docs/BACKENDS.md` in the plan-tool repository for configuration, command
 aliases, and separate precedence tables.
 
@@ -484,6 +489,28 @@ defer the concern rather than enlarging the arc. The bar is the smallest proof
 that satisfies that named property today, not the eventual, more general
 capability the mechanism could someday support.
 
+**Every correction is true and proportional to the intent at its current
+altitude.** At bare-plan altitude, state and prove the smallest plan-level
+property that completes the intent; leave delivery mechanics to `detail`.
+Before editing, sweep both the cited identifier and the concept's vocabulary,
+then judge the proposed remedy against the goal and the bug's shape. Do not
+mistake replaying one mechanism at every matched site for proof that the
+mechanism produces the intended property.
+
+The run-grade bare-mechanism / same-finding `edit_drift` advisory helps an
+operator reconsider a likely detail-owned request. It is recommend-only, not
+causal proof or an automatic deferral, and it changes no gate, continuation,
+failure, or exit behavior. The
+detail-grounded audit remains the stage that judges the selected mechanism.
+
+**Proceed to `detail` when** a re-audit is confirmed-dry (or confirmed-low-yield
+per the stopping rule below) against a fresh unchanged snapshot. Record the
+report path, the `N of M` detail coverage, the audit-coverage verdict
+(including a budget-limited result), and which remedies remain detail-owned. **After three
+bare rounds, proceed to `detail` when the remaining findings are D, I, or about
+text the previous round added**, and carry them as detail inputs; a fourth bare
+round on them audits your own edits (the second of the three exits below), not the plan.
+
 ## Explicit overengineering checkpoints
 
 Ask **“Are we overengineering this?”** at each transition below, even when
@@ -509,28 +536,6 @@ would change a settled contract or scope, surface the choice to the user
 before proceeding; apply the existing audit-shape override rule when a shape
 fires. This is an explicit session judgment, not a new automated check,
 blocking predicate, or exit-code rule.
-
-**Every correction is true and proportional to the intent at its current
-altitude.** At bare-plan altitude, state and prove the smallest plan-level
-property that completes the intent; leave delivery mechanics to `detail`.
-Before editing, sweep both the cited identifier and the concept's vocabulary,
-then judge the proposed remedy against the goal and the bug's shape. Do not
-mistake replaying one mechanism at every matched site for proof that the
-mechanism produces the intended property.
-
-The run-grade bare-mechanism / same-finding `edit_drift` advisory helps an
-operator reconsider a likely detail-owned request. It is recommend-only, not
-causal proof or an automatic deferral, and it changes no gate, continuation,
-failure, or exit behavior. The
-detail-grounded audit remains the stage that judges the selected mechanism.
-
-**Proceed to `detail` when** a re-audit is confirmed-dry (or confirmed-low-yield
-per the stopping rule below) against a fresh unchanged snapshot. Record the
-report path, the `N of M` detail coverage, the audit-coverage verdict
-(including a budget-limited result), and which remedies remain detail-owned. **After three
-bare rounds, proceed to `detail` when the remaining findings are D, I, or about
-text the previous round added**, and carry them as detail inputs; a fourth bare
-round on them audits your own edits (the second of the three exits below), not the plan.
 
 ## Gate 2 — the detail-grounded audit (after `detail`)
 
