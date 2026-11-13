@@ -4,8 +4,9 @@
 
 The checkpoint instructions make the question explicit in this small, loaded-context
 test. They do not demonstrate better design decisions: both conditions choose the
-same bounded remedies and preserve the necessary ownership protection. The installed
-workflow still needs the updated instructions before it can use these checkpoints.
+same bounded remedies and preserve the necessary ownership protection. The
+installed-workflow follow-up below tests delivery and visible checkpoints on
+a real edit in a throwaway repository.
 
 This is a dated measurement (2026-11-12), not a new gate or a reliability claim.
 There is one fresh session per condition, with four obvious synthetic situations
@@ -71,11 +72,10 @@ They can still have proportionality guidance and a backend can receive project
 instructions through other routes. The observation establishes that these edits
 do not automatically inject the new checkpoint into every subprocess prompt.
 
-Therefore the change is sufficient to elicit an explicit question in this loaded
-sample, but insufficient to establish delivery or compliance throughout the real
-process. Update the active instruction sources through the normal installation
-route, then observe a real session at stage transitions. This test supplies no
-reason by itself to add an automated semantic gate or expand every prompt.
+The initial result establishes an explicit question in the loaded sample, but
+not delivery or compliance throughout the real process. The follow-up below
+checks the active instructions and direct-change behavior. Neither test supplies
+a reason by itself to add an automated semantic gate or expand every prompt.
 
 ## Exact task
 
@@ -128,3 +128,128 @@ Next action: before editing, enumerate affected sites using identifier and vocab
 Next action: remove that machinery and its references, verify the count behavior with affected tests, and complete the required reconciliation and review convergence before requesting pull-request review.
 
 For each situation, I would record the decision in the existing handoff or review ledger.
+
+
+## Installed-workflow follow-up (2026-11-12)
+
+The active instructions now contain the checkpoint section and a short reminder
+in the skill entry point. A completed executable task makes the pre-edit check
+and final-review answer visible after two bounded wording corrections. One
+successful run is evidence of the behavior, not a reliability estimate.
+
+### Delivery and remedy scope
+
+The active directives contain newer rules than this test checkout. Replacing
+whole files with this checkout's copies would remove those rules. The update
+therefore inserts only the checkpoint section into the installed Codex copy
+and the tracked source behind both Claude instruction links. Byte comparisons
+verify that removing the inserted section reproduces each original exactly.
+The active source checkpoint commit is `a22d16bc1`; its final skill-router
+commit is `ac54ca7e2`. This test checkout carries the router change in
+`8f62a579d`.
+
+The first task run reads the updated directives but omits both explicit
+checkpoints. The remedy class is entry-point visibility: identifier and
+vocabulary searches locate three bundled skill routers (Codex, Claude, Cursor)
+that route to the shared reference. All three receive the same short reminder;
+the active Codex copy and newer source routers receive only that insertion.
+No installed Cursor skill is present. Both Claude links retain their targets.
+No project `CLAUDE.md` rules or pipeline prompts change.
+
+The first reminder names the pre-implementation and final-review checkpoints.
+The second task run asks before editing, but its completion message omits the
+final review. The final wording explicitly locates the first answer before
+the first edit and the final-review answer in the completion response. The
+third task run follows both instructions. The shared reference continues to
+own the other stage checkpoints; they are not exercised by this direct task.
+
+### Task and execution
+
+Each run starts in a fresh Git repository with byte-identical initial files:
+an argparse script that prints the number of nonblank lines in a named file,
+and one subprocess unittest that expects `2\n` for two nonblank lines. The
+agent may edit and test the fixture; no parent repository instructions are
+inherited because the fixtures live directly under `/tmp`. The installed skill
+is requested by name, as in normal use. The task contains no overengineering
+reminder and does not direct the agent to read a particular instruction file.
+
+The same Codex CLI and model as the initial experiment run sequentially with
+`--ephemeral --ignore-user-config -s workspace-write`. Logs show the installed
+directives are read. The task is:
+
+```text
+Use $plan-tool for this task. Add a --json option to count_notes.py that prints a JSON object with the single key "count" and its integer value. Keep the existing numeric output when the option is absent. Implement and verify the change using this repository's existing approach, and leave a short account of the work. Work only in this throwaway repository; do not publish, contact remotes, install dependencies, or modify user configuration. You may commit here.
+```
+
+### Observations
+
+| Instructions | Before first edit | Final response | Executable verification |
+| --- | --- | --- | --- |
+| Updated directives only | No explicit overengineering check | No explicit overengineering review | Both tests pass |
+| First skill-entry reminder | Explicit question and small-change alternative | No explicit overengineering review | Both tests pass |
+| Final skill-entry reminder | Explicit question and small-change alternative | Explicit answer: no added machinery needed | Both tests pass |
+
+These are three sequential wording trials, not independent repetitions of the
+final instruction. Each run chooses a small argparse/standard-library JSON
+implementation. The evidence establishes visibility of the requested judgment,
+not better code quality, resistance to tempting abstractions, or compliance
+through seed, plan, detail, and correction-batch transitions. Claude and Cursor
+receive consistent source wording but are not behaviorally tested here.
+
+### Retained user-facing responses
+
+#### Directives only
+
+Before work:
+
+I’ll use the plan-tool skill and inspect the repository’s existing workflow before making the change. I’ll keep all work local to this throwaway repository.
+
+Completion:
+
+Implemented `--json` to print `{"count": 2}` while preserving numeric output without the flag.
+
+Used plan-tool’s direct-change workflow and existing unittest approach. Both tests and `git diff --check` pass.
+
+Short account: [WORK_LOG.md](/tmp/overengineering-checkpoints-normal-task/WORK_LOG.md). All changes remain local and uncommitted.
+
+#### First entry reminder
+
+Before work:
+
+I’m using the plan-tool skill and will first check the repository’s existing workflow. Are we overengineering this? A small argument-handling change and focused verification should be enough unless the repository requires more.
+
+Completion:
+
+Implemented `--json` to print `{"count": 2}` while preserving numeric output without the flag.
+
+Verified with `python3 -m unittest -v` and `git diff --check`; all passed. Added a short account in [WORK_LOG.md](/tmp/overengineering-checkpoints-normal-task-reminder/WORK_LOG.md).
+
+No remotes, dependencies, or user configuration were touched.
+
+#### Final entry reminder
+
+Before work:
+
+I’m using the plan-tool skill and will inspect the repository’s workflow first. Are we overengineering this? A small CLI change with focused verification should be enough; I’ll keep the work at that scale unless the repository requires more.
+
+Completion:
+
+Implemented `--json` to print `{"count": 2}` while preserving numeric output without the flag.
+
+Verified with `python3 -m unittest -v` and `git diff --check`. Tests cover default output, JSON structure, integer type, and empty input.
+
+Used plan-tool’s direct-change guidance. Final overengineering review: the small argparse/JSON change needs no added machinery. All work stayed local.
+
+### Verification and review
+
+- Independent reruns of `python3 -m unittest -v` pass both tests in each of
+  the three completed fixtures. Default numeric output remains covered;
+  JSON tests assert the exact object and integer type, including empty input.
+- `uv run pytest tests/cli/test_skill_cmd.py -q` passes all 32 tests after the
+  final router edit. `git diff --check` passes in both source checkouts.
+- Byte comparisons verify the installed/source router insertions preserve
+  all unrelated content and match the reminders in all three bundled routers.
+- The evidence review corrects the initial summary so it no longer describes
+  the active copies as still missing the checkpoints. Final review keeps the
+  limited claim: the direct-change test visibly exercises two points; the
+  remaining stage transitions and long-run compliance remain unmeasured.
