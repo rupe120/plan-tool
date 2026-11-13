@@ -1,0 +1,121 @@
+{
+  "version": 4,
+  "plan_slug": "project-model-selection",
+  "plan_path": "docs/implementation-plans/2-project-model-selection.md",
+  "created_at": "2026-11-13T02:37:25Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "39cbea7f4731d8b6cf3c867f77d1640b7f5acd0909fa5b4e80e6725c29cf3be5",
+  "code_fingerprint": {
+    "BACKLOG.md": "d3fd7289ee49a611a9aa04c050082cbb3f0f5fa94a6cb10aeca44e84c5c257f5",
+    "README.md": "d595d5e08df07965d9889e1ddf333bc5565c8f1678b12cd4c2caab654a2e600e",
+    "docs/BACKENDS.md": "4c1b9bd76ef1e130905c960406587ab61719667c82ddb07be9864c46be403925",
+    "docs/design-plans/BACKEND_SELECTION.md": "0387459f76a34965cb16fd71e72d6d12bedc3ddc36a0bccca00194f88680a024",
+    "docs/reference/commands.md": "fc1c3068fa3e1dcf6f1b65861592d3e750162d90f857829c5196f520f91a5755",
+    "integrations/claude/SKILL.md": "0fedf792e262ba5c93f03d5200bc8300ed31a1c83d2faa97d6499b9a67566fff",
+    "integrations/codex/SKILL.md": "285d933efed2f5833520552d11b894cd361fd410670f2d5636a808d96221ffca",
+    "integrations/cursor/SKILL.md": "90f066562f3d028bccca350c8e14aa01f186fe1b316de26ac51a0626b821c1d3",
+    "integrations/shared/DIRECTIVES.md": "75208deb2d8392d6010a59c7e1999c7496c6b90c6e99b198ca79ff61c6d8ba5c",
+    "plan_tool/backend.py": "7acd617021eb08d60aec90c012eac87d26deb84e37fad6d948d7dfc4ad022452",
+    "plan_tool/backend_config.py": "5f4fc74cf1a1b19839e97d995f790dbac663e5ab659cd596c0ee84b85d516031",
+    "plan_tool/cli/app.py": "d83c40fcfb132e86d4b0ee3a3dbf05cf9fdb00d3f6d62f69ce452370d41fe460",
+    "plan_tool/cli/parser.py": "750592f0b78c7e39b25bf023a05323684c01b81366d31bc085ad069eb9e4cf26",
+    "tests/cli/test_app.py": "86743bcc283c37e44ecc855b1ae264ad3521fd12fdd28cea0544ed3e839d8e27",
+    "tests/cli/test_skill_cmd.py": "8593d80276894dfe5b3ad3231b732e188605a987b417afb06f3ce1f8b027cccb",
+    "tests/test_backend.py": "1aecd836968a3382c1ba48c6462e8d5474a3aa2ecc359039def598ebe20b678c",
+    "tests/test_backend_config.py": "b147af24f886808e8186c0187e73b5915cca91238114e27b607f13e68d2ec015",
+    "tests/test_launcher.py": "425ddeab62798685def4d6d5920d0887ef5f4b4b9c03becf367a3eea667c1dd7",
+    "tests/test_shell.py": "cb3be2fa202f21851e79b6ab9f712b291a120f994a5af1c05f56c3d5bcc4fed7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md": "9881e3f6e7f82003438bcf0d36f5dd96636909404fbbc7bd6a6cd4b0357c247d",
+    "docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md": "28ff1709654776720f2ba3aa1f4bfd7734fa3d9fb012cc04c9d3f82d78be070a",
+    "docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md": "8336f5828829e01aef581771f2330936da6ad29962ad7dc089f6b87c9e284dd3",
+    "docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md": "496a9ce6b7cdd7d4b7d579ba25a42b9d0972bba88a7ea3b2f2ca4bc78ab42fac"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Project Model Selection\n\n`project-model-selection` \u00b7 generated 2026-11-13T02:37:25Z \u00b7 mode: iterate \u00b7 loop stopped: pre-apply checkpoint after 0 iteration(s)\n\n## Recovery evidence\n\nThis pre-apply checkpoint preserves findings for recovery; it is not a final qualified audit result.\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 1\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Conceptual correctness \u2014 fix these first\n\nUnsound or contradictory concepts in the plan's design \u2014 the highest-priority gaps. The audit reports these but does not apply them (read-only-audit split, #85): close each one through a session-directed edit to the plan body. Review plan-level completeness gaps now; leave detail-only remedies for detail authoring.\n\n    plan-tool reconcile-plan-walk project-model-selection  # optional interactive review of the saved findings\n\n- MEDIUM `[explicit-backend-model-defaults]` [confidence: limited]: Explicit `--backend` has two conflicting meanings in Architecture and step 4 (Document the configuration fields\u2026). Architecture\u2019s model precedence says:\n  ```text\n  Model precedence for that backend is explicit `--model`, its command-specific model, its existing `model`, manifest default, then omission so the provider CLI chooses.\n  ```\n  But Architecture\u2019s documentation requirement says:\n  ```text\n  Document configuration with examples and precedence tables, including the fact that explicit flags bypass configured model defaults.\n  ```\n  The first rule preserves the selected backend\u2019s configured models when only `--backend` is supplied; the second can require bypassing them. `plan_tool/backend.py:_select_effective_backend` already preserves the selected backend\u2019s project model without an explicit model, and step 2 preserves that precedence. Clarify the documentation requirement so step 4 cannot teach a different override contract.\n  - Fix: State consistently that `--backend` overrides backend selection while retaining that backend\u2019s configured model defaults, and `--model` overrides model defaults.\n\n## Suggested next steps\n\n- `plan-tool completeness-audit project-model-selection --iterate` \u2014 run a fresh audit before reusing or applying saved findings.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Project Model Selection\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous. **Bare-plan audit \u2014 0 of 4 step(s) detailed (bare):** bare steps are judged at the plan/concept level only (no detail bundle to ground against); detail/code-grounded findings require a detail bundle._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\nConceptual correctness: see the dedicated section above.\n\n### Suggested next steps\n\n- `plan-tool completeness-audit project-model-selection --iterate` \u2014 blocking verdict unavailable \u2014 re-audit to establish it; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "plan-plan-correctness-9e0f4471",
+      "source": "plan-correctness",
+      "severity": "medium",
+      "step_id": null,
+      "title": "Explicit `--backend` has two conflicting meanings in Architecture and step 4 (Document the configuration fields\u2026). Archi",
+      "body": "Explicit `--backend` has two conflicting meanings in Architecture and step 4 (Document the configuration fields\u2026). Architecture\u2019s model precedence says:\n  ```text\n  Model precedence for that backend is explicit `--model`, its command-specific model, its existing `model`, manifest default, then omission so the provider CLI chooses.\n  ```\n  But Architecture\u2019s documentation requirement says:\n  ```text\n  Document configuration with examples and precedence tables, including the fact that explicit flags bypass configured model defaults.\n  ```\n  The first rule preserves the selected backend\u2019s configured models when only `--backend` is supplied; the second can require bypassing them. `plan_tool/backend.py:_select_effective_backend` already preserves the selected backend\u2019s project model without an explicit model, and step 2 preserves that precedence. Clarify the documentation requirement so step 4 cannot teach a different override contract.",
+      "suggested_action": "State consistently that `--backend` overrides backend selection while retaining that backend\u2019s configured model defaults, and `--model` overrides model defaults.",
+      "impact": "medium",
+      "complexity": "low",
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "explicit-backend-model-defaults",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": null,
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "checkpoint_audit_revision": {
+    "version": 3,
+    "detail_grade": "run",
+    "plan_digest": "39cbea7f4731d8b6cf3c867f77d1640b7f5acd0909fa5b4e80e6725c29cf3be5",
+    "detail_bundle_digest": "9c7bfec7c0a21f9a6e9d1eb797fe5a3d5c3e9cd47887f07ab77c30c2638e1552",
+    "details": [
+      {
+        "step_id": 1,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 2,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 3,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md",
+        "state": "missing",
+        "digest": null
+      },
+      {
+        "step_id": 4,
+        "resolution": "canonical",
+        "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md",
+        "state": "missing",
+        "digest": null
+      }
+    ],
+    "source_seed_digest": "b475c89569fd120163cea9ee1aaf0097ff23676b5efe069470026ef77b3345fc",
+    "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+  },
+  "qualified_result": null,
+  "is_pre_apply_checkpoint": true,
+  "audit_stage": "bare"
+}
