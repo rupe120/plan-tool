@@ -109,7 +109,8 @@ steps:
       describe.
   description: 'Document the configuration fields, supported canonical command keys
     and aliases, backend and model precedence tables, and the Codex create/detail
-    proof. Explain precisely which defaults explicit backend and model flags override.
+    proof. Explain that --backend selects the backend while retaining its configured
+    model defaults, and --model overrides model defaults.
     Update all three bundled routers to honor explicit user requests and otherwise
     allow project selection, keeping shared operational policy in DIRECTIVES.md and
     guidance for unconfigured projects. Extend temporary-install integration coverage
@@ -144,7 +145,7 @@ Resolve project inputs against the command's resolved repository root before sel
 
 The new keys are opt-in. Existing files without them preserve behavior, including the inert `default`, `aspects`, and `failover` keys tolerated by the current reader. Use `default_backend` rather than activating the older design's `default` key. Update the older backend-selection design's scope/status where needed to avoid contradictory ownership, without implementing its phase routing or failover proposals.
 
-Operator documentation and all three bundled skill routers must allow project selection to take effect: explicit user backend/model requests still win, while ordinary skill-driven invocations defer to project configuration where present and retain documented guidance for unconfigured projects. Keep shared operational policy in `integrations/shared/DIRECTIVES.md`; do not edit repository governance rules in `CLAUDE.md` or `AGENTS.md`. Document configuration with examples and precedence tables, including the fact that explicit flags bypass configured model defaults.
+Operator documentation and all three bundled skill routers must allow project selection to take effect: explicit user backend/model requests still win, while ordinary skill-driven invocations defer to project configuration where present and retain documented guidance for unconfigured projects. Keep shared operational policy in `integrations/shared/DIRECTIVES.md`; do not edit repository governance rules in `CLAUDE.md` or `AGENTS.md`. Document configuration with examples and precedence tables: `--backend` selects the backend while retaining its configured model defaults; `--model` overrides model defaults.
 
 ## Scope guardrails
 
