@@ -28,6 +28,7 @@ from plan_tool.backend import (
 )
 from plan_tool.backend_config import (
     BackendConfigError,
+    load_project_backend_config,
 )
 from plan_tool.claude_errors import (
     OnRateLimitAction,
@@ -153,7 +154,7 @@ from plan_tool.cli.context import (
     _resolve_cmd_repo_root,
     _resolve_iterative_budget,
 )
-from plan_tool.cli.parser import Handler, assemble
+from plan_tool.cli.parser import Handler, assemble, command_name_map
 
 # Per-intent command modules carved out of this one. They own their
 # handlers + ``register(subparsers)`` and contribute to ``COMMAND_MODULES``
@@ -480,7 +481,7 @@ def _synthesize_unregistered_backend(name: str, *, model_supplied: bool = False)
     if model_supplied:
         warn(provisional_backend_warning(
             name,
-            "The supplied --model will be passed through.",
+            "The supplied model will be passed through.",
         ))
         return synthesize_backend(name)
 
@@ -602,32 +603,47 @@ def main(argv: Optional[list[str]] = None) -> int:
     args = parser.parse_args(argv)
     rate_limit_policy = _resolve_on_rate_limit_policy(args, parser)
 
-    # A flag wins; a recognized model family otherwise precedes env/default.
-    env_backend = os.environ.get("PLAN_TOOL_BACKEND")
-    inferred_backend = model_specs.backend_for_model(args.model or "")
-    if args.backend is not None:
-        name, selection_source = args.backend, "flag"
-    elif inferred_backend is not None:
-        name, selection_source = inferred_backend, "model"
-    elif env_backend:
-        name, selection_source = env_backend, "environment"
-    else:
-        name, selection_source = "claude", "default"
-    preflight_required = (
-        args.backend is not None or name != "claude" or env_backend == "claude"
-    )
-    model_inference_changed_selection = (
-        selection_source == "model" and name != (env_backend or "claude")
-    )
-    repo_root = _resolve_cmd_repo_root(args)
     try:
+        repo_root = _resolve_cmd_repo_root(args)
+        command_names = command_name_map(parser)
+        project = load_project_backend_config(repo_root, command_names=command_names)
+        env_backend = os.environ.get("PLAN_TOOL_BACKEND")
+        inferred_backend = model_specs.backend_for_model(args.model or "")
+        if args.backend is not None:
+            name, selection_source = args.backend, "flag"
+        elif inferred_backend is not None:
+            name, selection_source = inferred_backend, "model"
+        elif env_backend:
+            name, selection_source = env_backend, "environment"
+        elif project.default_backend:
+            name, selection_source = project.default_backend, "project"
+        else:
+            name, selection_source = "claude", "default"
+        preflight_required = (
+            selection_source in {"flag", "environment", "project"}
+            or name != "claude"
+            or (env_backend or project.default_backend) == "claude"
+        )
+        model_inference_changed_selection = (
+            selection_source == "model"
+            and name != (env_backend or project.default_backend or "claude")
+        )
+        backend_key = name.strip().lower()
+        command_model = project.command_models.get(backend_key, {}).get(
+            command_names[args.command]
+        )
+        project_override = project.overrides.get(backend_key)
         selection = select_active_backend(
             name,
             repo_root=repo_root,
             model=args.model,
+            command_model=command_model,
             fallback_factory=lambda backend_name: _synthesize_unregistered_backend(
                 backend_name,
-                model_supplied=bool(args.model),
+                model_supplied=bool(
+                    args.model or command_model
+                    or (project_override.model if project_override else None)
+                ),
             ),
             known_override_names=model_specs.model_family_backend_names(),
         )
@@ -661,7 +677,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             ),
             (
                 "plan-tool --backend claude …",
-                "or unset PLAN_TOOL_BACKEND to use the default backend",
+                "override environment and project backend defaults",
             ),
         ]
         if model_inference_changed_selection:
