@@ -39,7 +39,9 @@ branch, and hand the updated settled-decision list to the next reviewer.
   closed set above, the closure paragraph, and every `tracked`/`pending` item.
   The compressed file keeps the evidence and reasoning needed to understand each decision. Do not remove the sole explanation of a finding or its disposition.
 - A ledger records **how** it closed: converged (two consecutive low-yield
-  passes), stopped by the owner, or closed by owner decision. The three are not
+  passes), stopped by the owner, closed by owner decision, or stopped at exit 2
+  (the loop was auditing its own edits, so it is neither converged nor clean;
+  `CLAUDE.md` § "Driving the convergence loops"). The four are not
   interchangeable, and a compressed ledger keeps its own label.
 - Every file in this directory except `README.md` appears below.
 
@@ -142,7 +144,7 @@ its arc documents, not here; the successor-slug rule lives in
 
 ## Review ledgers
 
-Closure labels follow § "Retention"; "Stopped at exit 2" is a ledger's own label for the exit-2 stop in `CLAUDE.md` § "Driving the convergence loops". Compressed 2026-09-29 unless noted.
+Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
