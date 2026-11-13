@@ -12443,6 +12443,52 @@ class TestGenerateDetailIterationLoop:
         err = capsys.readouterr().err
         assert "deadline_exceeded" in err
 
+    def test_deadline_hint_prints_a_budget_derived_from_the_effective_deadline(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """The resume hint is computed from the step loop's own deadline, never
+        a fixed number that may equal the value that just expired, and it does
+        not call the no-progress deadline a wall-clock budget."""
+        from plan_tool import detail as detail_module
+        from plan_tool.review import _claude_recommendations
+
+        plan_path = _write_orchestrator_plan(tmp_path)
+        seen: list[float] = []
+
+        def fake_larger(budget_seconds: float) -> int:
+            seen.append(budget_seconds)
+            return 4242
+
+        monkeypatch.setattr(
+            detail_module, "apply_finding", lambda *a, **kw: _stub_apply_result_detail()
+        )
+        monkeypatch.setattr(
+            detail_module,
+            "collect_detail_quality_findings",
+            lambda *a, **kw: _claude_recommendations(_FINDINGS_BLOCK_TWO_OPEN),
+        )
+        monkeypatch.setattr(
+            detail_module, "larger_iteration_budget_seconds", fake_larger
+        )
+
+        generate_detail(
+            plan_path,
+            repo_root=tmp_path,
+            step_id=1,
+            invoker=lambda _p: _GOOD_BODY,
+            extract_lessons=False,
+            budget=_IterativeBudget(
+                enabled=True, max_iterations=3, budget_seconds=0
+            ),
+        )
+        err = capsys.readouterr().err
+        assert "--step 1 --iteration-budget 4242" in err
+        assert seen == [0]
+        assert "wall-clock" not in err
+
     def test_iteration_loop_lessons_redirect_when_project_in_files(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:

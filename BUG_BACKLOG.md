@@ -598,29 +598,58 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
-### The iteration-loop hints print `--iteration-budget 1800`, the default, as "a larger wall-clock budget"
+### The loop-stop resume hints print a command that does not change the run: `--iterate` is omitted for `detail` and `completeness-audit`, and `--max-iterations 5` is fixed
 
-- **Files:** `plan_tool/create.py`, `plan_tool/detail.py` and
-  `plan_tool/cli/completeness_phases.py` (the `deadline_exceeded` hint in each),
-  and `plan_tool/completeness_report.py` (the "Open" disposition text, which
-  calls the loop stop an "iteration cap, wall-clock budget, or no-progress" stop
-  and suggests a larger `--iteration-budget`); authority `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS`.
-- **Symptom:** on a `deadline_exceeded` stop each prints
-  `plan-tool <command> <name> --iteration-budget 1800   # resume with a larger
-  wall-clock budget`. 1800 is already the default, so following the hint changes
-  nothing, and `--iteration-budget` is a debounced no-progress deadline, not a
-  wall-clock budget (`--time-budget` is the total cap). No test pins the hint
-  text. Found 2026-11-13 in the fact-check of the `RUNBOOK.md` budget fix.
-- **Fix:** print a value above the effective budget and drop "wall-clock" from the
-  comment. Deliberately not done: changing the default or the deadline's meaning.
-- **Approach:** `direct` — one hint per command plus a test that the printed value
-  exceeds the effective budget.
-- **Verification:** `grep -rn -A1 'wall-clock' plan_tool/create.py plan_tool/detail.py
-  plan_tool/cli/completeness_phases.py plan_tool/completeness_report.py` shows no
-  text that describes `--iteration-budget` as wall-clock, and a test pins the
-  printed value above the default.
+- **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
+  `time_budget_exceeded` hints, and the `--force` "re-author this step's detail"
+  hint), `plan_tool/cli/completeness_phases.py` (the
+  same three plus `no_progress`) and `plan_tool/create.py` (the `max_iterations`
+  hint); authority
+  `plan_tool/cli/context.py:_resolve_iterative_budget` (`enabled` comes from
+  `--iterate`).
+- **Symptom:** `detail` and `completeness-audit` default `--iterate` to off, and
+  the hints print `plan-tool detail <name> --step N --iteration-budget <n>` and
+  `plan-tool completeness-audit <name> --iteration-budget <n>` without it.
+  Probed 2026-11-13: parsing each printed command gives `enabled=False`, so the
+  loop does not run and the larger value is ignored; adding `--iterate` gives
+  `enabled=True`. `create` defaults `--iterate` on and is unaffected. For
+  `detail` the step's written body is also skipped by a re-run without
+  `--force` (`detail.py:_converge_run_grade_step_detail`, the comment above the
+  per-step iteration loop), so the fix needs a
+  decision on the remedy, not only a flag; the `--force` re-author hint also
+  omits `--iterate`, so the re-authored body gets no quality loop. Separately, the `max_iterations` hint
+  at all three sites prints a literal `--max-iterations 5`, so a run that
+  already used 5 or more is told to re-run with a value that is no larger.
+- **Fix:** add `--iterate` to the `completeness-audit` hints; for `detail`, decide
+  between `--iterate --force` (re-authors) and a different remedy; derive the
+  `--max-iterations` value from `state.budget.max_iterations` at all three sites.
+  Deliberately not done: changing either command's `--iterate` default.
+- **Approach:** `direct` — one decision for `detail`, then a test that parses
+  every printed resume command with the real parser and asserts the budget it
+  builds is enabled.
+- **Verification:** that test passes for every hint at both sites, and the
+  printed `--max-iterations` exceeds the effective cap.
+- **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
+- **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
+
+### `completeness_report.py` keeps `WHY["open"]` and `_HEADINGS["open"]`, which no report path renders
+
+- **Files:** `plan_tool/completeness_report.py` (`WHY`, `_HEADINGS`, and the
+  `open` return of `deferred_kind`).
+- **Symptom:** the report builder states that `open` "is no longer a section of
+  its own" (the comment above the "Other deferred buckets" loop), and that loop
+  reads `WHY` and `_HEADINGS` only for `concept-link`, `diagnostic`, `triage` and
+  `info`. The `open` text is therefore never printed, and `deferred_kind` still
+  sorts findings into a bucket nothing renders. Found 2026-11-13 while fixing the
+  iteration-budget hints, whose removed entry had assumed operators saw that text.
+- **Fix:** delete the two unused entries, and either drop the `open` return or
+  say in a comment why it stays. Deliberately not done: re-adding an `open`
+  section.
+- **Approach:** `direct` — deletion plus a check that nothing reads the key.
+- **Verification:** `grep -n '"open"' plan_tool/completeness_report.py` shows no
+  `WHY` or `_HEADINGS` entry, and the report tests pass.
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, fact-check review of the `RUNBOOK.md` iteration budget fix.
+- **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
 ### The loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md` omit the `no_progress` and `no_blocking_findings` stops
 

@@ -40,6 +40,16 @@ DEFAULT_MAX_ITERATIONS = 3
 
 DEFAULT_ITERATION_BUDGET_SECONDS = 1800
 
+
+def larger_iteration_budget_seconds(budget_seconds: int) -> int:
+    """A ``--iteration-budget`` value above ``budget_seconds`` for resume hints.
+
+    Doubles the effective deadline; the default is the floor so a deadline set
+    below it never hints at a value lower than the default.
+    """
+    return max(2 * budget_seconds, DEFAULT_ITERATION_BUDGET_SECONDS)
+
+
 MARGINAL_OVERLAP_THRESHOLD = 0.5
 
 # Default number of consecutive no-net-progress rounds tolerated before
@@ -342,7 +352,7 @@ def should_continue(
     """Decide whether to run another iteration.
 
     Returns ``(continue?, reason)`` so callers can log a one-line
-    "stopped because budget_exhausted" / "stopped because converged"
+    "stopped because deadline_exceeded" / "stopped because converged"
     line without re-deriving the predicate. Reason codes are stable
     strings the test suite asserts against:
 
