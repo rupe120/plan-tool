@@ -9,7 +9,7 @@ plan-tool registers three:
 - **`codex`** — the OpenAI Codex CLI.
 - **`cursor`** — the Cursor Agent CLI (binary `agent`).
 
-Every claude-invoking subcommand (`run`, `detail`, `reconcile-plan`, `jira`,
+Every backend-invoking subcommand (`run`, `detail`, `reconcile-plan`, `jira`,
 …) routes through whichever backend is active. Switch to `codex`, for
 example, and plan-tool swaps the executable, its argv, its `--json` event
 parsing, and its failure classification — all in one place.
@@ -34,33 +34,111 @@ regenerated from the synthetic backend-quality benchmark
 
 ## Selecting a backend
 
-plan-tool picks a backend in this order — first match wins:
+Backend selection uses the first available value:
 
-1. The explicit `--backend` flag.
-2. A recognized `--model` family.
-3. The `PLAN_TOOL_BACKEND` environment variable.
-4. The default, `claude`.
+| Priority | Backend source |
+| --- | --- |
+| 1 | Explicit global `--backend` |
+| 2 | Recognized family of explicit `--model` |
+| 3 | `PLAN_TOOL_BACKEND` |
+| 4 | Project `default_backend` |
+| 5 | `claude` |
 
-`gpt-*`, `chatgpt-*`, `o1`/`o3`/`o4`, and
-`codex-*` select Codex; `claude-*` selects Claude; and `gemini-*` selects the provisional
-`gemini` backend until a packaged Gemini integration is available. Other model
-names stay on the configured backend.
+`gpt-*`, `chatgpt-*`, `o1`/`o3`/`o4`, and `codex-*` select Codex;
+`claude-*` selects Claude; `gemini-*` selects provisional Gemini. Cursor has
+no inferred model family. Other model names retain the selected backend.
+Configured models never infer or change a backend.
 
-An explicit `--backend` is your escape hatch for an intentional non-default
-pairing.
+Model selection uses the first available value for the selected backend:
 
-```bash
-plan-tool --backend codex run my-feature        # one run against codex
-plan-tool --backend cursor run my-feature       # one run against Cursor Agent
-PLAN_TOOL_BACKEND=codex plan-tool run my-feature # same, via the env var
-plan-tool --model gpt-5.6-terra run my-feature  # infers the Codex backend
+| Priority | Model source |
+| --- | --- |
+| 1 | Explicit global `--model` |
+| 2 | `backends.<name>.commands.<canonical-command>.model` |
+| 3 | `backends.<name>.model` |
+| 4 | Backend manifest `default_model` |
+| 5 | Provider CLI default (no model argument) |
+
+`--backend` selects the backend while retaining its configured model defaults.
+`--model` overrides model defaults. Both are global flags before the subcommand.
+An explicit backend wins over model-family inference, allowing intentional
+non-default pairings. Selection applies to the whole command, including its
+nested authoring/audit calls; it does not route individual phases or steps.
+
+## Project configuration
+
+Store project choices in `<repo-root>/.plan-tool/backends.json`:
+
+```json
+{
+  "default_backend": "codex",
+  "backends": {
+    "codex": {
+      "model": "gpt-6.1-sol",
+      "commands": {
+        "create": {"model": "gpt-6.1-sol"},
+        "detail": {"model": "gpt-5.6-terra"}
+      },
+      "extra_batch_argv": [],
+      "extra_streaming_argv": []
+    }
+  }
+}
 ```
 
-`--backend` is a global flag — a sibling of `--no-wait-on-rate-limit` —
-applied once in `main()` before dispatch. Its argparse default is `None`,
-so leaving it unset lets a recognized model family or the env var choose
-the backend; a literal `--backend claude` wins over both. Internally, the
-selection name maps to a registered backend via `resolve_backend(name)`.
+All fields are optional. An absent file preserves unconfigured behavior.
+`default_backend` must be a non-empty string when present. Backend entries and
+`commands` entries must be objects; model values are non-empty strings, with
+absent or `null` models inheriting the next default. Null does not clear a
+lower default. Model strings are opaque provider identifiers, not validated
+quality tiers. Extra argv fields are lists of strings appended to the backend's
+manifest arguments. Configuration cannot replace its binary or parser.
+
+Malformed JSON, wrong field types, empty model strings, unknown command keys,
+and duplicate aliases of one canonical command fail with a path-specific
+configuration error. Unknown backend override names warn and are ignored;
+an unusable selected backend fails selection/preflight. Use lowercase backend
+keys. Unknown fields are inert, including the proposal's `default`, `aspects`,
+and `failover`; none activates routing or failover.
+
+### Supported command keys and aliases
+
+Keys identify registered top-level commands, not modes, phases or nested
+subcommands. Aliases normalize before lookup; specifying both an alias and its
+canonical key in one backend is an error.
+
+| Canonical key | Accepted aliases |
+| --- | --- |
+| `reconcile-plan` | `reconcile`, `review` |
+| `verify-all` | `reconcile-all`, `review-all`, `verify` |
+| `reconcile-plan-walk` | `reconcile-walk`, `review-walk` |
+
+Other canonical keys (no aliases):
+
+`list`, `root`, `status`, `validate`, `register`, `deregister`, `sweep`, `withdraw`, `attach-branch`, `detach-branch`, `checkpoint`, `runs`, `lessons`, `roadmap`, `create`, `detail`, `split`, `merge`, `jira`, `run`, `reconcile-code`, `completeness-audit`, `data-contract-apply`, `gate-status`, `convergence`, `telemetry`, `init`, `decide`, `suggest-gates`, `bench`, `annotate`, `scope-out`, `scope-review`, `split-criteria`, `worktree`, `install-skill`.
+
+A setting for a deterministic command is accepted but causes no model call.
+
+### Codex create/detail proof
+
+With the example configuration, an authenticated `codex` CLI on PATH, no
+`PLAN_TOOL_BACKEND`, and a reviewed seed at `docs/implementation-plans/plan-seeds/my-feature.md`:
+
+```bash
+plan-tool create my-feature --from-existing docs/implementation-plans/plan-seeds/my-feature.md --iterate -y < /dev/null
+# Commit the generated plan; complete the bare audit and commit judged corrections.
+plan-tool completeness-audit my-feature --iterate --commit -y < /dev/null
+# From a clean committed tree after the bare gate:
+plan-tool detail my-feature --commit -y < /dev/null
+```
+
+Without selection flags, `create` uses Codex with `gpt-6.1-sol`; `detail` uses
+Codex with `gpt-5.6-terra`. Nested calls retain their outer command's choice.
+The model ids illustrate distinct command defaults; choose available models
+for your account. Complete the detail-grounded audit before implementation.
+`plan-tool --backend codex detail my-feature --commit -y < /dev/null` retains
+the configured detail model; adding global `--model gpt-6.1-sol` overrides it.
+These commands demonstrate configuration delivery, not model quality.
 
 ## Rate-limit recovery
 
@@ -90,7 +168,8 @@ For an ordinary short rate limit, here's what each action does:
   then restore the backend that was active before the call. The fallback
   comes from `--fallback-backend` or `PLAN_TOOL_FALLBACK_BACKEND` (the flag
   wins). Later calls, sibling parallel workers, and serial replay do not
-  inherit the fallback backend.
+  inherit the fallback backend. The fallback call uses that backend's own
+  `model`, not its `commands.<command>.model`.
 - `stop`: return immediately so you can run the printed resume command
   later.
 - `ask`: on an interactive stdin+stderr, show `rate limit [w/b/s]:` and let
@@ -116,9 +195,9 @@ Codex needs two things before plan-tool can use it:
 - Authentication: credentials live under `~/.codex` (`config.toml` +
   `auth.json`), populated by `codex login`.
 
-When you **explicitly** select a backend (via the flag or the env var) and
-its binary is absent, the run fails fast with an install/PATH hint and
-exit code `127` (`EXEC_NOT_FOUND_EXIT`). The default-`claude` path keeps its
+When a backend is selected by flag, environment, or project default, or a
+non-Claude backend is inferred from an explicit model, and its binary is absent, the run fails fast with an install/PATH hint and
+exit code `127` (`EXEC_NOT_FOUND_EXIT`). The unconfigured default-`claude` path keeps its
 lazy per-call guard instead, so binary-less
 read-only commands (`list`, `status`, `validate`) still work with nothing
 installed.
@@ -133,7 +212,7 @@ Same idea as Codex: the `agent` executable must be installed and on
 `PATH`, and authenticated via `agent login` or the `CURSOR_API_KEY`
 environment variable.
 
-Explicit selection (`--backend cursor` or `PLAN_TOOL_BACKEND=cursor`) fails
+Cursor selection (including project `default_backend: "cursor"`) fails
 fast with exit `127` when `agent` is absent, same as codex. Unauthenticated
 runs surface an auth failure on stderr and do not retry — see
 [`RUNBOOK.md`](../RUNBOOK.md#cursor-agent-backend-prerequisites--auth) and

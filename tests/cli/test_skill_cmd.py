@@ -56,6 +56,42 @@ class TestInstallSkill:
         assert directives_dest.is_symlink()
         assert directives_dest.resolve() == _bundled_directives()
 
+    @pytest.mark.parametrize("integration", ["claude", "codex", "cursor"])
+    def test_installed_router_ships_the_single_selection_rule_with_project_opt_in(
+        self, tmp_repo, integration
+    ) -> None:
+        assert cli.main(
+            tmp_repo.argv("install-skill", "--integration", integration)
+        ) == 0
+        root = ".agents" if integration == "codex" else ".claude"
+        router = _dest(tmp_repo, root)
+        directives = _directives_dest(tmp_repo, root)
+        assert router.read_bytes() == _bundled(integration).read_bytes()
+        assert directives.read_bytes() == _bundled_directives().read_bytes()
+        assert router.is_symlink() == (integration != "codex")
+        assert directives.is_symlink() == (integration != "codex")
+        router_text = router.read_text(encoding="utf-8")
+        assert ("otherwise omit `--backend` and `--model` when "
+                "`.plan-tool/backends.json` exists, else pass the recommendations"
+                ) in " ".join(router_text.split())
+        assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
+        policy = directives.read_text(encoding="utf-8")
+        flat = " ".join(policy.split())
+        assert "Honor explicit user requests for backend and model" in flat
+        # One file-existence rule, deliberately not conditional on what the
+        # file configures: present -> omit both flags; absent -> recommendations.
+        assert ("when `.plan-tool/backends.json` exists, omit `--backend` and "
+                "`--model` so its choices apply") in flat
+        assert "when it does not exist, pass the recommendations below" in flat
+        assert "including every configured command model" in flat
+        # Deterministic commands take neither flag (explicit --backend preflights).
+        assert "Deterministic commands (`list`, `status`, `validate`) need neither flag" in flat
+        # Superseded wordings must not return.
+        for gone in ("Decide each flag separately", "Settle the backend first",
+                     "unless the user asks for the project's configured choices",
+                     "already decides it"):
+            assert gone not in flat
+
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:
         assert cli.main(tmp_repo.argv("install-skill")) == 0
         # Second run sees the same link and reports already-installed, rc 0,
