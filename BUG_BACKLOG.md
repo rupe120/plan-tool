@@ -651,26 +651,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
-### The loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md` omit the `no_progress` and `no_blocking_findings` stops
-
-- **Files:** the "How the loop terminates" sections of `RUNBOOK.md` and
-  `docs/ITERATION.md`; authority `plan_tool/convergence.py:should_continue`.
-- **Symptom:** both lists name Converged, Marginal stagnation and Budget exhausted.
-  `should_continue` can also stop with `no_progress` (the open-finding count
-  failed to shrink for `--max-stall-rounds` consecutive rounds; default 2) and
-  `no_blocking_findings` (only advisory findings remain). An operator who sees
-  either reason on the final stderr line finds no entry for it. The lists say
-  nothing false; they are incomplete, and were before the budget fix.
-- **Fix:** add a bullet for each stop with the wording of the `should_continue`
-  docstring, naming `--max-stall-rounds`, in `docs/ITERATION.md` (the owner of the
-  definitions) and a pointer from `RUNBOOK.md`. Deliberately not done: a second
-  full definition in `RUNBOOK.md`.
-- **Approach:** `direct` — documentation only.
-- **Verification:** every reason code `should_continue` returns appears in
-  `docs/ITERATION.md`'s list.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, fact-check review of the `RUNBOOK.md` iteration budget fix.
-
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in

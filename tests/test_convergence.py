@@ -99,6 +99,42 @@ def test_default_budget_uses_module_constants() -> None:
     assert b.enabled is True
 
 
+def test_every_stop_reason_should_continue_returns_is_documented() -> None:
+    """``docs/ITERATION.md`` § "How the loop terminates" names each stop by its
+    code, so a stop added to ``should_continue`` without a bullet there leaves
+    an unexplained code. Each code must be introduced once, as ``(`code`)``; a
+    passing mention in another bullet does not count."""
+    import ast
+    import inspect
+    import textwrap
+
+    from plan_tool import convergence
+
+    tree = ast.parse(textwrap.dedent(inspect.getsource(convergence.should_continue)))
+    returned = {
+        node.value.elts[1].value
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Return)
+        and isinstance(node.value, ast.Tuple)
+        and len(node.value.elts) == 2
+        and isinstance(node.value.elts[1], ast.Constant)
+        and isinstance(node.value.elts[1].value, str)
+    } - {"continue"}
+    doc = (Path(__file__).resolve().parent.parent / "docs" / "ITERATION.md").read_text(
+        encoding="utf-8"
+    )
+    section = doc.split("## How the loop terminates", 1)[1].split("\n## ", 1)[0]
+    assert len(returned) == 8, "reason-code extraction changed; update this test"
+    assert {
+        code: section.count(f"(`{code}`") for code in sorted(returned)
+    } == dict.fromkeys(sorted(returned), 1)
+    # Reverse direction: a bullet for a code ``should_continue`` no longer
+    # returns is stale. The extraction reads only ``return False, "<code>"``
+    # tuples, so a stop written another way needs this test updated.
+    listed = set(re.findall(r"\(`(\w+)`", section))
+    assert sorted(listed - returned) == []
+
+
 @pytest.mark.parametrize("effective", [0, 1, 600, 900, 1800, 5000])
 def test_resume_hint_budget_always_exceeds_the_deadline_that_expired(
     effective: int,

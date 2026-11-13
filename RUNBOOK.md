@@ -1167,22 +1167,28 @@ handles only the localized one-step split; the cross-step re-seed fork
 
 ### How the loop terminates
 
-- **Converged** — claude returned no new findings vs the prior pass.
-  Exit code 0. The artifact is in the converged state.
-- **Marginal stagnation** — iteration N's findings overlap iteration
-  N-1's without introducing anything new. Exit code 0. The artifact
-  is no worse than the prior iteration; further iteration yields
-  nothing new.
+- **Converged** — no open findings remain after at least one round
+  (`detail` counts only apply-eligible findings).
+- **Marginal stagnation** — at least half of iteration N's open findings were
+  already open in iteration N-1. Further iteration yields little; the open set
+  may even have grown.
+- **No blocking findings** and **no progress** — the other two stops
+  (`no_blocking_findings`, set by `completeness-audit --iterate` only, and
+  `no_progress` with `--max-stall-rounds`), defined in
+  [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 - **Budget exhausted** — iteration count hit `--max-iterations` (3
   by default), no forward progress for `--iteration-budget` seconds (a
   debounced no-progress deadline, 1800 by default), or total elapsed time
-  hit `--time-budget` (off by default). Exit code 0 — the audit completed;
-  the remaining open
-  findings are in the report (and, for `completeness --json`,
-  bar-aware `has_blocking_findings`) for CI gates to inspect. Pass
-  `--fail-on-findings` to exit non-zero when stage-bar blockers remain
-  (`audit_incomplete` or any id in `conceptual_bar_blocking_ids` — see
-  `--json` `stage` and [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md)).
+  hit `--time-budget` (off by default). The remaining open findings are in the
+  report (and, for `completeness --json`, bar-aware `has_blocking_findings`) for
+  CI gates to inspect.
+
+Every stop exits 0 except under `completeness-audit --fail-on-findings`, which
+also exits non-zero on a `marginal`, `no_progress` or budget stop and whenever
+stage-bar blockers remain (`audit_incomplete` or any id in
+`conceptual_bar_blocking_ids` — see `--json` `stage` and
+[`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md)); the
+full rule is in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 
 ### Tuning the budget
 
@@ -3468,8 +3474,8 @@ Fix in this order:
 
 Symptom: the run exits 0 but the stderr final line names a
 `marginal` halt rather than `converged`. The artifact is
-the iteration-N output; iteration N+1 would have produced the same
-findings.
+the iteration-N output; iteration N+1 would most likely have re-found
+most of the same findings.
 
 Cause: claude can't improve further on this artifact. The remaining
 findings are either fundamentally out of scope for the loop (e.g.

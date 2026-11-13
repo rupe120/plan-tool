@@ -40,8 +40,8 @@ review may be describing the last edit rather than the artifact, or a repeated
 finding may call for a redesign. A falling count alone proves neither.
 
 An automated `--iterate` result is narrower. For example,
-`no-blocking-findings` can mean that nothing remains for the loop to change
-automatically; it does not certify that a plan is sound. Read the report and
+`no_blocking_findings` means no `medium`-or-above finding remains; it does not
+certify that a plan is sound. Read the report and
 handle conceptual findings deliberately. See
 [Iterating to convergence](ITERATION.md) and
 [the development model's loop exits](explanations/development-model.md#the-loops-and-how-they-end).

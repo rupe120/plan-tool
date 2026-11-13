@@ -4,8 +4,8 @@
 
 `--iterate` turns a one-shot write into a loop: write → audit →
 `apply-finding` (the step that edits the plan to close a finding) →
-re-audit — and it keeps going until no new findings turn up or the
-budget runs out.
+re-audit — and it keeps going until no open findings remain or a stop
+condition fires (see [How the loop terminates](#how-the-loop-terminates)).
 
 **Why convergence matters.** Convergence isn't just a loop mode — it's
 the plan's correctness signal. A plan that converges under audit →
@@ -27,7 +27,7 @@ the plan and hands the next audit more surface to flag.
 
 The fix is to **re-decompose** — re-split the step, or re-seed the plan
 — not to patch it a fourth time. One gotcha to know about:
-`no-blocking-findings` means "nothing left the loop may auto-touch," not
+`no_blocking_findings` means "nothing at `medium` or above remains," not
 "sound." A plan whose remaining problems are all structural reports
 converged prematurely.
 
@@ -93,7 +93,7 @@ them once, and the loop runs itself within the fence you drew.
 | `--iterate` / `--no-iterate` | `create`: `--iterate` (on). `detail`, `completeness-audit`: `--no-iterate` (off). | `BooleanOptionalAction` + per-subparser `default=True` on `create`, `default=False` on `detail` | Master switch. Off ⇒ `IterativeBudget(enabled=False)` ⇒ `should_continue` short-circuits with `"disabled"` on the first call. |
 | `--max-iterations N` | `3` | `convergence.DEFAULT_MAX_ITERATIONS` | Maximum iterations after the initial write. `--max-iterations 0` is rejected by `_resolve_iterative_budget`. |
 | `--iteration-budget SECONDS` | `1800` | `convergence.DEFAULT_ITERATION_BUDGET_SECONDS` | Debounced no-progress deadline: fires only after SECONDS pass with zero forward progress. It resets on every round and every `apply_finding` call, so a single 15-20+ minute claude call never trips it — this is not a cap on total loop wall-clock (see `--time-budget` for that). |
-| `--time-budget SECONDS` | off (`0`); falls back to `PLAN_TOOL_TIME_BUDGET` | `convergence.IterativeBudget.hard_budget_seconds` | Cooperative total-elapsed cap: stops the loop at the next round boundary once SECONDS of total command time pass, even while still converging, and exits 0 with a resume hint. Shared across `detail` steps; it does not interrupt a model call in flight. Ignored under `--no-iterate`. |
+| `--time-budget SECONDS` | off (`0`); falls back to `PLAN_TOOL_TIME_BUDGET` | `convergence.IterativeBudget.hard_budget_seconds` | Cooperative total-elapsed cap: stops the loop at the next round boundary once SECONDS of total command time pass, even while still converging, and exits 0 with a resume hint (`completeness-audit --fail-on-findings` exits 1 on any budget stop; see [Exit codes](#how-the-loop-terminates)). Shared across `detail` steps; it does not interrupt a model call in flight. Ignored under `--no-iterate`. |
 | `--max-stall-rounds N` | `2` | `convergence.DEFAULT_MAX_STALL_ROUNDS` | Stop after N consecutive rounds whose open-finding **count** doesn't shrink. It's an ID-agnostic backstop for a subjective audit that re-phrases the same findings each round (fresh ids would otherwise defeat the `marginal` / `converged` checks). `0` disables. |
 
 - **On by default:** `create`. Pass `--no-iterate` to skip the
@@ -165,22 +165,47 @@ them once, and the loop runs itself within the fence you drew.
 
 ## How the loop terminates
 
-- **Converged.** `finding_set_delta` returns an empty introduced-set.
-  Exit code 0.
-- **Budget exhausted.** The iteration count hit `--max-iterations`, no
-  forward progress was made for `--iteration-budget` seconds (a debounced
-  no-progress deadline, not a cap on total time; `--time-budget` is the total
-  cap), or `--time-budget` was reached. Exit code 0 — the loop
-  completed; any findings still open are in the report (and, for
-  `completeness-audit --json`, the `has_blocking_findings` flag), which CI /
-  aggregation scripts inspect instead of the exit code. For
-  `completeness-audit`, add `--fail-on-findings` to turn "budget exhausted
-  with medium+ findings still open" into a non-zero exit a CI step can
-  gate on.
-- **Marginal stagnation.** Iteration N introduced no *new* findings
-  relative to iteration N-1 (the intersection equals the prior set).
-  The loop halts cleanly with exit code 0 — it's making no further
-  progress, but the artifact is no worse than the prior iteration.
+Each `should_continue` stop is named by the code in the loop's stop banner.
+
+- **Converged** (`converged`). After at least one round, no open findings
+  remain; `detail` counts only apply-eligible findings.
+- **No blocking findings** (`no_blocking_findings`). Only
+  `completeness-audit --iterate` stops on it: after at least one round, no
+  remaining finding is `medium` or above. `create` and `detail` never stop on
+  it, and the reconcile commands expose no iteration loop.
+- **Budget exhausted.** The iteration count hit `--max-iterations`
+  (`max_iterations`), no forward progress was made for `--iteration-budget`
+  seconds (`deadline_exceeded`; a debounced no-progress deadline, not a cap on
+  total time; `--time-budget` is the total cap), or `--time-budget` was reached
+  (`time_budget_exceeded`).
+- **Marginal stagnation** (`marginal`). At least half of iteration N's open
+  findings were already open in iteration N-1, so the round is mostly
+  re-finding the same set: little further progress, though the open set may
+  even have grown.
+- **No progress** (`no_progress`). The open-finding count failed to shrink for
+  `--max-stall-rounds` consecutive rounds (default 2; `0` disables). This
+  catches a subjective audit that re-phrases the same findings each round, so
+  fresh ids defeat the `marginal` check; the remaining findings likely need a
+  manual edit.
+- **Disabled.** `--no-iterate` skips the loop and performs one pass, so no stop
+  line prints (`disabled`).
+
+`completeness-audit` can also stop on `all_auto_apply_findings_deferred` or
+`manual_fix_blocking_findings`, and it reports `converged`,
+`no_blocking_findings` or `all_auto_apply_findings_deferred` as
+`terminal_hand_apply` while stage-bar blockers remain;
+see [`how-to/pipeline/audit.md`](how-to/pipeline/audit.md).
+
+**Exit codes.** Every `should_continue` stop exits 0: the loop completed, and any findings still
+open are in the report (and, for `completeness-audit --json`, the
+`has_blocking_findings` flag), which CI / aggregation scripts inspect instead of
+the exit code. The exception is `completeness-audit --fail-on-findings`, which
+exits 1 unless the audit is complete, no blocking findings remain, and the stop
+is `converged`, `no_blocking_findings` or `all_auto_apply_findings_deferred`; a
+`marginal`, `no_progress` or budget stop therefore fails a CI step that passes
+the flag. A loop-internal halt (for example pre-apply drift) exits 2 and wins
+over the flag, and a failed `--commit` exits 1; see
+[`how-to/pipeline/audit.md`](how-to/pipeline/audit.md).
 
 ## Checkpoint interaction
 
