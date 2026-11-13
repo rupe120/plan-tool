@@ -9469,14 +9469,18 @@ class TestUnusableConceptHeadingRefusal:
         assert result.plan_path is not None
 
     @pytest.mark.parametrize(
-        "variant", ["## Notes ##", "## **Notes**"], ids=["closing-hashes", "emphasis"],
+        "variant",
+        ["## Notes ##", "## **Notes**", "## \u200b"],
+        ids=["closing-hashes", "emphasis", "zero-width-only"],
     )
     def test_headings_that_normalize_to_different_names_are_not_refused(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str
     ) -> None:
         """Carve-out: closing ATX hashes and emphasis markup are not stripped
         from a section name, so these never share a concept id with ``Notes``.
-        A looser refusal key would start rejecting them."""
+        A zero-width space is not whitespace to ``str.split``, so a heading
+        made only of one has a non-empty (invisible) name: neither refused nor
+        a crash. A looser refusal key would start rejecting them."""
         result = self._create_direct(
             tmp_path,
             monkeypatch,
@@ -9572,6 +9576,29 @@ class TestUnusableConceptHeadingRefusal:
         assert listed in message
         assert "title path components" not in message
         self._assert_nothing_written(tmp_path)
+
+    @pytest.mark.parametrize(
+        "extra",
+        [
+            "\n## Notes\n\nsecond note.\n\n## :\n\nbody.\n",
+            "\n## :\n\none.\n\n## :\n\ntwo.\n",
+        ],
+        ids=["empty-plus-genuine-repeat", "empty-heading-twice"],
+    )
+    def test_an_empty_heading_is_reported_before_any_repeat(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, extra: str
+    ) -> None:
+        """Precedence: empty names share one id, so the empty check must run
+        before concept bootstrap and win over the repeated-heading refusal. The
+        author fixes the empty heading first and meets any repeat next."""
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(
+                tmp_path, monkeypatch, self._direct_ready_source(extra)
+            )
+        message = str(excinfo.value)
+        assert "no name after normalization" in message
+        assert "'## :'" in message
+        assert "same after case" not in message
 
     def test_every_empty_heading_is_listed(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

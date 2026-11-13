@@ -7871,8 +7871,8 @@ def _reject_empty_concept_headings(sections: Sequence[BodySection]) -> None:
     if empty:
         raise CreateError(
             "plan body has section headings with no name after normalization "
-            f"(trailing ':' and '.' are dropped): {', '.join(empty)}. Give "
-            "each a name or remove it, and retry."
+            "(surrounding whitespace and trailing ':' and '.' are dropped): "
+            f"{', '.join(empty)}. Give each a name or remove it, and retry."
         )
 
 
