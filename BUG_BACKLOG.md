@@ -565,6 +565,57 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
 
+### `BACKLOG.md` `Iterate:` recipes run `detail` straight after `create`, skipping the bare-plan gate
+
+- **Files:** `BACKLOG.md` (eleven `Iterate:` or `Iteration:` command blocks: the
+  `mechanism-reach-02-audit`, `incremental-completeness-audit`,
+  `conceptual-pass-impact-sweep`, `jira-readiness-audit-lane`,
+  `detail-authoring-wizard`, `partial-mutation-snapshot-restore`,
+  `partial-mutation-guard-hardening`, `roadmap-05-framework-lenses`,
+  `detail-readiness-advisory`, `connectivity-pause-and-poll` and
+  `artifact-contention-handoff` recipes); authority
+  `integrations/shared/DIRECTIVES.md` Gate 1.
+- **Symptom:** each block lists `create`, then `detail`, then one
+  `completeness-audit`, so an operator who copies it skips the bare-plan audit
+  that Gate 1 runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
+  in the tracked documents for a `plan-tool detail` command that follows a
+  `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
+  between; its 24 hits were these eleven, two real gaps in `docs/how-to/roadmap.md`
+  (since corrected), and independent syntax or opt-in examples. The routers carry
+  both gates, so this reaches only an operator who copies a queue entry's recipe.
+  Two of the entries (`roadmap-05-framework-lenses`, `detail-readiness-advisory`)
+  tell the reader to follow the current directives directly above a recipe that
+  skips Gate 1.
+- **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
+  after `create` in each block, as each entry is next touched. Deliberately not
+  done: a script that rewrites the queue, because the recipes are part of
+  entries that are edited when picked up.
+- **Approach:** `direct` — documentation only; re-run the sweep to confirm none
+  remains.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
+
+### `RUNBOOK.md` states a 300-second iteration budget; the default is an 1800-second no-progress deadline
+
+- **Files:** `RUNBOOK.md` (the passages "Default budget: 3 iterations × 300s
+  wall-clock", "wall-clock hit `--iteration-budget` (300s by default)" and
+  "after 3 iteration(s) / 300s"); authority
+  `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS` and
+  `plan-tool create --help`.
+- **Symptom:** the code default is 1800 seconds, and `--iteration-budget` is a
+  debounced no-progress deadline that resets on every round and every
+  `apply_finding` call, so a long single model call does not trip it;
+  `--time-budget` is the total-elapsed cap. `RUNBOOK.md` describes a 300-second
+  wall-clock stop, so a reader expects a five-minute cutoff. A search of the
+  tracked instructional documents for "300s" found only these three statements
+  (`experiments/minimize-claude/LESSONS.md` has an unrelated measurement).
+- **Fix:** state the 1800-second debounced no-progress deadline in the three
+  places and name `--time-budget` for a hard cap. Deliberately not done: changing
+  the default.
+- **Approach:** `direct` — documentation only.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, fact-check review of the same removal.
+
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
