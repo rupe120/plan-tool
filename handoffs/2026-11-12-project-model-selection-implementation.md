@@ -171,20 +171,20 @@ Code and tests: no defects found. Five findings:
    advisory, proceed-to-`detail` rule) now read as part of the checkpoint
    section; Gate 2 starts at ~535. Suggested fix: move the section before
    Gate 1 or after all of Gate 1, or demote it to an H3.
-   **Disposition:** _(pending)_
+   **Disposition:** **Fixed** — the checkpoints section now sits after all of Gate 1 and before Gate 2; Gate 1's remaining paragraphs are back under its heading.
 2. **[CONFIRMED, low, docs-contradiction] `docs/BACKENDS.md` ~217 — the cursor
    paragraph still says project `default_backend: "cursor"` fails fast with exit
    127**, false now for `list`, `status`, `validate`. `RUNBOOK.md` ~3599 and
    `BACKENDS.md` ~100 are similarly unqualified. Suggested fix: qualify or
    point at the shared paragraph.
-   **Disposition:** _(pending)_
+   **Disposition:** **Fixed** — the cursor paragraph and `BACKENDS.md` ~100 qualify the exemption; `RUNBOOK.md` carries the same qualifier.
 3. **[PLAUSIBLE, low, altitude/consistency] `plan_tool/cli/app.py` ~628 — the
    hardcoded `{"list","status","validate"}` omits `root`**, another handler
    `inspect.py` documents as never calling a backend; `plan-tool root` still
    exits 127 with a missing project-default binary. The set is also a second
    source of truth. Suggested fix: add `root`, record `root` as a deliberate
    exclusion with its reason, or derive the set from the inspection group.
-   **Disposition:** _(pending)_
+   **Disposition:** **Fixed** — `root` joins the exemption set (same defect, same never-calls-a-backend property); the matrix test gains a `root` row. The set stays a literal, not derived from the inspection group.
 4. **[CONFIRMED, low, test-hygiene] `tests/cli/test_app.py` ~330 — the
    rewritten parametrized test has `expected` always 0**, leaving a dead `127`
    branch, an unused `EXEC_NOT_FOUND_EXIT` import, and rows duplicating
@@ -192,7 +192,7 @@ Code and tests: no defects found. Five findings:
    The unique row is `codex` + `--model claude-sonnet-4-5` (model-only Claude
    stays lazy). Suggested fix: drop `expected`, assert `== 0`, keep and name
    the model-inference row.
-   **Disposition:** _(pending)_
+   **Disposition:** **Fixed** — the dead `expected`/`127` branch and `EXEC_NOT_FOUND_EXIT` import are gone; the one unique row is kept and named for model-only Claude inference.
 5. **[PLAUSIBLE, low, guidance] `DIRECTIVES.md` ~279 — the omit-flags rule keys
    on `backends.json` existing, not on what it configures.** A file that only
    overrides one binary path leaves `create`/`roadmap` on the provider default
@@ -200,12 +200,14 @@ Code and tests: no defects found. Five findings:
    deliberately; the question is whether to record the residual case. Suggested
    fix: key the rule on `default_backend` or a command model, or document the
    limitation.
-   **Disposition:** _(pending)_
+   **Disposition:** **Fixed by documenting** — the rule stays keyed on file existence (the pass-5 decision); the directive now states the residual case and tells the operator to pass `--model` explicitly there.
 
 ### Convergence status
 
-Five passes before pass 6 (pass 6 above awaits dispositions; the loop is not
-converged — finding 1 is material). Passes 2–4 re-seeded on the per-flag selection paragraph, which was
+Six passes. Pass 6's medium finding (misplaced DIRECTIVES section) and four low
+findings are dispositioned above. No pass 7 has run: pass 6 carried a material
+finding, so the two-consecutive-low-yield condition is unmet; the user chose to
+stop after applying the fixes (2026-11-13). Passes 2–4 re-seeded on the per-flag selection paragraph, which was
 removed; pass 5 then found its replacement ("always pass explicit flags")
 overrode project configuration, contradicting the plan's requirement that
 skill-driven invocations defer to it. The guidance is now one file-existence
