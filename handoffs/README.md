@@ -142,11 +142,11 @@ its arc documents, not here; the successor-slug rule lives in
 
 ## Review ledgers
 
-Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
+Closure labels follow § "Retention"; "Stopped at exit 2" is a ledger's own label for the exit-2 stop in `CLAUDE.md` § "Driving the convergence loops". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
-| [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13; merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
+| [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13 (not a clean audit); merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
 | [Dockerfile mention recognition](2026-11-13-files-coherence-dockerfile-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #201; not compressed | None open; the `_claim_delivered` fuzzy match was declined and the `detail` follow-up shipped in PR #202 |
 | [Multiline concept decisions](2026-11-13-multiline-concept-decisions-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #198; not compressed | None open; the repeated-heading and empty-heading follow-ups shipped in PRs #199 and #200 |
 | [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164 | #369, #519, #520 retain their independent owners |

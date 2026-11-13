@@ -447,25 +447,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-10-19 Integration `construction-batch-driver` citation report;
   nested-function portion retained separately from the class-method fix.
 
-### Onboarding and installed skill instructions conflict with canonical audit and iteration rules
-
-- **Files:** `docs/how-to/common-workflows.md`, `README.md`, all three
-  `integrations/*/SKILL.md` routers; authority:
-  `integrations/shared/DIRECTIVES.md` and `docs/how-to/pipeline/audit.md`.
-- **Symptom:** common workflows tells readers to detail before auditing and
-  treats absent details as audit defects; routers also describe detail iteration
-  as on by default despite their own one-shot instruction. The first-task path
-  can therefore skip the bare gate or select the wrong detail behavior.
-- **Fix:** enumerate identifier and vocabulary restatements, then align the
-  introductory flows and routers with the two audit gates and actual iteration
-  defaults. Keep one authority for rules; add no prose-lint gate.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Arc assignment:** `backlog-arc-installed-skill`; coordinate onboarding #510.
-- **Verification:** review all three routers and linked first-plan paths against
-  current parser behavior and canonical guidance; check affected links/examples.
-- **Scope:** documentation correctness only; no runtime/default changes or
-  unrelated documentation rewrite.
-
 ### `plan-tool create --from-existing` crashes with "concept scope contains duplicate IDs" on a seed that has some but not all of the standard section headings
 
 - **Files:** `plan_tool/create.py` (`_review_create_concepts`, which builds the
