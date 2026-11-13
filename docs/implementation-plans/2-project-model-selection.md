@@ -73,7 +73,7 @@ steps:
     1: Provides project defaults and canonical command lookup.
     2: Provides optional command-model defaults in the existing model-precedence owner.
   detail: docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md
-  status: current
+  status: done
   description: Resolve the repository root and validate project settings using registration-derived
     command identities. Choose the backend by explicit flag, explicit-model inference,
     environment, project default, then Claude. Look up only that backend's canonical-command
@@ -103,6 +103,7 @@ steps:
     3: Provides the verified invocation behavior that documentation and skill guidance
       describe.
   detail: docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md
+  status: current
   description: 'Document the configuration fields, supported canonical command keys
     and aliases, backend and model precedence tables, and the Codex create/detail
     proof. Explain that --backend selects the backend while retaining its configured
