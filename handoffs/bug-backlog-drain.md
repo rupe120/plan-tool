@@ -102,38 +102,12 @@ they resolve.
   with the headings named (PR #199, merged 2026-11-13).
 
 - 2026-11-13 — the iteration-loop hints print `--iteration-budget 1800`, the
-  default, as "a larger wall-clock budget": `fixed bab3c18a2` for the printed
-  value and wording, entry removed in `2403fec96`. The `deadline_exceeded` hint
-  in `create.py`, `detail.py` and `cli/completeness_phases.py` now prints
-  `larger_iteration_budget_seconds(state.budget.budget_seconds)`
-  (`convergence.py`: double the effective deadline, floored at the default) with
-  the comment "resume with a longer no-progress deadline". Tests: one per site,
-  each patching the helper to a sentinel and asserting the site passes it the
-  effective deadline (0), plus a helper test. Mutation: hardcoding `1800` at
-  each site failed exactly that site's test.
-  - **Not fixed, `tracked` in `BUG_BACKLOG.md`:** the `detail` and
-    `completeness-audit` hints omit `--iterate` (both default it off) and the
-    `max_iterations` hints print a literal `--max-iterations 5`, so those
-    printed commands still do not change the run. This fix corrects the
-    `--iteration-budget` value, not those.
-  - **The entry's fourth file was dead text.** `completeness_report.py`
-    `WHY["open"]` and `_HEADINGS["open"]` are never rendered (the report builder
-    says the section no longer exists), so the removed entry's claim that
-    operators saw that sentence was false. The text was reworded in `bab3c18a2`
-    and `9dc1d748e` so no stale vocabulary remains; its test was dropped in
-    `4d8da8c95` because no output could make it fail. Deleting the two unused
-    entries is a separate cleanup and is not filed.
-  - `/code-review` high, pass 1 (headless, read-only): no high finding.
-    `fixed 9dc1d748e`: `WHY["open"]` dropped the stall stop; this line cited no
-    hash; a missing blank line and an over-wide comment. `tracked`: the
-    `--iterate` omission. `declined`: an unpatched nonzero-deadline site test
-    (passing `budget.budget_seconds` instead of `state.budget.budget_seconds`
-    is equivalent in production, and the helper test pins the property).
-  - `/code-review` high, pass 2 (headless, read-only): one medium (the dead
-    text above), five low. `fixed 4d8da8c95`: the dead-text test dropped; the
-    residual entry widened to the `--max-iterations 5` sibling and its locator
-    corrected; the `should_continue` docstring's phantom `budget_exhausted`
-    example replaced; the helper typed `int` with an accurate docstring.
+  default, as "a larger wall-clock budget": `fixed bab3c18a2`, entry removed in
+  `2403fec96`. The `deadline_exceeded` hints now print a value above the
+  effective deadline. Pass-by-pass record, mutation evidence and closure
+  (stopped at exit 2): [ledger](2026-11-13-iteration-budget-hints-code-review.md).
+  Filed in `BUG_BACKLOG.md`, not fixed: the `--iterate` and `--max-iterations 5`
+  hint residual, and the unrendered `WHY["open"]` text.
 
 ## Deliberately not in this handoff
 
