@@ -4585,6 +4585,53 @@ implementation contract.
 - **Origin:** 2026-09-18, `roadmap-decision-settlement` post-run
   `/code-review` rounds 1-4, 6, and 9 (recurring).
 
+**#525 — Validate copied plan-tool skills in the current project so stale instructions are visible**
+
+- **What:** add a read-only validation of the current project's copied
+  plan-tool skill against the matching bundled integration. Compare both
+  `SKILL.md` and its shared `DIRECTIVES.md`; report whether each copy matches,
+  differs, or cannot be compared, with the project path and a safe refresh
+  command. A symlinked installation is outside this copied-content check.
+- **Why:** copied installations do not track package updates automatically.
+  `plan_tool/cli/skill_cmd.py` also deliberately installs the Codex integration
+  as copies because Codex skips symlinked `SKILL.md` files. A current-project
+  check makes stale copied instructions visible before they guide work.
+- **Route:** direct.
+- **Readiness:** decision-needed — select the existing validation surface and
+  when it runs; coordinate with #403's doctor spike without requiring a new
+  doctor command or its broader readiness inventory.
+- **Tier:** experienced.
+- **Principle:** deterministic-non-determinism.
+- **Effort:** small — project installation discovery, byte comparison against
+  packaged sources, an actionable report, and focused tests.
+- **Risks / fallout:** legitimate local edits also differ from bundled bytes;
+  describe a difference without judging instruction quality or overwriting it.
+  Missing packaged sources must report inability to compare, not a match.
+- **Dependencies:** no implementation dependency; coordinate ownership with
+  #403, which already considers stale copied skills among its candidate checks.
+- **Scope contract:**
+  - **Outcome:** an operator can determine whether a copied plan-tool skill in
+    the current project matches the installed package's corresponding files.
+  - **In scope:** project-local `.claude` and `.agents` plan-tool skill
+    installations, matching integration selection, router/directives byte
+    comparison, and actionable read-only validation output.
+  - **Out of scope / Non-goals:** semantic quality judgments, comparison of
+    unrelated skills, user-wide installation inventory, automatic refresh,
+    forced overwrites, converting copies to symlinks, and a general doctor
+    framework. Do not make freshness a gate or change ordinary command exit
+    codes merely because copied bytes differ.
+  - **Allowed behavior changes:** only the selected validation report and its
+    documented invocation; preserve installations and local edits.
+  - **Allowed reorganization:** none.
+  - **Verification:** fixtures cover matching copies, stale router only,
+    stale directives only, missing companion/source, both project skill roots,
+    the Codex copy default, and symlink exclusion. Verify no files change.
+  - **Stop / defer:** resolve the validation-surface choice before implementation;
+    file broader readiness checks separately or leave them with #403.
+- **Origin:** explicit owner request, 2026-11-12, during project model
+  configuration design.
+- **Status:** not started.
+
 **#403 — Spike: define a read-only `plan-tool doctor` readiness contract**
 
 - **What:** investigate and design a small, reliable `plan-tool doctor` command

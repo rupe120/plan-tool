@@ -55,6 +55,8 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Project model selection plan review](2026-11-12-project-model-selection-code-review.md) — audited project backend/model defaults plan, proportionality correction, and separate copied-skill backlog item.
+
 - [Jira-grade retirement execution and review](2026-11-03-jira-grade-retirement-plan.md) — eight
   completed steps, reconciliation findings and corrections, model provenance,
   two clean independent reviews, and prepared publication branches.
