@@ -365,7 +365,7 @@ Durable re-open conditions for retired items are recorded in
   Gate 2", 2026-10-19. Filed first as BACKLOG #503 in the same pull request,
   then moved here; #503 is not reused.
 
-### `create --from-existing` records `source_seed` as the seed path it then archives, so the plan points at a file that no longer exists and Gate 1 rates it HIGH
+### `create --from-existing` records `source_seed` as the seed path it then archives; for a roadmap-published seed the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
 - **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1677`) and the
   seed archive on the superseded-by-new-plan path (`ARCHIVE_DIRNAME`,
@@ -379,9 +379,12 @@ Durable re-open conditions for retired items are recorded in
   pins the recorded pre-archival path, so recording the archived path instead
   needs a deliberate decision, not a quiet test rewrite. **The roadmap-published
   case (`plan-seed-drafts/` is the durable copy) is untested** and is what
-  this entry now covers. n=1; log `.tmp/source-seed-archive-repro.run4.log`.
-- **Symptom:** `_resolve_source_seed` records the `--from-existing` path
-  while the file exists, and `create` then moves that file to
+  this entry now covers. n=1, plan-tool 1.3.1, one-step throwaway plan; the
+  run's log is a local scratch file (`.tmp/` is gitignored) and is not part of
+  this record.
+- **Symptom (reported for a roadmap-published seed; the plain `plan-seeds/`
+  case is verified clean above):** `_resolve_source_seed` records the
+  `--from-existing` path while the file exists, and `create` then moves that file to
   `plan-seeds/archive/<slug>.replaced.md`. Integration commit `da657b8` wrote
   `source_seed: plan-seeds/bitbucket-deployment-pipelines.md` into
   `2-bitbucket-deployment-pipelines.md`, and the same commit holds only
@@ -391,10 +394,12 @@ Durable re-open conditions for retired items are recorded in
   The round-five Gate 1 audit (`bitbucket-deployment-pipelines`
   `20261010-042824`/`-042825`) reported `[authoritative-roadmap-snapshot]`
   HIGH on the dangling path, and Integration commit `03b4e23` repointed it by hand.
-- **Fix:** record the path that survives `create`. For a roadmap-published
-  seed that is its `plan-seed-drafts/` source; otherwise the archived copy.
-  The audit resolves `source_seed` through the same rule, so a plan created
-  before the fix still grounds.
+- **Fix:** for a roadmap-published seed, record the `plan-seed-drafts/` source
+  that survives `create`. Leave the plain `plan-seeds/` behavior unchanged: the
+  pinned test above records the pre-archival path and the audit already
+  resolves it through `latest_seed_archive`. The audit resolves `source_seed`
+  through the same rule, so a roadmap plan created before the fix still
+  grounds.
 - **Approach:** direct.
   **Escalate to plan if:** the roadmap-published seed's draft path is not
   recoverable from the `plan-seeds/` copy without a new link record.
@@ -490,12 +495,12 @@ Durable re-open conditions for retired items are recorded in
   get the same ID, so the check at `concept_review.py:61` rejects the list.
   Crash logs are in `.plan-tool/crashes/<slug>/` (for example
   `20261018T032229Z.txt`).
-- **Fix:** none applied. Not yet found: why `concept_source` (`seed_body` at
-  that call) holds the five canonical sections twice. The likely cause is that
-  the distilled body is joined with the original seed's own canonical sections
-  when the seed has some of the standard headings but not all of them. This is
-  an inference from the evidence above; the joining code has not been read.
-  Fix it where the duplicates are introduced, and also make
+- **Fix:** none applied. As of the 2026-10-18 report, the cause was not found:
+  why `concept_source` (`seed_body` at that call) holds the five canonical
+  sections twice. The report's inference was that the distilled body is joined
+  with the original seed's own canonical sections when the seed has some of
+  the standard headings but not all of them; **Checked** below records what
+  the code at 1.3.1 does. Fix it where the duplicates are introduced, and also make
   `_review_create_concepts` report the repeated section name instead of the
   hash-based "duplicate IDs" crash, since no user can act on that message.
 - **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
@@ -507,10 +512,14 @@ Durable re-open conditions for retired items are recorded in
   throwaway run (some canonical headings, real models) also succeeded.
   `parse_body_sections` does return repeated headings unchanged, so a body
   that repeats a title still reaches `bootstrap_concepts`; whether the
-  "duplicate IDs" message then surfaces unactionably is unverified. The
-  distill-then-join cause named above is still an inference: the code path
-  that builds the distilled body from a unique-keyed section dict does not
-  append the raw seed's sections.
+  "duplicate IDs" message then surfaces unactionably is unverified. On the
+  normalized route the distilled body comes from `_render_distilled_markdown`,
+  which emits each canonical or recognized optional section once and never
+  `References`; the only raw-seed text appended afterwards is the seed's own
+  `## References` (`create.py`, the `local_references` block that sets
+  `distilled_markdown` and then `seed_body`), so the five repeated sections in
+  the original report do not come from that append. The report's cause stays
+  unverified for 0.1.0.
 - **Workaround:** add non-empty `## Overview` and `## Problem statement`
   sections so the seed is direct-ready and skips the distill step. Not tried
   yet.
@@ -556,20 +565,27 @@ Durable re-open conditions for retired items are recorded in
   (2026-11-13) returned `plan-plan-correctness-50f04139`: severity `medium`,
   axis `correctness`, whose body ends "No gap here; this is a confirmation
   only." It carried no `### Fix`, appeared in `conceptual_bar_blocking_ids`,
-  and set `has_blocking_findings: true`, so a clean audit read as blocked. n=1.
+  and set `has_blocking_findings: true`, so a clean audit read as blocked.
+  Command: `plan-tool --model claude-sonnet-5-5 completeness-audit greeter
+  --audit-passes 1 --json` at plan-tool 1.3.1, bare stage, a one-step plan.
+  The finding's title opened "Step 1 (`Add greet_all(names)…`) says `greet`
+  'stays byte-for-byte unchanged'" and its body went on to say the code at
+  HEAD matched. n=1; the run's log is a local scratch file (`.tmp/` is
+  gitignored) and is not part of this record.
 - **Fix:** tighten the prompt so a confirmation is never written as a finding
   bullet (the empty-axis `_(none)_` marker is the only way to say "nothing
   found"). Deliberately not done: a deterministic matcher over finding prose
-  for phrases like "no gap" — that measures vocabulary, the withdrawn
-  anti-pattern in `CLAUDE.md` § "Withdrawn: the per-`change_type`
-  test-ordering contract".
+  for phrases like "no gap" — a proxy that measures vocabulary, which
+  `CLAUDE.md` § "Validating a semantic property you cannot observe" rule 5
+  says to kill, not tune; § "Withdrawn: the per-`change_type` test-ordering
+  contract" is the measured instance.
 - **Approach:** `direct` — a prompt edit plus a regression that pins the
   contract text; confirm the second sample reproduces before editing.
 - **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
   Reopen condition: a second independent audit returns a confirmation-only
   finding. One sample cannot separate a prompt gap from reviewer variation.
-- **Origin:** 2026-11-13, source-seed archive repro; log
-  `.tmp/source-seed-archive-repro.run4.log`.
+- **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
+  entry above.
 
 ## RISK
 
