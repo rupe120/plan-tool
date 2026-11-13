@@ -171,8 +171,8 @@ its arc documents, not here; the successor-slug rule lives in
 - [General branch cleanup](2026-09-29-branch-cleanup.md) — the local and
   `origin` branch inventory: what is merged and safe to delete, what is active,
   and the ancient remote-only branches.
-- [Handoff-directory cleanup and consolidation](2026-09-29-handoff-consolidation.md)
-  — this directory's own queued cleanup, with the compression record.
+- [Handoff directory cleanup](handoff-directory-cleanup.md)
+  — this directory's remaining cleanup, standing owner decisions, and the compression-omission record.
 
 ## Review ledgers
 
