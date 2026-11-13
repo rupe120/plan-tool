@@ -30,6 +30,24 @@ def canonical_source_key(section: BodySection, parent_path: Iterable[str] = ()) 
     )
 
 
+def empty_concept_headings_message(sections: Iterable[BodySection]) -> str | None:
+    """Refusal text for sections whose name is empty after normalization, else ``None``.
+
+    ``parse_body_sections`` strips whitespace before dropping trailing ``:``/``.``,
+    so a name is empty exactly when ``concept_id`` would raise a bare
+    ``ValueError`` naming no heading. Every command that bootstraps concepts
+    from a plan body raises this one text through its own error path.
+    """
+    empty = [f"'## {section.heading}'" for section in sections if not section.name]
+    if not empty:
+        return None
+    return (
+        "plan body has section headings with no name after normalization "
+        "(surrounding whitespace and trailing ':' and '.' are dropped): "
+        f"{', '.join(empty)}. Give each a name or remove it, and retry."
+    )
+
+
 def _derived_values(node: ConceptNode) -> dict[str, object]:
     return {name: copy.deepcopy(getattr(node, name)) for name in _DERIVED_FIELDS}
 

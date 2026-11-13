@@ -16445,6 +16445,37 @@ def test_candidate_body_buckets_ignore_fenced_pseudo_heading(tmp_path: Path) -> 
     assert "example bucket" not in names
 
 
+@pytest.mark.parametrize("empty_heading", ["## :", "## ."], ids=["colon", "period"])
+def test_candidate_buckets_refuse_a_heading_with_no_name_naming_it(
+    tmp_path: Path, empty_heading: str
+) -> None:
+    """A hand-edited plan can hold a heading whose name is empty after
+    normalization; ``concept_id`` would raise a bare ``ValueError`` naming
+    nothing. ``detail`` refuses with the same text ``create`` uses."""
+    from plan_tool.detail import derive_candidate_buckets
+
+    plan_path = _write_detail_plan_with_sections(tmp_path)
+    plan_text = plan_path.read_text(encoding="utf-8") + f"\n{empty_heading}\n\nbody.\n"
+
+    with pytest.raises(DetailError) as excinfo:
+        derive_candidate_buckets(parse_plan(plan_path), plan_text)
+
+    message = str(excinfo.value)
+    assert "no name after normalization" in message
+    assert f"'{empty_heading}'" in message
+
+
+def test_candidate_buckets_keep_a_zero_width_only_heading(tmp_path: Path) -> None:
+    """Carve-out: a zero-width space is not whitespace to ``str.split``, so the
+    heading has a non-empty (invisible) name and is neither refused nor a crash."""
+    from plan_tool.detail import derive_candidate_buckets
+
+    plan_path = _write_detail_plan_with_sections(tmp_path)
+    plan_text = plan_path.read_text(encoding="utf-8") + "\n## \u200b\n\nbody.\n"
+
+    assert derive_candidate_buckets(parse_plan(plan_path), plan_text)
+
+
 def test_detail_render_and_pointer_update_keep_description_step_text(tmp_path):
     import yaml
     from plan_tool.parser import parse_plan, parse_plan_text, render_plan_text, split_plan_document

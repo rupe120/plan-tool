@@ -6,7 +6,11 @@ import argparse
 
 from plan_tool.cli.context import _load_context
 from plan_tool.cli.parser import Handler
-from plan_tool.concept_bootstrap import bootstrap_concepts, rederive_concepts
+from plan_tool.concept_bootstrap import (
+    bootstrap_concepts,
+    empty_concept_headings_message,
+    rederive_concepts,
+)
 from plan_tool.concept_review import (
     CONCEPT_DECISIONS,
     ConceptReviewError,
@@ -153,12 +157,17 @@ def cmd_scope_review(args: argparse.Namespace) -> int:
         # Legacy full-tree record: re-derive the whole tree from the current
         # plan body and review the candidate (dual-mode — kept for records
         # written before the flat decision-record shape; see plan #131).
+        sections = parse_body_sections(
+            split_plan_document(source_plan_text).body,
+            ignore_fenced_code=True,
+        )
+        message = empty_concept_headings_message(sections)
+        if message is not None:
+            warn(f"{plan_path}: {message} No changes were written.")
+            return SCOPE_REVIEW_INVALID_STATE_EXIT
         fresh_tree = bootstrap_concepts(
             plan,
-            parse_body_sections(
-                split_plan_document(source_plan_text).body,
-                ignore_fenced_code=True,
-            ),
+            sections,
             plan_slug=slug,
             plan_fingerprint=fingerprint,
         )
