@@ -9,11 +9,11 @@ exact, case-sensitive `Dockerfile` through one fixed list, and an identical
 
 | Item | State |
 | --- | --- |
-| Review range | `origin/main..` the branch head named in the next row (the branch carries one unrelated handoff-trim commit, `9e0173ede`) |
-| Head reviewed by pass 2 | `8bc109c46`. Corrections to pass 2: `52d26f957`, then this ledger revision (the next commit) |
-| Checks | Full suite 14,904 passed, 67 skipped, 2026-11-13, with `52d26f957`'s code. The reviewers could not run tests; the author ran them. One skip is `tests/test_cli.py:3277`, a run-log scope proxy that skips whenever the branch diff touches a test file outside its allowlist (here `tests/test_review.py`); it passes on `main`. The other skips are unchanged (`tests/test_roadmap.py`, one unresolvable plan title) |
+| Review range | `origin/main..HEAD` at each pass's head (the branch carries one unrelated handoff-trim commit, `9e0173ede`) |
+| Heads reviewed | Pass 1: `4abcb9171`. Pass 2: `8bc109c46`. Pass 3: `f8a8c9f42`. Corrections to pass 3: `ef4ef9202`, then this ledger revision (the next commit) |
+| Checks | Full suite 14,906 passed, 67 skipped, 2026-11-13, with `ef4ef9202`'s code. The reviewers could not run tests; the author ran them. One skip is `tests/test_cli.py:3277`, a run-log scope proxy that skips whenever the branch diff touches a test file outside its allowlist (here `tests/test_review.py`); it passes on `main`. The other skips are unchanged (`tests/test_roadmap.py`, one unresolvable plan title) |
 | Reviewer | Headless sessions on `claude-sonnet-5-5`. Findings files and stream logs are local scratch (`.tmp/files-coherence-dockerfile-code-review-N.*`, gitignored); findings and dispositions are recorded here |
-| Disposition | **In progress at `52d26f957`, 2026-11-13.** Pass 2 returned one medium finding, so the low-yield exit has not been reached; pass 3 on the corrections is pending |
+| Disposition | **Stopped at exit 2, 2026-11-13: neither converged nor clean.** See Closure |
 
 ## Settled decisions
 
@@ -37,8 +37,11 @@ exact, case-sensitive `Dockerfile` through one fixed list, and an identical
   and case-insensitivity are each caught.
 - Sibling-directory scores that motivated the skip, reproduced by running
   `_nearest_declared_match`: `docker/web` vs `docker/api` 0.857, `services/web`
-  vs `services/api` 0.870, `worker-b` vs `worker-a` 0.947 (bar 0.85); `index.ts`
-  in the same layouts scores 0.82–0.84.
+  vs `services/api` 0.870, `worker-b` vs `worker-a` 0.947 (bar 0.85). Generic
+  names keep the existing tradeoff and can reach the same route: `index.ts` in
+  the same layouts scores 0.842, 0.857 and 0.941, so only the first stays under
+  the bar. A cited `Dockerfile` vs a declared `Dockerfile.dev` in one directory
+  also cleared the near-miss rules before the dotted-variant clause.
 
 ## Findings and dispositions
 
@@ -85,8 +88,32 @@ Pass 2 (five findings, one medium):
 5. Pass-1 record not enumerable in the drain log — `fixed` in this ledger
    revision.
 
+Pass 3 (four low findings, confirming pass; verified by running the scores):
+
+1. `_claim_delivered` still fuzzy-matches a sibling-directory Dockerfile as
+   delivered — `declined`: it only reduces the recall of an info advisory and
+   produces no false finding, and Dockerfile claims were not extracted at all
+   before this change, so nothing regressed. Not filed.
+2. A cited `Dockerfile` against a declared `Dockerfile.<suffix>` in one
+   directory still drew a near-miss (`services/api/Dockerfile` vs
+   `services/api/Dockerfile.dev`, reproduced) — `fixed ef4ef9202`: the repeated-by-design
+   skip also covers a dotted variant of the cited basename; a unit case and a
+   files-coherence case pin it, and dropping the clause fails both.
+3. The test docstring and this ledger claimed `index.ts` stays under the
+   similarity bar in the same layouts — `fixed ef4ef9202` and this revision:
+   reproduced at 0.842, 0.857 and 0.941; the claim now states the existing
+   tradeoff for generic names. Not filed: it is documented behavior.
+4. The range row named a head that was not the branch head, and the README
+   entry said "the open pass" — `fixed` in this ledger revision.
+
 ## Closure
 
-Not closed. Pass 2's one medium finding resets the low-yield streak; pass 3 on
-the corrections is pending, and the disposition above is updated when it
-returns.
+**Stopped at exit 2 on 2026-11-13; not converged, not clean.** Pass 2's one
+medium finding reset the low-yield streak, and pass 3 was the only low-only pass
+after it, so the two-consecutive-passes condition was not met. Most of pass 2's
+and pass 3's findings describe this branch's own earlier edits (the first
+remedy, its tests and claims, and this ledger), the shape `CLAUDE.md` calls the
+loop auditing its own edits, so every finding is applied or dispositioned above
+and no fourth pass is planned unless the owner asks for one. The extractor
+change itself drew no material finding after pass 1's regression and pass 2's
+incomplete-remedy finding were fixed.

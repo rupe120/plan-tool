@@ -106,8 +106,9 @@ they resolve.
   `52d26f957`; entry removed in `ac27792bf`. Both mention extractors in
   `plan_tool/detail.py` now also match an exact, case-sensitive `Dockerfile`
   through one fixed list (`_EXTENSIONLESS_FILENAMES`), not `Dockerfile.dev` or
-  look-alikes; an identical `Dockerfile` basename in another directory is never
-  a near-miss in `plan_tool/review.py` (`_REPEATED_BY_DESIGN_BASENAMES`, kept
+  look-alikes; an identical or dotted-variant `Dockerfile` basename in another
+  directory is never a near-miss in `plan_tool/review.py`
+  (`_REPEATED_BY_DESIGN_BASENAMES`, kept
   apart from the generic set because the long name pushes sibling directories
   over the 0.85 ratio bar). The extractors feed `check_files_coherence`, the
   claim-vs-delivery smell, the orphaned-deliverable deferral check and
@@ -116,7 +117,7 @@ they resolve.
   stops blocking. Not done, by design: other extensionless names and
   `Dockerfile.<suffix>`. Filed from the review: `detail` and `scope-review`
   raise a bare `ValueError` on a plan holding `## :` (`BUG_BACKLOG.md`).
-  Review record, evidence and open status:
+  Review record and evidence:
   [`2026-11-13-files-coherence-dockerfile-code-review.md`](2026-11-13-files-coherence-dockerfile-code-review.md).
 
 ## Deliberately not in this handoff
