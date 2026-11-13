@@ -88,11 +88,12 @@ Record each drained entry here as one line: entry heading, disposition
   test change: the scratch test was discarded because it could not be shown to
   fail under the old behavior.
 - Multiline concept decisions can create document headings outside their owned
-  section — `fixed a0cda5b53`. Reproduced through `synchronize_concepts` (all four
-  parametrized cases fail without the fix, pass with it); title and rationale
+  section — `fixed a0cda5b53`. Reproduced through `synchronize_concepts` (the
+  four cases then in the test failed without the fix and passed with it; a
+  fifth, bare-CR case was added in `0b20bcbb1`); title and rationale
   now render on one line in `render_scope_decisions`. Full suite 14,858 passed,
   67 skipped (`.tmp/multiline-concept-decisions.fullsuite.log`). Entry removed
-  from `BUG_BACKLOG.md`.
+  from `BUG_BACKLOG.md` in `436b812d7`.
   - `/code-review` high, pass 1 (headless, report-only; the reviewer could
     not run code, so its claims are read-only evidence):
     `.tmp/multiline-concept-decisions-code-review-1.md`. No material defect;
@@ -107,9 +108,19 @@ Record each drained entry here as one line: entry heading, disposition
     - Another copy of the whitespace-collapse idiom — `declined`: no shared
       helper is importable without a cycle; any consolidation needs AST
       evidence and a `BACKLOG.md` entry, not a drive-by.
-  - Pass 2 on the final state: pending (one pass with no material finding is
-    not the two-pass convergence the rules require). Full suite after pass 1:
-    14,859 passed, 67 skipped (`.tmp/multiline-concept-decisions.fullsuite2.log`).
+  - Full suite after pass 1: 14,859 passed, 67 skipped
+    (`.tmp/multiline-concept-decisions.fullsuite2.log`).
+  - `/code-review` high, pass 2 (headless, report-only, on `282e75b9f..HEAD`
+    through `af59e779c`; it ran `tests/test_concept_sync.py`, 36 passed, and
+    verified the cited hashes and logs; the sandbox refused its own mutant runs,
+    so the mutation claims above remain this session's evidence):
+    `.tmp/multiline-concept-decisions-code-review-2.md`. No material defect in
+    code or tests; two low documentation findings, both `fixed` in the handoff
+    edit that adds this line: the removing commit is now recorded, and the
+    case counts are dated.
+  - **Closure: low-yield convergence, not a clean audit.** Pass 1 added only
+    low/info test items and pass 2 only low documentation items, with no
+    material finding in either. Nothing is pushed.
 
 ## Deliberately not in this handoff
 
