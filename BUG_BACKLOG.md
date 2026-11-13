@@ -575,9 +575,9 @@ Durable re-open conditions for retired items are recorded in
   `detail-readiness-advisory`, `connectivity-pause-and-poll` and
   `artifact-contention-handoff` recipes); authority
   `integrations/shared/DIRECTIVES.md` Gate 1.
-- **Symptom:** each block lists `create`, then `detail`, then one
-  `completeness-audit`, so an operator who copies it skips the bare-plan audit
-  that Gate 1 runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
+- **Symptom:** each block runs `detail` straight after `create` and audits only
+  after it, so an operator who copies it skips the bare-plan audit that Gate 1
+  runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
   in the tracked documents for a `plan-tool detail` command that follows a
   `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
   between; its 24 hits were these eleven, two real gaps in `docs/how-to/roadmap.md`
@@ -590,16 +590,20 @@ Durable re-open conditions for retired items are recorded in
   after `create` in each block, as each entry is next touched. Deliberately not
   done: a script that rewrites the queue, because the recipes are part of
   entries that are edited when picked up.
-- **Approach:** `direct` — documentation only; re-run the sweep to confirm none
-  remains.
+- **Approach:** `direct` — documentation only.
+- **Verification:** no `BACKLOG.md` recipe block has a `plan-tool detail` line
+  without a `plan-tool completeness-audit` line before it in the same block
+  (a `detail --reconcile` or `--dry-run` line is exempt).
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
 ### `RUNBOOK.md` states a 300-second iteration budget; the default is an 1800-second no-progress deadline
 
 - **Files:** `RUNBOOK.md` (the passages "Default budget: 3 iterations × 300s
-  wall-clock", "wall-clock hit `--iteration-budget` (300s by default)" and
-  "after 3 iteration(s) / 300s"); authority
+  wall-clock" and "wall-clock hit `--iteration-budget` (300s by default)"; the
+  example stop message "after 3 iteration(s) / 300s", which no code prints; and
+  the advice "Bump the cap ... `--iteration-budget 600`" plus the "Tuning the
+  budget" example, which lower a default of 1800); authority
   `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS` and
   `plan-tool create --help`.
 - **Symptom:** the code default is 1800 seconds, and `--iteration-budget` is a
@@ -607,12 +611,17 @@ Durable re-open conditions for retired items are recorded in
   `apply_finding` call, so a long single model call does not trip it;
   `--time-budget` is the total-elapsed cap. `RUNBOOK.md` describes a 300-second
   wall-clock stop, so a reader expects a five-minute cutoff. A search of the
-  tracked instructional documents for "300s" found only these three statements
-  (`experiments/minimize-claude/LESSONS.md` has an unrelated measurement).
-- **Fix:** state the 1800-second debounced no-progress deadline in the three
-  places and name `--time-budget` for a hard cap. Deliberately not done: changing
-  the default.
+  tracked instructional documents for "300s" found only the three 300-second
+  passages above (`experiments/minimize-claude/LESSONS.md` has an unrelated
+  measurement); the 600-second advice assumes the same low default.
+- **Fix:** state the 1800-second debounced no-progress deadline where the
+  default is described, name `--time-budget` for a hard cap, make the example
+  stop message and the 600-second figures consistent with it. Deliberately not
+  done: changing the default.
 - **Approach:** `direct` — documentation only.
+- **Verification:** `grep -n '300s' RUNBOOK.md` returns nothing, and every
+  stated default matches the `--iteration-budget` text in `plan-tool create
+  --help`.
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, fact-check review of the same removal.
 
