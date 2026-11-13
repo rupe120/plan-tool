@@ -77,9 +77,16 @@ Record each drained entry here as one line: entry heading, disposition
   The roadmap-published case (`plan-seed-drafts/`) is **untested**, so the
   entry stays, narrowed to that case and marked `evidence-gated`. A second
   entry (audit emits a "no gap here" confirmation as a blocking medium
-  finding) was filed `evidence-gated` from the same run. Log: `.tmp/source-seed-archive-repro.run4.log`. Existing test
+  finding) was filed `evidence-gated` from the same run. Log:
+  `.tmp/source-seed-archive-repro.run4.log`. Existing test
   `test_source_seed_survives_the_cli_archiving_its_own_seed` pins the
   recorded pre-archival path.
+- `create --from-existing` crashes with "concept scope contains duplicate IDs"
+  (`BUG_BACKLOG.md`, BUG section) — `pending`, narrowed to `evidence-gated`
+  2026-11-13. Not reproduced at 1.3.1 with the entry's nine-heading seed and a
+  stubbed distill; the original distill response is not retained. No code or
+  test change: the scratch test was discarded because it could not be shown to
+  fail under the old behavior.
 
 ## Deliberately not in this handoff
 
