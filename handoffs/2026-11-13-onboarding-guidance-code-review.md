@@ -24,8 +24,9 @@ in [`bug-backlog-drain.md`](bug-backlog-drain.md).
 - The shorthand `create → detail → audit → run` collapses the two audit gates and
   does not contradict them; edits to `CLAUDE.md` need architect-tier review, and
   `AGENTS.md` is a symlink to it.
-- The `BACKLOG.md` recipes and the `RUNBOOK.md` iteration budget are filed, not
-  fixed here (separate classes of defect; queue records).
+- The `BACKLOG.md` recipes and the `RUNBOOK.md` iteration budget were filed, not
+  fixed here, as separate classes of defect and queue records; the
+  iteration-budget entry was fixed afterwards in `9f8c67e9b`.
 - Restructuring the first-task path belongs to onboarding #510.
 
 ## Evidence (this session's runs)
@@ -73,7 +74,8 @@ Pass 2 (one medium, two low, one info):
    finding 1).
 2. The README lead-in contradicted Retention — `fixed 881047f62`.
 3. The `RUNBOOK.md` "narrow variant" sentence — `fixed 977b02cbb`; the stale
-   300-second budget — `tracked`: `BUG_BACKLOG.md`, filed in `94c9b4171`.
+   300-second budget — `tracked`: `BUG_BACKLOG.md`, filed in `94c9b4171` and fixed
+   afterwards in `9f8c67e9b`.
 4. Present-tense status that goes stale — `fixed 881047f62` ("as of 2026-11-13",
    "open on 2026-11-13").
 

@@ -1032,7 +1032,9 @@ plan-tool create my-feature --no-iterate \
     -y < /dev/null
 ```
 
-Default budget: 3 iterations × 300s wall-clock. After the initial
+Default budget: 3 iterations (`--max-iterations`) and an 1800-second
+debounced no-progress deadline (`--iteration-budget`); `--time-budget` is an
+optional cooperative total-elapsed cap (checked at round boundaries), off by default. After the initial
 `write_new_plan`, the loop runs the body-section / detail-coverage /
 references-coherence primitives (from `review.py`'s deterministic
 completeness check), passes any findings to `apply-finding` against
@@ -1052,8 +1054,10 @@ plan-tool detail my-feature --iterate
 plan-tool detail my-feature --iterate --step 3
 ```
 
-Each step gets its own per-step budget — exhausting step 2's budget
-does not block step 3's iteration. The per-step loop runs the
+Each step gets its own per-step iteration and no-progress budget —
+exhausting step 2's budget does not block step 3's iteration.
+`--time-budget` is the exception: it measures total elapsed time for the
+whole command, so once it passes, the later steps' loops stop too. The per-step loop runs the
 `detail-quality.md` review (a claude call that produces findings on
 the just-written detail body), hands those findings to
 `apply-finding`, and re-renders. The detail file is mutated in place
@@ -1170,8 +1174,10 @@ handles only the localized one-step split; the cross-step re-seed fork
   is no worse than the prior iteration; further iteration yields
   nothing new.
 - **Budget exhausted** — iteration count hit `--max-iterations` (3
-  by default) or wall-clock hit `--iteration-budget` (300s by
-  default). Exit code 0 — the audit completed; the remaining open
+  by default), no forward progress for `--iteration-budget` seconds (a
+  debounced no-progress deadline, 1800 by default), or total elapsed time
+  hit `--time-budget` (off by default). Exit code 0 — the audit completed;
+  the remaining open
   findings are in the report (and, for `completeness --json`,
   bar-aware `has_blocking_findings`) for CI gates to inspect. Pass
   `--fail-on-findings` to exit non-zero when stage-bar blockers remain
@@ -1182,7 +1188,7 @@ handles only the localized one-step split; the cross-step re-seed fork
 
 ```bash
 plan-tool detail my-plan --iterate --max-iterations 5
-plan-tool detail my-plan --iterate --iteration-budget 600
+plan-tool detail my-plan --iterate --iteration-budget 3600
 plan-tool detail my-plan --iterate --max-iterations 1 # one pass only
 ```
 
@@ -3433,15 +3439,15 @@ git diff            # the actual partial edits
 
 ### `--iterate` exhausted the iteration budget
 
-Symptom: the run exits 0 but the final stderr line names a
-`budget_exhausted` stop (e.g. after 3 iteration(s) / 300s) rather
-than `converged`; the artifact on disk is the last iteration's
-output and findings may still be open.
+Symptom: the run exits 0 but the final stderr line names a budget
+stop (`max_iterations`, `deadline_exceeded` or, under `--time-budget`,
+`time_budget_exceeded`) rather than `converged`; the artifact on disk is
+the last iteration's output and findings may still be open.
 
-Cause: the loop hit either `--max-iterations` or
-`--iteration-budget` without converging. Either claude keeps finding
-new issues each pass, or the issues themselves keep introducing
-regressions on the next iteration.
+Cause: the loop hit `--max-iterations`, the `--iteration-budget`
+no-progress deadline, or the `--time-budget` total cap without converging.
+Either claude keeps finding new issues each pass, or the issues themselves
+keep introducing regressions on the next iteration.
 
 Fix in this order:
 
@@ -3450,7 +3456,9 @@ Fix in this order:
    `plan-tool completeness <name>`, or `plan-tool verify-all --rollup <name>
    --step N` depending on which subcommand owned the loop.
 2. **Bump the cap** if the loop was nearly converging:
-   `--max-iterations 5 --iteration-budget 600`. Each iteration is
+   `--max-iterations 5` (raise `--iteration-budget` above its 1800-second
+   default only when the stop was `deadline_exceeded`, or `--time-budget`
+   when it was `time_budget_exceeded`). Each iteration is
    one or more claude calls; expect proportional cost.
 3. **Fall back to one-shot** if the loop is thrashing rather than
    converging: re-run with `--no-iterate` and hand-edit the surviving
@@ -3459,7 +3467,7 @@ Fix in this order:
 ### `--iterate` halted on marginal stagnation
 
 Symptom: the run exits 0 but the stderr final line names a
-`marginal-stagnation` halt rather than `converged`. The artifact is
+`marginal` halt rather than `converged`. The artifact is
 the iteration-N output; iteration N+1 would have produced the same
 findings.
 

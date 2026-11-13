@@ -274,7 +274,7 @@ Options applied *during* create:
   convergence or budget. Pairs with `--max-iterations N` (default 3)
   and `--iteration-budget SECONDS` (default 1800; a debounced
   no-progress deadline, not a cap on total loop time — see
-  [Defaults). Pass `--no-iterate`
+  [Defaults](../ITERATION.md#defaults)). Pass `--no-iterate`
   to skip the post-write loop. Detail authoring defaults to one shot;
   enable its quality loop only when explicitly requested. Neither
   `detail --reconcile` nor `run --reconcile` accepts `--iterate`.
@@ -329,8 +329,9 @@ Options applied *during* detail:
 - `--iterate`: opt in only when explicitly requested; the normal authoring route
   uses one-shot detail followed by the grounded audit. After each write, the
   optional detail-quality loop drives 2–3 revisions tightening citations
-  and pinning vague prose. Budget is **per step**; one step
-  exhausting doesn't block the next.
+  and pinning vague prose. The iteration and no-progress budgets are **per
+  step**; one step exhausting doesn't block the next (`--time-budget` is
+  shared across steps).
 - `-y < /dev/null`: headless. Skips the re-run Y/N gates.
 - `--lessons`: opt into lessons capture — a second Claude call per
   step distilling the written body into the shared lessons store.

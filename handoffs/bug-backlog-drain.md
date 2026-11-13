@@ -101,6 +101,45 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
+- 2026-11-13 — `RUNBOOK.md` states a 300-second iteration budget; the default is
+  an 1800-second no-progress deadline: `fixed 9f8c67e9b`, entry removed in `cb5341b66`.
+  Five passages corrected against `plan_tool/convergence.py`
+  (`DEFAULT_ITERATION_BUDGET_SECONDS = 1800`, a debounced no-progress deadline;
+  `--time-budget` is the optional hard cap) and `plan-tool create --help`: the
+  create-loop default, the "Budget exhausted" bullet, the tuning example (600
+  raised to 3600), the troubleshooting symptom and the "Bump the cap" advice.
+  Found while fixing: the troubleshooting symptom named a `budget_exhausted`
+  stop that the code never emits (the reasons are `max_iterations`,
+  `deadline_exceeded` and `time_budget_exceeded`), so it now names those. The
+  entry's own checks pass: no `300s` and no `budget_exhausted` reason code remain
+  in `RUNBOOK.md`. Documentation only; the suite is unchanged by it.
+  - `/code-review` high, fact-check pass 1 (headless, read-only): the five
+    corrections hold against the code and `docs/cli`. Findings, all verified
+    before acting: `fixed 3b88dfcf3` (RUNBOOK named a `marginal-stagnation` stop the
+    code never emits, now `marginal`; `docs/ITERATION.md` still said wall-clock
+    hit `--iteration-budget`; the RUNBOOK cause, fix and "Budget exhausted"
+    bullet now cover `--time-budget`; two over-long lines rewrapped),
+    `fixed 343d6fb3a` (a truncated `[Defaults)` link in `common-workflows.md`, target
+    `docs/ITERATION.md#defaults`), `fixed 79eafd931` (the onboarding ledger row and
+    finding still pointed at the removed entry), and `tracked` in
+    `BUG_BACKLOG.md`, filed in `f12de12bb` (the loop hints print `--iteration-budget
+    1800`, the default, as "a larger wall-clock budget"; the termination lists
+    omit `no_progress` and `no_blocking_findings`).
+  - `/code-review` high, fact-check pass 2 (headless, read-only): no high or
+    medium finding; the pass-1 fixes hold and all cited hashes are reachable.
+    Findings, verified before acting: `fixed 21f731ae5` (the text now calls
+    `--time-budget` cooperative, not "hard"; says it is shared across `detail`
+    steps while the iteration and no-progress budgets are per step, which the
+    code comment at `detail.py` confirms; `docs/ITERATION.md`'s Defaults table
+    gained the missing `--time-budget` row), `fixed 6408b799a` (a history record still
+    called the fixed RUNBOOK entry open; a ledger sentence was tidied) and
+    `fixed 8a0d1f90e` (the hints entry now includes the saved-report text at
+    `completeness_report.py`, which also calls the stop wall-clock, with a check
+    that can find it). **Closure: stopped at exit 2, neither converged nor clean.**
+    Pass 1 returned three medium findings and pass 2 none, so the two
+    consecutive low-yield passes were not reached, and most findings in both
+    passes described this change's own new text. No third pass is planned.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read

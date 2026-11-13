@@ -93,6 +93,7 @@ them once, and the loop runs itself within the fence you drew.
 | `--iterate` / `--no-iterate` | `create`: `--iterate` (on). `detail`, `completeness-audit`: `--no-iterate` (off). | `BooleanOptionalAction` + per-subparser `default=True` on `create`, `default=False` on `detail` | Master switch. Off ⇒ `IterativeBudget(enabled=False)` ⇒ `should_continue` short-circuits with `"disabled"` on the first call. |
 | `--max-iterations N` | `3` | `convergence.DEFAULT_MAX_ITERATIONS` | Maximum iterations after the initial write. `--max-iterations 0` is rejected by `_resolve_iterative_budget`. |
 | `--iteration-budget SECONDS` | `1800` | `convergence.DEFAULT_ITERATION_BUDGET_SECONDS` | Debounced no-progress deadline: fires only after SECONDS pass with zero forward progress. It resets on every round and every `apply_finding` call, so a single 15-20+ minute claude call never trips it — this is not a cap on total loop wall-clock (see `--time-budget` for that). |
+| `--time-budget SECONDS` | off (`0`); falls back to `PLAN_TOOL_TIME_BUDGET` | `convergence.IterativeBudget.hard_budget_seconds` | Cooperative total-elapsed cap: stops the loop at the next round boundary once SECONDS of total command time pass, even while still converging, and exits 0 with a resume hint. Shared across `detail` steps; it does not interrupt a model call in flight. Ignored under `--no-iterate`. |
 | `--max-stall-rounds N` | `2` | `convergence.DEFAULT_MAX_STALL_ROUNDS` | Stop after N consecutive rounds whose open-finding **count** doesn't shrink. It's an ID-agnostic backstop for a subjective audit that re-phrases the same findings each round (fresh ids would otherwise defeat the `marginal` / `converged` checks). `0` disables. |
 
 - **On by default:** `create`. Pass `--no-iterate` to skip the
@@ -158,15 +159,18 @@ them once, and the loop runs itself within the fence you drew.
   loop wraps each detail-file write independently). `create`'s budget
   is *per plan* (one loop around the post-`write_new_plan` reaudit).
   When you iterate across multiple steps with `detail` (no `--step`
-  argument), each step gets its own fresh budget — one step exhausting
-  its budget doesn't block the next.
+  argument), each step gets its own fresh iteration and no-progress budget —
+  one step exhausting its budget doesn't block the next. `--time-budget` is
+  shared across the whole command.
 
 ## How the loop terminates
 
 - **Converged.** `finding_set_delta` returns an empty introduced-set.
   Exit code 0.
-- **Budget exhausted.** The iteration count hit `--max-iterations`, or
-  wall-clock hit `--iteration-budget`. Exit code 0 — the loop
+- **Budget exhausted.** The iteration count hit `--max-iterations`, no
+  forward progress was made for `--iteration-budget` seconds (a debounced
+  no-progress deadline, not a cap on total time; `--time-budget` is the total
+  cap), or `--time-budget` was reached. Exit code 0 — the loop
   completed; any findings still open are in the report (and, for
   `completeness-audit --json`, the `has_blocking_findings` flag), which CI /
   aggregation scripts inspect instead of the exit code. For

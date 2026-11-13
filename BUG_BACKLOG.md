@@ -598,33 +598,49 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
-### `RUNBOOK.md` states a 300-second iteration budget; the default is an 1800-second no-progress deadline
+### The iteration-loop hints print `--iteration-budget 1800`, the default, as "a larger wall-clock budget"
 
-- **Files:** `RUNBOOK.md` (the passages "Default budget: 3 iterations × 300s
-  wall-clock" and "wall-clock hit `--iteration-budget` (300s by default)"; the
-  example stop message "after 3 iteration(s) / 300s", which no code prints; and
-  the advice "Bump the cap ... `--iteration-budget 600`" plus the "Tuning the
-  budget" example, which lower a default of 1800); authority
-  `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS` and
-  `plan-tool create --help`.
-- **Symptom:** the code default is 1800 seconds, and `--iteration-budget` is a
-  debounced no-progress deadline that resets on every round and every
-  `apply_finding` call, so a long single model call does not trip it;
-  `--time-budget` is the total-elapsed cap. `RUNBOOK.md` describes a 300-second
-  wall-clock stop, so a reader expects a five-minute cutoff. A search of the
-  tracked instructional documents for "300s" found only the three 300-second
-  passages above (`experiments/minimize-claude/LESSONS.md` has an unrelated
-  measurement); the 600-second advice assumes the same low default.
-- **Fix:** state the 1800-second debounced no-progress deadline where the
-  default is described, name `--time-budget` for a hard cap, make the example
-  stop message and the 600-second figures consistent with it. Deliberately not
-  done: changing the default.
-- **Approach:** `direct` — documentation only.
-- **Verification:** `grep -n '300s' RUNBOOK.md` returns nothing, and every
-  stated default matches the `--iteration-budget` text in `plan-tool create
-  --help`.
+- **Files:** `plan_tool/create.py`, `plan_tool/detail.py` and
+  `plan_tool/cli/completeness_phases.py` (the `deadline_exceeded` hint in each),
+  and `plan_tool/completeness_report.py` (the "Open" disposition text, which
+  calls the loop stop an "iteration cap, wall-clock budget, or no-progress" stop
+  and suggests a larger `--iteration-budget`); authority `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS`.
+- **Symptom:** on a `deadline_exceeded` stop each prints
+  `plan-tool <command> <name> --iteration-budget 1800   # resume with a larger
+  wall-clock budget`. 1800 is already the default, so following the hint changes
+  nothing, and `--iteration-budget` is a debounced no-progress deadline, not a
+  wall-clock budget (`--time-budget` is the total cap). No test pins the hint
+  text. Found 2026-11-13 in the fact-check of the `RUNBOOK.md` budget fix.
+- **Fix:** print a value above the effective budget and drop "wall-clock" from the
+  comment. Deliberately not done: changing the default or the deadline's meaning.
+- **Approach:** `direct` — one hint per command plus a test that the printed value
+  exceeds the effective budget.
+- **Verification:** `grep -rn -A1 'wall-clock' plan_tool/create.py plan_tool/detail.py
+  plan_tool/cli/completeness_phases.py plan_tool/completeness_report.py` shows no
+  text that describes `--iteration-budget` as wall-clock, and a test pins the
+  printed value above the default.
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, fact-check review of the same removal.
+- **Origin:** 2026-11-13, fact-check review of the `RUNBOOK.md` iteration budget fix.
+
+### The loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md` omit the `no_progress` and `no_blocking_findings` stops
+
+- **Files:** the "How the loop terminates" sections of `RUNBOOK.md` and
+  `docs/ITERATION.md`; authority `plan_tool/convergence.py:should_continue`.
+- **Symptom:** both lists name Converged, Marginal stagnation and Budget exhausted.
+  `should_continue` can also stop with `no_progress` (the open-finding count
+  failed to shrink for `--max-stall-rounds` consecutive rounds; default 2) and
+  `no_blocking_findings` (only advisory findings remain). An operator who sees
+  either reason on the final stderr line finds no entry for it. The lists say
+  nothing false; they are incomplete, and were before the budget fix.
+- **Fix:** add a bullet for each stop with the wording of the `should_continue`
+  docstring, naming `--max-stall-rounds`, in `docs/ITERATION.md` (the owner of the
+  definitions) and a pointer from `RUNBOOK.md`. Deliberately not done: a second
+  full definition in `RUNBOOK.md`.
+- **Approach:** `direct` — documentation only.
+- **Verification:** every reason code `should_continue` returns appears in
+  `docs/ITERATION.md`'s list.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, fact-check review of the `RUNBOOK.md` iteration budget fix.
 
 ## RISK
 
