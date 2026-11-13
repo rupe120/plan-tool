@@ -329,8 +329,9 @@ Options applied *during* detail:
 - `--iterate`: opt in only when explicitly requested; the normal authoring route
   uses one-shot detail followed by the grounded audit. After each write, the
   optional detail-quality loop drives 2–3 revisions tightening citations
-  and pinning vague prose. Budget is **per step**; one step
-  exhausting doesn't block the next.
+  and pinning vague prose. The iteration and no-progress budgets are **per
+  step**; one step exhausting doesn't block the next (`--time-budget` is
+  shared across steps).
 - `-y < /dev/null`: headless. Skips the re-run Y/N gates.
 - `--lessons`: opt into lessons capture — a second Claude call per
   step distilling the written body into the shared lessons store.

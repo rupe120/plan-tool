@@ -1034,7 +1034,7 @@ plan-tool create my-feature --no-iterate \
 
 Default budget: 3 iterations (`--max-iterations`) and an 1800-second
 debounced no-progress deadline (`--iteration-budget`); `--time-budget` is an
-optional hard total-elapsed cap, off by default. After the initial
+optional cooperative total-elapsed cap (checked at round boundaries), off by default. After the initial
 `write_new_plan`, the loop runs the body-section / detail-coverage /
 references-coherence primitives (from `review.py`'s deterministic
 completeness check), passes any findings to `apply-finding` against
@@ -1054,8 +1054,10 @@ plan-tool detail my-feature --iterate
 plan-tool detail my-feature --iterate --step 3
 ```
 
-Each step gets its own per-step budget — exhausting step 2's budget
-does not block step 3's iteration. The per-step loop runs the
+Each step gets its own per-step iteration and no-progress budget —
+exhausting step 2's budget does not block step 3's iteration.
+`--time-budget` is the exception: it measures total elapsed time for the
+whole command, so once it passes, the later steps' loops stop too. The per-step loop runs the
 `detail-quality.md` review (a claude call that produces findings on
 the just-written detail body), hands those findings to
 `apply-finding`, and re-renders. The detail file is mutated in place
