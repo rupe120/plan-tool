@@ -598,34 +598,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
-### `RUNBOOK.md` states a 300-second iteration budget; the default is an 1800-second no-progress deadline
-
-- **Files:** `RUNBOOK.md` (the passages "Default budget: 3 iterations × 300s
-  wall-clock" and "wall-clock hit `--iteration-budget` (300s by default)"; the
-  example stop message "after 3 iteration(s) / 300s", which no code prints; and
-  the advice "Bump the cap ... `--iteration-budget 600`" plus the "Tuning the
-  budget" example, which lower a default of 1800); authority
-  `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS` and
-  `plan-tool create --help`.
-- **Symptom:** the code default is 1800 seconds, and `--iteration-budget` is a
-  debounced no-progress deadline that resets on every round and every
-  `apply_finding` call, so a long single model call does not trip it;
-  `--time-budget` is the total-elapsed cap. `RUNBOOK.md` describes a 300-second
-  wall-clock stop, so a reader expects a five-minute cutoff. A search of the
-  tracked instructional documents for "300s" found only the three 300-second
-  passages above (`experiments/minimize-claude/LESSONS.md` has an unrelated
-  measurement); the 600-second advice assumes the same low default.
-- **Fix:** state the 1800-second debounced no-progress deadline where the
-  default is described, name `--time-budget` for a hard cap, make the example
-  stop message and the 600-second figures consistent with it. Deliberately not
-  done: changing the default.
-- **Approach:** `direct` — documentation only.
-- **Verification:** `grep -n '300s' RUNBOOK.md` returns nothing, and every
-  stated default matches the `--iteration-budget` text in `plan-tool create
-  --help`.
-- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
-- **Origin:** 2026-11-13, fact-check review of the same removal.
-
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
