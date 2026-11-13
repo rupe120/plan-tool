@@ -619,14 +619,15 @@ def main(argv: Optional[list[str]] = None) -> int:
             name, selection_source = project.default_backend, "project"
         else:
             name, selection_source = "claude", "default"
+        default_key = (env_backend or project.default_backend or "").strip().lower()
         preflight_required = (
             selection_source in {"flag", "environment", "project"}
             or name != "claude"
-            or (env_backend or project.default_backend) == "claude"
+            or default_key == "claude"
         )
         model_inference_changed_selection = (
             selection_source == "model"
-            and name != (env_backend or project.default_backend or "claude")
+            and name != (default_key or "claude")
         )
         backend_key = name.strip().lower()
         command_model = project.command_models.get(backend_key, {}).get(

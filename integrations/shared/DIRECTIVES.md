@@ -286,8 +286,10 @@ explicit `--model` can infer a backend from its model family; configured models
 never change the backend. See `docs/BACKENDS.md` in the plan-tool repository for
 configuration, command aliases, and separate precedence tables.
 
-**For unconfigured projects, use these recommendations** when the user has no
-selection preference: pass `--backend <name>` for the backend appropriate to
+**Tell the two regimes apart by reading `.plan-tool/backends.json`:** when it
+sets `default_backend` or a `commands.<command>.model`, omit selection flags (a
+global `--model` overrides every command model). **For a project with neither, use
+these recommendations** when the user has no selection preference: pass `--backend <name>` for the backend appropriate to
 the work, then pass its recommended `--model` explicitly where listed. For Codex use `gpt-6.1-sol`;
 for Claude use Opus for roadmap, seed and plan creation and Sonnet for subsequent
 work; for Cursor use Auto without `--model`. Deterministic commands need no

@@ -41,3 +41,42 @@ start because its saved authentication expires; Codex supplies both reviews.
 
 The branch remains local. Publication and pull-request review are the next
 team checkpoint; no push, pull request, or merge is part of this execution.
+
+## Review loop (PR 195)
+
+Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
+`.tmp/project-model-selection.review-loop-r*.test.log`.
+
+### Review pass 1 — 9 findings
+
+1. **Eager preflight for project `default_backend` breaks read-only commands
+   without the CLI** (`cli/app.py`). Disposition: **declined, documented
+   contract.** `docs/BACKENDS.md` § prerequisites lists "project default"
+   beside flag and environment as fail-fast sources, and the environment
+   variable already behaves the same. Surfaced to the user as a design choice,
+   not changed.
+2. **Rate-limit fallback ignores `commands.<cmd>.model`.** Disposition:
+   **refuted as a defect; docs clarified.** `tests/test_shell.py` and
+   `tests/test_launcher.py` pin `fallback-base` over `fallback-command` on
+   purpose (fallback keeps its own selection). `docs/BACKENDS.md` now says so.
+3. **Precedence chain re-derived in `app.py` for `model_supplied`.**
+   Disposition: **deferred** — warning-text duplication only; no behavior
+   difference today.
+4. **Unguarded `command_names[args.command]`.** Disposition: **refuted.**
+   The map is built from the same required-subparser choices that populate
+   `args.command`, so every parsed command is a key.
+5. **Command map cached as a private parser attribute.** Disposition:
+   **deferred** — style only.
+6. **Module docstring dropped the tuning-only guarantee; stale
+   `_read_backend_config` docstring.** Disposition: **fixed** — guarantee
+   restored tersely; reader docstring matches its 3-tuple return.
+7. **`default_backend` case-sensitive in preflight/hint comparisons.**
+   Disposition: **fixed** — comparisons use a stripped, lowercased key. The
+   preflight result was already correct for mixed case; the fix removes a
+   spurious "remove or change --model" hint.
+8. **`backends.json` parsed twice per run.** Disposition: **deferred** —
+   negligible cost; skew needs a concurrent edit mid-startup.
+9. **DIRECTIVES.md gave contradictory flag advice.** Disposition: **fixed** —
+   the assistant reads `.plan-tool/backends.json` to choose the regime;
+   configured projects omit flags (global `--model` overrides command models).
+   The three bundled routers only link to this section.

@@ -168,7 +168,8 @@ For an ordinary short rate limit, here's what each action does:
   then restore the backend that was active before the call. The fallback
   comes from `--fallback-backend` or `PLAN_TOOL_FALLBACK_BACKEND` (the flag
   wins). Later calls, sibling parallel workers, and serial replay do not
-  inherit the fallback backend.
+  inherit the fallback backend. The fallback call uses that backend's own
+  `model`, not its `commands.<command>.model`.
 - `stop`: return immediately so you can run the printed resume command
   later.
 - `ask`: on an interactive stdin+stderr, show `rate limit [w/b/s]:` and let

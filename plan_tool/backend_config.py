@@ -1,4 +1,9 @@
-"""Read project backend defaults and tuning without importing CLI registrations."""
+"""Read project backend defaults and tuning without importing CLI registrations.
+
+``BackendOverride`` has no ``binary``/``parser``/``classification`` fields, so a
+project file cannot swap the binary, stream parser or failure regexes: tuning
+only. Stdlib-only leaf; ``repo_root`` is a parameter so it stays hermetic.
+"""
 
 from __future__ import annotations
 
@@ -65,12 +70,12 @@ def _argv_field(block: dict, key: str, name: str, mf: Path) -> list[str]:
 def _read_backend_config(
     repo_root: Path, *, path: Optional[Path] = None
 ) -> tuple[dict, dict[str, BackendOverride], Path]:
-    """Read ``.plan-tool/backends.json`` and parse its ``backends`` block.
+    """Read ``.plan-tool/backends.json``: raw data, parsed overrides, file path.
 
-    Returns an empty map when the file is absent (the unconfigured
-    project) or carries no ``backends`` key. Tolerates the sibling
-    ``default`` / ``aspects`` / ``failover`` keys — they belong to
-    ``BACKEND_SELECTION.md`` and are never inspected or rejected. Raises
+    Returns empty data and overrides when the file is absent (the unconfigured
+    project). ``default_backend`` and ``commands`` are validated by
+    :func:`load_project_backend_config`; other sibling keys are never
+    inspected or rejected. Raises
     :class:`BackendConfigError` when the file exists but is malformed.
 
     Other keys inside a per-backend block (``binary``, ``parser``,
