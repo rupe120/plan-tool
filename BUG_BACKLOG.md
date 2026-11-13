@@ -601,7 +601,8 @@ Durable re-open conditions for retired items are recorded in
 ### The loop-stop resume hints print a command that does not change the run: `--iterate` is omitted for `detail` and `completeness-audit`, and `--max-iterations 5` is fixed
 
 - **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
-  `time_budget_exceeded` hints), `plan_tool/cli/completeness_phases.py` (the
+  `time_budget_exceeded` hints, and the `--force` "re-author this step's detail"
+  hint), `plan_tool/cli/completeness_phases.py` (the
   same three plus `no_progress`) and `plan_tool/create.py` (the `max_iterations`
   hint); authority
   `plan_tool/cli/context.py:_resolve_iterative_budget` (`enabled` comes from
@@ -615,7 +616,8 @@ Durable re-open conditions for retired items are recorded in
   `detail` the step's written body is also skipped by a re-run without
   `--force` (`detail.py:_converge_run_grade_step_detail`, the comment above the
   per-step iteration loop), so the fix needs a
-  decision on the remedy, not only a flag. Separately, the `max_iterations` hint
+  decision on the remedy, not only a flag; the `--force` re-author hint also
+  omits `--iterate`, so the re-authored body gets no quality loop. Separately, the `max_iterations` hint
   at all three sites prints a literal `--max-iterations 5`, so a run that
   already used 5 or more is told to re-run with a value that is no larger.
 - **Fix:** add `--iterate` to the `completeness-audit` hints; for `detail`, decide
@@ -629,6 +631,25 @@ Durable re-open conditions for retired items are recorded in
   printed `--max-iterations` exceeds the effective cap.
 - **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
+
+### `completeness_report.py` keeps `WHY["open"]` and `_HEADINGS["open"]`, which no report path renders
+
+- **Files:** `plan_tool/completeness_report.py` (`WHY`, `_HEADINGS`, and the
+  `open` return of `deferred_kind`).
+- **Symptom:** the report builder states that `open` "is no longer a section of
+  its own" (the comment above the "Other deferred buckets" loop), and that loop
+  reads `WHY` and `_HEADINGS` only for `concept-link`, `diagnostic`, `triage` and
+  `info`. The `open` text is therefore never printed, and `deferred_kind` still
+  sorts findings into a bucket nothing renders. Found 2026-11-13 while fixing the
+  iteration-budget hints, whose removed entry had assumed operators saw that text.
+- **Fix:** delete the two unused entries, and either drop the `open` return or
+  say in a comment why it stays. Deliberately not done: re-adding an `open`
+  section.
+- **Approach:** `direct` — deletion plus a check that nothing reads the key.
+- **Verification:** `grep -n '"open"' plan_tool/completeness_report.py` shows no
+  `WHY` or `_HEADINGS` entry, and the report tests pass.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
 ### The loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md` omit the `no_progress` and `no_blocking_findings` stops
 
