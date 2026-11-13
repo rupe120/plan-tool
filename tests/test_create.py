@@ -9414,18 +9414,16 @@ def _patch_direct_route_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 class TestRepeatedSectionHeadingRefusal:
-    """Concept ids hash the section name, so two sections with one name would
-    share an id and ``review_concept_scope`` rejects the scope with a hash-based
-    "duplicate IDs" crash that names no heading. ``create`` refuses first, and
-    the refusal names the repeated heading so the author can fix it."""
+    """Concept ids hash the normalized section name, so two sections with one
+    name would share an id and ``review_concept_scope`` rejects the scope with
+    a hash-based "duplicate IDs" crash that names no heading. ``create``
+    refuses first and lists every colliding spelling so the author can fix it.
+    Fenced copies of a heading are not sections and stay allowed."""
 
     @staticmethod
-    def _direct_ready_source(*, repeat: bool, second_heading: str = "## Notes") -> str:
+    def _direct_ready_source(extra: str) -> str:
         raw = _direct_ready_file_source(steps="## Steps\n\n### 1. Do the thing\n")
-        raw += "\n## Notes\n\nfirst note.\n"
-        if repeat:
-            raw += f"\n{second_heading}\n\nsecond note.\n"
-        return raw
+        return raw + "\n## Notes\n\nfirst note.\n" + extra
 
     def _create_direct(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, raw: str
@@ -9451,41 +9449,81 @@ class TestRepeatedSectionHeadingRefusal:
             claude_invoker=lambda _prompt: pytest.fail("unexpected model call"),
         )
 
+    @staticmethod
+    def _assert_nothing_written(tmp_path: Path) -> None:
+        # Ordering guard, not a pre-fix/post-fix discriminator: the old crash
+        # also wrote nothing. It fails only if the refusal moves after a write.
+        plans = tmp_path / "plans"
+        assert not plans.exists() or not list(plans.glob("*.md"))
+        assert not (tmp_path / "manifest.json").exists()
+
     def test_a_unique_extra_heading_still_creates_the_plan(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         """Control: the refusal keys on repetition, not on a non-canonical heading."""
         result = self._create_direct(
-            tmp_path, monkeypatch, self._direct_ready_source(repeat=False)
+            tmp_path, monkeypatch, self._direct_ready_source("")
+        )
+        assert result.plan_path is not None
+
+    def test_a_repeated_heading_inside_a_fence_is_not_a_section_and_stays_allowed(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Carve-out: ``parse_body_sections(..., ignore_fenced_code=True)``
+        excludes fenced text, so an example block repeating a heading must not
+        be refused."""
+        fenced = "\n```markdown\n## Notes\n\nexample\n```\n"
+        result = self._create_direct(
+            tmp_path, monkeypatch, self._direct_ready_source(fenced)
         )
         assert result.plan_path is not None
 
     @pytest.mark.parametrize(
-        "second_heading", ["## Notes", "## notes", "##  Notes"],
-        ids=["same-case", "different-case", "extra-space"],
+        ("second_heading", "listed"),
+        [
+            ("## Notes", "'## Notes', '## Notes'"),
+            ("## notes", "'## Notes', '## notes'"),
+            ("##  Notes", "'## Notes', '## Notes'"),
+            ("## Notes:", "'## Notes', '## Notes:'"),
+        ],
+        ids=["same-case", "different-case", "extra-space", "trailing-colon"],
     )
-    def test_repeated_heading_in_a_direct_ready_seed_is_refused_naming_it(
+    def test_repeated_heading_in_a_direct_ready_seed_is_refused_listing_each_spelling(
         self,
         tmp_path: Path,
         monkeypatch: pytest.MonkeyPatch,
         second_heading: str,
+        listed: str,
     ) -> None:
-        with pytest.raises(CreateError, match="Notes") as excinfo:
+        with pytest.raises(CreateError) as excinfo:
             self._create_direct(
                 tmp_path,
                 monkeypatch,
-                self._direct_ready_source(repeat=True, second_heading=second_heading),
+                self._direct_ready_source(f"\n{second_heading}\n\nsecond note.\n"),
             )
-        assert "duplicate IDs" not in str(excinfo.value)
-        assert not (tmp_path / "plans").exists() or not list(
-            (tmp_path / "plans").glob("*.md")
-        ), "a refused create must not write a plan"
+        message = str(excinfo.value)
+        assert listed in message
+        assert "duplicate IDs" not in message
+        self._assert_nothing_written(tmp_path)
 
-    def test_repeated_heading_in_an_inline_description_is_refused_naming_it(
+    def test_two_distinct_repeated_headings_are_both_named(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        extra = (
+            "\n## Notes\n\nsecond note.\n"
+            "\n## Alpha\n\nfirst.\n\n## Alpha\n\nsecond.\n"
+        )
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(tmp_path, monkeypatch, self._direct_ready_source(extra))
+        message = str(excinfo.value)
+        assert "'## Notes', '## Notes'" in message
+        assert "'## Alpha', '## Alpha'" in message
+
+    def test_repeated_heading_in_an_inline_description_is_refused_listing_it(
         self, tmp_path: Path
     ) -> None:
         description = "# Probe\n\n## Notes\n\none.\n\n## Notes\n\ntwo.\n"
-        with pytest.raises(CreateError, match="Notes") as excinfo:
+        with pytest.raises(CreateError) as excinfo:
             create_plan(
                 "repeat",
                 repo_root=tmp_path,
@@ -9502,7 +9540,10 @@ class TestRepeatedSectionHeadingRefusal:
                 distill=False,
                 offer_intents=False,
             )
-        assert "duplicate IDs" not in str(excinfo.value)
+        message = str(excinfo.value)
+        assert "'## Notes', '## Notes'" in message
+        assert "duplicate IDs" not in message
+        self._assert_nothing_written(tmp_path)
 
 
 class TestFileBackedSourceIntake:

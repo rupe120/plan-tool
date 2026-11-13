@@ -7865,21 +7865,23 @@ def _reject_repeated_concept_headings(
     """Refuse sections that share a concept id (it hashes the section name).
 
     The scope check would otherwise fail with a hash-based message that names
-    no heading.
+    no heading. Names are normalized (case, spacing, trailing ``:``/``.``,
+    Unicode), so the colliding spellings can differ; the message lists each.
     """
-    first: dict[str, str] = {}
-    repeated: dict[str, str] = {}
+    spellings: dict[str, list[str]] = {}
     for section, node in zip(sections, tree.concepts):
-        if node.id in first:
-            repeated.setdefault(node.id, first[node.id])
-        else:
-            first[node.id] = section.heading
-    if repeated:
-        names = ", ".join(f"'## {heading}'" for heading in repeated.values())
+        spellings.setdefault(node.id, []).append(section.heading)
+    groups = [
+        ", ".join(f"'## {heading}'" for heading in headings)
+        for headings in spellings.values()
+        if len(headings) > 1
+    ]
+    if groups:
         raise CreateError(
-            f"plan body repeats the section heading {names}: concept review "
-            "needs one section per heading. Rename or merge the repeated "
-            "sections and retry."
+            "plan body has sections whose headings are the same after case, "
+            f"spacing, trailing ':' or '.', and Unicode normalization: "
+            f"{'; '.join(groups)}. Concept review needs one section per "
+            "heading. Rename or merge them and retry."
         )
 
 
