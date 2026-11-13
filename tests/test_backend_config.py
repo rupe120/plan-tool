@@ -7,6 +7,26 @@ from pathlib import Path
 
 import pytest
 
+
+@pytest.mark.parametrize("reader", ["legacy", "lookup", "project"])
+def test_explicit_config_path_wins_over_project_convention(tmp_path, reader):
+    from plan_tool.backend_config import load_project_backend_config
+
+    _write(tmp_path, {"backends": {"codex": {"model": "conventional"}}})
+    explicit = tmp_path / "selected.json"
+    explicit.write_text(json.dumps({"default_backend": "codex", "backends": {
+        "codex": {"model": "selected", "commands": {"run": {"model": "command"}}}
+    }}))
+    if reader == "legacy":
+        assert load_backend_overrides(tmp_path, path=explicit)["codex"].model == "selected"
+    elif reader == "lookup":
+        assert backend_override_for("codex", tmp_path, path=explicit).model == "selected"
+    else:
+        config = load_project_backend_config(tmp_path, path=explicit, command_names={"run": "run"})
+        assert config.default_backend == "codex"
+        assert config.overrides["codex"].model == "selected"
+        assert config.command_models == {"codex": {"run": "command"}}
+
 from plan_tool.backend import structural_codex_backend
 from plan_tool.backend_config import (
     BackendConfigError,
