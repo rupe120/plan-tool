@@ -100,10 +100,15 @@ they resolve.
   shown to fail under the old behavior. A repeated non-canonical heading in a
   direct-ready seed does crash with the same message; it is filed as its own
   `ready` entry.
-- 2026-11-13 — Multiline concept decisions can create document headings
-  outside their owned section: `fixed a0cda5b53`, entry removed in
-  `436b812d7`. Review record:
-  [`2026-11-13-multiline-concept-decisions-code-review.md`](2026-11-13-multiline-concept-decisions-code-review.md).
+- 2026-11-13 — `create --from-existing` crashes with "concept scope contains
+  duplicate IDs" when a seed repeats any `## Heading`: `fixed 6b5f266a2`, entry
+  removed in `71c3a4238`. `create` refuses with a `CreateError` naming the heading
+  after the concept tree is bootstrapped (covers a direct-ready file seed and an
+  inline description; five tests, the control stays green; a heading-text key
+  and a dropped call each fail them). Not changed, by design:
+  `detail.py` (a repeated heading collapses silently in a dict, no error) and
+  `cli/scope_review_cmd.py` (the legacy full-tree route already exits cleanly,
+  with the same hash-based text). Review: pending.
 
 ## Deliberately not in this handoff
 
