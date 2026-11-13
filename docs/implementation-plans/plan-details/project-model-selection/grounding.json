@@ -1,7 +1,7 @@
 {
   "plan_slug": "project-model-selection",
-  "grounded_at": "2026-11-13T02:22:50Z",
-  "plan_fingerprint": "39cbea7f4731d8b6cf3c867f77d1640b7f5acd0909fa5b4e80e6725c29cf3be5",
+  "grounded_at": "2026-11-13T02:52:17Z",
+  "plan_fingerprint": "26683a2e78dc6aff6e0d969ed3bb67e921eb6356dd990fc3ab383c7a8cea2ba7",
   "code_fingerprint": {
     "BACKLOG.md": "d3fd7289ee49a611a9aa04c050082cbb3f0f5fa94a6cb10aeca44e84c5c257f5",
     "README.md": "d595d5e08df07965d9889e1ddf333bc5565c8f1678b12cd4c2caab654a2e600e",
@@ -23,6 +23,11 @@
     "tests/test_launcher.py": "425ddeab62798685def4d6d5920d0887ef5f4b4b9c03becf367a3eea667c1dd7",
     "tests/test_shell.py": "cb3be2fa202f21851e79b6ab9f712b291a120f994a5af1c05f56c3d5bcc4fed7"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "49099e192642f3f27d0cf7f4189e5c8d1b2d7828f59ab2bdeaa7536d018ab7f6",
+    "2": "51d72f478d1743d520932d5d481e14040e916e0ca43686586c96455c8187efdf",
+    "3": "d83b6fce14b35c33fcd8d728afa98249397a0c5e2becda6191a5c92892dceef4",
+    "4": "3a580d2e17884d086a1d91ffdc4beb1f53f6bbba0c1d40cab4539a1cfde0831d"
+  },
   "schema_version": 1
 }
