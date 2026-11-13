@@ -347,6 +347,25 @@ def test_project_defaults_preflight_but_model_only_claude_stays_lazy(
 
 
 @pytest.mark.integration
+@pytest.mark.parametrize("default_backend", ["Codex", " codex "])
+def test_mixed_case_default_backend_does_not_raise_a_spurious_model_hint(
+    tmp_repo, project_models, monkeypatch, capsys, default_backend,
+):
+    """A model family that infers the project's own backend changed nothing,
+    so the 'remove or change --model' hint must not appear (case/space-blind)."""
+    import json
+    import shutil
+    from plan_tool.cli.app import EXEC_NOT_FOUND_EXIT
+
+    path, payload = project_models
+    payload["default_backend"] = default_backend
+    path.write_text(json.dumps(payload))
+    monkeypatch.setattr(shutil, "which", lambda binary: None)
+    assert cli.main(tmp_repo.argv("--model", "gpt-5.6-terra", "list")) == EXEC_NOT_FOUND_EXIT
+    assert "remove or change --model" not in capsys.readouterr().err
+
+
+@pytest.mark.integration
 def test_create_and_detail_inherit_distinct_project_models_with_fake_invokers(
     tmp_repo, project_models, monkeypatch,
 ):

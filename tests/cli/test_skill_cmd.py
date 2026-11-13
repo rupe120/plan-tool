@@ -79,7 +79,7 @@ class TestInstallSkill:
         # The regime is chosen by reading backends.json, so the two paragraphs
         # cannot both apply to one project.
         assert "Tell the two regimes apart by reading `.plan-tool/backends.json`" in policy
-        assert "use\nthese recommendations" in policy
+        assert "use these recommendations" in " ".join(policy.split())
         assert "`--model` overrides model defaults" in policy
 
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:

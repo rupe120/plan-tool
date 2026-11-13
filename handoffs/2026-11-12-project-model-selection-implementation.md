@@ -50,8 +50,9 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
 ### Review pass 1 — 9 findings
 
 1. **Eager preflight for project `default_backend` breaks read-only commands
-   without the CLI** (`cli/app.py`). Disposition: **declined, documented
-   contract.** `docs/BACKENDS.md` § prerequisites lists "project default"
+   without the CLI** (`cli/app.py`). Disposition: **open — user decision
+   required (round 2 noted the assistant cannot self-adjudicate it).** Current
+   behavior follows the documented contract; `docs/BACKENDS.md` § prerequisites lists "project default"
    beside flag and environment as fail-fast sources, and the environment
    variable already behaves the same. Surfaced to the user as a design choice,
    not changed.
@@ -80,3 +81,23 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
    the assistant reads `.plan-tool/backends.json` to choose the regime;
    configured projects omit flags (global `--model` overrides command models).
    The three bundled routers only link to this section.
+
+### Review pass 2 — 7 findings over `1b6ac78e0..3241029f3`
+
+1. **No regression test for the pass-1 case normalization.** **Fixed** —
+   `test_mixed_case_default_backend_does_not_raise_a_spurious_model_hint`;
+   removing `.lower()` turns the `Codex` case red.
+2. **Config backend keys not lowercased (`Codex` key misses).** **Declined** —
+   `docs/BACKENDS.md` § configuration requires lowercase backend keys, and the
+   unknown-key warning names the offending key; unchanged pre-existing contract.
+3. **Whitespace-only `PLAN_TOOL_BACKEND` disagrees with `default_key`.**
+   **Deferred** — pathological input; selection itself is unchanged by it.
+4. **DIRECTIVES omit-flags rule wrongly sent command-model-only projects
+   without `default_backend` to Claude.** **Fixed** — the rule now separates
+   `--backend` (omit only with a top-level `default_backend`) from `--model`
+   (omit when any configured model exists).
+5. **Test pinned a hard-wrap newline.** **Fixed** — whitespace-normalized.
+6. **DIRECTIVES named a top-level `commands` key.** **Fixed** with item 4 — it
+   names `backends.<name>.commands.<command>.model`.
+7. **Pass-1 item 1 disposition rested on the assistant's own reading.**
+   **Fixed (record)** — now marked open pending the user's decision.
