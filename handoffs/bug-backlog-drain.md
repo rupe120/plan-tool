@@ -101,6 +101,22 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
+- 2026-11-13 — Files-coherence checking cannot recognize declared extensionless
+  Dockerfile citations: `fixed 095782ff9`, entry removed in `ac27792bf`. Both mention
+  extractors in `plan_tool/detail.py` required a dot extension; they now also
+  match `Dockerfile` through one fixed list (`_EXTENSIONLESS_FILENAMES`):
+  exact, case-sensitive, and not `Dockerfile.dev` or look-alikes. About ten
+  consumers share the extractors (`lessons.py`, the claim-vs-delivery smell, the
+  deferral and acceptance path checks, finding-domain classification) and gain
+  the recognition together; no sibling test pinned the old behavior. Seven new
+  tests; mutants checked by this session: dropping either regex arm, substring
+  matching and case-insensitivity are each caught. A finding that cites only a
+  Dockerfile keeps the `unknown` domain label (pinned). Full suite 14,888
+  passed, 67 skipped. Not done, by design: other extensionless names
+  (`Makefile`, `Jenkinsfile`) and `Dockerfile.<suffix>` variants. `ruff`
+  reports five `F811` errors in `tests/test_detail.py` and `tests/test_review.py`
+  that also exist on `main` and are untouched. Review: pending.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
