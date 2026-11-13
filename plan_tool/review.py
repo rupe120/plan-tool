@@ -857,6 +857,7 @@ _GENERIC_BASENAMES = frozenset(
         "schema.ts",
         "config.ts",
         "readme.md",
+        "dockerfile",
     }
 )
 _LESSONS_MISSING_FILE_SEV = "medium"

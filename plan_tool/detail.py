@@ -1979,7 +1979,8 @@ def extract_plan_references(plan_path: Path) -> str:
 
 
 # Backtick-quoted token containing at least one ``/`` and ending in a
-# recognized source/config/markdown extension. Conservative on purpose
+# recognized source/config/markdown extension, or in an exact extensionless
+# name from ``_EXTENSIONLESS_FILENAMES`` below. Conservative on purpose
 # — un-backticked path mentions in prose produce too many false
 # positives. The extension list mirrors what the heuristic touches plus
 # common docs extensions so a YAML config or buildspec citation lands.
@@ -2008,8 +2009,9 @@ def extract_path_mentions(body: str) -> set[str]:
     """Pull backtick-quoted file path tokens from a markdown body.
 
     Returns a set of path strings (no leading/trailing slashes). The
-    regex requires at least one slash and a known extension so prose
-    that backticks bare identifiers (no slash) doesn't match.
+    regex requires at least one slash and a known extension (or an exact
+    ``_EXTENSIONLESS_FILENAMES`` name) so prose that backticks bare
+    identifiers (no slash) doesn't match.
 
     Used by :func:`review.check_files_coherence` to compare the detail
     body's path mentions against the step's declared ``files:``.
@@ -2027,7 +2029,8 @@ def extract_filename_mentions(body: str) -> set[str]:
     file (``BACKLOG.md``, ``CLAUDE.md``) invisible to it no matter how often
     the body cites it. Callers asking "was this declared file discussed?"
     match these against a declared path's basename; the near-miss direction
-    deliberately keeps using the path-shaped set. See BUG_BACKLOG.
+    deliberately keeps using the path-shaped set. A bare token needs a known
+    extension or an exact ``_EXTENSIONLESS_FILENAMES`` name. See BUG_BACKLOG.
     """
     if not body:
         return set()
