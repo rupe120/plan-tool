@@ -1167,14 +1167,15 @@ handles only the localized one-step split; the cross-step re-seed fork
 
 ### How the loop terminates
 
-- **Converged** — no open apply-eligible findings remain after at least one
-  round. Exit code 0. The artifact is in the converged state.
+- **Converged** — no open findings remain after at least one round
+  (`detail` counts only apply-eligible findings). Exit code 0.
 - **Marginal stagnation** — at least half of iteration N's open findings were
   already open in iteration N-1. Exit code 0. The artifact is no worse than the
   prior iteration; further iteration yields little.
 - **No blocking findings** and **no progress** — the other two stops
-  (`no_blocking_findings`, `no_progress` with `--max-stall-rounds`); both exit
-  0 and are defined in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
+  (`no_blocking_findings`, set by the `completeness-audit` loop only, and
+  `no_progress` with `--max-stall-rounds`); both are defined, with every stop's
+  exit code, in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 - **Budget exhausted** — iteration count hit `--max-iterations` (3
   by default), no forward progress for `--iteration-budget` seconds (a
   debounced no-progress deadline, 1800 by default), or total elapsed time
