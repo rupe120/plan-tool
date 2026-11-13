@@ -498,6 +498,19 @@ Durable re-open conditions for retired items are recorded in
   Fix it where the duplicates are introduced, and also make
   `_review_create_concepts` report the repeated section name instead of the
   hash-based "duplicate IDs" crash, since no user can act on that message.
+- **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
+  reproduced. A test seeded with the nine headings above (no Overview, no
+  Problem statement), a stubbed distill returning the eight canonical
+  sections, and `yes=True` wrote its plan without error. The model-written
+  distill response from the original crash is not retained here, so this
+  cannot exclude a response shape the stub does not produce. The same-day
+  throwaway run (some canonical headings, real models) also succeeded.
+  `parse_body_sections` does return repeated headings unchanged, so a body
+  that repeats a title still reaches `bootstrap_concepts`; whether the
+  "duplicate IDs" message then surfaces unactionably is unverified. The
+  distill-then-join cause named above is still an inference: the code path
+  that builds the distilled body from a unique-keyed section dict does not
+  append the raw seed's sections.
 - **Workaround:** add non-empty `## Overview` and `## Problem statement`
   sections so the seed is direct-ready and skips the distill step. Not tried
   yet.
@@ -506,7 +519,10 @@ Durable re-open conditions for retired items are recorded in
   **Escalate to plan if:** the duplication comes from the distilled body being
   merged with the raw seed by design, and the right merge rule is a product
   decision.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reopen condition: a crash on plan-tool 1.x with the retained
+  `.plan-tool/checkpoints/<slug>/create-distill-seed.json` and the crash log,
+  so the distilled body that repeats a title can be replayed.
 - **Origin:** the discord-cfg repository (`rupe120/discord-config`), writing a
   seed for its milestone 3 plan, 2026-10-17. Not checked against the existing
   tests for `create`, so a test that pins the current joining behavior may
