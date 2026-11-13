@@ -98,38 +98,42 @@ they resolve.
   and a stubbed distill; the original distill response is not retained. No
   code or test change: the scratch test was discarded because it could not be
   shown to fail under the old behavior. A repeated non-canonical heading in a
-  direct-ready seed does crash with the same message; it is filed as its own
-  `ready` entry.
-- 2026-11-13 — `create --from-existing` crashes with "concept scope contains
-  duplicate IDs" when a seed repeats any `## Heading`: `fixed 6b5f266a2`,
-  tightened in `0aea27533` and `7a6b7b6af`; entry removed in `71c3a4238`. `create`
-  refuses with a `CreateError` that lists every colliding spelling, after the
-  concept tree is bootstrapped (covers a direct-ready file seed and an inline
-  description). Twelve tests. Mutants checked by this session: dropping the
-  call fails eight tests; fence-awareness off fails the fenced-heading
-  carve-out test; listing only the first spelling fails the spelling cases; a
-  lowercased heading-text key fails the trailing-colon, fullwidth and
-  three-spelling cases. Full suite 14,872 passed, 66 skipped. Not changed, by
-  design: `detail.py` (a repeated heading collapses silently in a dict, no
-  error) and `cli/scope_review_cmd.py` (the legacy full-tree route already exits
-  cleanly, with the same hash-based text).
-  - `/code-review` high, two headless report-only passes (the reviewers ran the
-    tests and `ruff` but not mutants). Pass 1: no material defect, five low
-    findings: `fixed 0aea27533` (message named only the first spelling; no
-    carve-out or trailing-colon test; the "nothing written" assertion was an
-    undocumented ordering guard) and `fixed 3c6b361f1` (overstated mutant
-    wording); `declined` hoisting the check ahead of the interactive step
-    prompts (model-call ordering is settled, `--yes` runs are unaffected) and
-    restoring the dropped multiline review-record link (the ledger stays
-    indexed in `handoffs/README.md`). Pass 2: no material defect, four low and
-    one info: `fixed 7a6b7b6af` (NFKC, three-spelling and non-collision tests;
-    strict `zip`; the dropped-call mutant count, corrected to eight);
-    `fixed ce0368152` (the refusal's advice does not apply to a distill-route
-    collision, recorded in the 0.1.0 entry); `tracked`: a heading that
-    normalizes to empty crashes `create` with a bare `ValueError`, reproduced
-    and filed in `BUG_BACKLOG.md` as its own `ready` entry (`ce0368152`).
+  direct-ready seed did crash with the same message; `create` now refuses it
+  with the headings named (PR #199, merged 2026-11-13).
+- 2026-11-13 — `create` raises a bare `ValueError` when a plan body has a
+  heading that normalizes to empty (`## :`, `## .`): `fixed d835c3eb1`,
+  tightened in `1797de480`; entry removed in `616d6e001`. `create` refuses with a
+  `CreateError` that lists each such heading, before the concept tree is
+  bootstrapped (direct-ready file seed and inline description; reproduced end
+  to end first, five cases failing with the bare error). Tests:
+  `TestUnusableConceptHeadingRefusal`, 21 tests. Mutants checked by this
+  session on the final 21-test suite: dropping the call fails eight; keying on
+  the raw heading instead of the name fails eight; moving the empty check below
+  the repeated check fails eight; keeping only the first empty heading fails
+  one; refusing a zero-width-only heading fails its carve-out case. Full suite 14,881 passed,
+  66 skipped. The check is `not section.name`, not a `concept_id` probe: the
+  parser strips whitespace before dropping trailing `:`/`.`, so a name is empty
+  exactly when the id would raise (read in the parser and `concept_id`, and
+  pinned by the non-breaking-space and zero-width cases; the scratch probes
+  behind it are not retained). Not changed, by design: `detail.py` and
+  `cli/scope_review_cmd.py` also bootstrap concepts from an existing plan body,
+  so a hand-edited plan holding `## :` would likely reach the same bare error
+  there (by code reading, not run); `create` can no longer produce such a plan.
+  - `/code-review` high, pass 1 (headless, report-only; the reviewer ran the
+    tests and `ruff`, not mutants or a Unicode probe): no material defect,
+    three low/info findings. `fixed 1797de480`: no precedence test for the empty check
+    against the repeated-heading check; no pinned zero-width carve-out; the
+    message omitted that surrounding whitespace is dropped. `declined`:
+    numbering or `repr`-quoting a non-breaking-space-only heading in the message
+    (rare; the visible cases are unambiguous).
+  - `/code-review` high, pass 2 (headless, report-only; it ran the tests and
+    `ruff`, not mutants or a Unicode probe): no material defect, two low and one
+    info finding, all `fixed`: the mutant counts mixed two suite states (now
+    re-measured on the final suite, above) and two negative message assertions
+    pinned stale wording (`4067b25b6`), and a stray blank line in this log.
   - **Closure: low-yield convergence, not a clean audit.** Two consecutive
-    passes returned only low and info findings, no material one.
+    passes returned only low and info findings, no material one. Full suite
+    after the last change: 14,881 passed, 66 skipped.
 
 ## Deliberately not in this handoff
 
