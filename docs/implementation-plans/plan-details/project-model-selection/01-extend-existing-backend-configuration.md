@@ -26,7 +26,7 @@ Edit `plan_tool/backend_config.py`, `plan_tool/cli/parser.py`, and `tests/test_b
 
 Use the current `.plan-tool/backends.json` reader and error type. Add `default_backend` and `backends.<name>.commands.<command>.model`; keep base model and extra-argv parsing in their existing owner. Expose the expanded settings to the CLI with one small result, not a settings registry. Existing `load_backend_overrides` and `backend_override_for` signatures and projection behavior remain usable without CLI context.
 
-Derive a plain canonical-name/alias map from the assembled top-level parsers in `cli/parser.py`, without changing `assemble`'s return shape. CLI callers supply this map to the expanded reader for command-key validation and normalization. Backend leaves never assemble or import the CLI. Legacy projection reads retain base tuning and do not require command-name validation.
+Derive a plain canonical-name/alias map from the assembled top-level parsers in `plan_tool/cli/parser.py`, without changing `assemble`'s return shape. CLI callers supply this map to the expanded reader for command-key validation and normalization. Backend leaves never assemble or import the CLI. Legacy projection reads retain base tuning and do not require command-name validation.
 
 Validate the new shapes: absent `default_backend` inherits, but present null/empty/non-string fails; a missing `commands` block is empty, while present blocks and entries must be objects. Missing/null command models inherit; non-empty strings are trimmed and other values fail. Errors identify the file and field. Reject unknown command keys with supported choices, and reject two keys that normalize to the same command. Model names remain free-form.
 
