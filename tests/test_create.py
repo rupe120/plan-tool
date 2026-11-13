@@ -9413,6 +9413,98 @@ def _patch_direct_route_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
+class TestRepeatedSectionHeadingRefusal:
+    """Concept ids hash the section name, so two sections with one name would
+    share an id and ``review_concept_scope`` rejects the scope with a hash-based
+    "duplicate IDs" crash that names no heading. ``create`` refuses first, and
+    the refusal names the repeated heading so the author can fix it."""
+
+    @staticmethod
+    def _direct_ready_source(*, repeat: bool, second_heading: str = "## Notes") -> str:
+        raw = _direct_ready_file_source(steps="## Steps\n\n### 1. Do the thing\n")
+        raw += "\n## Notes\n\nfirst note.\n"
+        if repeat:
+            raw += f"\n{second_heading}\n\nsecond note.\n"
+        return raw
+
+    def _create_direct(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, raw: str
+    ):
+        _patch_direct_route_metadata(monkeypatch)
+        monkeypatch.setattr(
+            create_module,
+            "assess_direct_source_split_from_claude",
+            lambda *_args, **_kwargs: DirectSplitAssessment(),
+        )
+        return create_plan(
+            "repeat",
+            repo_root=tmp_path,
+            output_dir_override=tmp_path / "plans",
+            manifest_path=tmp_path / "manifest.json",
+            from_description="unselected provenance prose",
+            from_existing_path=tmp_path / "source.md",
+            seed_body=raw,
+            yes=True,
+            resume=False,
+            distill=False,
+            offer_intents=False,
+            claude_invoker=lambda _prompt: pytest.fail("unexpected model call"),
+        )
+
+    def test_a_unique_extra_heading_still_creates_the_plan(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Control: the refusal keys on repetition, not on a non-canonical heading."""
+        result = self._create_direct(
+            tmp_path, monkeypatch, self._direct_ready_source(repeat=False)
+        )
+        assert result.plan_path is not None
+
+    @pytest.mark.parametrize(
+        "second_heading", ["## Notes", "## notes", "##  Notes"],
+        ids=["same-case", "different-case", "extra-space"],
+    )
+    def test_repeated_heading_in_a_direct_ready_seed_is_refused_naming_it(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        second_heading: str,
+    ) -> None:
+        with pytest.raises(CreateError, match="Notes") as excinfo:
+            self._create_direct(
+                tmp_path,
+                monkeypatch,
+                self._direct_ready_source(repeat=True, second_heading=second_heading),
+            )
+        assert "duplicate IDs" not in str(excinfo.value)
+        assert not (tmp_path / "plans").exists() or not list(
+            (tmp_path / "plans").glob("*.md")
+        ), "a refused create must not write a plan"
+
+    def test_repeated_heading_in_an_inline_description_is_refused_naming_it(
+        self, tmp_path: Path
+    ) -> None:
+        description = "# Probe\n\n## Notes\n\none.\n\n## Notes\n\ntwo.\n"
+        with pytest.raises(CreateError, match="Notes") as excinfo:
+            create_plan(
+                "repeat",
+                repo_root=tmp_path,
+                output_dir_override=tmp_path / "plans",
+                manifest_path=tmp_path / "manifest.json",
+                from_description=description,
+                input_fn=_queue_input(_basic_metadata_answers()),
+                claude_invoker=lambda _prompt: json.dumps(
+                    [{"title": "a step", "complexity": None, "files": [],
+                      "depends_on": []}]
+                ),
+                yes=True,
+                resume=False,
+                distill=False,
+                offer_intents=False,
+            )
+        assert "duplicate IDs" not in str(excinfo.value)
+
+
 class TestFileBackedSourceIntake:
     def test_file_backed_route_vocabulary_is_closed(self) -> None:
         assert {route.value for route in FileBackedSourceRoute} == {
