@@ -57,12 +57,6 @@ compressing or retiring a handoff.
 
 - [Bug backlog drain](bug-backlog-drain.md) — standing procedure, queue order, stop conditions, and session log for draining `BUG_BACKLOG.md`.
 
-- [Detail empty-heading refusal review](2026-11-13-detail-empty-heading-code-review.md) — review ledger for refusing a no-name heading in `detail`: settled decisions, evidence, and per-pass findings and dispositions.
-
-- [Dockerfile mention recognition review](2026-11-13-files-coherence-dockerfile-code-review.md) — review ledger for recognizing an extensionless `Dockerfile` in the files-coherence extractors: settled decisions, evidence, and per-pass findings and dispositions.
-
-- [Multiline concept decisions review](2026-11-13-multiline-concept-decisions-code-review.md) — review ledger for the one-line concept decision rendering fix: settled decisions and per-pass findings and dispositions.
-
 - [Overengineering checkpoints](2026-11-12-overengineering-checkpoints.md) — merged checkpoints, instruction refresh after project model selection, behavioral-test limits, and observation on the next real task.
 
 - [Project model selection plan review](2026-11-12-project-model-selection-code-review.md) — audited project backend/model defaults plan, proportionality correction, and separate copied-skill backlog item.
@@ -152,6 +146,9 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
+| [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13; merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
+| [Dockerfile mention recognition](2026-11-13-files-coherence-dockerfile-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #201; not compressed | None open; the `_claim_delivered` fuzzy match was declined and the `detail` follow-up shipped in PR #202 |
+| [Multiline concept decisions](2026-11-13-multiline-concept-decisions-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #198; not compressed | None open; the repeated-heading and empty-heading follow-ups shipped in PRs #199 and #200 |
 | [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164 | #369, #519, #520 retain their independent owners |
 | [Completed maintenance](2026-11-05-completed-maintenance-code-review.md) | Converged; merged through PRs #165–167 and #169 | Deferred stability bugs, nested-function citations, and run-ID collision in `BUG_BACKLOG.md` |
 | [`BACKLOG.md` id guard](2026-09-23-backlog-id-guard-code-review.md) | All in-diff findings fixed or declined | Finding E, the wider broken-link count (#426); not compressed |
