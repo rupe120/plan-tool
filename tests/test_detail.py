@@ -2509,6 +2509,29 @@ class TestGenerateDetailHappyPath:
         assert plan_path.read_text(encoding="utf-8") == original
         assert not _detail_path_for(tmp_path, 1, "wire-up-renderer").exists()
 
+    def test_generate_detail_refuses_a_heading_with_no_name_before_any_model_call(
+        self, tmp_path: Path
+    ) -> None:
+        """Through the real entry point: a hand-edited plan holding ``## :``
+        used to reach ``concept_id`` and raise a bare ``ValueError``. It is a
+        ``DetailError`` naming the heading, raised before the model runs, with
+        the plan and detail directory untouched."""
+        plan_path = _write_orchestrator_plan(tmp_path)
+        original = plan_path.read_text(encoding="utf-8") + "\n## :\n\nbody.\n"
+        plan_path.write_text(original, encoding="utf-8")
+
+        with pytest.raises(DetailError, match="no name after normalization") as excinfo:
+            generate_detail(
+                plan_path,
+                repo_root=tmp_path,
+                step_id=1,
+                invoker=lambda _prompt: pytest.fail("detail model must not run"),
+            )
+
+        assert "'## :'" in str(excinfo.value)
+        assert plan_path.read_text(encoding="utf-8") == original
+        assert not _detail_path_for(tmp_path, 1, "wire-up-renderer").exists()
+
     def test_single_step_writes_file_and_updates_plan(
         self, tmp_path: Path
     ) -> None:
@@ -16473,7 +16496,9 @@ def test_candidate_buckets_keep_a_zero_width_only_heading(tmp_path: Path) -> Non
     plan_path = _write_detail_plan_with_sections(tmp_path)
     plan_text = plan_path.read_text(encoding="utf-8") + "\n## \u200b\n\nbody.\n"
 
-    assert derive_candidate_buckets(parse_plan(plan_path), plan_text)
+    assert "\u200b" in derive_candidate_buckets(
+        parse_plan(plan_path), plan_text
+    ).values()
 
 
 def test_detail_render_and_pointer_update_keep_description_step_text(tmp_path):

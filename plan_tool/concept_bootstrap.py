@@ -35,8 +35,10 @@ def empty_concept_headings_message(sections: Iterable[BodySection]) -> str | Non
 
     ``parse_body_sections`` strips whitespace before dropping trailing ``:``/``.``,
     so a name is empty exactly when ``concept_id`` would raise a bare
-    ``ValueError`` naming no heading. Every command that bootstraps concepts
-    from a plan body raises this one text through its own error path.
+    ``ValueError`` naming no heading. Callers surface this one text through
+    their own error path: ``create`` (``CreateError``), ``detail``
+    (``DetailError``) and the ``scope-review`` legacy route (a warning plus the
+    invalid-state exit).
     """
     empty = [f"'## {section.heading}'" for section in sections if not section.name]
     if not empty:
