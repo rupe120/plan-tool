@@ -159,7 +159,7 @@ its arc documents, not here; the successor-slug rule lives in
 
 ## Review ledgers
 
-Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
+Closure labels follow § "Retention". Compressed 2026-09-29 unless noted; the ledgers named in the next sentence were compressed 2026-11-13. Prompt-budget model window, roadmap context ceiling, roadmap stack layer, roadmap stack propagation, roadmap versioned-from-birth, completeness-apply retirement, and the 2026-10-22 ledgers (committed test authorship, scope-out rollback ownership, seed default placement, step description alias, run iteration guidance, plan body newline preservation) are compressed; every other file in the ledger list and the table keeps its full text unless its entry says otherwise.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
@@ -173,7 +173,7 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 | [Candidate capsule fixes](2026-10-05-candidate-capsule-fixes-code-review.md) | Passes 1–2 triaged; **pass 3 `pending`** (convergence not recorded) | Two `BUG_BACKLOG.md` entries (capsule Decision-row restore, source-span evidence) |
 | [Roadmap versioned-from-birth](2026-10-06-roadmap-versioned-from-birth-code-review.md) | Loop concluded 2026-10-06 after pass 4 | See "Loop conclusion" in the ledger |
 | [Roadmap stack layer](2026-10-08-roadmap-stack-layer-code-review.md) | Converged (passes 4–5 LOW-only); PR #46 | #461 |
-| [Prompt-budget model window](2026-10-09-prompt-budget-model-window-code-review.md) | Converged 2026-10-09 (passes 6–7 low-yield); 1,129 lines, not compressed | #470 |
+| [Prompt-budget model window](2026-10-09-prompt-budget-model-window-code-review.md) | Converged 2026-10-09 (passes 6–7 low-yield); compressed 2026-11-13 | #470 |
 | [Roadmap context ceiling](2026-10-09-roadmap-context-ceiling-code-review.md) | Converged 2026-10-09 (passes 2–3 low-yield); PR #58 | #469 (removed on merge) |
 | [Completeness next-steps blocking set](2026-10-10-completeness-next-steps-blocking-set-code-review.md) | **Closed non-converging by agreement** (four passes); PR #71 | #479; pass-4 findings tracked as #480 |
 | [Completeness next-step verdict finish](2026-10-10-completeness-next-step-verdict-finish-code-review.md) | Three rounds; bare-plan audit **stopped at exit 2**; PR #74 | #480; open remainder routed to #481. Step-4 [reader enumeration](2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md) is its attached deliverable |
