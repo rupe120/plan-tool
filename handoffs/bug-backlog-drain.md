@@ -100,7 +100,6 @@ they resolve.
   shown to fail under the old behavior. A repeated non-canonical heading in a
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
-
 - 2026-11-13 — `create` raises a bare `ValueError` when a plan body has a
   heading that normalizes to empty (`## :`, `## .`): `fixed d835c3eb1`,
   tightened in `1797de480`; entry removed in `616d6e001`. `create` refuses with a
@@ -108,10 +107,10 @@ they resolve.
   bootstrapped (direct-ready file seed and inline description; reproduced end
   to end first, five cases failing with the bare error). Tests:
   `TestUnusableConceptHeadingRefusal`, 21 tests. Mutants checked by this
-  session: dropping the call fails six; keeping only the first empty heading
-  fails one; keying on the raw heading instead of the name fails six; moving
-  the empty check below the repeated check fails eight; refusing a
-  zero-width-only heading fails its carve-out case. Full suite 14,881 passed,
+  session on the final 21-test suite: dropping the call fails eight; keying on
+  the raw heading instead of the name fails eight; moving the empty check below
+  the repeated check fails eight; keeping only the first empty heading fails
+  one; refusing a zero-width-only heading fails its carve-out case. Full suite 14,881 passed,
   66 skipped. The check is `not section.name`, not a `concept_id` probe: the
   parser strips whitespace before dropping trailing `:`/`.`, so a name is empty
   exactly when the id would raise (read in the parser and `concept_id`, and
@@ -126,7 +125,15 @@ they resolve.
     against the repeated-heading check; no pinned zero-width carve-out; the
     message omitted that surrounding whitespace is dropped. `declined`:
     numbering or `repr`-quoting a non-breaking-space-only heading in the message
-    (rare; the visible cases are unambiguous). Pass 2: pending.
+    (rare; the visible cases are unambiguous).
+  - `/code-review` high, pass 2 (headless, report-only; it ran the tests and
+    `ruff`, not mutants or a Unicode probe): no material defect, two low and one
+    info finding, all `fixed`: the mutant counts mixed two suite states (now
+    re-measured on the final suite, above) and two negative message assertions
+    pinned stale wording (`4067b25b6`), and a stray blank line in this log.
+  - **Closure: low-yield convergence, not a clean audit.** Two consecutive
+    passes returned only low and info findings, no material one. Full suite
+    after the last change: 14,881 passed, 66 skipped.
 
 ## Deliberately not in this handoff
 
