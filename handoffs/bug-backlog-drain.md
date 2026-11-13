@@ -101,14 +101,6 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
-- 2026-11-13 — the iteration-loop hints print `--iteration-budget 1800`, the
-  default, as "a larger wall-clock budget": `fixed bab3c18a2`, entry removed in
-  `2403fec96`. The `deadline_exceeded` hints now print a value above the
-  effective deadline. Pass-by-pass record, mutation evidence and closure
-  (stopped at exit 2): [ledger](2026-11-13-iteration-budget-hints-code-review.md).
-  Filed in `BUG_BACKLOG.md`, not fixed: the `--iterate` and `--max-iterations 5`
-  hint residual, and the unrendered `WHY["open"]` text.
-
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read

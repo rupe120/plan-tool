@@ -149,7 +149,7 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
-| [Iteration-budget hints](2026-11-13-iteration-budget-hints-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); not compressed | Two open `BUG_BACKLOG.md` entries: the `--iterate` / `--max-iterations 5` hint residual and the unrendered `WHY["open"]` text |
+| [Iteration-budget hints](2026-11-13-iteration-budget-hints-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #205; not compressed | Two open `BUG_BACKLOG.md` entries: the `--iterate` / `--max-iterations 5` hint residual and the unrendered `WHY["open"]` text |
 | [Onboarding guidance entry removal](2026-11-13-onboarding-guidance-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #203; not compressed | One open `BUG_BACKLOG.md` entry (the `BACKLOG.md` recipes); the `RUNBOOK.md` iteration budget entry was fixed in `9f8c67e9b`; #510 owns the first-task path |
 | [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13 (not a clean audit); merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
 | [Dockerfile mention recognition](2026-11-13-files-coherence-dockerfile-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #201; not compressed | None open; the `_claim_delivered` fuzzy match was declined and the `detail` follow-up shipped in PR #202 |
