@@ -584,29 +584,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
 
-### `detail` raises a bare `ValueError` on a plan body that has a heading normalizing to empty (`## :`, `## .`)
-
-- **Files:** `plan_tool/detail.py:derive_candidate_buckets` (bootstraps concepts
-  from the plan body), `plan_tool/cli/scope_review_cmd.py` (the legacy full-tree
-  route bootstraps the same way; by code reading), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
-  `plan_tool/concept_tree.py:concept_id`.
-- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 at function level:
-  `derive_candidate_buckets` on a parsed plan whose body holds `## Notes` and
-  `## :` raises `ValueError: title path components must be non-empty strings`,
-  naming no heading. `create` now refuses such a body with the heading named, so
-  this arises only for a hand-edited or externally written plan. The
-  `plan-tool detail` command end to end and the scope-review route were not run.
-- **Fix:** refuse with a clear error that names the empty heading where each
-  command reads the plan body, as `create` does. Deliberately not done: skipping
-  empty-named sections silently, and changing the name normalization in
-  `parse_body_sections`.
-- **Approach:** `direct` — a regression test per command with a `## :` body (a
-  `## Notes` control stays green). **Escalate to plan if:** the two commands need
-  different refusal paths.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-13, a residual of the empty-heading refusal in `create`
-  (PR #200), found again in review of the Dockerfile fix.
-
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
