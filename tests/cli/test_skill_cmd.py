@@ -57,7 +57,7 @@ class TestInstallSkill:
         assert directives_dest.resolve() == _bundled_directives()
 
     @pytest.mark.parametrize("integration", ["claude", "codex", "cursor"])
-    def test_installed_router_defers_to_project_choices_and_ships_shared_selection_policy(
+    def test_installed_router_ships_the_single_selection_rule_with_project_opt_in(
         self, tmp_repo, integration
     ) -> None:
         assert cli.main(
@@ -71,22 +71,18 @@ class TestInstallSkill:
         assert router.is_symlink() == (integration != "codex")
         assert directives.is_symlink() == (integration != "codex")
         router_text = router.read_text(encoding="utf-8")
-        assert "otherwise omit a selection" in " ".join(router_text.split())
+        assert "otherwise pass the recommended backend and model" in " ".join(router_text.split())
         assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
         policy = directives.read_text(encoding="utf-8")
-        assert "Honor explicit user requests for backend and model" in policy
-        assert "already decides it" in " ".join(policy.split())
-        # Each flag is decided separately from backends.json, so the two
-        # paragraphs cannot both apply to one flag.
         flat = " ".join(policy.split())
-        assert "**Decide each flag separately.**" in flat
-        assert "use these recommendations" in flat
-        # Carve-outs: backend settled first; a model counts only for its own
-        # backend and command; undecided flags keep the recommendations.
-        assert "Settle the backend first" in flat
-        assert "`backends.<that backend>.commands.<command being run>.model`" in flat
-        assert "For each flag left undecided" in flat
-        assert "`--model` overrides model defaults" in policy
+        assert "Honor explicit user requests for backend and model" in flat
+        # One rule, no guessing what the project configured: pass the
+        # recommended flags unless the user asks for the project's choices.
+        assert "pass `--backend` and `--model` as the table below recommends" in flat
+        assert "unless the user asks for the project's configured choices" in flat
+        # Deliberately not conditional on backends.json contents.
+        assert "Decide each flag separately" not in flat
+        assert "including every configured command model" in flat
 
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:
         assert cli.main(tmp_repo.argv("install-skill")) == 0

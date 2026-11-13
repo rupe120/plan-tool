@@ -142,10 +142,18 @@ confirming pass follows.
 
 ### Convergence status
 
-Four passes. Passes 2–4 re-seeded on the DIRECTIVES selection paragraph with a
-different symptom each round, which is the non-converging signal for that
-region: the policy is too intricate to state in one paragraph. Application is
-complete; the loop stops here and the owner decides between keeping this
-wording, collapsing it to one rule (for example "always pass explicit flags
-unless the user says otherwise"), or carving the guidance into its own change.
+Four passes, then two owner-directed changes (2026-11-12):
+
+- **DIRECTIVES selection guidance collapsed to one rule.** Passes 2–4 re-seeded
+  on the per-flag paragraph with a different symptom each round, so the
+  guidance now says: honor explicit requests; otherwise pass the recommended
+  `--backend`/`--model`; use the project's configured choices only when the
+  user asks. The three bundled routers and the pinned test carry the same
+  rule; the test also asserts the per-flag wording is absent. Pass 4 items 1–2
+  are closed by removing the paragraph they described.
+- **Pass-1 item 1 and pass-4 item 6 are tracked as BACKLOG #526** (skip the
+  eager preflight for deterministic commands when the backend comes from the
+  project default). PR 195 keeps the documented behavior.
+
 Pass 1's material findings (docstrings, case normalization) have not recurred.
+No fifth review pass has run over the simplified guidance.
