@@ -107,26 +107,33 @@ they resolve.
   in `create.py`, `detail.py` and `cli/completeness_phases.py` now prints
   `larger_iteration_budget_seconds(state.budget.budget_seconds)`
   (`convergence.py`: double the effective deadline, floored at the default) with
-  the comment "resume with a longer no-progress deadline"; `WHY["open"]` in
-  `completeness_report.py` names each tunable stop and calls
-  `--iteration-budget` a no-progress deadline. Tests: one per site, each
-  patching the helper to a sentinel and asserting the site passes it the
-  effective deadline (0), plus helper and report-text tests. Mutation, this
-  session's runs: hardcoding `1800` at each site failed exactly that site's
-  test; the pre-fix report text failed the report test.
-  - **Residual, `tracked` in `BUG_BACKLOG.md`:** the `detail` and
-    `completeness-audit` hints omit `--iterate` (both default it off), so the
-    printed command still does not run the loop there; `create` is unaffected.
-    This fix corrects the value, not that. Found by pass 1.
+  the comment "resume with a longer no-progress deadline". Tests: one per site,
+  each patching the helper to a sentinel and asserting the site passes it the
+  effective deadline (0), plus a helper test. Mutation: hardcoding `1800` at
+  each site failed exactly that site's test.
+  - **Not fixed, `tracked` in `BUG_BACKLOG.md`:** the `detail` and
+    `completeness-audit` hints omit `--iterate` (both default it off) and the
+    `max_iterations` hints print a literal `--max-iterations 5`, so those
+    printed commands still do not change the run. This fix corrects the
+    `--iteration-budget` value, not those.
+  - **The entry's fourth file was dead text.** `completeness_report.py`
+    `WHY["open"]` and `_HEADINGS["open"]` are never rendered (the report builder
+    says the section no longer exists), so the removed entry's claim that
+    operators saw that sentence was false. The text was reworded in `bab3c18a2`
+    and `9dc1d748e` so no stale vocabulary remains; its test was dropped in
+    `4d8da8c95` because no output could make it fail. Deleting the two unused
+    entries is a separate cleanup and is not filed.
   - `/code-review` high, pass 1 (headless, read-only): no high finding.
-    `fixed` (this commit): `WHY["open"]` enumerated stops and dropped the stall
-    stop, now unenumerated and naming `--max-stall-rounds`; handoff line cited
-    no hash; missing blank line and an over-wide comment. `tracked`: the
-    `--iterate` omission above. `declined`: an unpatched site test with a
-    nonzero deadline (passing `budget.budget_seconds` instead of
-    `state.budget.budget_seconds` is behavior-equivalent, since the per-step
-    scaling in `detail` leaves `budget_seconds` unchanged; the pure-function
-    test pins the property).
+    `fixed 9dc1d748e`: `WHY["open"]` dropped the stall stop; this line cited no
+    hash; a missing blank line and an over-wide comment. `tracked`: the
+    `--iterate` omission. `declined`: an unpatched nonzero-deadline site test
+    (passing `budget.budget_seconds` instead of `state.budget.budget_seconds`
+    is equivalent in production, and the helper test pins the property).
+  - `/code-review` high, pass 2 (headless, read-only): one medium (the dead
+    text above), five low. `fixed 4d8da8c95`: the dead-text test dropped; the
+    residual entry widened to the `--max-iterations 5` sibling and its locator
+    corrected; the `should_continue` docstring's phantom `budget_exhausted`
+    example replaced; the helper typed `int` with an accurate docstring.
 
 ## Deliberately not in this handoff
 
