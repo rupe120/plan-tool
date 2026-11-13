@@ -102,19 +102,15 @@ they resolve.
   with the headings named (PR #199, merged 2026-11-13).
 
 - 2026-11-13 — the loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md`
-  omit the `no_progress` and `no_blocking_findings` stops: `fixed` in the
-  commit that changes the two documents, entry removed in the commit after it.
-  `docs/ITERATION.md` § "How the loop terminates" now lists every reason
-  `should_continue` returns, with its code, and `RUNBOOK.md` points there for the
-  two stops it does not define. Found while fixing: the entry's claim that the
-  lists "say nothing false" was wrong. "Converged" described a
-  `finding_set_delta` predicate the code does not use (it is "no open
-  apply-eligible findings after one round") and "Marginal" said "no new findings"
-  where `is_marginal` is an overlap of at least half the current set; both are
-  corrected, as are two restatements (the `RUNBOOK.md` marginal troubleshooting
-  symptom and the `docs/ITERATION.md` intro sentence). A drift test
-  (`tests/test_convergence.py`) fails when a reason code is missing from the
-  section; dropping `no_progress` from the doc failed it. No review pass has run.
+  omit the `no_progress` and `no_blocking_findings` stops: `fixed c8bd15643`,
+  entry removed in `ea5396a14`, wording corrected in `77fddec1a`.
+  `docs/ITERATION.md` § "How the loop terminates" lists every reason
+  `should_continue` returns with its code; `RUNBOOK.md` points there for the
+  stops it does not define. The entry's claim that the lists said nothing false
+  was wrong: "Converged" and "Marginal" misstated their predicates, and
+  `no_blocking_findings` is set only by the `completeness-audit` and reconcile
+  loops, never by `create` or `detail`. A drift test in
+  `tests/test_convergence.py` fails when a reason code lacks its bullet.
 
 ## Deliberately not in this handoff
 
