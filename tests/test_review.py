@@ -6002,6 +6002,74 @@ class TestFilesCoherenceRootLevelFilenames:
         issues = check_files_coherence(parse_plan(plan_path), tmp_path)
         assert issues == []
 
+    def test_declared_extensionless_dockerfile_cited_as_a_path_counts_as_mentioned(
+        self, tmp_path: Path
+    ) -> None:
+        # Both mention regexes used to require a dot extension, so no spelling
+        # of `engine_worker/Dockerfile` could satisfy the check.
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py` and `engine_worker/Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    def test_bare_backticked_dockerfile_credits_the_declared_dockerfile_path(
+        self, tmp_path: Path
+    ) -> None:
+        # Same basename credit a declared `BACKLOG.md` gets: the body names the
+        # file bare, and only the declared direction reads bare tokens.
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py`; pin the base image in the `Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    def test_undiscussed_extensionless_dockerfile_still_nits(
+        self, tmp_path: Path
+    ) -> None:
+        # Carve-out: recognizing the filename must not credit a declared
+        # Dockerfile the body never cites.
+        body = "# Step 1\n\n## Implementation\n\nEdit `apps/foo.py` only.\n"
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [(i.kind, i.path) for i in issues] == [
+            ("files_only", "engine_worker/Dockerfile")
+        ]
+
+    @pytest.mark.parametrize(
+        "prose",
+        [
+            "The Dockerfile is unchanged.",
+            "See `engine_worker/Dockerfiles` and `engine_worker/MyDockerfile`.",
+            "Build from `engine_worker/Dockerfile.dev`.",
+        ],
+        ids=["bare-prose", "similar-names", "unlisted-suffix"],
+    )
+    def test_text_that_is_not_the_dockerfile_does_not_count_as_mentioned(
+        self, tmp_path: Path, prose: str
+    ) -> None:
+        """Carve-out: only an exact ``/Dockerfile`` path or a bare backticked
+        ``Dockerfile`` counts. Prose, look-alike names and an unlisted suffix
+        (``Dockerfile.dev``) do not."""
+        body = f"# Step 1\n\n## Implementation\n\nEdit `apps/foo.py`. {prose}\n"
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [(i.kind, i.path) for i in issues] == [
+            ("files_only", "engine_worker/Dockerfile")
+        ]
+
 
 class TestCheckFilesCoherence:
     def test_files_coherence_reads_canonical_when_pointer_unset(
@@ -18950,6 +19018,22 @@ class TestClassifyFindingDomain:
             ),
         )
         assert classify_finding_domain(rec) == FINDING_DOMAIN_DOCS
+
+    def test_classify_finding_domain_dockerfile_path_alone_stays_unclassified(
+        self,
+    ) -> None:
+        """Carve-out: recognizing ``Dockerfile`` as a path mention must not
+        turn it into a code-logic or docs signal, so a finding that cites only
+        a Dockerfile keeps its ``unknown`` label and its blocking behavior."""
+        rec = Recommendation(
+            id="dockerfile-only",
+            source="plan-completeness",
+            severity="medium",
+            step_id=1,
+            title="Base image is unpinned",
+            body="The footprint names `engine_worker/Dockerfile` without a tag.",
+        )
+        assert classify_finding_domain(rec) == FINDING_DOMAIN_UNKNOWN
 
     def test_classify_finding_domain_docs_implementation_plans_path(self) -> None:
         # BUG_BACKLOG regression: "implementation" used to substring-match

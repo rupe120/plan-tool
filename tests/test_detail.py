@@ -216,6 +216,22 @@ def test_path_extractors_recognize_text_golden_artifacts() -> None:
     assert extract_filename_mentions(body) == {"package_surface_help.golden.txt"}
 
 
+def test_path_extractors_recognize_the_extensionless_dockerfile_only() -> None:
+    """``Dockerfile`` is the one supported extensionless filename: an exact
+    ``/Dockerfile`` path and a bare backticked ``Dockerfile`` match, while
+    look-alikes, a different case, an unlisted suffix and un-backticked prose
+    do not."""
+    body = (
+        "Edit `engine_worker/Dockerfile` and `Dockerfile`. Not these: "
+        "`engine_worker/Dockerfiles`, `engine_worker/MyDockerfile`, "
+        "`engine_worker/dockerfile`, `Dockerfile.dev`, `Makefile`, or the "
+        "Dockerfile in prose."
+    )
+
+    assert extract_path_mentions(body) == {"engine_worker/Dockerfile"}
+    assert extract_filename_mentions(body) == {"Dockerfile"}
+
+
 @pytest.fixture(autouse=True)
 def _stub_lessons_extraction(monkeypatch: pytest.MonkeyPatch) -> None:
     """Default the lesson-extraction inside ``generate_detail`` to a

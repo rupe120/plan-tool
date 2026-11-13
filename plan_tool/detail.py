@@ -1988,10 +1988,20 @@ _PATH_EXT_ALT = (
     "md|txt|json|toml|yaml|yml|sh|sql|css|scss|html"
 )
 
-_PATH_MENTION_RE = re.compile(rf"`([^`\s]*?/[^`\s]*?\.(?:{_PATH_EXT_ALT}))`")
+# Extensionless filenames recognized exactly (case-sensitive, no suffix such as
+# ``Dockerfile.dev``). A fixed list, not a pattern, so an arbitrary backticked
+# identifier never reads as a file.
+_EXTENSIONLESS_FILENAMES = ("Dockerfile",)
+_EXTENSIONLESS_ALT = "|".join(_EXTENSIONLESS_FILENAMES)
+
+_PATH_MENTION_RE = re.compile(
+    rf"`([^`\s]*?/[^`\s]*?\.(?:{_PATH_EXT_ALT})|[^`\s]*?/(?:{_EXTENSIONLESS_ALT}))`"
+)
 
 # Bare (directory-less) filename tokens — the companion to the path regex above.
-_FILENAME_MENTION_RE = re.compile(rf"`([^`\s/]+?\.(?:{_PATH_EXT_ALT}))`")
+_FILENAME_MENTION_RE = re.compile(
+    rf"`([^`\s/]+?\.(?:{_PATH_EXT_ALT})|(?:{_EXTENSIONLESS_ALT}))`"
+)
 
 
 def extract_path_mentions(body: str) -> set[str]:
