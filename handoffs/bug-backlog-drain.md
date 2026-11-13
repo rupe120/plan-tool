@@ -87,6 +87,12 @@ Record each drained entry here as one line: entry heading, disposition
   stubbed distill; the original distill response is not retained. No code or
   test change: the scratch test was discarded because it could not be shown to
   fail under the old behavior.
+- Multiline concept decisions can create document headings outside their owned
+  section — `fixed a0cda5b53`. Reproduced through `synchronize_concepts` (all four
+  parametrized cases fail without the fix, pass with it); title and rationale
+  now render on one line in `render_scope_decisions`. Full suite 14,858 passed,
+  67 skipped (`.tmp/multiline-concept-decisions.fullsuite.log`). Entry removed
+  from `BUG_BACKLOG.md`. `/code-review` at `high`: pending.
 
 ## Deliberately not in this handoff
 

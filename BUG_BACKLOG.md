@@ -539,16 +539,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
 
-### Multiline concept decisions can create document headings outside their owned section
-
-- **Files:** `plan_tool/concept_sync.py:render_scope_decisions` interpolates concept titles/rationales as unescaped Markdown.
-- **Symptom / evidence:** a valid deferred concept with rationale `why\n# Injected heading\nmore rationale` publishes successfully, but the section reader sees only `- Delayed — why` inside Deferred; the rest becomes an H1 section. A 2026-10-22 probe through `synchronize_concepts` confirms the heading and truncated owned body. The rendering code predates the H1-boundary repair and is unchanged by it.
-- **Outcome / in scope:** render valid concept text as decision content without letting it introduce document-level boundaries; cover title and rationale consistently.
-- **Out of scope:** changing concept ownership/decisions, tightening stored schemas, parser boundary rules, publication protocols or broader Markdown sanitization.
-- **Verification:** actual sync with multiline titles/rationales, heading-looking and fenced-looking lines; assert intended decision content remains within its owned section, unowned bytes survive and repeat sync does not accumulate unintended sections.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** H1-boundary Claude Code review 1, candidate 6; independently reproduced through the actual synchronizer.
-
 ### Files-coherence checking cannot recognize declared extensionless Dockerfile citations
 
 - **Files:** `plan_tool/detail.py:extract_path_mentions`, `extract_filename_mentions`, and `plan_tool/review.py:check_files_coherence`.
