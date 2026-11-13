@@ -30,8 +30,9 @@ plan-tool roadmap my-project --accept-seed <roadmap-plan-id>
 plan-tool roadmap my-project --apply
 plan-tool roadmap my-project --apply -y
 plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
+plan-tool completeness-audit <roadmap-plan-id> --iterate --commit   # bare-plan gate
 plan-tool detail <roadmap-plan-id>
-plan-tool completeness-audit <roadmap-plan-id>
+plan-tool completeness-audit <roadmap-plan-id> --iterate --commit   # detail-grounded gate
 plan-tool run <roadmap-plan-id> --commit
 ```
 
@@ -647,15 +648,21 @@ procedure above when the accepted scope needs to change.
 
 After `create`, continue with an ordinary bounded plan grounded against current
 code. Keep the accepted responsibilities, prerequisite boundaries, and eventual
-proof obligations while authoring implementation detail. Audit the completed
-plan, then execute it in its declared order.
+proof obligations while authoring implementation detail. Audit the bare plan
+first, then author detail, audit the completed bundle, and execute it in its
+declared order. [The two audit gates](pipeline/audit.md) say what each audit
+judges.
+
+```bash
+plan-tool completeness-audit <roadmap-plan-id> --iterate --commit
+```
 
 ```bash
 plan-tool detail <roadmap-plan-id>
 ```
 
 ```bash
-plan-tool completeness-audit <roadmap-plan-id>
+plan-tool completeness-audit <roadmap-plan-id> --iterate --commit
 ```
 
 ```bash
