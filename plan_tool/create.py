@@ -31,7 +31,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from string import Template
-from typing import Any, Callable, Literal, Optional, Protocol, TypeVar
+from typing import Any, Callable, Literal, Optional, Protocol, Sequence, TypeVar
 
 from plan_tool.pathutil import display_path, is_within
 from plan_tool.roadmap_artifacts import (
@@ -125,6 +125,7 @@ from plan_tool.distill_thresholds import (
 from plan_tool.detail_artifacts import DetailFormatError
 from plan_tool.locator import default_manifest_path
 from plan_tool.parser import (
+    BodySection,
     ParseError,
     ValidationError,
     parse_body_sections,
@@ -7858,6 +7859,32 @@ def predict_plan_path(
     return output_dir / f"{PRIORITY_PREFIX[priority]}-{slug}.md"
 
 
+def _reject_repeated_concept_headings(
+    sections: Sequence[BodySection], tree: ConceptTree
+) -> None:
+    """Refuse sections that share a concept id (it hashes the section name).
+
+    The scope check would otherwise fail with a hash-based message that names
+    no heading. Names are normalized (case, spacing, trailing ``:``/``.``,
+    Unicode), so the colliding spellings can differ; the message lists each.
+    """
+    spellings: dict[str, list[str]] = {}
+    for section, node in zip(sections, tree.concepts, strict=True):
+        spellings.setdefault(node.id, []).append(section.heading)
+    groups = [
+        ", ".join(f"'## {heading}'" for heading in headings)
+        for headings in spellings.values()
+        if len(headings) > 1
+    ]
+    if groups:
+        raise CreateError(
+            "plan body has sections whose headings are the same after case, "
+            f"spacing, trailing ':' or '.', and Unicode normalization: "
+            f"{'; '.join(groups)}. Concept review needs one section per "
+            "heading. Rename or merge them and retry."
+        )
+
+
 def _review_create_concepts(
     tree: ConceptTree,
     steps: list[Step],
@@ -9803,6 +9830,7 @@ def _prepare_create_plan(
         plan_slug=slug,
         plan_fingerprint=concept_fingerprint,
     )
+    _reject_repeated_concept_headings(concept_sections, fresh_concepts)
     saved_concepts: Optional[ConceptTree] = None
     if prospective_plan_path.exists():
         try:

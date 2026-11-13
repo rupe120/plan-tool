@@ -100,10 +100,36 @@ they resolve.
   shown to fail under the old behavior. A repeated non-canonical heading in a
   direct-ready seed does crash with the same message; it is filed as its own
   `ready` entry.
-- 2026-11-13 — Multiline concept decisions can create document headings
-  outside their owned section: `fixed a0cda5b53`, entry removed in
-  `436b812d7`. Review record:
-  [`2026-11-13-multiline-concept-decisions-code-review.md`](2026-11-13-multiline-concept-decisions-code-review.md).
+- 2026-11-13 — `create --from-existing` crashes with "concept scope contains
+  duplicate IDs" when a seed repeats any `## Heading`: `fixed 6b5f266a2`,
+  tightened in `0aea27533` and `7a6b7b6af`; entry removed in `71c3a4238`. `create`
+  refuses with a `CreateError` that lists every colliding spelling, after the
+  concept tree is bootstrapped (covers a direct-ready file seed and an inline
+  description). Twelve tests. Mutants checked by this session: dropping the
+  call fails eight tests; fence-awareness off fails the fenced-heading
+  carve-out test; listing only the first spelling fails the spelling cases; a
+  lowercased heading-text key fails the trailing-colon, fullwidth and
+  three-spelling cases. Full suite 14,872 passed, 66 skipped. Not changed, by
+  design: `detail.py` (a repeated heading collapses silently in a dict, no
+  error) and `cli/scope_review_cmd.py` (the legacy full-tree route already exits
+  cleanly, with the same hash-based text).
+  - `/code-review` high, two headless report-only passes (the reviewers ran the
+    tests and `ruff` but not mutants). Pass 1: no material defect, five low
+    findings: `fixed 0aea27533` (message named only the first spelling; no
+    carve-out or trailing-colon test; the "nothing written" assertion was an
+    undocumented ordering guard) and `fixed 3c6b361f1` (overstated mutant
+    wording); `declined` hoisting the check ahead of the interactive step
+    prompts (model-call ordering is settled, `--yes` runs are unaffected) and
+    restoring the dropped multiline review-record link (the ledger stays
+    indexed in `handoffs/README.md`). Pass 2: no material defect, four low and
+    one info: `fixed 7a6b7b6af` (NFKC, three-spelling and non-collision tests;
+    strict `zip`; the dropped-call mutant count, corrected to eight);
+    `fixed ce0368152` (the refusal's advice does not apply to a distill-route
+    collision, recorded in the 0.1.0 entry); `tracked`: a heading that
+    normalizes to empty crashes `create` with a bare `ValueError`, reproduced
+    and filed in `BUG_BACKLOG.md` as its own `ready` entry (`ce0368152`).
+  - **Closure: low-yield convergence, not a clean audit.** Two consecutive
+    passes returned only low and info findings, no material one.
 
 ## Deliberately not in this handoff
 

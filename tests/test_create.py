@@ -9413,6 +9413,160 @@ def _patch_direct_route_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
+class TestRepeatedSectionHeadingRefusal:
+    """Concept ids hash the normalized section name, so two sections with one
+    name would share an id and ``review_concept_scope`` rejects the scope with
+    a hash-based "duplicate IDs" crash that names no heading. ``create``
+    refuses first and lists every colliding spelling so the author can fix it.
+    Fenced copies of a heading are not sections and stay allowed."""
+
+    @staticmethod
+    def _direct_ready_source(extra: str) -> str:
+        raw = _direct_ready_file_source(steps="## Steps\n\n### 1. Do the thing\n")
+        return raw + "\n## Notes\n\nfirst note.\n" + extra
+
+    def _create_direct(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, raw: str
+    ):
+        _patch_direct_route_metadata(monkeypatch)
+        monkeypatch.setattr(
+            create_module,
+            "assess_direct_source_split_from_claude",
+            lambda *_args, **_kwargs: DirectSplitAssessment(),
+        )
+        return create_plan(
+            "repeat",
+            repo_root=tmp_path,
+            output_dir_override=tmp_path / "plans",
+            manifest_path=tmp_path / "manifest.json",
+            from_description="unselected provenance prose",
+            from_existing_path=tmp_path / "source.md",
+            seed_body=raw,
+            yes=True,
+            resume=False,
+            distill=False,
+            offer_intents=False,
+            claude_invoker=lambda _prompt: pytest.fail("unexpected model call"),
+        )
+
+    @staticmethod
+    def _assert_nothing_written(tmp_path: Path) -> None:
+        # Ordering guard, not a pre-fix/post-fix discriminator: the old crash
+        # also wrote nothing. It fails only if the refusal moves after a write.
+        plans = tmp_path / "plans"
+        assert not plans.exists() or not list(plans.glob("*.md"))
+        assert not (tmp_path / "manifest.json").exists()
+
+    def test_a_unique_extra_heading_still_creates_the_plan(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Control: the refusal keys on repetition, not on a non-canonical heading."""
+        result = self._create_direct(
+            tmp_path, monkeypatch, self._direct_ready_source("")
+        )
+        assert result.plan_path is not None
+
+    @pytest.mark.parametrize(
+        "variant", ["## Notes ##", "## **Notes**"], ids=["closing-hashes", "emphasis"],
+    )
+    def test_headings_that_normalize_to_different_names_are_not_refused(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str
+    ) -> None:
+        """Carve-out: closing ATX hashes and emphasis markup are not stripped
+        from a section name, so these never share a concept id with ``Notes``.
+        A looser refusal key would start rejecting them."""
+        result = self._create_direct(
+            tmp_path,
+            monkeypatch,
+            self._direct_ready_source(f"\n{variant}\n\nsecond note.\n"),
+        )
+        assert result.plan_path is not None
+
+    def test_a_repeated_heading_inside_a_fence_is_not_a_section_and_stays_allowed(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Carve-out: ``parse_body_sections(..., ignore_fenced_code=True)``
+        excludes fenced text, so an example block repeating a heading must not
+        be refused."""
+        fenced = "\n```markdown\n## Notes\n\nexample\n```\n"
+        result = self._create_direct(
+            tmp_path, monkeypatch, self._direct_ready_source(fenced)
+        )
+        assert result.plan_path is not None
+
+    @pytest.mark.parametrize(
+        ("second_heading", "listed"),
+        [
+            ("## Notes", "'## Notes', '## Notes'"),
+            ("## notes", "'## Notes', '## notes'"),
+            ("##  Notes", "'## Notes', '## Notes'"),
+            ("## Notes:", "'## Notes', '## Notes:'"),
+            ("## \uff2e\uff4f\uff54\uff45\uff53", "'## Notes', '## \uff2e\uff4f\uff54\uff45\uff53'"),
+            ("## notes\n\nthird note.\n\n## Notes:", "'## Notes', '## notes', '## Notes:'"),
+        ],
+        ids=[
+            "same-case", "different-case", "extra-space", "trailing-colon",
+            "nfkc-fullwidth", "three-spellings",
+        ],
+    )
+    def test_repeated_heading_in_a_direct_ready_seed_is_refused_listing_each_spelling(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        second_heading: str,
+        listed: str,
+    ) -> None:
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(
+                tmp_path,
+                monkeypatch,
+                self._direct_ready_source(f"\n{second_heading}\n\nsecond note.\n"),
+            )
+        message = str(excinfo.value)
+        assert listed in message
+        assert "duplicate IDs" not in message
+        self._assert_nothing_written(tmp_path)
+
+    def test_two_distinct_repeated_headings_are_both_named(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        extra = (
+            "\n## Notes\n\nsecond note.\n"
+            "\n## Alpha\n\nfirst.\n\n## Alpha\n\nsecond.\n"
+        )
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(tmp_path, monkeypatch, self._direct_ready_source(extra))
+        message = str(excinfo.value)
+        assert "'## Notes', '## Notes'" in message
+        assert "'## Alpha', '## Alpha'" in message
+
+    def test_repeated_heading_in_an_inline_description_is_refused_listing_it(
+        self, tmp_path: Path
+    ) -> None:
+        description = "# Probe\n\n## Notes\n\none.\n\n## Notes\n\ntwo.\n"
+        with pytest.raises(CreateError) as excinfo:
+            create_plan(
+                "repeat",
+                repo_root=tmp_path,
+                output_dir_override=tmp_path / "plans",
+                manifest_path=tmp_path / "manifest.json",
+                from_description=description,
+                input_fn=_queue_input(_basic_metadata_answers()),
+                claude_invoker=lambda _prompt: json.dumps(
+                    [{"title": "a step", "complexity": None, "files": [],
+                      "depends_on": []}]
+                ),
+                yes=True,
+                resume=False,
+                distill=False,
+                offer_intents=False,
+            )
+        message = str(excinfo.value)
+        assert "'## Notes', '## Notes'" in message
+        assert "duplicate IDs" not in message
+        self._assert_nothing_written(tmp_path)
+
+
 class TestFileBackedSourceIntake:
     def test_file_backed_route_vocabulary_is_closed(self) -> None:
         assert {route.value for route in FileBackedSourceRoute} == {

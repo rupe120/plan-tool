@@ -502,8 +502,8 @@ Durable re-open conditions for retired items are recorded in
   with the original seed's own canonical sections when the seed has some of
   the standard headings but not all of them; **Checked** below records what
   the code at 1.3.1 does. Fix it where the duplicates are introduced. The
-  unactionable message is a separate, reproduced defect with its own entry
-  below.
+  unactionable message for a repeated heading is fixed separately: `create`
+  now refuses with the heading named.
 - **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
   reproduced. A test seeded with the nine headings above (no Overview, no
   Problem statement), a stubbed distill returning the eight canonical
@@ -512,15 +512,18 @@ Durable re-open conditions for retired items are recorded in
   cannot exclude a response shape the stub does not produce. A one-step
   real-model throwaway run at 1.3.1 (a seed with Outcome, Scope contract,
   Deferred, Risks and References) also succeeded. `parse_body_sections` does
-  return repeated headings unchanged, and a repeated heading does reach the
-  crash on another route (next entry). On the
+  return repeated headings unchanged, and a repeated heading did reach the
+  crash on another route (since refused with a named heading). On the
   normalized route the distilled body comes from `_render_distilled_markdown`,
   which emits each canonical or recognized optional section once and never
   `References`; the only raw-seed text appended afterwards is the seed's own
   `## References` (`create.py`, the `local_references` block that sets
   `distilled_markdown` and then `seed_body`), so the five repeated sections in
   the original report do not come from that append. The report's cause stays
-  unverified for 0.1.0.
+  unverified for 0.1.0. The new refusal's advice (rename or merge the repeated
+  headings) does not apply if a distill response itself yields two sections
+  with one name: the author's seed has no repeat, and a retry replays the
+  cached distill checkpoint and fails the same way.
 - **Workaround:** add non-empty `## Overview` and `## Problem statement`
   sections so the seed is direct-ready and skips the distill step. Not tried
   yet.
@@ -537,35 +540,6 @@ Durable re-open conditions for retired items are recorded in
   seed for its milestone 3 plan, 2026-10-17. Not checked against the existing
   tests for `create`, so a test that pins the current joining behavior may
   exist.
-
-### `create --from-existing` crashes with "concept scope contains duplicate IDs" when a seed repeats any `## Heading`
-
-- **Files:** `plan_tool/create.py` (`_review_create_concepts`; the concept tree
-  built in `create_plan` from `parse_body_sections(concept_source,
-  ignore_fenced_code=True)`), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
-  `plan_tool/concept_review.py:_validate_request`.
-- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 with no model call
-  beyond a stubbed split assessment. A direct-ready file seed
-  (`tests/test_create.py::_direct_ready_file_source`: each canonical heading
-  once, a `## Steps` block, one `## References`) that also holds two
-  `## Notes` sections stops `create` with `InvalidConceptScopeError: concept
-  scope contains duplicate IDs`; the same seed with `## Notes` once writes its
-  plan. `parse_body_sections` returns repeated headings unchanged and
-  `bootstrap_concepts` derives each id from the section name, so two sections
-  with one name get one id. The message names no heading, so the author cannot
-  tell which one to rename. Two cases (control and repeat); the seed shape is
-  an extra non-canonical heading, not the report in the entry above.
-- **Fix:** refuse before the concept review with a `CreateError` that names the
-  repeated heading and says to rename or merge it, like the other
-  `--from-existing` source refusals (`classify_file_backed_source` already reads
-  `extract_h2_section_occurrences`; check it for a seam before adding a new
-  check). Deliberately not done: merging or renaming duplicate sections
-  automatically (that edits the author's body) and changing concept ids.
-- **Approach:** `direct` — a regression test with the two cases above (the
-  control must stay green) and one pre-review check.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-13, found while checking the entry above; same message,
-  different route.
 
 ### Create body-patch helpers can normalize existing plan body newlines
 
@@ -616,6 +590,30 @@ Durable re-open conditions for retired items are recorded in
   finding. One sample cannot separate a prompt gap from reviewer variation.
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
+
+### `create` raises a bare `ValueError` when a plan body has a heading that normalizes to empty (`## :`, `## .`)
+
+- **Files:** `plan_tool/concept_tree.py:concept_id` (raises on an empty
+  normalized component), `plan_tool/concept_bootstrap.py:bootstrap_concepts`
+  (builds each id from `section.name`), `plan_tool/parser.py:parse_body_sections`
+  (the name drops trailing `:` and `.`), and `create_plan` in
+  `plan_tool/create.py` (bootstraps before any heading check).
+- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 through the
+  inline-description route (`distill=False`, a stubbed steps response, a body
+  with `## Notes` and `## :`): `create` ends with `ValueError: title path
+  components must be non-empty strings` and no heading named. The heading `:`
+  parses to the name `""`, which `concept_id` rejects; `## .` behaves the same
+  at the function level. One route run end to end; the direct-ready route shares
+  the bootstrap call and was not run. Same class as the repeated-heading
+  refusal, a different trigger.
+- **Fix:** refuse with a `CreateError` that names the empty heading, before the
+  concept tree is bootstrapped, beside the repeated-heading check. Deliberately
+  not done: dropping such a section silently, and changing the name
+  normalization in `parse_body_sections`.
+- **Approach:** `direct` — a regression test with the `## :` and `## .` cases
+  (the `## Notes` control stays green) and one pre-bootstrap check.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-13, second review pass of the repeated-heading fix.
 
 ## RISK
 
