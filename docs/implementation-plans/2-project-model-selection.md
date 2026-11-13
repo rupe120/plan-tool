@@ -75,6 +75,7 @@ steps:
   depends_on_notes:
     1: Provides project defaults and canonical command lookup.
     2: Provides command-aware model selection with preserved fallback semantics.
+  detail: docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md
   description: Resolve the repository root before reading project selection inputs
     in main, then select the backend by explicit --backend, recognized explicit --model
     family, PLAN_TOOL_BACKEND, project default_backend, then Claude. Pass the normalized
