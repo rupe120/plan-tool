@@ -177,3 +177,57 @@ class TestBackendConfigErrors:
         )
         with pytest.raises(BackendConfigError, match="extra_batch_argv"):
             load_backend_overrides(tmp_path)
+
+
+class TestProjectBackendConfig:
+    @pytest.mark.parametrize('value', [None, '', '  ', 3, [], {}])
+    def test_explicit_default_requires_nonempty_string(self, tmp_path, value):
+        from plan_tool.backend_config import load_project_backend_config
+        _write(tmp_path, {'default_backend': value})
+        with pytest.raises(BackendConfigError, match='default_backend') as error:
+            load_project_backend_config(tmp_path, command_names={})
+        assert str(default_backends_config_path(tmp_path)) in str(error.value)
+
+    @pytest.mark.parametrize('entry', [{}, {'model': None}, {'model': ' model-x '}])
+    def test_alias_models_normalize_and_null_inherits(self, tmp_path, entry):
+        from plan_tool.backend_config import load_project_backend_config
+        _write(tmp_path, {'default_backend': ' custom ', 'backends': {'custom': {
+            'model': 'base', 'commands': {'alias': entry}}}})
+        config = load_project_backend_config(tmp_path, command_names={'run': 'run', 'alias': 'run'})
+        assert config.default_backend == 'custom'
+        assert config.command_models == {'custom': {'run': 'model-x' if entry.get('model') else None}}
+        assert config.overrides == load_backend_overrides(tmp_path)
+
+    @pytest.mark.parametrize('commands', [None, [], {'run': None}, {'run': []},
+        {'run': {'model': ''}}, {'run': {'model': 1}}, {'unknown': {}},
+        {'run': {}, 'alias': {}}])
+    def test_invalid_commands_fail_without_changing_file(self, tmp_path, commands):
+        from plan_tool.backend_config import load_project_backend_config
+        _write(tmp_path, {'backends': {'custom': {'commands': commands}}})
+        path = default_backends_config_path(tmp_path)
+        before = path.read_bytes()
+        with pytest.raises(BackendConfigError) as error:
+            load_project_backend_config(tmp_path, command_names={'run': 'run', 'alias': 'run'})
+        assert str(path) in str(error.value)
+        assert 'commands' in str(error.value)
+        if isinstance(commands, dict) and 'unknown' in commands:
+            assert 'supported choices: alias, run' in str(error.value)
+        assert path.read_bytes() == before
+        assert load_backend_overrides(tmp_path)['custom'].model is None
+
+    def test_missing_config_does_not_create_files(self, tmp_path):
+        from plan_tool.backend_config import load_project_backend_config, ProjectBackendConfig
+        assert load_project_backend_config(tmp_path, command_names={}) == ProjectBackendConfig()
+        assert list(tmp_path.iterdir()) == []
+
+    def test_command_identity_comes_from_parsers_not_shared_handlers(self):
+        from types import SimpleNamespace
+        from plan_tool.cli.parser import assemble, command_name_map
+        def handler():
+            pass
+        def register(subparsers):
+            subparsers.add_parser('run', aliases=['r'])
+            subparsers.add_parser('review')
+            return {'run': handler, 'r': handler, 'review': handler}
+        parser, _ = assemble('test', [SimpleNamespace(register=register)])
+        assert command_name_map(parser) == {'run': 'run', 'r': 'run', 'review': 'review'}

@@ -24,7 +24,7 @@ steps:
   complexity: medium
   change_type: feature
   detail: docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md
-  status: current
+  status: done
   description: Extend the existing backend configuration reader to expose optional
     default_backend and per-backend commands.<command>.model settings. Preserve load_backend_overrides
     and backend_override_for compatibility, existing model and extra-argv behavior,
@@ -50,6 +50,7 @@ steps:
   depends_on_notes:
     1: Provides validated backend-scoped command models and command normalization.
   detail: docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md
+  status: current
   description: Add an optional validated command-model default to the existing effective-backend
     selector. Keep explicit model > command model > selected-backend base model >
     manifest default > omission in one owner. Existing callers omit the new input;

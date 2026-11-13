@@ -364,5 +364,20 @@ def assemble(
                 f"module"
             )
             dispatch[command] = handler
+    parser._project_command_names = command_name_map(parser)
     _reorder_subcommands(subparsers)
     return parser, dispatch
+
+
+def command_name_map(parser: argparse.ArgumentParser) -> dict[str, str]:
+    """Map registered top-level names and aliases to their primary command."""
+    if hasattr(parser, "_project_command_names"):
+        return dict(parser._project_command_names)
+    names: dict[str, str] = {}
+    canonical_by_parser: dict[int, str] = {}
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            for name, command_parser in action.choices.items():
+                canonical = canonical_by_parser.setdefault(id(command_parser), name)
+                names[name] = canonical
+    return names
