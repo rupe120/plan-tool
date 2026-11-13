@@ -104,10 +104,8 @@ its arc documents, not here; the successor-slug rule lives in
   — plan review pickup for IPPT-10: the plan pull request and architect review
   before `run`.
 
-- [Roadmap to plan backlog update](2026-10-15-roadmap-to-plan-backlog.md) — tracking-only pickup: #492 as the single authority for the staged roadmap-to-plan route.
 - [Roadmap base-plan business-logic loop](2026-10-16-roadmap-business-logic-base-plan-loop.md) — owner decisions (stop at base plans, business-logic focus, `gpt-6.1-sol`) and the Integration benchmark loop.
 - [Roadmap plan derivation implementation](2026-10-16-roadmap-plan-derivation-implementation.md) — execution checkpoint and evidence for the derivation plan.
-- [Roadmap derivation correction pickup](2026-10-16-roadmap-plan-set-creation.md) — withdrawn alternative creation mode and the corrected mapping → seeds → create scope.
 
 ### Token ledger
 
