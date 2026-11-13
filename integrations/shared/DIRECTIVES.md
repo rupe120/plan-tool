@@ -482,6 +482,32 @@ defer the concern rather than enlarging the arc. The bar is the smallest proof
 that satisfies that named property today, not the eventual, more general
 capability the mechanism could someday support.
 
+## Explicit overengineering checkpoints
+
+Ask **“Are we overengineering this?”** at each transition below, even when
+the audits find no defects. Correctness alone does not justify the design's
+size or complexity.
+
+| When | Compare |
+| --- | --- |
+| Before `create` (seed review), then before `detail` (bare-plan review) | The stated outcome against the proposed scope and step graph. Can a smaller effort deliver the same outcome? |
+| After detail authoring, before `run` or Jira export | The selected mechanisms against the simplest workable implementation. Which current requirement needs each added abstraction, configuration option, state, or workflow? |
+| Before applying each audit/review correction batch | The remedy against the defect. Does it close the invariant, or add a capability the outcome does not require? |
+| During final code review, before requesting pull-request review | The whole change against the original outcome. What can be removed while preserving the acceptance properties? |
+
+For direct changes, make the same comparison before implementation, before
+each correction batch, and during final review. State the answer briefly in
+the session: the required outcome, the simpler alternative, and the concrete
+requirement that rules it out—or what you will simplify. Record the final
+decision in the existing handoff or review ledger; no separate report is
+needed. “More flexible” or “we may need it later” is not a current requirement.
+
+Remove unnecessary machinery within the settled scope. If simplification
+would change a settled contract or scope, surface the choice to the user
+before proceeding; apply the existing audit-shape override rule when a shape
+fires. This is an explicit session judgment, not a new automated check,
+blocking predicate, or exit-code rule.
+
 **Every correction is true and proportional to the intent at its current
 altitude.** At bare-plan altitude, state and prove the smallest plan-level
 property that completes the intent; leave delivery mechanics to `detail`.

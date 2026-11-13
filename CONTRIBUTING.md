@@ -250,6 +250,14 @@ Habits that apply either way:
 
 ## Code review: where the craft gets taught
 
+Explicitly ask **“Are we overengineering this?”** before implementation,
+before each audit/review correction batch, and during final review. For plans,
+also ask at seed review and before detail authoring. Compare the simplest
+workable alternative with the current requirements, and state what justifies
+the added complexity or what you will remove. Follow the
+[overengineering checkpoints](integrations/shared/DIRECTIVES.md#explicit-overengineering-checkpoints)
+for the stage-specific questions and decision record.
+
 Code review is the last local loop before pull-request review, and it's the
 one outside `plan-tool`. In Claude Code it's the `/code-review` command. It's
 also where most of the lessons about working with assistants were learned.

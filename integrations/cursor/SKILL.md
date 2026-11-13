@@ -27,6 +27,13 @@ the two audit gates, the session-directed convergence loop, `--iterate` /
 live in one shared reference, [DIRECTIVES.md](DIRECTIVES.md), installed
 alongside this file.
 
+**Ask “Are we overengineering this?” before implementation and again during
+final review, including direct changes.** Give the first answer before the
+first edit, and include the final-review answer in the completion response.
+State the simpler alternative and which current requirement needs any added
+complexity, or what you will simplify. Follow [the checkpoints](DIRECTIVES.md#explicit-overengineering-checkpoints)
+at seed, plan, detail, and correction-batch transitions as well.
+
 ## Which tool
 
 - Plan markdown **starts with `---` frontmatter** → use **plan-tool** (this skill).
