@@ -5,7 +5,7 @@ intent: A repository can select its default execution backend and a model per co
   for each backend in `.plan-tool/backends.json`, so scripts and assistant sessions
   use project choices without repeating flags. Explicit invocation overrides remain
   authoritative.
-status: planning
+status: completed
 priority: medium
 risk_profile: standard
 risk_profile_rationale: Risk declaration uses standard because --yes does not accept
@@ -103,7 +103,7 @@ steps:
     3: Provides the verified invocation behavior that documentation and skill guidance
       describe.
   detail: docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md
-  status: current
+  status: done
   description: 'Document the configuration fields, supported canonical command keys
     and aliases, backend and model precedence tables, and the Codex create/detail
     proof. Explain that --backend selects the backend while retaining its configured
