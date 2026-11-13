@@ -9466,6 +9466,22 @@ class TestRepeatedSectionHeadingRefusal:
         )
         assert result.plan_path is not None
 
+    @pytest.mark.parametrize(
+        "variant", ["## Notes ##", "## **Notes**"], ids=["closing-hashes", "emphasis"],
+    )
+    def test_headings_that_normalize_to_different_names_are_not_refused(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str
+    ) -> None:
+        """Carve-out: closing ATX hashes and emphasis markup are not stripped
+        from a section name, so these never share a concept id with ``Notes``.
+        A looser refusal key would start rejecting them."""
+        result = self._create_direct(
+            tmp_path,
+            monkeypatch,
+            self._direct_ready_source(f"\n{variant}\n\nsecond note.\n"),
+        )
+        assert result.plan_path is not None
+
     def test_a_repeated_heading_inside_a_fence_is_not_a_section_and_stays_allowed(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
@@ -9485,8 +9501,13 @@ class TestRepeatedSectionHeadingRefusal:
             ("## notes", "'## Notes', '## notes'"),
             ("##  Notes", "'## Notes', '## Notes'"),
             ("## Notes:", "'## Notes', '## Notes:'"),
+            ("## \uff2e\uff4f\uff54\uff45\uff53", "'## Notes', '## \uff2e\uff4f\uff54\uff45\uff53'"),
+            ("## notes\n\nthird note.\n\n## Notes:", "'## Notes', '## notes', '## Notes:'"),
         ],
-        ids=["same-case", "different-case", "extra-space", "trailing-colon"],
+        ids=[
+            "same-case", "different-case", "extra-space", "trailing-colon",
+            "nfkc-fullwidth", "three-spellings",
+        ],
     )
     def test_repeated_heading_in_a_direct_ready_seed_is_refused_listing_each_spelling(
         self,

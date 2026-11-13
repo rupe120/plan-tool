@@ -7869,7 +7869,7 @@ def _reject_repeated_concept_headings(
     Unicode), so the colliding spellings can differ; the message lists each.
     """
     spellings: dict[str, list[str]] = {}
-    for section, node in zip(sections, tree.concepts):
+    for section, node in zip(sections, tree.concepts, strict=True):
         spellings.setdefault(node.id, []).append(section.heading)
     groups = [
         ", ".join(f"'## {heading}'" for heading in headings)
