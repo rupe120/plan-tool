@@ -1,0 +1,117 @@
+{
+  "version": 4,
+  "plan_slug": "project-model-selection",
+  "plan_path": "docs/implementation-plans/2-project-model-selection.md",
+  "created_at": "2026-11-13T03:02:42Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "6af6e5461fc26319dbd1026a9a991a7a213dd7a9796e32bb4ae2fddbaa4ea3e3",
+  "code_fingerprint": {
+    "BACKLOG.md": "d3fd7289ee49a611a9aa04c050082cbb3f0f5fa94a6cb10aeca44e84c5c257f5",
+    "README.md": "d595d5e08df07965d9889e1ddf333bc5565c8f1678b12cd4c2caab654a2e600e",
+    "docs/BACKENDS.md": "4c1b9bd76ef1e130905c960406587ab61719667c82ddb07be9864c46be403925",
+    "docs/design-plans/BACKEND_SELECTION.md": "0387459f76a34965cb16fd71e72d6d12bedc3ddc36a0bccca00194f88680a024",
+    "docs/reference/commands.md": "fc1c3068fa3e1dcf6f1b65861592d3e750162d90f857829c5196f520f91a5755",
+    "integrations/claude/SKILL.md": "0fedf792e262ba5c93f03d5200bc8300ed31a1c83d2faa97d6499b9a67566fff",
+    "integrations/codex/SKILL.md": "285d933efed2f5833520552d11b894cd361fd410670f2d5636a808d96221ffca",
+    "integrations/cursor/SKILL.md": "90f066562f3d028bccca350c8e14aa01f186fe1b316de26ac51a0626b821c1d3",
+    "integrations/shared/DIRECTIVES.md": "75208deb2d8392d6010a59c7e1999c7496c6b90c6e99b198ca79ff61c6d8ba5c",
+    "plan_tool/backend.py": "7acd617021eb08d60aec90c012eac87d26deb84e37fad6d948d7dfc4ad022452",
+    "plan_tool/backend_config.py": "5f4fc74cf1a1b19839e97d995f790dbac663e5ab659cd596c0ee84b85d516031",
+    "plan_tool/cli/app.py": "d83c40fcfb132e86d4b0ee3a3dbf05cf9fdb00d3f6d62f69ce452370d41fe460",
+    "plan_tool/cli/parser.py": "750592f0b78c7e39b25bf023a05323684c01b81366d31bc085ad069eb9e4cf26",
+    "tests/cli/test_app.py": "86743bcc283c37e44ecc855b1ae264ad3521fd12fdd28cea0544ed3e839d8e27",
+    "tests/cli/test_package_surface.py": "9e5bd035176df29479f98a29c11efa87b617a0553b65038da36a6997c67709c5",
+    "tests/cli/test_skill_cmd.py": "8593d80276894dfe5b3ad3231b732e188605a987b417afb06f3ce1f8b027cccb",
+    "tests/test_backend.py": "1aecd836968a3382c1ba48c6462e8d5474a3aa2ecc359039def598ebe20b678c",
+    "tests/test_backend_config.py": "b147af24f886808e8186c0187e73b5915cca91238114e27b607f13e68d2ec015",
+    "tests/test_launcher.py": "425ddeab62798685def4d6d5920d0887ef5f4b4b9c03becf367a3eea667c1dd7",
+    "tests/test_shell.py": "cb3be2fa202f21851e79b6ab9f712b291a120f994a5af1c05f56c3d5bcc4fed7"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md": "89e82e2447b5d03d207dd577eb3b08db221e74326e9b6d10b54ee70e655d0d04",
+    "docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md": "f554c911ef34fb7d45d4d8cc9d4f5111486109911f8315016073532ee83bc1e9",
+    "docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md": "5e07340681dea587bb45baeda400e6d23d095ec49f2ac499bfe5011cd0696bbc",
+    "docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md": "1b0db5eabcb9e3722d68eac20ea75dbe95645b53cc4a9bbd33eb96ccb3675bfe"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Project Model Selection\n\n`project-model-selection` \u00b7 generated 2026-11-13T03:02:41Z \u00b7 mode: iterate \u00b7 loop stopped: converged after 0 iteration(s)\n\n## Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `821a24bac22c3b79997d15642b90a2611462338c2725aa702f5f2e467dd127c4`\n- **Detail bundle digest:** `7cc497601db21b3a920915e1591b0db747309ca93e074ed3daf6d6cbaa2be9a1`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Applied:** 0 dispatched (0 APPLIED, 0 other verdict)\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 4 (+0 vs. first audit)\n- **Detail-bundle size:** 7171 bytes (+7171 vs. first audit)\n- **Keystone fan-out:** 0.67\n- **Satellite ratio:** 0.25\n- **Inert-step ratio:** 0.00\n- **Audit-induced growth:** 0.00\n\n## Suggested next steps\n\n- No gaps left to close \u2014 `plan-tool run project-model-selection` \u2014 no gaps left \u2014 execute the next runnable step.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Project Model Selection\n\n### Audit result\n\n- **Result:** `clean`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `821a24bac22c3b79997d15642b90a2611462338c2725aa702f5f2e467dd127c4`\n- **Detail bundle digest:** `7cc497601db21b3a920915e1591b0db747309ca93e074ed3daf6d6cbaa2be9a1`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n_(no completeness issues detected)_\n\n### Suggested next steps\n\n- No gaps to close \u2014 `plan-tool run project-model-selection` \u2014 no gaps left \u2014 execute the next runnable step.\n",
+  "recommendations": [],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 1,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "clean",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "821a24bac22c3b79997d15642b90a2611462338c2725aa702f5f2e467dd127c4",
+      "detail_bundle_digest": "7cc497601db21b3a920915e1591b0db747309ca93e074ed3daf6d6cbaa2be9a1",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md",
+          "state": "present",
+          "digest": "89e82e2447b5d03d207dd577eb3b08db221e74326e9b6d10b54ee70e655d0d04"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md",
+          "state": "present",
+          "digest": "f554c911ef34fb7d45d4d8cc9d4f5111486109911f8315016073532ee83bc1e9"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md",
+          "state": "present",
+          "digest": "5e07340681dea587bb45baeda400e6d23d095ec49f2ac499bfe5011cd0696bbc"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/bitbucket/protagona/plan-tool/docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md",
+          "state": "present",
+          "digest": "1b0db5eabcb9e3722d68eac20ea75dbe95645b53cc4a9bbd33eb96ccb3675bfe"
+        }
+      ],
+      "source_seed_digest": "b475c89569fd120163cea9ee1aaf0097ff23676b5efe069470026ef77b3345fc",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 4,
+    "detail_bundle_bytes": 7171,
+    "keystone_fan_out": 0.6666666666666666,
+    "satellite_ratio": 0.25,
+    "inert_step_ratio": 0.0,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
