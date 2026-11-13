@@ -50,6 +50,7 @@ from plan_tool.convergence import (
     ConvergenceState,
     DEFAULT_MAX_ITERATIONS,
     IterativeBudget,
+    larger_iteration_budget_seconds,
     record_iteration,
     should_continue,
     touch,
@@ -4007,8 +4008,9 @@ def _converge_run_grade_step_detail(
                             hints.append(
                                 f"  plan-tool detail "
                                 f"{plan_slug_for_iter} --step {step.id} "
-                                f"--iteration-budget 1800   "
-                                f"# resume with a larger wall-clock budget"
+                                f"--iteration-budget "
+                                f"{larger_iteration_budget_seconds(state.budget.budget_seconds)}   "
+                                f"# resume with a longer no-progress deadline"
                             )
                         elif reason == "max_iterations":
                             hints.append(

@@ -8295,6 +8295,63 @@ class TestFinalizeCompletenessRun:
         assert rc == 0
 
 
+class TestDeadlineHint:
+    def test_deadline_hint_prints_a_budget_derived_from_the_effective_deadline(
+        self, tmp_repo, monkeypatch, capsys
+    ) -> None:
+        """The resume hint is computed from the loop's own deadline, never a
+        fixed number that may equal the value that just expired, and it does
+        not call the no-progress deadline a wall-clock budget."""
+        from plan_tool import review as review_module
+        import plan_tool.cli.completeness_phases as completeness_phases
+        from plan_tool.cli.app import build_parser
+        from plan_tool.cli.context import _load_context
+
+        plan_path = tmp_repo.add_plan("1-demo", title="Demo")
+        tmp_repo.write_manifest()
+        seen: list[float] = []
+
+        def fake_larger(budget_seconds: float) -> int:
+            seen.append(budget_seconds)
+            return 4242
+
+        monkeypatch.setattr(
+            review_module, "collect_deterministic_findings", lambda *_a, **_kw: []
+        )
+        monkeypatch.setattr(
+            review_module, "collect_self_consistency_findings", lambda *_a, **_kw: []
+        )
+        monkeypatch.setattr(
+            completeness_phases, "larger_iteration_budget_seconds", fake_larger
+        )
+        args = build_parser().parse_args(
+            tmp_repo.argv("completeness-audit", "demo", "--iterate", "--yes")
+        )
+        ctx = _load_context(args)
+        plan = parse_plan(plan_path)
+        bundle_status, audit_stage = _hoisted_bundle(plan, plan_path, tmp_repo.root)
+        _run_iterate_convergence_loop(
+            plan,
+            plan_path,
+            ctx,
+            args,
+            IterativeBudget(enabled=True, max_iterations=3, budget_seconds=0),
+            bundle_status=bundle_status,
+            audit_stage=audit_stage,
+            reused_audit_recs=[],
+            reused_audit_coverage=_observed_audit_coverage(
+                budget_limited=False,
+                passes_used=2,
+                cap=3,
+                confirmation_kind="confirmed-low-yield",
+            ),
+        )
+        err = capsys.readouterr().err
+        assert "completeness-audit demo --iteration-budget 4242" in err
+        assert seen == [0]
+        assert "wall-clock" not in err
+
+
 class TestIterateReuseCoverage:
     def test_iterate_reuse_replays_low_yield_coverage_without_audit(
         self, tmp_repo, monkeypatch, capsys

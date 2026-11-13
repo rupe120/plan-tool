@@ -27,6 +27,7 @@ from plan_tool.convergence import (
     is_blocking_finding,
     is_blocking_impact,
     is_marginal,
+    larger_iteration_budget_seconds,
     record_iteration,
     should_continue,
     touch,
@@ -96,6 +97,21 @@ def test_default_budget_uses_module_constants() -> None:
     assert b.max_iterations == DEFAULT_MAX_ITERATIONS
     assert b.budget_seconds == DEFAULT_ITERATION_BUDGET_SECONDS
     assert b.enabled is True
+
+
+@pytest.mark.parametrize("effective", [0, 1, 600, 900, 1800, 5000])
+def test_resume_hint_budget_always_exceeds_the_deadline_that_expired(
+    effective: int,
+) -> None:
+    """A hint that repeats the expired value, or the default, would change
+    nothing on resume: the printed value must be strictly larger."""
+    assert larger_iteration_budget_seconds(effective) > effective
+
+
+def test_resume_hint_budget_floors_at_the_default_and_otherwise_doubles() -> None:
+    assert larger_iteration_budget_seconds(0) == DEFAULT_ITERATION_BUDGET_SECONDS
+    assert larger_iteration_budget_seconds(1800) == 3600
+    assert larger_iteration_budget_seconds(0.4) == DEFAULT_ITERATION_BUDGET_SECONDS
 
 
 def test_budget_rejects_negative_max_iterations() -> None:

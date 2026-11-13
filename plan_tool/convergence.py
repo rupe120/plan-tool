@@ -40,6 +40,15 @@ DEFAULT_MAX_ITERATIONS = 3
 
 DEFAULT_ITERATION_BUDGET_SECONDS = 1800
 
+
+def larger_iteration_budget_seconds(budget_seconds: float) -> int:
+    """A ``--iteration-budget`` value above ``budget_seconds`` for resume hints.
+
+    Doubles the effective deadline, with the default as the floor so a zero
+    or tiny deadline still hints at a usable value.
+    """
+    return int(max(2 * budget_seconds, DEFAULT_ITERATION_BUDGET_SECONDS))
+
 MARGINAL_OVERLAP_THRESHOLD = 0.5
 
 # Default number of consecutive no-net-progress rounds tolerated before

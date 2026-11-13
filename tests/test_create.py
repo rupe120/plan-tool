@@ -14309,6 +14309,55 @@ class TestCreatePlanIterationLoop:
         err = capsys.readouterr().err
         assert "iteration loop stopped: deadline_exceeded" in err
 
+    def test_deadline_hint_prints_a_budget_derived_from_the_effective_deadline(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """The resume hint is computed from the loop's own deadline, never a
+        fixed number that may equal the value that just expired, and it does
+        not call the no-progress deadline a wall-clock budget."""
+        from plan_tool import create as create_module
+
+        (tmp_path / ".git").mkdir()
+        out_dir = tmp_path / "plans"
+        out_dir.mkdir()
+        seen: list[float] = []
+
+        def fake_larger(budget_seconds: float) -> int:
+            seen.append(budget_seconds)
+            return 4242
+
+        monkeypatch.setattr(
+            create_module,
+            "collect_deterministic_findings",
+            lambda *a, **kw: [_rec("A")],
+        )
+        monkeypatch.setattr(
+            create_module, "apply_finding", lambda *a, **kw: _stub_apply_result()
+        )
+        monkeypatch.setattr(
+            create_module, "larger_iteration_budget_seconds", fake_larger
+        )
+
+        create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=out_dir,
+            manifest_path=tmp_path / "m.json",
+            from_description="build a thing",
+            input_fn=_queue_input(_basic_metadata_answers()),
+            claude_invoker=_iter_invoker({"n": 0}),
+            budget=_IterativeBudget(
+                enabled=True, max_iterations=3, budget_seconds=0
+            ),
+        )
+        err = capsys.readouterr().err
+        assert "plan-tool create demo --iteration-budget 4242" in err
+        assert seen == [0]
+        assert "wall-clock" not in err
+
     def test_create_plan_stops_on_time_budget_with_resume_hint(
         self,
         tmp_path: Path,

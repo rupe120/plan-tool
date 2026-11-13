@@ -3485,6 +3485,19 @@ def test_report_default_grade_prose_unchanged() -> None:
     assert WHY["advisory-conceptual"] in md
 
 
+class TestOpenDispositionNamesTheRealStops:
+    def test_open_text_names_the_no_progress_deadline_and_time_budget_not_wall_clock(
+        self,
+    ) -> None:
+        """``--iteration-budget`` is a debounced no-progress deadline and
+        ``--time-budget`` is the total cap; calling the loop stop a
+        "wall-clock budget" sends the operator to the wrong flag."""
+        text = WHY["open"]
+        assert "no-progress deadline" in text
+        assert "--time-budget" in text
+        assert "wall-clock" not in text
+
+
 class TestSuggestedActionRendersInReport:
     """The persisted report must carry each conceptual finding's remediation
     scope. The interactive walk shows ``suggested_action`` labelled "will

@@ -113,6 +113,7 @@ from plan_tool.convergence import (
     ConvergenceState,
     IterativeBudget,
     finding_set_delta,
+    larger_iteration_budget_seconds,
     record_iteration,
     should_continue,
     touch,
@@ -10648,7 +10649,7 @@ def _converge_create_plan(
                         # Action hints depend on *why* the loop stopped.
                         # ``marginal`` / open findings → walk them or author
                         # detail files. ``deadline_exceeded`` → re-run with a
-                        # bigger budget. ``max_iterations`` → re-run or audit.
+                        # longer no-progress deadline. ``max_iterations`` → re-run or audit.
                         # The slug here is the original create slug, which
                         # downstream commands accept as the plan name.
                         hints: list[str] = _open_findings_hints(
@@ -10656,8 +10657,9 @@ def _converge_create_plan(
                         )
                         if reason == "deadline_exceeded":
                             hints.append(
-                                f"  plan-tool create {slug} --iteration-budget 1800   "
-                                f"# resume with a larger wall-clock budget"
+                                f"  plan-tool create {slug} --iteration-budget "
+                                f"{larger_iteration_budget_seconds(state.budget.budget_seconds)}   "
+                                f"# resume with a longer no-progress deadline"
                             )
                         elif reason == "max_iterations":
                             hints.append(
