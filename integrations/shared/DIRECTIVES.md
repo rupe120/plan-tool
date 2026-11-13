@@ -276,21 +276,25 @@ Expect to find an altitude mismatch, not only a wrong answer.
 
 ## Which model to run a subcommand with
 
-**Honor explicit user requests for backend and model. Otherwise pass
-`--backend` and `--model` as the table below recommends, unless the user asks
-for the project's configured choices.** `.plan-tool/backends.json` can select
-`default_backend` and `backends.<name>.commands.<command>.model`; a backend's
-`model` supplies its general default. The host assistant integration does not
-choose the execution backend. `--backend` selects the backend while retaining
-its configured model defaults; `--model` overrides model defaults, including
-every configured command model. Only an explicit `--model` can infer a backend
-from its model family; configured models never change the backend. See
-`docs/BACKENDS.md` in the plan-tool repository for configuration, command
+**Honor explicit user requests for backend and model. Otherwise, when
+`.plan-tool/backends.json` exists, omit `--backend` and `--model` so its choices
+apply; when it does not exist, pass the recommendations below.** The file can
+select `default_backend` and `backends.<name>.commands.<command>.model`; a
+backend's `model` supplies its general default. The host assistant integration
+does not choose the execution backend. `--backend` selects the backend while
+retaining its configured model defaults; `--model` overrides model defaults,
+including every configured command model. Only an explicit `--model` can infer
+a backend from its model family; configured models never change the backend.
+See `docs/BACKENDS.md` in the plan-tool repository for configuration, command
 aliases, and separate precedence tables.
 
-For Codex use `gpt-6.1-sol`; for Claude use Opus for roadmap, seed and plan
-creation and Sonnet for subsequent work; for Cursor use Auto without `--model`.
-Deterministic commands need no model selection.
+Without a `backends.json`, pass `--backend <name>` for the backend appropriate
+to the work, then its recommended `--model` where listed. For Codex use
+`gpt-6.1-sol`; for Claude use Opus for roadmap, seed and plan creation and
+Sonnet for subsequent work; for Cursor use Auto without `--model`.
+Deterministic commands (`list`, `status`, `validate`) need neither flag: an
+explicit `--backend` runs the eager executable preflight and can fail on a
+machine without that CLI.
 
 | Backend | Roadmap, seed, and plan creation | Subsequent model-backed work |
 | --- | --- | --- |

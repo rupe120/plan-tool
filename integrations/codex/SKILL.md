@@ -52,8 +52,8 @@ to `.git`. Nested `.git` folders (sub-repos, submodules) are supported — the
 root whose `.plan-tool/plans.json` resolves the most plans wins. Pass
 `--repo-root` when auto-detection lands on the wrong directory.
 
-**Backend and model:** honor explicit user requests; otherwise pass the recommended
-backend and model unless the user asks for the project's configured choices. Follow [DIRECTIVES.md](DIRECTIVES.md#which-model-to-run-a-subcommand-with)
+**Backend and model:** honor explicit user requests; otherwise omit `--backend` and
+`--model` when `.plan-tool/backends.json` exists, else pass the recommendations. Follow [DIRECTIVES.md](DIRECTIVES.md#which-model-to-run-a-subcommand-with)
 for selection policy and the recommended models. The host
 integration does not force the execution backend. Install and authenticate the
 selected provider CLI separately. For an explicit `--model`, the recognized

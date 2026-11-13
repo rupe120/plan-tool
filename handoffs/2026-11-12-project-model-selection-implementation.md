@@ -50,7 +50,7 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
 ### Review pass 1 — 9 findings
 
 1. **Eager preflight for project `default_backend` breaks read-only commands
-   without the CLI** (`cli/app.py`). Disposition: **open — owner decision.**
+   without the CLI** (`cli/app.py`). Disposition: **tracked as BACKLOG #526.**
    Current behavior follows the documented contract: `docs/BACKENDS.md`
    § prerequisites lists "project default" beside flag and environment as
    fail-fast sources. The cost: a committed `default_backend` makes `list`,
@@ -135,25 +135,37 @@ confirming pass follows.
 5. **Test pinned the heading, not the carve-outs.** **Fixed** — pins
    backend-first ordering, backend-and-command scoping and the undecided-flag
    fallback.
-6. **Open preflight decision has no tracked home.** **Open — owner decision**;
-   file in `BACKLOG.md` only if the owner keeps the current behavior.
+6. **Open preflight decision has no tracked home.** **Tracked as BACKLOG #526.**
 7. **Test coupled to full preflight wording.** **Fixed** — asserts only the
    executable-not-found fragment.
 
+### Review pass 5 — 7 findings over `bff5e3d78..e87406e44`
+
+1. **Always-pass-flags rule overrode project configuration.** **Fixed** —
+   file-existence rule (see Convergence status).
+2. **Plan and step 4 detail still said "defer to project configuration".**
+   **Refuted as stale text** — they were right and the shipped rule was wrong;
+   no plan edit.
+3. **Table gave no backend selector.** **Fixed** — "the backend appropriate to
+   the work" restored for the no-file case.
+4. **Deterministic commands conflicted with "pass `--backend`".** **Fixed** —
+   named as needing neither flag, with the preflight reason.
+5. **Handoff contradicted itself on the open decision.** **Fixed** — both items
+   point to #526; the stale convergence text is replaced.
+6. **Test did not pin the carve-out or superseded wording.** **Fixed.**
+7. **Rule text hand-copied across three routers.** **Deferred** — one test
+   asserts the same fragment in all three; a shared include has no mechanism in
+   the router install path.
+
 ### Convergence status
 
-Four passes, then two owner-directed changes (2026-11-12):
-
-- **DIRECTIVES selection guidance collapsed to one rule.** Passes 2–4 re-seeded
-  on the per-flag paragraph with a different symptom each round, so the
-  guidance now says: honor explicit requests; otherwise pass the recommended
-  `--backend`/`--model`; use the project's configured choices only when the
-  user asks. The three bundled routers and the pinned test carry the same
-  rule; the test also asserts the per-flag wording is absent. Pass 4 items 1–2
-  are closed by removing the paragraph they described.
-- **Pass-1 item 1 and pass-4 item 6 are tracked as BACKLOG #526** (skip the
-  eager preflight for deterministic commands when the backend comes from the
-  project default). PR 195 keeps the documented behavior.
-
-Pass 1's material findings (docstrings, case normalization) have not recurred.
-No fifth review pass has run over the simplified guidance.
+Five passes. Passes 2–4 re-seeded on the per-flag selection paragraph, which was
+removed; pass 5 then found its replacement ("always pass explicit flags")
+overrode project configuration, contradicting the plan's requirement that
+skill-driven invocations defer to it. The guidance is now one file-existence
+rule (2026-11-12): with `.plan-tool/backends.json`, omit `--backend` and
+`--model`; without it, pass the recommendations. The plan body and step 4
+detail already say this and need no edit. Deterministic commands take neither
+flag; skipping their eager preflight is BACKLOG #526. Pass 1's material findings
+(docstrings, case normalization) have not recurred. A sixth pass over the
+file-existence rule has not run.

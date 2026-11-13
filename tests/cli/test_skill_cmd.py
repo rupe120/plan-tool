@@ -71,18 +71,26 @@ class TestInstallSkill:
         assert router.is_symlink() == (integration != "codex")
         assert directives.is_symlink() == (integration != "codex")
         router_text = router.read_text(encoding="utf-8")
-        assert "otherwise pass the recommended backend and model" in " ".join(router_text.split())
+        assert ("otherwise omit `--backend` and `--model` when "
+                "`.plan-tool/backends.json` exists, else pass the recommendations"
+                ) in " ".join(router_text.split())
         assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
         policy = directives.read_text(encoding="utf-8")
         flat = " ".join(policy.split())
         assert "Honor explicit user requests for backend and model" in flat
-        # One rule, no guessing what the project configured: pass the
-        # recommended flags unless the user asks for the project's choices.
-        assert "pass `--backend` and `--model` as the table below recommends" in flat
-        assert "unless the user asks for the project's configured choices" in flat
-        # Deliberately not conditional on backends.json contents.
-        assert "Decide each flag separately" not in flat
+        # One file-existence rule, deliberately not conditional on what the
+        # file configures: present -> omit both flags; absent -> recommendations.
+        assert ("when `.plan-tool/backends.json` exists, omit `--backend` and "
+                "`--model` so its choices apply") in flat
+        assert "when it does not exist, pass the recommendations below" in flat
         assert "including every configured command model" in flat
+        # Deterministic commands take neither flag (explicit --backend preflights).
+        assert "Deterministic commands (`list`, `status`, `validate`) need neither flag" in flat
+        # Superseded wordings must not return.
+        for gone in ("Decide each flag separately", "Settle the backend first",
+                     "unless the user asks for the project's configured choices",
+                     "already decides it"):
+            assert gone not in flat
 
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:
         assert cli.main(tmp_repo.argv("install-skill")) == 0
