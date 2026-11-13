@@ -94,9 +94,8 @@ selection guidance, not a new overengineering mechanism or behavioral trial.
 The [project-model-selection record](2026-11-12-project-model-selection-implementation.md)
 owns that feature's execution and review evidence, including its 14,824-pass,
 67-skip full-suite receipt. That record is not evidence that the explicit
-overengineering checkpoints run on a real task. Its remaining preflight issue
-is separately tracked as BACKLOG #526; neither that issue nor #525 expands
-this handoff's checkpoint scope.
+overengineering checkpoints run on a real task. The preflight follow-up (#526) is fixed in `996afd895`; #525 remains
+separately scoped. Neither follow-up expands this handoff's checkpoint scope.
 
 ## Local pickup and retirement
 

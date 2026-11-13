@@ -50,10 +50,10 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
 ### Review pass 1 — 9 findings
 
 1. **Eager preflight for project `default_backend` breaks read-only commands
-   without the CLI** (`cli/app.py`). Disposition: **tracked as BACKLOG #526.**
-   Current behavior follows the documented contract: `docs/BACKENDS.md`
+   without the CLI** (`cli/app.py`). Disposition: **fixed in `996afd895` (2026-11-13), follow-up #526.**
+   At PR 195 review, behavior followed the documented contract: `docs/BACKENDS.md`
    § prerequisites lists "project default" beside flag and environment as
-   fail-fast sources. The cost: a committed `default_backend` makes `list`,
+   fail-fast sources. At that snapshot, a committed `default_backend` made `list`,
    `status` and `validate` exit 127 for a teammate without that CLI.
 2. **Rate-limit fallback ignores `commands.<cmd>.model`.** Disposition:
    **refuted as a defect; docs clarified.** `tests/test_shell.py` and
@@ -135,7 +135,7 @@ confirming pass follows.
 5. **Test pinned the heading, not the carve-outs.** **Fixed** — pins
    backend-first ordering, backend-and-command scoping and the undecided-flag
    fallback.
-6. **Open preflight decision has no tracked home.** **Tracked as BACKLOG #526.**
+6. **Open preflight decision has no tracked home.** **Fixed in `996afd895` (follow-up #526, 2026-11-13).**
 7. **Test coupled to full preflight wording.** **Fixed** — asserts only the
    executable-not-found fragment.
 
@@ -166,6 +166,22 @@ skill-driven invocations defer to it. The guidance is now one file-existence
 rule (2026-11-12): with `.plan-tool/backends.json`, omit `--backend` and
 `--model`; without it, pass the recommendations. The plan body and step 4
 detail already say this and need no edit. Deterministic commands take neither
-flag; skipping their eager preflight is BACKLOG #526. Pass 1's material findings
+flag; `996afd895` exempts those commands from project-default eager preflight. Pass 1's material findings
 (docstrings, case normalization) have not recurred. A sixth pass over the
 file-existence rule has not run.
+
+
+## Follow-up #526 — project-default inspection preflight
+
+`996afd895` keeps `list`, `status`, and `validate` usable without the
+project-default backend installed. Other commands and explicit backend/model
+selection retain their existing preflight behavior. The backlog entry is
+resolved and removed.
+
+Verification (2026-11-13): affected CLI tests pass twice (116 tests); the full
+suite passes (14,850 passed, 67 skipped). Removing the exception makes all six
+project-default inspection cases fail while the other 18 matrix cases pass.
+Two session self-review passes examine correctness and completeness with no
+additional findings; no independent reviewer or `/code-review` invocation is
+part of this follow-up. The change stays within #526's scope and uses a direct
+exception rather than a command registry.
