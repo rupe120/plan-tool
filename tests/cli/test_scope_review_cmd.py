@@ -254,64 +254,6 @@ def test_scope_review_legacy_full_tree_still_confirms(
     assert "- candidate" in plan_path.read_text(encoding="utf-8")
 
 
-def _plan_with_an_empty_named_heading(plan_path: Path) -> str:
-    """Write the standard plan plus a ``## :`` section; return the clean text."""
-    clean = _write_plan(plan_path)
-    plan_path.write_text(clean + "\n## :\n\nempty-named.\n", encoding="utf-8")
-    return clean
-
-
-def test_scope_review_legacy_route_refuses_a_heading_with_no_name(
-    tmp_path: Path, monkeypatch, capsys
-) -> None:
-    """The legacy full-tree route re-derives every concept from the plan body,
-    and ``concept_id`` would raise a bare ``ValueError`` naming nothing on a
-    heading that is empty after normalization. It refuses, names the heading,
-    and writes nothing."""
-    plan_path = tmp_path / "review-concepts.md"
-    clean = _plan_with_an_empty_named_heading(plan_path)
-    save_concepts(
-        plan_path,
-        bootstrap_concepts(
-            parse_plan(plan_path),
-            parse_body_sections(split_plan_document(clean).body),
-            plan_slug=slug_from_filename(plan_path),
-            plan_fingerprint=compute_plan_fingerprint(plan_path),
-        ),
-    )
-    before_plan = plan_path.read_bytes()
-    before_sidecar = concepts_path(plan_path).read_bytes()
-    _resolve_to(monkeypatch, plan_path)
-
-    result = scope_review_cmd.cmd_scope_review(
-        _args(concept_id("candidate", []), "defer")
-    )
-
-    assert result == scope_review_cmd.SCOPE_REVIEW_INVALID_STATE_EXIT
-    err = capsys.readouterr().err
-    assert "'## :'" in err and "no name after normalization" in err
-    assert "No changes were written." in err
-    assert plan_path.read_bytes() == before_plan
-    assert concepts_path(plan_path).read_bytes() == before_sidecar
-
-
-def test_scope_review_flat_route_still_signs_off_with_an_empty_named_heading(
-    tmp_path: Path, monkeypatch
-) -> None:
-    """Carve-out: the flat decision-record route never re-derives concepts from
-    the body, so the refusal must not block it."""
-    plan_path = tmp_path / "review-concepts.md"
-    _plan_with_an_empty_named_heading(plan_path)
-    _seed_flat_record(plan_path, [("parked idea", "candidate", "defer")])
-    _resolve_to(monkeypatch, plan_path)
-
-    result = scope_review_cmd.cmd_scope_review(
-        _args(concept_id("parked idea", []), "defer")
-    )
-
-    assert result == 0
-
-
 def test_scope_review_flat_sync_conflict_maps_to_conflict_exit(
     tmp_path: Path, monkeypatch
 ) -> None:

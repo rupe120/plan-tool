@@ -3628,9 +3628,12 @@ def _prepare_run_grade_detail(
     # The buckets a detail step may defer are the plan's current body sections,
     # derived once here (record-independent) and threaded to the prompt, the
     # parse gate, and the persist tail so all three resolve an id identically.
-    candidate_buckets = derive_candidate_buckets(
-        plan, plan_path.read_text(encoding="utf-8")
-    )
+    try:
+        candidate_buckets = derive_candidate_buckets(
+            plan, plan_path.read_text(encoding="utf-8")
+        )
+    except DetailError as exc:
+        raise DetailError(f"{plan_path}: {exc}") from exc
     # Require (and validate) the deferral envelope whenever a deferral could be
     # recorded — any body-section bucket exists — or a concept record is on disk
     # (legacy full-tree discipline). A bare plan with neither keeps the lenient

@@ -2529,6 +2529,7 @@ class TestGenerateDetailHappyPath:
             )
 
         assert "'## :'" in str(excinfo.value)
+        assert str(plan_path) in str(excinfo.value)
         assert plan_path.read_text(encoding="utf-8") == original
         assert not _detail_path_for(tmp_path, 1, "wire-up-renderer").exists()
 
