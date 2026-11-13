@@ -3597,7 +3597,8 @@ found on PATH`, exit code `127`.
 
 Cause: Codex was explicitly selected or inferred from `--model`, but isn't
 installed or isn't on `PATH`. An explicit or non-default selection preflights
-the binary before any step runs, so the failure is up front rather than
+the binary before any step runs (a project default skips it for `list`,
+`root`, `status`, and `validate`), so the failure is up front rather than
 mid-run.
 
 Fix: install codex and make the `codex` command available, or correct

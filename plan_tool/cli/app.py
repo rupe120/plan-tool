@@ -625,7 +625,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             or name != "claude"
             or default_key == "claude"
         )
-        if selection_source == "project" and args.command in {"list", "status", "validate"}:
+        if selection_source == "project" and args.command in {"list", "root", "status", "validate"}:
             preflight_required = False
         model_inference_changed_selection = (
             selection_source == "model"

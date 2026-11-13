@@ -326,29 +326,25 @@ def test_invalid_project_selection_returns_usage_error_before_dispatch(
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize("backend,flags,expected", [
-    ("claude", [], 0), ("codex", [], 0),
-    ("codex", ["--model", "claude-sonnet-4-5"], 0),
-])
-def test_project_defaults_and_model_only_claude_keep_list_backend_free(
-    tmp_repo, project_models, monkeypatch, backend, flags, expected,
+@pytest.mark.parametrize("flags", [["--model", "claude-sonnet-4-5"]])
+def test_model_only_claude_inference_under_codex_project_default_keeps_list_lazy(
+    tmp_repo, project_models, monkeypatch, flags,
 ):
+    """A Claude-family --model infers the default backend, not codex, so no
+    binary preflight runs even though the project default is codex."""
     import json
     import shutil
-    from plan_tool.cli.app import EXEC_NOT_FOUND_EXIT
 
     path, payload = project_models
-    payload["default_backend"] = backend
+    payload["default_backend"] = "codex"
     path.write_text(json.dumps(payload))
     monkeypatch.setattr(shutil, "which", lambda binary: None)
-    assert cli.main(tmp_repo.argv(*flags, "list")) == (
-        EXEC_NOT_FOUND_EXIT if expected == 127 else expected
-    )
+    assert cli.main(tmp_repo.argv(*flags, "list")) == 0
 
 
 @pytest.mark.integration
 @pytest.mark.parametrize("backend", ["claude", "codex"])
-@pytest.mark.parametrize("command", ["list", "status", "validate", "create"])
+@pytest.mark.parametrize("command", ["list", "root", "status", "validate", "create"])
 @pytest.mark.parametrize("source", ["project", "flag", "environment"])
 def test_only_project_defaults_skip_missing_binary_for_inspection_commands(
     registered_plan, project_models, monkeypatch, backend, command, source,
@@ -364,7 +360,7 @@ def test_only_project_defaults_skip_missing_binary_for_inspection_commands(
     flags = ["--backend", backend] if source == "flag" else []
     if source == "environment":
         monkeypatch.setenv("PLAN_TOOL_BACKEND", backend)
-    arguments = [command] if command == "list" else [command, "1-demo"]
+    arguments = [command] if command in {"list", "root"} else [command, "1-demo"]
     expected = 0 if source == "project" and command != "create" else EXEC_NOT_FOUND_EXIT
     assert cli.main(registered_plan.argv(*flags, *arguments)) == expected
 

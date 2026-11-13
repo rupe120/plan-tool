@@ -97,7 +97,8 @@ manifest arguments. Configuration cannot replace its binary or parser.
 Malformed JSON, wrong field types, empty model strings, unknown command keys,
 and duplicate aliases of one canonical command fail with a path-specific
 configuration error. Unknown backend override names warn and are ignored;
-an unusable selected backend fails selection/preflight. Use lowercase backend
+an unusable selected backend fails selection/preflight (inspection commands
+skip it for a project default; see the codex prerequisites). Use lowercase backend
 keys. Unknown fields are inert, including the proposal's `default`, `aspects`,
 and `failover`; none activates routing or failover.
 
@@ -199,7 +200,7 @@ When a backend is selected by flag, environment, or project default, or a
 non-Claude backend is inferred from an explicit model, an absent binary fails
 fast with an install/PATH hint and exit code `127` (`EXEC_NOT_FOUND_EXIT`).
 
-For a project-default selection, `list`, `status`, and `validate` skip this
+For a project-default selection, `list`, `root`, `status`, and `validate` skip this
 preflight and work without the backend installed. Explicit flag, environment,
 and model selections retain their existing checks. The unconfigured
 default-`claude` path retains its lazy per-call guard as well.
@@ -215,7 +216,9 @@ Same idea as Codex: the `agent` executable must be installed and on
 environment variable.
 
 Cursor selection (including project `default_backend: "cursor"`) fails
-fast with exit `127` when `agent` is absent, same as codex. Unauthenticated
+fast with exit `127` when `agent` is absent, same as codex; the
+project-default exemption for `list`, `root`, `status`, and `validate`
+(see codex prerequisites) applies equally. Unauthenticated
 runs surface an auth failure on stderr and do not retry — see
 [`RUNBOOK.md`](../RUNBOOK.md#cursor-agent-backend-prerequisites--auth) and
 [`docs/reference/contracts/cursor-agent-cli.md`](reference/contracts/cursor-agent-cli.md).
