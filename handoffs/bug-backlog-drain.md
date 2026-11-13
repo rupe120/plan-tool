@@ -92,7 +92,24 @@ Record each drained entry here as one line: entry heading, disposition
   parametrized cases fail without the fix, pass with it); title and rationale
   now render on one line in `render_scope_decisions`. Full suite 14,858 passed,
   67 skipped (`.tmp/multiline-concept-decisions.fullsuite.log`). Entry removed
-  from `BUG_BACKLOG.md`. `/code-review` at `high`: pending.
+  from `BUG_BACKLOG.md`.
+  - `/code-review` high, pass 1 (headless, report-only; the reviewer could
+    not run code, so its claims are read-only evidence):
+    `.tmp/multiline-concept-decisions-code-review-1.md`. No material defect;
+    three findings, each with one disposition:
+    - Test pinned only `\n` — `fixed 0b20bcbb1`: added a bare-CR case; the parser
+      treats a bare CR as a heading boundary, and a `\n`-only mutant now fails
+      on it. `declined`: the `U+2028`/`U+0085` examples (not boundaries to this
+      parser) and the `wont_do` / nested-concept cases (same code path as the
+      fix, no new branch).
+    - Repeat-sync assertion was vacuous — `fixed 0b20bcbb1`: each case asserts the
+      exact one-line rendering; the repeat sync stays as a labeled smoke check.
+    - Another copy of the whitespace-collapse idiom — `declined`: no shared
+      helper is importable without a cycle; any consolidation needs AST
+      evidence and a `BACKLOG.md` entry, not a drive-by.
+  - Pass 2 on the final state: pending (one pass with no material finding is
+    not the two-pass convergence the rules require). Full suite after pass 1:
+    14,859 passed, 67 skipped (`.tmp/multiline-concept-decisions.fullsuite2.log`).
 
 ## Deliberately not in this handoff
 
