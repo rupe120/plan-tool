@@ -50,10 +50,10 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
 ### Review pass 1 — 9 findings
 
 1. **Eager preflight for project `default_backend` breaks read-only commands
-   without the CLI** (`cli/app.py`). Disposition: **tracked as BACKLOG #526.**
-   Current behavior follows the documented contract: `docs/BACKENDS.md`
+   without the CLI** (`cli/app.py`). Disposition: **fixed in `996afd895` (2026-11-13), follow-up #526.**
+   At PR 195 review, behavior followed the documented contract: `docs/BACKENDS.md`
    § prerequisites lists "project default" beside flag and environment as
-   fail-fast sources. The cost: a committed `default_backend` makes `list`,
+   fail-fast sources. At that snapshot, a committed `default_backend` made `list`,
    `status` and `validate` exit 127 for a teammate without that CLI.
 2. **Rate-limit fallback ignores `commands.<cmd>.model`.** Disposition:
    **refuted as a defect; docs clarified.** `tests/test_shell.py` and
@@ -135,7 +135,7 @@ confirming pass follows.
 5. **Test pinned the heading, not the carve-outs.** **Fixed** — pins
    backend-first ordering, backend-and-command scoping and the undecided-flag
    fallback.
-6. **Open preflight decision has no tracked home.** **Tracked as BACKLOG #526.**
+6. **Open preflight decision has no tracked home.** **Fixed in `996afd895` (follow-up #526, 2026-11-13).**
 7. **Test coupled to full preflight wording.** **Fixed** — asserts only the
    executable-not-found fragment.
 
@@ -157,15 +157,79 @@ confirming pass follows.
    asserts the same fragment in all three; a shared include has no mechanism in
    the router install path.
 
+### Review pass 6 — `/code-review high` findings over `e87406e44..HEAD` (2026-11-13)
+
+Scope: `d9f148a0e`, `996afd895`, `cfade9cc2` (file-existence selection rule,
+project-default preflight exemption, #526 closure). Method: headless
+`/code-review high`, report-only, `handoffs/` and `docs/evidence/` excluded from
+bug hunting; the suite was not run. Log: `.tmp/project-model-selection.review-r6.log`.
+Code and tests: no defects found. Five findings:
+
+1. **[CONFIRMED, medium, docs-structure] `DIRECTIVES.md` ~487 — the new
+   "## Explicit overengineering checkpoints" H2 sits in the middle of Gate 1.**
+   The Gate 1 paragraphs after it (proportional-correction rule, `edit_drift`
+   advisory, proceed-to-`detail` rule) now read as part of the checkpoint
+   section; Gate 2 starts at ~535. Suggested fix: move the section before
+   Gate 1 or after all of Gate 1, or demote it to an H3.
+   **Disposition:** **Fixed** — the checkpoints section now sits after all of Gate 1 and before Gate 2; Gate 1's remaining paragraphs are back under its heading.
+2. **[CONFIRMED, low, docs-contradiction] `docs/BACKENDS.md` ~217 — the cursor
+   paragraph still says project `default_backend: "cursor"` fails fast with exit
+   127**, false now for `list`, `status`, `validate`. `RUNBOOK.md` ~3599 and
+   `BACKENDS.md` ~100 are similarly unqualified. Suggested fix: qualify or
+   point at the shared paragraph.
+   **Disposition:** **Fixed** — the cursor paragraph and `BACKENDS.md` ~100 qualify the exemption; `RUNBOOK.md` carries the same qualifier.
+3. **[PLAUSIBLE, low, altitude/consistency] `plan_tool/cli/app.py` ~628 — the
+   hardcoded `{"list","status","validate"}` omits `root`**, another handler
+   `inspect.py` documents as never calling a backend; `plan-tool root` still
+   exits 127 with a missing project-default binary. The set is also a second
+   source of truth. Suggested fix: add `root`, record `root` as a deliberate
+   exclusion with its reason, or derive the set from the inspection group.
+   **Disposition:** **Fixed** — `root` joins the exemption set (same defect, same never-calls-a-backend property); the matrix test gains a `root` row. The set stays a literal, not derived from the inspection group.
+4. **[CONFIRMED, low, test-hygiene] `tests/cli/test_app.py` ~330 — the
+   rewritten parametrized test has `expected` always 0**, leaving a dead `127`
+   branch, an unused `EXEC_NOT_FOUND_EXIT` import, and rows duplicating
+   `test_only_project_defaults_skip_missing_binary_for_inspection_commands`.
+   The unique row is `codex` + `--model claude-sonnet-4-5` (model-only Claude
+   stays lazy). Suggested fix: drop `expected`, assert `== 0`, keep and name
+   the model-inference row.
+   **Disposition:** **Fixed** — the dead `expected`/`127` branch and `EXEC_NOT_FOUND_EXIT` import are gone; the one unique row is kept and named for model-only Claude inference.
+5. **[PLAUSIBLE, low, guidance] `DIRECTIVES.md` ~279 — the omit-flags rule keys
+   on `backends.json` existing, not on what it configures.** A file that only
+   overrides one binary path leaves `create`/`roadmap` on the provider default
+   instead of the recommended strongest tier. Pass 5 chose file-existence
+   deliberately; the question is whether to record the residual case. Suggested
+   fix: key the rule on `default_backend` or a command model, or document the
+   limitation.
+   **Disposition:** **Fixed by documenting** — the rule stays keyed on file existence (the pass-5 decision); the directive now states the residual case and tells the operator to pass `--model` explicitly there.
+
 ### Convergence status
 
-Five passes. Passes 2–4 re-seeded on the per-flag selection paragraph, which was
+Six passes. Pass 6's medium finding (misplaced DIRECTIVES section) and four low
+findings are dispositioned above. No pass 7 has run: pass 6 carried a material
+finding, so the two-consecutive-low-yield condition is unmet; the user chose to
+stop after applying the fixes (2026-11-13). Passes 2–4 re-seeded on the per-flag selection paragraph, which was
 removed; pass 5 then found its replacement ("always pass explicit flags")
 overrode project configuration, contradicting the plan's requirement that
 skill-driven invocations defer to it. The guidance is now one file-existence
 rule (2026-11-12): with `.plan-tool/backends.json`, omit `--backend` and
 `--model`; without it, pass the recommendations. The plan body and step 4
 detail already say this and need no edit. Deterministic commands take neither
-flag; skipping their eager preflight is BACKLOG #526. Pass 1's material findings
+flag; `996afd895` exempts those commands from project-default eager preflight. Pass 1's material findings
 (docstrings, case normalization) have not recurred. A sixth pass over the
 file-existence rule has not run.
+
+
+## Follow-up #526 — project-default inspection preflight
+
+`996afd895` keeps `list`, `status`, and `validate` usable without the
+project-default backend installed. Other commands and explicit backend/model
+selection retain their existing preflight behavior. The backlog entry is
+resolved and removed.
+
+Verification (2026-11-13): affected CLI tests pass twice (116 tests); the full
+suite passes (14,850 passed, 67 skipped). Removing the exception makes all six
+project-default inspection cases fail while the other 18 matrix cases pass.
+Two session self-review passes examine correctness and completeness with no
+additional findings; no independent reviewer or `/code-review` invocation is
+part of this follow-up. The change stays within #526's scope and uses a direct
+exception rather than a command registry.

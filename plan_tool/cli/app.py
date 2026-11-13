@@ -625,6 +625,8 @@ def main(argv: Optional[list[str]] = None) -> int:
             or name != "claude"
             or default_key == "claude"
         )
+        if selection_source == "project" and args.command in {"list", "root", "status", "validate"}:
+            preflight_required = False
         model_inference_changed_selection = (
             selection_source == "model"
             and name != (default_key or "claude")
@@ -661,7 +663,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     for key in selection.unknown_override_names:
         warn(unknown_backend_override_warning(key, names))
 
-    # Only the silent default and a model-only Claude selection stay lazy.
+    # Project defaults also stay lazy for the three backend-free inspection commands.
     if preflight_required and shutil.which(selected.binary) is None:
         error(
             f"{selected.name} backend selected but its '{selected.binary}' "

@@ -5639,44 +5639,6 @@ separate)**
   running `collect_detail_quality_findings` in quiet-probe mode while each
   per-step claude call ran for minutes with no terminal output.
 
-**#526 — Deterministic commands fail with exit 127 when a project's `default_backend` CLI is not installed**
-
-- **What:** a committed `default_backend` in `.plan-tool/backends.json` makes
-  the eager binary preflight in `plan_tool/cli/app.py` run for every command.
-  `list`, `status` and `validate` call no backend, yet exit 127 for a teammate
-  without that CLI. Skip the preflight for deterministic commands when the
-  selection source is the project default.
-- **Why:** the file is shared by the team, so one committed setting changes
-  every teammate's read-only commands. A flag or `PLAN_TOOL_BACKEND` affects
-  only the person who set it. `docs/BACKENDS.md` promises these commands work
-  with nothing installed; its prerequisites paragraph lists "project default"
-  beside flag and environment as fail-fast sources. Raised in the PR 195 review
-  loop (`handoffs/2026-11-12-project-model-selection-implementation.md`).
-- **Route:** direct.
-- **Readiness:** ready.
-- **Tier:** experienced.
-- **Principle:** write-for-the-human.
-- **Effort:** small — one predicate on the command, plus the doc paragraph and
-  parametrized tests. The app has no existing notion of "deterministic
-  command"; the smallest source of that fact is the decision to make first.
-- **Risks / fallout:** a command wrongly marked deterministic would skip a
-  preflight it needs and fail later at the per-call guard, with a less direct
-  message.
-- **Dependencies:** none.
-- **Scope contract:**
-  - **Outcome:** with `default_backend` set and its CLI absent, `list`,
-    `status` and `validate` exit 0 while backend-calling commands still exit 127.
-  - **In scope:** `plan_tool/cli/app.py` preflight, the `docs/BACKENDS.md`
-    prerequisites paragraph, and tests beside
-    `test_project_defaults_preflight_but_model_only_claude_stays_lazy`.
-  - **Out of scope / Non-goals:** changing flag or environment preflight,
-    changing precedence, a command registry, and other commands' preflight.
-  - **Allowed behavior changes:** only the deterministic-command exit above.
-  - **Allowed reorganization:** none.
-  - **Verification:** the parametrized test fails when the skip is removed.
-  - **Stop / defer:** discovered backend-selection issues become separate entries.
-- **Status:** not started.
-
 ### C. Investigations / decision-making
 
 
