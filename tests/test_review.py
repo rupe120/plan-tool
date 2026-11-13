@@ -5872,6 +5872,28 @@ class TestNearestDeclaredMatch:
             is None
         )
 
+    @pytest.mark.parametrize(
+        ("cited", "declared"),
+        [
+            ("api/Dockerfile", "engine_worker/Dockerfile"),
+            ("docker/web/Dockerfile", "docker/api/Dockerfile"),
+            ("services/web/Dockerfile", "services/api/Dockerfile"),
+            ("worker-b/Dockerfile", "worker-a/Dockerfile"),
+        ],
+        ids=["distant-dirs", "docker-siblings", "service-siblings", "worker-siblings"],
+    )
+    def test_dockerfile_with_an_identical_basename_is_never_a_near_miss(
+        self, cited: str, declared: str
+    ) -> None:
+        """A Dockerfile repeats by design in every service directory, and its
+        long name dominates the full-path ratio: sibling directories score
+        0.86-0.95, above the 0.85 bar, on the shared basename alone. Unlike
+        ``index.ts`` (short, so sibling directories stay under the bar), it
+        must not reach the ratio route at all."""
+        from plan_tool.review import _nearest_declared_match
+
+        assert _nearest_declared_match(cited, [declared]) is None
+
     def test_generic_basename_does_not_match(self) -> None:
         from plan_tool.review import _nearest_declared_match
 
@@ -6032,20 +6054,43 @@ class TestFilesCoherenceRootLevelFilenames:
         issues = check_files_coherence(parse_plan(plan_path), tmp_path)
         assert issues == []
 
+    @pytest.mark.parametrize(
+        ("declared", "cited"),
+        [
+            ("engine_worker/Dockerfile", "api/Dockerfile"),
+            ("docker/api/Dockerfile", "docker/web/Dockerfile"),
+            ("worker-a/Dockerfile", "worker-b/Dockerfile"),
+        ],
+        ids=["distant-dirs", "docker-siblings", "worker-siblings"],
+    )
     def test_cited_dockerfile_in_another_directory_is_context_not_drift(
-        self, tmp_path: Path
+        self, tmp_path: Path, declared: str, cited: str
     ) -> None:
         """A repo with several Dockerfiles cites a sibling image as context.
-        ``dockerfile`` is a generic basename (like ``index.ts``), so the shared
-        basename alone must not read as a stale copy of the declared path."""
+        A shared ``Dockerfile`` basename alone must not read as a stale copy of
+        the declared path, including for sibling directories whose names are
+        close enough to clear the similarity bar."""
         body = (
             "# Step 1\n\n## Implementation\n\n"
-            "Edit `apps/foo.py` and `engine_worker/Dockerfile`; base the image "
-            "on `api/Dockerfile`.\n"
+            f"Edit `apps/foo.py` and `{declared}`; base the image on `{cited}`.\n"
         )
-        plan_path = self._fixture(
-            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        plan_path = self._fixture(tmp_path, body, files=f"apps/foo.py, {declared}")
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    @pytest.mark.parametrize(
+        "citation", ["`Dockerfile`", "`./Dockerfile`"], ids=["bare", "dot-slash"],
+    )
+    def test_a_declared_root_dockerfile_is_credited_by_either_citation_form(
+        self, tmp_path: Path, citation: str
+    ) -> None:
+        """The commonest declared form: a repo-root ``Dockerfile``, cited bare
+        or with an explicit relative prefix (stripped before matching)."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            f"Edit `apps/foo.py`; pin the base image in {citation}.\n"
         )
+        plan_path = self._fixture(tmp_path, body, files="apps/foo.py, Dockerfile")
         issues = check_files_coherence(parse_plan(plan_path), tmp_path)
         assert issues == []
 
@@ -17000,7 +17045,7 @@ class TestClaimVsDelivery:
             == []
         )
 
-    def test_claim_vs_delivery_no_trip_when_a_step_declares_it(
+    def test_claim_vs_delivery_no_trip_when_step_declares_it(
         self, tmp_path: Path
     ) -> None:
         plan, plan_path = _write_orphan_plan(
@@ -19111,10 +19156,11 @@ class TestClassifyFindingDomain:
         ("path", "expected"),
         [
             ("engine_worker/Dockerfile", FINDING_DOMAIN_UNKNOWN),
+            ("Dockerfile", FINDING_DOMAIN_UNKNOWN),
             ("docs/examples/Dockerfile", FINDING_DOMAIN_DOCS),
             ("tests/fixtures/Dockerfile", FINDING_DOMAIN_UNIT_TEST),
         ],
-        ids=["plain-path", "under-docs", "under-tests"],
+        ids=["plain-path", "bare-token", "under-docs", "under-tests"],
     )
     def test_classify_finding_domain_dockerfile_path_follows_its_directory_only(
         self, path: str, expected: str

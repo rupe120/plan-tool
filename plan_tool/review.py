@@ -857,9 +857,15 @@ _GENERIC_BASENAMES = frozenset(
         "schema.ts",
         "config.ts",
         "readme.md",
-        "dockerfile",
     }
 )
+
+# Filenames that repeat by design in every service directory. Unlike the
+# generic set above, an identical basename is never a near-miss at all, not
+# even through the similarity ratio: the long name dominates the full-path
+# ratio, so sibling directories (``docker/api`` vs ``docker/web``) clear the
+# threshold on the shared basename alone.
+_REPEATED_BY_DESIGN_BASENAMES = frozenset({"dockerfile"})
 _LESSONS_MISSING_FILE_SEV = "medium"
 _LESSONS_MISSING_ENTRY_SEV = "medium"
 
@@ -1645,7 +1651,9 @@ def _nearest_declared_match(
     Two ways to qualify, strongest first:
 
     1. **Identical basename, different directory** — and the basename
-       isn't in :data:`_GENERIC_BASENAMES`. This is the canonical case
+       isn't in :data:`_GENERIC_BASENAMES` or
+       :data:`_REPEATED_BY_DESIGN_BASENAMES` (the latter never matches on an
+       identical basename, by either rule). This is the canonical case
        (``packages/web/Foo.tsx`` declared, ``apps/web/src/Foo.tsx``
        cited): the file moved or the prefix is wrong.
     2. **High full-path similarity** *and* few differing basename
@@ -1662,8 +1670,10 @@ def _nearest_declared_match(
     for d in declared:
         if d == cited:
             continue
-        ratio = SequenceMatcher(None, cited.lower(), d.lower()).ratio()
         d_base = d.rsplit("/", 1)[-1].lower()
+        if d_base == cited_base and cited_base in _REPEATED_BY_DESIGN_BASENAMES:
+            continue
+        ratio = SequenceMatcher(None, cited.lower(), d.lower()).ratio()
         same_base = (
             d_base == cited_base and cited_base not in _GENERIC_BASENAMES
         )
