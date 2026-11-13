@@ -1098,8 +1098,9 @@ Reach for `completeness-audit --iterate` only as the narrow variant —
 audit-only convergence without the rest of the create/detail authoring
 loop. For actual convergence-driving authoring, reach for
 `create --iterate` (drives completeness findings to convergence as part
-of the create flow) or `detail --iterate` (drives the
-`detail-quality.md` review per step).
+of the create flow) or, only when explicitly requested, `detail --iterate`
+(drives the `detail-quality.md` review per step; `detail` is one-shot by
+default).
 
 ### The escalate-to-split bridge (auto split-or-recommend)
 
