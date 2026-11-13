@@ -276,8 +276,9 @@ Expect to find an altitude mismatch, not only a wrong answer.
 
 ## Which model to run a subcommand with
 
-**Honor explicit user requests for backend and model. Otherwise omit selection
-flags so project defaults apply.** `.plan-tool/backends.json` can select
+**Honor explicit user requests for backend and model. Otherwise omit a
+selection flag only where the project or environment already decides it.**
+`.plan-tool/backends.json` can select
 `default_backend` and `backends.<name>.commands.<command>.model`; a backend's
 `model` supplies its general default. The host assistant integration does not
 choose the execution backend. `--backend` selects the backend while retaining
@@ -286,13 +287,14 @@ explicit `--model` can infer a backend from its model family; configured models
 never change the backend. See `docs/BACKENDS.md` in the plan-tool repository for
 configuration, command aliases, and separate precedence tables.
 
-**Decide each flag separately by reading `.plan-tool/backends.json`.**
-Backend: omit `--backend` when a top-level `default_backend` is set. Model: omit
-`--model` when a model (`backends.<name>.model` or
-`backends.<name>.commands.<command>.model`) is configured for the backend that
-will run. A global `--model` overrides every configured model. For each flag
-the project leaves unconfigured, use these recommendations when the user has no
-selection preference: pass `--backend <name>` for the backend appropriate to
+**Decide each flag separately.** The backend is already decided when the user
+passes `--backend`, `PLAN_TOOL_BACKEND` is set, or `backends.json` sets a
+top-level `default_backend`; omit `--backend` then. The model is already decided
+when `backends.<that backend>.commands.<command being run>.model` or
+`backends.<that backend>.model` is set; omit `--model` then (a global `--model`
+overrides every configured model). Settle the backend first, because configured
+models apply only to their own backend. For each flag left undecided, use these
+recommendations when the user has no selection preference: pass `--backend <name>` for the backend appropriate to
 the work, then pass its recommended `--model` explicitly where listed. For Codex use `gpt-6.1-sol`;
 for Claude use Opus for roadmap, seed and plan creation and Sonnet for subsequent
 work; for Cursor use Auto without `--model`. Deterministic commands need no

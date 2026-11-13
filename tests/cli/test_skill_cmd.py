@@ -71,16 +71,21 @@ class TestInstallSkill:
         assert router.is_symlink() == (integration != "codex")
         assert directives.is_symlink() == (integration != "codex")
         router_text = router.read_text(encoding="utf-8")
-        assert "honor explicit user requests; otherwise omit selection" in router_text
+        assert "otherwise omit a selection" in " ".join(router_text.split())
         assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
         policy = directives.read_text(encoding="utf-8")
         assert "Honor explicit user requests for backend and model" in policy
-        assert "flags so project defaults apply" in policy
+        assert "already decides it" in " ".join(policy.split())
         # Each flag is decided separately from backends.json, so the two
         # paragraphs cannot both apply to one flag.
         flat = " ".join(policy.split())
-        assert "Decide each flag separately by reading `.plan-tool/backends.json`" in flat
+        assert "**Decide each flag separately.**" in flat
         assert "use these recommendations" in flat
+        # Carve-outs: backend settled first; a model counts only for its own
+        # backend and command; undecided flags keep the recommendations.
+        assert "Settle the backend first" in flat
+        assert "`backends.<that backend>.commands.<command being run>.model`" in flat
+        assert "For each flag left undecided" in flat
         assert "`--model` overrides model defaults" in policy
 
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:

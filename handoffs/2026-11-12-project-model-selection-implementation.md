@@ -120,3 +120,32 @@ Passes 2 and 3 are majority self-seeded (4 of 7, then 5 of 5 findings describe
 the previous round's own edits, mostly the DIRECTIVES paragraph): exit 2 of
 CLAUDE.md § "Driving the convergence loops". The application is finished; one
 confirming pass follows.
+
+### Review pass 4 — 7 findings over `d9c3da09d..4442d6851`
+
+1. **Backend rule ignored `PLAN_TOOL_BACKEND`.** **Fixed** — the backend counts
+   as decided by flag, environment, or `default_backend`.
+2. **Model rule was circular and ignored per-command scope.** **Fixed** —
+   backend settled first; the model must be set for that backend and the
+   command being run.
+3. **Three bundled routers restated the old unconditional rule.** **Fixed** —
+   all three reworded; no other restatement remains (`project defaults apply`
+   search over `integrations/` and `docs/` is empty).
+4. **Bold lead paragraph contradicted the per-flag paragraph.** **Fixed.**
+5. **Test pinned the heading, not the carve-outs.** **Fixed** — pins
+   backend-first ordering, backend-and-command scoping and the undecided-flag
+   fallback.
+6. **Open preflight decision has no tracked home.** **Open — owner decision**;
+   file in `BACKLOG.md` only if the owner keeps the current behavior.
+7. **Test coupled to full preflight wording.** **Fixed** — asserts only the
+   executable-not-found fragment.
+
+### Convergence status
+
+Four passes. Passes 2–4 re-seeded on the DIRECTIVES selection paragraph with a
+different symptom each round, which is the non-converging signal for that
+region: the policy is too intricate to state in one paragraph. Application is
+complete; the loop stops here and the owner decides between keeping this
+wording, collapsing it to one rule (for example "always pass explicit flags
+unless the user says otherwise"), or carving the guidance into its own change.
+Pass 1's material findings (docstrings, case normalization) have not recurred.
