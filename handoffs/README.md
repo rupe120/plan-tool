@@ -149,7 +149,7 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
-| [Onboarding guidance entry removal](2026-11-13-onboarding-guidance-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #203; not compressed | Two filed `BUG_BACKLOG.md` entries (the `BACKLOG.md` recipes; the `RUNBOOK.md` iteration budget); #510 owns the first-task path |
+| [Onboarding guidance entry removal](2026-11-13-onboarding-guidance-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #203; not compressed | One open `BUG_BACKLOG.md` entry (the `BACKLOG.md` recipes); the `RUNBOOK.md` iteration budget entry was fixed in `9f8c67e9b`; #510 owns the first-task path |
 | [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13 (not a clean audit); merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
 | [Dockerfile mention recognition](2026-11-13-files-coherence-dockerfile-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #201; not compressed | None open; the `_claim_delivered` fuzzy match was declined and the `detail` follow-up shipped in PR #202 |
 | [Multiline concept decisions](2026-11-13-multiline-concept-decisions-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #198; not compressed | None open; the repeated-heading and empty-heading follow-ups shipped in PRs #199 and #200 |
