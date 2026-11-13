@@ -101,6 +101,20 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
+- 2026-11-13 — the iteration-loop hints print `--iteration-budget 1800`, the
+  default, as "a larger wall-clock budget": `fixed` (code and tests in the
+  preceding commit; entry removed in the next). The `deadline_exceeded` hint in
+  `create.py`, `detail.py` and `cli/completeness_phases.py` now prints
+  `larger_iteration_budget_seconds(state.budget.budget_seconds)`
+  (`convergence.py`: double the effective deadline, floored at the default) with
+  the comment "resume with a longer no-progress deadline"; the "Open" disposition
+  text in `completeness_report.py` names the no-progress deadline and
+  `--time-budget`. Tests: one per site, each patching the helper to a sentinel
+  and asserting the site passes it the effective deadline (0), plus a helper
+  test that the value always exceeds the deadline. Mutation: hardcoding `1800`
+  at each site failed exactly that site's test; the pre-fix report text failed
+  the report test. No review pass has run yet.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
