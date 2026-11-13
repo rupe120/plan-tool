@@ -103,14 +103,10 @@ they resolve.
 
 - 2026-11-13 — the loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md`
   omit the `no_progress` and `no_blocking_findings` stops: `fixed c8bd15643`,
-  entry removed in `ea5396a14`, wording corrected in `77fddec1a`.
-  `docs/ITERATION.md` § "How the loop terminates" lists every reason
-  `should_continue` returns with its code; `RUNBOOK.md` points there for the
-  stops it does not define. The entry's claim that the lists said nothing false
-  was wrong: "Converged" and "Marginal" misstated their predicates, and
-  `no_blocking_findings` is set only by the `completeness-audit` and reconcile
-  loops, never by `create` or `detail`. A drift test in
-  `tests/test_convergence.py` fails when a reason code lacks its bullet.
+  entry removed in `ea5396a14`. `docs/ITERATION.md` § "How the loop terminates"
+  now lists every `should_continue` reason with its code, per-command scope and
+  exit codes, pinned by a drift test. Pass-by-pass record and closure (stopped at
+  exit 2): [ledger](2026-11-13-loop-termination-lists-code-review.md).
 
 ## Deliberately not in this handoff
 
