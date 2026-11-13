@@ -55,6 +55,8 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
+- [Overengineering checkpoints](2026-11-12-overengineering-checkpoints.md) — merged checkpoints, instruction refresh after project model selection, behavioral-test limits, and observation on the next real task.
+
 - [Project model selection plan review](2026-11-12-project-model-selection-code-review.md) — audited project backend/model defaults plan, proportionality correction, and separate copied-skill backlog item.
 
 - [Jira-grade retirement execution and review](2026-11-03-jira-grade-retirement-plan.md) — eight
