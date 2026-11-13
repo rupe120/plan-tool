@@ -49,6 +49,7 @@ def larger_iteration_budget_seconds(budget_seconds: float) -> int:
     """
     return int(max(2 * budget_seconds, DEFAULT_ITERATION_BUDGET_SECONDS))
 
+
 MARGINAL_OVERLAP_THRESHOLD = 0.5
 
 # Default number of consecutive no-net-progress rounds tolerated before

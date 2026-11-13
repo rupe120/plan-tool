@@ -3486,15 +3486,19 @@ def test_report_default_grade_prose_unchanged() -> None:
 
 
 class TestOpenDispositionNamesTheRealStops:
-    def test_open_text_names_the_no_progress_deadline_and_time_budget_not_wall_clock(
-        self,
-    ) -> None:
-        """``--iteration-budget`` is a debounced no-progress deadline and
-        ``--time-budget`` is the total cap; calling the loop stop a
-        "wall-clock budget" sends the operator to the wrong flag."""
+    def test_open_text_names_every_tunable_stop_and_not_wall_clock(self) -> None:
+        """Any stop can leave findings open (cap, no-progress deadline, stall,
+        total-time cap), so the text points at each matching flag and does not
+        call ``--iteration-budget`` a wall-clock budget."""
         text = WHY["open"]
+        for flag in (
+            "--max-iterations",
+            "--iteration-budget",
+            "--max-stall-rounds",
+            "--time-budget",
+        ):
+            assert flag in text
         assert "no-progress deadline" in text
-        assert "--time-budget" in text
         assert "wall-clock" not in text
 
 

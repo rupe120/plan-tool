@@ -102,18 +102,31 @@ they resolve.
   with the headings named (PR #199, merged 2026-11-13).
 
 - 2026-11-13 — the iteration-loop hints print `--iteration-budget 1800`, the
-  default, as "a larger wall-clock budget": `fixed` (code and tests in the
-  preceding commit; entry removed in the next). The `deadline_exceeded` hint in
-  `create.py`, `detail.py` and `cli/completeness_phases.py` now prints
+  default, as "a larger wall-clock budget": `fixed bab3c18a2` for the printed
+  value and wording, entry removed in `2403fec96`. The `deadline_exceeded` hint
+  in `create.py`, `detail.py` and `cli/completeness_phases.py` now prints
   `larger_iteration_budget_seconds(state.budget.budget_seconds)`
   (`convergence.py`: double the effective deadline, floored at the default) with
-  the comment "resume with a longer no-progress deadline"; the "Open" disposition
-  text in `completeness_report.py` names the no-progress deadline and
-  `--time-budget`. Tests: one per site, each patching the helper to a sentinel
-  and asserting the site passes it the effective deadline (0), plus a helper
-  test that the value always exceeds the deadline. Mutation: hardcoding `1800`
-  at each site failed exactly that site's test; the pre-fix report text failed
-  the report test. No review pass has run yet.
+  the comment "resume with a longer no-progress deadline"; `WHY["open"]` in
+  `completeness_report.py` names each tunable stop and calls
+  `--iteration-budget` a no-progress deadline. Tests: one per site, each
+  patching the helper to a sentinel and asserting the site passes it the
+  effective deadline (0), plus helper and report-text tests. Mutation, this
+  session's runs: hardcoding `1800` at each site failed exactly that site's
+  test; the pre-fix report text failed the report test.
+  - **Residual, `tracked` in `BUG_BACKLOG.md`:** the `detail` and
+    `completeness-audit` hints omit `--iterate` (both default it off), so the
+    printed command still does not run the loop there; `create` is unaffected.
+    This fix corrects the value, not that. Found by pass 1.
+  - `/code-review` high, pass 1 (headless, read-only): no high finding.
+    `fixed` (this commit): `WHY["open"]` enumerated stops and dropped the stall
+    stop, now unenumerated and naming `--max-stall-rounds`; handoff line cited
+    no hash; missing blank line and an over-wide comment. `tracked`: the
+    `--iterate` omission above. `declined`: an unpatched site test with a
+    nonzero deadline (passing `budget.budget_seconds` instead of
+    `state.budget.budget_seconds` is behavior-equivalent, since the per-step
+    scaling in `detail` leaves `budget_seconds` unchanged; the pure-function
+    test pins the property).
 
 ## Deliberately not in this handoff
 

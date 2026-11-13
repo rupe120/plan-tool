@@ -822,10 +822,10 @@ WHY: dict[str, str] = {
         "`--no-triage`."
     ),
     "open": (
-        "Eligible to apply, but the loop stopped (iteration cap, no-progress "
-        "deadline, or `--time-budget`) before reaching them. Re-run to "
-        "continue, optionally with a larger `--max-iterations` / "
-        "`--iteration-budget` / `--time-budget`."
+        "Eligible to apply, but the loop stopped early (the stop reason is on "
+        "the run's final banner) before reaching them. Re-run to continue; "
+        "`--max-iterations`, `--iteration-budget` (a no-progress deadline), "
+        "`--max-stall-rounds` and `--time-budget` tune the matching stops."
     ),
 }
 

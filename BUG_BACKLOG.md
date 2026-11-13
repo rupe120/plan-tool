@@ -598,6 +598,32 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
+### The `detail` and `completeness-audit` loop-stop resume hints omit `--iterate`, so the printed command never runs the loop
+
+- **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
+  `time_budget_exceeded` hints) and `plan_tool/cli/completeness_phases.py` (the
+  same three plus `no_progress`); authority
+  `plan_tool/cli/context.py:_resolve_iterative_budget` (`enabled` comes from
+  `--iterate`).
+- **Symptom:** `detail` and `completeness-audit` default `--iterate` to off, and
+  the hints print `plan-tool detail <name> --step N --iteration-budget <n>` and
+  `plan-tool completeness-audit <name> --iteration-budget <n>` without it.
+  Probed 2026-11-13: parsing each printed command gives `enabled=False`, so the
+  loop does not run and the larger value is ignored; adding `--iterate` gives
+  `enabled=True`. `create` defaults `--iterate` on and is unaffected. For
+  `detail` the step's written body is also skipped by a re-run without
+  `--force` (`detail.py`, comment above the step loop), so the fix needs a
+  decision on the remedy, not only a flag.
+- **Fix:** add `--iterate` to the `completeness-audit` hints; for `detail`, decide
+  between `--iterate --force` (re-authors) and a different remedy. Deliberately
+  not done: changing either command's `--iterate` default.
+- **Approach:** `direct` — one decision for `detail`, then a test that parses
+  every printed resume command with the real parser and asserts the budget it
+  builds is enabled.
+- **Verification:** that test passes for every hint at both sites.
+- **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
+- **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
+
 ### The loop-termination lists in `RUNBOOK.md` and `docs/ITERATION.md` omit the `no_progress` and `no_blocking_findings` stops
 
 - **Files:** the "How the loop terminates" sections of `RUNBOOK.md` and
