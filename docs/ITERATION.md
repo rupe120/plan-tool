@@ -165,8 +165,10 @@ them once, and the loop runs itself within the fence you drew.
 
 - **Converged.** `finding_set_delta` returns an empty introduced-set.
   Exit code 0.
-- **Budget exhausted.** The iteration count hit `--max-iterations`, or
-  wall-clock hit `--iteration-budget`. Exit code 0 — the loop
+- **Budget exhausted.** The iteration count hit `--max-iterations`, no
+  forward progress was made for `--iteration-budget` seconds (a debounced
+  no-progress deadline, not a cap on total time; `--time-budget` is the total
+  cap), or `--time-budget` was reached. Exit code 0 — the loop
   completed; any findings still open are in the report (and, for
   `completeness-audit --json`, the `has_blocking_findings` flag), which CI /
   aggregation scripts inspect instead of the exit code. For
