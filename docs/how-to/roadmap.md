@@ -30,9 +30,9 @@ plan-tool roadmap my-project --accept-seed <roadmap-plan-id>
 plan-tool roadmap my-project --apply
 plan-tool roadmap my-project --apply -y
 plan-tool create <roadmap-plan-id> --from-existing <reported-draft-path>
-plan-tool completeness-audit <roadmap-plan-id> --iterate --commit   # bare-plan gate
+plan-tool completeness-audit <roadmap-plan-id> --iterate   # bare-plan gate
 plan-tool detail <roadmap-plan-id>
-plan-tool completeness-audit <roadmap-plan-id> --iterate --commit   # detail-grounded gate
+plan-tool completeness-audit <roadmap-plan-id> --iterate   # detail-grounded gate
 plan-tool run <roadmap-plan-id> --commit
 ```
 
@@ -654,7 +654,7 @@ declared order. [The two audit gates](pipeline/audit.md) say what each audit
 judges.
 
 ```bash
-plan-tool completeness-audit <roadmap-plan-id> --iterate --commit
+plan-tool completeness-audit <roadmap-plan-id> --iterate
 ```
 
 ```bash
@@ -662,7 +662,7 @@ plan-tool detail <roadmap-plan-id>
 ```
 
 ```bash
-plan-tool completeness-audit <roadmap-plan-id> --iterate --commit
+plan-tool completeness-audit <roadmap-plan-id> --iterate
 ```
 
 ```bash
