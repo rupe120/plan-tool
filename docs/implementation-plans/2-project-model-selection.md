@@ -110,6 +110,7 @@ steps:
   depends_on_notes:
     3: Provides the verified invocation behavior that documentation and skill guidance
       describe.
+  detail: docs/implementation-plans/plan-details/project-model-selection/04-document-configuration-fields-supported.md
   description: 'Document the configuration fields, supported canonical command keys
     and aliases, backend and model precedence tables, and the Codex create/detail
     proof. Explain that --backend selects the backend while retaining its configured
