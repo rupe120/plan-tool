@@ -124,7 +124,21 @@ they resolve.
     finding still pointed at the removed entry), and `tracked` in
     `BUG_BACKLOG.md`, filed in `f12de12bb` (the loop hints print `--iteration-budget
     1800`, the default, as "a larger wall-clock budget"; the termination lists
-    omit `no_progress` and `no_blocking_findings`). Pass 2 pending.
+    omit `no_progress` and `no_blocking_findings`).
+  - `/code-review` high, fact-check pass 2 (headless, read-only): no high or
+    medium finding; the pass-1 fixes hold and all cited hashes are reachable.
+    Findings, verified before acting: `fixed 21f731ae5` (the text now calls
+    `--time-budget` cooperative, not "hard"; says it is shared across `detail`
+    steps while the iteration and no-progress budgets are per step, which the
+    code comment at `detail.py` confirms; `docs/ITERATION.md`'s Defaults table
+    gained the missing `--time-budget` row), `fixed 6408b799a` (a history record still
+    called the fixed RUNBOOK entry open; a ledger sentence was tidied) and
+    `fixed 8a0d1f90e` (the hints entry now includes the saved-report text at
+    `completeness_report.py`, which also calls the stop wall-clock, with a check
+    that can find it). **Closure: stopped at exit 2, neither converged nor clean.**
+    Pass 1 returned three medium findings and pass 2 none, so the two
+    consecutive low-yield passes were not reached, and most findings in both
+    passes described this change's own new text. No third pass is planned.
 
 ## Deliberately not in this handoff
 
