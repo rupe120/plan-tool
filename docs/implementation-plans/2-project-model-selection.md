@@ -50,7 +50,7 @@ steps:
   depends_on_notes:
     1: Provides validated backend-scoped command models and command normalization.
   detail: docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md
-  status: current
+  status: done
   description: Add an optional validated command-model default to the existing effective-backend
     selector. Keep explicit model > command model > selected-backend base model >
     manifest default > omission in one owner. Existing callers omit the new input;
@@ -73,6 +73,7 @@ steps:
     1: Provides project defaults and canonical command lookup.
     2: Provides optional command-model defaults in the existing model-precedence owner.
   detail: docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md
+  status: current
   description: Resolve the repository root and validate project settings using registration-derived
     command identities. Choose the backend by explicit flag, explicit-model inference,
     environment, project default, then Claude. Look up only that backend's canonical-command
