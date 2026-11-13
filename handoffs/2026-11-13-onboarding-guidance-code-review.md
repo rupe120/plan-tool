@@ -25,7 +25,8 @@ in [`bug-backlog-drain.md`](bug-backlog-drain.md).
   does not contradict them; edits to `CLAUDE.md` need architect-tier review, and
   `AGENTS.md` is a symlink to it.
 - The `BACKLOG.md` recipes and the `RUNBOOK.md` iteration budget were filed, not
-  fixed here (the iteration-budget entry was fixed afterwards in `9f8c67e9b`) (separate classes of defect; queue records).
+  fixed here, as separate classes of defect and queue records; the
+  iteration-budget entry was fixed afterwards in `9f8c67e9b`.
 - Restructuring the first-task path belongs to onboarding #510.
 
 ## Evidence (this session's runs)

@@ -872,8 +872,9 @@ two gates and replaced the paragraph. The entry outlived that repair as far as
 the routers go.
 
 **Filed separately, not fixed here.** The eleven `BACKLOG.md` recipes (queue
-records, edited when each entry is picked up) and the stale 300-second iteration
-budget in `RUNBOOK.md` are `BUG_BACKLOG.md` entries.
+records, edited when each entry is picked up) are a `BUG_BACKLOG.md` entry; the
+stale 300-second iteration budget in `RUNBOOK.md` was filed too and fixed
+afterwards in `9f8c67e9b`.
 
 **Left as is, deliberately.**
 
