@@ -7859,6 +7859,23 @@ def predict_plan_path(
     return output_dir / f"{PRIORITY_PREFIX[priority]}-{slug}.md"
 
 
+def _reject_empty_concept_headings(sections: Sequence[BodySection]) -> None:
+    """Refuse a section whose name is empty after normalization.
+
+    ``concept_id`` rejects an empty name with a bare ``ValueError`` that names
+    no heading. ``parse_body_sections`` already strips whitespace before
+    dropping trailing ``:``/``.``, so a name is empty exactly when the id
+    derivation would raise.
+    """
+    empty = [f"'## {section.heading}'" for section in sections if not section.name]
+    if empty:
+        raise CreateError(
+            "plan body has section headings with no name after normalization "
+            f"(trailing ':' and '.' are dropped): {', '.join(empty)}. Give "
+            "each a name or remove it, and retry."
+        )
+
+
 def _reject_repeated_concept_headings(
     sections: Sequence[BodySection], tree: ConceptTree
 ) -> None:
@@ -9824,6 +9841,7 @@ def _prepare_create_plan(
             _render_plan_body(plan.title, steps=plan.steps),
             ignore_fenced_code=True,
         )
+    _reject_empty_concept_headings(concept_sections)
     fresh_concepts = bootstrap_concepts(
         plan,
         concept_sections,

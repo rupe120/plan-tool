@@ -9413,12 +9413,14 @@ def _patch_direct_route_metadata(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
-class TestRepeatedSectionHeadingRefusal:
+class TestUnusableConceptHeadingRefusal:
     """Concept ids hash the normalized section name, so two sections with one
     name would share an id and ``review_concept_scope`` rejects the scope with
     a hash-based "duplicate IDs" crash that names no heading. ``create``
     refuses first and lists every colliding spelling so the author can fix it.
-    Fenced copies of a heading are not sections and stay allowed."""
+    A heading whose name is empty after normalization (``## :``) has no
+    concept id at all and gets the same treatment. Fenced copies of a heading
+    are not sections and stay allowed."""
 
     @staticmethod
     def _direct_ready_source(extra: str) -> str:
@@ -9539,6 +9541,75 @@ class TestRepeatedSectionHeadingRefusal:
         message = str(excinfo.value)
         assert "'## Notes', '## Notes'" in message
         assert "'## Alpha', '## Alpha'" in message
+
+    @pytest.mark.parametrize(
+        ("empty_heading", "listed"),
+        [
+            ("## :", "'## :'"),
+            ("## .", "'## .'"),
+            ("## ::", "'## ::'"),
+            ("## .\u00a0", "'## .'"),
+        ],
+        ids=["colon", "period", "double-colon", "period-nbsp"],
+    )
+    def test_heading_that_normalizes_to_empty_is_refused_naming_it(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        empty_heading: str,
+        listed: str,
+    ) -> None:
+        """``section.name`` drops trailing ``:`` and ``.``, so these headings
+        have an empty name and ``concept_id`` would raise a bare ``ValueError``
+        naming nothing."""
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(
+                tmp_path,
+                monkeypatch,
+                self._direct_ready_source(f"\n{empty_heading}\n\nbody.\n"),
+            )
+        message = str(excinfo.value)
+        assert listed in message
+        assert "title path components" not in message
+        self._assert_nothing_written(tmp_path)
+
+    def test_every_empty_heading_is_listed(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        with pytest.raises(CreateError) as excinfo:
+            self._create_direct(
+                tmp_path,
+                monkeypatch,
+                self._direct_ready_source("\n## :\n\none.\n\n## .\n\ntwo.\n"),
+            )
+        message = str(excinfo.value)
+        assert "'## :'" in message and "'## .'" in message
+
+    def test_heading_that_normalizes_to_empty_in_an_inline_description_is_refused(
+        self, tmp_path: Path
+    ) -> None:
+        description = "# Probe\n\n## Notes\n\none.\n\n## :\n\ntwo.\n"
+        with pytest.raises(CreateError) as excinfo:
+            create_plan(
+                "empty",
+                repo_root=tmp_path,
+                output_dir_override=tmp_path / "plans",
+                manifest_path=tmp_path / "manifest.json",
+                from_description=description,
+                input_fn=_queue_input(_basic_metadata_answers()),
+                claude_invoker=lambda _prompt: json.dumps(
+                    [{"title": "a step", "complexity": None, "files": [],
+                      "depends_on": []}]
+                ),
+                yes=True,
+                resume=False,
+                distill=False,
+                offer_intents=False,
+            )
+        message = str(excinfo.value)
+        assert "'## :'" in message
+        assert "title path components" not in message
+        self._assert_nothing_written(tmp_path)
 
     def test_repeated_heading_in_an_inline_description_is_refused_listing_it(
         self, tmp_path: Path
