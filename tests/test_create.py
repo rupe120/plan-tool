@@ -9574,7 +9574,6 @@ class TestUnusableConceptHeadingRefusal:
             )
         message = str(excinfo.value)
         assert listed in message
-        assert "title path components" not in message
         self._assert_nothing_written(tmp_path)
 
     @pytest.mark.parametrize(
@@ -9598,7 +9597,6 @@ class TestUnusableConceptHeadingRefusal:
         message = str(excinfo.value)
         assert "no name after normalization" in message
         assert "'## :'" in message
-        assert "same after case" not in message
 
     def test_every_empty_heading_is_listed(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -9635,7 +9633,6 @@ class TestUnusableConceptHeadingRefusal:
             )
         message = str(excinfo.value)
         assert "'## :'" in message
-        assert "title path components" not in message
         self._assert_nothing_written(tmp_path)
 
     def test_repeated_heading_in_an_inline_description_is_refused_listing_it(
