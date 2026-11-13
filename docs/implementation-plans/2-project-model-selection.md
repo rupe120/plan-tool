@@ -23,6 +23,7 @@ steps:
   - tests/test_backend_config.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/project-model-selection/01-extend-existing-backend-configuration.md
   status: current
   description: Extend the existing backend configuration reader to expose optional
     default_backend and per-backend commands.<command>.model settings. Preserve load_backend_overrides
@@ -110,18 +111,17 @@ steps:
   description: 'Document the configuration fields, supported canonical command keys
     and aliases, backend and model precedence tables, and the Codex create/detail
     proof. Explain that --backend selects the backend while retaining its configured
-    model defaults, and --model overrides model defaults.
-    Update all three bundled routers to honor explicit user requests and otherwise
-    allow project selection, keeping shared operational policy in DIRECTIVES.md and
-    guidance for unconfigured projects. Extend temporary-install integration coverage
-    to verify the routers and shared guidance ship together; preserve installation
-    and copied-skill replacement behavior without changing skill_cmd.py or refreshing
-    installed copies. Mark overlapping portions of BACKEND_SELECTION.md as superseded
-    while leaving aspect routing and failover proposals unimplemented. After the implementation
-    and full pytest suite pass, reconcile BACKLOG.md #254 with the shipped explicit-command
-    design and preserve deferred scope, including copied-skill freshness validation.
-    Leave CLAUDE.md and AGENTS.md unchanged; regenerate CLI references only if parser
-    help changes.'
+    model defaults, and --model overrides model defaults. Update all three bundled
+    routers to honor explicit user requests and otherwise allow project selection,
+    keeping shared operational policy in DIRECTIVES.md and guidance for unconfigured
+    projects. Extend temporary-install integration coverage to verify the routers
+    and shared guidance ship together; preserve installation and copied-skill replacement
+    behavior without changing skill_cmd.py or refreshing installed copies. Mark overlapping
+    portions of BACKEND_SELECTION.md as superseded while leaving aspect routing and
+    failover proposals unimplemented. After the implementation and full pytest suite
+    pass, reconcile BACKLOG.md #254 with the shipped explicit-command design and preserve
+    deferred scope, including copied-skill freshness validation. Leave CLAUDE.md and
+    AGENTS.md unchanged; regenerate CLI references only if parser help changes.'
 ---
 # Project Model Selection
 
