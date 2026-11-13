@@ -68,7 +68,16 @@ Record each drained entry here as one line: entry heading, disposition
 (`fixed <commit>`, `refuted <evidence>`, `declined <reason>`,
 `tracked <backlog id>`, or `pending`), and the commit that removed the entry.
 
-_(none yet)_
+- `create --from-existing` records `source_seed` as the seed it then archives
+  (`BUG_BACKLOG.md`, BUG section) — `pending`. Plain `plan-seeds/` case run
+  2026-11-13 in a throwaway repo (one `create`, one single-pass bare audit):
+  `source_seed` stayed `plan-seeds/greeter.md` after the seed moved to
+  `plan-seeds/archive/`; the audit still read the seed (`source_seed_digest` set)
+  and raised no finding about the path. Not reproduced for the plain case.
+  The roadmap-published case (`plan-seed-drafts/`) is **untested**, so the
+  entry stays. Log: `.tmp/source-seed-archive-repro.run4.log`. Existing test
+  `test_source_seed_survives_the_cli_archiving_its_own_seed` pins the
+  recorded pre-archival path.
 
 ## Deliberately not in this handoff
 
