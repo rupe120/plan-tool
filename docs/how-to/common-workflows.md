@@ -274,7 +274,7 @@ Options applied *during* create:
   convergence or budget. Pairs with `--max-iterations N` (default 3)
   and `--iteration-budget SECONDS` (default 1800; a debounced
   no-progress deadline, not a cap on total loop time — see
-  [Defaults). Pass `--no-iterate`
+  [Defaults](../ITERATION.md#defaults)). Pass `--no-iterate`
   to skip the post-write loop. Detail authoring defaults to one shot;
   enable its quality loop only when explicitly requested. Neither
   `detail --reconcile` nor `run --reconcile` accepts `--iterate`.
