@@ -42,7 +42,8 @@ branch, and hand the updated settled-decision list to the next reviewer.
   passes), stopped by the owner, closed by owner decision, or stopped at exit 2
   (the loop was auditing its own edits, so it is neither converged nor clean;
   `CLAUDE.md` § "Driving the convergence loops"). The four are not
-  interchangeable, and a compressed ledger keeps its own label.
+  interchangeable, and a compressed ledger keeps its own label; rows closed
+  before this rule keep the label they carry.
 - Every file in this directory except `README.md` appears below.
 
 ## Release preparation

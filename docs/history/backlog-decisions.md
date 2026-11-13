@@ -849,15 +849,18 @@ despite their own one-shot instruction.
   stated in `common-workflows.md`, `DIRECTIVES.md` Gate 1 and
   `docs/how-to/pipeline/audit.md`; `README.md` and the routers give the order
   without repeating that sentence.
-- Two sweeps of the tracked instructional documents (everything outside the
-  archived plans, history, evidence, concept briefs, seeds and handoffs). A
+- Two sweeps of the tracked instructional documents (everything outside
+  `docs/implementation-plans/`, `docs/history/`, `docs/evidence/`,
+  `docs/concepts/`, the root `plan-seeds/`, `handoffs/`, `.tmp/` and
+  `.plan-tool/`). A
   vocabulary sweep for text that recommends or defaults detail iteration found
   the `RUNBOOK.md` closing line, which contradicted the same file's "Detail with
   iteration" section and `DIRECTIVES.md`. A command-sequence sweep over fenced
   blocks, for a `plan-tool detail` command that follows a `plan-tool create` with
   no `plan-tool completeness-audit` between, returned 24 hits: two real gaps in
-  `docs/how-to/roadmap.md` (the command list and section 8), eleven `Iterate:`
-  recipes in `BACKLOG.md`, and eleven independent syntax or opt-in examples.
+  `docs/how-to/roadmap.md` (the command list and section 8), eleven
+  `Iterate:`/`Iteration:` recipes in `BACKLOG.md`, and eleven independent
+  examples (see below).
 
 **Provenance.** `common-workflows.md` already read correctly at the `9c10d74ca`
 snapshot (2026-10-21), so that half of the report is stale from the earliest
@@ -868,22 +871,29 @@ recovery and reconciliation recipes", 2026-10-21) reordered the row around the
 two gates and replaced the paragraph. The entry outlived that repair as far as
 the routers go.
 
-**Filed separately, not fixed here.** The eleven `BACKLOG.md` recipes (they are
-queue records, edited when each entry is picked up) and the stale 300-second
-iteration budget in `RUNBOOK.md` are `BUG_BACKLOG.md` entries.
+**Filed separately, not fixed here.** The eleven `BACKLOG.md` recipes (queue
+records, edited when each entry is picked up) and the stale 300-second iteration
+budget in `RUNBOOK.md` are `BUG_BACKLOG.md` entries.
 
 **Left as is, deliberately.**
 
-- The shorthand `create → detail → audit → run` in `docs/how-to/pipeline/run.md`,
-  `RUNBOOK.md` and `CLAUDE.md` (`AGENTS.md` is a symlink to it) collapses the two
-  audit gates into one word. It does not contradict the gates, and edits to
-  `CLAUDE.md` need architect-tier review.
-- The headless-syntax examples that list `create` and `detail` side by side in
-  `integrations/shared/DIRECTIVES.md`, the routers (which say they are not a
-  stage sequence) and `docs/OPERATIONS.md`, and the tracked copy under
-  `.claude/skills/plan-tool/`.
+- The shorthand `create → detail → audit → run` (or `→ run steps 1–N`) in
+  `docs/how-to/pipeline/run.md`, `RUNBOOK.md`, `MISSION.md`,
+  `experiments/contract-trace-audit/LESSONS.md` and `CLAUDE.md` (`AGENTS.md` is a
+  symlink to it) collapses the two audit gates into one word. It does not
+  contradict the gates, and edits to `CLAUDE.md` need architect-tier review.
+- Independent examples that list `create` and `detail` side by side without
+  being a stage sequence: the headless-syntax blocks in the three routers and in
+  `docs/OPERATIONS.md` (both say so), `integrations/shared/DIRECTIVES.md` (which
+  now says so too) and the tracked copy under `.claude/skills/plan-tool/` (a
+  copy that lags `integrations/` elsewhere and is not refreshed here), the
+  opt-in loop examples in
+  `RUNBOOK.md`'s "Create with iteration" and "Detail with iteration" sections,
+  and the prompt-mode comparison in `docs/explanations/prompt-ab-testing.md`.
 - As of 2026-11-13, `docs/explanations/lessons-learned.md` lists `run` among the
-  commands that support `--iterate`; `run` accepts the flag and ignores it.
+  commands that support `--iterate`; `run` accepts the flag and ignores it. It is
+  outside this entry's class (a `run` flag, not gate order or the `detail`
+  default).
 - Restructuring the first-task path belongs to onboarding #510, open on
   2026-11-13.
 
