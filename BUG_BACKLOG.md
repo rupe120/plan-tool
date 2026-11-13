@@ -598,11 +598,12 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
 
-### The `detail` and `completeness-audit` loop-stop resume hints omit `--iterate`, so the printed command never runs the loop
+### The loop-stop resume hints print a command that does not change the run: `--iterate` is omitted for `detail` and `completeness-audit`, and `--max-iterations 5` is fixed
 
 - **Files:** `plan_tool/detail.py` (the `deadline_exceeded`, `max_iterations` and
-  `time_budget_exceeded` hints) and `plan_tool/cli/completeness_phases.py` (the
-  same three plus `no_progress`); authority
+  `time_budget_exceeded` hints), `plan_tool/cli/completeness_phases.py` (the
+  same three plus `no_progress`) and `plan_tool/create.py` (the `max_iterations`
+  hint); authority
   `plan_tool/cli/context.py:_resolve_iterative_budget` (`enabled` comes from
   `--iterate`).
 - **Symptom:** `detail` and `completeness-audit` default `--iterate` to off, and
@@ -612,15 +613,20 @@ Durable re-open conditions for retired items are recorded in
   loop does not run and the larger value is ignored; adding `--iterate` gives
   `enabled=True`. `create` defaults `--iterate` on and is unaffected. For
   `detail` the step's written body is also skipped by a re-run without
-  `--force` (`detail.py`, comment above the step loop), so the fix needs a
-  decision on the remedy, not only a flag.
+  `--force` (`detail.py:_converge_run_grade_step_detail`, the comment above the
+  per-step iteration loop), so the fix needs a
+  decision on the remedy, not only a flag. Separately, the `max_iterations` hint
+  at all three sites prints a literal `--max-iterations 5`, so a run that
+  already used 5 or more is told to re-run with a value that is no larger.
 - **Fix:** add `--iterate` to the `completeness-audit` hints; for `detail`, decide
-  between `--iterate --force` (re-authors) and a different remedy. Deliberately
-  not done: changing either command's `--iterate` default.
+  between `--iterate --force` (re-authors) and a different remedy; derive the
+  `--max-iterations` value from `state.budget.max_iterations` at all three sites.
+  Deliberately not done: changing either command's `--iterate` default.
 - **Approach:** `direct` — one decision for `detail`, then a test that parses
   every printed resume command with the real parser and asserts the budget it
   builds is enabled.
-- **Verification:** that test passes for every hint at both sites.
+- **Verification:** that test passes for every hint at both sites, and the
+  printed `--max-iterations` exceeds the effective cap.
 - **Route:** direct · **Readiness:** decision-needed (the `detail` remedy) · **Tier:** beginner.
 - **Origin:** 2026-11-13, review of the `--iteration-budget` hints fix.
 

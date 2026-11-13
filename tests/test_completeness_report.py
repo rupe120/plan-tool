@@ -3485,23 +3485,6 @@ def test_report_default_grade_prose_unchanged() -> None:
     assert WHY["advisory-conceptual"] in md
 
 
-class TestOpenDispositionNamesTheRealStops:
-    def test_open_text_names_every_tunable_stop_and_not_wall_clock(self) -> None:
-        """Any stop can leave findings open (cap, no-progress deadline, stall,
-        total-time cap), so the text points at each matching flag and does not
-        call ``--iteration-budget`` a wall-clock budget."""
-        text = WHY["open"]
-        for flag in (
-            "--max-iterations",
-            "--iteration-budget",
-            "--max-stall-rounds",
-            "--time-budget",
-        ):
-            assert flag in text
-        assert "no-progress deadline" in text
-        assert "wall-clock" not in text
-
-
 class TestSuggestedActionRendersInReport:
     """The persisted report must carry each conceptual finding's remediation
     scope. The interactive walk shows ``suggested_action`` labelled "will

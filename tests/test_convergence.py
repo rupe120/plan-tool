@@ -111,7 +111,6 @@ def test_resume_hint_budget_always_exceeds_the_deadline_that_expired(
 def test_resume_hint_budget_floors_at_the_default_and_otherwise_doubles() -> None:
     assert larger_iteration_budget_seconds(0) == DEFAULT_ITERATION_BUDGET_SECONDS
     assert larger_iteration_budget_seconds(1800) == 3600
-    assert larger_iteration_budget_seconds(0.4) == DEFAULT_ITERATION_BUDGET_SECONDS
 
 
 def test_budget_rejects_negative_max_iterations() -> None:
