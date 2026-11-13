@@ -73,9 +73,13 @@ def render_scope_decisions(tree: ConceptTree) -> dict[str, str]:
     for node in sorted(tree.concepts, key=lambda item: (item.order, item.parent_path, item.id)):
         if node.review_state != "approved" or node.decision not in target:
             continue
-        suffix = f" — {node.rationale.strip()}" if node.rationale.strip() else ""
+        # One line each: a heading- or fence-looking line inside a title or
+        # rationale would otherwise start a document-level boundary.
+        title = " ".join(node.title.split())
+        rationale = " ".join(node.rationale.split())
+        suffix = f" — {rationale}" if rationale else ""
         rendered[target[node.decision]].append(
-            f"{'  ' * len(node.parent_path)}- {node.title}{suffix}"
+            f"{'  ' * len(node.parent_path)}- {title}{suffix}"
         )
     return {name: "\n".join(lines) for name, lines in rendered.items()}
 

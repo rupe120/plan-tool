@@ -365,13 +365,27 @@ Durable re-open conditions for retired items are recorded in
   Gate 2", 2026-10-19. Filed first as BACKLOG #503 in the same pull request,
   then moved here; #503 is not reused.
 
-### `create --from-existing` records `source_seed` as the seed path it then archives, so the plan points at a file that no longer exists and Gate 1 rates it HIGH
+### `create --from-existing` records `source_seed` as the seed path it then archives; for a roadmap-published seed the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
-- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1672`) and the
-  seed archive on the superseded-by-new-plan path (`ARCHIVE_DIRNAME`,
-  `REPLACED_SUFFIX`, `:488-498`).
-- **Symptom:** `_resolve_source_seed` records the `--from-existing` path
-  while the file exists, and `create` then moves that file to
+- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1677`) and the
+  seed archive on the superseded-by-new-plan path (`archive_existing_source`,
+  `_archive_targets`; the `ARCHIVE_DIRNAME` and `REPLACED_SUFFIX` constants at
+  `:493`, `:503`).
+- **Verified 2026-11-13 (plain `plan-seeds/` seed only):** one throwaway
+  `create --from-existing` plus one single-pass bare audit did **not**
+  reproduce the HIGH. `source_seed` stayed `plan-seeds/greeter.md` after the
+  seed moved to `plan-seeds/archive/`, the audit still read the seed
+  (`source_seed_digest` set, via `latest_seed_archive`), and it raised no
+  finding about the path. `tests/test_create.py::test_source_seed_survives_the_cli_archiving_its_own_seed`
+  pins the recorded pre-archival path, so recording the archived path instead
+  needs a deliberate decision, not a quiet test rewrite. **The roadmap-published
+  case (`plan-seed-drafts/` is the durable copy) is untested** and is what
+  this entry now covers. n=1, plan-tool 1.3.1, one-step throwaway plan; the
+  run's log is a local scratch file (`.tmp/` is gitignored) and is not part of
+  this record.
+- **Symptom (reported for a roadmap-published seed; the plain `plan-seeds/`
+  case is verified clean above):** `_resolve_source_seed` records the
+  `--from-existing` path while the file exists, and `create` then moves that file to
   `plan-seeds/archive/<slug>.replaced.md`. Integration commit `da657b8` wrote
   `source_seed: plan-seeds/bitbucket-deployment-pipelines.md` into
   `2-bitbucket-deployment-pipelines.md`, and the same commit holds only
@@ -381,14 +395,19 @@ Durable re-open conditions for retired items are recorded in
   The round-five Gate 1 audit (`bitbucket-deployment-pipelines`
   `20261010-042824`/`-042825`) reported `[authoritative-roadmap-snapshot]`
   HIGH on the dangling path, and Integration commit `03b4e23` repointed it by hand.
-- **Fix:** record the path that survives `create`. For a roadmap-published
-  seed that is its `plan-seed-drafts/` source; otherwise the archived copy.
-  The audit resolves `source_seed` through the same rule, so a plan created
-  before the fix still grounds.
+- **Fix:** for a roadmap-published seed, record the `plan-seed-drafts/` source
+  that survives `create`. Leave the plain `plan-seeds/` behavior unchanged: the
+  pinned test above records the pre-archival path and the audit already
+  resolves it through `latest_seed_archive`. The audit resolves `source_seed`
+  through the same rule, so a roadmap plan created before the fix still
+  grounds.
 - **Approach:** direct.
   **Escalate to plan if:** the roadmap-published seed's draft path is not
   recoverable from the `plan-seeds/` copy without a new link record.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reproduce the roadmap-published case first (a seed published from a roadmap
+  with an accepted head, then `create` and a bare audit); retire the entry if
+  it is clean, keep the fix above if it is not.
 - **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 ### A roadmap reader-guard test times out under full-suite load
@@ -449,12 +468,12 @@ Durable re-open conditions for retired items are recorded in
 
 ### `plan-tool create --from-existing` crashes with "concept scope contains duplicate IDs" on a seed that has some but not all of the standard section headings
 
-- **Files:** `plan_tool/create.py` (`_review_create_concepts` at line 7833, which
-  builds the scope list at line 7871; the concept tree is built at about line
-  9648 from `parse_body_sections(concept_source, ignore_fenced_code=True)`),
-  `plan_tool/concept_review.py:_validate_request` (line 61, the duplicate-ID
-  check), `plan_tool/concept_tree.py:concept_id` (line 77, the ID is a hash of
-  the section title).
+- **Files:** `plan_tool/create.py` (`_review_create_concepts`, which builds the
+  scope list; the concept tree is built in `create_plan` from
+  `parse_body_sections(concept_source, ignore_fenced_code=True)`),
+  `plan_tool/concept_review.py:_validate_request` (the duplicate-ID check),
+  `plan_tool/concept_tree.py:concept_id` (the ID is a hash of the section
+  title).
 - **Symptom:** confirmed by running the command twice. On plan-tool 0.1.0,
   `plan-tool create milestone-3-diff-plan --from-existing
   plan-seeds/milestone-3-diff-plan.md --output-dir docs/implementation-plans -y
@@ -477,14 +496,31 @@ Durable re-open conditions for retired items are recorded in
   get the same ID, so the check at `concept_review.py:61` rejects the list.
   Crash logs are in `.plan-tool/crashes/<slug>/` (for example
   `20261018T032229Z.txt`).
-- **Fix:** none applied. Not yet found: why `concept_source` (`seed_body` at
-  that call) holds the five canonical sections twice. The likely cause is that
-  the distilled body is joined with the original seed's own canonical sections
-  when the seed has some of the standard headings but not all of them. This is
-  an inference from the evidence above; the joining code has not been read.
-  Fix it where the duplicates are introduced, and also make
-  `_review_create_concepts` report the repeated section name instead of the
-  hash-based "duplicate IDs" crash, since no user can act on that message.
+- **Fix:** none applied. As of the 2026-10-18 report, the cause was not found:
+  why `concept_source` (`seed_body` at that call) holds the five canonical
+  sections twice. The report's inference was that the distilled body is joined
+  with the original seed's own canonical sections when the seed has some of
+  the standard headings but not all of them; **Checked** below records what
+  the code at 1.3.1 does. Fix it where the duplicates are introduced. The
+  unactionable message is a separate, reproduced defect with its own entry
+  below.
+- **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
+  reproduced. A test seeded with the nine headings above (no Overview, no
+  Problem statement), a stubbed distill returning the eight canonical
+  sections, and `yes=True` wrote its plan without error. The model-written
+  distill response from the original crash is not retained here, so this
+  cannot exclude a response shape the stub does not produce. A one-step
+  real-model throwaway run at 1.3.1 (a seed with Outcome, Scope contract,
+  Deferred, Risks and References) also succeeded. `parse_body_sections` does
+  return repeated headings unchanged, and a repeated heading does reach the
+  crash on another route (next entry). On the
+  normalized route the distilled body comes from `_render_distilled_markdown`,
+  which emits each canonical or recognized optional section once and never
+  `References`; the only raw-seed text appended afterwards is the seed's own
+  `## References` (`create.py`, the `local_references` block that sets
+  `distilled_markdown` and then `seed_body`), so the five repeated sections in
+  the original report do not come from that append. The report's cause stays
+  unverified for 0.1.0.
 - **Workaround:** add non-empty `## Overview` and `## Problem statement`
   sections so the seed is direct-ready and skips the distill step. Not tried
   yet.
@@ -493,11 +529,43 @@ Durable re-open conditions for retired items are recorded in
   **Escalate to plan if:** the duplication comes from the distilled body being
   merged with the raw seed by design, and the right merge rule is a product
   decision.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reopen condition: a crash on plan-tool 1.x with the retained
+  `.plan-tool/checkpoints/<slug>/create-distill-seed.json` and the crash log,
+  so the distilled body that repeats a title can be replayed.
 - **Origin:** the discord-cfg repository (`rupe120/discord-config`), writing a
   seed for its milestone 3 plan, 2026-10-17. Not checked against the existing
   tests for `create`, so a test that pins the current joining behavior may
   exist.
+
+### `create --from-existing` crashes with "concept scope contains duplicate IDs" when a seed repeats any `## Heading`
+
+- **Files:** `plan_tool/create.py` (`_review_create_concepts`; the concept tree
+  built in `create_plan` from `parse_body_sections(concept_source,
+  ignore_fenced_code=True)`), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
+  `plan_tool/concept_review.py:_validate_request`.
+- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 with no model call
+  beyond a stubbed split assessment. A direct-ready file seed
+  (`tests/test_create.py::_direct_ready_file_source`: each canonical heading
+  once, a `## Steps` block, one `## References`) that also holds two
+  `## Notes` sections stops `create` with `InvalidConceptScopeError: concept
+  scope contains duplicate IDs`; the same seed with `## Notes` once writes its
+  plan. `parse_body_sections` returns repeated headings unchanged and
+  `bootstrap_concepts` derives each id from the section name, so two sections
+  with one name get one id. The message names no heading, so the author cannot
+  tell which one to rename. Two cases (control and repeat); the seed shape is
+  an extra non-canonical heading, not the report in the entry above.
+- **Fix:** refuse before the concept review with a `CreateError` that names the
+  repeated heading and says to rename or merge it, like the other
+  `--from-existing` source refusals (`classify_file_backed_source` already reads
+  `extract_h2_section_occurrences`; check it for a seam before adding a new
+  check). Deliberately not done: merging or renaming duplicate sections
+  automatically (that edits the author's body) and changing concept ids.
+- **Approach:** `direct` — a regression test with the two cases above (the
+  control must stay green) and one pre-review check.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-13, found while checking the entry above; same message,
+  different route.
 
 ### Create body-patch helpers can normalize existing plan body newlines
 
@@ -510,22 +578,44 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
 
-### Multiline concept decisions can create document headings outside their owned section
-
-- **Files:** `plan_tool/concept_sync.py:render_scope_decisions` interpolates concept titles/rationales as unescaped Markdown.
-- **Symptom / evidence:** a valid deferred concept with rationale `why\n# Injected heading\nmore rationale` publishes successfully, but the section reader sees only `- Delayed — why` inside Deferred; the rest becomes an H1 section. A 2026-10-22 probe through `synchronize_concepts` confirms the heading and truncated owned body. The rendering code predates the H1-boundary repair and is unchanged by it.
-- **Outcome / in scope:** render valid concept text as decision content without letting it introduce document-level boundaries; cover title and rationale consistently.
-- **Out of scope:** changing concept ownership/decisions, tightening stored schemas, parser boundary rules, publication protocols or broader Markdown sanitization.
-- **Verification:** actual sync with multiline titles/rationales, heading-looking and fenced-looking lines; assert intended decision content remains within its owned section, unowned bytes survive and repeat sync does not accumulate unintended sections.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** H1-boundary Claude Code review 1, candidate 6; independently reproduced through the actual synchronizer.
-
 ### Files-coherence checking cannot recognize declared extensionless Dockerfile citations
 
 - **Files:** `plan_tool/detail.py:extract_path_mentions`, `extract_filename_mentions`, and `plan_tool/review.py:check_files_coherence`.
 - **Symptom:** an explicitly declared `engine_worker/Dockerfile` is reported as not mentioned even when the detail names it in Files, Implementation and a Markdown reference. Both mention extractors require a known dot extension, so no spelling of the real extensionless path can satisfy the check. Loom async-engine-startup detail audit `20261104-230108-completeness` reproduced one false nit and an awaiting-human-action result despite zero conceptual findings. Source inspection later established that the Dockerfile was read-only context, so the Loom footprint was legitimately narrowed; the extractor defect remains for efforts that really edit Dockerfiles.
 - **Fix:** recognize supported extensionless filenames while preserving exact-path matching and avoiding arbitrary identifier matches. Do not require invented filenames or remove a real edit from a plan merely to suppress the diagnostic.
 - **Approach:** direct, with focused regressions for a declared Dockerfile cited as a path, an actually missing Dockerfile citation, and nearby bare prose that is not a filename.
+
+### The plan audit can emit a "no gap here" confirmation as a medium finding, and it blocks convergence
+
+- **Files:** `plan_tool/prompts/plan-audit.md` (the output contract at
+  `:321-324`, where an empty axis is written `_(none)_`),
+  `plan_tool/convergence.py:is_blocking_finding` (a medium
+  `plan-correctness` finding blocks unless its domain is `docs`).
+- **Symptom:** a single-pass bare audit of a one-step throwaway plan
+  (2026-11-13) returned `plan-plan-correctness-50f04139`: severity `medium`,
+  axis `correctness`, whose body ends "No gap here; this is a confirmation
+  only." It carried no `### Fix`, appeared in `conceptual_bar_blocking_ids`,
+  and set `has_blocking_findings: true`, so a clean audit read as blocked.
+  Command: `plan-tool --model claude-sonnet-5-5 completeness-audit greeter
+  --audit-passes 1 --json` at plan-tool 1.3.1, bare stage, a one-step plan.
+  The finding's title opened "Step 1 (`Add greet_all(names)…`) says `greet`
+  'stays byte-for-byte unchanged'" and its body went on to say the code at
+  HEAD matched. n=1; the run's log is a local scratch file (`.tmp/` is
+  gitignored) and is not part of this record.
+- **Fix:** tighten the prompt so a confirmation is never written as a finding
+  bullet (the empty-axis `_(none)_` marker is the only way to say "nothing
+  found"). Deliberately not done: a deterministic matcher over finding prose
+  for phrases like "no gap" — a proxy that measures vocabulary, which
+  `CLAUDE.md` § "Validating a semantic property you cannot observe" rule 5
+  says to kill, not tune; § "Withdrawn: the per-`change_type` test-ordering
+  contract" is the measured instance.
+- **Approach:** `direct` — a prompt edit plus a regression that pins the
+  contract text; confirm the second sample reproduces before editing.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reopen condition: a second independent audit returns a confirmation-only
+  finding. One sample cannot separate a prompt gap from reviewer variation.
+- **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
+  entry above.
 
 ## RISK
 
