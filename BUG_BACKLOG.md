@@ -552,13 +552,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** needs investigation · **Tier:** experienced.
 - **Origin:** newline-preservation Claude Code review 2, raw finding 2; static evidence only.
 
-### Files-coherence checking cannot recognize declared extensionless Dockerfile citations
-
-- **Files:** `plan_tool/detail.py:extract_path_mentions`, `extract_filename_mentions`, and `plan_tool/review.py:check_files_coherence`.
-- **Symptom:** an explicitly declared `engine_worker/Dockerfile` is reported as not mentioned even when the detail names it in Files, Implementation and a Markdown reference. Both mention extractors require a known dot extension, so no spelling of the real extensionless path can satisfy the check. Loom async-engine-startup detail audit `20261104-230108-completeness` reproduced one false nit and an awaiting-human-action result despite zero conceptual findings. Source inspection later established that the Dockerfile was read-only context, so the Loom footprint was legitimately narrowed; the extractor defect remains for efforts that really edit Dockerfiles.
-- **Fix:** recognize supported extensionless filenames while preserving exact-path matching and avoiding arbitrary identifier matches. Do not require invented filenames or remove a real edit from a plan merely to suppress the diagnostic.
-- **Approach:** direct, with focused regressions for a declared Dockerfile cited as a path, an actually missing Dockerfile citation, and nearby bare prose that is not a filename.
-
 ### The plan audit can emit a "no gap here" confirmation as a medium finding, and it blocks convergence
 
 - **Files:** `plan_tool/prompts/plan-audit.md` (the output contract at
@@ -590,6 +583,29 @@ Durable re-open conditions for retired items are recorded in
   finding. One sample cannot separate a prompt gap from reviewer variation.
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
+
+### `detail` raises a bare `ValueError` on a plan body that has a heading normalizing to empty (`## :`, `## .`)
+
+- **Files:** `plan_tool/detail.py:derive_candidate_buckets` (bootstraps concepts
+  from the plan body), `plan_tool/cli/scope_review_cmd.py` (the legacy full-tree
+  route bootstraps the same way; by code reading), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
+  `plan_tool/concept_tree.py:concept_id`.
+- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 at function level:
+  `derive_candidate_buckets` on a parsed plan whose body holds `## Notes` and
+  `## :` raises `ValueError: title path components must be non-empty strings`,
+  naming no heading. `create` now refuses such a body with the heading named, so
+  this arises only for a hand-edited or externally written plan. The
+  `plan-tool detail` command end to end and the scope-review route were not run.
+- **Fix:** refuse with a clear error that names the empty heading where each
+  command reads the plan body, as `create` does. Deliberately not done: skipping
+  empty-named sections silently, and changing the name normalization in
+  `parse_body_sections`.
+- **Approach:** `direct` — a regression test per command with a `## :` body (a
+  `## Notes` control stays green). **Escalate to plan if:** the two commands need
+  different refusal paths.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-13, a residual of the empty-heading refusal in `create`
+  (PR #200), found again in review of the Dockerfile fix.
 
 ## RISK
 

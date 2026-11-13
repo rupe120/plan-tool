@@ -100,40 +100,25 @@ they resolve.
   shown to fail under the old behavior. A repeated non-canonical heading in a
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
-- 2026-11-13 — `create` raises a bare `ValueError` when a plan body has a
-  heading that normalizes to empty (`## :`, `## .`): `fixed d835c3eb1`,
-  tightened in `1797de480`; entry removed in `616d6e001`. `create` refuses with a
-  `CreateError` that lists each such heading, before the concept tree is
-  bootstrapped (direct-ready file seed and inline description; reproduced end
-  to end first, five cases failing with the bare error). Tests:
-  `TestUnusableConceptHeadingRefusal`, 21 tests. Mutants checked by this
-  session on the final 21-test suite: dropping the call fails eight; keying on
-  the raw heading instead of the name fails eight; moving the empty check below
-  the repeated check fails eight; keeping only the first empty heading fails
-  one; refusing a zero-width-only heading fails its carve-out case. Full suite 14,881 passed,
-  66 skipped. The check is `not section.name`, not a `concept_id` probe: the
-  parser strips whitespace before dropping trailing `:`/`.`, so a name is empty
-  exactly when the id would raise (read in the parser and `concept_id`, and
-  pinned by the non-breaking-space and zero-width cases; the scratch probes
-  behind it are not retained). Not changed, by design: `detail.py` and
-  `cli/scope_review_cmd.py` also bootstrap concepts from an existing plan body,
-  so a hand-edited plan holding `## :` would likely reach the same bare error
-  there (by code reading, not run); `create` can no longer produce such a plan.
-  - `/code-review` high, pass 1 (headless, report-only; the reviewer ran the
-    tests and `ruff`, not mutants or a Unicode probe): no material defect,
-    three low/info findings. `fixed 1797de480`: no precedence test for the empty check
-    against the repeated-heading check; no pinned zero-width carve-out; the
-    message omitted that surrounding whitespace is dropped. `declined`:
-    numbering or `repr`-quoting a non-breaking-space-only heading in the message
-    (rare; the visible cases are unambiguous).
-  - `/code-review` high, pass 2 (headless, report-only; it ran the tests and
-    `ruff`, not mutants or a Unicode probe): no material defect, two low and one
-    info finding, all `fixed`: the mutant counts mixed two suite states (now
-    re-measured on the final suite, above) and two negative message assertions
-    pinned stale wording (`4067b25b6`), and a stray blank line in this log.
-  - **Closure: low-yield convergence, not a clean audit.** Two consecutive
-    passes returned only low and info findings, no material one. Full suite
-    after the last change: 14,881 passed, 66 skipped.
+
+- 2026-11-13 — Files-coherence checking cannot recognize declared extensionless
+  Dockerfile citations: `fixed 095782ff9`, tightened in `50f35c48a` and
+  `52d26f957`; entry removed in `ac27792bf`. Both mention extractors in
+  `plan_tool/detail.py` now also match an exact, case-sensitive `Dockerfile`
+  through one fixed list (`_EXTENSIONLESS_FILENAMES`), not `Dockerfile.dev` or
+  look-alikes; an identical or dotted-variant `Dockerfile` basename in another
+  directory is never a near-miss in `plan_tool/review.py`
+  (`_REPEATED_BY_DESIGN_BASENAMES`, kept
+  apart from the generic set because the long name pushes sibling directories
+  over the 0.85 ratio bar). The extractors feed `check_files_coherence`, the
+  claim-vs-delivery smell, the orphaned-deliverable deferral check and
+  finding-domain classification, which gain the recognition together; a
+  medium finding citing only a `docs/` Dockerfile now classifies `docs` and
+  stops blocking. Not done, by design: other extensionless names and
+  `Dockerfile.<suffix>`. Filed from the review: `detail` and `scope-review`
+  raise a bare `ValueError` on a plan holding `## :` (`BUG_BACKLOG.md`).
+  Review record and evidence:
+  [`2026-11-13-files-coherence-dockerfile-code-review.md`](2026-11-13-files-coherence-dockerfile-code-review.md).
 
 ## Deliberately not in this handoff
 

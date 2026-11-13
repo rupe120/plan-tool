@@ -5872,6 +5872,34 @@ class TestNearestDeclaredMatch:
             is None
         )
 
+    @pytest.mark.parametrize(
+        ("cited", "declared"),
+        [
+            ("api/Dockerfile", "engine_worker/Dockerfile"),
+            ("docker/web/Dockerfile", "docker/api/Dockerfile"),
+            ("services/web/Dockerfile", "services/api/Dockerfile"),
+            ("worker-b/Dockerfile", "worker-a/Dockerfile"),
+            ("services/api/Dockerfile", "services/api/Dockerfile.dev"),
+        ],
+        ids=[
+            "distant-dirs", "docker-siblings", "service-siblings",
+            "worker-siblings", "dotted-variant",
+        ],
+    )
+    def test_dockerfile_with_an_identical_or_dotted_basename_is_never_a_near_miss(
+        self, cited: str, declared: str
+    ) -> None:
+        """A Dockerfile repeats by design in every service directory, and its
+        long name dominates the full-path ratio: sibling directories score
+        0.86-0.95, above the 0.85 bar, on the shared basename alone, and
+        ``Dockerfile`` vs ``Dockerfile.dev`` in one directory clears it too.
+        Generic names such as ``index.ts`` keep the existing tradeoff (the
+        ratio route can still flag close sibling directories); a Dockerfile
+        must not reach either rule on its basename."""
+        from plan_tool.review import _nearest_declared_match
+
+        assert _nearest_declared_match(cited, [declared]) is None
+
     def test_generic_basename_does_not_match(self) -> None:
         from plan_tool.review import _nearest_declared_match
 
@@ -6001,6 +6029,150 @@ class TestFilesCoherenceRootLevelFilenames:
         plan_path = self._fixture(tmp_path, body, files="apps/foo.py")
         issues = check_files_coherence(parse_plan(plan_path), tmp_path)
         assert issues == []
+
+    def test_declared_extensionless_dockerfile_cited_as_a_path_counts_as_mentioned(
+        self, tmp_path: Path
+    ) -> None:
+        # Both mention regexes used to require a dot extension, so no spelling
+        # of `engine_worker/Dockerfile` could satisfy the check.
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py` and `engine_worker/Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    def test_bare_backticked_dockerfile_credits_the_declared_dockerfile_path(
+        self, tmp_path: Path
+    ) -> None:
+        # Same basename credit a declared `BACKLOG.md` gets: the body names the
+        # file bare, and only the declared direction reads bare tokens.
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py`; pin the base image in the `Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    @pytest.mark.parametrize(
+        ("declared", "cited"),
+        [
+            ("engine_worker/Dockerfile", "api/Dockerfile"),
+            ("docker/api/Dockerfile", "docker/web/Dockerfile"),
+            ("worker-a/Dockerfile", "worker-b/Dockerfile"),
+        ],
+        ids=["distant-dirs", "docker-siblings", "worker-siblings"],
+    )
+    def test_cited_dockerfile_in_another_directory_is_context_not_drift(
+        self, tmp_path: Path, declared: str, cited: str
+    ) -> None:
+        """A repo with several Dockerfiles cites a sibling image as context.
+        A shared ``Dockerfile`` basename alone must not read as a stale copy of
+        the declared path, including for sibling directories whose names are
+        close enough to clear the similarity bar."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            f"Edit `apps/foo.py` and `{declared}`; base the image on `{cited}`.\n"
+        )
+        plan_path = self._fixture(tmp_path, body, files=f"apps/foo.py, {declared}")
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    @pytest.mark.parametrize(
+        "citation", ["`Dockerfile`", "`./Dockerfile`"], ids=["bare", "dot-slash"],
+    )
+    def test_a_declared_root_dockerfile_is_credited_by_either_citation_form(
+        self, tmp_path: Path, citation: str
+    ) -> None:
+        """The commonest declared form: a repo-root ``Dockerfile``, cited bare
+        or with an explicit relative prefix (stripped before matching)."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            f"Edit `apps/foo.py`; pin the base image in {citation}.\n"
+        )
+        plan_path = self._fixture(tmp_path, body, files="apps/foo.py, Dockerfile")
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    def test_cited_dockerfile_beside_a_declared_dotted_variant_is_not_drift(
+        self, tmp_path: Path
+    ) -> None:
+        """``Dockerfile`` and ``Dockerfile.dev`` sit side by side in ordinary
+        repos; citing one while declaring the other is context, not a stale
+        path. Only the drift direction is asserted: a declared
+        ``Dockerfile.dev`` cannot be credited as mentioned (its suffix is not
+        recognized), which is a separate, accepted limitation."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py`; mirror the production image in "
+            "`services/api/Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, services/api/Dockerfile.dev"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [i for i in issues if i.kind == "detail_only"] == []
+
+    def test_bare_dockerfile_credits_every_declared_dockerfile(
+        self, tmp_path: Path
+    ) -> None:
+        """Accepted, not a goal: the existing basename credit applies to any
+        name, so a bare `Dockerfile` credits both declared Dockerfiles, as a
+        bare `__init__.py` already credits every declared one."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py`; pin the base image in the `Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body,
+            files="apps/foo.py, api/Dockerfile, engine_worker/Dockerfile",
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert issues == []
+
+    def test_undiscussed_extensionless_dockerfile_still_nits(
+        self, tmp_path: Path
+    ) -> None:
+        # Carve-out: recognizing the filename must not credit a declared
+        # Dockerfile the body never cites.
+        body = "# Step 1\n\n## Implementation\n\nEdit `apps/foo.py` only.\n"
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [(i.kind, i.path) for i in issues] == [
+            ("files_only", "engine_worker/Dockerfile")
+        ]
+
+    @pytest.mark.parametrize(
+        "prose",
+        [
+            "The Dockerfile is unchanged.",
+            "See `engine_worker/Dockerfiles` and `engine_worker/MyDockerfile`.",
+            "Build from `engine_worker/Dockerfile.dev`.",
+        ],
+        ids=["bare-prose", "similar-names", "unlisted-suffix"],
+    )
+    def test_text_that_is_not_the_dockerfile_does_not_count_as_mentioned(
+        self, tmp_path: Path, prose: str
+    ) -> None:
+        """Carve-out: only an exact ``/Dockerfile`` path or a bare backticked
+        ``Dockerfile`` counts. Prose, look-alike names and an unlisted suffix
+        (``Dockerfile.dev``) do not."""
+        body = f"# Step 1\n\n## Implementation\n\nEdit `apps/foo.py`. {prose}\n"
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, engine_worker/Dockerfile"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [(i.kind, i.path) for i in issues] == [
+            ("files_only", "engine_worker/Dockerfile")
+        ]
 
 
 class TestCheckFilesCoherence:
@@ -15624,6 +15796,28 @@ class TestOrphanedDeliverable:
         assert recs[0].step_id == 1
         assert "pkg/orphan_widget.py" in recs[0].title
 
+    def test_orphaned_deliverable_sees_a_plan_level_deferred_dockerfile_path(
+        self, tmp_path: Path
+    ) -> None:
+        """Class-wide effect of recognizing ``Dockerfile``. Plan-level deferral
+        matches on explicit path only (a step's own deferral also matches the
+        path-derived symbol, so it tripped before), so this is the case the
+        extractor decides: a created image whose wiring the plan defers is
+        orphaned, like any created file."""
+        path = "deploy/Dockerfile"
+        plan, plan_path = _write_orphan_plan(
+            tmp_path,
+            [{"id": 1, "title": "Ship the image", "creates": [path]}],
+            plan_body=f"\n## Deferred\n\nWiring `{path}` is deferred to a "
+            "follow-up plan.\n",
+        )
+        recs = detect_orphaned_deliverable(
+            plan, tmp_path, plan_name="p", plan_path=plan_path
+        )
+        assert len(recs) == 1
+        assert recs[0].source == "orphaned-deliverable"
+        assert path in recs[0].title
+
     def test_orphaned_deliverable_no_trip_when_consumer_step_exists(
         self, tmp_path: Path
     ) -> None:
@@ -16843,6 +17037,38 @@ class TestClaimVsDelivery:
         assert recs[0].severity == "info"
         assert recs[0].step_id is None
         assert "nonexistent_mechanism" in recs[0].title
+
+    def test_claim_vs_delivery_trips_on_a_claimed_undeclared_dockerfile_path(
+        self, tmp_path: Path
+    ) -> None:
+        """Class-wide effect of recognizing ``Dockerfile``: acceptance prose
+        that names an image path no step delivers is the same advisory gap as
+        any other claimed file."""
+        plan, plan_path = _write_orphan_plan(
+            tmp_path,
+            [{"id": 1, "title": "Ship", "creates": ["pkg/widget.py"]}],
+            plan_body=_acceptance_body("The worker image is `deploy/Dockerfile`."),
+        )
+        recs = detect_claim_vs_delivery(
+            plan, tmp_path, plan_name="p", plan_path=plan_path
+        )
+        assert [(r.source, r.severity) for r in recs] == [("claim-vs-delivery", "info")]
+        assert "deploy/Dockerfile" in recs[0].title
+
+    def test_claim_vs_delivery_no_trip_when_a_step_declares_the_dockerfile(
+        self, tmp_path: Path
+    ) -> None:
+        plan, plan_path = _write_orphan_plan(
+            tmp_path,
+            [{"id": 1, "title": "Ship", "creates": ["deploy/Dockerfile"]}],
+            plan_body=_acceptance_body("The worker image is `deploy/Dockerfile`."),
+        )
+        assert (
+            detect_claim_vs_delivery(
+                plan, tmp_path, plan_name="p", plan_path=plan_path
+            )
+            == []
+        )
 
     def test_claim_vs_delivery_no_trip_when_step_declares_it(
         self, tmp_path: Path
@@ -18950,6 +19176,35 @@ class TestClassifyFindingDomain:
             ),
         )
         assert classify_finding_domain(rec) == FINDING_DOMAIN_DOCS
+
+    @pytest.mark.parametrize(
+        ("path", "expected"),
+        [
+            ("engine_worker/Dockerfile", FINDING_DOMAIN_UNKNOWN),
+            ("Dockerfile", FINDING_DOMAIN_UNKNOWN),
+            ("docs/examples/Dockerfile", FINDING_DOMAIN_DOCS),
+            ("tests/fixtures/Dockerfile", FINDING_DOMAIN_UNIT_TEST),
+        ],
+        ids=["plain-path", "bare-token", "under-docs", "under-tests"],
+    )
+    def test_classify_finding_domain_dockerfile_path_follows_its_directory_only(
+        self, path: str, expected: str
+    ) -> None:
+        """Recognizing ``Dockerfile`` as a path mention adds no signal of its
+        own (no code-logic or docs label from the name), so only the directory
+        rules apply: a plain path stays ``unknown`` and keeps blocking, while a
+        ``docs/`` path is documentation and a test path is test code. The
+        ``docs/`` cell is a recorded verdict change: such a medium finding used
+        to resolve ``unknown`` because the path was never extracted."""
+        rec = Recommendation(
+            id="dockerfile-only",
+            source="plan-completeness",
+            severity="medium",
+            step_id=1,
+            title="Base image is unpinned",
+            body=f"The footprint names `{path}` without a tag.",
+        )
+        assert classify_finding_domain(rec) == expected
 
     def test_classify_finding_domain_docs_implementation_plans_path(self) -> None:
         # BUG_BACKLOG regression: "implementation" used to substring-match
