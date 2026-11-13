@@ -50,23 +50,19 @@ steps:
   depends_on_notes:
     1: Provides validated backend-scoped command models and command normalization.
   detail: docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md
-  description: Extend the existing effective-backend selection owner with optional
-    command context so model precedence is explicit model, selected backend's command
-    model, selected backend's base model, manifest default, then provider omission.
-    Keep commandless selection behavior unchanged and reuse build_effective_backend
-    unchanged for batch and streaming arguments. Add unmarked tests for inheritance,
-    explicit overrides, backend isolation, unchanged registry descriptors, and both
-    argument paths. Extend existing shell and launcher recovery tests to prove their
-    unchanged commandless scoped selection uses the fallback backend's base model
-    and restores the primary selection after success or failure; do not add command
-    routing to either recovery loop. The existing dataclass replace calls remain descriptor-only
-    operations and perform no artifact replacement.
+  description: Add an optional validated command-model default to the existing effective-backend
+    selector. Keep explicit model > command model > selected-backend base model >
+    manifest default > omission in one owner. Existing callers omit the new input;
+    fallback uses its own base model and restores the primary descriptor. Reuse existing
+    argv construction and prove precedence, descriptor preservation, and fallback
+    compatibility with focused tests.
 - id: 3
   intent: Scripts and assistant sessions honor project backend and model choices without
     repeating flags.
   files:
   - plan_tool/cli/app.py
   - tests/cli/test_app.py
+  - tests/cli/test_package_surface.py
   complexity: high
   change_type: feature
   depends_on:
@@ -74,21 +70,15 @@ steps:
   - 2
   depends_on_notes:
     1: Provides project defaults and canonical command lookup.
-    2: Provides command-aware model selection with preserved fallback semantics.
+    2: Provides optional command-model defaults in the existing model-precedence owner.
   detail: docs/implementation-plans/plan-details/project-model-selection/03-resolve-repository-root-before-reading.md
-  description: Resolve the repository root before reading project selection inputs
-    in main, then select the backend by explicit --backend, recognized explicit --model
-    family, PLAN_TOOL_BACKEND, project default_backend, then Claude. Pass the normalized
-    parsed top-level command into model selection once before dispatch; run modes
-    and detail reconciliation retain their parent command, and nested audits and applies
-    reuse the active selection. Preserve registration, provisional-backend synthesis,
-    warnings, and preflight behavior, treating a project-selected backend like an
-    environment-selected backend while keeping unconfigured read-only commands usable
-    without Claude installed. Add pytest integration coverage with fake invokers for
-    one project selecting Codex with distinct create and detail models, explicit overrides,
-    precedence combinations, aliases, repository-root isolation, malformed configuration,
-    executable availability, and nested-call consistency. Reuse the existing root
-    resolver and selection owners; add no phase routing or new runtime dependencies.
+  description: Resolve the repository root and validate project settings using registration-derived
+    command identities. Choose the backend by explicit flag, explicit-model inference,
+    environment, project default, then Claude. Look up only that backend's canonical-command
+    model and pass the validated value to the existing selector, preserving the explicit
+    model separately. Keep modes, nested calls, synthesis, errors, and preflight behavior
+    within the stated compatibility contract; prove the end-to-end create/detail result
+    with fake invokers.
 - id: 4
   intent: Operators and bundled skills use one consistent project selection contract,
     and shipped work is reflected in tracking.
