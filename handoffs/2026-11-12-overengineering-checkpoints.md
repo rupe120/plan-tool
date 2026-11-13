@@ -1,32 +1,40 @@
 # Overengineering checkpoints: next-session pickup
 
-Use the merged checkpoints on the next real task. No implementation work or
-installation repair remains for this change; the open question is whether the
-judgments consistently catch unnecessary work in practice.
+Use the merged checkpoints on the next real task. No checkpoint implementation
+work remains. Before a model-backed task, refresh the active instruction
+sources to include the project backend/model selection guidance in PR #195.
+The open behavioral question is whether the judgments consistently catch
+unnecessary work in practice.
 
 | Item | Current state |
 | --- | --- |
-| Delivery | [PR #194](https://bitbucket.org/protagona/plan-tool/pull-requests/194) is merged into `main` at `daf5b6959` |
-| Checkouts | This clone and the source checkout behind the active Claude links are clean and aligned with that merge before this handoff |
-| Codex installation | Installed skill router and shared directives match the merged source byte for byte |
-| Claude installation | Both directive links resolve to the updated shared source; the skill router includes the reminder |
-| Verification | Full parallel suite: 14,752 passed, 67 skipped; the pre-push suite also passes |
+| Delivery | [PR #194](https://bitbucket.org/protagona/plan-tool/pull-requests/194) is merged at `daf5b6959`; [PR #195](https://bitbucket.org/protagona/plan-tool/pull-requests/195) adds project model selection at `c46512f7f` |
+| Handoff publication | [PR #196](https://bitbucket.org/protagona/plan-tool/pull-requests/196) is open for this handoff and index entry |
+| Checkouts | This handoff branch includes `main` through `c46512f7f`; the source checkout behind the active Claude links remains at `daf5b6959` at this review |
+| Codex installation | Installed router and directives contain the checkpoints but predate PR #195; neither matches current `main` byte for byte |
+| Claude installation | Both directive links resolve to the earlier source checkout; its router contains the reminder but lacks PR #195 selection guidance |
+| Verification provenance | PR #194 full suite: 14,752 passed, 67 skipped; its pre-push suite also passes. These counts describe that snapshot, not current `main` |
 | Behavioral evidence | One final executable Codex task visibly exercises the pre-edit checkpoint and final-review answer; broader reliability remains unmeasured |
 
 ## What to do next
 
-1. Pick the user's next real task; do not create a separate implementation
+1. Resolve and refresh the active instruction source checkout and installed
+   copies from merged `main`, preserving unrelated changes. Verify the
+   checkpoint section, router reminder, and backend/model guidance together.
+   Copied-skill freshness validation remains separately scoped in
+   [BACKLOG #525](../BACKLOG.md); do not implement it as part of this pickup.
+2. Pick the user's next real task; do not create a separate implementation
    effort just to elaborate these checks.
-2. Before the first edit, explicitly ask **“Are we overengineering this?”**
+3. Before the first edit, explicitly ask **“Are we overengineering this?”**
    State the required outcome, the simpler alternative, and what justifies
    any extra complexity or what will be simplified.
-3. Apply the same judgment at the relevant seed, bare-plan, detail, and
+4. Apply the same judgment at the relevant seed, bare-plan, detail, and
    audit/review correction-batch transitions. During final review, consider
    the whole change again and include the answer in the completion response.
-4. If the checkpoint exposes unnecessary machinery, simplify within the
+5. If the checkpoint exposes unnecessary machinery, simplify within the
    settled scope. Surface any change to a settled contract or scope to the
    user before proceeding. Preserve required safety and ownership properties.
-5. If a real task misses a checkpoint or reveals a substantive limitation,
+6. If a real task misses a checkpoint or reveals a substantive limitation,
    record the concrete observation in the existing evidence or review record
    before proposing another instruction change.
 
@@ -43,6 +51,13 @@ prove that the design is proportionate.
   [Claude](../integrations/claude/SKILL.md), and
   [Cursor](../integrations/cursor/SKILL.md) routers carry the short entry
   reminder: an answer before editing and a final-review answer at completion.
+- [Backend/model selection](../integrations/shared/DIRECTIVES.md#which-model-to-run-a-subcommand-with)
+  honors explicit user requests. Otherwise, when `.plan-tool/backends.json`
+  exists, omit `--backend` and `--model`; without it, use the documented
+  recommendations. Deterministic commands need neither flag. See
+  [BACKENDS](../docs/BACKENDS.md) for configuration and precedence. Do not
+  copy the test record's explicit experiment model into new task invocations
+  as an unconditional override of project settings.
 - This is a session judgment. No automated semantic gate, new blocking
   predicate, exit-code change, extra model pass, or pipeline-prompt expansion
   is part of the change.
@@ -68,6 +83,20 @@ independent repeated trials of the final wording. Claude, Cursor, and the
 plan-stage transitions are not behaviorally tested. The result supports
 instruction delivery and visible judgment on one direct task, not improved
 design quality or reliable compliance across tasks.
+
+## Latest-change review
+
+Review scope is `daf5b6959..c46512f7f`, the merged project-model-selection
+change. Direct block comparisons confirm that the checkpoint section and all
+three router reminders remain unchanged. The relevant change is backend/model
+selection guidance, not a new overengineering mechanism or behavioral trial.
+
+The [project-model-selection record](2026-11-12-project-model-selection-implementation.md)
+owns that feature's execution and review evidence, including its 14,824-pass,
+67-skip full-suite receipt. That record is not evidence that the explicit
+overengineering checkpoints run on a real task. Its remaining preflight issue
+is separately tracked as BACKLOG #526; neither that issue nor #525 expands
+this handoff's checkpoint scope.
 
 ## Local pickup and retirement
 
