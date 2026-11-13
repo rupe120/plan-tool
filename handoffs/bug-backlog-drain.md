@@ -102,34 +102,22 @@ they resolve.
   with the headings named (PR #199, merged 2026-11-13).
 
 - 2026-11-13 — Files-coherence checking cannot recognize declared extensionless
-  Dockerfile citations: `fixed 095782ff9`, tightened in `50f35c48a`; entry removed in
-  `ac27792bf`. Both mention extractors in `plan_tool/detail.py` required a dot
-  extension; they now also match `Dockerfile` through one fixed list
-  (`_EXTENSIONLESS_FILENAMES`): exact, case-sensitive, and not `Dockerfile.dev`
-  or look-alikes. The extractors feed `check_files_coherence`, the
+  Dockerfile citations: `fixed 095782ff9`, tightened in `50f35c48a` and
+  `52d26f957`; entry removed in `ac27792bf`. Both mention extractors in
+  `plan_tool/detail.py` now also match an exact, case-sensitive `Dockerfile`
+  through one fixed list (`_EXTENSIONLESS_FILENAMES`), not `Dockerfile.dev` or
+  look-alikes; an identical `Dockerfile` basename in another directory is never
+  a near-miss in `plan_tool/review.py` (`_REPEATED_BY_DESIGN_BASENAMES`, kept
+  apart from the generic set because the long name pushes sibling directories
+  over the 0.85 ratio bar). The extractors feed `check_files_coherence`, the
   claim-vs-delivery smell, the orphaned-deliverable deferral check and
-  finding-domain classification, which gain the recognition together
-  (`lessons.py` also calls the extractor but already read slash-containing
-  tokens through its own pass, so it is unchanged). The sweep found one
-  regression, fixed in `50f35c48a`: a context citation such as `api/Dockerfile` drew a
-  new "did you mean" finding against a declared `engine_worker/Dockerfile`, so
-  `dockerfile` is now a generic basename like `index.ts`. Recorded verdict
-  change: a medium finding citing only a `docs/` Dockerfile now classifies
-  `docs` and stops blocking. Accepted, as for any basename: a bare backticked
-  `Dockerfile` credits every declared Dockerfile. Tests: 15 whose names mention
-  Dockerfile (1 in `tests/test_detail.py`, 14 in `tests/test_review.py`);
-  mutants checked by this session: dropping either regex arm, substring
-  matching, case-insensitivity, and removing the generic-basename entry are
-  each caught (dropping the path arm fails seven). One first-draft orphan test
-  was vacuous and was replaced by a plan-level deferral case. Full suite 14,895
-  passed, 67 skipped (the skipped count was 66 in earlier runs on other
-  branches; not investigated). Not done, by design: other extensionless names
-  (`Makefile`, `Jenkinsfile`) and `Dockerfile.<suffix>` variants. Lint: five
-  `F811` errors in `tests/test_detail.py` and `tests/test_review.py` and two
-  `F821` in `plan_tool/launcher.py` exist on `main` and are untouched. Filed:
-  `detail` and `scope-review` raise a bare `ValueError` on a plan holding
-  `## :` (`BUG_BACKLOG.md`, `1acb52485`). Review: pass 1 applied (findings 1–7 all
-  `fixed` or accepted above); pass 2 pending.
+  finding-domain classification, which gain the recognition together; a
+  medium finding citing only a `docs/` Dockerfile now classifies `docs` and
+  stops blocking. Not done, by design: other extensionless names and
+  `Dockerfile.<suffix>`. Filed from the review: `detail` and `scope-review`
+  raise a bare `ValueError` on a plan holding `## :` (`BUG_BACKLOG.md`).
+  Review record, evidence and open status:
+  [`2026-11-13-files-coherence-dockerfile-code-review.md`](2026-11-13-files-coherence-dockerfile-code-review.md).
 
 ## Deliberately not in this handoff
 
