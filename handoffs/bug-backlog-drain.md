@@ -101,6 +101,20 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
+- 2026-11-13 — `RUNBOOK.md` states a 300-second iteration budget; the default is
+  an 1800-second no-progress deadline: `fixed 9f8c67e9b`, entry removed in `cb5341b66`.
+  Five passages corrected against `plan_tool/convergence.py`
+  (`DEFAULT_ITERATION_BUDGET_SECONDS = 1800`, a debounced no-progress deadline;
+  `--time-budget` is the optional hard cap) and `plan-tool create --help`: the
+  create-loop default, the "Budget exhausted" bullet, the tuning example (600
+  raised to 3600), the troubleshooting symptom and the "Bump the cap" advice.
+  Found while fixing: the troubleshooting symptom named a `budget_exhausted`
+  stop that the code never emits (the reasons are `max_iterations`,
+  `deadline_exceeded` and `time_budget_exceeded`), so it now names those. The
+  entry's own checks pass: no `300s` and no `budget_exhausted` reason code remain
+  in `RUNBOOK.md`. Documentation only; the suite is unchanged by it. Review:
+  pending.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
