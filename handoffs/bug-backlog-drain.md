@@ -101,6 +101,27 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
+- 2026-11-13 — `detail` raises a bare `ValueError` on a plan body that has a
+  heading normalizing to empty (`## :`, `## .`): `fixed b1b935f56`, entry removed in
+  `ae7a03808`. The detection and refusal text now live in one place,
+  `empty_concept_headings_message` in `plan_tool/concept_bootstrap.py`; `create`
+  (same message as before), `detail` (`derive_candidate_buckets` raises
+  `DetailError`) and the `scope-review` legacy full-tree route (warns and
+  returns the invalid-state exit, writing nothing) each raise it through their
+  own error path. Probed first: the legacy route raised the bare error at
+  command level, and the flat decision-record route already worked with such a
+  body (returned 0), so the refusal is deliberately not applied there and a test
+  pins that. Tests: 10 new across `tests/test_concept_bootstrap.py`,
+  `tests/test_detail.py` and `tests/cli/test_scope_review_cmd.py`; before the
+  fix exactly the three refusal tests failed with the bare error. Mutants
+  checked by this session: skipping the refusal in each of the three commands,
+  widening the helper to a zero-width name, and refusing on the flat route are
+  each caught. Full suite 14,916 passed, 67 skipped (the extra skip is the
+  run-log scope proxy `tests/test_cli.py:3277`, which skips when a branch's diff
+  touches test files outside its allowlist). Not tested: the `plan-tool detail`
+  command end to end (`derive_candidate_buckets` has one caller). Review:
+  pass 1 pending.
+
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
