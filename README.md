@@ -397,8 +397,9 @@ See [run modes](docs/cli/run.md) for execution and report modes. A rendered
 
 Install and authenticate the backend CLI separately from the assistant skill.
 [Backends](docs/BACKENDS.md) covers selection, prerequisites, sandbox mapping and
-rate-limit recovery. The default backend is Claude; choose another explicitly
-with the global `--backend` option before the subcommand.
+rate-limit recovery, including project defaults in `.plan-tool/backends.json`.
+Explicit `--backend` selects a backend and retains its configured model defaults;
+`--model` overrides model defaults. Unconfigured projects default to Claude.
 
 ## Lessons log behavior
 

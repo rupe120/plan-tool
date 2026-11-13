@@ -1,6 +1,6 @@
 ---
 name: plan-tool
-description: Turn a feature idea or a project-sized concept into a developer-ready implementation plan, then audit, execute, or reconcile it against the code, spawning a fresh claude subprocess per step. Use when a user wants to plan non-trivial work before coding, resume or check status on an existing plan, audit a plan for completeness or code drift, run a plan step by step, reconcile plan and code, export a plan to JIRA, or turn a larger concept into a staged `roadmap` before a single plan exists. Only for plans whose markdown begins with `---` frontmatter; frontmatter-less markdown is a legacy plan for a different runner.
+description: Turn a feature idea or a project-sized concept into a developer-ready implementation plan, then audit, execute, or reconcile it against the code, spawning a fresh backend subprocess per step. Use when a user wants to plan non-trivial work before coding, resume or check status on an existing plan, audit a plan for completeness or code drift, run a plan step by step, reconcile plan and code, export a plan to JIRA, or turn a larger concept into a staged `roadmap` before a single plan exists. Only for plans whose markdown begins with `---` frontmatter; frontmatter-less markdown is a legacy plan for a different runner.
 when_to_use: 'Use for: "I have an idea/concept, turn it into an implementation plan", "let''s roadmap this project", "make a plan for X", "what''s left on plan X" / "continue plan X", "audit plan X for completeness", "does the code match plan X", "reconcile the plan with the code", "export plan X to Jira".'
 allowed-tools: Bash Read Grep Glob Edit Write
 # model: deliberately unset; the session's own model drives the skill.
@@ -16,7 +16,7 @@ argument-hint: '[--backend claude|codex|cursor] [--on-rate-limit wait|switch|sto
 
 A Python CLI that drives **YAML-frontmatter implementation plans**: author them,
 audit them, then execute locally one step at a time (each step runs in a fresh
-`claude` subprocess for context isolation) or export them as JIRA-sized stories.
+backend subprocess for context isolation) or export them as JIRA-sized stories.
 
 This file is the router — when to reach for the tool and how to invoke it. For
 the full subcommand reference, flag semantics, and operational recipes, follow
@@ -59,20 +59,19 @@ to `.git`. Nested `.git` folders (sub-repos, submodules) are supported — the
 root whose `.plan-tool/plans.json` resolves the most plans wins. Pass
 `--repo-root` when auto-detection lands on the wrong directory.
 
-**Backend:** the global `--backend <name>` flag (or
-`PLAN_TOOL_BACKEND` env var) picks the CLI that runs steps; when no explicit
-backend is set, a recognized `--model` family selects its matching CLI before
-the env fallback. `gpt-*`, `chatgpt-*`, `o1`/`o3`/`o4`, and `codex-*` select Codex;
-`claude-*` selects Claude; and `gemini-*` selects the provisional Gemini
-backend. Precedence is flag > model family > env > default `claude`.
-For ordinary recoverable short rate limits,
-rate-limit handling is separate: `--on-rate-limit wait|switch|stop|ask` (or
-`PLAN_TOOL_ON_RATE_LIMIT`) chooses whether to wait, switch, stop, or prompt;
-`switch` needs `--fallback-backend` or `PLAN_TOOL_FALLBACK_BACKEND`. A
-confirmed Cursor monthly plan quota bypasses those actions: neither closed
-stdin, `-y`, nor an `--on-rate-limit` setting recovers it. Resolve the provider
-condition and begin a new command; see RUNBOOK.md's Recovery section (in the
-plan-tool repo).
+**Backend and model:** honor explicit user requests; otherwise omit `--backend` and
+`--model` when `.plan-tool/backends.json` exists, else pass the recommendations. Follow [DIRECTIVES.md](DIRECTIVES.md#which-model-to-run-a-subcommand-with)
+for selection policy and the recommended models. The host
+integration does not force the execution backend. Install and authenticate the
+selected provider CLI separately. For an explicit `--model`, the recognized
+families are `gpt-*`, `chatgpt-*`, `codex-*`, `o1`/`o3`/`o4` (Codex),
+`claude-*` (Claude), and `gemini-*` (provisional Gemini); Cursor has no inferred
+family. An explicit `--backend` wins over family inference.
+
+Rate-limit recovery remains separate: `--on-rate-limit wait|switch|stop|ask`
+(or `PLAN_TOOL_ON_RATE_LIMIT`); `switch` requires `--fallback-backend` or
+`PLAN_TOOL_FALLBACK_BACKEND`. A confirmed Cursor monthly plan quota is terminal;
+resolve the provider condition and begin a new command (see RUNBOOK.md).
 
 ## Running from chat / automation (no TTY)
 
@@ -148,27 +147,27 @@ The authoring pipeline is
 with `verify-all` as an optional CI gate. Follow the shared
 directives for judged corrections, user review and continuation.
 
-| Group | Subcommands | Calls claude? |
+| Group | Subcommands | Calls backend? |
 |---|---|---|
 | **Roadmap** (project-altitude, above the pipeline) | `roadmap <slug> --from-existing <concept.md>` [`--apply` [`-y`]] [`--view ...`] [`--compare`] — see DIRECTIVES.md | Yes (`--apply`, `--view`, `--compare`: no) |
 | **Discovery** | `list`, `list --status` (cached annotate rollup), `status <name>`, `validate <name>` | No |
 | **Project context** | `init --intent '…' [--non-goal '…'] [--decision '…']` — create the tracked, operator-confirmed `.plan-tool/project.json` profile before scope-bearing authoring and audit prompts. Revise it by editing the file and committing the change. | No |
 | **Authoring** | `create <slug>`, `detail <name>`, `split <name> --step N --into "..." --into "..."` (split one step into named sub-steps, author them, re-audit), `merge <name> --steps N --steps M` (fold a contiguous set of steps into one, re-author it, re-audit), `scope-out <name> --step N` (carve an over-packed step out into a `create --from-existing` forward-seed and narrow the plan; recommend-only, `--apply` to mutate) | Yes |
 | **Annotate** (forward seed) | `annotate <path-or-glob>...` — judge old plans against current code, emit `<stem>.annotated.md` (verbatim + per-section IMPLEMENTED/PARTIAL/NOT-IMPLEMENTED/NEEDS-REVIEW plus grounding) and a carryover `<stem>.seed.md` for the next `create --from-existing`; batch runs end with a coverage/grounding summary table; read-only on sources except opt-in `--archive` (numbered on archive collisions). `--iterate` is rejected; iterate the follow-up `create`, not annotate. | Yes |
-| **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip claude on no drift) | Yes (walk/refresh-no-drift: no) |
+| **Audit · reconcile** (plan↔code) | `reconcile-plan <name>` (pre-execution only; edit a stale plan against current code), `reconcile-code <name>` (post-execution; plan is canonical, edits code), `detail <name> --reconcile` (pre-execution, per-step plan side), `reconcile-plan-walk <name>` (apply saved findings), `reconcile-plan <name> --refresh` (cheap fingerprint gate — reconcile only the drifted files, skip backend calls on no drift) | Yes (walk/refresh-no-drift: no) |
 | **Audit · verify** (read-only) | `verify-all <name> --rollup` (verdict), `verify-all <name> --mode <m>` (sweep), `run <name> --mode <review>` | Yes |
 | **Audit · completeness** (design) | `completeness-audit <name>` (read the saved report, judge and hand-edit conceptual corrections, commit, and re-audit) | Yes |
 | **Execution** | `run <name>` (advances plan state on success) | Yes (one per step) |
 | **Workspaces** | `worktree add <plan> [--clone]`, `worktree list`, `worktree remove <plan> [--force]`, `worktree prune` — an isolated worktree (or `--clone`) per plan for parallel runs; caveats (`worktree_base`, clone manual-cleanup, per-branch/`gc`, orphan branch) in README.md's Worktrees section / RUNBOOK.md's parallel-worktrees workflow section (in the plan-tool repo) | No |
-| **Integration** | `jira <name>`, `jira config`, `jira --lint` (read-only artifact lint; no claude / no epic assignment) | jira yes (`--lint`: no) |
+| **Integration** | `jira <name>`, `jira config`, `jira --lint` (read-only artifact lint; no backend call / no epic assignment) | jira yes (`--lint`: no) |
 | **State** | `checkpoint {list\|show\|clear}`, `runs {list\|show\|diff\|clear}`, `register`, `deregister`, `sweep`, `withdraw <name> --reason "..."` (archive an *abandoned* plan — reason required, distinct from `sweep`'s completion path), `attach-branch <plan> <branch>`, `detach-branch <plan>` (ad-hoc branch binding; pure git-config writes; refuse unless branch-awareness is enabled) | No |
 | **Setup** | `install-skill [--user\|--copy\|--root .claude\|.agents]` — install this bundled skill so an agent can drive plan-tool (opt-in; the CLI is standalone) | No |
 
 The three audit verbs answer different questions: `validate` = schema only
-(no claude); `completeness-audit` = deterministic authoring gaps (sections/detail/
-lessons), then a sampled claude audit of whether the plan's own concepts are
+(no backend call); `completeness-audit` = deterministic authoring gaps (sections/detail/
+lessons), then a sampled backend audit of whether the plan's own concepts are
 correct + complete, grounded in the per-step detail bundle + code at HEAD
-(`--audit-samples` / `--audit-dry-rounds`); `reconcile-plan` = paths/deps + claude
+(`--audit-samples` / `--audit-dry-rounds`); `reconcile-plan` = paths/deps + backend
 semantic review of the plan against the code. When both correctness and
 completeness findings exist, correctness renders first.
 

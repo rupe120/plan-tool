@@ -1,22 +1,8 @@
-"""Read per-project backend tuning from ``.plan-tool/backends.json``.
+"""Read project backend defaults and tuning without importing CLI registrations.
 
-The file is co-owned with the backend *selection* design
-(``docs/design-plans/BACKEND_SELECTION.md``), which reads its
-``default`` / ``aspects`` / ``failover`` keys. This module reads **only**
-the ``backends.<name>`` block and parses each entry into a typed
-:class:`BackendOverride`.
-
-The load-bearing scoping decision: :class:`BackendOverride` carries
-**no** ``binary`` / ``parser`` / ``classification`` fields, so a project
-file structurally cannot swap the binary, the stream parser, or the
-failure-classification regexes — the per-project surface is deliberately
-tuning-only (``model`` + extra argv). A missing file returns an empty
-map, the legitimate "no per-project tuning" state.
-
-Stdlib-only leaf: imports nothing from :mod:`plan_tool.backend`,
-``locator``, or any orchestrator, so it sits below the backend seam in
-the import graph. ``repo_root`` is a parameter (the loader never calls
-``locator``) so it stays hermetic and testable.
+``BackendOverride`` has no ``binary``/``parser``/``classification`` fields, so a
+project file cannot swap the binary, stream parser or failure regexes: tuning
+only. Stdlib-only leaf; ``repo_root`` is a parameter so it stays hermetic.
 """
 
 from __future__ import annotations
@@ -81,15 +67,15 @@ def _argv_field(block: dict, key: str, name: str, mf: Path) -> list[str]:
     return list(raw)
 
 
-def load_backend_overrides(
+def _read_backend_config(
     repo_root: Path, *, path: Optional[Path] = None
-) -> dict[str, BackendOverride]:
-    """Read ``.plan-tool/backends.json`` and parse its ``backends`` block.
+) -> tuple[dict, dict[str, BackendOverride], Path]:
+    """Read ``.plan-tool/backends.json``: raw data, parsed overrides, file path.
 
-    Returns an empty map when the file is absent (the unconfigured
-    project) or carries no ``backends`` key. Tolerates the sibling
-    ``default`` / ``aspects`` / ``failover`` keys — they belong to
-    ``BACKEND_SELECTION.md`` and are never inspected or rejected. Raises
+    Returns empty data and overrides when the file is absent (the unconfigured
+    project). ``default_backend`` and ``commands`` are validated by
+    :func:`load_project_backend_config`; other sibling keys are never
+    inspected or rejected. Raises
     :class:`BackendConfigError` when the file exists but is malformed.
 
     Other keys inside a per-backend block (``binary``, ``parser``,
@@ -98,7 +84,7 @@ def load_backend_overrides(
     """
     mf = path or default_backends_config_path(repo_root)
     if not mf.is_file():
-        return {}
+        return {}, {}, mf
 
     try:
         data = json.loads(mf.read_text(encoding="utf-8"))
@@ -127,20 +113,15 @@ def load_backend_overrides(
                 f"backends[{name!r}] in {mf} must be a JSON object, "
                 f"got {type(block).__name__}"
             )
-        model = block.get("model")
-        if model is not None and (not isinstance(model, str) or not model.strip()):
-            raise BackendConfigError(
-                f"backends[{name!r}].model in {mf} must be a non-empty string "
-                "when set"
-            )
+        model = _model_field(block, f"backends[{name!r}].model", mf)
         overrides[name] = BackendOverride(
-            model=model.strip() if isinstance(model, str) else None,
+            model=model,
             extra_batch_argv=_argv_field(block, "extra_batch_argv", name, mf),
             extra_streaming_argv=_argv_field(
                 block, "extra_streaming_argv", name, mf
             ),
         )
-    return overrides
+    return data, overrides, mf
 
 
 def backend_override_for(
@@ -152,3 +133,59 @@ def backend_override_for(
     the "use manifest defaults" signal for step 6's selection-time lookup.
     """
     return load_backend_overrides(repo_root, path=path).get(name)
+
+
+@dataclass(frozen=True)
+class ProjectBackendConfig:
+    """Project selection defaults and the compatible base-tuning projection."""
+
+    default_backend: str | None = None
+    overrides: dict[str, BackendOverride] = field(default_factory=dict)
+    command_models: dict[str, dict[str, str | None]] = field(default_factory=dict)
+
+
+def load_backend_overrides(
+    repo_root: Path, *, path: Optional[Path] = None
+) -> dict[str, BackendOverride]:
+    """Read base tuning only; selection settings remain inert for legacy callers."""
+    return _read_backend_config(repo_root, path=path)[1]
+
+
+def load_project_backend_config(
+    repo_root: Path, *, command_names: dict[str, str], path: Optional[Path] = None
+) -> ProjectBackendConfig:
+    """Read selection settings using canonical command identities supplied by CLI."""
+    data, overrides, mf = _read_backend_config(repo_root, path=path)
+    default = data.get("default_backend")
+    if "default_backend" in data:
+        if not isinstance(default, str) or not default.strip():
+            raise BackendConfigError(f"default_backend in {mf} must be a non-empty string")
+        default = default.strip()
+    command_models: dict[str, dict[str, str | None]] = {}
+    for name, block in data.get("backends", {}).items():
+        commands = block.get("commands", {})
+        prefix = f"backends[{name!r}].commands"
+        if not isinstance(commands, dict):
+            raise BackendConfigError(f"{prefix} in {mf} must be a JSON object")
+        models: dict[str, str | None] = {}
+        for command, entry in commands.items():
+            location = f"{prefix}[{command!r}] in {mf}"
+            if command not in command_names:
+                choices = ", ".join(sorted(command_names))
+                raise BackendConfigError(f"{location}: unknown command; supported choices: {choices}")
+            canonical = command_names[command]
+            if canonical in models:
+                raise BackendConfigError(f"{location}: duplicate command after normalization to {canonical!r}")
+            if not isinstance(entry, dict):
+                raise BackendConfigError(f"{location} must be a JSON object")
+            models[canonical] = _model_field(entry, f"{prefix}[{command!r}].model", mf)
+        command_models[name] = models
+    return ProjectBackendConfig(default, overrides, command_models)
+
+
+def _model_field(block: dict, location: str, mf: Path) -> str | None:
+    """Null and absent models inherit; explicit models must be non-empty strings."""
+    model = block.get("model")
+    if model is not None and (not isinstance(model, str) or not model.strip()):
+        raise BackendConfigError(f"{location} in {mf} must be a non-empty string when set")
+    return model.strip() if isinstance(model, str) else None

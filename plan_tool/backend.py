@@ -1250,6 +1250,7 @@ def _select_effective_backend(
     *,
     repo_root: Path,
     model: Optional[str] = None,
+    command_model: Optional[str] = None,
     fallback_factory: Optional[Callable[[str], CliBackend]] = None,
     known_override_names: Sequence[str] = (),
 ) -> BackendSelection:
@@ -1270,7 +1271,7 @@ def _select_effective_backend(
     )
     override = overrides.get(selected.name)
     resolved_model = (
-        model or (override.model if override else None) or selected.default_model
+        model or command_model or (override.model if override else None) or selected.default_model
     )
     effective = build_effective_backend(
         selected,
@@ -1290,6 +1291,7 @@ def select_active_backend(
     *,
     repo_root: Path,
     model: Optional[str] = None,
+    command_model: Optional[str] = None,
     fallback_factory: Optional[Callable[[str], CliBackend]] = None,
     known_override_names: Sequence[str] = (),
 ) -> BackendSelection:
@@ -1299,7 +1301,8 @@ def select_active_backend(
     stays above this stdlib-only backend layer.
 
     Selection precedence matches the CLI contract: caller-supplied ``model``
-    (from ``--model``) wins over ``.plan-tool/backends.json``'s
+    (from ``--model``) wins over the validated ``command_model``, which wins
+    over ``.plan-tool/backends.json``'s
     ``backends.<name>.model``, which wins over the backend manifest's
     ``default_model``. Project ``extra_batch_argv`` and
     ``extra_streaming_argv`` are spliced into the effective descriptor before
@@ -1318,6 +1321,7 @@ def select_active_backend(
         name,
         repo_root=repo_root,
         model=model,
+        command_model=command_model,
         fallback_factory=fallback_factory,
         known_override_names=known_override_names,
     )

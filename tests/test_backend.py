@@ -2015,3 +2015,41 @@ def test_a_recorded_real_claude_model_usage_yields_its_window() -> None:
 
     assert parsed is not None and parsed.stats is not None
     assert backend.reported_window_for_model("claude-sonnet-5-5", parsed.stats.model_windows) == (1_000_000, True)
+
+
+@pytest.mark.parametrize("argv_method", ["batch_argv", "streaming_argv"])
+@pytest.mark.parametrize("explicit,command,base,manifest,expected", [
+    ("explicit", "command", "base", "manifest", "explicit"),
+    (None, "command", "base", "manifest", "command"),
+    (None, None, "base", "manifest", "base"),
+    (None, None, None, "manifest", "manifest"),
+    (None, None, None, None, None),
+])
+@pytest.mark.parametrize("omit_command", [False, True])
+def test_command_model_precedence_preserves_registry_and_noop_identity(
+    tmp_path, monkeypatch, _restore_backend_state,
+    argv_method, explicit, command, base, manifest, expected, omit_command,
+):
+    if omit_command:
+        command = None
+        expected = explicit or base or manifest
+    registered = replace(CLAUDE_BACKEND, default_model=manifest)
+    monkeypatch.setitem(backend._REGISTRY, "claude", registered)
+    original_argv = getattr(registered, argv_method)("P")
+    config_dir = tmp_path / ".plan-tool"
+    config_dir.mkdir()
+    (config_dir / "backends.json").write_text(json.dumps({
+        "backends": {"claude": {"model": base}},
+    }))
+    kwargs = {} if omit_command else {"command_model": command}
+    selection = select_active_backend("claude", repo_root=tmp_path, model=explicit, **kwargs)
+    assert selection.selected is registered
+    assert selection.effective.resolved_model == expected
+    assert resolve_backend("claude") is registered
+    assert getattr(registered, argv_method)("P") == original_argv
+    assert registered.resolved_model is None
+    if expected is None:
+        assert selection.effective is registered
+        assert getattr(selection.effective, argv_method)("P") == original_argv
+    else:
+        assert getattr(selection.effective, argv_method)("P")[-3:] == ["--model", expected, "P"]

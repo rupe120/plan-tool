@@ -206,8 +206,10 @@ These go before the subcommand, and apply no matter which one follows:
   `.git`.
 - `--backend <name>`: pick the subprocess backend for all backend-invoking
   calls in this process. It overrides model-family inference and
-  `PLAN_TOOL_BACKEND`; default `claude`.
-- `--model <name>`: pick the model passed to the selected backend. Without an
+  `PLAN_TOOL_BACKEND` and project `default_backend`; unconfigured default `claude`.
+  It retains the selected backend's configured model defaults.
+- `--model <name>`: override command, backend and manifest model defaults. See
+  [project configuration and precedence](../BACKENDS.md#project-configuration). Without an
   explicit `--backend`, OpenAI GPT/ChatGPT/o/Codex models select Codex, Claude models
   select Claude, and Gemini models select the provisional Gemini backend.
 - `--on-rate-limit wait|switch|stop|ask`: choose the default response for an

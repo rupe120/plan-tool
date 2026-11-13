@@ -8658,21 +8658,24 @@ def test_shell_invoker_rate_limit_menu_switch_reselects_backend(
         set_active_backend(original_backend)
 
 
+@pytest.mark.parametrize("explicit_model", [None, "primary-explicit"])
 def test_shell_invoker_switch_policy_switches_without_prompt(
     switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
+    explicit_model: str | None,
 ) -> None:
     """A process-wide SWITCH policy consumes ``fallback_backend`` and retries
     on it without opening the interactive menu, even on a TTY."""
-    from contextlib import contextmanager
 
-    from plan_tool import claude_errors, launcher
+    import json
+
+    from plan_tool import backend, claude_errors, launcher
     from plan_tool.backend import (
         CLAUDE_BACKEND,
         CODEX_BACKEND,
         get_active_backend,
-        scoped_active_backend,
+        select_active_backend,
         spawn_cwd,
         set_active_backend,
     )
@@ -8681,8 +8684,18 @@ def test_shell_invoker_switch_policy_switches_without_prompt(
     original_backend = get_active_backend()
     seen_argv: list[list[str]] = []
     seen_parse: list[str] = []
-    claude_backend = _recording_stream_backend(CLAUDE_BACKEND, seen_parse)
-    codex_backend = _recording_stream_backend(CODEX_BACKEND, seen_parse)
+    monkeypatch.setitem(backend._REGISTRY, "claude", _recording_stream_backend(CLAUDE_BACKEND, seen_parse))
+    monkeypatch.setitem(backend._REGISTRY, "codex", _recording_stream_backend(CODEX_BACKEND, seen_parse))
+    config_dir = tmp_path / ".plan-tool"
+    config_dir.mkdir()
+    (config_dir / "backends.json").write_text(json.dumps({
+        "backends": {"codex": {"model": "fallback-base", "commands": {
+            "create": {"model": "fallback-command"},
+        }}},
+    }))
+    claude_backend = select_active_backend(
+        "claude", repo_root=tmp_path, model=explicit_model, command_model="primary-command",
+    ).effective
     monkeypatch.setattr(claude_errors, "_default_on_rate_limit_policy",
                         OnRateLimitPolicy(action=OnRateLimitAction.SWITCH,
                                           fallback_backend="codex"))
@@ -8693,21 +8706,6 @@ def test_shell_invoker_switch_policy_switches_without_prompt(
         raise AssertionError("SWITCH policy must not open the interactive menu")
 
     monkeypatch.setattr(launcher, "ask_on_rate_limit_action", _fail_if_prompted)
-    selections: list[tuple[str, Path]] = []
-
-    @contextmanager
-    def fake_scoped_select_active_backend(
-        name: str, *, repo_root: Path, model=None, fallback_factory=None,
-        known_override_names=(),
-    ):
-        selections.append((name, repo_root))
-        assert name == "codex"
-        with scoped_active_backend(codex_backend):
-            yield object()
-
-    monkeypatch.setattr(
-        launcher, "scoped_select_active_backend", fake_scoped_select_active_backend
-    )
     monkeypatch.setattr(
         launcher.subprocess,
         "Popen",
@@ -8726,9 +8724,11 @@ def test_shell_invoker_switch_policy_switches_without_prompt(
             rc, out = launcher.shell_invoker("p")
 
         assert (rc, out) == (0, "recovered on codex\n")
-        assert selections == [("codex", tmp_path)]
         assert [argv[0] for argv in seen_argv] == ["claude", "codex"]
         assert seen_parse == ["claude", "codex"]
+        assert claude_backend.resolved_model == (explicit_model or "primary-command")
+        assert seen_argv[0][seen_argv[0].index("--model") + 1] == (explicit_model or "primary-command")
+        assert seen_argv[1][seen_argv[1].index("-m") + 1] == "fallback-base"
         assert get_active_backend() is claude_backend
     finally:
         set_active_backend(original_backend)
@@ -9061,46 +9061,49 @@ def test_shell_invoker_rate_limit_switch_resets_wait_budget(
         set_active_backend(original_backend)
 
 
+@pytest.mark.parametrize("explicit_model", [None, "primary-explicit"])
 def test_shell_invoker_switch_policy_restores_after_fallback_rate_limit(
     switch_target_on_path: None,
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    explicit_model: str | None,
 ) -> None:
-    from contextlib import contextmanager
     from types import SimpleNamespace
 
-    from plan_tool import claude_errors, launcher
+    import json
+
+    from plan_tool import backend, claude_errors, launcher
     from plan_tool.backend import (
         CLAUDE_BACKEND,
         CODEX_BACKEND,
         get_active_backend,
-        scoped_active_backend,
+        select_active_backend,
         set_active_backend,
+        spawn_cwd,
     )
     from plan_tool.claude_errors import OnRateLimitAction, OnRateLimitPolicy
 
     original_backend = get_active_backend()
     seen_argv: list[list[str]] = []
     seen_parse: list[str] = []
-    claude_backend = _recording_stream_backend(CLAUDE_BACKEND, seen_parse)
-    codex_backend = _recording_stream_backend(CODEX_BACKEND, seen_parse)
+    monkeypatch.setitem(backend._REGISTRY, "claude", _recording_stream_backend(CLAUDE_BACKEND, seen_parse))
+    monkeypatch.setitem(backend._REGISTRY, "codex", _recording_stream_backend(CODEX_BACKEND, seen_parse))
+    config_dir = tmp_path / ".plan-tool"
+    config_dir.mkdir()
+    (config_dir / "backends.json").write_text(json.dumps({
+        "backends": {"codex": {"model": "fallback-base", "commands": {
+            "create": {"model": "fallback-command"},
+        }}},
+    }))
+    claude_backend = select_active_backend(
+        "claude", repo_root=tmp_path, model=explicit_model, command_model="primary-command",
+    ).effective
     monkeypatch.setattr(claude_errors, "_default_on_rate_limit_policy",
                         OnRateLimitPolicy(action=OnRateLimitAction.SWITCH,
                                           fallback_backend="codex"))
     monkeypatch.setattr("sys.stdin.isatty", lambda: False)
     monkeypatch.setattr("sys.stderr.isatty", lambda: False)
 
-    @contextmanager
-    def fake_scoped_select_active_backend(
-        name: str, *, repo_root: Path, model=None, fallback_factory=None,
-        known_override_names=(),
-    ):
-        assert name == "codex"
-        with scoped_active_backend(codex_backend):
-            yield object()
-
-    monkeypatch.setattr(
-        launcher, "scoped_select_active_backend", fake_scoped_select_active_backend
-    )
     monkeypatch.setattr(
         launcher.subprocess,
         "Popen",
@@ -9121,12 +9124,16 @@ def test_shell_invoker_switch_policy_restores_after_fallback_rate_limit(
 
     set_active_backend(claude_backend)
     try:
-        rc, out = launcher.shell_invoker("p")
+        with spawn_cwd(tmp_path):
+            rc, out = launcher.shell_invoker("p")
 
         assert rc == 1
         assert "hit your limit" in out
         assert [argv[0] for argv in seen_argv] == ["claude", "codex"]
         assert seen_parse == ["claude", "codex"]
+        assert claude_backend.resolved_model == (explicit_model or "primary-command")
+        assert seen_argv[0][seen_argv[0].index("--model") + 1] == (explicit_model or "primary-command")
+        assert seen_argv[1][seen_argv[1].index("-m") + 1] == "fallback-base"
         assert get_active_backend() is claude_backend
     finally:
         set_active_backend(original_backend)
