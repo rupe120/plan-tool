@@ -3,12 +3,31 @@
 This directory carries handoffs and review ledgers. Start with `BACKLOG.md`'s
 working board; a handoff records a route and its fence, not a queue override.
 
+## Naming
+
+A new handoff or ledger is named for its concept, not its date:
+`<concept>.md` for a handoff and `<concept>-code-review.md` for a ledger. The
+concept is the change or route in a few lowercase words
+(`roadmap-feedback-revision`, not `notes` or `handoff`).
+
+- **The date lives in the file, not the name.** The summary table carries an
+  `Opened` row (and the closure paragraph carries its closure date); `git log`
+  holds the rest.
+- **One concept, one file.** A second record for a concept already here is an
+  update to that file. If the work is genuinely separate, name the narrower
+  concept instead of adding a suffix or a date.
+- **Existing dated files keep their names (deliberately not renamed).** About
+  270 frozen plan details, saved reports and evidence files cite them by path
+  and pin their text, so a rename would break those citations. A dated file
+  takes a concept name only when it is rewritten into a new file, and the old
+  path is then retired under § "Retention".
+
 ## Review ledgers
 
 A review ledger is the durable record for one bounded change: local code
 review, pull-request review, and the decisions a later reviewer needs. Keep
-one tracked ledger per change, normally named
-`YYYY-MM-DD-<change>-code-review.md`. A handoff records what a future session
+one tracked ledger per change, named
+`<concept>-code-review.md` (see § "Naming"). A handoff records what a future session
 does next; a ledger records how the current change was judged. A file may do
 both jobs when the same change is still in flight.
 
