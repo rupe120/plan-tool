@@ -75,7 +75,9 @@ Record each drained entry here as one line: entry heading, disposition
   `plan-seeds/archive/`; the audit still read the seed (`source_seed_digest` set)
   and raised no finding about the path. Not reproduced for the plain case.
   The roadmap-published case (`plan-seed-drafts/`) is **untested**, so the
-  entry stays. Log: `.tmp/source-seed-archive-repro.run4.log`. Existing test
+  entry stays, narrowed to that case and marked `evidence-gated`. A second
+  entry (audit emits a "no gap here" confirmation as a blocking medium
+  finding) was filed `evidence-gated` from the same run. Log: `.tmp/source-seed-archive-repro.run4.log`. Existing test
   `test_source_seed_survives_the_cli_archiving_its_own_seed` pins the
   recorded pre-archival path.
 

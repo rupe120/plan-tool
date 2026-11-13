@@ -367,9 +367,19 @@ Durable re-open conditions for retired items are recorded in
 
 ### `create --from-existing` records `source_seed` as the seed path it then archives, so the plan points at a file that no longer exists and Gate 1 rates it HIGH
 
-- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1672`) and the
+- **Files:** `plan_tool/create.py:_resolve_source_seed` (`:1677`) and the
   seed archive on the superseded-by-new-plan path (`ARCHIVE_DIRNAME`,
-  `REPLACED_SUFFIX`, `:488-498`).
+  `REPLACED_SUFFIX`, `:493`, `:503`).
+- **Verified 2026-11-13 (plain `plan-seeds/` seed only):** one throwaway
+  `create --from-existing` plus one single-pass bare audit did **not**
+  reproduce the HIGH. `source_seed` stayed `plan-seeds/greeter.md` after the
+  seed moved to `plan-seeds/archive/`, the audit still read the seed
+  (`source_seed_digest` set, via `latest_seed_archive`), and it raised no
+  finding about the path. `tests/test_create.py::test_source_seed_survives_the_cli_archiving_its_own_seed`
+  pins the recorded pre-archival path, so recording the archived path instead
+  needs a deliberate decision, not a quiet test rewrite. **The roadmap-published
+  case (`plan-seed-drafts/` is the durable copy) is untested** and is what
+  this entry now covers. n=1; log `.tmp/source-seed-archive-repro.run4.log`.
 - **Symptom:** `_resolve_source_seed` records the `--from-existing` path
   while the file exists, and `create` then moves that file to
   `plan-seeds/archive/<slug>.replaced.md`. Integration commit `da657b8` wrote
@@ -388,7 +398,10 @@ Durable re-open conditions for retired items are recorded in
 - **Approach:** direct.
   **Escalate to plan if:** the roadmap-published seed's draft path is not
   recoverable from the `plan-seeds/` copy without a new link record.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reproduce the roadmap-published case first (a seed published from a roadmap
+  with an accepted head, then `create` and a bare audit); retire the entry if
+  it is clean, keep the fix above if it is not.
 - **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
 ### A roadmap reader-guard test times out under full-suite load
@@ -526,6 +539,31 @@ Durable re-open conditions for retired items are recorded in
 - **Symptom:** an explicitly declared `engine_worker/Dockerfile` is reported as not mentioned even when the detail names it in Files, Implementation and a Markdown reference. Both mention extractors require a known dot extension, so no spelling of the real extensionless path can satisfy the check. Loom async-engine-startup detail audit `20261104-230108-completeness` reproduced one false nit and an awaiting-human-action result despite zero conceptual findings. Source inspection later established that the Dockerfile was read-only context, so the Loom footprint was legitimately narrowed; the extractor defect remains for efforts that really edit Dockerfiles.
 - **Fix:** recognize supported extensionless filenames while preserving exact-path matching and avoiding arbitrary identifier matches. Do not require invented filenames or remove a real edit from a plan merely to suppress the diagnostic.
 - **Approach:** direct, with focused regressions for a declared Dockerfile cited as a path, an actually missing Dockerfile citation, and nearby bare prose that is not a filename.
+
+### The plan audit can emit a "no gap here" confirmation as a medium finding, and it blocks convergence
+
+- **Files:** `plan_tool/prompts/plan-audit.md` (the output contract at
+  `:321-324`, where an empty axis is written `_(none)_`),
+  `plan_tool/convergence.py:is_blocking_finding` (a medium
+  `plan-correctness` finding blocks unless its domain is `docs`).
+- **Symptom:** a single-pass bare audit of a one-step throwaway plan
+  (2026-11-13) returned `plan-plan-correctness-50f04139`: severity `medium`,
+  axis `correctness`, whose body ends "No gap here; this is a confirmation
+  only." It carried no `### Fix`, appeared in `conceptual_bar_blocking_ids`,
+  and set `has_blocking_findings: true`, so a clean audit read as blocked. n=1.
+- **Fix:** tighten the prompt so a confirmation is never written as a finding
+  bullet (the empty-axis `_(none)_` marker is the only way to say "nothing
+  found"). Deliberately not done: a deterministic matcher over finding prose
+  for phrases like "no gap" — that measures vocabulary, the withdrawn
+  anti-pattern in `CLAUDE.md` § "Withdrawn: the per-`change_type`
+  test-ordering contract".
+- **Approach:** `direct` — a prompt edit plus a regression that pins the
+  contract text; confirm the second sample reproduces before editing.
+- **Route:** direct · **Readiness:** evidence-gated · **Tier:** experienced.
+  Reopen condition: a second independent audit returns a confirmation-only
+  finding. One sample cannot separate a prompt gap from reviewer variation.
+- **Origin:** 2026-11-13, source-seed archive repro; log
+  `.tmp/source-seed-archive-repro.run4.log`.
 
 ## RISK
 
