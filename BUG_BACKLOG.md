@@ -447,25 +447,6 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-10-19 Integration `construction-batch-driver` citation report;
   nested-function portion retained separately from the class-method fix.
 
-### Onboarding and installed skill instructions conflict with canonical audit and iteration rules
-
-- **Files:** `docs/how-to/common-workflows.md`, `README.md`, all three
-  `integrations/*/SKILL.md` routers; authority:
-  `integrations/shared/DIRECTIVES.md` and `docs/how-to/pipeline/audit.md`.
-- **Symptom:** common workflows tells readers to detail before auditing and
-  treats absent details as audit defects; routers also describe detail iteration
-  as on by default despite their own one-shot instruction. The first-task path
-  can therefore skip the bare gate or select the wrong detail behavior.
-- **Fix:** enumerate identifier and vocabulary restatements, then align the
-  introductory flows and routers with the two audit gates and actual iteration
-  defaults. Keep one authority for rules; add no prose-lint gate.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Arc assignment:** `backlog-arc-installed-skill`; coordinate onboarding #510.
-- **Verification:** review all three routers and linked first-plan paths against
-  current parser behavior and canonical guidance; check affected links/examples.
-- **Scope:** documentation correctness only; no runtime/default changes or
-  unrelated documentation rewrite.
-
 ### `plan-tool create --from-existing` crashes with "concept scope contains duplicate IDs" on a seed that has some but not all of the standard section headings
 
 - **Files:** `plan_tool/create.py` (`_review_create_concepts`, which builds the
@@ -583,6 +564,67 @@ Durable re-open conditions for retired items are recorded in
   finding. One sample cannot separate a prompt gap from reviewer variation.
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
+
+### `BACKLOG.md` `Iterate:` recipes run `detail` straight after `create`, skipping the bare-plan gate
+
+- **Files:** `BACKLOG.md` (eleven `Iterate:` or `Iteration:` command blocks: the
+  `mechanism-reach-02-audit`, `incremental-completeness-audit`,
+  `conceptual-pass-impact-sweep`, `jira-readiness-audit-lane`,
+  `detail-authoring-wizard`, `partial-mutation-snapshot-restore`,
+  `partial-mutation-guard-hardening`, `roadmap-05-framework-lenses`,
+  `detail-readiness-advisory`, `connectivity-pause-and-poll` and
+  `artifact-contention-handoff` recipes); authority
+  `integrations/shared/DIRECTIVES.md` Gate 1.
+- **Symptom:** each block runs `detail` straight after `create` and audits only
+  after it, so an operator who copies it skips the bare-plan audit that Gate 1
+  runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
+  in the tracked documents for a `plan-tool detail` command that follows a
+  `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
+  between; its 24 hits were these eleven, two real gaps in `docs/how-to/roadmap.md`
+  (since corrected), and independent syntax or opt-in examples. The routers carry
+  both gates, so this reaches only an operator who copies a queue entry's recipe.
+  Two of the entries (`roadmap-05-framework-lenses`, `detail-readiness-advisory`)
+  tell the reader to follow the current directives directly above a recipe that
+  skips Gate 1.
+- **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
+  after `create` in each block, as each entry is next touched, with the routers'
+  caveat to commit the plan first (`--commit` refuses a dirty working tree).
+  Deliberately not done: a script that rewrites the queue, because the recipes are part of
+  entries that are edited when picked up.
+- **Approach:** `direct` — documentation only.
+- **Verification:** no `BACKLOG.md` recipe block has a `plan-tool detail` line
+  without a `plan-tool completeness-audit` line before it in the same block
+  (a `detail --reconcile` or `--dry-run` line is exempt).
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, review of the removal of the onboarding guidance entry.
+
+### `RUNBOOK.md` states a 300-second iteration budget; the default is an 1800-second no-progress deadline
+
+- **Files:** `RUNBOOK.md` (the passages "Default budget: 3 iterations × 300s
+  wall-clock" and "wall-clock hit `--iteration-budget` (300s by default)"; the
+  example stop message "after 3 iteration(s) / 300s", which no code prints; and
+  the advice "Bump the cap ... `--iteration-budget 600`" plus the "Tuning the
+  budget" example, which lower a default of 1800); authority
+  `plan_tool/convergence.py:DEFAULT_ITERATION_BUDGET_SECONDS` and
+  `plan-tool create --help`.
+- **Symptom:** the code default is 1800 seconds, and `--iteration-budget` is a
+  debounced no-progress deadline that resets on every round and every
+  `apply_finding` call, so a long single model call does not trip it;
+  `--time-budget` is the total-elapsed cap. `RUNBOOK.md` describes a 300-second
+  wall-clock stop, so a reader expects a five-minute cutoff. A search of the
+  tracked instructional documents for "300s" found only the three 300-second
+  passages above (`experiments/minimize-claude/LESSONS.md` has an unrelated
+  measurement); the 600-second advice assumes the same low default.
+- **Fix:** state the 1800-second debounced no-progress deadline where the
+  default is described, name `--time-budget` for a hard cap, make the example
+  stop message and the 600-second figures consistent with it. Deliberately not
+  done: changing the default.
+- **Approach:** `direct` — documentation only.
+- **Verification:** `grep -n '300s' RUNBOOK.md` returns nothing, and every
+  stated default matches the `--iteration-budget` text in `plan-tool create
+  --help`.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** 2026-11-13, fact-check review of the same removal.
 
 ## RISK
 

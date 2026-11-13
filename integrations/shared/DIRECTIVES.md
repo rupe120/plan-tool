@@ -114,6 +114,8 @@ up through conversation:
 ## Running from chat / automation (no TTY)
 
 Treat every assistant-driven run as **headless**: close stdin and pass `-y`.
+These are independent syntax examples, not a stage sequence: sequential
+authoring follows Gate 1 and Gate 2 below.
 
 ```bash
 plan-tool create <slug> --from-existing <seed> --output-dir docs/implementation-plans -y < /dev/null

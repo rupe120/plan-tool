@@ -815,3 +815,88 @@ contingent change rather than widen the self-reference fix. Reopen only with a
 valid admitted predecessor and candidate for which a removed relation is
 incorrectly authorized through a same-batch addition. This is a retirement of
 an unproven risk, not a claim that removed-relation behavior changes.
+
+## Onboarding and router guidance entry removed, two residuals corrected, 2026-11-13
+
+Removed from `BUG_BACKLOG.md` on 2026-11-13: "Onboarding and installed skill
+instructions conflict with canonical audit and iteration rules" (unnumbered).
+The first-task paths and routers it named already read correctly at `1d8a47974`.
+Two passages outside them were corrected in the same change:
+`docs/how-to/roadmap.md` ran `detail` straight after `create` with no bare-plan
+audit, and `RUNBOOK.md` recommended `detail --iterate` without the "only when
+explicitly requested" qualifier and called the audit loop a narrow variant of
+authoring.
+
+**What was reported.** `docs/how-to/common-workflows.md` told readers to detail
+before auditing and treated absent details as audit defects, and the three
+`integrations/*/SKILL.md` routers described detail iteration as on by default
+despite their own one-shot instruction.
+
+**What was checked, at `1d8a47974`.**
+
+- The authority is `integrations/shared/DIRECTIVES.md`: Gate 1 is the bare-plan
+  audit before `detail`, Gate 2 the detail-grounded audit after it, and `detail`
+  stays one-shot unless the user asks for its loop.
+- The generated `docs/cli/` reference gives the real defaults: `create
+  --iterate` is on, `detail` and `completeness-audit` are off, and `run
+  --iterate` has no effect (`docs/cli/run.md`). `docs/ITERATION.md` states the
+  first three.
+- `README.md` (the first-task path and the lifecycle line), all three routers
+  (the recipe row, the authoring-pipeline line and the iteration paragraph,
+  identical across the three) and `common-workflows.md` (the lifecycle line and
+  the `detail` and audit sections) state that order and those defaults. That a
+  missing detail file is coverage at the bare gate, not a design defect, is
+  stated in `common-workflows.md`, `DIRECTIVES.md` Gate 1 and
+  `docs/how-to/pipeline/audit.md`; `README.md` and the routers give the order
+  without repeating that sentence.
+- Two sweeps of the tracked instructional documents (everything outside
+  `docs/implementation-plans/`, `docs/history/`, `docs/evidence/`,
+  `docs/concepts/`, the root `plan-seeds/`, `handoffs/`, `.tmp/` and
+  `.plan-tool/`). A
+  vocabulary sweep for text that recommends or defaults detail iteration found
+  the `RUNBOOK.md` closing line, which contradicted the same file's "Detail with
+  iteration" section and `DIRECTIVES.md`. A command-sequence sweep over fenced
+  blocks, for a `plan-tool detail` command that follows a `plan-tool create` with
+  no `plan-tool completeness-audit` between, returned 24 hits: two real gaps in
+  `docs/how-to/roadmap.md` (the command list and section 8), eleven
+  `Iterate:`/`Iteration:` recipes in `BACKLOG.md`, and eleven independent
+  examples (see below).
+
+**Provenance.** `common-workflows.md` already read correctly at the `9c10d74ca`
+snapshot (2026-10-21), so that half of the report is stale from the earliest
+retained history. At the snapshot the routers' recipe row ran `detail`
+(one-shot) before any audit, and their iteration paragraph called `--iterate`
+"on by default for `create`/`detail`"; `31fdf2f22` ("correct skill audit,
+recovery and reconciliation recipes", 2026-10-21) reordered the row around the
+two gates and replaced the paragraph. The entry outlived that repair as far as
+the routers go.
+
+**Filed separately, not fixed here.** The eleven `BACKLOG.md` recipes (queue
+records, edited when each entry is picked up) and the stale 300-second iteration
+budget in `RUNBOOK.md` are `BUG_BACKLOG.md` entries.
+
+**Left as is, deliberately.**
+
+- The shorthand `create → detail → audit → run` (or `→ run steps 1–N`) in
+  `docs/how-to/pipeline/run.md`, `RUNBOOK.md`, `MISSION.md`,
+  `experiments/contract-trace-audit/LESSONS.md` and `CLAUDE.md` (`AGENTS.md` is a
+  symlink to it) collapses the two audit gates into one word. It does not
+  contradict the gates, and edits to `CLAUDE.md` need architect-tier review.
+- Independent examples that list `create` and `detail` side by side without
+  being a stage sequence: the headless-syntax blocks in the three routers and in
+  `docs/OPERATIONS.md` (both say so), `integrations/shared/DIRECTIVES.md` (which
+  now says so too) and the tracked copy under `.claude/skills/plan-tool/` (a
+  copy that lags `integrations/` elsewhere and is not refreshed here), the
+  opt-in loop examples in
+  `RUNBOOK.md`'s "Create with iteration" and "Detail with iteration" sections,
+  and the prompt-mode comparison in `docs/explanations/prompt-ab-testing.md`.
+- As of 2026-11-13, `docs/explanations/lessons-learned.md` lists `run` among the
+  commands that support `--iterate`; `run` accepts the flag and ignores it. It is
+  outside this entry's class (a `run` flag, not gate order or the `detail`
+  default).
+- Restructuring the first-task path belongs to onboarding #510, open on
+  2026-11-13.
+
+**Re-open only when** a quoted passage in a first-task path, a router or a
+how-to contradicts `DIRECTIVES.md`'s gate order or the parser's iteration
+defaults.

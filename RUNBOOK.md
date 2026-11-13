@@ -1094,12 +1094,14 @@ When deterministic findings converge but conceptual stage blockers remain,
 the loop stops with **`terminal_hand_apply`**. Read the saved report, verify and judge the findings, edit the appropriate plan or detail text, commit bounded corrections, and re-run `completeness-audit --iterate --commit` against the changed snapshot.
 Bare and detail bars differ; see [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md).
 
-Reach for `completeness-audit --iterate` only as the narrow variant —
-audit-only convergence without the rest of the create/detail authoring
+Run `completeness-audit --iterate` at the two audit gates
+([`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md)): it
+is audit-only convergence without the rest of the create/detail authoring
 loop. For actual convergence-driving authoring, reach for
 `create --iterate` (drives completeness findings to convergence as part
-of the create flow) or `detail --iterate` (drives the
-`detail-quality.md` review per step).
+of the create flow) or, only when explicitly requested, `detail --iterate`
+(drives the `detail-quality.md` review per step; `detail` is one-shot by
+default).
 
 ### The escalate-to-split bridge (auto split-or-recommend)
 
