@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 
 from plan_tool.concept_sync import SyncStatus, _fingerprint, synchronize_concepts
-from plan_tool.concept_tree import ConceptNode, ConceptTree, concept_id, concepts_path
+from plan_tool.concept_tree import (
+    ConceptNode, ConceptTree, concept_id, concepts_path, load_concepts,
+)
 from plan_tool.parser import parse_plan, split_body_sections
 from plan_tool.review_persistence import compute_plan_fingerprint
 from plan_tool.schema import PLAN_FORMAT_VERSION, StepScope
@@ -435,3 +437,47 @@ def test_sync_keeps_unowned_h1_content_and_ignores_fenced_boundary_examples(
     assert split_body_sections(updated, ignore_fenced_code=True)["deferred"] == "- Delayed — Why Delayed"
     assert parse_plan(path).step_by_id(2).scope is StepScope.DEFERRED
     assert json.loads(concepts_path(path).read_text())["plan_fingerprint"] == compute_plan_fingerprint(path)
+
+
+@pytest.mark.parametrize(
+    ("title", "rationale"),
+    [
+        ("Delayed", "why\n# Injected heading\nmore rationale"),
+        ("Delayed", "why\n## Injected sibling\nmore rationale"),
+        ("Delayed", "why\n```\nunclosed fence swallows the tail"),
+        ("Delayed\n# Title heading\nrest of title", "why"),
+    ],
+    ids=["rationale-h1", "rationale-h2", "rationale-unclosed-fence", "title-h1"],
+)
+def test_multiline_decision_text_cannot_create_document_boundaries(
+    tmp_path: Path, title: str, rationale: str
+) -> None:
+    """A concept's title and rationale are decision *content*: a line inside
+    them that looks like a heading or a fence must not become a document-level
+    boundary, or the owned ``## Deferred`` body is truncated and the tail ends
+    up in a stray section the next read treats as unowned."""
+    path = tmp_path / "sync.md"
+    source = _write_plan(path)
+    plan = parse_plan(path)
+    node = _node("Delayed", "defer", order=0, step_id="2")
+    node = ConceptNode(**{**asdict(node), "id": concept_id(title, []), "title": title,
+                          "rationale": rationale})
+    tree = _tree(node)
+    _persist_tree(path, tree)
+
+    result = synchronize_concepts(path, plan, tree, tree, source_plan_text=source)
+
+    assert result.status is SyncStatus.SUCCESS
+    updated = path.read_text(encoding="utf-8")
+    sections = split_body_sections(updated.split("---\n", 2)[2])
+    assert set(sections) == {"custom", "deferred", "tail"}
+    for fragment in (*title.split(), *rationale.split()):
+        assert fragment in sections["deferred"]
+    assert "## Tail\n\nKeep tail." in updated
+
+    stored = load_concepts(path, compute_plan_fingerprint(path))
+    again = synchronize_concepts(
+        path, parse_plan(path), stored, stored, source_plan_text=updated
+    )
+    assert again.status is SyncStatus.SUCCESS
+    assert path.read_text(encoding="utf-8") == updated
