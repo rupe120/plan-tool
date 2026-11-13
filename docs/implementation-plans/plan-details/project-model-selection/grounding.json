@@ -1,0 +1,28 @@
+{
+  "plan_slug": "project-model-selection",
+  "grounded_at": "2026-11-13T02:22:50Z",
+  "plan_fingerprint": "39cbea7f4731d8b6cf3c867f77d1640b7f5acd0909fa5b4e80e6725c29cf3be5",
+  "code_fingerprint": {
+    "BACKLOG.md": "d3fd7289ee49a611a9aa04c050082cbb3f0f5fa94a6cb10aeca44e84c5c257f5",
+    "README.md": "d595d5e08df07965d9889e1ddf333bc5565c8f1678b12cd4c2caab654a2e600e",
+    "docs/BACKENDS.md": "4c1b9bd76ef1e130905c960406587ab61719667c82ddb07be9864c46be403925",
+    "docs/design-plans/BACKEND_SELECTION.md": "0387459f76a34965cb16fd71e72d6d12bedc3ddc36a0bccca00194f88680a024",
+    "docs/reference/commands.md": "fc1c3068fa3e1dcf6f1b65861592d3e750162d90f857829c5196f520f91a5755",
+    "integrations/claude/SKILL.md": "0fedf792e262ba5c93f03d5200bc8300ed31a1c83d2faa97d6499b9a67566fff",
+    "integrations/codex/SKILL.md": "285d933efed2f5833520552d11b894cd361fd410670f2d5636a808d96221ffca",
+    "integrations/cursor/SKILL.md": "90f066562f3d028bccca350c8e14aa01f186fe1b316de26ac51a0626b821c1d3",
+    "integrations/shared/DIRECTIVES.md": "75208deb2d8392d6010a59c7e1999c7496c6b90c6e99b198ca79ff61c6d8ba5c",
+    "plan_tool/backend.py": "7acd617021eb08d60aec90c012eac87d26deb84e37fad6d948d7dfc4ad022452",
+    "plan_tool/backend_config.py": "5f4fc74cf1a1b19839e97d995f790dbac663e5ab659cd596c0ee84b85d516031",
+    "plan_tool/cli/app.py": "d83c40fcfb132e86d4b0ee3a3dbf05cf9fdb00d3f6d62f69ce452370d41fe460",
+    "plan_tool/cli/parser.py": "750592f0b78c7e39b25bf023a05323684c01b81366d31bc085ad069eb9e4cf26",
+    "tests/cli/test_app.py": "86743bcc283c37e44ecc855b1ae264ad3521fd12fdd28cea0544ed3e839d8e27",
+    "tests/cli/test_skill_cmd.py": "8593d80276894dfe5b3ad3231b732e188605a987b417afb06f3ce1f8b027cccb",
+    "tests/test_backend.py": "1aecd836968a3382c1ba48c6462e8d5474a3aa2ecc359039def598ebe20b678c",
+    "tests/test_backend_config.py": "b147af24f886808e8186c0187e73b5915cca91238114e27b607f13e68d2ec015",
+    "tests/test_launcher.py": "425ddeab62798685def4d6d5920d0887ef5f4b4b9c03becf367a3eea667c1dd7",
+    "tests/test_shell.py": "cb3be2fa202f21851e79b6ab9f712b291a120f994a5af1c05f56c3d5bcc4fed7"
+  },
+  "step_authoring_fingerprints": {},
+  "schema_version": 1
+}

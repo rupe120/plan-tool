@@ -10,6 +10,7 @@
     "docs/implementation-plans/2-arm-clustering-cross-round-consensus.md",
     "docs/implementation-plans/2-roadmap-revision-retention.md",
     "docs/implementation-plans/2-roadmap-source-baseline-recovery.md",
-    "docs/implementation-plans/2-roadmap-candidate-vocabulary-retry.md"
+    "docs/implementation-plans/2-roadmap-candidate-vocabulary-retry.md",
+    "docs/implementation-plans/2-project-model-selection.md"
   ]
 }

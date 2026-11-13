@@ -1,3 +1,6 @@
+> **Replaced**: this file has been superseded by `docs/implementation-plans/2-project-model-selection.md`.
+> Preserved here for history; do not edit.
+
 # Project backend defaults and command-specific models
 
 ## Outcome
