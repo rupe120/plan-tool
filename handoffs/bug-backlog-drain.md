@@ -101,17 +101,6 @@ they resolve.
   direct-ready seed did crash with the same message; `create` now refuses it
   with the headings named (PR #199, merged 2026-11-13).
 
-- 2026-11-13 — `detail` raises a bare `ValueError` on a plan body that has a
-  heading normalizing to empty (`## :`, `## .`): `fixed b1b935f56`, tightened in
-  `84d9aae57` and the correction commit named in the ledger; entry removed in
-  `ae7a03808`. `detail` now refuses with a `DetailError` that names the heading
-  and the plan, through `empty_concept_headings_message` in
-  `plan_tool/concept_bootstrap.py`, which `create` shares (same message as
-  before). `scope-review` is deliberately unguarded: review showed its legacy
-  route cannot reach the bootstrap with such a plan, because a hand-edit makes
-  the record stale first. Review record, evidence and closure:
-  [`2026-11-13-detail-empty-heading-code-review.md`](2026-11-13-detail-empty-heading-code-review.md).
-
 ## Deliberately not in this handoff
 
 - A snapshot of the current queue: it goes stale on the next drain, so read
