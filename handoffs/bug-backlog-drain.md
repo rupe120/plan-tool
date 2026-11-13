@@ -14,11 +14,16 @@ home first.
    holds the brief.
 3. Skip the `## ROADMAP` section: it is owner-tracked and not part of the
    drain.
-4. An entry with a `Priority` line (for example, "blocks the next Integration
-   proposal") goes first within its section.
-5. Prefer `Route: direct` + `Readiness: ready`. Treat these as not drain work:
-   `Route: plan` (use `plan-tool`), `decision-needed`, `evidence-gated`, and
-   `needs investigation`. Surface them to the user instead of picking them up.
+4. Order across files follows `docs/TRACKING.md` § "Choosing what to promote
+   next"; this handoff adds no priority rule of its own.
+5. Take an entry only when its Route is `direct` and its Readiness is `ready`
+   (labels: `docs/TRACKING.md` § "Labels every entry carries"). Surface every
+   other entry to the user instead of picking it up: `Route: plan` (use
+   `plan-tool`) and any other Readiness (`decision-needed`, `evidence-gated`,
+   `blocked-on #N`, `parked`).
+6. An entry with no Route or Readiness label: read it, map an older
+   `Approach:` tag per TRACKING, label it, and take it only if the result is
+   `direct` + `ready`.
 
 ## Per-entry procedure
 
@@ -64,63 +69,35 @@ home first.
 
 ## Session log
 
-Record each drained entry here as one line: entry heading, disposition
+Record each drained entry as one dated line: entry heading, disposition
 (`fixed <commit>`, `refuted <evidence>`, `declined <reason>`,
 `tracked <backlog id>`, or `pending`), and the commit that removed the entry.
+A change that goes through a review loop keeps its pass-by-pass record in its
+own ledger (`handoffs/README.md` § "Review ledgers"); the line here points to it.
+Drop a line once its change has merged to `main`; keep `pending` lines until
+they resolve.
 
-- `create --from-existing` records `source_seed` as the seed it then archives
-  (`BUG_BACKLOG.md`, BUG section) — `pending`. Plain `plan-seeds/` case run
-  2026-11-13 in a throwaway repo (one `create`, one single-pass bare audit):
-  `source_seed` stayed `plan-seeds/greeter.md` after the seed moved to
-  `plan-seeds/archive/`; the audit still read the seed (`source_seed_digest` set)
-  and raised no finding about the path. Not reproduced for the plain case.
-  The roadmap-published case (`plan-seed-drafts/`) is **untested**, so the
-  entry stays, narrowed to that case and marked `evidence-gated`. A second
-  entry (audit emits a "no gap here" confirmation as a blocking medium
-  finding) was filed `evidence-gated` from the same run. Log:
-  `.tmp/source-seed-archive-repro.run4.log`. Existing test
-  `test_source_seed_survives_the_cli_archiving_its_own_seed` pins the
-  recorded pre-archival path.
-- `create --from-existing` crashes with "concept scope contains duplicate IDs"
-  (`BUG_BACKLOG.md`, BUG section) — `pending`, narrowed to `evidence-gated`
-  2026-11-13. Not reproduced at 1.3.1 with the entry's nine-heading seed and a
-  stubbed distill; the original distill response is not retained. No code or
-  test change: the scratch test was discarded because it could not be shown to
-  fail under the old behavior.
-- Multiline concept decisions can create document headings outside their owned
-  section — `fixed a0cda5b53`. Reproduced through `synchronize_concepts` (the
-  four cases then in the test failed without the fix and passed with it; a
-  fifth, bare-CR case was added in `0b20bcbb1`); title and rationale
-  now render on one line in `render_scope_decisions`. Full suite 14,858 passed,
-  67 skipped (`.tmp/multiline-concept-decisions.fullsuite.log`). Entry removed
-  from `BUG_BACKLOG.md` in `436b812d7`.
-  - `/code-review` high, pass 1 (headless, report-only; the reviewer could
-    not run code, so its claims are read-only evidence):
-    `.tmp/multiline-concept-decisions-code-review-1.md`. No material defect;
-    three findings, each with one disposition:
-    - Test pinned only `\n` — `fixed 0b20bcbb1`: added a bare-CR case; the parser
-      treats a bare CR as a heading boundary, and a `\n`-only mutant now fails
-      on it. `declined`: the `U+2028`/`U+0085` examples (not boundaries to this
-      parser) and the `wont_do` / nested-concept cases (same code path as the
-      fix, no new branch).
-    - Repeat-sync assertion was vacuous — `fixed 0b20bcbb1`: each case asserts the
-      exact one-line rendering; the repeat sync stays as a labeled smoke check.
-    - Another copy of the whitespace-collapse idiom — `declined`: no shared
-      helper is importable without a cycle; any consolidation needs AST
-      evidence and a `BACKLOG.md` entry, not a drive-by.
-  - Full suite after pass 1: 14,859 passed, 67 skipped
-    (`.tmp/multiline-concept-decisions.fullsuite2.log`).
-  - `/code-review` high, pass 2 (headless, report-only, on `282e75b9f..HEAD`
-    through `af59e779c`; it ran `tests/test_concept_sync.py`, 36 passed, and
-    verified the cited hashes and logs; the sandbox refused its own mutant runs,
-    so the mutation claims above remain this session's evidence):
-    `.tmp/multiline-concept-decisions-code-review-2.md`. No material defect in
-    code or tests; two low documentation findings, both `fixed` in the handoff
-    edit that adds this line: the removing commit is now recorded, and the
-    case counts are dated.
-  - **Closure: low-yield convergence, not a clean audit.** Pass 1 added only
-    low/info test items and pass 2 only low documentation items, with no
-    material finding in either. Nothing is pushed.
+- 2026-11-13 — `create --from-existing` records `source_seed` as the seed it
+  then archives (`BUG_BACKLOG.md`, BUG section): `pending`, narrowed to the
+  roadmap-published case and `evidence-gated`. A one-step throwaway run at
+  plan-tool 1.3.1 did not reproduce the HIGH for a plain `plan-seeds/` seed
+  (`source_seed` stayed `plan-seeds/greeter.md` after the move to
+  `plan-seeds/archive/`; the audit still read the seed and raised no finding
+  about the path). The roadmap-published case (`plan-seed-drafts/`) is
+  **untested**. Existing test
+  `test_source_seed_survives_the_cli_archiving_its_own_seed` pins the recorded
+  pre-archival path. The same run filed a second entry (the audit emitted a
+  "no gap here" confirmation as a blocking medium finding), `evidence-gated`.
+- 2026-11-13 — `create --from-existing` crashes with "concept scope contains
+  duplicate IDs" (`BUG_BACKLOG.md`, BUG section): `pending`, narrowed to
+  `evidence-gated`. Not reproduced at 1.3.1 with the entry's nine-heading seed
+  and a stubbed distill; the original distill response is not retained. No
+  code or test change: the scratch test was discarded because it could not be
+  shown to fail under the old behavior.
+- 2026-11-13 — Multiline concept decisions can create document headings
+  outside their owned section: `fixed a0cda5b53`, entry removed in
+  `436b812d7`. Review record and open status:
+  [`2026-11-13-multiline-concept-decisions-code-review.md`](2026-11-13-multiline-concept-decisions-code-review.md).
 
 ## Deliberately not in this handoff
 
