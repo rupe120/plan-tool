@@ -57,6 +57,8 @@ compressing or retiring a handoff.
 
 - [Bug backlog drain](bug-backlog-drain.md) — standing procedure, queue order, stop conditions, and session log for draining `BUG_BACKLOG.md`.
 
+- [Detail empty-heading refusal review](2026-11-13-detail-empty-heading-code-review.md) — review ledger for refusing a no-name heading in `detail`: settled decisions, evidence, and per-pass findings and dispositions.
+
 - [Dockerfile mention recognition review](2026-11-13-files-coherence-dockerfile-code-review.md) — review ledger for recognizing an extensionless `Dockerfile` in the files-coherence extractors: settled decisions, evidence, and per-pass findings and dispositions.
 
 - [Multiline concept decisions review](2026-11-13-multiline-concept-decisions-code-review.md) — review ledger for the one-line concept decision rendering fix: settled decisions and per-pass findings and dispositions.

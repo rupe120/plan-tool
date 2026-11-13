@@ -102,37 +102,15 @@ they resolve.
   with the headings named (PR #199, merged 2026-11-13).
 
 - 2026-11-13 — `detail` raises a bare `ValueError` on a plan body that has a
-  heading normalizing to empty (`## :`, `## .`): `fixed b1b935f56`, entry removed in
-  `ae7a03808`. The detection and refusal text now live in one place,
-  `empty_concept_headings_message` in `plan_tool/concept_bootstrap.py`; `create`
-  (same message as before), `detail` (`derive_candidate_buckets` raises
-  `DetailError`) and the `scope-review` legacy full-tree route (warns and
-  returns the invalid-state exit, writing nothing) each raise it through their
-  own error path. Probed first: the legacy route raised the bare error at
-  command level, and the flat decision-record route already worked with such a
-  body (returned 0), so the refusal is deliberately not applied there and a test
-  pins that. Tests: 10 across `tests/test_concept_bootstrap.py`,
-  `tests/test_detail.py` and `tests/cli/test_scope_review_cmd.py`; before the
-  fix exactly the three refusal tests failed with the bare error. Mutants
-  checked by this session: skipping the refusal in each of the three commands,
-  widening the helper to a zero-width name, and refusing on the flat route are
-  each caught. Full suite 14,916 passed, 67 skipped (the extra skip is the
-  run-log scope proxy `tests/test_cli.py:3277`, which skips when a branch's diff
-  touches test files outside its allowlist). Tests added in `84d9aae57` bring the new
-  total to 11 (suite 14,917 passed, 67 skipped), including one through
-  `generate_detail` (a `DetailError` naming the heading before any model call,
-  plan and detail directory untouched); the CLI handler that prints it was
-  traced by the reviewer, not run.
-  - `/code-review` high, pass 1 (headless, report-only; the reviewer ran lint
-    but not tests): no material defect; three low findings, all `fixed 84d9aae57`:
-    the zero-width carve-out test in `detail` asserted only a truthy dict (it
-    now asserts the invisible-named bucket exists), the helper docstring
-    overstated "every command" (it now names the three callers), and no test
-    drove the refusal through the real `detail` entry point (now added).
-    Reviewer notes, not findings: `detail` and the `scope-review` legacy route
-    do not run the repeated-heading check from PR #199 (they collapse silently
-    or exit cleanly, as already recorded), and the flat route stays unrefused
-    on purpose. Pass 2 pending.
+  heading normalizing to empty (`## :`, `## .`): `fixed b1b935f56`, tightened in
+  `84d9aae57` and the correction commit named in the ledger; entry removed in
+  `ae7a03808`. `detail` now refuses with a `DetailError` that names the heading
+  and the plan, through `empty_concept_headings_message` in
+  `plan_tool/concept_bootstrap.py`, which `create` shares (same message as
+  before). `scope-review` is deliberately unguarded: review showed its legacy
+  route cannot reach the bootstrap with such a plan, because a hand-edit makes
+  the record stale first. Review record, evidence and closure:
+  [`2026-11-13-detail-empty-heading-code-review.md`](2026-11-13-detail-empty-heading-code-review.md).
 
 ## Deliberately not in this handoff
 
