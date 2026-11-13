@@ -327,10 +327,10 @@ def test_invalid_project_selection_returns_usage_error_before_dispatch(
 
 @pytest.mark.integration
 @pytest.mark.parametrize("backend,flags,expected", [
-    ("claude", [], 127), ("codex", [], 127),
+    ("claude", [], 0), ("codex", [], 0),
     ("codex", ["--model", "claude-sonnet-4-5"], 0),
 ])
-def test_project_defaults_preflight_but_model_only_claude_stays_lazy(
+def test_project_defaults_and_model_only_claude_keep_list_backend_free(
     tmp_repo, project_models, monkeypatch, backend, flags, expected,
 ):
     import json
@@ -344,6 +344,29 @@ def test_project_defaults_preflight_but_model_only_claude_stays_lazy(
     assert cli.main(tmp_repo.argv(*flags, "list")) == (
         EXEC_NOT_FOUND_EXIT if expected == 127 else expected
     )
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("backend", ["claude", "codex"])
+@pytest.mark.parametrize("command", ["list", "status", "validate", "create"])
+@pytest.mark.parametrize("source", ["project", "flag", "environment"])
+def test_only_project_defaults_skip_missing_binary_for_inspection_commands(
+    registered_plan, project_models, monkeypatch, backend, command, source,
+):
+    import json
+    import shutil
+    from plan_tool.cli.app import EXEC_NOT_FOUND_EXIT
+
+    path, payload = project_models
+    payload["default_backend"] = backend
+    path.write_text(json.dumps(payload))
+    monkeypatch.setattr(shutil, "which", lambda binary: None)
+    flags = ["--backend", backend] if source == "flag" else []
+    if source == "environment":
+        monkeypatch.setenv("PLAN_TOOL_BACKEND", backend)
+    arguments = [command] if command == "list" else [command, "1-demo"]
+    expected = 0 if source == "project" and command != "create" else EXEC_NOT_FOUND_EXIT
+    assert cli.main(registered_plan.argv(*flags, *arguments)) == expected
 
 
 @pytest.mark.integration

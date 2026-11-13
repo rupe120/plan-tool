@@ -196,11 +196,13 @@ Codex needs two things before plan-tool can use it:
   `auth.json`), populated by `codex login`.
 
 When a backend is selected by flag, environment, or project default, or a
-non-Claude backend is inferred from an explicit model, and its binary is absent, the run fails fast with an install/PATH hint and
-exit code `127` (`EXEC_NOT_FOUND_EXIT`). The unconfigured default-`claude` path keeps its
-lazy per-call guard instead, so binary-less
-read-only commands (`list`, `status`, `validate`) still work with nothing
-installed.
+non-Claude backend is inferred from an explicit model, an absent binary fails
+fast with an install/PATH hint and exit code `127` (`EXEC_NOT_FOUND_EXIT`).
+
+For a project-default selection, `list`, `status`, and `validate` skip this
+preflight and work without the backend installed. Explicit flag, environment,
+and model selections retain their existing checks. The unconfigured
+default-`claude` path retains its lazy per-call guard as well.
 
 A run against an unauthenticated codex surfaces an auth-failure message and
 does **not** wait or retry — fix the credentials and re-run (see
