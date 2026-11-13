@@ -5879,17 +5879,23 @@ class TestNearestDeclaredMatch:
             ("docker/web/Dockerfile", "docker/api/Dockerfile"),
             ("services/web/Dockerfile", "services/api/Dockerfile"),
             ("worker-b/Dockerfile", "worker-a/Dockerfile"),
+            ("services/api/Dockerfile", "services/api/Dockerfile.dev"),
         ],
-        ids=["distant-dirs", "docker-siblings", "service-siblings", "worker-siblings"],
+        ids=[
+            "distant-dirs", "docker-siblings", "service-siblings",
+            "worker-siblings", "dotted-variant",
+        ],
     )
-    def test_dockerfile_with_an_identical_basename_is_never_a_near_miss(
+    def test_dockerfile_with_an_identical_or_dotted_basename_is_never_a_near_miss(
         self, cited: str, declared: str
     ) -> None:
         """A Dockerfile repeats by design in every service directory, and its
         long name dominates the full-path ratio: sibling directories score
-        0.86-0.95, above the 0.85 bar, on the shared basename alone. Unlike
-        ``index.ts`` (short, so sibling directories stay under the bar), it
-        must not reach the ratio route at all."""
+        0.86-0.95, above the 0.85 bar, on the shared basename alone, and
+        ``Dockerfile`` vs ``Dockerfile.dev`` in one directory clears it too.
+        Generic names such as ``index.ts`` keep the existing tradeoff (the
+        ratio route can still flag close sibling directories); a Dockerfile
+        must not reach either rule on its basename."""
         from plan_tool.review import _nearest_declared_match
 
         assert _nearest_declared_match(cited, [declared]) is None
@@ -6093,6 +6099,25 @@ class TestFilesCoherenceRootLevelFilenames:
         plan_path = self._fixture(tmp_path, body, files="apps/foo.py, Dockerfile")
         issues = check_files_coherence(parse_plan(plan_path), tmp_path)
         assert issues == []
+
+    def test_cited_dockerfile_beside_a_declared_dotted_variant_is_not_drift(
+        self, tmp_path: Path
+    ) -> None:
+        """``Dockerfile`` and ``Dockerfile.dev`` sit side by side in ordinary
+        repos; citing one while declaring the other is context, not a stale
+        path. Only the drift direction is asserted: a declared
+        ``Dockerfile.dev`` cannot be credited as mentioned (its suffix is not
+        recognized), which is a separate, accepted limitation."""
+        body = (
+            "# Step 1\n\n## Implementation\n\n"
+            "Edit `apps/foo.py`; mirror the production image in "
+            "`services/api/Dockerfile`.\n"
+        )
+        plan_path = self._fixture(
+            tmp_path, body, files="apps/foo.py, services/api/Dockerfile.dev"
+        )
+        issues = check_files_coherence(parse_plan(plan_path), tmp_path)
+        assert [i for i in issues if i.kind == "detail_only"] == []
 
     def test_bare_dockerfile_credits_every_declared_dockerfile(
         self, tmp_path: Path
