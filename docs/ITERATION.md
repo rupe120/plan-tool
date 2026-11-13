@@ -4,8 +4,8 @@
 
 `--iterate` turns a one-shot write into a loop: write → audit →
 `apply-finding` (the step that edits the plan to close a finding) →
-re-audit — and it keeps going until no new findings turn up or the
-budget runs out.
+re-audit — and it keeps going until no open findings remain or a stop
+condition fires (see [How the loop terminates](#how-the-loop-terminates)).
 
 **Why convergence matters.** Convergence isn't just a loop mode — it's
 the plan's correctness signal. A plan that converges under audit →
@@ -165,22 +165,34 @@ them once, and the loop runs itself within the fence you drew.
 
 ## How the loop terminates
 
-- **Converged.** `finding_set_delta` returns an empty introduced-set.
-  Exit code 0.
-- **Budget exhausted.** The iteration count hit `--max-iterations`, no
-  forward progress was made for `--iteration-budget` seconds (a debounced
-  no-progress deadline, not a cap on total time; `--time-budget` is the total
-  cap), or `--time-budget` was reached. Exit code 0 — the loop
+- **Converged.** After at least one round, no open apply-eligible findings
+  remain (`converged`). Exit code 0.
+- **No blocking findings.** After at least one round, only advisory
+  (`nit`/`info`) findings remain (`no_blocking_findings`). A round-0 plan with
+  only advisory findings still gets one apply pass. Exit code 0.
+- **Budget exhausted.** The iteration count hit `--max-iterations`
+  (`max_iterations`), no forward progress was made for `--iteration-budget`
+  seconds (`deadline_exceeded`; a debounced no-progress deadline, not a cap on
+  total time; `--time-budget` is the total cap), or `--time-budget` was reached
+  (`time_budget_exceeded`). Exit code 0 — the loop
   completed; any findings still open are in the report (and, for
   `completeness-audit --json`, the `has_blocking_findings` flag), which CI /
   aggregation scripts inspect instead of the exit code. For
   `completeness-audit`, add `--fail-on-findings` to turn "budget exhausted
   with medium+ findings still open" into a non-zero exit a CI step can
   gate on.
-- **Marginal stagnation.** Iteration N introduced no *new* findings
-  relative to iteration N-1 (the intersection equals the prior set).
-  The loop halts cleanly with exit code 0 — it's making no further
-  progress, but the artifact is no worse than the prior iteration.
+- **Marginal stagnation** (`marginal`). At least half of iteration N's open
+  findings were already open in iteration N-1, so the round is mostly
+  re-finding the same set. The loop halts cleanly with exit code 0 — it's
+  making little further progress, but the artifact is no worse than the prior
+  iteration.
+- **No progress** (`no_progress`). The open-finding count failed to shrink for
+  `--max-stall-rounds` consecutive rounds (default 2; `0` disables). This
+  catches a subjective audit that re-phrases the same findings each round, so
+  fresh ids defeat the `marginal` check. Exit code 0; the remaining findings
+  likely need a manual edit.
+- **Disabled.** `--no-iterate` skips the loop and performs one pass
+  (`disabled`).
 
 ## Checkpoint interaction
 

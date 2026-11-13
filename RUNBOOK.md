@@ -1167,12 +1167,14 @@ handles only the localized one-step split; the cross-step re-seed fork
 
 ### How the loop terminates
 
-- **Converged** — claude returned no new findings vs the prior pass.
-  Exit code 0. The artifact is in the converged state.
-- **Marginal stagnation** — iteration N's findings overlap iteration
-  N-1's without introducing anything new. Exit code 0. The artifact
-  is no worse than the prior iteration; further iteration yields
-  nothing new.
+- **Converged** — no open apply-eligible findings remain after at least one
+  round. Exit code 0. The artifact is in the converged state.
+- **Marginal stagnation** — at least half of iteration N's open findings were
+  already open in iteration N-1. Exit code 0. The artifact is no worse than the
+  prior iteration; further iteration yields little.
+- **No blocking findings** and **no progress** — the other two stops
+  (`no_blocking_findings`, `no_progress` with `--max-stall-rounds`); both exit
+  0 and are defined in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 - **Budget exhausted** — iteration count hit `--max-iterations` (3
   by default), no forward progress for `--iteration-budget` seconds (a
   debounced no-progress deadline, 1800 by default), or total elapsed time
@@ -3468,8 +3470,8 @@ Fix in this order:
 
 Symptom: the run exits 0 but the stderr final line names a
 `marginal` halt rather than `converged`. The artifact is
-the iteration-N output; iteration N+1 would have produced the same
-findings.
+the iteration-N output; iteration N+1 would most likely have re-found
+most of the same findings.
 
 Cause: claude can't improve further on this artifact. The remaining
 findings are either fundamentally out of scope for the loop (e.g.

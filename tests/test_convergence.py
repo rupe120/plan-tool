@@ -99,6 +99,28 @@ def test_default_budget_uses_module_constants() -> None:
     assert b.enabled is True
 
 
+def test_every_stop_reason_should_continue_returns_is_documented() -> None:
+    """``docs/ITERATION.md`` § "How the loop terminates" is the operator's only
+    key to the reason code on the final stderr line, so a stop added to
+    ``should_continue`` without a bullet there leaves an unexplained code."""
+    import inspect
+
+    from plan_tool import convergence
+
+    returned = set(
+        re.findall(
+            r'return (?:True|False), "(\w+)"',
+            inspect.getsource(convergence.should_continue),
+        )
+    ) - {"continue"}
+    doc = (Path(__file__).resolve().parent.parent / "docs" / "ITERATION.md").read_text(
+        encoding="utf-8"
+    )
+    section = doc.split("## How the loop terminates", 1)[1].split("\n## ", 1)[0]
+    assert returned, "reason-code extraction found nothing; update this test"
+    assert sorted(code for code in returned if f"`{code}`" not in section) == []
+
+
 @pytest.mark.parametrize("effective", [0, 1, 600, 900, 1800, 5000])
 def test_resume_hint_budget_always_exceeds_the_deadline_that_expired(
     effective: int,
