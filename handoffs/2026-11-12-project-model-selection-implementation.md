@@ -157,9 +157,55 @@ confirming pass follows.
    asserts the same fragment in all three; a shared include has no mechanism in
    the router install path.
 
+### Review pass 6 — `/code-review high` findings over `e87406e44..HEAD` (2026-11-13)
+
+Scope: `d9f148a0e`, `996afd895`, `cfade9cc2` (file-existence selection rule,
+project-default preflight exemption, #526 closure). Method: headless
+`/code-review high`, report-only, `handoffs/` and `docs/evidence/` excluded from
+bug hunting; the suite was not run. Log: `.tmp/project-model-selection.review-r6.log`.
+Code and tests: no defects found. Five findings:
+
+1. **[CONFIRMED, medium, docs-structure] `DIRECTIVES.md` ~487 — the new
+   "## Explicit overengineering checkpoints" H2 sits in the middle of Gate 1.**
+   The Gate 1 paragraphs after it (proportional-correction rule, `edit_drift`
+   advisory, proceed-to-`detail` rule) now read as part of the checkpoint
+   section; Gate 2 starts at ~535. Suggested fix: move the section before
+   Gate 1 or after all of Gate 1, or demote it to an H3.
+   **Disposition:** _(pending)_
+2. **[CONFIRMED, low, docs-contradiction] `docs/BACKENDS.md` ~217 — the cursor
+   paragraph still says project `default_backend: "cursor"` fails fast with exit
+   127**, false now for `list`, `status`, `validate`. `RUNBOOK.md` ~3599 and
+   `BACKENDS.md` ~100 are similarly unqualified. Suggested fix: qualify or
+   point at the shared paragraph.
+   **Disposition:** _(pending)_
+3. **[PLAUSIBLE, low, altitude/consistency] `plan_tool/cli/app.py` ~628 — the
+   hardcoded `{"list","status","validate"}` omits `root`**, another handler
+   `inspect.py` documents as never calling a backend; `plan-tool root` still
+   exits 127 with a missing project-default binary. The set is also a second
+   source of truth. Suggested fix: add `root`, record `root` as a deliberate
+   exclusion with its reason, or derive the set from the inspection group.
+   **Disposition:** _(pending)_
+4. **[CONFIRMED, low, test-hygiene] `tests/cli/test_app.py` ~330 — the
+   rewritten parametrized test has `expected` always 0**, leaving a dead `127`
+   branch, an unused `EXEC_NOT_FOUND_EXIT` import, and rows duplicating
+   `test_only_project_defaults_skip_missing_binary_for_inspection_commands`.
+   The unique row is `codex` + `--model claude-sonnet-4-5` (model-only Claude
+   stays lazy). Suggested fix: drop `expected`, assert `== 0`, keep and name
+   the model-inference row.
+   **Disposition:** _(pending)_
+5. **[PLAUSIBLE, low, guidance] `DIRECTIVES.md` ~279 — the omit-flags rule keys
+   on `backends.json` existing, not on what it configures.** A file that only
+   overrides one binary path leaves `create`/`roadmap` on the provider default
+   instead of the recommended strongest tier. Pass 5 chose file-existence
+   deliberately; the question is whether to record the residual case. Suggested
+   fix: key the rule on `default_backend` or a command model, or document the
+   limitation.
+   **Disposition:** _(pending)_
+
 ### Convergence status
 
-Five passes. Passes 2–4 re-seeded on the per-flag selection paragraph, which was
+Five passes before pass 6 (pass 6 above awaits dispositions; the loop is not
+converged — finding 1 is material). Passes 2–4 re-seeded on the per-flag selection paragraph, which was
 removed; pass 5 then found its replacement ("always pass explicit flags")
 overrode project configuration, contradicting the plan's requirement that
 skill-driven invocations defer to it. The guidance is now one file-existence
