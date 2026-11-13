@@ -520,7 +520,10 @@ Durable re-open conditions for retired items are recorded in
   `## References` (`create.py`, the `local_references` block that sets
   `distilled_markdown` and then `seed_body`), so the five repeated sections in
   the original report do not come from that append. The report's cause stays
-  unverified for 0.1.0.
+  unverified for 0.1.0. The new refusal's advice (rename or merge the repeated
+  headings) does not apply if a distill response itself yields two sections
+  with one name: the author's seed has no repeat, and a retry replays the
+  cached distill checkpoint and fails the same way.
 - **Workaround:** add non-empty `## Overview` and `## Problem statement`
   sections so the seed is direct-ready and skips the distill step. Not tried
   yet.
@@ -587,6 +590,30 @@ Durable re-open conditions for retired items are recorded in
   finding. One sample cannot separate a prompt gap from reviewer variation.
 - **Origin:** 2026-11-13, a throwaway-repo run made to check the `source_seed`
   entry above.
+
+### `create` raises a bare `ValueError` when a plan body has a heading that normalizes to empty (`## :`, `## .`)
+
+- **Files:** `plan_tool/concept_tree.py:concept_id` (raises on an empty
+  normalized component), `plan_tool/concept_bootstrap.py:bootstrap_concepts`
+  (builds each id from `section.name`), `plan_tool/parser.py:parse_body_sections`
+  (the name drops trailing `:` and `.`), and `create_plan` in
+  `plan_tool/create.py` (bootstraps before any heading check).
+- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 through the
+  inline-description route (`distill=False`, a stubbed steps response, a body
+  with `## Notes` and `## :`): `create` ends with `ValueError: title path
+  components must be non-empty strings` and no heading named. The heading `:`
+  parses to the name `""`, which `concept_id` rejects; `## .` behaves the same
+  at the function level. One route run end to end; the direct-ready route shares
+  the bootstrap call and was not run. Same class as the repeated-heading
+  refusal, a different trigger.
+- **Fix:** refuse with a `CreateError` that names the empty heading, before the
+  concept tree is bootstrapped, beside the repeated-heading check. Deliberately
+  not done: dropping such a section silently, and changing the name
+  normalization in `parse_body_sections`.
+- **Approach:** `direct` — a regression test with the `## :` and `## .` cases
+  (the `## Notes` control stays green) and one pre-bootstrap check.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** 2026-11-13, second review pass of the repeated-heading fix.
 
 ## RISK
 
