@@ -140,6 +140,7 @@ from plan_tool.response_contract import (
 from plan_tool.concept_bootstrap import (
     bootstrap_concepts,
     carry_forward_decisions,
+    empty_concept_headings_message,
     rederive_concepts,
 )
 from plan_tool.concept_review import review_concept_scope
@@ -7860,20 +7861,10 @@ def predict_plan_path(
 
 
 def _reject_empty_concept_headings(sections: Sequence[BodySection]) -> None:
-    """Refuse a section whose name is empty after normalization.
-
-    ``concept_id`` rejects an empty name with a bare ``ValueError`` that names
-    no heading. ``parse_body_sections`` already strips whitespace before
-    dropping trailing ``:``/``.``, so a name is empty exactly when the id
-    derivation would raise.
-    """
-    empty = [f"'## {section.heading}'" for section in sections if not section.name]
-    if empty:
-        raise CreateError(
-            "plan body has section headings with no name after normalization "
-            "(surrounding whitespace and trailing ':' and '.' are dropped): "
-            f"{', '.join(empty)}. Give each a name or remove it, and retry."
-        )
+    """Refuse a section whose name is empty after normalization."""
+    message = empty_concept_headings_message(sections)
+    if message is not None:
+        raise CreateError(message)
 
 
 def _reject_repeated_concept_headings(

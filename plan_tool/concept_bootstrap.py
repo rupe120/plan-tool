@@ -30,6 +30,27 @@ def canonical_source_key(section: BodySection, parent_path: Iterable[str] = ()) 
     )
 
 
+def empty_concept_headings_message(sections: Iterable[BodySection]) -> str | None:
+    """Refusal text for sections whose name is empty after normalization, else ``None``.
+
+    ``parse_body_sections`` strips whitespace before dropping trailing ``:``/``.``,
+    so a name is empty exactly when ``concept_id`` would raise a bare
+    ``ValueError`` naming no heading. Callers surface this one text through
+    their own error path: ``create`` (``CreateError``) and ``detail``
+    (``DetailError``). ``scope-review`` needs no guard: its legacy route
+    reaches the bootstrap only with a record whose fingerprint matches the
+    plan, and a plan that holds such a heading can never have had one written.
+    """
+    empty = [f"'## {section.heading}'" for section in sections if not section.name]
+    if not empty:
+        return None
+    return (
+        "plan body has section headings with no name after normalization "
+        "(surrounding whitespace and trailing ':' and '.' are dropped): "
+        f"{', '.join(empty)}. Give each a name or remove it, and retry."
+    )
+
+
 def _derived_values(node: ConceptNode) -> dict[str, object]:
     return {name: copy.deepcopy(getattr(node, name)) for name in _DERIVED_FIELDS}
 
@@ -59,7 +80,12 @@ def bootstrap_concepts(
     plan_slug: str,
     plan_fingerprint: str,
 ) -> ConceptTree:
-    """Build a deterministic, unreviewed concept tree without persistence."""
+    """Build a deterministic, unreviewed concept tree without persistence.
+
+    A caller bootstrapping from a plan body runs
+    :func:`empty_concept_headings_message` first: an empty section name makes
+    ``concept_id`` raise a bare ``ValueError``.
+    """
     if not isinstance(plan, Plan):
         raise TypeError("plan must be a validated Plan")
     concepts: list[ConceptNode] = []

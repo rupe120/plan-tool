@@ -2509,6 +2509,30 @@ class TestGenerateDetailHappyPath:
         assert plan_path.read_text(encoding="utf-8") == original
         assert not _detail_path_for(tmp_path, 1, "wire-up-renderer").exists()
 
+    def test_generate_detail_refuses_a_heading_with_no_name_before_any_model_call(
+        self, tmp_path: Path
+    ) -> None:
+        """Through the real entry point: a hand-edited plan holding ``## :``
+        used to reach ``concept_id`` and raise a bare ``ValueError``. It is a
+        ``DetailError`` naming the heading, raised before the model runs, with
+        the plan and detail directory untouched."""
+        plan_path = _write_orchestrator_plan(tmp_path)
+        original = plan_path.read_text(encoding="utf-8") + "\n## :\n\nbody.\n"
+        plan_path.write_text(original, encoding="utf-8")
+
+        with pytest.raises(DetailError, match="no name after normalization") as excinfo:
+            generate_detail(
+                plan_path,
+                repo_root=tmp_path,
+                step_id=1,
+                invoker=lambda _prompt: pytest.fail("detail model must not run"),
+            )
+
+        assert "'## :'" in str(excinfo.value)
+        assert str(plan_path) in str(excinfo.value)
+        assert plan_path.read_text(encoding="utf-8") == original
+        assert not _detail_path_for(tmp_path, 1, "wire-up-renderer").exists()
+
     def test_single_step_writes_file_and_updates_plan(
         self, tmp_path: Path
     ) -> None:
@@ -16443,6 +16467,39 @@ def test_candidate_body_buckets_ignore_fenced_pseudo_heading(tmp_path: Path) -> 
     assert "overview" in names
     assert "risks" in names
     assert "example bucket" not in names
+
+
+@pytest.mark.parametrize("empty_heading", ["## :", "## ."], ids=["colon", "period"])
+def test_candidate_buckets_refuse_a_heading_with_no_name_naming_it(
+    tmp_path: Path, empty_heading: str
+) -> None:
+    """A hand-edited plan can hold a heading whose name is empty after
+    normalization; ``concept_id`` would raise a bare ``ValueError`` naming
+    nothing. ``detail`` refuses with the same text ``create`` uses."""
+    from plan_tool.detail import derive_candidate_buckets
+
+    plan_path = _write_detail_plan_with_sections(tmp_path)
+    plan_text = plan_path.read_text(encoding="utf-8") + f"\n{empty_heading}\n\nbody.\n"
+
+    with pytest.raises(DetailError) as excinfo:
+        derive_candidate_buckets(parse_plan(plan_path), plan_text)
+
+    message = str(excinfo.value)
+    assert "no name after normalization" in message
+    assert f"'{empty_heading}'" in message
+
+
+def test_candidate_buckets_keep_a_zero_width_only_heading(tmp_path: Path) -> None:
+    """Carve-out: a zero-width space is not whitespace to ``str.split``, so the
+    heading has a non-empty (invisible) name and is neither refused nor a crash."""
+    from plan_tool.detail import derive_candidate_buckets
+
+    plan_path = _write_detail_plan_with_sections(tmp_path)
+    plan_text = plan_path.read_text(encoding="utf-8") + "\n## \u200b\n\nbody.\n"
+
+    assert "\u200b" in derive_candidate_buckets(
+        parse_plan(plan_path), plan_text
+    ).values()
 
 
 def test_detail_render_and_pointer_update_keep_description_step_text(tmp_path):

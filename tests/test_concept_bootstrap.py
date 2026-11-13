@@ -3,9 +3,12 @@ from __future__ import annotations
 import copy
 from dataclasses import replace
 
+import pytest
+
 from plan_tool.concept_bootstrap import (
     bootstrap_concepts,
     carry_forward_decisions,
+    empty_concept_headings_message,
     rederive_concepts,
 )
 from plan_tool.concept_tree import ConceptNode, ConceptTree, RECORD_KIND_DECISION
@@ -185,3 +188,32 @@ def test_carry_forward_matched_node_appears_exactly_once() -> None:
     candidate = carry_forward_decisions(saved, fresh)
     matching = [n for n in candidate.concepts if n.id == fresh.concepts[0].id]
     assert len(matching) == 1
+
+
+def test_empty_concept_headings_message_is_none_for_a_body_with_named_sections() -> None:
+    body = "## Risks\nFirst\n## Architecture\nSecond\n"
+    assert empty_concept_headings_message(parse_body_sections(body)) is None
+
+
+def test_empty_concept_headings_message_lists_every_empty_heading_in_order() -> None:
+    """``parse_body_sections`` drops trailing ``:``/``.``, so a heading made only
+    of them has an empty name and ``concept_id`` would raise a bare
+    ``ValueError`` naming nothing. Every command that bootstraps concepts from
+    a body shares this one refusal text."""
+    body = "## Risks\nA\n## :\nB\n## Architecture\nC\n## .\nD\n"
+    message = empty_concept_headings_message(parse_body_sections(body))
+    assert message is not None
+    assert "no name after normalization" in message
+    assert message.index("'## :'") < message.index("'## .'")
+    assert "Risks" not in message and "Architecture" not in message
+
+
+@pytest.mark.parametrize(
+    "heading", ["## Notes ##", "## **Notes**", "## \u200b"],
+    ids=["closing-hashes", "emphasis", "zero-width-only"],
+)
+def test_headings_with_a_non_empty_name_are_not_reported_as_empty(heading: str) -> None:
+    """Carve-out: these keep a non-empty name (closing hashes and emphasis are
+    not stripped; a zero-width space is not whitespace to ``str.split``), so the
+    refusal must not widen to them."""
+    assert empty_concept_headings_message(parse_body_sections(f"{heading}\nbody\n")) is None

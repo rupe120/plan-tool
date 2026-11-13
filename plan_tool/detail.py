@@ -64,7 +64,10 @@ from plan_tool.concept_tree import (
     load_concepts,
     save_concepts,
 )
-from plan_tool.concept_bootstrap import bootstrap_concepts
+from plan_tool.concept_bootstrap import (
+    bootstrap_concepts,
+    empty_concept_headings_message,
+)
 # Canonical path derivation and slug rules live in the
 # ``plan_tool.detail_artifacts`` leaf (shared with ``fingerprint``/
 # ``review``/``scope_out``); re-imported here so every historical
@@ -596,11 +599,15 @@ def derive_candidate_buckets(
     # ``concept_id`` depends only on the section name (empty parent path), so
     # the slug/fingerprint carried by the bootstrap tree never reaches the ids
     # we read back — a placeholder slug keeps this a pure body-derived map.
+    sections = parse_body_sections(
+        split_plan_document(plan_text).body, ignore_fenced_code=True
+    )
+    message = empty_concept_headings_message(sections)
+    if message is not None:
+        raise DetailError(message)
     bootstrap = bootstrap_concepts(
         plan,
-        parse_body_sections(
-            split_plan_document(plan_text).body, ignore_fenced_code=True
-        ),
+        sections,
         plan_slug="candidate-buckets",
         plan_fingerprint="",
     )
@@ -3621,9 +3628,12 @@ def _prepare_run_grade_detail(
     # The buckets a detail step may defer are the plan's current body sections,
     # derived once here (record-independent) and threaded to the prompt, the
     # parse gate, and the persist tail so all three resolve an id identically.
-    candidate_buckets = derive_candidate_buckets(
-        plan, plan_path.read_text(encoding="utf-8")
-    )
+    try:
+        candidate_buckets = derive_candidate_buckets(
+            plan, plan_path.read_text(encoding="utf-8")
+        )
+    except DetailError as exc:
+        raise DetailError(f"{plan_path}: {exc}") from exc
     # Require (and validate) the deferral envelope whenever a deferral could be
     # recorded — any body-section bucket exists — or a concept record is on disk
     # (legacy full-tree discipline). A bare plan with neither keeps the lenient
