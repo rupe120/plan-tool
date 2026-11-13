@@ -440,22 +440,32 @@ def test_sync_keeps_unowned_h1_content_and_ignores_fenced_boundary_examples(
 
 
 @pytest.mark.parametrize(
-    ("title", "rationale"),
+    ("title", "rationale", "rendered"),
     [
-        ("Delayed", "why\n# Injected heading\nmore rationale"),
-        ("Delayed", "why\n## Injected sibling\nmore rationale"),
-        ("Delayed", "why\n```\nunclosed fence swallows the tail"),
-        ("Delayed\n# Title heading\nrest of title", "why"),
+        ("Delayed", "why\n# Injected heading\nmore rationale",
+         "- Delayed — why # Injected heading more rationale"),
+        ("Delayed", "why\n## Injected sibling\nmore rationale",
+         "- Delayed — why ## Injected sibling more rationale"),
+        ("Delayed", "why\r# Injected after a bare CR\rmore rationale",
+         "- Delayed — why # Injected after a bare CR more rationale"),
+        ("Delayed", "why\n```\nunclosed fence swallows the tail",
+         "- Delayed — why ``` unclosed fence swallows the tail"),
+        ("Delayed\n# Title heading\nrest of title", "why",
+         "- Delayed # Title heading rest of title — why"),
     ],
-    ids=["rationale-h1", "rationale-h2", "rationale-unclosed-fence", "title-h1"],
+    ids=[
+        "rationale-h1", "rationale-h2", "rationale-bare-cr-h1",
+        "rationale-unclosed-fence", "title-h1",
+    ],
 )
 def test_multiline_decision_text_cannot_create_document_boundaries(
-    tmp_path: Path, title: str, rationale: str
+    tmp_path: Path, title: str, rationale: str, rendered: str
 ) -> None:
     """A concept's title and rationale are decision *content*: a line inside
     them that looks like a heading or a fence must not become a document-level
     boundary, or the owned ``## Deferred`` body is truncated and the tail ends
-    up in a stray section the next read treats as unowned."""
+    up in a stray section the next read treats as unowned. The parser also
+    treats a bare CR as a line boundary, so the collapse must cover it."""
     path = tmp_path / "sync.md"
     source = _write_plan(path)
     plan = parse_plan(path)
@@ -471,10 +481,12 @@ def test_multiline_decision_text_cannot_create_document_boundaries(
     updated = path.read_text(encoding="utf-8")
     sections = split_body_sections(updated.split("---\n", 2)[2])
     assert set(sections) == {"custom", "deferred", "tail"}
-    for fragment in (*title.split(), *rationale.split()):
-        assert fragment in sections["deferred"]
+    assert sections["deferred"].strip() == rendered
     assert "## Tail\n\nKeep tail." in updated
 
+    # Smoke check only: the written plan re-syncs from its stored record. The
+    # renderer is deterministic, so this cannot pin the one-line property; the
+    # exact ``rendered`` assertion above does.
     stored = load_concepts(path, compute_plan_fingerprint(path))
     again = synchronize_concepts(
         path, parse_plan(path), stored, stored, source_plan_text=updated
