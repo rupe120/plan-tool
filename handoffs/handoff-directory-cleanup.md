@@ -1,5 +1,11 @@
 # Handoff directory cleanup
 
+| Field | Value |
+| --- | --- |
+| Opened | 2026-11-13 |
+| Branch | `docs/handoff-cleanup` |
+| Disposition | Open: release-cluster decision and pre-push review pending |
+
 Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
 Start with `BACKLOG.md`'s working board; this file does not override it.
 `README.md` owns the directory contract (naming, ledger shape, retention, index);
@@ -26,9 +32,9 @@ this file records what remains to clean and the owner decisions that fence it.
 
 ## State, 2026-11-13
 
-`README.md` links all 95 files; the index check in § "Retention" returns empty.
+`README.md` links each of the 94 other files exactly once; the index check in § "Retention" returns empty.
 Twelve closed ledgers were compressed to the retention shape; two superseded roadmap
-pickups were retired (their scope lives in BACKLOG #492 and #496).
+pickups were retired (their scope lives in BACKLOG #492 and the closed #496 record in `docs/history/backlog-decisions.md`).
 
 Compression omissions, kept so a later reader does not restore them:
 

@@ -31,7 +31,7 @@ one tracked ledger per change, named
 does next; a ledger records how the current change was judged. A file may do
 both jobs when the same change is still in flight.
 
-Put a small summary table at the top: the review range, the current head, the
+Put a small summary table at the top: the date opened (an `Opened` row), the review range, the current head, the
 checks run, the reviewer or review session, and the current disposition. Give
 the reviewer the settled decisions before each pass. Then record every
 substantive finding, including pull-request comments, with one disposition:
@@ -63,7 +63,7 @@ branch, and hand the updated settled-decision list to the next reviewer.
   `CLAUDE.md` § "Driving the convergence loops"). The four are not
   interchangeable, and a compressed ledger keeps its own label; rows closed
   before this rule keep the label they carry.
-- Every file in this directory except `README.md` is linked from exactly one section below. Check with `for f in *.md; do [ $f = README.md ] || grep -q "($f)" README.md || echo "NOT INDEXED: $f"; done`; empty output means the index is complete.
+- Every file in this directory except `README.md` is linked from exactly one section below. Check with `for f in *.md; do [ $f = README.md ] || [ $(grep -c "($f)" README.md) -eq 1 ] || echo "LINKED != 1: $f"; done`; empty output means every file is linked exactly once.
 
 ## Release preparation
 
@@ -71,7 +71,7 @@ Use the [selection record](../docs/evidence/public-release-content-snapshot.md)
 for content decisions, reference ownership and retained conclusions. Use the
 [verification receipt](../docs/evidence/public-release-content-snapshot-verification-20261020.md)
 for exact candidate identity, environment and measured results. The
-[release pickup](2026-10-19-public-onboarding-and-release.md) owns the next action. [Sanitized publication](2026-10-21-sanitized-publication.md) records the completed 2026-10-21 publication.
+release pickup (`2026-10-19-public-onboarding-and-release.md`, listed below) owns the next action. [Sanitized publication](2026-10-21-sanitized-publication.md) records the completed 2026-10-21 publication.
 Keep decisions and finding explanations in their maintained owners when
 compressing or retiring a handoff.
 
@@ -94,7 +94,7 @@ compressing or retiring a handoff.
 - [Demo and example refresh](2026-10-21-demo-refresh.md) — skill-driven pickup,
   current demo placement, earlier task-list preparation and verification/publication boundaries.
 
-Each records a next action or an open decision. Parked backlog routes (#216,
+Each records a next action or an open decision, or is a completed pickup kept until its retirement is decided (its entry says so). Parked backlog routes (#216,
 #242, #322, #355, #359, #361) carry their pickup and fence in `BACKLOG.md` and
 its arc documents, not here; the successor-slug rule lives in
 `docs/how-to/roadmap.md`.
@@ -186,23 +186,23 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted; the le
 | [Detail empty-heading refusal](2026-11-13-detail-empty-heading-code-review.md) | Low-yield convergence 2026-11-13 (not a clean audit); merged through PR #202; not compressed | None open; `scope-review` is unguarded by design |
 | [Dockerfile mention recognition](2026-11-13-files-coherence-dockerfile-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #201; not compressed | None open; the `_claim_delivered` fuzzy match was declined and the `detail` follow-up shipped in PR #202 |
 | [Multiline concept decisions](2026-11-13-multiline-concept-decisions-code-review.md) | **Stopped at exit 2** 2026-11-13 (neither converged nor clean); merged through PR #198; not compressed | None open; the repeated-heading and empty-heading follow-ups shipped in PRs #199 and #200 |
-| [Row-linked prose amendments](2026-09-29-roadmap-candidate-row-prose-amendments-code-review.md) | Converged after pass 5 | Source `BUG_BACKLOG.md` entry (version comparison omits row-linked prose amendments) |
-| [Candidate capsule fixes](2026-10-05-candidate-capsule-fixes-code-review.md) | Passes 1–2 triaged; **pass 3 `pending`** (convergence not recorded) | Two `BUG_BACKLOG.md` entries (capsule Decision-row restore, source-span evidence) |
-| [Roadmap versioned-from-birth](2026-10-06-roadmap-versioned-from-birth-code-review.md) | Loop concluded 2026-10-06 after pass 4 | See "Loop conclusion" in the ledger |
-| [Roadmap stack layer](2026-10-08-roadmap-stack-layer-code-review.md) | Converged (passes 4–5 LOW-only); PR #46 | #461 |
+| [Row-linked prose amendments](2026-09-29-roadmap-candidate-row-prose-amendments-code-review.md) | Converged after pass 5; not compressed | Source `BUG_BACKLOG.md` entry (version comparison omits row-linked prose amendments) |
+| [Candidate capsule fixes](2026-10-05-candidate-capsule-fixes-code-review.md) | Passes 1–2 triaged; **pass 3 `pending`** (convergence not recorded); not compressed | Two `BUG_BACKLOG.md` entries (capsule Decision-row restore, source-span evidence) |
+| [Roadmap versioned-from-birth](2026-10-06-roadmap-versioned-from-birth-code-review.md) | **Stopped at exit 2** (loop concluded 2026-10-06 after pass 4; neither converged nor clean); compressed 2026-11-13 | See "Loop conclusion" in the ledger |
+| [Roadmap stack layer](2026-10-08-roadmap-stack-layer-code-review.md) | Converged (passes 4–5 LOW-only); PR #46; compressed 2026-11-13 | #461 |
 | [Prompt-budget model window](2026-10-09-prompt-budget-model-window-code-review.md) | Converged 2026-10-09 (passes 6–7 low-yield); compressed 2026-11-13 | #470 |
-| [Roadmap context ceiling](2026-10-09-roadmap-context-ceiling-code-review.md) | Converged 2026-10-09 (passes 2–3 low-yield); PR #58 | #469 (removed on merge) |
-| [Completeness next-steps blocking set](2026-10-10-completeness-next-steps-blocking-set-code-review.md) | **Closed non-converging by agreement** (four passes); PR #71 | #479; pass-4 findings tracked as #480 |
-| [Completeness next-step verdict finish](2026-10-10-completeness-next-step-verdict-finish-code-review.md) | Three rounds; bare-plan audit **stopped at exit 2**; PR #74 | #480; open remainder routed to #481. Step-4 [reader enumeration](2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md) is its attached deliverable |
-| [Tail verdict whose artifacts moved](2026-10-10-tail-artifacts-moved-code-review.md) | Two review rounds | #481 |
-| [`run --accept`](2026-10-10-run-accept-code-review.md) | One round plus one delta review | #463 |
-| [Leftover `0N-*.md` warning](2026-10-10-leftover-artifact-warning-code-review.md) | Single review, findings dispositioned | `BUG_BACKLOG.md` "bare `0N-*.md` names" part 2 |
-| [Multi-line finding bullets](2026-10-10-multiline-report-bullets-code-review.md) | Single review, findings dispositioned | `BUG_BACKLOG.md` bullet-indent entry |
-| [Roadmap seed `## Risks` rule](2026-10-10-roadmap-seed-risks-code-review.md) | Single review, findings dispositioned | Owner decision 2026-10-10 |
-| [Unpublished seed overwrite](2026-10-10-seed-overwrite-code-review.md) | Single review, findings dispositioned | `BUG_BACKLOG.md` seed-overwrite entry |
-| [`run` no-edits-applied block](2026-10-13-no-edits-applied-code-review.md) | Converged after 6 rounds | #456 |
-| [Gate-status review](2026-10-19-gate-status-code-review.md) | Converged after two Claude Code passes | #500 |
-| [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164 | #369, #519, #520 retain their independent owners |
+| [Roadmap context ceiling](2026-10-09-roadmap-context-ceiling-code-review.md) | Converged 2026-10-09 (passes 2–3 low-yield); PR #58; compressed 2026-11-13 | #469 (removed on merge) |
+| [Completeness next-steps blocking set](2026-10-10-completeness-next-steps-blocking-set-code-review.md) | **Closed non-converging by agreement** (four passes); PR #71; not compressed | #479; pass-4 findings tracked as #480 |
+| [Completeness next-step verdict finish](2026-10-10-completeness-next-step-verdict-finish-code-review.md) | Three rounds; bare-plan audit **stopped at exit 2**; PR #74; not compressed | #480; open remainder routed to #481. Step-4 [reader enumeration](2026-10-10-completeness-next-step-verdict-finish-reader-enumeration.md) is its attached deliverable |
+| [Tail verdict whose artifacts moved](2026-10-10-tail-artifacts-moved-code-review.md) | Two review rounds; not compressed | #481 |
+| [`run --accept`](2026-10-10-run-accept-code-review.md) | One round plus one delta review; not compressed | #463 |
+| [Leftover `0N-*.md` warning](2026-10-10-leftover-artifact-warning-code-review.md) | Single review, findings dispositioned; not compressed | `BUG_BACKLOG.md` "bare `0N-*.md` names" part 2 |
+| [Multi-line finding bullets](2026-10-10-multiline-report-bullets-code-review.md) | Single review, findings dispositioned; not compressed | `BUG_BACKLOG.md` bullet-indent entry |
+| [Roadmap seed `## Risks` rule](2026-10-10-roadmap-seed-risks-code-review.md) | Single review, findings dispositioned; not compressed | Owner decision 2026-10-10 |
+| [Unpublished seed overwrite](2026-10-10-seed-overwrite-code-review.md) | Single review, findings dispositioned; not compressed | `BUG_BACKLOG.md` seed-overwrite entry |
+| [`run` no-edits-applied block](2026-10-13-no-edits-applied-code-review.md) | Converged after 6 rounds; not compressed | #456 |
+| [Gate-status review](2026-10-19-gate-status-code-review.md) | Converged after two Claude Code passes; not compressed | #500 |
+| [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164; compressed 2026-11-13 | #369, #519, #520 retain their independent owners |
 | [Completed maintenance](2026-11-05-completed-maintenance-code-review.md) | Converged; merged through PRs #165–167 and #169 | Deferred stability bugs, nested-function citations, and run-ID collision in `BUG_BACKLOG.md` |
 | [`BACKLOG.md` id guard](2026-09-23-backlog-id-guard-code-review.md) | All in-diff findings fixed or declined | Finding E, the wider broken-link count (#426); not compressed |
 | [Roadmap brief-source drift](2026-09-12-roadmap-brief-source-drift-code-review.md) | Converged 2026-09-14 (10 rounds, 55 findings) | `BUG_BACKLOG.md` external-replacement risk (F26); closed route-local record and #367 |
@@ -215,7 +215,7 @@ Closure labels follow § "Retention". Compressed 2026-09-29 unless noted; the le
 | [Detail deferrals-envelope repair](2026-09-25-detail-deferrals-envelope-repair-code-review.md) | Converged 2026-09-25 | Source `BUG_BACKLOG.md` entry removed at `8491289f` |
 | [Candidate envelope diagnostics](2026-09-26-roadmap-candidate-envelope-diagnostics-code-review.md) | Converged, low-yield, 2026-09-27 | `BUG_BACKLOG.md` entry for P1.3/P2.2 |
 | [Candidate anchor/gate correction](2026-09-27-candidate-anchor-gate-correction-code-review.md) | Converged, low-yield, after 8 passes | #431, #432 |
-| [Roadmap stack propagation](2026-10-08-roadmap-stack-propagation-code-review.md) | Converged 2026-10-08, four passes (3 and 4 consecutive and clean) | #463, #464, one `BUG_BACKLOG.md` entry; its pickup section lists the next session's work (the audit replay, #461's last audit, the directives branch's pull request) |
+| [Roadmap stack propagation](2026-10-08-roadmap-stack-propagation-code-review.md) | Converged 2026-10-08, four passes (3 and 4 consecutive and clean); compressed 2026-11-13 | #463, #464, one `BUG_BACKLOG.md` entry; its pickup section lists the next session's work (the audit replay, #461's last audit, the directives branch's pull request) |
 
 ## Known dangling citations
 
