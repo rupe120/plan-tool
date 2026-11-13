@@ -502,8 +502,8 @@ Durable re-open conditions for retired items are recorded in
   with the original seed's own canonical sections when the seed has some of
   the standard headings but not all of them; **Checked** below records what
   the code at 1.3.1 does. Fix it where the duplicates are introduced. The
-  unactionable message is a separate, reproduced defect with its own entry
-  below.
+  unactionable message for a repeated heading is fixed separately: `create`
+  now refuses with the heading named.
 - **Checked 2026-11-13 at plan-tool 1.3.1 (the report is from 0.1.0):** not
   reproduced. A test seeded with the nine headings above (no Overview, no
   Problem statement), a stubbed distill returning the eight canonical
@@ -512,8 +512,8 @@ Durable re-open conditions for retired items are recorded in
   cannot exclude a response shape the stub does not produce. A one-step
   real-model throwaway run at 1.3.1 (a seed with Outcome, Scope contract,
   Deferred, Risks and References) also succeeded. `parse_body_sections` does
-  return repeated headings unchanged, and a repeated heading does reach the
-  crash on another route (next entry). On the
+  return repeated headings unchanged, and a repeated heading did reach the
+  crash on another route (since refused with a named heading). On the
   normalized route the distilled body comes from `_render_distilled_markdown`,
   which emits each canonical or recognized optional section once and never
   `References`; the only raw-seed text appended afterwards is the seed's own
@@ -537,35 +537,6 @@ Durable re-open conditions for retired items are recorded in
   seed for its milestone 3 plan, 2026-10-17. Not checked against the existing
   tests for `create`, so a test that pins the current joining behavior may
   exist.
-
-### `create --from-existing` crashes with "concept scope contains duplicate IDs" when a seed repeats any `## Heading`
-
-- **Files:** `plan_tool/create.py` (`_review_create_concepts`; the concept tree
-  built in `create_plan` from `parse_body_sections(concept_source,
-  ignore_fenced_code=True)`), `plan_tool/concept_bootstrap.py:bootstrap_concepts`,
-  `plan_tool/concept_review.py:_validate_request`.
-- **Symptom:** reproduced 2026-11-13 at plan-tool 1.3.1 with no model call
-  beyond a stubbed split assessment. A direct-ready file seed
-  (`tests/test_create.py::_direct_ready_file_source`: each canonical heading
-  once, a `## Steps` block, one `## References`) that also holds two
-  `## Notes` sections stops `create` with `InvalidConceptScopeError: concept
-  scope contains duplicate IDs`; the same seed with `## Notes` once writes its
-  plan. `parse_body_sections` returns repeated headings unchanged and
-  `bootstrap_concepts` derives each id from the section name, so two sections
-  with one name get one id. The message names no heading, so the author cannot
-  tell which one to rename. Two cases (control and repeat); the seed shape is
-  an extra non-canonical heading, not the report in the entry above.
-- **Fix:** refuse before the concept review with a `CreateError` that names the
-  repeated heading and says to rename or merge it, like the other
-  `--from-existing` source refusals (`classify_file_backed_source` already reads
-  `extract_h2_section_occurrences`; check it for a seam before adding a new
-  check). Deliberately not done: merging or renaming duplicate sections
-  automatically (that edits the author's body) and changing concept ids.
-- **Approach:** `direct` — a regression test with the two cases above (the
-  control must stay green) and one pre-review check.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-11-13, found while checking the entry above; same message,
-  different route.
 
 ### Create body-patch helpers can normalize existing plan body newlines
 
