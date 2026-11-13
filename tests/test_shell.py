@@ -1197,16 +1197,31 @@ def test_claude_invoke_rate_limit_menu_switches_backend_and_retries(
     assert sleeps == []
 
 
+@pytest.mark.parametrize("explicit_model", [None, "primary-explicit"])
 def test_claude_invoke_switch_policy_switches_backend_without_prompt(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    explicit_model: str | None,
 ) -> None:
     """A process-wide SWITCH policy consumes ``fallback_backend`` and retries
     on it non-interactively — no menu, no wait, even on a TTY."""
     from plan_tool import claude_errors
-    from plan_tool.backend import get_active_backend
+    from plan_tool.backend import get_active_backend, select_active_backend, spawn_cwd
     from plan_tool.claude_errors import OnRateLimitAction, OnRateLimitPolicy
 
-    original_backend = get_active_backend()
+    from plan_tool import backend
+
+    monkeypatch.setattr(backend, "_active_backend", get_active_backend())
+    config_dir = tmp_path / ".plan-tool"
+    config_dir.mkdir()
+    (config_dir / "backends.json").write_text(json.dumps({
+        "backends": {"codex": {"model": "fallback-base", "commands": {
+            "create": {"model": "fallback-command"},
+        }}},
+    }))
+    original_backend = select_active_backend(
+        "claude", repo_root=tmp_path, model=explicit_model, command_model="primary-command",
+    ).effective
     monkeypatch.setattr(claude_errors, "_default_on_rate_limit_policy",
                         OnRateLimitPolicy(action=OnRateLimitAction.SWITCH,
                                           fallback_backend="codex"))
@@ -1217,7 +1232,11 @@ def test_claude_invoke_switch_policy_switches_backend_without_prompt(
     ]
     seen_argv: list[list[str]] = []
 
+    real_popen = backend_runner.subprocess.Popen
+
     def fake_popen(argv, **kwargs):
+        if argv[0] == "git":
+            return real_popen(argv, **kwargs)
         seen_argv.append(list(argv))
         return _popen_response(responses.pop(0))
 
@@ -1230,10 +1249,14 @@ def test_claude_invoke_switch_policy_switches_backend_without_prompt(
     monkeypatch.setattr(shell, "ask_on_rate_limit_action", _fail_if_prompted)
 
     sleeps: list[float] = []
-    rc, out = shell.claude_invoke("p", _sleep=lambda s: sleeps.append(s))
+    with spawn_cwd(tmp_path):
+        rc, out = shell.claude_invoke("p", _sleep=lambda s: sleeps.append(s))
 
     assert (rc, out) == (0, "switched output")
     assert [argv[0] for argv in seen_argv] == ["claude", "codex"]
+    assert original_backend.resolved_model == (explicit_model or "primary-command")
+    assert seen_argv[0][seen_argv[0].index("--model") + 1] == (explicit_model or "primary-command")
+    assert seen_argv[1][seen_argv[1].index("-m") + 1] == "fallback-base"
     assert get_active_backend() is original_backend
     assert sleeps == []  # switched, never waited
 
@@ -1545,16 +1568,31 @@ def test_claude_invoke_switch_bounds_when_fallback_also_rate_limited(
     assert sleeps, "expected one fallback wait after the switch"
 
 
+@pytest.mark.parametrize("explicit_model", [None, "primary-explicit"])
 def test_claude_invoke_scoped_switch_restores_after_fallback_failure(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    explicit_model: str | None,
 ) -> None:
     """A successful switch that still terminates rate-limited restores the
     original active backend before returning."""
     from plan_tool import claude_errors
-    from plan_tool.backend import get_active_backend
+    from plan_tool.backend import get_active_backend, select_active_backend, spawn_cwd
     from plan_tool.claude_errors import OnRateLimitAction, OnRateLimitPolicy
 
-    original_backend = get_active_backend()
+    from plan_tool import backend
+
+    monkeypatch.setattr(backend, "_active_backend", get_active_backend())
+    config_dir = tmp_path / ".plan-tool"
+    config_dir.mkdir()
+    (config_dir / "backends.json").write_text(json.dumps({
+        "backends": {"codex": {"model": "fallback-base", "commands": {
+            "create": {"model": "fallback-command"},
+        }}},
+    }))
+    original_backend = select_active_backend(
+        "claude", repo_root=tmp_path, model=explicit_model, command_model="primary-command",
+    ).effective
     monkeypatch.setattr(claude_errors, "_default_on_rate_limit_policy",
                         OnRateLimitPolicy(action=OnRateLimitAction.SWITCH,
                                           fallback_backend="codex"))
@@ -1565,9 +1603,15 @@ def test_claude_invoke_scoped_switch_restores_after_fallback_failure(
         SimpleNamespace(stdout="You've hit your limit", stderr="", returncode=1),
     ]
     seen: list[str] = []
+    seen_argv: list[list[str]] = []
+
+    real_popen = backend_runner.subprocess.Popen
 
     def fake_popen(argv, **kwargs):
+        if argv[0] == "git":
+            return real_popen(argv, **kwargs)
         seen.append(argv[0])
+        seen_argv.append(list(argv))
         return _popen_response(responses.pop(0))
 
     monkeypatch.setattr(backend_runner.subprocess, "Popen", fake_popen)
@@ -1579,11 +1623,15 @@ def test_claude_invoke_scoped_switch_restores_after_fallback_failure(
         lambda *a, **k: SimpleNamespace(action=claude_errors.WaitUntilAction.STOP),
     )
 
-    rc, out = shell.claude_invoke("p")
+    with spawn_cwd(tmp_path):
+        rc, out = shell.claude_invoke("p")
 
     assert rc == 1
     assert "hit your limit" in out
     assert seen == ["claude", "codex"]
+    assert original_backend.resolved_model == (explicit_model or "primary-command")
+    assert seen_argv[0][seen_argv[0].index("--model") + 1] == (explicit_model or "primary-command")
+    assert seen_argv[1][seen_argv[1].index("-m") + 1] == "fallback-base"
     assert get_active_backend() is original_backend
 
 
