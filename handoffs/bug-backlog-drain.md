@@ -112,8 +112,19 @@ they resolve.
   stop that the code never emits (the reasons are `max_iterations`,
   `deadline_exceeded` and `time_budget_exceeded`), so it now names those. The
   entry's own checks pass: no `300s` and no `budget_exhausted` reason code remain
-  in `RUNBOOK.md`. Documentation only; the suite is unchanged by it. Review:
-  pending.
+  in `RUNBOOK.md`. Documentation only; the suite is unchanged by it.
+  - `/code-review` high, fact-check pass 1 (headless, read-only): the five
+    corrections hold against the code and `docs/cli`. Findings, all verified
+    before acting: `fixed 3b88dfcf3` (RUNBOOK named a `marginal-stagnation` stop the
+    code never emits, now `marginal`; `docs/ITERATION.md` still said wall-clock
+    hit `--iteration-budget`; the RUNBOOK cause, fix and "Budget exhausted"
+    bullet now cover `--time-budget`; two over-long lines rewrapped),
+    `fixed 343d6fb3a` (a truncated `[Defaults)` link in `common-workflows.md`, target
+    `docs/ITERATION.md#defaults`), `fixed 79eafd931` (the onboarding ledger row and
+    finding still pointed at the removed entry), and `tracked` in
+    `BUG_BACKLOG.md`, filed in `f12de12bb` (the loop hints print `--iteration-budget
+    1800`, the default, as "a larger wall-clock budget"; the termination lists
+    omit `no_progress` and `no_blocking_findings`). Pass 2 pending.
 
 ## Deliberately not in this handoff
 
