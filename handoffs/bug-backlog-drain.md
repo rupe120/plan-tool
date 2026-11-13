@@ -101,14 +101,27 @@ they resolve.
   direct-ready seed does crash with the same message; it is filed as its own
   `ready` entry.
 - 2026-11-13 — `create --from-existing` crashes with "concept scope contains
-  duplicate IDs" when a seed repeats any `## Heading`: `fixed 6b5f266a2`, entry
-  removed in `71c3a4238`. `create` refuses with a `CreateError` naming the heading
-  after the concept tree is bootstrapped (covers a direct-ready file seed and an
-  inline description; five tests, the control stays green; a heading-text key
-  and a dropped call each fail them). Not changed, by design:
-  `detail.py` (a repeated heading collapses silently in a dict, no error) and
-  `cli/scope_review_cmd.py` (the legacy full-tree route already exits cleanly,
-  with the same hash-based text). Review: pending.
+  duplicate IDs" when a seed repeats any `## Heading`: `fixed 6b5f266a2`,
+  tightened in `0aea27533`; entry removed in `71c3a4238`. `create` refuses with a
+  `CreateError` that lists every colliding spelling, after the concept tree is
+  bootstrapped (covers a direct-ready file seed and an inline description).
+  Eight tests; mutants checked by this session: fence-awareness off fails the
+  fenced-heading carve-out test, listing only the first spelling fails six
+  tests, and a dropped call fails the four repeat cases. Full suite 14,868
+  passed, 66 skipped. Not changed, by design: `detail.py` (a repeated heading
+  collapses silently in a dict, no error) and `cli/scope_review_cmd.py` (the
+  legacy full-tree route already exits cleanly, with the same hash-based text).
+  `/code-review` high, pass 1 (headless, report-only; the reviewer ran the
+  tests and `ruff` but not mutants): no material defect; five low findings.
+  `fixed 0aea27533`: the message named only the first spelling; no carve-out or
+  trailing-colon test; the "nothing written" assertion was undocumented as an
+  ordering guard and skipped the manifest and the inline route. `fixed` in the
+  commit that adds this line: the overstated mutant wording in the earlier log
+  line. `declined`: hoisting the check ahead of the interactive step prompts
+  (the model-call ordering is settled and `--yes` runs are unaffected), and
+  restoring the dropped multiline review-record link (the ledger stays
+  indexed in `handoffs/README.md`). One pass with no material finding is not
+  the two-pass convergence the stopping rule requires: **second pass pending**.
 
 ## Deliberately not in this handoff
 
