@@ -128,6 +128,11 @@ def test_every_stop_reason_should_continue_returns_is_documented() -> None:
     assert {
         code: section.count(f"(`{code}`") for code in sorted(returned)
     } == dict.fromkeys(sorted(returned), 1)
+    # Reverse direction: a bullet for a code ``should_continue`` no longer
+    # returns is stale. The extraction reads only ``return False, "<code>"``
+    # tuples, so a stop written another way needs this test updated.
+    listed = set(re.findall(r"\(`(\w+)`", section))
+    assert sorted(listed - returned) == []
 
 
 @pytest.mark.parametrize("effective", [0, 1, 600, 900, 1800, 5000])

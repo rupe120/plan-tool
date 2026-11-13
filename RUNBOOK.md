@@ -1168,24 +1168,27 @@ handles only the localized one-step split; the cross-step re-seed fork
 ### How the loop terminates
 
 - **Converged** — no open findings remain after at least one round
-  (`detail` counts only apply-eligible findings). Exit code 0.
+  (`detail` counts only apply-eligible findings).
 - **Marginal stagnation** — at least half of iteration N's open findings were
-  already open in iteration N-1. Exit code 0. The artifact is no worse than the
-  prior iteration; further iteration yields little.
+  already open in iteration N-1. Further iteration yields little; the open set
+  may even have grown.
 - **No blocking findings** and **no progress** — the other two stops
-  (`no_blocking_findings`, set by the `completeness-audit` loop only, and
-  `no_progress` with `--max-stall-rounds`); both are defined, with every stop's
-  exit code, in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
+  (`no_blocking_findings`, set by `completeness-audit --iterate` only, and
+  `no_progress` with `--max-stall-rounds`), defined in
+  [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 - **Budget exhausted** — iteration count hit `--max-iterations` (3
   by default), no forward progress for `--iteration-budget` seconds (a
   debounced no-progress deadline, 1800 by default), or total elapsed time
-  hit `--time-budget` (off by default). Exit code 0 — the audit completed;
-  the remaining open
-  findings are in the report (and, for `completeness --json`,
-  bar-aware `has_blocking_findings`) for CI gates to inspect. Pass
-  `--fail-on-findings` to exit non-zero when stage-bar blockers remain
-  (`audit_incomplete` or any id in `conceptual_bar_blocking_ids` — see
-  `--json` `stage` and [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md)).
+  hit `--time-budget` (off by default). The remaining open findings are in the
+  report (and, for `completeness --json`, bar-aware `has_blocking_findings`) for
+  CI gates to inspect.
+
+Every stop exits 0 except under `completeness-audit --fail-on-findings`, which
+also exits non-zero on a `marginal`, `no_progress` or budget stop and whenever
+stage-bar blockers remain (`audit_incomplete` or any id in
+`conceptual_bar_blocking_ids` — see `--json` `stage` and
+[`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md)); the
+full rule is in [`docs/ITERATION.md`](docs/ITERATION.md#how-the-loop-terminates).
 
 ### Tuning the budget
 
