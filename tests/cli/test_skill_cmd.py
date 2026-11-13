@@ -76,10 +76,11 @@ class TestInstallSkill:
         policy = directives.read_text(encoding="utf-8")
         assert "Honor explicit user requests for backend and model" in policy
         assert "flags so project defaults apply" in policy
-        # The regime is chosen by reading backends.json, so the two paragraphs
-        # cannot both apply to one project.
-        assert "Tell the two regimes apart by reading `.plan-tool/backends.json`" in policy
-        assert "use these recommendations" in " ".join(policy.split())
+        # Each flag is decided separately from backends.json, so the two
+        # paragraphs cannot both apply to one flag.
+        flat = " ".join(policy.split())
+        assert "Decide each flag separately by reading `.plan-tool/backends.json`" in flat
+        assert "use these recommendations" in flat
         assert "`--model` overrides model defaults" in policy
 
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:

@@ -50,12 +50,11 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
 ### Review pass 1 — 9 findings
 
 1. **Eager preflight for project `default_backend` breaks read-only commands
-   without the CLI** (`cli/app.py`). Disposition: **open — user decision
-   required (round 2 noted the assistant cannot self-adjudicate it).** Current
-   behavior follows the documented contract; `docs/BACKENDS.md` § prerequisites lists "project default"
-   beside flag and environment as fail-fast sources, and the environment
-   variable already behaves the same. Surfaced to the user as a design choice,
-   not changed.
+   without the CLI** (`cli/app.py`). Disposition: **open — owner decision.**
+   Current behavior follows the documented contract: `docs/BACKENDS.md`
+   § prerequisites lists "project default" beside flag and environment as
+   fail-fast sources. The cost: a committed `default_backend` makes `list`,
+   `status` and `validate` exit 127 for a teammate without that CLI.
 2. **Rate-limit fallback ignores `commands.<cmd>.model`.** Disposition:
    **refuted as a defect; docs clarified.** `tests/test_shell.py` and
    `tests/test_launcher.py` pin `fallback-base` over `fallback-command` on
@@ -91,7 +90,9 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
    `docs/BACKENDS.md` § configuration requires lowercase backend keys, and the
    unknown-key warning names the offending key; unchanged pre-existing contract.
 3. **Whitespace-only `PLAN_TOOL_BACKEND` disagrees with `default_key`.**
-   **Deferred** — pathological input; selection itself is unchanged by it.
+   **Deferred** — `PLAN_TOOL_BACKEND=' '` selects the name `' '` while
+   `default_key` is empty, so only the preflight-vs-hint text could differ;
+   the selected backend is unaffected and the input is not a supported value.
 4. **DIRECTIVES omit-flags rule wrongly sent command-model-only projects
    without `default_backend` to Claude.** **Fixed** — the rule now separates
    `--backend` (omit only with a top-level `default_backend`) from `--model`
@@ -101,3 +102,21 @@ Report-and-fix loop over `d858703b1..HEAD`, `/code-review` at `high`. Logs:
    names `backends.<name>.commands.<command>.model`.
 7. **Pass-1 item 1 disposition rested on the assistant's own reading.**
    **Fixed (record)** — now marked open pending the user's decision.
+
+### Review pass 3 — 5 findings over `3241029f3..d9c3da09d`
+
+1. **Omit-`--model` rule ignored which backend a model belongs to.** **Fixed**
+   — scoped to the backend that will run.
+2. **"Configures neither" fallback left one flag unguided.** **Fixed** — the
+   directive decides `--backend` and `--model` separately.
+3. **Handoff item 1 carried contradictory, session-narrated text.** **Fixed**
+   — restated as an open owner decision with its cost.
+4. **New test asserted only an absence.** **Fixed** — also asserts the
+   preflight error text.
+5. **Deferral of pass-2 item 3 lacked its observable effect.** **Fixed** —
+   effect stated.
+
+Passes 2 and 3 are majority self-seeded (4 of 7, then 5 of 5 findings describe
+the previous round's own edits, mostly the DIRECTIVES paragraph): exit 2 of
+CLAUDE.md § "Driving the convergence loops". The application is finished; one
+confirming pass follows.

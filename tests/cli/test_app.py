@@ -362,7 +362,9 @@ def test_mixed_case_default_backend_does_not_raise_a_spurious_model_hint(
     path.write_text(json.dumps(payload))
     monkeypatch.setattr(shutil, "which", lambda binary: None)
     assert cli.main(tmp_repo.argv("--model", "gpt-5.6-terra", "list")) == EXEC_NOT_FOUND_EXIT
-    assert "remove or change --model" not in capsys.readouterr().err
+    err = capsys.readouterr().err
+    assert "backend selected but its 'codex' executable was not found" in err
+    assert "remove or change --model" not in err
 
 
 @pytest.mark.integration
