@@ -49,6 +49,7 @@ steps:
   - 1
   depends_on_notes:
     1: Provides validated backend-scoped command models and command normalization.
+  detail: docs/implementation-plans/plan-details/project-model-selection/02-extend-existing-effective-backend.md
   description: Extend the existing effective-backend selection owner with optional
     command context so model precedence is explicit model, selected backend's command
     model, selected backend's base model, manifest default, then provider omission.
