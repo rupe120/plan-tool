@@ -56,6 +56,29 @@ class TestInstallSkill:
         assert directives_dest.is_symlink()
         assert directives_dest.resolve() == _bundled_directives()
 
+    @pytest.mark.parametrize("integration", ["claude", "codex", "cursor"])
+    def test_installed_router_defers_to_project_choices_and_ships_shared_selection_policy(
+        self, tmp_repo, integration
+    ) -> None:
+        assert cli.main(
+            tmp_repo.argv("install-skill", "--integration", integration)
+        ) == 0
+        root = ".agents" if integration == "codex" else ".claude"
+        router = _dest(tmp_repo, root)
+        directives = _directives_dest(tmp_repo, root)
+        assert router.read_bytes() == _bundled(integration).read_bytes()
+        assert directives.read_bytes() == _bundled_directives().read_bytes()
+        assert router.is_symlink() == (integration != "codex")
+        assert directives.is_symlink() == (integration != "codex")
+        router_text = router.read_text(encoding="utf-8")
+        assert "honor explicit user requests; otherwise omit selection" in router_text
+        assert "DIRECTIVES.md#which-model-to-run-a-subcommand-with" in router_text
+        policy = directives.read_text(encoding="utf-8")
+        assert "Honor explicit user requests for backend and model" in policy
+        assert "flags so project defaults apply" in policy
+        assert "For unconfigured projects, use these recommendations" in policy
+        assert "`--model` overrides model defaults" in policy
+
     def test_symlink_install_is_idempotent(self, tmp_repo) -> None:
         assert cli.main(tmp_repo.argv("install-skill")) == 0
         # Second run sees the same link and reports already-installed, rc 0,

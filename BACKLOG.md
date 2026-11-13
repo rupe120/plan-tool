@@ -1038,7 +1038,8 @@ working straight down the tiers.
   - **Out of scope / Non-goals:** moving model policy into Integration or another host
     repo's general coding-assistant directives; duplicating vendor model ids in
     each router; changing backend/model precedence in the CLI; implementing
-    per-subcommand configuration (#254); selecting the missing Claude analog
+    extending the shipped explicit-command configuration
+    ([selection contract](docs/BACKENDS.md#project-configuration)); selecting the missing Claude analog
     (#387); installing skills automatically; or changing any plan-tool command
     semantics.
   - **Allowed behavior changes:** installed skills emit explicit backend/model
@@ -9578,71 +9579,6 @@ longer describes current work. It is retained only as dated carve-out context.
   self-flagged `[out-of-scope-deferred]` by that audit and split out rather
   than absorbed.
 - **Status:** not started.
-
-**#254 — Per-subcommand model tiers, so "strong for `create`, fast for the rest" is configuration rather than operator memory**
-
-- **What:** let a project say which model each subcommand runs with, via a
-  **named tier** rather than a raw model id: `backends.<name>.models.strong` and
-  `.fast` in `.plan-tool/backends.json`, with the tier→subcommand mapping fixed
-  in the tool (`create` and `roadmap` → strong; everything else → fast, per
-  `integrations/shared/DIRECTIVES.md` § "Which model to run a subcommand with").
-  Explicit `--model` keeps winning; an absent `models` block keeps today's
-  single-model behavior exactly.
-- **Why:** `BackendOverride` carries only `model` + `extra_*_argv` and is scoped
-  **per-backend, not per-subcommand**, so the rule that `create` deserves the
-  strong tier while `detail`/`run`/audit rounds do not is currently operator
-  discipline — remembered per invocation, and silently lost the moment anyone
-  scripts a pipeline or drives it unattended. The rule matters because `create`
-  runs **once** and constrains the step list, the `depends_on` graph, and the
-  file footprints every later call inherits: bounded cost, unbounded blast
-  radius.
-- **The design constraint that shapes this, and it is load-bearing.** Tiers
-  cannot be *inferred*. `plan_tool/model_specs.py`'s own `pick_default_model`
-  says so in its docstring — "there is no 'flagship' flag in the source" — and
-  ranks by `(context_window, output_cost, id)` on a stated premise, calling
-  itself "a guess, never authoritative." Model ids are also backend-specific and
-  free-form (`--model` takes no choices; `opus` means nothing to codex or
-  cursor). So **the operator names both tier members explicitly, per backend**;
-  do **not** extend the catalog heuristic to guess a strong/fast split, and do
-  not hardcode vendor model names in the tool.
-- **Effort:** small — one config block, the fixed mapping, and the precedence
-  wiring into the existing `--model` > project > manifest chain.
-- **Risks / fallout:** it adds config surface to a tool with a deliberate
-  anti-creep posture, and a second model per backend is a second thing to keep
-  current as vendors rename. Absent config **must** behave exactly as today, or
-  this becomes a breaking change for every existing project file.
-- **Do not build this preemptively — it has a trigger.** The discipline works
-  when a human types the invocation; file this as *ready* and build it when the
-  discipline is observably decaying: a scripted or unattended pipeline that runs
-  `create` on the fast tier, or a plan whose decomposition is traced back to one.
-  Until then the cheaper fix is the directive that already exists.
-- **Dependencies:** none. Adjacent to the shipped bridging-edge grounding rule
-  and `depends_on_notes`, which improve what
-  `create` produces; this decides what `create` runs on.
-- **Scope contract:**
-  - **Outcome:** the strong/fast split survives being scripted, instead of
-    depending on whoever types the command.
-  - **In scope:** `plan_tool/backend_config.py` (`BackendOverride`), the
-    resolution chain in `backend.py`, the fixed tier→subcommand mapping,
-    `docs/cli/` regeneration, tests.
-  - **Out of scope / Non-goals:** inferring tiers from the models.dev catalog;
-    hardcoding vendor model names; per-*step* or per-*phase* model selection;
-    changing the tier→subcommand mapping itself (that lives in DIRECTIVES.md and
-    is a separate decision); any gate or refusal keyed on which model ran.
-  - **Allowed behavior changes:** which model a subcommand invokes, only when a
-    `models` block is present.
-  - **Allowed reorganization:** none.
-  - **Verification:** a project file naming both tiers runs `create` on strong
-    and `detail` on fast; an explicit `--model` overrides both; a project file
-    with no `models` block is byte-identical in behavior to today.
-  - **Stop / defer:** if naming two models per backend proves more annoying than
-    typing `--model` on `create`, close it as a measured no.
-- **Approach:** `direct` — a config field and a mapping, once the trigger fires.
-- **Quality:** `operability` — makes a decided policy hold under automation.
-- **Origin:** 2026-08-08, from the model-selection rule added to CLAUDE.md and
-  DIRECTIVES.md during a convergence review; filed at operator request with the
-  build trigger stated rather than building it immediately.
-- **Status:** not started; ready, waiting on the trigger above.
 
 **#280 — Verify and resolve the `completeness-cli-layering` code-review duplication candidates (remaining saved-audit candidate)**
 
