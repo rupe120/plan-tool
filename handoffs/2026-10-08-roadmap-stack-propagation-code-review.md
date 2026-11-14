@@ -10,8 +10,8 @@ One ledger, updated in place. Closure label (see `handoffs/README.md` § "Retent
 | Review range | `bfc8b261..3991adb7` (pass 1 reviewed `bfc8b261..0af115dd`) |
 | Last logic-changing commit | `ec368b44` |
 | Branch head at merge | `6a834bb1`; merge commit `cba602a8` |
-| Checks run | Full suite green at 13,465 passed, 67 skipped; the touched test files (1,061 tests) green after the last docs commit; `reconcile-code --all` twice, steps 1-3 at 0 critical / 0 high / 0 medium / 0 nits both times (sweep 1's first step 3 verdict was unreadable and was re-run clean); the tests added by the review fixes mutation-checked (breaking the replacer, the title normalization, the frontmatter handling, or the Jira whitelist turns them red); the tests the plan's steps authored were not mutation-checked |
-| Reviewer | Four independent headless `claude -p` sessions at effort `high`, report-only, each with a fresh session id and a named findings file |
+| Checks run | Full suite green at 13,465 passed, 67 skipped; touched test files (1,061 tests) green after the last docs commit; `reconcile-code --all` twice, steps 1-3 at 0 critical / 0 high / 0 medium / 0 nits both times (sweep 1's unreadable step 3 verdict was re-run clean); tests added by the review fixes mutation-checked (breaking the replacer, title normalization, frontmatter handling or the Jira whitelist turns them red); the tests the plan's steps authored were not mutation-checked |
+| Reviewer | Four independent headless `claude -p` sessions at effort `high`, report-only |
 | Disposition | Converged: passes 3 and 4 were consecutive, independent, and clean against `3991adb7`, which contains `ec368b44` |
 
 ## Settled decisions (hand to each reviewer)
@@ -31,85 +31,42 @@ One ledger, updated in place. Closure label (see `handoffs/README.md` § "Retent
 - A draft not rematerialized after the accepted version changes keeps its older stack;
   detecting that is an accepted limit left to the existing digest.
 
-## Review pass 1 — headless /code-review, 2026-10-08, `bfc8b261..0af115dd`
+## Findings
 
-Probes could not run (sandbox refusal), so every finding was a static trace; finding 1
-was reproduced by hand before it was accepted.
+Pass 1 (`bfc8b261..0af115dd`; static traces, finding 1 reproduced by hand):
 
-1. **Model-authored heading variants survived the replacer** (`## stack`, `## STACK`,
-   `##  Stack`, `## Stack ##`), so `create` read the model's text as the plan's stack.
-   `plan_tool/roadmap.py`, the replacer. Reproduced: 4 of 5 variants survived and won. —
-   medium-high. **fixed df4397f5** (reuses the reader's own rules via the new
-   `scope_fence.h2_section_spans`).
-2. **The replacer's fence scanner differed from the validator's** (indentation, info
-   strings). **fixed df4397f5**, same root cause as 1.
-3. **A removed model section ran to the next H2, the readers' section ends at the next
-   H1.** **fixed df4397f5**, same root cause as 1.
-4. **Dead error branch and a second read of the accepted version** that could cite a
-   different version than the artifacts. **fixed df4397f5** (the version id now comes
-   from the same load).
-5. **"No accepted store is used" asserted a fact for a plan row with no components.**
-   **fixed df4397f5** (the line now says the components name no store, so none is
-   listed).
-6. **Product values with newlines or markdown could start a heading inside the
-   section.** **fixed df4397f5** (values render on one line; a blank product reads as
-   open).
+1. Model-authored heading variants (`## stack`, `## STACK`, `##  Stack`, `## Stack ##`) survived the replacer (4 of 5 variants won), so `create` read the model's text as the plan's stack; medium-high. fixed df4397f5: reuses the reader's own rules via `scope_fence.h2_section_spans`.
+2. Replacer's fence scanner differed from the validator's (indentation, info strings). fixed df4397f5, same root cause.
+3. A removed model section ran to the next H2 while readers end at the next H1. fixed df4397f5, same root cause.
+4. Dead error branch and a second read of the accepted version that could cite a different version. fixed df4397f5: version id comes from the same load.
+5. "No accepted store is used" asserted a fact for a plan row with no components. fixed df4397f5: the line says the components name no store.
+6. Product values with newlines or markdown could start a heading inside the section. fixed df4397f5: values render on one line; blank product reads as open.
+- D1 (“replaces any model-authored `## Stack`” held only for the exact spelling) fixed df4397f5; D2 “four recognized headings” comment declined (accurate); D3 prompt line width declined (cosmetic); D4 stale `#460` references refuted (none remain on the merged tree).
 
-Documentation notes: D1 the "replaces any model-authored `## Stack`" claim held only for
-the exact spelling — **fixed df4397f5** (the matcher now makes it true). D2 "four
-recognized headings" comment — **declined** (accurate). D3 prompt line width —
-**declined** (cosmetic). D4 stale `#460` references — **refuted**: none remain after the
-backlog reconciliation (checked on the merged tree).
+Pass 2 (`bfc8b261..df4397f5`):
 
-## Review pass 2 — headless /code-review, 2026-10-08, `bfc8b261..df4397f5`
+7. The replacer scanned the draft's YAML frontmatter: a column-0 `## Stack` comment there deleted the closing `---` and the provenance block (reproduced); low-medium. fixed ec368b44: replacer works on the body only and returns frontmatter bytes untouched; two tests.
+8. Nothing pinned that the Jira handoff omits `## Stack`, so a consolidation over `GUARDRAIL_BODY_SECTIONS` would turn it on silently; test gap, medium. fixed 1f8f5bb3.
+- D5 `ROADMAP_FORMAT.md` superseded empty-stores sentence, D6 `SEED_FORMAT.md` and D7 `docs/how-to/pipeline/audit.md` heading lists missing the tool-written Stack: fixed 3991adb7. D8 `PLAN_FORMAT.md` “author-supplied” declined (section explains the tool-written case).
 
-7. **The replacer scanned the draft's YAML frontmatter.** A column-0 `## Stack` comment
-   there made it delete the closing `---` and the rest of the provenance block, and a
-   fence-looking line in the frontmatter could hide the body's section. Reproduced
-   (frontmatter lost its closing fence). — low-medium. **fixed ec368b44** (the replacer
-   works on the body only and returns the frontmatter bytes untouched; two tests).
-8. **Nothing pinned that the Jira handoff omits `## Stack`**, so a consolidation over
-   `GUARDRAIL_BODY_SECTIONS` would have turned it on silently. — test gap, medium.
-   **fixed 1f8f5bb3**.
+Pass 3 (`bfc8b261..3991adb7`): no logic findings; both pass-2 findings re-checked closed. D9 `SEED_FORMAT.md` lead sentence still says “three” headings: declined (accurate for a hand-authored seed; next sentence names the fourth). D10 `PLAN_FORMAT.md` wording: declined, as D8.
 
-Documentation notes: D5 `ROADMAP_FORMAT.md` quoted a superseded empty-stores sentence —
-**fixed 3991adb7**. D6 `SEED_FORMAT.md` and D7 `docs/how-to/pipeline/audit.md`
-enumerated the guardrail headings without the tool-written Stack — **fixed 3991adb7**.
-D8 `PLAN_FORMAT.md` "author-supplied" — **declined** (the section explains the
-tool-written case).
-
-## Review pass 3 — headless /code-review, 2026-10-08, `bfc8b261..3991adb7`
-
-No logic findings. Both pass-2 findings re-checked closed. Notes: D9 the lead sentence of
-`SEED_FORMAT.md` still says "three" headings — **declined** (accurate for a hand-authored
-seed; the next sentence names the tool-written fourth). D10 `PLAN_FORMAT.md` wording —
-**declined**, as D8.
-
-## Review pass 4 — headless /code-review, 2026-10-08, `bfc8b261..3991adb7`
-
-Emphasis on tests and callers. No logic findings. 2,676 tests in the touched files
-passed. W1 the cross-cutting-listed-components test alone would stay green under another
-source of `store-checkout` — **declined** (the exclusion test covers that mutation).
-D11 `JIRA_FORMAT.md` silent on the Stack omission, D12 a prompt-key test comment claiming
-an assertion it does not make, D13 a trailing blank line — all **fixed 93d53d41**.
+Pass 4 (`bfc8b261..3991adb7`, emphasis on tests and callers; 2,676 touched-file tests pass): no logic findings. W1 cross-cutting-listed-components test alone would stay green under another source of `store-checkout`: declined (the exclusion test covers that mutation). D11 `JIRA_FORMAT.md` silent on the Stack omission, D12 a prompt-key test comment claiming an assertion it does not make, D13 trailing blank line: fixed 93d53d41.
 
 ## Closure
 
-Converged. The window restarted at each of `df4397f5` and `ec368b44`; after `ec368b44`
-two independent passes were clean. The plan-canonical sweeps (two, steps 1-3 clean; sweep 1's
-unreadable step 3 verdict was re-run) ran before and after the review fixes. Documentation-only commits after `ec368b44` did not
-reset the window.
+Converged. The window restarted at each of `df4397f5` and `ec368b44`; after `ec368b44` two independent passes were clean. The two plan-canonical sweeps (steps 1-3 clean; sweep 1's unreadable step 3 verdict re-run) ran before and after the review fixes. Documentation-only commits after `ec368b44` did not reset the window.
 
 ## Run record
 
 Steps 3 and 4 were committed by the tool. Steps 1 and 2 were accepted by hand
 (`RUNBOOK.md` § "Accept as complete"): each failed the full-suite gate on a defect in the
-step's own test or a pinned prompt line break, which was fixed, the full suite run green,
-the step committed (`2621def3`, `9a771741`) and its status set to `done` (`edabfee5`,
-`b77efc10`). Re-running the tool after a hand fix could not advance either step: the model
-changes nothing, so the test-authoring gate fails, and `--commit` refuses a dirty tree.
-That recovery is written into `integrations/shared/DIRECTIVES.md` on branch
-`docs/directives-hand-fix-on-step-test-failure`, and the gap is tracked below.
+step's own test or a pinned prompt line break; fixed, suite green, step committed
+(`2621def3`, `9a771741`), status set to `done` (`edabfee5`, `b77efc10`). A bare re-run
+after a hand fix cannot advance a step (the model changes nothing, so the test-authoring
+gate fails, and `--commit` refuses a dirty tree). The recovery is written into
+`integrations/shared/DIRECTIVES.md` on branch `docs/directives-hand-fix-on-step-test-failure`;
+the gap is tracked below.
 
 ## Tracked
 
@@ -128,15 +85,13 @@ merged (`49ec6c5f`).
 
 ## Audit replay
 
-Owed by plan step 3; gates nothing. A throwaway repo held a bare one-step plan whose
-`## Stack` listed `store-app-db` (relational, pool) as PostgreSQL while its
-`## Architecture` and step 1 persisted to a local SQLite file. `plan-tool --model
-claude-sonnet-5-5 completeness-audit <plan> --iterate -y` (2 conceptual passes, bare-plan
-stage) **reported the contradiction**, in both passes, as a HIGH `plan-correctness`
-finding quoting both texts, with a fix that offers either choice (name SQLite a deliberate
-exception, or drop it for PostgreSQL). One sample, bare-plan stage, `limited` confidence
-label; no detail-grounded replay and no Integration-sized plan were run. The audit prompt needs
-no change on this evidence.
+Owed by plan step 3; gates nothing. A throwaway bare one-step plan whose `## Stack` listed
+`store-app-db` as PostgreSQL while its `## Architecture` and step 1 used a local SQLite
+file was run through `plan-tool --model claude-sonnet-5-5 completeness-audit <plan>
+--iterate -y` (2 conceptual passes, bare-plan stage). Both passes reported the
+contradiction as a HIGH `plan-correctness` finding quoting both texts, with a fix offering
+either choice. One sample, bare-plan stage, `limited` confidence; no detail-grounded replay
+or Integration-sized plan. The audit prompt needs no change on this evidence.
 
 ## Next session — pickup
 

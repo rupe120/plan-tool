@@ -12,6 +12,8 @@ Post-run code-review loop for the `roadmap-concept-comparison` plan (steps 1–7
 
 ## Settled decisions (from the dispositions below)
 
+*Compression note (added 2026-11-13; the ledger was compressed 2026-09-29): this ledger had no original settled-decisions list; the list below was assembled from its own declined and refuted findings.*
+
 - Dead-import claim on `artifact_row_diffs as _artifact_row_diffs` is a false positive: `tests/test_roadmap_candidate.py:884` uses it through the module namespace (rounds 1, 3, 6, 11).
 - `raw_evidence_identity` is a do-not-merge look-alike of the canonical-JSON identity helpers (`stored_version_identity_preimage`, `_content_identity`, `checkpoint.compute_input_hash`): it hashes raw patch text byte-exact (rounds 3, 5, 11).
 - The CLI handler narrows internal errors to one clean usage error; reversing it toward crash-loud is declined (rounds 3, 6).
