@@ -7778,13 +7778,13 @@ def _offer_missing_intents(
     return reviewed
 
 
-def _is_same_step(prior: Optional[Step], proposed: Step) -> bool:
+def _is_same_step(prior: Step, proposed: Step) -> bool:
     """Whether a re-proposed step is the on-disk step ``prior``.
 
     Ids are positional, so identity is the same id *and* the same title; this is
     the one place the iterate loop decides it.
     """
-    return prior is not None and prior.title == proposed.title
+    return prior.title == proposed.title
 
 
 def _preserve_on_disk_step_fields(
@@ -11127,8 +11127,10 @@ def _converge_create_plan(
 
                         # A step that kept its id under a different title no
                         # longer carries the on-disk status (see
-                        # ``_preserve_on_disk_step_fields``), so the in-flight
-                        # step it replaced leaves the plan; say so.
+                        # ``_preserve_on_disk_step_fields``): a different step
+                        # and a reworded one look the same. Say so when that
+                        # drops an in-flight or finished state.
+                        merged_proposed: list[Step] = []
                         for s in steps_proposal:
                             on_disk_step = existing_by_id.get(s.id)
                             if (
@@ -11138,26 +11140,25 @@ def _converge_create_plan(
                                 in (StepStatus.CURRENT, StepStatus.DONE)
                             ):
                                 tool(
-                                    f"proposal replaced step {s.id} "
-                                    f"({on_disk_step.status.value}, "
-                                    f"{on_disk_step.title!r}) with a different "
-                                    f"step ({s.title!r}); the plan no longer "
-                                    f"holds that {on_disk_step.status.value} "
-                                    "step, so check what `plan-tool run` "
-                                    "recorded for it before continuing.",
+                                    f"proposal gave step {s.id} the title "
+                                    f"{s.title!r}, replacing "
+                                    f"{on_disk_step.title!r} "
+                                    f"({on_disk_step.status.value}); it is "
+                                    "treated as a different step and starts "
+                                    "pending, so `plan-tool run` will do it "
+                                    "again unless its status is restored.",
                                     level="warning",
                                 )
-
-                        merged_proposed = [
-                            _preserve_on_disk_step_fields(
-                                s,
-                                existing_by_id.get(s.id),
-                                proposal_included_depends_on_notes=notes_key_present.get(
-                                    s.id, False
-                                ),
+                            merged_proposed.append(
+                                _preserve_on_disk_step_fields(
+                                    s,
+                                    on_disk_step,
+                                    proposal_included_depends_on_notes=(
+                                        notes_key_present.get(s.id, False)
+                                    ),
+                                )
                             )
-                            for s in steps_proposal
-                        ]
+
                         merged_steps = sorted(
                             merged_proposed + preserved_dropped, key=lambda s: s.id
                         )

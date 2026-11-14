@@ -3765,6 +3765,32 @@ class TestReproposalPreservesAcceptedIntent:
         )
         assert merged.status == StepStatus.PENDING
 
+    @pytest.mark.parametrize("state", [StepStatus.DONE, StepStatus.CURRENT])
+    def test_status_survives_when_id_and_title_both_match(
+        self, state: StepStatus
+    ) -> None:
+        prior = Step(id=2, title="Add retry logic", status=state)
+        merged = _preserve_on_disk_step_fields(
+            Step(id=2, title="Add retry logic"), prior
+        )
+        assert merged.status == state
+
+    def test_a_reworded_title_is_treated_as_a_different_step_and_resets_status(
+        self,
+    ) -> None:
+        """A deliberate trade-off, not an oversight. Ids are positional and the
+        re-proposal is regenerated, so identity is the exact title. A reworded
+        title of the same step therefore resets a finished step to ``pending``:
+        a visible re-run, where the old id-only rule could stamp ``done`` on a
+        different step and silently skip work. A stable step id would end the
+        trade-off (see BUG_BACKLOG, "A `create --iterate` re-proposal that
+        reuses a done or current step's id ...")."""
+        prior = Step(id=2, title="Add retry logic", status=StepStatus.DONE)
+        merged = _preserve_on_disk_step_fields(
+            Step(id=2, title="Add retry handling"), prior
+        )
+        assert merged.status == StepStatus.PENDING
+
     @pytest.mark.integration
     def test_accepted_intent_survives_a_full_iterate_run(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -15418,8 +15444,10 @@ class TestCreatePlanIterationLoop:
             "positional ids cannot hold both steps; the replaced one leaves the plan"
         )
         err = capsys.readouterr().err
-        assert "proposal replaced step 1 (done, 'Step one')" in err, err
-        assert "proposal replaced step 2" not in err, err
+        assert "proposal gave step 1 the title 'A different first step'" in err, err
+        assert "replacing 'Step one' (done)" in err, err
+        assert "will do it again unless its status is restored" in err, err
+        assert "proposal gave step 2" not in err, err
         assert "cannot be silently discarded" not in err, (
             "the warning must not claim a protection the loop does not give"
         )
