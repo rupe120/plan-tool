@@ -439,9 +439,7 @@ the highest-leverage move (e.g. a `heuristic-tuning` unlock).
 - **Theoretical (decide/investigate first):** **#71** (refusal-token shape —
   the one theoretical item in a top tier),
   **#111** (orphaned-deliverable identity model), **#110** (claim-vs-delivery
-  FP rate), **#87** (test-authoring gate hardening), **#113** (budget-limited
-  under-decomposed false-positive — needs a disambiguating signal; carries a
-  cheap `direct` wording slice), **#141** (jira story-size floor vs. the
+  FP rate), **#87** (test-authoring gate hardening), **#141** (jira story-size floor vs. the
   configurable ceiling), **#210** (keep/cut the purity pass — passive
   observation only; do not schedule a dedicated audit), **#36** (per-plan
   `lessons.md` value), **#366** (aidlc-workflows pattern-applicability
@@ -5435,47 +5433,6 @@ separate)**
 
 **#69 — Close (or explicitly document) the standalone `reconcile-plan` unattended-apply gap** → promoted to IPPT-13 (2026-09-27)
 
-**#115 — Give the completeness per-step purity/quality sweep the same heartbeat the conceptual-audit and detailing phases already have (it currently runs silent for tens of minutes)**
-
-- **What:** During `detail`'s post-detail completeness sweep,
-  `_collect_purity_split_findings` (`plan_tool/cli/completeness_phases.py:515`)
-  loops over every non-DONE code step and calls
-  `detail.collect_detail_quality_findings(...)` **without a `reporter=`**
-  argument. That producer is silent-by-default (`detail.py:1156` — "`reporter`
-  opts the silent claude call into the same start + heartbeat lines… `None`
-  (the default) keeps the original quiet-probe behavior"). So each step is a
-  live 5–6 min `claude` call that emits **zero** terminal output; a 7-step plan
-  produces ~35–40 minutes of total silence, which reads as a hang. The
-  conceptual-audit loop (`completeness_phases.py:807`) and the main detailing
-  loop (`detail.py` default `StderrReporter`) both already pass a reporter and
-  animate the `▸ … / ⋯ step N · Ns elapsed / ✓ done in Ns` heartbeat; this one
-  sweep is the gap. Thread a `StderrReporter()` plus an `[i/n]` step counter
-  into the loop so each step's scan shows the same liveness
-  (`▸ [3/7] step 3 · scanning… / ⋯ step 3 · 45s elapsed / ✓ step 3 · done in 312s`).
-- **Reuse (no new machinery):** `collect_detail_quality_findings` already
-  accepts `reporter=` and wires the 15s heartbeat at `detail.py:1189-1199`
-  (`HEARTBEAT_INTERVAL_S = 15.0`, `progress.py:53`); two of its existing callers
-  already pass a reporter, so the idx/total param convention is established —
-  confirm the exact kwarg names (`invoke_idx` / `invoke_total`) before wiring.
-  Precompute the applicable-step list (the `status != DONE and change_type !=
-  NON_CODE` filter already in the loop) so the `[i/n]` total counts only steps
-  that actually invoke claude, not all `plan.steps`.
-- **Effort:** small — one `StderrReporter()` construction + a filtered
-  enumerate + three added kwargs at the single call site, plus a test asserting
-  the sweep emits start/done lines (mirror the conceptual-audit reporter test).
-- **Risks:** small. Keep the non-TTY / piped path byte-stable (the reporter
-  already falls back to line-per-tick off a TTY, `progress.py:234`); don't let
-  the heartbeat thread spin on the quiet-probe early-return path (a step with no
-  `detail` pointer returns `[]` before any claude call — `start_step` must not
-  wrap that no-op, or guard it the way the resumed-checkpoint branch does at
-  `detail.py:1660`).
-- **Dependencies:** none — every primitive exists.
-- **Approach:** `direct` — one call site, established reporter pattern, one test.
-- **Origin:** 2026-07-09 — a `detail geographic-filter-recommendations --commit`
-  run appeared hung during the post-detail sweep; traced to this call site
-  running `collect_detail_quality_findings` in quiet-probe mode while each
-  per-step claude call ran for minutes with no terminal output.
-
 ### C. Investigations / decision-making
 
 
@@ -5917,8 +5874,8 @@ separate)**
   close this as documented.
 - **Scope note:** the detector is deliberately conservative ("when in doubt,
   don't flag"), so this is a **precision-hardening** decision, not a hair-on-fire
-  bug — the shipped equilibrium is defensible. Distinct from #109 (footprint
-  over-work / dead fields) and #110 (`claim-vs-delivery` FP rate), though all
+  bug — the shipped equilibrium is defensible. Distinct from the footprint
+  over-work reduction (shipped) and #110 (`claim-vs-delivery` FP rate), though all
   three touch the same self-consistency detectors.
 - **Effort:** small (the decision); the model that follows is a separate
   `plan-tool` item. **Approach:** decision first (`direct` write-up), then
@@ -6129,53 +6086,6 @@ separate)**
 - **Approach:** direct. Same shape as #19 — investigation, not
   implementation.
 
-**#113 — [Investigation] The budget-limited "likely under-decomposed" verdict false-positives on detailed-but-sound plans (conflates structural churn with prose-treadmill)**
-
-- **What:** `_classify_budget_limited_stop` (`plan_tool/review.py:5611`, the
-  message at `:5681`) decides why a conceptual audit hit its pass cap by keying
-  **only on the per-pass new-finding count series** (tapering vs flat/cliff). On
-  a flat/non-tapering tail it asserts *"the plan is likely under-decomposed; run
-  `plan-tool convergence`"*. But a **non-tapering count has (at least) two
-  distinct causes** the heuristic can't tell apart: (a) a genuinely
-  under-decomposed plan (structural findings that a re-split would resolve), and
-  (b) the tool's own documented **body-hash treadmill** — a subjective audit
-  finding ever-finer *prose-precision* nuances in a large, necessarily-detailed
-  plan whose **decomposition is sound** (the same audit validates the step
-  structure/deps/purity every pass). Case (b) is a false positive: the verdict
-  tells the operator to re-decompose a plan that does not need it.
-- **Observed:** authoring `rate-limit-loop-extraction`, a 4-step
-  refactor. Four hand-edit convergence rounds each fixed real *prose-precision*
-  gaps (an 11-seam boundary gives an LLM auditor unbounded surface); the
-  count series oscillated (2→3→2, then 2→1→1) and the tool repeatedly warned
-  "likely under-decomposed" even though every pass validated the decomposition
-  as sound. The operator correctly read it as repeated audit churn, not
-  under-decomposition.
-- **Why:** a confident-but-often-wrong diagnosis erodes trust in the audit's
-  headline signal and can push an operator to wastefully re-decompose a sound
-  plan (the opposite of the mission's *always surface the more-correct plan*).
-- **Direction (needs a disambiguating signal — the investigation):** teach the
-  classifier to distinguish the two causes before asserting a cause. Candidate
-  signals it does **not** consult today: whether the recurring findings are
-  **structural** (`granularity` / dependency / step-boundary sources) vs
-  **prose-precision** (body-completeness / conceptual-wording), whether the
-  decomposition is being **validated sound** each pass, and cross-run region
-  recurrence (the `convergence` diagnostic already reasons over region trends —
-  reuse it rather than a raw count series). Grounds naturally in
-  `plan-tool telemetry` (tune the threshold + the cause split from the
-  distribution).
-- **Cheap first slice (bug-flavored):** independent of the full redesign, soften
-  the `:5681` wording to present **both** hypotheses ("either the plan is
-  under-decomposed, or the audit is finding prose-precision nuances on a
-  sound-but-detailed plan — check whether the recurring findings are structural
-  before re-decomposing") rather than asserting one. Low cost, removes the
-  actively-misleading claim while the disambiguating signal is designed.
-- **Effort:** medium (the disambiguation) / small (the wording slice).
-  **Approach:** `decision first` — decide the disambiguating signal before
-  wiring; the wording slice is `direct` and can land immediately.
-- **Origin:** 2026-07-09 — surfaced while driving the `rate-limit-loop-extraction`
-  detail bundle to convergence; the heuristic fired on every round of a
-  plan its own audit validated as well-decomposed.
-
 **#129 — Deferred: deterministic program-scale decomposition observations**
 
 - **What remains:** three separately selectable observations: a declared
@@ -6263,26 +6173,6 @@ separate)**
   `--purity` and the yield/cost census above was run to answer whether the
   check was worth it.
 - **Status:** passive observation only, settled 2026-08-20 (user-confirmed).
-
-**#229 — Have detail prompts reference plan fences instead of copying them**
-
-- **What:** the detail prompt currently encourages step files to repeat the
-  plan's scope fence, including `## Out of scope` and allowed-behavior clauses.
-  Those copies become stale when the plan changes and generated multiple
-  unrelated conceptual findings. Update the prompt and focused tests so a detail
-  references the authoritative plan section rather than reproducing it.
-- **Outcome:** generated detail preserves the applicable scope boundary without
-  verbatim plan-fence copies that can drift across the bundle.
-- **In scope:** the detail prompt/template, its rendering or fixture tests, and
-  operator-facing documentation if the generated wording requires it.
-- **Out of scope / Non-goals:** a repository-wide restatement index; changing
-  the plan's scope contract; regenerating existing detail bundles; and causal
-  provenance features (retired #231).
-- **Effort:** small. **Approach:** direct — one prompt-output contract with
-  bounded fixture coverage.
-- **Quality:** `grounding` — one authoritative fence, fewer stale copies.
-- **Origin:** completed detail-bundle convergence investigation, 2026-08-04.
-- **Status:** not started.
 
 **#212 — `apply_finding` rewrites a step but never clears its `intent`, leaving an authoritative stale why**
 
@@ -7741,22 +7631,6 @@ separate)**
   `roadmap-incremental-revision` / `roadmap-seed-materialization-observability`
   merge.
 
-**#276 — `_TrackFromStage` argparse Action duplicates the `default=None` idiom it sits beside**
-
-- **What:** `plan_tool/cli/roadmap_cmd.py:_TrackFromStage` is a custom
-  `argparse.Action` subclass that exists solely to set a second namespace
-  field (`from_stage_supplied`) when `--from-stage` is passed — duplicating
-  what argparse's own `default=None` plus an `is not None` check at the one
-  production use site would express with no custom Action at all.
-- **Why:** two fields (`from_stage`, `from_stage_supplied`) set by two
-  different mechanisms must stay in sync by hand for no behavioral gain.
-- **Approach:** `direct` — remove the Action subclass, default `from_stage`
-  to `None` in the parser, and resolve "was it supplied" at the one
-  consuming call site.
-- **Status:** not started — backlog entry only.
-- **Origin:** 2026-08-14, `/code-review` pass on the local-revision-observability
-  merge's follow-up direct fixes.
-
 **#277 — `roadmap_writer_guard`'s per-slug cross-process lock may be fully redundant with `repo_mutation_lock`**
 
 - **What:** `roadmap_revision_publish.py:roadmap_writer_guard` is a new
@@ -7824,35 +7698,6 @@ separate)**
   the `rate-limit-loop-extraction` run; the loop was stopped here per the
   don't-patch-the-same-region-forever rule (correctness had converged with zero
   bugs across six rounds; the remainder is this structural completion).
-
-**#109 — Reduce `build_plan_footprint` over-work: thread one footprint across the two self-consistency detectors (double build)**
-
-- **Shipped (sub-items 2–4, 2026-07-09, `direct`):** the **over-heavy claim
-  build** (`detect_claim_vs_delivery` now uses the zero-I/O `_declared_footprint`
-  helper instead of a full footprint), the **double plan read**
-  (`detect_orphaned_deliverable` parses the plan body once and threads
-  `plan_sections` into `build_plan_footprint`), and the **dead footprint fields**
-  (`referenced_paths` / `referenced_symbols` / `declared_symbols_by_step` dropped)
-  all landed, adversarially verified behavior-preserving.
-- **Remaining (sub-item 1) — double build:** `detect_orphaned_deliverable`
-  (battery → `self_consistency_recs`) and `detect_claim_vs_delivery` (via
-  `review.collect_smell_findings` → `smell_recs`) **each** call
-  `build_plan_footprint`, so it runs twice per audit pass, each re-reading every
-  detail body. Thread one `PlanFootprint` through both.
-- **Why deferred:** the two detectors sit on **different fan-outs** with no
-  shared call frame, so hoisting one build means reshaping the call graph across
-  the advisory (`smell_recs`) and blocking (`self_consistency_recs`) lanes.
-- **Scope caution:** those lanes are only loosely coupled today; a shared pass
-  must not over-couple them for a negligible saving (both read only cheap
-  plan/detail markdown). Confirm the redundant cost is worth removing before
-  reshaping the call graph.
-- **Dependencies:** none — sub-items 2–4 have shipped; `_declared_footprint`
-  now exists as the zero-I/O declared side, which a shared build would reuse.
-- **Effort:** small. **Approach:** `plan-tool`. **Iterate:** default recipe.
-- **Origin:** 2026-07-09 — the double-build was noted during
-  `plan-self-consistency-gate` detail authoring (the `[cross-step]` lesson +
-  step 4's Deferred note); the high-effort workflow review of the step commits
-  surfaced sub-items 2–4 as sibling efficiency findings (now shipped).
 
 **#89 — Extend `--commit` to more mutating commands (wider, consistent commit-hygiene coverage)**
 
@@ -10141,35 +9986,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** not started; low priority.
-
-**#419 — No working-roadmap reader (including `--compare`) locks against a concurrent writer**
-
-- **What:** `roadmap_compare_run.py:_load_working_snapshot` reads the four
-  working-roadmap artifact files with four independent, unsynchronized
-  `read_bytes()` calls. If a `plan-tool roadmap <slug>` stage run is
-  concurrently rewriting stage artifacts in the same directory while
-  `--compare` reads them, the four reads can straddle the write, producing
-  a torn cross-artifact snapshot (some files pre-write, some post-write).
-- **Effort:** large if solved generally — **this is not specific to
-  `--compare`**: no locking primitive exists anywhere in this codebase, so
-  every reader of "working" roadmap state (not just this new feature) has
-  the same latent exposure. A fix scoped to `_load_working_snapshot` alone
-  would add asymmetric protection to one reader while leaving every other
-  one unprotected — the wrong level to fix this at.
-- **Risks / fallout:** requires an actual concurrency design decision (a
-  lock file? a fingerprint-then-reread-to-verify pattern? accept it as a
-  known limitation of a local, single-operator CLI tool where running two
-  `plan-tool` invocations against the same roadmap directory simultaneously
-  is already an unusual, self-inflicted usage pattern?) — not a mechanical
-  fix. Judge whether this is worth solving at all before scoping an
-  implementation.
-- **Dependencies:** none.
-- **Approach:** `plan-tool` (architect tier) if pursued — this is a
-  cross-cutting design decision, not a `--compare`-local patch.
-- **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
-  plan's shipped implementation (`e77ebfa5..HEAD`).
-- **Status:** not started; low priority (self-inflicted trigger; systemic,
-  not feature-specific).
 
 **#420 — `RoadmapComparison.raw_evidence_identity` is a stored field that's always derived from its sibling `raw_evidence` field**
 
