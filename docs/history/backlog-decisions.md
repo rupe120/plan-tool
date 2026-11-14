@@ -21,16 +21,16 @@ authored-artifact version work were renumbered: former roadmap #362 → #383
 | ID | Delivery record or current contract |
 | --- | --- |
 | #164 | The side-by-side Jira-grade detail route shipped 2026-07-30, stopped new authoring 2026-08-24, and is selected for full retirement by live #308. |
-| #181, #182 | [Risk-profile declaration](../implementation-plans/archive/2-risk-profile-1.md) and [advisory detail context](../implementation-plans/archive/2-risk-profile-2.md). #314 remains the separate evidence-gated follow-up. |
+| #181, #182 | [Risk-profile declaration](../implementation-plans/archive/2-risk-profile-1.md) and [advisory detail context](../implementation-plans/archive/2-risk-profile-2.md). #314 was a separate evidence-gated follow-up and is since discarded. |
 | #247 | The read-only saved-audit ledger in `plan_tool/review_persistence.py` and `plan_tool/completeness_report.py`; #303 remains the separate comparison proposal. |
 | #293 | [Jira developer handoff plan](../implementation-plans/archive/2-jira-developer-handoff-companion.md); the current paired export contract is `JIRA_FORMAT.md`. |
-| #295 | [Recommendation confidence plan](../implementation-plans/archive/2-recommendation-confidence.md); #316 and #382 remain independent follow-ups. |
+| #295 | [Recommendation confidence plan](../implementation-plans/archive/2-recommendation-confidence.md); #316 and #382 were independent follow-ups and are since discarded. |
 | #305 | `plan_tool.response_contract.coerce_response_id`, the shared cycle-free grammar for `gates`, `foundational_logic`, `create`'s dependency/note-key parsers, `intent_proposal`, and `concept_sync`; each caller keeps its own `None` disposition. |
-| #309 | The `retire-roadmap-v1-evidence` post-run review fixes, recorded in commits `55a989df`, `9a676e7d`, `74a4e23e` and the subsequent review commits cited by Git history. #311 owns the remaining independent efficiency work. |
+| #309 | The `retire-roadmap-v1-evidence` post-run review fixes, recorded in commits `55a989df`, `9a676e7d`, `74a4e23e` and the subsequent review commits cited by Git history. #311, which owned the remaining efficiency work, is since discarded. |
 | #315 | [Confirmed feedback reopen proof](../implementation-plans/archive/2-roadmap-confirmed-feedback-reopen.md); #242 remains a separate retention redesign. |
 | #327 | [Seed-ingestion routing plan](../implementation-plans/archive/2-seed-ingestion-routing.md) and the [seed-ingestion contract](../reference/contracts/seed-ingestion.md). #102 and #353 remain separate. |
-| #328 | [Immutable candidate versions plan](../implementation-plans/archive/2-roadmap-immutable-candidate-versions.md). #329 and #330 remain separate persistence-integrity work. |
-| #334 | [Mechanism-reach authoring plan](../implementation-plans/archive/2-mechanism-reach-01-authoring.md); #335 and #336 consume its shipped rule. |
+| #328 | [Immutable candidate versions plan](../implementation-plans/archive/2-roadmap-immutable-candidate-versions.md). #329 remains separate persistence-integrity work; #330 is since discarded. |
+| #334 | [Mechanism-reach authoring plan](../implementation-plans/archive/2-mechanism-reach-01-authoring.md); #336 consumes its shipped rule; #335 is since discarded. |
 | #337 | [Roadmap stage lifecycle output plan](../implementation-plans/archive/2-roadmap-stage-lifecycle-output.md). |
 | #351 | [Seed References fallback plan](../implementation-plans/archive/2-seed-source-references-fallback.md). |
 
@@ -74,8 +74,9 @@ is a suggestion and cannot amend the plan.
   13,212 prompt bytes; context membership is 2 full members and 19 inventory
   entries; expansion is not used; terminal outcome is `failed`. This records
   operational facts only, with no prompt, response, or model-quality claim.
-- **Deferred hardening:** #329 and #330 keep the two persistence-integrity
-  findings that the representative happy-path proof did not need.
+- **Deferred hardening:** #329 keeps a persistence-integrity finding that the
+  representative happy-path proof did not need; #330, the other, is since
+  discarded.
 - **Status:** closed 2026-09-01 after the deterministic lifecycle tests and
   the recorded real-backend observation; moved here from `BACKLOG.md`
   2026-11-14.
@@ -202,8 +203,8 @@ reached a prompt, but cannot show that it changed the result or that the
 result would be unchanged without it. #193's citation store already
 records the injection-count residual, so no distinct bounded feature
 remains after the unsupported influence claim is cut. #193, #194, #195,
-and #197 retain their independent provenance, reconciliation, retrieval,
-and contradiction contracts.
+and #197 retained independent provenance, reconciliation, retrieval,
+and contradiction contracts; #197 is since discarded.
 
 ### #222 — Published-data-interface (ODCS) roadmap lens
 
@@ -304,8 +305,8 @@ evidence that changes no enforcement or outcome; Jira-grade audits suppress it.
 On 2026-08-17, a cross-route replay of create's combined and split proposal
 paths established the boundary: keep the missing property catchable and let
 detail select its delivery mechanism. #231's causal-provenance follow-on is
-retired; separate live work remains #241 (bare-prompt generation) and #262
-(detail-readiness guidance).
+retired; #241 (bare-prompt generation) is since discarded; #262
+(detail-readiness guidance) remains.
 
 ### #299 — Completeness coverage replay
 
@@ -373,7 +374,7 @@ fresh observable premise rather than a renamed fork path.
 Shipped 2026-08-10. Bare and detail-grounded audits use their separate
 conceptual bars, with the bare stage retaining named-property correctness gaps
 and deferring unselected implementation mechanics. Medium conceptual findings
-demote only when classified as documentation. Reporting polish is #260; #231's
+demote only when classified as documentation. Reporting polish (#260) is since discarded; #231's
 bad-fix-provenance proposal is retired.
 
 ## Shipped records
@@ -573,10 +574,10 @@ focus on application business logic):
   step-proposal prompt, so the two can drift.
 
 **Deliberately not filed:** a mapping-altitude audit (reopen only if a second
-route shows an unowned hop; see #435 for the advisory precedent) and a seed
+route shows an unowned hop; see the discarded #435 for the advisory precedent) and a seed
 audit verb (the seed-altitude audit stays a session procedure after
 `--materialize`). PR #105's separate plan-set layer was withdrawn as out of
-scope; do not reintroduce it under this id. #462, #493 and #494 stay separate.
+scope; do not reintroduce it under this id. #462 stays separate; #493 and #494 are since discarded.
 
 Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 [corrected-evidence iteration](../evidence/roadmap-corrected-evidence-iteration.md),
@@ -1062,7 +1063,7 @@ Removed from `BACKLOG.md` after a value review against `MISSION.md` and the anti
 | #128 | Concept non-delivery ledger + lifecycle accounting | A 27-step second decision store. The entry itself says the bureaucracy grows faster than the failures it prevents, and existing nets (`concept-coverage`, decision fields) cover the case. |
 | #129 | Deferred program-scale decomposition observations | A placeholder with no work in it. The verdict layer is already retired, and "name a consumer first" applies to any new entry anyway. |
 | #130 | On-demand sub-concept drill | The entry admits the flat MVP fully closes the founding incident, and the drill would bring back a producer that was cut on purpose. No need has been observed. |
-| #131 | Migrate legacy full-tree `concepts.json` | Checked: the dual-shape `record_kind` branch is still in `concept_tree.py`. Retiring it is only worth doing as part of a wider decision on whether the concept subsystem stays at all (see cross-cutting notes). |
+| #131 | Migrate legacy full-tree `concepts.json` | Checked: the dual-shape `record_kind` branch is still in `concept_tree.py`. Retiring it is only worth doing as part of a wider decision on whether the concept subsystem stays at all, which nothing has asked for. |
 | #132 | Dismiss verb for wrong pending deferral | The entry says this is not a correctness need: an unconfirmed deferral is inert. |
 | #134 | E2E founding-incident test (detail→status) | A cheap hermetic test, but it protects a dormant feature whose producer and consumer already agree on the record shape. If the concept lane is ever reactivated, write it then as a 30-minute direct test. |
 | #136 | Generalize rate-limit helper family (shell/launcher) | Contradicts #79's measured do-not-merge list, which says the `_can_prompt_on_rate_limit` duplication *is* the injection seam. The remaining two helpers are coupled to deliberately distinct per-lane ContextVars. Consolidation would put backend-switch scoping at risk with no bug to fix. |
@@ -1079,7 +1080,7 @@ Removed from `BACKLOG.md` after a value review against `MISSION.md` and the anti
 | #256 | Defer automatic analogous-site sweeps | A "do not build" decision, gated on a labelled corpus nobody is building. Manual Check 0 is the standing rule in CLAUDE.md. |
 | #260 | Parked: stage-bar reporting polish | A placeholder whose own reopen trigger says "file a small direct defect instead", plus a commented-out superseded block that breaks the forward-looking-docs rule. |
 | #263 | scope-out seed lacks commit/report provenance | The entry admits nothing downstream reads the block. One instance, already fixed by hand. The blame/attribution logic costs more than the audit trail is worth. |
-| #266 | Page `roadmap --view` through a pager | `\ |
+| #266 | Page `roadmap --view` through a pager | Piping to `less` already solves it. A TTY-detecting pager wrapper plus a `--no-pager` flag is permanent test surface for a convenience. |
 | #273 | Shared advisory-lock-release leaf | Two ~6-line release functions in different modules. Merging them means a new leaf and new import edges for no correctness gain, which is the low-value consolidation CLAUDE.md warns about. The allowlist rationale has already been corrected, so leave the pair allowlisted. |
 | #277 | `roadmap_writer_guard` maybe redundant with repo lock | Even the entry says "not a confirmed bug". The guard has 10 call sites, carries the `writer_token` that the reuse/validate paths depend on, and is the finer lock that parked #353 (artifact contention) would want. Removing defense-in-depth to save "machinery" is risk with no payoff. |
 | #296 | Bound `render_detail_prompt`'s `prior_body_block` | Speculative: the advisory already names the block, truncation is ruled out by design, and the entry's own stop rule says close if no merge has approached `warn`. No such incident is cited. |
@@ -1121,7 +1122,7 @@ Removed from `BACKLOG.md` after a value review against `MISSION.md` and the anti
 | #436 | Labeled prose-correction cards in comparison | Pure presentation. Approval time already shows the exact before and after, so nothing is hidden. |
 | #465 | Two absent stack-callout tests (self-labelled low value) | Self-admitted optional and low value. Display-only feature, structural tests already exist, and the new ones would be brittle output pins. |
 | #471 | Intern relation node identities in candidate context | The ceiling was raised (PR #58). The byte saving alone doesn't justify a new model-facing representation with readability risk. |
-| #476 | Bulk-convert `Approach:` to `Route:` with presence test | Backlog-format churn plus a new guard test. Label-on-touch already works. A large share of these entries should be deleted rather than relabelled (see observations). |
+| #476 | Bulk-convert `Approach:` to `Route:` with presence test | Backlog-format churn plus a new guard test. Label-on-touch already works. Pruning delivered, closed and discarded entries comes first; relabelling entries that are then deleted would be wasted work. |
 | #493 | Supply shared context to authoring/audits | #492 decided no-action for this entry. A gated entry kept "in case" is clutter; re-file on a demonstrated delivery need. |
 | #494 | Show unresolved prerequisites in `status` | #492 decided no-action. Same reasoning as #493. |
 | #498 | Plan body should point to `plan-tool status` | The gain is one wording change. The cost is five pinned test files, the `annotate.md` placeholder check, and permanent recognition of both pointer strings. That tax outweighs a pointer that is read mostly by tools. |

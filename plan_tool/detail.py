@@ -4772,7 +4772,7 @@ def _persist_final_detail_concepts(
                 f"step {deferral.step_id}: proposed deferral of "
                 f"`{deferral.concept_id}` cannot be recorded on this plan's "
                 "legacy full-tree concept record, and no migration route exists; "
-                "record the deferral by hand."
+                "the proposal is reported here only and is not recorded."
             )
         link_replacements = [
             (step_id, ()) for step_id, _deferrals in written_replacements

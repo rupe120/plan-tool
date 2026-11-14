@@ -6789,7 +6789,7 @@ class TestStructuredDetailDeferrals:
         message = captured.out + captured.err
         assert bucket_id in message
         assert "no migration route exists" in message
-        assert "record the deferral by hand" in message
+        assert "is not recorded" in message
 
     def test_include_transition_regenerates_and_clears_link(self, tmp_path: Path) -> None:
         plan_path = _write_detail_plan(tmp_path)

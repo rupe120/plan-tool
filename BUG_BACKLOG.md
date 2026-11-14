@@ -2224,7 +2224,7 @@ not include them.
   not: changing the journal format, the first-run rollback semantics, or adding
   a recovery command. If a non-root kind needs a member-state invariant the
   recognizer cannot derive, keep refusing it and record that here.
-- **Related:** the ROADMAP entry "Incomplete immutable lifecycle journals can
+- **Related:** the entry under `## ROADMAP` titled "Incomplete immutable lifecycle journals can
   permanently block a resumed proposal, review, or promotion" covers the
   promotion, candidate and settlement journal shapes; settle the per-kind
   recovery policy for both together.
