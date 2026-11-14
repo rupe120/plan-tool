@@ -41,9 +41,11 @@ from plan_tool.roadmap_versions import (
 SLUG = "comparison"
 
 
-def _artifact_bytes(*, domain_body: str = "# Domain\n") -> tuple[bytes, ...]:
+def _artifact_bytes(
+    *, domain_body: str = "# Domain\n", entities: tuple[EntityRow, ...] = ()
+) -> tuple[bytes, ...]:
     rendered = {
-        "domain": render_domain_artifact(DomainArtifact((), (), (), (), domain_body)),
+        "domain": render_domain_artifact(DomainArtifact(entities, (), (), (), domain_body)),
         "constraints": render_constraints_artifact(ConstraintsArtifact((), (), (), "# Constraints\n")),
         "components": render_components_artifact(ComponentsArtifact((), (), (), (), "# Components\n")),
         "plans": render_plans_artifact(PlansArtifact((), (), (), (), "# Plans\n")),
@@ -93,6 +95,38 @@ def _stored_pair(tmp_path: Path, *, target_domain: str = "# Stored target\n"):
     _write_version(tmp_path, base, accepted=True)
     _write_version(tmp_path, target)
     return base, target
+
+
+def _duplicate_id_entities() -> tuple[EntityRow, ...]:
+    return (
+        EntityRow(id="shared", name="First", fields=()),
+        EntityRow(id="shared", name="Second", fields=()),
+    )
+
+
+@pytest.mark.parametrize("side", ["base", "target"])
+def test_a_duplicate_row_id_on_either_side_refuses_instead_of_dropping_a_row(
+    tmp_path: Path, side: str
+) -> None:
+    """The diff keys rows by id, so two rows sharing one would silently collapse
+    on the after side and pair a stale value with the wrong row on the before
+    side. A published version has passed the duplicate-id gate, so this is a
+    refusal for a version a tool without the gate wrote, never a silent result."""
+    dup = _duplicate_id_entities()
+    base = _prepared(_artifact_bytes(entities=dup if side == "base" else ()))
+    target = _prepared(
+        _artifact_bytes(domain_body="# Changed\n", entities=dup if side == "target" else ())
+    )
+    _write_version(tmp_path, base, accepted=True)
+    _write_version(tmp_path, target)
+
+    with pytest.raises(
+        roadmap_compare_run.RoadmapComparisonRunError,
+        match=rf"the {side} snapshot cannot be compared: row id 'shared' is declared by 2 rows",
+    ):
+        roadmap_compare_run.run_roadmap_comparison(
+            plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
+        )
 
 
 def _activate(monkeypatch: pytest.MonkeyPatch, version_id: str | None) -> None:

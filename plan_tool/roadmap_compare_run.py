@@ -26,6 +26,7 @@ from plan_tool.roadmap_compare import (
     build_roadmap_comparison,
 )
 from plan_tool.roadmap_diff import build_roadmap_diff
+from plan_tool.roadmap_gates import ArtifactEnvelope, check_duplicate_row_ids
 from plan_tool.roadmap_seed_manifest import (
     NoPublishedRoadmapVersionError,
     no_published_version_message,
@@ -110,6 +111,8 @@ def run_roadmap_comparison(
             plans_dir=Path(plans_dir), slug=slug, base=base, target=target
         )
         patches = _capture_patches(base=base, target=target)
+        _refuse_duplicate_row_ids(base, "base")
+        _refuse_duplicate_row_ids(target, "target")
         typed_diff = build_roadmap_diff(
             predecessor_artifacts=base.parsed_artifacts,
             candidate_artifacts=target.parsed_artifacts,
@@ -127,6 +130,30 @@ def run_roadmap_comparison(
     except (OSError, UnicodeError, TypeError, ValueError, RoadmapVersionError, RoadmapArtifactError) as exc:
         raise RoadmapComparisonRunError(str(exc)) from exc
     return RoadmapComparisonRun(base=base, target=target, patches=patches, comparison=comparison)
+
+
+def _refuse_duplicate_row_ids(snapshot: RoadmapComparisonSnapshot, label: str) -> None:
+    """Refuse a snapshot whose row ids collide: the diff keys rows by id.
+
+    Parsing keeps duplicate ids so the stage gate can report them, and a
+    published version has passed that gate, so this fires only on a version a
+    tool without the gate wrote. The diff would otherwise drop one of two rows
+    that share an id, or pair a stale row with the wrong one, with no trace.
+    """
+    parsed = snapshot.parsed_artifacts
+    violations = check_duplicate_row_ids(
+        ArtifactEnvelope(
+            domain=parsed["domain"],
+            constraints=parsed["constraints"],
+            components=parsed["components"],
+            plans=parsed["plans"],
+        )
+    )
+    if violations:
+        raise RoadmapComparisonRunError(
+            f"the {label} snapshot cannot be compared: "
+            + "; ".join(violation.message for violation in violations)
+        )
 
 
 def _bound_prose_amendment_evidence(
