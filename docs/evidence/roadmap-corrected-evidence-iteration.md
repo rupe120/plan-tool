@@ -81,4 +81,4 @@ No detail files or application-code changes occur. Both original immutable store
 
 The mapping, seed and base-plan observations support the existing bounded guidance: assign source-required production/update operations, their consumers and integration, and retain explicit uncertainty about external support. They do not establish complete coverage of the original Integration corpus, optimal decomposition, causal improvement from one phrase or implementation efficiency. Earlier and newer mappings are single samples. No additional prompt change is justified by this result; it supplies evidence for the existing business-operation guidance. The next independent business case is durable handoff-content continuity, tracing emitted content and revision identity through successor consumption. Do not prescribe its storage mechanism.
 
-The [testing handoff](../../handoffs/roadmap-business-logic-base-plan-loop.md) owns the operator workflow. BACKLOG #496 remains open; no shipment or semantic certification follows from this experiment.
+BACKLOG #496 remains open; no shipment or semantic certification follows from this experiment.

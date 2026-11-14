@@ -12,7 +12,7 @@ application code.
 
 | Record | Repository | Role |
 | --- | --- | --- |
-| [`roadmap-aidlc-inception-fit.md`](roadmap-aidlc-inception-fit.md) | `plan-tool` handoffs | The design: eight changes, settled decisions, open design choices, and next steps |
+| [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../docs/design-plans/roadmap-aidlc-inception-fit.md) | `plan-tool` design docs | The design: eight changes, settled decisions, open design choices, and next steps |
 | [`integration-ideation-roadmap-intake-review.md`](integration-ideation-roadmap-intake-review.md) | `plan-tool` handoffs | The review question, evaluation criteria, and execution fence |
 | `BACKLOG.md` #384 | `plan-tool` | Amended: carried decisions cite their source instead of carrying rejected alternatives |
 | `handoffs/README.md` | Integration | Integration's canonical execution checklist; its current checkpoint and single-brief steps require refresh before use |

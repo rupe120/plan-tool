@@ -278,7 +278,7 @@ For the owner:
   "Readiness lens" section once cited as bucket C (for example its "Theoretical"
   list) carries the right `readiness` value.
 - **Finish the Jira configuration** (decision 11) through
-  [`jira-management.md`](jira-management.md), which owns
+  [`docs/how-to/jira-management.md`](../docs/how-to/jira-management.md), which owns
   the ticket seeding and the recurring management loop.
 - **Review the three `CLAUDE.md` commits** (`b0b21e8c`, `8ecef0c2`, `bdd8e6b1`)
   in the tracking-model PR (#14), since that file's own rule requires Architect

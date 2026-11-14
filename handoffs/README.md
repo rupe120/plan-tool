@@ -3,6 +3,19 @@
 This directory carries handoffs and review ledgers. Start with `BACKLOG.md`'s
 working board; a handoff records a route and its fence, not a queue override.
 
+## Policy: temporary, and cited only here
+
+Handoffs and review ledgers are temporary working records. This README is the only
+document that refers to them, and other documents (`CLAUDE.md`, the how-to guides, the
+backlog, plans, evidence) point at this README, never at an individual file. Anything
+durable (a design, a procedure, a decision, a measurement) lives in `docs/`, a plan, or
+a backlog entry, and is moved there before its handoff is retired. A handoff can then be
+renamed, merged or deleted without sweeping references.
+
+Frozen files (archived plans, plan details, saved reports, seeds, `docs/evidence/*.json`
+receipts, experiment data) pin their text and can still contain paths to handoffs that no
+longer exist. They are not edited, and a dead path there is expected.
+
 ## Naming
 
 A new handoff or ledger is named for its concept, not its date:
@@ -16,14 +29,13 @@ concept is the change or route in a few lowercase words
 - **One concept, one file.** A second record for a concept already here is an
   update to that file. If the work is genuinely separate, name the narrower
   concept instead of adding a suffix or a date.
-- **Dated names were dropped 2026-11-13.** [Former dated names](former-dated-names.md) maps each
-  old name and its date to the current file, because frozen plans, saved reports and
-  evidence receipts still cite the old paths and pin their text.
+- **Dated prefixes were dropped 2026-11-13.** `git log --follow <file>` gives a file's
+  history and its original date.
 
 ## Review ledgers
 
-A review ledger is the durable record for one bounded change: local code
-review, pull-request review, and the decisions a later reviewer needs. Keep
+A review ledger records how one bounded change is judged while it is in review: local
+code review, pull-request review, and the decisions a later reviewer needs. Keep
 one tracked ledger per change, named
 `<concept>-code-review.md` (see § "Naming"). A handoff records what a future session
 does next; a ledger records how the current change was judged. A file may do
@@ -65,7 +77,7 @@ branch, and hand the updated settled-decision list to the next reviewer.
   below, and every link resolves. Check with
   `for f in *.md; do [ $f = README.md ] || grep -qF "]($f)" README.md || echo "NOT INDEXED: $f"; done; grep -oE '\]\(([^)#]+\.md)' README.md | sed 's/](//' | sort -u | while read l; do [ -e "$l" ] || echo "DEAD: $l"; done`;
   empty output means both hold. Run it from `handoffs/`. It does not count sections: a link anywhere in this
-  file, including "Known dangling citations", counts as indexed, so check that each
+  file counts as indexed, so check that each
   file also has its own entry in a list or table. A section that routes to a file
   listed in another section (the release pickup) may link it twice.
 
@@ -81,7 +93,6 @@ compressing or retiring a handoff.
 
 ## Live handoffs
 
-- [Former dated names](former-dated-names.md) — old-name-to-current-file map with each file's original date; resolves citations in frozen files.
 - [Bug backlog drain](bug-backlog-drain.md) — standing procedure, queue order, stop conditions, and session log for draining `BUG_BACKLOG.md`.
 
 - [Overengineering checkpoints](overengineering-checkpoints.md) — merged checkpoints, instruction refresh after project model selection, behavioral-test limits, and observation on the next real task.
@@ -113,9 +124,6 @@ its arc documents, not here; the successor-slug rule lives in
   — the review question, criteria, and execution fence for whether roadmap's
   single-brief intake makes adequate use of the first complete AI-DLC
   Ideation corpus.
-- [Roadmap fit to the AI-DLC workflow framework](roadmap-aidlc-inception-fit.md)
-  — approach-level design for `roadmap` as an Inception implementation, with
-  its settled decisions and the open design choices; the owner of that list.
 - [Integration seam resume order](integration-seam-resume-order.md) — where the
   Ideation-to-roadmap seam work stands across Integration and `plan-tool`; the entry
   point for the next session on this seam.
@@ -162,9 +170,6 @@ its arc documents, not here; the successor-slug rule lives in
   — the settled decisions (tracking model, remote of record, review tail
   rules, persona tiers, promotion stubs, roadmap boundary, release process,
   Jira board, `--version`), where each is recorded, and the work still open.
-- [Jira project setup and management](jira-management.md) — the
-  live `IPPT` state against the lean board, the ticket promotion procedure,
-  and the recurring management loop.
 - [First Jira tickets and the `run` merge guard](first-jira-tickets-and-run-merge-guard.md)
   — the seven live `IPPT` tickets, the short ticket format and tier rules, the
   owner decisions still open, and the next steps.
@@ -221,26 +226,6 @@ Closure labels follow § "Retention". Every table row states its compression sta
 | [Candidate envelope diagnostics](roadmap-candidate-envelope-diagnostics-code-review.md) | Converged, low-yield, 2026-09-27; compressed 2026-09-29 | `BUG_BACKLOG.md` entry for P1.3/P2.2 |
 | [Candidate anchor/gate correction](candidate-anchor-gate-correction-code-review.md) | Converged, low-yield, after 8 passes; compressed 2026-09-29 | #431, #432 |
 | [Roadmap stack propagation](roadmap-stack-propagation-code-review.md) | Converged 2026-10-08, four passes (3 and 4 consecutive and clean); compressed 2026-11-13 | #463, #464, one `BUG_BACKLOG.md` entry; its pickup section lists the next session's work (the audit replay, #461's last audit, the directives branch's pull request) |
-
-## Known dangling citations
-
-Every frozen citation of a dated `handoffs/YYYY-MM-DD-…` path resolves through
-[Former dated names](former-dated-names.md); the entries below are the older, separate cases.
-
-Two citations in `docs/implementation-plans/2-roadmap-source-baseline-recovery.md`
-(lines 67 and 104) name `handoffs/2026-08-27-integration-roadmap-evidence-preflight.md`,
-which no longer exists. The plan is deferred and its saved reports pin its text,
-so the citations stay. Use the retained summary in
-[the roadmap arc](../docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md) (the #242
-"Paused" entry). Three frozen archive files (`docs/implementation-plans/archive/2-authored-artifact-format-version.md` and its step-7 detail) and the id-guard ledger cite the old `handoffs/` path of the authored-artifact record, now [the authored-artifact evidence](../docs/evidence/authored-artifact-structure-versioning.md); use that retained replacement while frozen citations stay as written. Citations of `handoffs/2026-09-08-aidlc-authoring-route.md` name an external application's own handoff, not a file in this repository. The [selection record](../docs/evidence/public-release-content-snapshot.md) summarizes the decisions relevant to this repository.
-
-Three handoffs retired 2026-11-13 are cited by path in both
-`docs/evidence/public-release-*-verification-20261021.json` receipts, which pin their
-text, so the citations stay: `handoffs/2026-09-29-handoff-consolidation.md` (now
-[the cleanup record](handoff-directory-cleanup.md)),
-`handoffs/2026-10-15-roadmap-to-plan-backlog.md` (scope in BACKLOG #492) and
-`handoffs/2026-10-16-roadmap-plan-set-creation.md` (scope in the closed #496 record,
-`docs/history/backlog-decisions.md`).
 
 ## 2026-09-08 consolidation record
 

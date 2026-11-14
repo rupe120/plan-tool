@@ -17,7 +17,7 @@ publication, remote changes, history rewriting, or independent team-policy chang
 | --- | --- | --- |
 | 1 | Content preparation — complete (#513) | PR #123 is merged; its selected bytes match the independently verified 2,588-path prose candidate. Preserve the selection and verification evidence when preparing a release. |
 | 2 | #514 distribution, license and history decisions | Apache-2.0, the GitHub source and a shared sanitized root for both hosts define the release route. Review install/update and synchronization guidance, then verify the final candidate and destinations. |
-| 3 | #508; recipe consistency satisfied by the [skill-router repair](../../../handoffs/skill-router-recipes-code-review.md) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
+| 3 | #508; recipe consistency satisfied (skill-router repair) | Installed guidance is portable and first-task instructions agree with canonical audit/iteration rules. |
 | 4 | #509, #511, #512 and existing #377 | Hosting selection, skill installation/refresh, model guidance and seed authoring support the consuming repository. These are separate bounded items, not one combined implementation. |
 | 5 | #510, then #515 | A skill-first walkthrough works in a fresh consuming repository, with prerequisites resolved or explicitly dispositioned. |
 
@@ -28,8 +28,8 @@ Do not duplicate #378/#379 tracker-convention or stale-entry work.
 
 Next bounded action: review #514's [install/update instructions](../../how-to/install-and-update.md)
 and [shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized),
-then verify the final candidate and both destinations. The [pickup handoff](../../../handoffs/public-onboarding-and-release.md#next-actions)
-owns the current route. Keep distribution, updates and fresh-consumer verification
+then verify the final candidate and both destinations.
+Keep distribution, updates and fresh-consumer verification
 with their separate work items.
 
 ## Decision gates

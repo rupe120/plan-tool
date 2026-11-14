@@ -6,7 +6,7 @@ bounded live dark-mode rehearsal completes seed → create → bare audit → de
 coverage and passing story lint. This verifies planning and local export on one
 small repository; it does not verify feature implementation, browser behavior,
 a full TTRPG run or remote presentation checkpoints. Remote publication remains
-separately owned by the [release workflow](../../handoffs/public-onboarding-and-release.md).
+separately owned by the release workflow.
 
 ## Reviewed snapshot and method
 
@@ -137,8 +137,7 @@ carried the same stale quick recipes. The
 iteration defaulted on, and failed-step recovery said to mark the step done
 manually. The actual run follows the canonical directives: both audit gates,
 one-shot detail, and tool-mediated `run --accept` if recovery is needed.
-The [separate skill repair record](../../handoffs/skill-router-recipes-code-review.md)
-owns their correction and validation. The demo conversion itself changes no
+The separate skill repair owns their correction and validation. The demo conversion itself changes no
 skill behavior or router content.
 
 ## Retained artifacts and repository checks
@@ -178,9 +177,7 @@ Observed verification results, 2026-10-21:
 
 The parent session's final full suite reports **14,698 passed, 66 skipped in
 71.48s**. All four launcher step gates also pass. Final local-target checks cover 290 file links and 201 Markdown fragments,
-including the review ledger and the corrected RUNBOOK canonical-layout anchor. The
-[review ledger](../../handoffs/skill-led-demo-examples-code-review.md)
-retains two independent report-only reviews and their exact ranges and methods;
+including the review ledger and the corrected RUNBOOK canonical-layout anchor. Two independent report-only reviews cover exact ranges and methods;
 both report no material findings. The code reconciliation sweep exits 0 with no
 eligible steps because this plan is entirely non-code. These checks close the
 documentation implementation; they do not broaden the rehearsal's claims.

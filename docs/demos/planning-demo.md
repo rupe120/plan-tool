@@ -6,8 +6,7 @@ to see what to inspect at each decision point; they are not captured model resul
 
 > **Demo needs updating before its next presentation.** Remote checkpoints
 > `demo/1-seed` through `demo/4-jira` still need review against the current tool.
-> The [demo refresh handoff](../../handoffs/demo-refresh.md) records
-> local preparation and remaining verification. Documentation and fixture checks
+> Documentation and fixture checks
 > do not establish a verified live workflow or authorize replacement remote refs.
 > Temporary preparation files may be absent.
 
@@ -86,7 +85,6 @@ results with the authored samples without promising a fixed answer or duration.
 
 ## Refresh the demo
 
-Use the [handoff's remaining verification](../../handoffs/demo-refresh.md#remaining-demo-verification-and-publication)
-before presenting a verified current workflow: rehearse in a real consuming
+Before presenting a verified current workflow, rehearse in a real consuming
 repository, retain actual audit evidence and validate both local export outputs.
 Remote checkpoint replacement requires separate review and authorization.
