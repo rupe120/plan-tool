@@ -13,8 +13,8 @@ This directory's own upkeep: scope fence, owner decisions and open items. Each s
 | Field | Value |
 | --- | --- |
 | Opened | 2026-11-13 |
-| Branch | `docs/handoff-undated-names` |
-| Disposition | Open: release-cluster decision pending. The review loop was stopped by the owner after pass 4 (not converged; findings had turned to this branch's own wording) |
+| Branch | `docs/handoff-retire-and-move` |
+| Disposition | Open: owner items listed under Still open |
 
 Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
 `README.md` owns the directory contract (naming, ledger shape, retention, index).
@@ -33,27 +33,42 @@ Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
 
 ### State, 2026-11-13
 
-- The directory holds 11 workstream files, `bug-backlog-drain.md` and `README.md`
-  (`README.md` § "Workstreams"). The roughly 90 per-change files are merged into their
-  workstreams, one section per change with its opened date. No section text was dropped in
-  the merge; each section keeps the source file's original title.
-- `model-and-budget.md` was retired 2026-11-13 once its shipped work's durable decisions moved to `docs/ARCHITECTURE.md`, `docs/reference/contracts/model-window-sources.md` and `DATA_CONTRACT.md`. Its lessons-surface ablation and observation-index notes were dropped: `BACKLOG.md` #195 owns shrinking the lessons surface, and the observation-index decision belongs to the separate Integration replay.
-- Twelve closed ledgers were compressed to the retention shape before the merge;
-  compression dropped only reviewer session UUIDs and a few non-commit ids.
-  `roadmap-versioned-from-birth` records its deferrals as `tracked` to fit the closed
-  disposition set.
+- The directory holds two workstream files (`run-and-completeness.md`, `tracking-and-jira.md`),
+  `bug-backlog-drain.md`, this file and `README.md` (`README.md` § "Workstreams"). About 90
+  per-change files were merged into workstreams, compressed, then retired once their work
+  shipped and their durable decisions moved to docs.
 - Durable content moved out: the AI-DLC fit design to `docs/design-plans/`, the Jira
   procedure to `docs/how-to/jira-management.md`, the AI-DLC seam contract to
-  `docs/reference/contracts/aidlc-seam.md`.
+  `docs/reference/contracts/aidlc-seam.md`, and the settled design, contract and
+  procedure decisions of the retired workstreams to `docs/ARCHITECTURE.md`, the FORMAT
+  documents, `DATA_CONTRACT.md`, `RUNBOOK.md`, `docs/how-to/pipeline/run.md`,
+  `docs/TRACKING.md`, `docs/history/backlog-decisions.md` and the evidence pages.
+- Retired workstreams: `model-and-budget`, `roadmap-candidates`, `roadmap-feedback`,
+  `roadmap-plans`, `roadmap-aidlc`, `create-and-detail`, `docs-and-onboarding`, `release`,
+  `review-process`.
+- Live follow-ups were filed as `BACKLOG.md` #527 (remote demo-ref refresh), #528
+  (stage-4 plan breakdown assessment), #529 (live-doc link guard) and #530 (remaining
+  readability audit batches and walkthrough), plus `BUG_BACKLOG.md` entries.
+- Deliberately dropped, not filed: the Integration replay and its observation-index decision
+  (separate repository), the lessons-surface ablation (`BACKLOG.md` #195 owns shrinking the
+  lessons surface), the `claude-personal` alias (personal configuration), the Linux
+  per-argument limit (recorded as unverified in
+  `docs/evidence/integration-context-budget-2026-10-09/sizing.md`), the unsent release
+  announcement, GitHub mirror state, 1.1.0 Jira coverage, review case studies, the
+  iterate-convention pointer swap, two assistant-tooling ideas, the PR-template readability
+  item, and the five PR #195 review findings (`declined`: low value).
 - One local-only note (`2026-10-16-token-ledger-logging-gaps-reverted-attempt.md`, excluded
   by `.git/info/exclude`) is untracked and unindexed on purpose.
 
 ### Still open
 
-- **Compress the large workstreams.** `docs-and-onboarding.md` (about 1,800 lines),
-  `tracking-and-jira.md` and `roadmap-feedback.md` hold uncompressed sections; compress
-  closed sections per `README.md` § "Retention", never by splitting by change.
-- **Retire shipped sections.** Release sections whose work shipped are candidates for
-  deletion once nothing live depends on them. Owner decision needed.
 - **`unpushed-main` R4-8** (in `tracking-and-jira.md`) stays `pending` and unfiled until
   either function is next touched.
+- **Owner items held in `tracking-and-jira.md` and `run-and-completeness.md`:** Bitbucket
+  approval and merge-queue settings, remaining Jira configuration, architect review of the
+  `CLAUDE.md` and `DIRECTIVES.md` edits (A2/G1), #473 and #474, IPPT-16, and the reading of
+  `awaiting-human-action`. Each retires its section when decided.
+- **Local `stash@{0}`** holds an abandoned stack-propagation attempt; drop it in the clone
+  that holds it.
+- **`2-roadmap-candidate-vocabulary-retry.md`** still reads `status: planning`; archive or
+  supersede it by owner decision.
