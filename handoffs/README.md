@@ -101,7 +101,6 @@ compressing or retiring a handoff.
 | [docs-and-onboarding.md](docs-and-onboarding.md) | Documentation accuracy, placement and readability, demos, onboarding and skill-router guidance. |
 | [release.md](release.md) | Public release preparation, versioning, tagging and sanitized publication. |
 | [tracking-and-jira.md](tracking-and-jira.md) | Work tracking, the Jira board and tickets, backlog guards, branch hygiene and settled tracking decisions. |
-| [model-and-budget.md](model-and-budget.md) | Project model selection, prompt budgets and token-ledger logging. |
 | [review-process.md](review-process.md) | Standing review and proportionality checkpoints. |
 | [handoff-directory.md](handoff-directory.md) | This directory's own upkeep: scope fence, owner decisions, open items. |
 | [bug-backlog-drain.md](bug-backlog-drain.md) | Standing procedure, queue order, stop conditions and session log for draining `BUG_BACKLOG.md`. Kept as its own file because sessions append to its log; not a merge candidate. |

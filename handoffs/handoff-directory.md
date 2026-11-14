@@ -33,10 +33,11 @@ Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
 
 ### State, 2026-11-13
 
-- The directory holds 12 workstream files, `bug-backlog-drain.md` and `README.md`
+- The directory holds 11 workstream files, `bug-backlog-drain.md` and `README.md`
   (`README.md` § "Workstreams"). The roughly 90 per-change files are merged into their
   workstreams, one section per change with its opened date. No section text was dropped in
   the merge; each section keeps the source file's original title.
+- `model-and-budget.md` was retired 2026-11-13 once its shipped work's durable decisions moved to `docs/ARCHITECTURE.md`, `docs/reference/contracts/model-window-sources.md` and `DATA_CONTRACT.md`. Its lessons-surface ablation and observation-index notes were dropped: `BACKLOG.md` #195 owns shrinking the lessons surface, and the observation-index decision belongs to the separate Integration replay.
 - Twelve closed ledgers were compressed to the retention shape before the merge;
   compression dropped only reviewer session UUIDs and a few non-commit ids.
   `roadmap-versioned-from-birth` records its deferrals as `tracked` to fit the closed
