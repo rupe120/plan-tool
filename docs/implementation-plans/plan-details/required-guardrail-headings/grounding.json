@@ -1,7 +1,7 @@
 {
   "plan_slug": "required-guardrail-headings",
-  "grounded_at": "2026-11-14T23:08:54Z",
-  "plan_fingerprint": "3a6f722bfe0202d00c5ef528514972a39df43d0978ffbd2c2dc650d969a3aa9d",
+  "grounded_at": "2026-11-14T23:40:14Z",
+  "plan_fingerprint": "3162b1e9cc0881aa212a553346d2e1318858e7d9cfdb37d903463c993431dc53",
   "code_fingerprint": {
     "BACKLOG.md": "4585fa73da0ae8ed25f8125cf2af11676557ef313ec9ac7cc949ff87b40c842c",
     "PLAN_FORMAT.md": "1de1e20f0d0f2255d91cd23451710dfd1d1122935111cc3cd2685780b0d5cdd0",
@@ -36,6 +36,14 @@
     "tests/test_scope_fence.py": "71dd79984c57892c4e2023cf896ce470a03a3dffacee8d8e7a1abf0bbe92efe6",
     "tests/test_scope_out.py": "7f3fb24e915ef1732b44b0d2f971155dc56131e70453ba29f6d4bb38fdc8ba9e"
   },
-  "step_authoring_fingerprints": {},
+  "step_authoring_fingerprints": {
+    "1": "2629e456a99de405590c170cc8cbafbc8f971824f51c5a047f9c2f5b1fe35e36",
+    "2": "54e583df19a42af70596349d14934ead6ca0786159c5211c6520a3c128fdbb1e",
+    "3": "8732034382cf842099f1b8033b9beadcb37900bce4f87e16c9c355f2d75c9e8d",
+    "4": "6655c1756fc458e7c7256cdf619c1525842a6a964defb75bcf19137ddaf0fb97",
+    "5": "ce240b76eeb4fcf973b0670f107f6c3fb78b53e0b52b04a48d2141e2cf0f71c4",
+    "6": "ac22a241df525b392ef3eb11076dfa6174a2b595fa8ee1e6d321e7e0afb05164",
+    "7": "f1d4a998d2c46f1e2e9930e2a6ef7de71587fe90fb7059aa6be7abeaafbde40d"
+  },
   "schema_version": 1
 }

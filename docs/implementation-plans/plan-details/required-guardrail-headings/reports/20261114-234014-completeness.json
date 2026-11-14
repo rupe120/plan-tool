@@ -1,0 +1,175 @@
+{
+  "version": 4,
+  "plan_slug": "required-guardrail-headings",
+  "plan_path": "docs/implementation-plans/2-required-guardrail-headings.md",
+  "created_at": "2026-11-14T23:40:14Z",
+  "kind": "completeness",
+  "step_id": null,
+  "plan_fingerprint": "3162b1e9cc0881aa212a553346d2e1318858e7d9cfdb37d903463c993431dc53",
+  "code_fingerprint": {
+    "BACKLOG.md": "4585fa73da0ae8ed25f8125cf2af11676557ef313ec9ac7cc949ff87b40c842c",
+    "PLAN_FORMAT.md": "1de1e20f0d0f2255d91cd23451710dfd1d1122935111cc3cd2685780b0d5cdd0",
+    "ROADMAP_FORMAT.md": "3c1d991dad3dbb77de1add4083ce86dbf35ea173736adbeb696a9af89fecd779",
+    "SEED_FORMAT.md": "f8faf41a14b6ff3f0ee53f5bd103422fb26facc2985efcaae1c8aea5f450a001",
+    "docs/how-to/pipeline/create-from-existing.md": "745d0034fc4661918470be67bc73994644c97a536716b0d56716367d7a29a0ee",
+    "plan_tool/annotate.py": "c0620a24c307135c77e1a1211ce65047adea4a62e6edfa77f197ab1c56d7d986",
+    "plan_tool/annotate_render.py": "44add53d5006a20f95830efd4afb8d14fe77267dc5074a7413720ece2a731022",
+    "plan_tool/cli/annotate_cmd.py": "bc800f5fc555c9039c5838254a18b0e64529bad303f1b71459693a88af41e2a8",
+    "plan_tool/cli/authoring.py": "572e8099f4749db9424700ff30e87a95bd35124d44b7f9499942a2a5cd0ea631",
+    "plan_tool/cli/scope_out_cmd.py": "4897a958acf73e58ea61340fe41b3427cd6c916a3ec9dc71e71a7b0263d56255",
+    "plan_tool/create.py": "8056c44b287083ee17b906441a4aa152fa8bf5d13ef8a8b69114ac7ec049d904",
+    "plan_tool/prompts/annotate.md": "c0157dcd7cd51862157f45580cb8d4ef9c2e6ef5e075f44f535483f2de4b12ca",
+    "plan_tool/prompts/roadmap-seed.md": "a077fa75311dabae3f80e45d0aca4df21c2fd86089105a8e51f0e8909fed5f8c",
+    "plan_tool/reground.py": "5103a968721e1f79b9c8583ba8579a54ea6e897e7df16163e7175162c2b84041",
+    "plan_tool/roadmap_gates.py": "860ad814c86ca9a3bd5a9488d99165b7b4c7e316a733535fe0bd7fa976d3aa32",
+    "plan_tool/scope_fence.py": "5bcae54698b274d25a402f45931327cd2feaaf4474d633e883335df54b49328a",
+    "plan_tool/scope_out.py": "f25d938ef8b1b8bd0b624004b6a5b25e83219645f944c8e43b22c82ffdc7b79d",
+    "tests/cli/test_annotate_cmd.py": "7037b5ee579415ebb9dcc5575b62d2695ef98b6105e5b560daf0932f2c97efc7",
+    "tests/cli/test_authoring_cmds.py": "1b7ea4aa8e65859eca8744d63e6a0e57bf2cc70b9899eeccead1a88b8871c6de",
+    "tests/cli/test_roadmap_cmd.py": "893da8cb0d40be73567848bc58a3b8735c799a9e82e42f563c47b8aad81f8b38",
+    "tests/cli/test_scope_out_cmd.py": "906ab90fa67f8d74af0bd1f32276a0d23c6a77defce3a21638f5722b73cbb614",
+    "tests/test_annotate.py": "b1f390bb77c04a583edd308d3f54e139219f57c328b27d28e8228e45ccb8fdc7",
+    "tests/test_annotate_render.py": "afa69d391254e72eb4b3b86b5f3c880456ab2ef442549bb748931a8964a52d7d",
+    "tests/test_cli.py": "5d063bc3185d2800c3329fafdec4177e6748f0229f6782a5e03a8c7dac71de86",
+    "tests/test_create.py": "1f87fddb602145170f1d148ddd8df1fc8ac45d015542aa3f4dd7d01a22199a74",
+    "tests/test_distill.py": "7b07093288fe975eb90cd7055b3a6cdc721bb4529b9f0f0cd8088d209609b2e5",
+    "tests/test_reground.py": "2ba3b99ec874d50cb6f93363548811efa6909d8e98742c74277d5272424ea042",
+    "tests/test_review.py": "9764404bdf60b8b3f46a1970f4474989a4217afffb716427ce04acf309f3d4b0",
+    "tests/test_roadmap.py": "f54d61bc8f751ce41c4a6752d0679160d7c8126f2036588ab58f7f2519333269",
+    "tests/test_roadmap_gates.py": "0dd10313320f61acefa732553915975e9eff863348aeb0a68cedbf9445537eef",
+    "tests/test_scope_fence.py": "71dd79984c57892c4e2023cf896ce470a03a3dffacee8d8e7a1abf0bbe92efe6",
+    "tests/test_scope_out.py": "7f3fb24e915ef1732b44b0d2f971155dc56131e70453ba29f6d4bb38fdc8ba9e"
+  },
+  "code_fingerprint_present": true,
+  "detail_bundle_fingerprint": {
+    "docs/implementation-plans/plan-details/required-guardrail-headings/01-one-shared-check-three-guardrail.md": "753bba17b4712aa10a40d8fa05e605fa9277b00624eb6ba0d83f40193bc15844",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md": "f5b386f689bf1c97db869eb18d6f354be4a42ef9797f60557f70b3f7246e6107",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md": "c9aa35027318a382ef3320c779f8b7b38d1bff5a2fb51750696d56998c08bc38",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md": "c5a204a824f17bc6d79bb0bf88bf0d2cd4e491c8c07b21e806feaa5f16e524f7",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md": "3e0060118a88c9e2b06c53e57102653200e95d72f8c49fe3f4349e06ddbe5de1",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md": "d9489de96b3b17784b95084145301de3bb3fccf569d367217fc8f7dd5c3851e8",
+    "docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md": "9660be49ee40b81087c1dbc2703a768af87af5ab9c435961ab2ee1a225eeb0c3"
+  },
+  "detail_bundle_fingerprint_present": true,
+  "step_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "step_ids_present": true,
+  "outcome_evidence_valid": null,
+  "report_md": "# Completeness report: Required Guardrail Headings\n\n`required-guardrail-headings` \u00b7 generated 2026-11-14T23:40:14Z \u00b7 mode: audit-only\n\n## Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `7528f3a9d533e2fec86191b0d889e5a6e5cee48f70d17a9b0cd01b2fb197c649`\n- **Detail bundle digest:** `c2897f41eb7fd85ceed6474b32ff8b17ca8728e57e5436ede7d5b5ecc1c5371c`\n- **Detail grade:** `run`\n\n## Disposition summary\n\n- **Conceptual correctness:** 0\n- **Conceptual completeness (advisory, not auto-applied):** 0\n- **Deferred:** 0 (0 missing-concept-link, 0 structural-diagnostic, 0 info, 0 low-payoff)\n- **Pending concept decisions (advisory, not blocking):** 0\n\n## Plan mass\n\nFindings falling while the plan grows reads as healthy convergence to the finding-count stopping rule; this block reports the artifact's own growth so both curves are visible together. Reporting only \u2014 nothing here gates or warns (BACKLOG #238).\n\n- **Committed step count:** 7 (+0 vs. first audit)\n- **Detail-bundle size:** 93733 bytes (+93733 vs. first audit)\n- **Keystone fan-out:** 0.83\n- **Satellite ratio:** 0.43\n- **Inert-step ratio:** 0.20\n- **Audit-induced growth:** 0.00\n\n## Smells (advisory)\n\nAdvisory plan-structure heuristics (brittle feature refs, self-referential steps, and cross-step granularity split/merge advice). Reported for a human to act on; never auto-applied and never block the run.\n\n- INFO `[plan-claim-vs-delivery-00c20530]` [confidence: limited]: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO `[step3-granularity-split-5aa81f74]` [confidence: limited]: Step 3 \"Make `annotate` write all three guardrail headings into its carryover seed. When the source plan or document has a guardrail heading the step 1 predicate accepts, `annotate_render.render_create_seed` copies it verbatim through the step 2 block helper, under the same source-state rule. When it has no accepted heading, the existing single `annotate` call also returns the missing guardrail bodies, which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation` in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing response stay valid unchanged. A response with no guardrail bodies renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`: write only fences the source already implies, use `None` when it implies none, and add no scope, mechanism or requirement. That line carries the proportionality rule from `synthesize-body.md`. The printed result in `plan_tool/cli/annotate_cmd.py` names each model-written or inherited heading for review before `create`. The destructive operations stay as they are: the refusal to overwrite an existing default seed, replacement only through an explicit `--seed`, and the opt-in `--archive` move. Tests in `tests/test_annotate.py`, `tests/test_annotate_render.py` and `tests/cli/test_annotate_cmd.py` use canned responses and cover verbatim copy, a model-written guardrail, an older response shape with no guardrails, and that the prompt contains the instruction.\" carries refactor verb(s) ['move'] and feature verb(s) ['add', 'create'] \u2014 likely two concerns in one step.\n\n## Suggested next steps\n\n- Close the blocking `data-contract` finding (medium) directly \u2014 Stale Input contract reference `annotate_render.py`\n- `plan-tool completeness-audit required-guardrail-headings --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n\n---\n\n## Full grouped report\n\n## Plan completeness: Required Guardrail Headings\n\n### Audit result\n\n- **Result:** `awaiting-human-action`\n- **Coverage:** `confirmed`\n- **Audit revision:** `current`\n- **Audit stage:** `detail`\n- **Plan digest:** `7528f3a9d533e2fec86191b0d889e5a6e5cee48f70d17a9b0cd01b2fb197c649`\n- **Detail bundle digest:** `c2897f41eb7fd85ceed6474b32ff8b17ca8728e57e5436ede7d5b5ecc1c5371c`\n- **Detail grade:** `run`\n\n_Two layers: deterministic checks confirm the plan document is well-formed (sections, files, deps); the conceptual audit asks claude whether the plan's own ideas are correct, complete, and unambiguous, grounded in the per-step detail bundle and the code at HEAD._\n\n### Correctness (run these first)\n\n_Verified: file paths resolve, dependencies are coherent, and the plan's stated concepts are internally sound._\n\n- _(none \u2014 paths resolve, deps coherent, concepts sound)_\n\n### Files coherence\n\n- NIT: step 5 declared `(no declared files cited in detail body)` not mentioned in detail\n\n### Data contract\n\n_Persisted data shapes in code and `DATA_CONTRACT.md` have drifted. Update the named contract section before treating the plan as complete._\n\n- MEDIUM `[data-contract-input-annotate-render-py]` [confidence: limited]: docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md:## Input cites `annotate_render.py`, but code anchor path `annotate_render.py` does not exist.\n\n### Smells (advisory)\n\n_Advisory plan-structure heuristics (brittle feature refs, self-referential steps, cross-step granularity split/merge advice, per-step mixed refactor + feature (MIXED-STEP) split findings, and claim-vs-delivery \u2014 a deliverable the acceptance prose claims that no step delivers), plus unsigned concept deferral reminders. Reported for a human to act on; never auto-applied and never block the run._\n\n- INFO [confidence: limited]: The plan's `## Acceptance criteria` names `_(todo)_`, but no step's declared footprint (`creates:` / `files:`, or a path-derived symbol) delivers it \u2014 even by fuzzy match. Confirm a step delivers it, or drop the claim. Advisory: fuzzy prose matching can false-positive, so this never blocks.\n- INFO [confidence: limited]: Step 3 \"Make `annotate` write all three guardrail headings into its carryover seed. When the source plan or document has a guardrail heading the step 1 predicate accepts, `annotate_render.render_create_seed` copies it verbatim through the step 2 block helper, under the same source-state rule. When it has no accepted heading, the existing single `annotate` call also returns the missing guardrail bodies, which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation` in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing response stay valid unchanged. A response with no guardrail bodies renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`: write only fences the source already implies, use `None` when it implies none, and add no scope, mechanism or requirement. That line carries the proportionality rule from `synthesize-body.md`. The printed result in `plan_tool/cli/annotate_cmd.py` names each model-written or inherited heading for review before `create`. The destructive operations stay as they are: the refusal to overwrite an existing default seed, replacement only through an explicit `--seed`, and the opt-in `--archive` move. Tests in `tests/test_annotate.py`, `tests/test_annotate_render.py` and `tests/cli/test_annotate_cmd.py` use canned responses and cover verbatim copy, a model-written guardrail, an older response shape with no guardrails, and that the prompt contains the instruction.\" carries refactor verb(s) ['move'] and feature verb(s) ['add', 'create'] \u2014 likely two concerns in one step.\n\n### Suggested next steps\n\n- The convergence loop in the re-audit below auto-applies the deterministic finding(s) above.\n- `plan-tool completeness-audit required-guardrail-headings --iterate` \u2014 1 blocking gap(s) open \u2014 re-audit after the session-directed edit; no stage transition is offered while the blocking verdict is open or unavailable.\n",
+  "recommendations": [
+    {
+      "id": "step3-data-contract-d81a7bc4",
+      "source": "data-contract",
+      "severity": "medium",
+      "step_id": 3,
+      "title": "Stale Input contract reference `annotate_render.py`",
+      "body": "docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md:## Input cites `annotate_render.py`, but code anchor path `annotate_render.py` does not exist.",
+      "suggested_action": "Update the plan/detail `## Input` reference to match HEAD, or remove it if this step no longer consumes that contract.",
+      "impact": null,
+      "complexity": null,
+      "redirect": null,
+      "purity_verdict_provenance": null,
+      "file_path": null,
+      "anchor": "data-contract-input-annotate-render-py",
+      "target_signature": null,
+      "confidence": "limited",
+      "restated_property": null
+    }
+  ],
+  "annotations": {},
+  "audit_coverage": {
+    "budget_limited": false,
+    "passes_used": 1,
+    "cap": 3,
+    "recommendation_kind": null,
+    "recommended_passes": null,
+    "recommendation_advice": null,
+    "confirmation_kind": "confirmed-dry",
+    "conforming_pass_count": 1,
+    "failed_or_malformed_pass_count": 0,
+    "early_stop_reason": null
+  },
+  "qualified_result": {
+    "headline": "awaiting-human-action",
+    "stage": "detail",
+    "coverage": "confirmed",
+    "revision_status": "current",
+    "audit_revision": {
+      "version": 3,
+      "detail_grade": "run",
+      "plan_digest": "7528f3a9d533e2fec86191b0d889e5a6e5cee48f70d17a9b0cd01b2fb197c649",
+      "detail_bundle_digest": "c2897f41eb7fd85ceed6474b32ff8b17ca8728e57e5436ede7d5b5ecc1c5371c",
+      "details": [
+        {
+          "step_id": 1,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/01-one-shared-check-three-guardrail.md",
+          "state": "present",
+          "digest": "753bba17b4712aa10a40d8fa05e605fa9277b00624eb6ba0d83f40193bc15844"
+        },
+        {
+          "step_id": 2,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md",
+          "state": "present",
+          "digest": "f5b386f689bf1c97db869eb18d6f354be4a42ef9797f60557f70b3f7246e6107"
+        },
+        {
+          "step_id": 3,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/03-make-annotate-write-all-three-guardrail.md",
+          "state": "present",
+          "digest": "c9aa35027318a382ef3320c779f8b7b38d1bff5a2fb51750696d56998c08bc38"
+        },
+        {
+          "step_id": 4,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md",
+          "state": "present",
+          "digest": "c5a204a824f17bc6d79bb0bf88bf0d2cd4e491c8c07b21e806feaa5f16e524f7"
+        },
+        {
+          "step_id": 5,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md",
+          "state": "present",
+          "digest": "3e0060118a88c9e2b06c53e57102653200e95d72f8c49fe3f4349e06ddbe5de1"
+        },
+        {
+          "step_id": 6,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/06-turn-on-refusal-create-py-classify-file.md",
+          "state": "present",
+          "digest": "d9489de96b3b17784b95084145301de3bb3fccf569d367217fc8f7dd5c3851e8"
+        },
+        {
+          "step_id": 7,
+          "resolution": "pointer",
+          "path": "/Users/joshrusso/temp/plan-tool/plan-tool-clones/plan-tool-2/docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md",
+          "state": "present",
+          "digest": "9660be49ee40b81087c1dbc2703a768af87af5ab9c435961ab2ee1a225eeb0c3"
+        }
+      ],
+      "source_seed_digest": "7677ca8bff156491cf60aa14f08a510013361ba56d96111366fbbb977b4208bd",
+      "project_context_digest": "674f88f45d859fc4d180f76a878916557540038f95b8d0a416d0a74b2e7a392e"
+    }
+  },
+  "is_pre_apply_checkpoint": false,
+  "plan_mass": {
+    "step_count": 7,
+    "detail_bundle_bytes": 93733,
+    "keystone_fan_out": 0.8333333333333334,
+    "satellite_ratio": 0.42857142857142855,
+    "inert_step_ratio": 0.2,
+    "audit_induced_growth": 0.0,
+    "soft_edges": []
+  },
+  "audit_stage": "detail"
+}
