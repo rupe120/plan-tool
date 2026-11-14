@@ -5983,7 +5983,7 @@ separate)**
   `--commit`):** (1) a retry whose tests were already in the tree from an earlier
   attempt made no edits, so the delta was empty and the gate failed it (step 3,
   attempt 3); `enforce_test_authoring: false` was then added by hand to steps 3
-  through 9 so a retry could advance. (2) The model committed its own work inside
+  through 9 so a retry could advance. (2) *(Fixed 2026-10-22: the gate now unions the working-tree delta with backend-committed test paths, `launcher.py` `committed_changed_paths`.)* The model committed its own work inside
   the call (a 49-file commit, step 10), so the working-tree delta was empty, the
   gate reported "no test file modified", and the suite gate never ran. Candidate
   fixes for the open question below: pass when the step's declared test files
@@ -8033,51 +8033,37 @@ separate)**
 **#56 — Add a linter (ruff) + pre-commit gate**
 
 - **Principle:** `none` — a repository lint gate, not a property of the tool's output.
-- **What:** The repo has no lint step (CLAUDE.md: "no separate
-  lint/build step beyond pytest"). Adopt `ruff` (lint + format,
-  subsumes flake8/isort/pyupgrade/black) as the standard: add it to
-  the dev dependency group, add a `[tool.ruff]` config to
-  `pyproject.toml`, and wire a `pre-commit` hook into the existing
-  tracked `scripts/hooks/` setup (alongside the `pre-push` suite guard)
-  that lints staged Python.
-- **Effort:** small for the wiring; **medium once the existing-code
-  cleanup is counted.** A probe on 2026-06-16 found **368 violations**
-  under ruff's default `E,F` ruleset (264 `F401` unused-import, 59
-  `E402` import-not-at-top, 15 `F811` redefine, 8 `F541`, 8 `F821`
-  undefined-name, 6 `F841`, 5 `E741`, 3 `E731`); 287 are
-  `--fix`-autofixable. The 8 `F821` undefined-name hits are worth a
-  look — they may be real bugs, not style.
-- **Risks:** a strict repo-wide ruleset blocks every commit until the
-  backlog of violations is cleared. Mitigations to decide in the plan:
-  (a) autofix the 287, hand-fix the rest, then enable repo-wide; or
-  (b) lint only staged/changed files in the hook so legacy code doesn't
-  gate day-one, and tighten later; or (c) start with a narrow ruleset
-  (e.g. `F` only) and grow it. `E402` (59 hits) is often legitimate in
-  this codebase (deferred imports to keep leaf modules cycle-free) — it
-  likely needs a per-file ignore rather than a fix.
+- **What:** `ruff` is in the dev dependency group (`ruff>=0.16.3`) and
+  `pyproject.toml` carries `[tool.ruff]` with `select = ["F", "E9"]`; as of
+  2026-11-14 `uv run ruff check plan_tool` reports 2 errors (the undefined
+  names tracked in `BUG_BACKLOG.md`). What remains: wire a `pre-commit` hook
+  into the existing tracked `scripts/hooks/` setup (alongside the `pre-push`
+  suite guard) that lints staged Python; today `scripts/hooks/pre-commit` is a
+  secret scanner only and runs no ruff.
+- **Effort:** small — the hook wiring plus the 2 remaining errors. (A
+  2026-06-16 probe under ruff's default `E,F` ruleset found 368 violations; the
+  narrower shipped ruleset, `F` and `E9` only, replaced that rollout.)
+- **Risks:** a hook that lints the whole repo blocks every commit while the 2
+  errors stand; lint only staged Python, or clear the 2 errors first.
 - **Dependencies:** none. The tracked-hooks scaffold
   (`scripts/hooks/install.sh`, `core.hooksPath`) already exists, so the
   pre-commit hook slots in beside `pre-push`.
 - **Origin:** Requested 2026-06-16 while adding the CLI-reference
-  pre-push hook; deferred to backlog rather than implemented inline
-  because the existing-code violation count makes it a scoped task, not
-  a one-liner.
-- **Approach:** plan-tool. The wiring is trivial, but the
-  rollout strategy (which rules, fix-vs-ignore the 368, staged-only vs
-  repo-wide, the `F821`/`E402` judgment calls) is a multi-decision
-  cleanup worth a paper trail.
+  pre-push hook; the dependency and `[tool.ruff]` config have since landed.
+- **Approach:** `direct` — the rule set is already chosen (`F`, `E9`); what is
+  left is the staged-file hook and the 2 remaining errors.
 
-**#176 — Run-log writers for the remaining Claude-spending verbs (`jira`, `annotate`, `merge`, `reconcile-plan-walk`)**
+**#176 — Run-log writers for the remaining Claude-spending verbs (`jira`, `annotate`, `reconcile-plan-walk`)**
 
-- **What:** these four spend Claude and open no run log at all — no cost
+- **What:** these three spend Claude and open no run log at all — no cost
   record, no `in-flight.json`, nothing in `plan-tool runs list`. Verified
   empirically against every saved log in this repo: the only `run_start`
   commands ever recorded are `run`, `completeness`, `detail`, `create`,
   `completeness-apply`, `run-reconcile`, `detail-reconcile`, `split`,
   `suggest-gates`, and (as of `741fdf6`) `reconcile-plan` / `verify-all`.
   Statically, `cli/jira_cmd.py` and `cli/annotate_cmd.py` contain no
-  `RunLogWriter` reference; `merge` and the standalone `reconcile-plan-walk`
-  likewise. `annotate` is one call per file, so a batch run multiplies it.
+  `RunLogWriter` reference; the standalone `reconcile-plan-walk` likewise.
+  (`merge` logs now: `command="merge"` in `cli/authoring.py`.) `annotate` is one call per file, so a batch run multiplies it.
 - **Why:** an unlogged verb is invisible to the whole observability surface —
   `runs list` / `runs diff` / `runs profile`, the in-flight "is it hung?"
   recipe in RUNBOOK, and any cost attribution. The 2026-07 purity-scan
@@ -8090,20 +8076,20 @@ separate)**
   `_audit_sink` rather than re-deriving it (moving them to a shared leaf is
   a judgment call for whoever takes this — see Allowed reorganization).
 - **Scope contract:**
-  - **Outcome:** each of the four verbs writes one run log per invocation,
+  - **Outcome:** each of the three verbs writes one run log per invocation,
     with its Claude calls recorded under a named phase.
   - **In scope:** `plan_tool/cli/jira_cmd.py`, `plan_tool/cli/annotate_cmd.py`,
-    the `merge` handler in `plan_tool/cli/authoring.py`, `cmd_review_walk` in
+    `cmd_review_walk` in
     `plan_tool/cli/review_cmd.py`; their tests.
   - **Out of scope / Non-goals:** #177 (the slug pre-log ordering), the
     already-satisfied `run` phase attribution, adding new run-log *event kinds* or
     fields; changing `DATA_CONTRACT.md`; any orchestrator signature change
     (bind the sink at the command level, as `741fdf6` did).
   - **Allowed behavior changes:** a `.plan-tool/runs/<slug>/` log appears for
-    these four verbs. Nothing else — no output, rc, or prompt changes.
+    these three verbs. Nothing else — no output, rc, or prompt changes.
   - **Allowed reorganization:** promoting `_run_logged_audit` / `_audit_sink`
     out of `review_cmd.py` into a shared CLI leaf **is** permitted here,
-    since three of the four callers live in other modules and importing from
+    since two of the three callers live in other modules and importing from
     `review_cmd` would create a new edge between command modules. Smallest
     move only: the two helpers, no adjacent refactor.
   - **Verification:** per verb, one test asserting `run_start`'s `command`,
