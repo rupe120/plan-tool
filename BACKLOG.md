@@ -793,6 +793,83 @@ working straight down the tiers.
   "create a backlog item to setup an experiment based on the loom artifacts to
   attempt to build a more comprehensive list of plans."
 
+**#535 — A `roadmap` stage can mark its own decision `settled`, so a cut no owner answered is pinned against later revisions**
+
+- **Labels:** Route `plan`
+  · Readiness `decision-needed` (which of the options below, since it reverses a deliberate two-member design)
+  · Tier `architect`
+  · Principle `converge-on-correct-plan`
+- **What:** each stage prompt tells the model to mark a decision `pending`
+  "when it genuinely binds downstream design and the brief does not settle it.
+  Use `settled` otherwise" (`roadmap-domain.md`, and the same rule in
+  `roadmap-constraints.md`, `roadmap-components.md` and `roadmap-plans.md`).
+  Only `pending` decisions reach the owner. A `settled` one is then pinned by
+  `roadmap_gates.check_settled_decisions`, which refuses any revision that
+  changes its id, status, chosen option or anchor until an operator un-settles
+  it. So a model's own call, written as `settled`, behaves like an owner
+  decision without the owner having made it.
+- **Evidence:** Loom's `loom-aidlc-mvp` stage 1 wrote
+  `decision-exclude-repo-browsing` as `settled` in its first root version,
+  dropping the read-only repository tree the brief's Scope Fence puts in
+  scope (#533). It was never `pending`, so it was never asked; it stayed pinned
+  across the revisions from 2026-09-17 until the owner's 2026-10-01 feedback
+  (`fb-domain-repository-context`) reopened it. Record:
+  `docs/evidence/roadmap-run-measurements.md` §8.
+- **The current design is deliberate:** `ROADMAP_FORMAT.md` § "Decision status":
+  "Two members, deliberately. Status does not record authorship: a first run may
+  write a `settled` decision." Any option below reverses or narrows that, so it
+  needs an explicit owner decision recorded in `ROADMAP_FORMAT.md`.
+- **Options to decide between:**
+  1. **Record who settled it.** A stage-written decision carries a distinct
+     status (for example `proposed`) or an authorship field; the settled-decision
+     gate pins only operator-settled decisions, and the review surfaces
+     stage-settled ones as confirmable. Schema and gate change; older roadmaps
+     read their `settled` rows as they do today.
+  2. **A stage may write `settled` only with a citation.** It must cite the brief
+     or inherited-decision span that settles the call; with no citation it writes
+     `pending`. The observable is that a citation is present and resolves, not
+     whether it supports the call.
+  3. **A stage never writes `settled`.** Every stage decision is `pending` until
+     an operator settles it. Simple, but every option point becomes owner work.
+  4. **Keep the design and record the limit.** #533's requirements-stay rule
+     removes the prompt wording that produced this cut; the residual risk is
+     documented.
+- **Deliberately not an option:** judging from a decision's wording whether it
+  narrows the brief or should have been `pending`. That is a content judgment
+  with no binary observable, the class the discarded #435
+  (`docs/history/backlog-decisions.md`) and `ROADMAP_FORMAT.md` § "Deliberately
+  not defined" refuse.
+- **Effort:** small for option 4; medium for 2 or 3 (prompts, one gate, docs);
+  large for 1 (schema, gate, review surfaces, compatibility).
+- **Risks / fallout:** options 1–3 change how many decisions reach the owner;
+  options 1 and 2 touch persisted artifacts and need a compatibility rule for
+  existing roadmaps, whose stored versions are immutable.
+- **Dependencies:** none; complements #533. Decide after #533 lands, since its
+  wording change removes the cause seen here and may make option 4 enough.
+- **Scope contract:**
+  - **Outcome:** a recorded owner decision among the options, and, for options
+    1–3, a stage-written decision that no owner has confirmed is no longer
+    pinned against revision as if an owner had settled it.
+  - **In scope:** the stage prompts' `settled`/`pending` rule;
+    `check_settled_decisions`; `DecisionStatus` and its row in
+    `ROADMAP_FORMAT.md`; the review surfaces that list decisions; the
+    `--settle-decision` route; their tests.
+  - **Out of scope / Non-goals:** no content judgment of a decision (above); no
+    change to inherited decisions supplied as approved source facts, which stay
+    `settled`; no rewrite of stored versions; no change to feedback-ledger
+    semantics beyond what the chosen option needs.
+  - **Allowed behavior changes:** per the chosen option only.
+  - **Allowed reorganization:** none.
+  - **Verification:** a fixture first run whose stage writes a decision without
+    owner confirmation, followed by a revision that changes it: the revision is
+    allowed (options 1–3) or refused as today (option 4); an operator-settled
+    decision is still pinned in every option; older roadmaps still parse.
+  - **Stop / defer:** a review-surface redesign beyond listing stage-settled
+    decisions is its own entry.
+- **Origin:** 2026-11-14, the owner, after the trace of Loom's repository-browser
+  decision found it was model-settled and never asked: "file the self-settled
+  entry".
+
 **#502 — A refused `create` prints a stable reason token an external driver can read**
 
 - **Labels:** Route `direct`
