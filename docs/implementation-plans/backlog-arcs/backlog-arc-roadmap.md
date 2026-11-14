@@ -304,8 +304,8 @@ detail.
    which shows the owner why a step stopped and deliberately leaves routing
    out. The operator names the roadmap and target; a plan-provenance field is
    a separate entry if one turns out to be needed.
-13. **#489 is parked until its trigger.** Unpark when Integration's roadmap
-   driver begins relaying an owner's approval into `--decide-candidate`. Record who decided a structural approval or
+13. **#489 is parked.** Unpark condition: Integration's roadmap driver
+   begins relaying an owner's approval into `--decide-candidate`. The contract: record who decided a structural approval or
    a decision settlement (`human` or `agent`, as the caller states it) before
    Integration's roadmap driver begins relaying an owner's approval into
    `--decide-candidate`. Plan-tool records the claim and does not verify it;

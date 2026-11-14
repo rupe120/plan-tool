@@ -62,7 +62,9 @@ authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 ## Exit and handoff
 
 This arc finishes when #336 preserves an excluded shared semantic change as a
-manual handoff, or is discarded after its unpark condition never fires. A required shared change leaves this arc as one separately scoped
+manual handoff, or an owner decision to discard it is recorded in
+`docs/history/backlog-decisions.md`. While #336 is parked this arc has nothing
+active. A required shared change leaves this arc as one separately scoped
 backlog item; an unchanged or bounded owner choice needs no follow-up arc.
 
 ## Out of scope

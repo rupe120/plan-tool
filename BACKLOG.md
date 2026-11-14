@@ -368,7 +368,7 @@ competes for the next session?"
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Readiness.*parked' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #391, #523, #524 · plus #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #391, #523, #524 · Deferred without the label: #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
 
@@ -1168,7 +1168,7 @@ working straight down the tiers.
   then select a bounded evidence path before re-scoping implementation.
 - **Quality:** `audit-coverage` — any cost reduction remains explicitly bounded
   by evidence that it does not hide a finding.
-- **Status:** deferred 2026-08-20 (user-confirmed). Fresh completeness audits
+- **Status:** parked since 2026-08-20 (user-confirmed). Fresh completeness audits
   remain the operating path.
 - **Durable insight (from a superseded draft, cut 2026-11-14):** under
   `--audit-passes 1`, `confirmation_kind` is `null` in every saved report,
@@ -4447,7 +4447,7 @@ working straight down the tiers.
   `run_interrupted` still lets each caller return its interrupted result; if
   the chosen contract leaves the raw methods in place, the duplicate suppress
   in the two call sites is recorded here as accepted or removed.
-- **Why deferred:** one live gap is now known (the pre-`try` `phase_start`
+- **Why parked:** one live gap is now known (the pre-`try` `phase_start`
   calls in the candidate flows) rather than only a future-enforcement
   risk, but it is a narrow-window, best-effort-diagnostics path — not the
   primary interruption/result semantics — and patching them one more time at
@@ -5765,8 +5765,10 @@ working straight down the tiers.
   complete as new recovery exits are added.
 - **Origin:** 2026-08-20, `plan-quota-recovery` whole-feature review round 5,
   finding 4; narrowed 2026-11-14 from a loop restructure to the test.
-- **Status:** deferred 2026-08-20; no live bug, retained for a deliberate
-  recovery-loop hardening pass.
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`.
+- **Unpark when:** a deliberate recovery-loop hardening pass is scheduled, or a
+  new recovery arm is added to the loop.
+- **Status:** parked since 2026-08-20; no live bug.
 
 **#303 — Compare saved audit history only with provenance-backed admission**
 
@@ -5774,7 +5776,7 @@ working straight down the tiers.
 - **Unpark when:** a convergence decision needs cross-invocation audit comparison; none has asked since #247.
 - **What:** add a separately scoped cross-invocation audit comparison only
   after saved evidence can prove the history is eligible for comparison.
-- **Why deferred:** #247 makes artifacts visible, but saved metadata alone
+- **Why parked:** #247 makes artifacts visible, but saved metadata alone
   cannot establish that two model-generated findings refer to the same plan,
   audit contract, or finding. The delivered ledger is a visibility prerequisite,
   not admission evidence; a verdict built on that uncertainty would look more
@@ -6217,7 +6219,7 @@ working straight down the tiers.
 - **Unpark when:** a lost `seed-state.json` write is observed from two concurrent processes.
 - **Origin:** 2026-08-13, `roadmap-seed-materialization` completeness audit,
   finding `seed-state-concurrent-cli-race`.
-- **Status:** not started.
+- **Status:** parked.
 
 **#291 — Seed materialization states the greenfield case explicitly instead of asking the model to match code that doesn't exist**
 
@@ -7576,7 +7578,7 @@ working straight down the tiers.
   - **Draft seeds:** all six cite `store-app-db` by id; none names a database product, hosting product, or language, and none contradicts another or the roadmap.
   - **Plan vs. plan within the roadmap:** none possible; `connector-registry-seed` was the only plan derived from `integration-aidlc-mvp`.
   - **Outside this entry's reference:** `2-workspace-membership-selection.md` derives from the separate `project-workspace-membership-proof` roadmap, defers its store product (`:224`), and creates `pyproject.toml` with a `src/integration/` layout (`:22-23`) where the connector plan creates a flat `integration/` package (`:33-35`); that cross-roadmap collision is not a stack-decision conflict and is out of scope here.
-  - The SQLite case is within the `## Stack` section's reach once the stack is carried into the plan body, so it does not yet show a conflict only a cross-plan audit can see; hence `evidence-gated`.
+  - The SQLite case is within the `## Stack` section's reach once the stack is carried into the plan body, so it does not yet show a conflict only a cross-plan audit can see; hence the gate stays and the entry is parked.
 - **Evidence update (2026-10-10):** Integration now has nine plans derived from `integration-aidlc-mvp`. Their bare per-plan audits surfaced three plan-vs-plan conflicts. Each was seen from one side only, as a side effect of the auditor reading a sibling plan (reports under Integration `docs/implementation-plans/plan-details/<plan>/reports/`):
   - `step-completion-and-handoff` `20261010-004244` `[next-step-availability]`: "`workflow-catalog-core` owns `workflow-run` progress and `current_step`, while this plan owns handoff availability", with no transition boundary between them.
   - `chat-output-streaming` `20261010-010406` `[repository-reference-status-ordering]`: chat-output-streaming says `repository-browse-and-reference` depends on it, while repository-browse says it consumes the chat path, "so no status supplier exis[ts]".
@@ -7745,7 +7747,7 @@ working straight down the tiers.
 - **Route:** direct · **Readiness:** parked — efficiency follow-up · **Tier:** architect.
   **Principle:** `converge-on-correct-plan`.
 - **Unpark when:** roadmap retry failures recur after the ordering fixes.
-- **Status:** not started; one consumer observation, and the retry would add about 68 KB of context.
+- **Status:** parked; one consumer observation, and the retry would add about 68 KB of context.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** Integration owner requested these plan-tool updates on 2026-10-09.
 

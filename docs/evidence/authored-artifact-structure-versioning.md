@@ -288,6 +288,14 @@ interactive re-author path.
 
 ### Roadmap staged artifacts — deferred
 
+> **Superseded in part, 2026-11-14.** No roadmap module now carries a
+> `BASELINE_FORMAT_VERSION`, `BaselineRecord` or a
+> `CanonicalSourceIdentity.format_version`; the roadmap store is versioned from
+> birth and `roadmap_source_identity.py` holds only `SOURCE_IDENTITY_VERSION`
+> for the publication journal. The identifier-collision argument below no longer
+> describes live code. The digest-binding argument still holds. BACKLOG #362
+> records the current reading.
+
 **Decision: the roadmap class is out of scope for #356. Neither the in-band
 declaration nor an upgrade ships. This is deliberate and user-confirmed, not an
 oversight or an unfinished edge.**
