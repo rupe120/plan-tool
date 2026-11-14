@@ -7778,6 +7778,15 @@ def _offer_missing_intents(
     return reviewed
 
 
+def _is_same_step(prior: Optional[Step], proposed: Step) -> bool:
+    """Whether a re-proposed step is the on-disk step ``prior``.
+
+    Ids are positional, so identity is the same id *and* the same title; this is
+    the one place the iterate loop decides it.
+    """
+    return prior is not None and prior.title == proposed.title
+
+
 def _preserve_on_disk_step_fields(
     proposed: Step,
     prior: Optional[Step],
@@ -7825,20 +7834,20 @@ def _preserve_on_disk_step_fields(
     update: dict[str, object] = {
         "status": (
             prior.status
-            if prior is not None and prior.title == proposed.title
+            if prior is not None and _is_same_step(prior, proposed)
             else StepStatus.PENDING
         )
     }
     if (
         prior is not None
-        and prior.title == proposed.title
+        and _is_same_step(prior, proposed)
         and is_usable_intent(prior.intent)
     ):
         update["intent"] = prior.intent
     if (
         not proposal_included_depends_on_notes
         and prior is not None
-        and prior.title == proposed.title
+        and _is_same_step(prior, proposed)
         and prior.depends_on_notes
     ):
         allowed = set(proposed.depends_on)
@@ -7846,7 +7855,7 @@ def _preserve_on_disk_step_fields(
             k: v for k, v in prior.depends_on_notes.items() if k in allowed
         }
         update["depends_on_notes"] = preserved
-    if prior is not None and prior.title == proposed.title and prior.gate:
+    if prior is not None and _is_same_step(prior, proposed) and prior.gate:
         update["gate"] = prior.gate
     return proposed.model_copy(update=update)
 
@@ -11124,7 +11133,7 @@ def _converge_create_plan(
                             on_disk_step = existing_by_id.get(s.id)
                             if (
                                 on_disk_step is not None
-                                and on_disk_step.title != s.title
+                                and not _is_same_step(on_disk_step, s)
                                 and on_disk_step.status
                                 in (StepStatus.CURRENT, StepStatus.DONE)
                             ):
@@ -11132,10 +11141,10 @@ def _converge_create_plan(
                                     f"proposal replaced step {s.id} "
                                     f"({on_disk_step.status.value}, "
                                     f"{on_disk_step.title!r}) with a different "
-                                    f"step ({s.title!r}); the replaced step's "
-                                    "state is not carried over -- execution work "
-                                    "cannot be silently discarded by the create "
-                                    "iteration loop.",
+                                    f"step ({s.title!r}); the plan no longer "
+                                    f"holds that {on_disk_step.status.value} "
+                                    "step, so check what `plan-tool run` "
+                                    "recorded for it before continuing.",
                                     level="warning",
                                 )
 

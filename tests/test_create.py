@@ -15354,9 +15354,13 @@ class TestCreatePlanIterationLoop:
         def fake_apply_finding(plan_path, **kwargs):
             plan = create_module.parse_plan(plan_path)
             updated_steps = [
-                s.model_copy(update={"status": StepStatus.DONE})
-                if s.id == 1
-                else s
+                s.model_copy(
+                    update={
+                        "status": StepStatus.DONE
+                        if s.id == 1
+                        else StepStatus.CURRENT
+                    }
+                )
                 for s in plan.steps
             ]
             create_module.write_plan(
@@ -15407,9 +15411,18 @@ class TestCreatePlanIterationLoop:
         assert by_id[1].status == StepStatus.PENDING, (
             "a retitled step must not inherit the replaced step's done status"
         )
-        assert by_id[2].status == StepStatus.PENDING
+        assert by_id[2].status == StepStatus.CURRENT, (
+            "an unchanged-title step keeps its in-flight status through the loop"
+        )
+        assert "Step one" not in {s.title for s in final_plan.steps}, (
+            "positional ids cannot hold both steps; the replaced one leaves the plan"
+        )
         err = capsys.readouterr().err
         assert "proposal replaced step 1 (done, 'Step one')" in err, err
+        assert "proposal replaced step 2" not in err, err
+        assert "cannot be silently discarded" not in err, (
+            "the warning must not claim a protection the loop does not give"
+        )
 
     def test_iteration_checkpoint_files_survive_failed_write(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
