@@ -179,7 +179,7 @@ its arc documents, not here; the successor-slug rule lives in
   `origin` branch inventory: what is merged and safe to delete, what is active,
   and the ancient remote-only branches.
 - [Handoff directory cleanup](handoff-directory-cleanup.md)
-  — this directory's remaining cleanup, standing owner decisions, and the compression-omission record.
+  — this directory's remaining cleanup, scope fence, and open items.
 
 ## Review ledgers
 
