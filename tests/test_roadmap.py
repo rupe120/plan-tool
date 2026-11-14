@@ -5535,6 +5535,22 @@ class TestInputsAndSeams:
         assert str(missing) in str(excinfo.value)
         assert invoker.calls == 0
 
+    def test_first_run_brief_keeps_exact_bytes_and_translates_newlines_in_its_text(
+        self, tmp_path: Path
+    ) -> None:
+        """The stored brief is the exact bytes; only the text the stages judge is newline-translated,
+        so a CRLF or CR brief digests identically to its LF form under the decoded-text contract."""
+        brief_path = tmp_path / "concept.md"
+        source = b"first\r\nsecond\rthird\n"
+        brief_path.write_bytes(source)
+
+        brief_bytes, text = roadmap._read_first_run_brief(
+            brief_path=brief_path, slug=SLUG, run_logger=None
+        )
+
+        assert brief_bytes == source
+        assert text == "first\nsecond\nthird\n"
+
     def test_non_utf8_brief_is_a_brief_read_preflight_failure(self, env: _Env) -> None:
         env.brief_path.write_bytes(b"\xff")
         invoker = _StubInvoker(_domain_text())

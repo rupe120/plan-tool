@@ -250,5 +250,3 @@ def parse_carried_decisions(brief: str, *, brief_path: Path) -> CarriedDecisions
 def digest_decoded_text(text: str) -> str:
     """Return the SHA-256 of UTF-8 bytes re-encoded from decoded text."""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-

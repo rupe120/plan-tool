@@ -172,14 +172,10 @@ def test_carried_decision_rejects_duplicate_or_free_form_fields(tmp_path: Path) 
         parse_carried_decisions(brief, brief_path=tmp_path / "concept.md")
 
 
-def test_brief_text_and_digest_match_broad_decoded_text_contract(tmp_path: Path) -> None:
-    brief_path = tmp_path / "concept.md"
+def test_decoded_text_digest_hashes_the_reencoded_text_not_the_source_bytes() -> None:
     source_bytes = b"first line\r\nsecond line\r\n"
-    brief_path.write_bytes(source_bytes)
+    text = source_bytes.decode("utf-8").replace("\r\n", "\n")
 
-    text = brief_path.read_text(encoding="utf-8")
-
-    assert text == "first line\nsecond line\n"
     assert digest_decoded_text(text) == hashlib.sha256(text.encode("utf-8")).hexdigest()
     assert digest_decoded_text(text) != hashlib.sha256(source_bytes).hexdigest()
 

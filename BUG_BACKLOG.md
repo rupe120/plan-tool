@@ -423,28 +423,6 @@ Durable re-open conditions for retired items are recorded in
   it is clean, keep the fix above if it is not.
 - **Origin:** Integration `integration-aidlc-mvp` nine-plan roadmap-to-plan run, 2026-10-10.
 
-### A roadmap reader-guard test times out under full-suite load
-
-- **Files:** `tests/test_roadmap_revision_publish.py` —
-  `test_reader_guard_blocks_a_writer_for_the_same_roadmap`.
-- **Symptom:** a full `-n 4` run on a loaded machine reaches the test's
-  5-second subprocess wait limit; the test passes alone.
-- **Fix:** widen or poll the subprocess wait while preserving the assertion
-  that a reader guard blocks a writer for the same roadmap.
-- **Route:** `direct` · **Readiness:** `evidence-gated` · **Tier:** `experienced`.
-- **Verification:** run the focused test and the loaded parallel suite; retain
-  the guard assertion rather than accepting a timeout as success.
-- **Exclusions:** the retired direct-pipeline test has no surviving consumer;
-  do not restore it or change production reader/writer policy.
-- **Disposition:** deferred by user direction, 2026-11-04; no timeout or guard
-  policy change is selected. Reopen on a reproduced failure, retaining the
-  exact expired wait, child exit codes, traceback, and worker sequence.
-- **Reproduction evidence (2026-11-04):** at `9364cc7d0`, Python 3.14.7 /
-  Pydantic 2.13.3, version-promotion and revision-publication tests pass together
-  (136 tests). Ten guard repetitions alongside the normal parallel full suite
-  pass; the suite passes 14,716 tests with 67 skipped. This does not fix the flake.
-- **Origin:** 2026-10-13, full-suite runs during the stream-log review rounds.
-
 ### `_code_anchor_resolves` does not resolve function-local function citations
 
 - **Files:** `plan_tool/data_contract.py:_code_anchor_resolves` and

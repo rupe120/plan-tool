@@ -956,7 +956,7 @@ decoder is added or the duplicate-key policy changes in one of the five.
 Closed as moot. The entry's subject was the impact-snapshot capture path
 reading the recorded brief while a reader guard was held. That path no longer
 exists: `roadmap_reader_guard` and `read_brief_text` have no production caller
-(tests only). The two helpers were deleted on 2026-11-14 together with
+(tests only). The two helpers were deleted on 2026-11-14, on the owner's instruction, together with
 `_acquire_reader_lock` and `bootstrap_roadmap_reader_lock`, the same dead
 family, and the tests that exercised them. **Re-open only when** a read-only
 roadmap view needs to hold a lock against a concurrent writer; the writer
