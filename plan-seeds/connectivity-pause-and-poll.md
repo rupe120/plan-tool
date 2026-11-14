@@ -147,26 +147,27 @@ poll-eligible in the first place, which stays a caller-agnostic description of
 name and plumbing are `detail`'s call; the existence, independence from the
 budget, and default (below) are not.
 
-This is not a hypothetical: `roadmap_revision_run.py:shell_local_revision_invoker`
-passes `wait_on_rate_limit=False` (→ `recover_rate_limit=False`) *and*
-`max_transient_retries=1` specifically to make, in its own docstring's words,
-"the one physical local-revision backend request **without recovery**"
-(`roadmap_revision_run.py:66-74`). With `max_transient_retries=1`, its ordinary
-budget is already exhausted before a first retry — so without this opt-out,
-the poll-eligibility rule alone would newly make this explicitly no-recovery
-caller retry (and poll, possibly for a long time) whenever connectivity is
-down, contradicting the behavior its docstring already commits to.
+This is not a hypothetical: the candidate-flow invokers
+`roadmap_candidate_run.py:shell_candidate_proposal_invoker` and
+`roadmap_candidate_review.py:shell_candidate_review_invoker` pass
+`wait_on_rate_limit=False` (→ `recover_rate_limit=False`) *and*
+`max_transient_retries=1` specifically to make, in their own docstrings' words,
+one physical request "without rate-limit waiting" / "without retry waiting".
+With `max_transient_retries=1`, their ordinary budget is already exhausted
+before a first retry — so without this opt-out, the poll-eligibility rule alone
+would newly make these explicitly no-recovery callers retry (and poll, possibly
+for a long time) whenever connectivity is down, contradicting the behavior
+their docstrings already commit to.
 `run_with_rate_limit_recovery` itself has only two direct call sites
-(`launcher.py:679`, `shell.py:760`); `shell_local_revision_invoker` reaches it
-two layers down, through `shell.claude_invoke` (`shell.py:504-536`, which
-already declares and forwards `wait_on_rate_limit`/`max_transient_retries` by
-name — there is no generic passthrough). The new opt-out must be threaded the
-same way, as an explicit parameter on `claude_invoke`/`claude_invoke_outcome`
-as well as on the leaf, defaulting to "recovery allowed" everywhere except
-where `shell_local_revision_invoker` sets it alongside its existing
-`recover_rate_limit=False`. No current caller of `launcher.shell_invoker`
-needs the same opt-out, so extending that path is left to `detail` only if a
-need appears.
+(`launcher.py:716`, `shell.py:768`); the two candidate invokers reach it two
+layers down, through `shell.claude_invoke`, which already declares and
+forwards `wait_on_rate_limit`/`max_transient_retries` by name — there is no
+generic passthrough. The new opt-out must be threaded the same way, as an
+explicit parameter on `claude_invoke`/`claude_invoke_outcome` as well as on the
+leaf, defaulting to "recovery allowed" everywhere except where the two
+candidate invokers set it alongside their existing `wait_on_rate_limit=False`.
+No current caller of `launcher.shell_invoker` needs the same opt-out, so
+extending that path is left to `detail` only if a need appears.
 
 ### The poll arm, its two independent bounds, and the self-correcting budget
 
@@ -235,10 +236,11 @@ the poll-eligibility computation, reading the existing
 `get_last_termination_reason()`), `plan_tool/launcher.py` (wiring — unchanged
 unless a caller needs a non-default override), `plan_tool/shell.py`
 (`claude_invoke`/`claude_invoke_outcome` gain and forward the new opt-out
-parameter, since `roadmap_revision_run.py` reaches the leaf only through
-them), `roadmap_revision_run.py:shell_local_revision_invoker` (sets the new
-opt-out toggle to disable connectivity recovery, alongside its existing
-`wait_on_rate_limit=False`, preserving its documented no-recovery contract),
+parameter, since the candidate invokers reach the leaf only through them),
+`roadmap_candidate_run.py:shell_candidate_proposal_invoker` and
+`roadmap_candidate_review.py:shell_candidate_review_invoker` (set the new opt-out
+toggle to disable connectivity recovery, alongside their existing
+`wait_on_rate_limit=False`, preserving their documented no-recovery contract),
 `docs/how-to/pipeline/run.md`, `DATA_CONTRACT.md`, `RUNBOOK.md`, `TESTING.md`, `tests/`.
 **Not** `plan_tool/backend_runner.py` — it already exposes
 `get_last_termination_reason()`/`TerminationReason` read-only; nothing there
@@ -292,13 +294,13 @@ needs to change.
   rather than spinning forever with no operator watching.
 - **Test suite opening real sockets** — mitigated by the injected-seam
   discipline (§ Architecture's prior-art note); every test stubs the probe.
-- **A no-recovery caller silently gaining recovery** — `roadmap_revision_run.py:
-  shell_local_revision_invoker` already opts out of all recovery
-  (`wait_on_rate_limit=False` and `max_transient_retries=1`, per its own
-  "without recovery" docstring). Without a separate, budget-independent
+- **A no-recovery caller silently gaining recovery** — the candidate-flow invokers
+  (`shell_candidate_proposal_invoker`, `shell_candidate_review_invoker`) already
+  opt out of all recovery (`wait_on_rate_limit=False` and
+  `max_transient_retries=1`, per their own "without ... waiting" docstrings). Without a separate, budget-independent
   opt-out (mirroring the existing `recover_rate_limit` boolean), the poll
   would fire regardless of budget and silently break that contract. Mitigated
-  by requiring this caller to set the new opt-out explicitly — the same shape
+  by requiring these callers to set the new opt-out explicitly — the same shape
   as its existing `recover_rate_limit=False` — rather than inferring opt-out
   from `max_transient_retries`'s value.
 - **`SILENCE_TIMEOUT`/`CONFIGURED_TIMEOUT` misattribution** — both currently
@@ -346,8 +348,8 @@ needs to change.
   emits `reason="transient"`.
 - **Both callers:** `shell.claude_invoke` and `launcher.shell_invoker` both
   exercise the new arm identically (shared leaf).
-- **No-recovery caller preserved:** `shell_local_revision_invoker`, with
-  connectivity confirmed down, still returns `TERMINAL` on its first failure —
+- **No-recovery caller preserved:** the two candidate invokers, with
+  connectivity confirmed down, still return `TERMINAL` on their first failure —
   no poll, no retry — proving the new opt-out actually suppresses the poll
   rather than only the ordinary budget doing so.
 - **No real sockets:** every new/changed test stubs the connectivity probe;
@@ -367,9 +369,10 @@ needs to change.
   unaffected — identical to today's behavior.
 - The partial-mutation `retry_guard` still refuses any retry — connectivity-
   driven or not, either shape — when the aborted turn left a dirty tree.
-- `roadmap_revision_run.py:shell_local_revision_invoker` still returns
-  `TERMINAL` on its first transient failure with connectivity down, with no
-  poll and no retry — its "without recovery" contract is unchanged.
+- The candidate-flow invokers (`shell_candidate_proposal_invoker`,
+  `shell_candidate_review_invoker`) still return `TERMINAL` on their first
+  transient failure with connectivity down, with no poll and no retry — their
+  no-recovery contract is unchanged.
 - The poll itself has no retry-count limit; a non-interactive caller's poll is
   capped on wall-clock time and surfaces `TERMINAL` with a resume hint past the
   cap, while an interactive caller's poll is abortable with no separate cap.

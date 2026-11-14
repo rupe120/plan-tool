@@ -10502,9 +10502,10 @@ longer describes current work. It is retained only as dated carve-out context.
   poll-eligibility rule keyed on the existing `get_last_termination_reason()`
   to admit a `SILENCE_TIMEOUT` kill while permanently excluding a caller's own
   `CONFIGURED_TIMEOUT`, a new budget-independent opt-out (mirroring the
-  existing `recover_rate_limit` toggle) so `roadmap_revision_run.py`'s
-  explicitly no-recovery `shell_local_revision_invoker` doesn't silently gain
-  recovery it disclaims, a new `backend_recovery_wait` `reason="connectivity"`
+  existing `recover_rate_limit` toggle) so the candidate flow's
+  explicitly no-recovery `shell_candidate_proposal_invoker` and
+  `shell_candidate_review_invoker` (both `wait_on_rate_limit=False`,
+  `max_transient_retries=1`) don't silently gain recovery they disclaim, a new `backend_recovery_wait` `reason="connectivity"`
   value, and tests for both callers (`shell.claude_invoke`,
   `launcher.shell_invoker`).
 - **Risks / fallout:** a captive-portal/proxy false-positive (probe reaches a
@@ -10540,12 +10541,14 @@ longer describes current work. It is retained only as dated carve-out context.
   unless a caller needs a non-default override), `plan_tool/shell.py`
   (`claude_invoke`/`claude_invoke_outcome` gain the new opt-out parameter and
   forward it — `run_with_rate_limit_recovery` has only two direct call sites,
-  `launcher.py:716` and `shell.py:768`, and `shell_local_revision_invoker`
-  reaches the leaf two layers down through `claude_invoke`, which already
+  `launcher.py:716` and `shell.py:768`, and the two candidate invokers
+  reach the leaf two layers down through `claude_invoke`, which already
   declares and forwards `wait_on_rate_limit`/`max_transient_retries` by name
-  with no generic passthrough), `roadmap_revision_run.py:shell_local_revision_invoker`
-  (sets the new opt-out), `docs/how-to/pipeline/run.md`, `DATA_CONTRACT.md` (the
-  `backend_recovery_wait.reason` table, `DATA_CONTRACT.md:850`, currently
+  with no generic passthrough),
+  `roadmap_candidate_run.py:shell_candidate_proposal_invoker` and
+  `roadmap_candidate_review.py:shell_candidate_review_invoker` (set the new
+  opt-out), `docs/how-to/pipeline/run.md`, `DATA_CONTRACT.md` (the
+  `backend_recovery_wait.reason` table, `DATA_CONTRACT.md:1133`, currently
   documents only `"rate_limit"` / `"transient"`), `RUNBOOK.md`, `TESTING.md`,
   `tests/`. **Not** `plan_tool/backend_runner.py` — it already exposes the
   termination-reason accessor read-only.
@@ -13001,9 +13004,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** seed-default review 3, 2026-10-22; advisory about a pre-existing
   recursive traversal, not evidence of data loss or a failed publication gate.
 
----
-
-
 **#531 — `roadmap_reader_guard` and `read_brief_text` have no production caller**
 
 - **What:** `plan_tool/roadmap_revision_publish.py:roadmap_reader_guard` (with
@@ -13029,6 +13029,9 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Stop / defer:** keep both if a roadmap reader is planned within the arc.
 - **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
 - **Origin:** backlog reconciliation, 2026-11-14, while closing #310.
+
+---
+
 
 ---
 
