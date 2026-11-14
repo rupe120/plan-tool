@@ -281,7 +281,7 @@ detail.
    changed or legacy stage-run brief replaces its source baseline) shipped
    2026-09-16 and was removed by `roadmap-versioned-from-birth`; the flag no
    longer exists.
-10. **#384 review-converged; #383 remains held.** #384 carries settled
+10. **#384 review-converged; #383 remains parked.** #384 carries settled
    upstream decisions in as gated `settled` `decisions` rows; #383 generalizes
    to per-stage supplements with declared `grounding`/`judgment` roles. They
    overlap deliberately, and #384 is the narrower half: it reuses the
@@ -304,7 +304,8 @@ detail.
    which shows the owner why a step stopped and deliberately leaves routing
    out. The operator names the roadmap and target; a plan-provenance field is
    a separate entry if one turns out to be needed.
-13. **#489 waits on its trigger.** Record who decided a structural approval or
+13. **#489 is parked.** Unpark condition: Integration's roadmap driver
+   begins relaying an owner's approval into `--decide-candidate`. The contract: record who decided a structural approval or
    a decision settlement (`human` or `agent`, as the caller states it) before
    Integration's roadmap driver begins relaying an owner's approval into
    `--decide-candidate`. Plan-tool records the claim and does not verify it;
@@ -325,7 +326,7 @@ remaining items; it does not create another backlog owner.
 | --- | --- |
 | #492 composition-handoff investigation | Closed 2026-10-15: `use-existing` for `create`, `detail` and `completeness-audit`. |
 | #493 selected shared-context delivery | Discarded: #492 recorded `no-action`. Re-file only on a separately demonstrated delivery need. |
-| #462 advisory cross-plan conflict report | Keep its existing scope and evidence gate. Preferred after the context decision for this subroute; it remains independently eligible when its own gate is met. |
+| #462 advisory cross-plan conflict report | Parked; keep its existing scope and evidence gate. Unpark when a concrete case shows what the report catches or resolves that #492's shared contract record and coordinated session-directed edits cannot. |
 | #494 recorded-prerequisite view | Discarded: #492 recorded `no-action`. Re-file only on a distinct status-reporting need. |
 | #490 finding dispositions | Consult its convergence-evidence arc; do not duplicate its store or transfer ownership. |
 | #485 roadmap departures (merged into #490) | Resolve its authority decision in #490 before relying on departure semantics; a pending feedback id alone does not approve a roadmap change. |

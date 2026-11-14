@@ -51,8 +51,10 @@ push only when the user explicitly requests it.
 
 ## Ordered route
 
-1. Begin #322 from post-proof code, not from the completed proofs. Confirm
-   the baseline is committed; no follow-on seed exists yet.
+1. #322 is parked. Unpark when a named headless consumer (Loom or Integration)
+   blocks on a direct `input()` call; then begin from post-proof code, not
+   from the completed proofs. Confirm the baseline is committed; no follow-on
+   seed exists yet.
 2. Enumerate the remaining candidates before editing. Sweep both identifiers
    and vocabulary: direct input, `isatty` aliases, readiness checks, and
    helpers that decide whether prompting runs. Record every match and why it
@@ -105,8 +107,9 @@ remaining-input inventory merely because both routes can wait for a person.
 
 ## Exit and handoff
 
-This arc hands off only after #322 has a committed, classed inventory and one
-of two outcomes: a single evidence-backed seed names the next route group, or
+While #322 is parked, this arc has no active route and nothing to execute; it
+stays open as the router for #322's unpark condition. It hands off only after
+#322 has a committed, classed inventory and one of two outcomes: a single evidence-backed seed names the next route group, or
 the backlog records why no route group is justified. The next session follows
 that selected seed or backlog decision, not this arc. The arc never certifies
 every plan-tool command as headless-capable.
