@@ -49,8 +49,8 @@ Do not push automatically; push only when the user explicitly requests it.
    terminal quota diagnostics without changing the confirmed Cursor matcher.
    `21f46aad`, `f9fe30af`, `d82c8b15`, `5937c63f`, `e9f61b3b`, `fc23910f`,
    `a89ef20e`, and `792cfcbc` resolved the feature's five review rounds.
-   **#301** (versioned saved audit coverage) and **#302** (one checked
-   rate-limit recovery completion path) remain deferred structural follow-ups:
+   **#301** (versioned saved audit coverage) and **#302** (a table-driven test over
+   the rate-limit recovery loop's arms) remain deferred structural follow-ups:
    neither is a live defect or an active arc stage. Re-open #301 only for an
    intentional coverage-format addition and #302 only for a deliberate
    recovery-loop hardening pass.
