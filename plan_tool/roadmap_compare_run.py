@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
+from collections import Counter
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -11,8 +13,10 @@ from typing import Literal, Mapping
 
 from plan_tool.roadmap import STAGES
 from plan_tool.roadmap_artifacts import (
+    PlansArtifact,
     RoadmapArtifact,
     RoadmapArtifactError,
+    stage_row_collections,
 )
 from plan_tool import roadmap_candidate
 from plan_tool.roadmap_candidate_run import (
@@ -106,6 +110,8 @@ def run_roadmap_comparison(
         target = _resolve_target_snapshot(
             plans_dir=Path(plans_dir), slug=slug, version_id=target_version_id
         )
+        _refuse_duplicate_row_ids(base, "base")
+        _refuse_duplicate_row_ids(target, "target")
         prose_amendment_evidence = _bound_prose_amendment_evidence(
             plans_dir=Path(plans_dir), slug=slug, base=base, target=target
         )
@@ -127,6 +133,34 @@ def run_roadmap_comparison(
     except (OSError, UnicodeError, TypeError, ValueError, RoadmapVersionError, RoadmapArtifactError) as exc:
         raise RoadmapComparisonRunError(str(exc)) from exc
     return RoadmapComparisonRun(base=base, target=target, patches=patches, comparison=comparison)
+
+
+def _refuse_duplicate_row_ids(snapshot: RoadmapComparisonSnapshot, label: str) -> None:
+    """Refuse a snapshot with a repeated id inside one collection (or ordering).
+
+    See docs/ARCHITECTURE.md's "Read-only snapshot comparison" for why this is
+    scoped to what the diff keys.
+    """
+    duplicates: list[str] = []
+    for artifact_key, artifact in snapshot.parsed_artifacts.items():
+        keyed = {
+            row_type: [row.id for row in rows]
+            for row_type, rows in stage_row_collections(artifact).items()
+        }
+        if isinstance(artifact, PlansArtifact):
+            keyed["ordering"] = [entry.plan_id for entry in artifact.ordering]
+        for row_type, ids in keyed.items():
+            for row_id, count in Counter(ids).items():
+                if count > 1:
+                    duplicates.append(
+                        f"{artifact_key} holds more than one {row_type} entry "
+                        f"with id {json.dumps(row_id)}"
+                    )
+    if duplicates:
+        raise RoadmapComparisonRunError(
+            f"the {label} snapshot ({snapshot.version_id}) cannot be compared: "
+            + "; ".join(duplicates)
+        )
 
 
 def _bound_prose_amendment_evidence(

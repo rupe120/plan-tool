@@ -595,9 +595,7 @@ def _has_roadmap_comparison(args: argparse.Namespace) -> bool:
     """Whether any comparison selector or output choice appeared."""
     return any(
         _option_occurrences(args, name) for name in ("compare", "comparison_base", "comparison_target")
-    ) or bool(getattr(args, "_comparison_output_occurrences", ())) or getattr(
-        args, "comparison_output", "cards"
-    ) != "cards"
+    ) or bool(_option_occurrences(args, "comparison_output"))
 
 
 def _has_candidate_lifecycle_action(args: argparse.Namespace) -> bool:
@@ -637,13 +635,22 @@ def _selector_free_revise_feedback_selected(args: argparse.Namespace) -> bool:
     return bool(occurrences) and all(value is True for value in occurrences)
 
 
+_COMPARISON_OUTPUT_DEFAULT = "cards"
+# Options read through ``_option_occurrences`` whose parser default is not
+# ``None``; a test fails when the parser gains another.
+_OPTION_PARSER_DEFAULTS: dict[str, object] = {"comparison_output": _COMPARISON_OUTPUT_DEFAULT}
+
+
 def _option_occurrences(args: argparse.Namespace, name: str) -> tuple[object, ...]:
-    """Read one option's parser history, with a direct-call fallback."""
+    """Read one option's parser history, with a direct-call fallback.
+
+    The fallback treats the option's parser default as not supplied.
+    """
     occurrences = tuple(getattr(args, f"_{name}_occurrences", ()))
     if occurrences:
         return occurrences
     value = getattr(args, name, None)
-    return () if value is None else (value,)
+    return () if value is None or value == _OPTION_PARSER_DEFAULTS.get(name) else (value,)
 
 
 def _view_occurrences(args: argparse.Namespace) -> tuple[object, ...]:
@@ -2595,7 +2602,7 @@ def register(subparsers) -> dict[str, Handler]:
         "--comparison-output",
         action=_TrackExclusiveOption,
         choices=["cards", "patch", "json"],
-        default="cards",
+        default=_COMPARISON_OUTPUT_DEFAULT,
         help=(
             "comparison presentation: cards (default), complete Git patch, "
             "or deterministic JSON; valid only with --compare."

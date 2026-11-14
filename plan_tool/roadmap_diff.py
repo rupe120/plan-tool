@@ -208,11 +208,8 @@ def ordered_stage_collections(
 ) -> tuple[tuple[str, tuple[StageRow, ...]], ...]:
     """Return the fixed source order used for roadmap row comparisons.
 
-    See docs/ARCHITECTURE.md's "Read-only snapshot comparison" for why this
-    keeps its own fail-closed type guard alongside delegating the rest.
+    ``stage_row_collections`` fails closed on an unsupported artifact type.
     """
-    if not isinstance(artifact, RoadmapArtifact):
-        raise TypeError(f"roadmap artifact has unsupported type {type(artifact).__name__}")
     return tuple(stage_row_collections(artifact).items())
 
 
