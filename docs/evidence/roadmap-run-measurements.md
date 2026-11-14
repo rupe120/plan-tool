@@ -460,3 +460,29 @@ in both conceptual passes. The audit prompt needed no change on this evidence.
 The result supports `ROADMAP_FORMAT.md` § "Stack section" naming the plan audit as
 the contradiction check; it does not show a hit rate, and the tool itself never
 judges the contradiction.
+
+## 8. Where Loom's missing plans dropped out, 2026-11-14 (BACKLOG #534, trace)
+
+A read-only trace, **no model calls**, of the four plans a reviewer added to
+Loom's `loom-aidlc-mvp` roadmap between its first stored version (`9590a8964b…`,
+5 plans from 5 components, all `keep`) and its accepted head (`c7743c56d7…`,
+9 plans from the same 5 components, after 21 versions). Both versions share one
+brief (digest `0086ebf8…`). Loom was read at `44c22cc`; nothing in Loom was
+written. For each added plan, the first version's brief and stage 1–3
+artifacts were searched for its work, and the earliest stage where that work
+disappears is recorded.
+
+| Added plan | In the inputs? | Where it dropped out |
+| --- | --- | --- |
+| `repository-browse-and-reference` | **Required by the brief**: a feature bullet and the brief's Scope Fence ("In scope: … read-only repository tree and file references") | **Stage 1**, by `decision-exclude-repo-browsing`: browsing is "not a condition for" the central outcome. The smallest-proof wording removed a stated requirement. |
+| `cdk-infrastructure-and-environments` | Generic work only: stage 2's `hosting-compute`, `hosting-topology` (two deployable units) and `constraint-single-environment` | **Stage 3**: no component owns deploying the units, so the component-coverage gate passes with nothing to deploy. The CDK, environment-array and dev-account specifics are in no input; they are owner requirements added 2026-10-09 (feedback ledger). |
+| `static-spa-delivery` | Generic work only: the UI is one of stage 2's two deployable units | **Stage 3**, as above. The S3/CloudFront shape is in no input; it is a later owner deployment decision. |
+| `bitbucket-deployment-pipelines` | **No** | Never present: an owner requirement added 2026-10-09. |
+
+**Reading.** One of the four losses is a prompt defect at stage 1, two are an
+ownership gap at stage 3 for work stage 2 already stated, and the owner-specific
+infrastructure choices could not have come from these inputs at all. Stage 4
+was not where any of the four first went missing. The stage 1 finding led to the
+owner's settled rule in BACKLOG #533: the brief's requirements stay the
+requirements, and the smallest-proof rule applies to how they are achieved.
+The model runs of #534 are not yet recorded here.
