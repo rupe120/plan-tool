@@ -13810,6 +13810,24 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Approach:** direct.
 - **Origin:** 2026-11-13 triage of the live documentation after the temporary handoff files were retired.
 
+**#530 — Developer documentation readability review stops after the front-door batches, and no fresh-reader check covers the four reader journeys**
+
+- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped, but the section-by-section readability audit of the live developer documents covers only the high-traffic sections, and no reader outside the authors has walked the four journeys end to end from the documents alone. The audit's open batches are the contributor drive-or-review workflow (`CONTRIBUTING.md`), the module-ownership subsystem paragraphs (`docs/ARCHITECTURE.md`), default/optional/exception matrices for `docs/ITERATION.md` and `docs/GATES.md`, and the `docs/TRACKING.md` lifecycle (normal flow first, direct-versus-plan boundary and scope contract in linked subsections). The four journeys are install and begin, run or review a plan safely, change `plan-tool` itself, and find ownership, tracking, and escalation routes. #510 covers the first-task walkthrough for one of them.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Effort:** large in total; each batch is small to medium (one document or closely related group, reshape only where a mapping, state matrix, or ordered flow reads as dense prose).
+- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact. A long paragraph is a review signal, not a defect: `keep` is a valid verdict.
+- **Outcome:** each batch above has a recorded `keep`, `reshape`, `relocate`, or `clarify` verdict per section with its fact fence, and one cross-document walkthrough by a reader with no prior context confirms that the four journeys expose their normal path, exceptions, and next action, with links, terminology, and authority boundaries in agreement.
+- **In scope:** the live developer-facing documents named above plus `README.md`, `docs/reference/commands.md`, `docs/how-to/common-workflows.md`, and the glossary; one fresh-context walkthrough after the batches, recording each place the reader cannot find the normal path, an exception, an owner, or a next action; fixes for material findings.
+- **Out of scope / Non-goals:** the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
+- **Allowed behavior changes:** none to the CLI or generated output; documentation structure and wording only.
+- **Allowed reorganization:** only the smallest relocation a reshape needs, naming the ownership boundary it fixes; no document moves for tidiness.
+- **Verification:** every command, path, anchor, state condition, and ordering rule named in a reshaped section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass; the walkthrough record names no unresolved finding.
+- **Stop / defer:** a defect or product gap that a reshape exposes becomes its own entry; a reshape that would change a contract stops and is filed instead.
+- **Dependencies:** none; the walkthrough runs after the batches it covers.
+- **Approach:** direct, one reviewable batch per document group, each with the session-directed review loop.
+- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13 for the batches and the walkthrough that remain.
+
 ## Adding a new entry
 
 The rules for this live in [`docs/TRACKING.md` § "Adding a new entry"](docs/TRACKING.md#adding-a-new-entry).

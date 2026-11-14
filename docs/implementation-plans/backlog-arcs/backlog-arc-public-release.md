@@ -34,9 +34,10 @@ with their separate work items.
 
 ## Decision gates
 
-- Retain clone plus `uv tool install --editable .` as the supported method;
-  package publishing is outside this route. Explain clone retention, release
-  selection, dependency updates and copied-skill refresh.
+- Users install with `uv tool install git+https://github.com/rupe120/plan-tool`; the
+  clone plus `uv tool install --editable .` is the contributor route (owner
+  decision, 2026-11-06, #514). Package publishing is outside this route (#523).
+  Explain release selection, dependency updates and copied-skill refresh.
 - Classify owner-controlled projects, clients and legitimate third-party names
   before removing references. Inventory paths and structured content as well as
   prose. A search hit is a review candidate, not proof of private ownership.

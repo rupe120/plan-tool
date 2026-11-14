@@ -657,6 +657,10 @@ is overwritten on the next `--materialize` or `--refresh-seeds`; `--accept-seed`
 keeps a hand-edited draft only until that next rematerialization. To change a
 stack choice, change the roadmap through feedback and rematerialize.
 
+A draft that is not rematerialized after the accepted version changes keeps its older
+`## Stack`: classification does not compare the section with the accepted rows, and the
+seed-state invalidation marker is the only signal.
+
 `create --from-existing` preserves the section in the plan body verbatim
 (`GUARDRAIL_BODY_SECTIONS` in `plan_tool/scope_fence.py`), the `detail` scope
 fence carries it, and the plan audit treats it as authoritative. A draft
@@ -1239,6 +1243,10 @@ and differing snapshots both succeeds; Git status `0` records identical
 evidence and status `1` records differing evidence. Any other Git result, or a
 launch or decoding failure, refuses rather than presenting partial evidence.
 
+Every refusal and internal error inside the comparison, including a renderer
+invariant failure, reaches the operator as one clean usage error (exit 2), never
+a traceback.
+
 Comparison is exclusive and read-only: it accepts no companion roadmap option,
 writes no roadmap artifact, metadata, lifecycle record, seed, receipt, run log,
 or Git state, and does not accept, promote, settle, repair, or otherwise
@@ -1316,6 +1324,8 @@ until exact review-seal promotion. Promotion is terminal consumption of the
 exact review seal and changes only the accepted head.
 
 A batch candidate's question cannot anchor on a response: batch evidence deliberately persists no response patch or derived feedback, and the question route refuses such an anchor.
+
+A review replacement chains from the reviewed candidate's accepted predecessor, not from the reviewed candidate itself, so the replacement sits one hop above the accepted root. A model in which every revision chains from the previous one would need a different predecessor binding; this contract does not provide it.
 
 Candidate retries keep the parser strict. A retry correction reports every missing and unknown field in one line, naming an unknown field only when it is a tool-defined field name and otherwise as `other`, so a correction never repeats arbitrary model text. A rejected reply stays rejected: no parse-time repair, even if a recurrence appears; a recurrence is filed with its stored responses.
 
