@@ -281,7 +281,7 @@ detail.
    changed or legacy stage-run brief replaces its source baseline) shipped
    2026-09-16 and was removed by `roadmap-versioned-from-birth`; the flag no
    longer exists.
-10. **#384 review-converged; #383 remains held.** #384 carries settled
+10. **#384 review-converged; #383 remains parked.** #384 carries settled
    upstream decisions in as gated `settled` `decisions` rows; #383 generalizes
    to per-stage supplements with declared `grounding`/`judgment` roles. They
    overlap deliberately, and #384 is the narrower half: it reuses the

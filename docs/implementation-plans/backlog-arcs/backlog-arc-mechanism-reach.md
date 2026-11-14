@@ -18,9 +18,11 @@ identified it.
 
 ## Delivery cadence
 
-Treat the remaining #336 entry as plan-tool work. Commit before
-every command. #334's authoring contract and fixtures are complete; #336 can
-preserve an excluded shared semantic change as a manual handoff. A manual handoff or recommendation remains a decision
+The remaining #336 entry is parked, not next. When it unparks, treat it as
+plan-tool work and commit before every command. #334's authoring contract and
+fixtures are complete; #336 would preserve an excluded shared semantic change
+as a manual handoff. Unpark #336 when a split-create `defer` result is observed
+lost. A manual handoff or recommendation remains a decision
 surface: it never
 authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 
@@ -29,7 +31,9 @@ authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 1. **Completed — #334.** [The authoring plan](../archive/2-mechanism-reach-01-authoring.md)
    establishes reuse, bounded extension, and separately intentional shared
    semantics.
-2. Execute **#336**. It preserves a split-create `defer` as
+2. **Parked — #336.** Unpark when a split-create `defer` result is observed
+   lost; first try printing the defer verdict in create's summary and run log.
+   It would preserve a split-create `defer` as
    an operator-visible handoff for separately intentional work, without
    creating that work automatically.
 3. When a genuine shared semantic change is identified, create a separate
@@ -58,7 +62,7 @@ authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 ## Exit and handoff
 
 This arc finishes when #336 preserves an excluded shared semantic change as a
-manual handoff. A required shared change leaves this arc as one separately scoped
+manual handoff, or is discarded after its unpark condition never fires. A required shared change leaves this arc as one separately scoped
 backlog item; an unchanged or bounded owner choice needs no follow-up arc.
 
 ## Out of scope

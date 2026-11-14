@@ -559,106 +559,44 @@ working straight down the tiers.
     it, and `status` reports the upstream's state.
   - **Stop / defer:** if the fix for the unbuilt-sibling bug settles the
     contract another way, follow it.
-- **Route:** `plan` · **Readiness:** `decision-needed` (field shape and its
-  relation to roadmap `depends_on`) · **Tier:** `architect`.
+- **Route:** `plan` · **Readiness:** `parked` · **Tier:** `architect`.
+- **Unpark when:** the fix for the unbuilt-sibling bug settles the plan-to-plan
+  contract and a plan-level field is still needed; derive that field from the
+  roadmap's `depends_on` rather than authoring it by hand.
 - **Principle:** `keep-the-plan-true-to-code`.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design.
 
 **#362 — Roadmap staged artifacts declare their format version (deferred)**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** an actual breaking change to a staged roadmap artifact is
+  needed (not on a schedule); then open a fresh bare plan of its own, never a
+  resumed one.
 - **What:** the four roadmap staged artifacts (`01-domain.md` …
-  `04-roadmap.md`) are the third authored class with no in-band format
-  version, beside the plan and run-grade detail classes that already declare
-  one. This class needs two things settled first that the plan/detail classes
-  did not: an interaction with the accepted-head version store's exact-byte
-  digests, and a relationship to an *existing*, differently-scoped
-  `format_version` field already living in the same subsystem. Both are
-  explained in full below so a session re-entering this later does not have
-  to re-derive them.
-- **Why a declaration-only change is unsafe here:** the obvious approach — a
-  roadmap reader gate and a matching writer stamp, structured exactly like
-  the plan and detail classes — is unsafe to ship as written. Two verified
-  code facts show why:
-
-  1. **A stamp is a byte change, and the accepted-head roadmap-version store
-     is bound to exact bytes.** `plan_tool/roadmap_versions.py` digests raw
-     staged-artifact bytes with `hashlib.sha256(artifact_bytes)`, and
-     `_require_content_matches_record` raises `RoadmapVersionError("stored
-     artifact bytes do not match their record digests")` on any mismatch.
-     Writing a version declaration into the four staged artifacts changes
-     those bytes. Every roadmap enrolled in the accepted-head store — six
-     roadmaps exist today, all in the `integration` repository — would fail that
-     digest check the moment its artifacts were stamped. A declaration-only
-     change, safe for the other two classes, is a breaking change here.
-  2. **A field named `format_version` already ships in the same subsystem,
-     meaning something else.** *(Stale as of 2026-11-14: `BASELINE_FORMAT_VERSION`,
-     `BaselineRecord`, and `CanonicalSourceIdentity`, named below, no longer
-     exist; `plan_tool/roadmap_source_identity.py` now defines
-     `SOURCE_IDENTITY_VERSION = 1` for the publication journal. Re-check whether
-     this collision argument still holds before acting on the deferral.)* `plan_tool/roadmap_source_identity.py` defines
-     `BASELINE_FORMAT_VERSION = 1` and carries a `format_version` field on
-     both `BaselineRecord` and `CanonicalSourceIdentity`, bound to a
-     `stage_key` and persisted inside escalation receipts and impact
-     analyses (documented in `ROADMAP_FORMAT.md`'s escalation-receipt and
-     impact-analysis examples). It versions the **semantic projection** used
-     for baseline identity, not the staged artifact's on-disk markdown
-     structure. A second, differently-scoped in-band structure version on the
-     same artifact class needs that relationship settled before either field
-     is touched. Merging or renaming the two for label convenience is
-     explicitly refused — they answer different questions.
-
-  Full reasoning, including the evidence that led to deferring rather than
-  solving inline, is recorded in
+  `04-roadmap.md`) carry no in-band format version, unlike the plan and
+  run-grade detail classes. A stamp changes the artifact bytes, and
+  `plan_tool/roadmap_versions.py` binds each accepted-head version to the
+  sha256 digests of those exact bytes, so a declaration-only change would
+  invalidate every enrolled roadmap. Full reasoning:
   [`docs/evidence/authored-artifact-structure-versioning.md`](docs/evidence/authored-artifact-structure-versioning.md)
-  § "Roadmap staged artifacts — deferred". Read that section before starting
-  design work here; do not re-derive it from scratch.
-- **Why deferring costs nothing right now:** six roadmaps exist, all in one
-  repository (`integration`), all owned by one person. No roadmap format break is
-  currently pending. The one roadmap-format break to date — required entity
-  `fields`, added 2026-08-02 in commit `4c60b3ab` — was absorbed with no
-  migration code, and all six roadmaps carry the field today. There is no
-  schedule pressure to settle the digest-and-lineage interaction now, and
-  settling it under no pressure is safer than settling it while also shipping
-  a breaking roadmap change.
-- **Effort:** unknown until the design questions below are answered — do not
-  estimate effort before that design work happens. The mechanical part (a
-  reader gate and a writer stamp at the four staged parsers) is small; the
-  actual cost lives in the accepted-head interaction, which could be as cheap
-  as "publish the upgraded bundle as a new accepted-head version whose record
-  marks it structure-only" or could require store changes if that recommendation
-  does not hold up under design review.
-- **Risks / fallout:** shipping the declaration without settling the digest
-  interaction breaks every enrolled roadmap outright, which is why this class
-  stays a separate, deferred entry rather than shipping alongside the plan
-  and detail classes. Conflating this field with
-  `CanonicalSourceIdentity.format_version` — by reusing its name, its constant,
-  or its persisted location — would corrupt an unrelated, already-shipped
-  contract (`#328`'s accepted-head content/lineage authority) that this entry
-  must leave untouched.
-- **Dependencies:** none blocking. Independent of the shipped plan and
-  detail format-version work. Independent of paused **#242**
-  (roadmap revision retention) — do not resume #242 through this entry; they
-  touch adjacent roadmap machinery but answer unrelated questions. Does not
-  reopen closed **#328** (the accepted-head content/lineage store), whose
-  contract this entry must preserve unchanged.
+  § "Roadmap staged artifacts — deferred"; read it before design work.
 - **Scope contract:**
   - **Outcome:** each of the four roadmap staged artifacts declares its
     format version in-band as one bundle version (not four independently
     versioned stages), a reader rejects an unsupported version with a named,
     actionable result, and the interaction with the accepted-head version
-    store's exact-byte digests and with `CanonicalSourceIdentity.format_version`
-    is explicitly resolved rather than left implicit.
+    store's exact-byte digests is explicitly resolved rather than left
+    implicit.
   - **In scope (once re-entered):** `plan_tool/roadmap_artifacts.py`
     (`_parse_frontmatter` and the four staged parsers/renderers),
     `plan_tool/roadmap_versions.py` (the digest interaction),
-    `plan_tool/roadmap_source_identity.py` (the `format_version` relationship),
+    `plan_tool/roadmap_source_identity.py` (only if question 2 below still
+    finds a relationship to settle),
     `ROADMAP_FORMAT.md`, `DATA_CONTRACT.md`.
   - **Out of scope / Non-goals:** version 2 of any artifact, a migration
     engine, on-read upgrading, content revision/lineage/history, and
     versioning `BACKLOG.md` / `plan-seeds/` / jira exports; resuming paused
-    #242; reopening closed #328; renaming or merging
-    `CanonicalSourceIdentity.format_version` with the new field for label
-    convenience alone.
+    #242; reopening closed #328.
   - **Allowed behavior changes:** none yet — this entry is design work before
     it is implementation work. Behavior changes are scoped when the design
     questions below are answered.
@@ -667,39 +605,25 @@ working straight down the tiers.
     proving an already-enrolled roadmap either stays valid under the new
     declaration or is re-enrolled through an explicit, described transition —
     never silently invalidated.
-  - **Stop / defer:** this entire entry stays deferred until the re-entry
-    trigger below fires. Do not begin implementation from this entry's Outcome
-    alone; the design questions must be answered first, in a fresh bare plan.
-- **Approach:** `plan-tool`, once re-entered — design first (a fresh bare plan
-  answering the three questions below), then the standard
-  author/detail/audit/run loop. Not `direct`: the accepted-head digest
-  interaction is real design surface, not a mechanical change.
-- **Re-entry trigger:** re-enter only when an actual breaking change to a
-  staged roadmap artifact is needed — not on a schedule. At that point, open a
-  fresh bare plan of its own, never a resumed one, and settle these three
-  questions before writing code:
+  - **Stop / defer:** do not begin implementation from this entry's Outcome
+    alone; the design questions below are answered first, in a fresh bare plan.
+- **Design questions to settle in that bare plan:**
   1. Whether a structure upgrade republishes the bundle as a new accepted-head
-     version whose record marks it structure-only, preserving lineage at the
-     cost of one record field; or whether enrolled roadmaps are exempt from
-     upgrade; or whether re-enrollment with an accepted lineage break is
-     correct. The current recommendation, not yet designed against the store's
-     actual code, is the first option.
-  2. How an in-band structure version relates to
-     `CanonicalSourceIdentity.format_version`, without renaming or merging
-     either field.
-  3. Whether all four staged artifacts must always declare the same version.
-     The current recommendation is yes — one bundle version, with a
-     mixed-version bundle refusing — because a four-way compatibility matrix
-     across the staged artifacts is not itself a policy.
-- **Origin:** 2026-09-08, carved out during the authored-artifact
-  format-version design review, recorded in
-  [`docs/evidence/authored-artifact-structure-versioning.md`](docs/evidence/authored-artifact-structure-versioning.md);
-  user-confirmed the roadmap class is out of scope for the plan and detail
-  format-version work.
-- **Status:** deferred. No plan, seed, or design document exists yet — that is
-  correct; do not author one before the re-entry trigger fires. Do not rerun
-  or re-verify anything about the shipped plan/detail classes through this
-  entry.
+     version whose record marks it structure-only (the current, undesigned
+     recommendation), or enrolled roadmaps are exempt, or re-enrollment with an
+     accepted lineage break is correct.
+  2. How an in-band structure version relates to any other version field in the
+     roadmap subsystem. Re-checked 2026-11-14: no roadmap module carries a
+     `format_version` field now (`roadmap_source_identity.py` defines only
+     `SOURCE_IDENTITY_VERSION` for the publication journal), so the collision
+     the deferral first cited does not hold; confirm that at design time.
+  3. Whether all four staged artifacts always declare the same version. The
+     current recommendation is yes, one bundle version with a mixed-version
+     bundle refusing.
+- **Approach:** `plan-tool` once re-entered, design first; not `direct`.
+- **Origin:** 2026-09-08, carved out of the authored-artifact format-version
+  design review; user-confirmed the roadmap class is out of scope for the plan
+  and detail format-version work.
 
 **#365 — Reconcile authored-artifact documentation and planning-manifest discoverability**
 
@@ -732,6 +656,11 @@ working straight down the tiers.
 
 **#383 — Per-stage supplementary sources for `roadmap`, with declared roles**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** a named roadmap stage lacks essential grounded facts that
+  cannot safely fit in the approved one-file brief, with the stage, the facts,
+  and the failed safe representation recorded; more material in a composed
+  input is not evidence.
 - **What:** every roadmap stage receives exactly one prose input, the whole
   brief (`plan_tool/roadmap.py:_render_stage_prompt` builds `${brief}` plus
   one `${<key>_artifact}` per upstream stage). When the brief is produced
@@ -759,12 +688,9 @@ working straight down the tiers.
 - **Dependencies:** none. This remains separate from the shipped #384
   carried-decision input and must not reuse it as a general supplementary-source
   mechanism.
-- **Status:** held (2026-09-16 comparison,
-  [`roadmap-aidlc-intake-comparison-20260916.md`](docs/evidence/roadmap-aidlc-intake-comparison-20260916.md)).
-  Selected only when a named stage lacks essential grounded facts that cannot
-  safely fit in the approved one-file brief, with the stage, the facts, and
-  the failed safe representation recorded; more material in a composed input
-  is not evidence.
+- **Status:** held 2026-09-16
+  ([comparison](docs/evidence/roadmap-aidlc-intake-comparison-20260916.md));
+  parked, see Unpark when above.
 - **Precondition:** `source.json`, `read_recorded_brief_source`, and
   `_write_brief_source` were removed 2026-11-05 by
   `roadmap-versioned-from-birth`; a stage run now refuses once an accepted head
@@ -775,15 +701,6 @@ working straight down the tiers.
 - **Acceptance points (beyond the role enforcement above):** the identity
   digest covers each supplement and its role declaration; a roadmap with only
   a hand-written brief keeps current behavior.
-- **Review aids that become worth having once #383 ships (not in scope here):**
-  each is read-only and small, and none changes what a stage receives. (1) A
-  dry-run view of each stage's rendered prompt, so a pre-freeze review reads the
-  actual input instead of inferring it from the source files. (2) A review view
-  listing `judgment`-role sources beside the accepted plan rows, so a human
-  judges coverage semantically and the tool does not. (3) A source-set summary
-  in #385's `--view status --json`, so the projection also answers "what fed
-  this roadmap". File them as their own entries when #383 is selected. Origin:
-  2026-09-11 intake-ideas handoff, retired 2026-09-29.
 - **Origin:** 2026-09-09, Integration's AI-DLC Ideation route. Stage 2 requires one
   hosting row per facet and one disposition per quality attribute and guesses
   when the brief is silent; the facts exist in an upstream
@@ -821,6 +738,10 @@ working straight down the tiers.
 
 **#386 — Prefer stating a parity/consistency relationship over enumerating one side of it, in plan authoring and audit remedies**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** a second independent enumeration-drift spiral is observed
+  in plan authoring or audit remedies (the first was #370's router-parity
+  rounds, 2026-09-16).
 - **What:** When a plan's steps must keep several parallel structures
   consistent with each other (multiple backend integrations, multiple
   environments, multiple config profiles, repeated instances of one
@@ -866,7 +787,7 @@ working straight down the tiers.
   bare-plan completeness audit to convergence — three rounds of enumeration
   drift on router parity, resolved by switching to a stated symmetry
   principle instead of another enumerated patch.
-- **Status:** not started.
+- **Status:** parked; not started.
 
 **#518 — An installed plan-tool skill's router does not name the phase rules a driving session must read, so it skips them (for example the audit stopping rule)**
 
@@ -1045,6 +966,10 @@ working straight down the tiers.
 
 **#338 — Extend stage-lifecycle status output to `roadmap --refresh-seeds` and `--materialize`**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** an operator runs `roadmap --refresh-seeds` or
+  `--materialize` on a large seed or plan set and reports lacking visibility
+  into which item is processing.
 - **What:** `_cmd_roadmap_refresh_seeds` and `_cmd_roadmap_materialize`/
   `_cmd_roadmap_materialize_owned` (`plan_tool/cli/roadmap_cmd.py`) drive the
   same shape of long-running, per-item backend work
@@ -1093,10 +1018,15 @@ working straight down the tiers.
   (`plan_tool/roadmap.py` + `plan_tool/cli/roadmap_cmd.py`); the diff's own
   scope was the `roadmap <slug>` stage-run path, so this sibling gap was
   deliberately not folded into it.
-- **Status:** not started.
+- **Status:** parked; not started. No operator complaint stands behind it; it is a code-review sibling gap.
 
 **#336 — Preserve deferred shared semantic work as a manual follow-up handoff**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** a `defer` result from split-create is observed lost (not
+  surfaced where the operator would act on it); even then, first try printing
+  the defer verdict in create's summary and run log before building a handoff
+  artifact.
 - **What:** preserve a split-create foundational-logic `defer` result as a
   durable, operator-visible manual handoff that names the focused property,
   affected shared contract, and reason it stays out of the current plan. The
@@ -1132,9 +1062,8 @@ working straight down the tiers.
   work, distinct from the focused authoring rule that detects it.
 - **Quality:** `handoff` — preserves a material deferral without treating it
   as permission to broaden the current plan.
-- **Iterate:** author `plan-seeds/mechanism-reach-03-handoff.md` now that
-  #334 has shipped (archived plan `2-mechanism-reach-01-authoring`), then drive the resulting plan through the normal gates.
-- **Status:** not started.
+- **Iterate:** no seed is authored; none is written until unparked.
+- **Status:** parked; not started.
 
 **#332 — Install the run-log sink for developer-doc research in `create`**
 
@@ -1187,6 +1116,10 @@ working straight down the tiers.
 
 **#268 — Per-step contract asks in the step proposal (failure modes and criterion mapping)**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** #110 resolves; then re-check the gap against
+  `DETAIL_FORMAT.md`'s seven-section run-grade contract before designing,
+  since it may close with no action.
 - **What:** a proposed step today is title + classification + file list +
   one-line intent — the proposal prompt never asks what the step guarantees,
   what can fail and each failure's disposition, or which acceptance criterion
@@ -1194,17 +1127,20 @@ working straight down the tiers.
   (`batch-authoring-observability`, `roadmap-seed-materialization`) were
   dominated by exactly this mass: missing failure/atomicity contracts,
   unowned mechanisms, dangling criteria, `change_type` mislabels.
-- **Blocked on #110.** The right carrier (prompt-only prose vs. new `Step`
+- **Waits on #110.** The right carrier (prompt-only prose vs. new `Step`
   fields) can't be decided yet — #110's measurement may conclude "keep
   claim-vs-delivery advisory" rather than promote it, which changes how much
   of this gap #110 already closes on its own. Wait for #110 to resolve, then
   decide the carrier and write the full design.
 - **Effort:** medium–large, design-first, once unblocked.
 - **Dependencies:** #110.
-- **Approach:** plan-tool (seed first), once unblocked.
+- **Approach:** plan-tool (seed first), once unparked.
 
 **#173 — Keep incremental completeness scans deferred**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** measured operational audit cost justifies a new, bounded
+  design that selects and proves a full-discovery cadence.
 - **What:** retain only a possible fingerprint-gated step-scan cache and an
   anchored re-check lane. Cross-invocation low-yield reporting belongs to
   #303, not this item.
@@ -1235,100 +1171,10 @@ working straight down the tiers.
   by evidence that it does not hide a finding.
 - **Status:** deferred 2026-08-20 (user-confirmed). Fresh completeness audits
   remain the operating path.
-
-<!-- Superseded 2026-08-19: the following draft bundled an unspecified
-cadence, a cross-history decider now deferred as #303, and resolution-label
-evidence. It is not an active implementation contract.
-
-- **What:** three loop-shape changes sharing a per-step fingerprint/cache
-  substrate: (1) **fingerprint-gated step scans** — key each step's
-  conceptual scan on (step frontmatter + detail-file hash + plan-body
-  scope-section hash) and reuse the saved scan for unchanged steps
-  (the `reconcile-plan --refresh` / #165 posture applied to completeness);
-  (2) **anchored re-check mode** — after a hand-apply round, verify the
-  previously-open findings against their anchors instead of running full
-  discovery; full discovery every K rounds or as the final convergence
-  confirmation; (3) **encoded low-yield decider** — N consecutive rounds
-  of full prior-closure with strictly decaying materiality auto-labels
-  `confirmed-low-yield` (the shipped severity-aware rule extended to round-over-round
-  trajectories), instead of an operator hand-rolling the stop rule.
-- **Why (measured on jira-grade-01, 2026-07-22):** five audit rounds each
-  re-scanned all 9 steps while hand-applies touched 2–4 steps per round —
-  most of rounds 3–5's scan spend re-confirmed unchanged steps. By the shipped
-  severity-aware rule's
-  own logic round 4 (all-fresh findings, 100% prior-round closure,
-  materiality down to wording/footprint) already qualified as low-yield;
-  the un-encoded rule cost a full extra round. Re-check mode also emits
-  per-finding resolution verdicts for operator review.
-- **Second, independent instance — 2026-08-07 on `roadmap-view`, and it
-  narrows the root cause.** Driving `roadmap-view`'s detail-grounded audit
-  by hand across four `completeness-audit --audit-passes 1` invocations (one
-  per commit, per CLAUDE.md's mandated Claude-session-driven pattern) produced
-  the trajectory 9 → 2 → 2 → 1 material findings, with the final round's
-  lone finding self-seeded (a leftover word-count from the prior round's own
-  edit, confirmed fixed by a manual repo-wide grep). Every one of the four
-  saved reports' `audit_coverage` block shows `confirmation_kind: null` and
-  `recommendation_kind: null`, checked directly in the persisted JSON — the
-  shipped #125 decider (`audit_plan_until_stable` in `plan_tool/review.py`)
-  never fires here, not because the decider is wrong, but because its
-  `consecutive_dry` / `dry_streak_grew` streak is **local loop state scoped
-  to passes within one process invocation**, and `cap == 1` means the loop
-  runs exactly once and can never accumulate a streak to confirm against.
-  This is architecturally inert for exactly the operating mode the tool's own
-  directives prescribe: `--audit-passes 1` is the CLAUDE.md-recommended
-  default for scope-contract-bound audits, and *every* hand-applied,
-  session-driven round in this repo's own convergence loop runs that way.
-  The gap #173 names is real; this instance pins the precise mechanism —
-  the decider needs to compare **against the most recently saved report for
-  the same plan** (matched by `plan_slug`, findings diffed by the same
-  stable anchor-id `_make_rec_id` already uses for intra-run union), not
-  only against sibling passes held in memory this call. Verify this by comparing
-  persisted reports from separate invocations, including single-pass audits.
-- **Effort:** large — cache substrate, scan-skip wiring, a re-check prompt
-  lane, decider logic, coverage-reporting honesty for skipped steps.
-- **Risks / fallout:** a stale-cache bug silently narrows audit coverage —
-  the report must label every skipped step with the fingerprint it was
-  skipped under (no silent caps); re-check mode must not become the only
-  lane (discovery cadence is load-bearing); fingerprint field set must
-  avoid over-triggering (title reword ≠ rescan; see #165's severity-tier
-  note).
-- **Dependencies:** pairs with **#165** (same fingerprint family) and the
-  shipped severity-aware low-yield rule (the decider extends its rule).
-- **Scope contract:**
-  - **Outcome:** an audit round after a hand-apply spends Claude only on
-    changed steps and open findings, and the loop self-labels low-yield
-    convergence under the encoded rule.
-  - **In scope:** `plan_tool/completeness_report.py`,
-    `plan_tool/cli/completeness_phases.py`/`completeness_cmd.py`, the
-    grounding/fingerprint sidecar, prompt for the re-check lane,
-    `docs/how-to/pipeline/audit.md`, `DATA_CONTRACT.md`, tests.
-  - **Out of scope / Non-goals:** weakening any finding or severity;
-    parallelizing scans (the serial-by-default architecture rule stands);
-    changing `completeness-apply`; a convergence diagnostic.
-  - **Allowed behavior changes:** skipped-step reuse with labeled coverage;
-    the re-check lane; the auto low-yield label.
-  - **Allowed reorganization:** only the cache substrate extraction.
-  - **Verification:** a fixture plan where one step changes between rounds
-    scans exactly that step; a stale-cache fixture proves the skip label
-    names its fingerprint; the jira-grade-01 trajectory replayed as a
-    fixture stops at round 4 with `confirmed-low-yield`.
-  - **Stop / defer:** cross-plan caching; any `--jobs` fan-out.
-- **Approach:** `plan-tool` — multi-module loop redesign with an open
-  cadence question (K).
-- **Quality:** `audit-coverage` — coverage becomes explicit per-step
-  (labeled skips) instead of implicit; `convergence` — the stop rule stops
-  depending on operator judgment at the costliest moment.
-- **Iterate:** default recipe.
-
-  ```bash
-  plan-tool create incremental-completeness-audit --iterate -y --from-existing plan-seeds/incremental-completeness-audit.md
-  plan-tool detail incremental-completeness-audit --commit -y
-  plan-tool completeness-audit incremental-completeness-audit --iterate --commit -y
-  ```
-- **Status:** not started; measured evidence in
-  `.tmp/jira-grade-01-detail-instrument.audit-process-handoff.md`.
-
--->
+- **Durable insight (from a superseded draft, cut 2026-11-14):** under
+  `--audit-passes 1`, `confirmation_kind` is `null` in every saved report,
+  because the in-process dry streak cannot accumulate within a single pass;
+  #303 owns cross-invocation comparison.
 
 **#175 — Jira-readiness deterministic checks: HEAD-anchor verification and footprint coherence in `jira --lint` / `validate`**
 
@@ -1397,6 +1243,10 @@ evidence. It is not an active implementation contract.
 
 **#163 — Claude-judged fold detector for dropped guardrail sections**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** a run-log count of how often the preservation warning fires
+  on a folded rather than a dropped section shows the fold tail is noisy;
+  otherwise discard the entry.
 - **What:** when the shipped preservation check fires (seed carried heading H,
   body lacks H — `create.py:_find_dropped_guardrail_headings`), a bounded model
   judgment on whether H's substance
@@ -1458,7 +1308,7 @@ evidence. It is not an active implementation contract.
 - **Approach:** `direct`.
 - **Quality:** `convergence` — this closes the preservation check's
   false-positive tail rather than adding new judgment surface.
-- **Priority note:** gated on evidence rather than on order. #162 (shipped
+- **Priority note:** gated on evidence, not order. #162 (shipped
   2026-08-19) grounds the audit deterministically and spends no extra Claude;
   this spends a call to refine a finding's phrasing. The deterministic
   preservation check is live, so the question is answerable: **count how
@@ -1467,6 +1317,10 @@ evidence. It is not an active implementation contract.
 
 **#98 — Rate-limit handling under parallel workers: non-interactive policy under `--jobs N` (the de-dup half is discarded)**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** an operator is actually prompted N times for one rate-limit
+  event under `--jobs N`; it also waits on the `BUG_BACKLOG.md`
+  `--on-rate-limit` policy fix.
 - **What:** The interactive rate-limit recovery (prompt + key-polling wait) is now
   thread-serialized by a shared `claude_errors.RATE_LIMIT_PROMPT_LOCK`, so parallel
   workers (`detail --jobs N`, which share one process-global
@@ -1498,6 +1352,10 @@ evidence. It is not an active implementation contract.
 
 **#107 — Deferred: project-configurable story layer vocabulary**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** a non-web Jira export fails to produce a usable artifact
+  under the fixed story-layer vocabulary (see Trigger below); a hypothetical
+  repository is not a trigger.
 - **Principle:** `none` — deferred; export vocabulary with no demonstrated blocker.
 - **Decision (2026-08-19): defer.** Do not add a story-layer schema,
   model-assisted discovery, path inference, or generalized user-facing-tier
@@ -1512,7 +1370,7 @@ evidence. It is not an active implementation contract.
 - **Reason:** this is premature generalization, not an observable-property
   failure. The former combined feature assumed consumers and a configuration
   model before either existed.
-- **Status:** deferred pending a demonstrated non-web Jira-export blocker.
+- **Status:** parked pending a demonstrated non-web Jira-export blocker.
 
 **#66 — Contract-trace / path-enumeration audit mode (deterministic complement to the conceptual sampler)**
 
@@ -1707,6 +1565,9 @@ evidence. It is not an active implementation contract.
 
 **#105 — Stable per-step identity to close the directive-signature same-`(title, change_type)` collision**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** one mis-targeted structural remedy is observed from a
+  same-`(title, change_type)` collision.
 - **What:** The precise per-directive staleness signature shipped for #93
   (`review_walk.compute_target_signature`) identifies a target step by
   `(id → title + change_type)`. Two distinct steps that share **both** title and
@@ -1737,12 +1598,13 @@ evidence. It is not an active implementation contract.
   a plan deleted mid-live-apply would reach `escalate_to_split`'s own `parse_plan`,
   which is wrapped only for `KeyError` (step lookup), not `FileNotFoundError`.
   Far-fetched (the apply just read/wrote the plan), but `escalate_to_split` could
-  degrade to recommend-only on a gone plan instead of raising. Fold in if this
-  entry touches the bridge.
+  degrade to recommend-only on a gone plan instead of raising. Fold the
+  `FileNotFoundError` handling into whatever change next touches the bridge,
+  independent of unparking this entry.
 - **Quality:** `audit-coverage` — sharpens how precisely the walk reasons about
   which step a saved directive still targets. Sibling of #93 (shipped) and its
   remaining test-authoring cross-link (#87).
-- **Effort:** medium. **Approach:** `plan-tool`. **Iterate:** default recipe.
+- **Effort:** medium. **Approach:** `plan-tool`. **Iterate:** none until unparked.
 - **Origin:** 2026-07-08 — high-effort code review of the shipped
   `precise-directive-staleness` (#93) change; confirmed the `(title, change_type)`
   signature collides and the bridge re-validation does not fully defeat it,
@@ -1750,6 +1612,10 @@ evidence. It is not an active implementation contract.
 
 **#119 — Snapshot-restore-then-retry for a partial-mutation streaming failure (response B)**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** run logs show surfaced partial-mutation stops often enough
+  that the hand-revert-and-re-run cost is real; the `--commit` mandate already
+  keeps the common path clean.
 - **What:** Restore transient/rate-limit *resilience* on the streaming `run`
   path without reintroducing the double-apply corruption. Same detection as the
   shipped response A (an aborted turn left uncommitted edits when a re-invoke is
@@ -1778,18 +1644,8 @@ evidence. It is not an active implementation contract.
   streaming git-delta guard); no other backlog items.
 - **Approach:** `plan-tool` — touches the run invoker's retry contract and needs
   a snapshot/restore design decision, not a one-line fix.
-- **Iterate:** default recipe (author + converge). Load-bearing: `create`,
-  one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit` per step and the post-run
-  `reconcile-code --all` tail.
-
-  ```bash
-  plan-tool create partial-mutation-snapshot-restore --iterate -y --from-existing plan-seeds/partial-mutation-snapshot-restore.md
-  plan-tool detail partial-mutation-snapshot-restore --commit -y
-  plan-tool completeness-audit partial-mutation-snapshot-restore --iterate --commit -y
-  plan-tool run partial-mutation-snapshot-restore --commit -y
-  ```
-- **Status:** not started — backlog entry only.
+- **Iterate:** none until unparked.
+- **Status:** parked; backlog entry only.
 - **Origin:** deferred response B of the transient-retry-partial-mutation-guard
   plan (shipped response A closed the `BUG_BACKLOG.md` RISK), 2026-07-11.
 
@@ -2161,6 +2017,9 @@ evidence. It is not an active implementation contract.
 
 **#193 — Lesson provenance: code anchors, commit, and step outcome on every citation**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
+- **Unpark when:** `--lessons` capture becomes the default again, so the
+  lesson store grows on ordinary runs.
 - **What:** extend the lesson citation record so a lesson can be reconciled
   against the repo later. Today `~/.plan-tool/lessons/general-citations.jsonl`
   (1,462 records since 2026-05-27) carries `rule_hash`, `rule_preview`, `added`,
@@ -2245,10 +2104,13 @@ evidence. It is not an active implementation contract.
 - **Origin:** 2026-07-30, jira-grade authoring-model probe; the lessons cluster
   was discovered while checking whether a plan-body fence reaches
   `prompts/detail.md`.
-- **Status:** not started.
+- **Status:** parked; not started.
 
 **#194 — Reconcile lessons against the code they generalized from**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** #193 unparks and ships provenance anchors; discard this
+  entry if #195's reshape makes lesson injection opt-in.
 - **What:** a read-only sweep that re-resolves each lesson's recorded anchors
   (#193) against current code and flags the ones whose basis moved: anchor gone,
   source detail corrected, or the source step never shipped. Output is a report,
@@ -2287,7 +2149,7 @@ evidence. It is not an active implementation contract.
 - **Approach:** `plan-tool` — the flag-vs-noise policy is an open design call.
 - **Quality:** `grounding` — closes the loop between a lesson and its source.
 - **Origin:** 2026-07-30, jira-grade authoring-model probe.
-- **Status:** not started; blocked on #193.
+- **Status:** parked with #193; not started.
 
 **#195 — Inject lessons into `detail` authoring only behind the `--lessons` opt-in**
 
@@ -2483,49 +2345,17 @@ evidence. It is not an active implementation contract.
 
 **#208 — `roadmap` arc position 05: framework lenses** *(anchor entry for the `roadmap-NN-*` seed group)*
 
-- **What ships today (positions 01–04, 2026-07-31 → 2026-08-05).**
-  `plan-tool roadmap <slug> --from-existing <concept.md> [--from-stage N]` turns
-  a concept brief into four gated artifacts — `01-domain.md`,
-  `02-constraints.md`, `03-components.md`, `04-roadmap.md` under
-  `docs/implementation-plans/roadmaps/<slug>/` — plus draft seeds at each plan
-  row's `draft_seed_path`, non-interactively, retrying a stage with its gate
-  violations quoted back and exiting non-zero only when one exhausts its retry
-  budget. Revision mode carries `feedback` and `removals` rows so `--from-stage N`
-  revises the reviewer's copy instead of regenerating over it. Completion prints
-  runnable `create --from-existing` lines; `plan-seeds/` mutation is opt-in via
-  `--apply` (+ confirm or `-y`). Contract in `ROADMAP_FORMAT.md`; operator
-  workflow in `docs/how-to/use-cases.md` (entry 11), `RUNBOOK.md`,
-  `docs/how-to/roadmap.md`, and `integrations/claude/SKILL.md`; flags in
-  `docs/cli/roadmap.md`.
-- **What remains — position 05, and it is the whole of this entry.**
-  `roadmap-05-framework-lenses`: the lens registry, an `aws-well-architected`
-  descriptor, a `--framework` flag, a lens-driven stage-2 prompt, and a coverage
-  gate that fails a response leaving a pillar undischarged and undeferred.
-  Stages 1–4 ship on the generic default lens, so this is additive — no existing
-  stage changes shape.
-- **Why:** the constraints stage today ranks quality attributes the model infers
-  from the brief. A lens supplies the attribute vocabulary from an external
-  framework instead, so a reviewer can ask "did it discharge *every* pillar"
-  rather than "is this list plausible" — a binary coverage question a gate can
-  answer, which is the only kind this arc adds. **Greenfield runs are the
-  highest-leverage case** (2026-08-13 greenfield-scenario review): stage 2 is
-  repo-blind on every project, but on an existing one the reviewer can
-  sanity-check the inferred attribute list against a stack and operational
-  history they already know, while a greenfield brief gives the reviewer no
-  such anchor — the external vocabulary is doing the most work exactly where
-  the roadmap verb is the intended entry point (#270–#272 file the sibling
-  greenfield gaps).
-- **Effort:** medium — one new data-driven descriptor family plus a coverage
-  gate, against four stages of existing pattern (invoker seam, response gates +
-  reprompt, artifact re-parse discipline, run log).
-- **Risks / fallout:** a lens that names pillars the brief cannot speak to turns
-  the coverage gate into a spin generator — the gate must accept an explicit
-  *deferred* disposition, not only a discharge. Multi-framework composition in
-  one run stays out (below).
-- **Dependencies:** none hard.
-- **Note the two numbering axes:** artifact stages 1–4 and seed positions 01–05
-  do not line up (the components *artifact* stage 3 is seed position 03 only by
-  coincidence of the later renumber). Prefer naming stages, not numbering them.
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect` ·
+  Principle `grounding`
+- **Unpark when:** a named framework-specific roadmap need arises with a
+  checkable coverage contract (a set comparison, not a judgment).
+- **What:** positions 01-04 of the `roadmap` arc ship (2026-07-31 to
+  2026-08-05; contract in `ROADMAP_FORMAT.md`). Position 05,
+  `roadmap-05-framework-lenses`, is the whole of this entry and stays
+  unauthored: a lens registry, an `aws-well-architected` descriptor, a
+  `--framework` flag, a lens-driven stage-2 prompt, and a coverage gate that
+  fails a response leaving a pillar neither discharged nor explicitly
+  deferred. Stages 1-4 ship on the generic default lens, so it is additive.
 - **Scope contract:**
   - **Outcome:** `plan-tool roadmap <slug> --framework aws-well-architected`
     ranks and discharges that framework's attribute vocabulary in
@@ -2556,40 +2386,12 @@ evidence. It is not an active implementation contract.
   are *not* to be re-cut on one-shot-quality grounds); the **naming** reservation
   of "roadmap" for this pipeline; the **narrow** reading of decision-record
   Carve B; and the revision prompt's **scope-clarification** permission.
-- **Live design constraint inherited from the arc:** emitted seeds anchor to
-  **entity ids**, the only row kind stable enough to cite across a re-author.
-  Nothing downstream may anchor to a field name across a *regeneration* — within
-  a revision chain they are stable, which does not license the cross-re-author
-  case. Evidence: `docs/evidence/roadmap-run-measurements.md` § 1.
-- **Evidence:** `docs/evidence/roadmap-run-measurements.md` (both briefs, the feedback
-  loop, the decision-record rule's four branches, and the first stage-3/stage-4
-  runs) and `docs/evidence/roadmap-layering-measurement.md` (the 2026-08-01 three-arm
-  comparison — read its "How to read this result" before citing it).
-- **Residuals filed separately, not folded here:** the reply bytes a dead stage discards (the discarded #217; the BUG_BACKLOG
-  failure-receipt entry owns them).
-- **Approach:** `plan-tool` — a new prompt branch plus a gate with a persisted
-  descriptor format; the arc convention sends it through a seed.
-- **Quality:** `grounding` — a lens replaces an inferred attribute vocabulary
-  with an external one, so the constraints artifact's coverage becomes checkable
-  rather than plausible.
-- **Iterate:** standard recipe, current directives.
-
-  ```bash
-  plan-tool create roadmap-05-framework-lenses -y --from-existing plan-seeds/roadmap-05-framework-lenses.md
-  plan-tool detail roadmap-05-framework-lenses -y --commit
-  plan-tool completeness-audit roadmap-05-framework-lenses --iterate --audit-passes 1 -y
-  # then close the conceptual gaps by hand
-  plan-tool run roadmap-05-framework-lenses --all --commit
-  # post-run tail: plan-tool reconcile-code roadmap-05-framework-lenses --all
-  ```
-- **Origin:** 2026-07-31, user request: project-concept → initial plan set with
-  explicit domain/constraint/component/pattern layering, educated-guess decisions
-  with alternatives called out, and architecture-framework alignment (AWS
-  Well-Architected named). Positions 01–04 discharged everything but the
+- **Evidence:** `docs/evidence/roadmap-run-measurements.md`; read
+  `docs/evidence/roadmap-layering-measurement.md` § "How to read this result"
+  before citing it.
+- **Origin:** 2026-07-31, user request for architecture-framework alignment
+  (AWS Well-Architected named); positions 01-04 discharged everything but the
   framework half.
-- **Status:** positions 01–04 shipped; **position 05 parked and unauthored**.
-  Re-enter only for a named framework-specific roadmap need with a checkable
-  coverage contract.
 
 **#216 — A quality benchmark for plan-tool's own output, floors first** *(anchor entry for the `quality-bench-NN-*` seed group)*
 
@@ -2742,6 +2544,12 @@ evidence. It is not an active implementation contract.
 
 **#242 — A `roadmap` revision discards what it resolves: retain the closed feedback and the decision behind a drop**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** a second independently justified source-baseline recovery
+  need arises, or an explicit bounded one-time Integration 2:3 remedy is
+  requested; start with a fresh bare plan and consider shipping only
+  `FeedbackState.closed` first, since the removal-to-decision reference has no
+  reader need yet.
 - **What:** two retention additions to the roadmap artifact schema so a revised
   roadmap can say what changed and why, rather than only what it currently holds.
   Today a revision is lossy in two specific ways, and each loss is structural
