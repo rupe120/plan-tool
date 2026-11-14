@@ -50,7 +50,9 @@ push automatically; push only when the user explicitly requests it.
    after the BUG_BACKLOG.md entry on `--commit` staging the whole tree). Observed orphaning gap on `reconcile-code`; see the entry's
    "Evidence it recurs" bullet in `BACKLOG.md`.
 5. **#79–#81** — the Bucket D consolidation cluster. See the decision gate
-   above before touching #79's claims specifically.
+   above before touching #79's claims specifically. #81 is parked; unpark
+   it when the next fix has to touch the same sub-block in all four
+   convergence loops.
 
 ## Exit and handoff
 

@@ -50,15 +50,15 @@ Do not push automatically; push only when the user explicitly requests it.
    `21f46aad`, `f9fe30af`, `d82c8b15`, `5937c63f`, `e9f61b3b`, `fc23910f`,
    `a89ef20e`, and `792cfcbc` resolved the feature's five review rounds.
    **#301** (versioned saved audit coverage) and **#302** (a table-driven test over
-   the rate-limit recovery loop's arms) remain deferred structural follow-ups:
-   neither is a live defect or an active arc stage. Re-open #301 only for an
-   intentional coverage-format addition and #302 only for a deliberate
+   the rate-limit recovery loop's arms) are parked structural follow-ups:
+   neither is a live defect or an active arc stage. Unpark #301 when the next
+   additive `audit_coverage` field is proposed, and #302 only for a deliberate
    recovery-loop hardening pass.
 5. **Delivered 2026-08-21:** #247's independent, zero-Claude ledger lists
    saved completeness artifacts with their saved metadata or opaque state. It
    provides evidence visibility only: it does not compare entries or make a
    convergence claim.
-6. **Deferred:** #303 remains the next separately scoped comparison route until
+6. **Parked:** #303 stays parked (unpark when a convergence decision needs cross-invocation comparison) until
    a persistence design can admit eligible history across plan identity, audit
    revision, coverage, provenance, and finding identity. #247's delivered
    ledger is a visibility prerequisite, not admission evidence. Incomplete,

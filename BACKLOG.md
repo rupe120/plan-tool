@@ -3415,6 +3415,8 @@ working straight down the tiers.
 
 **#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a human operator reports difficulty discovering which plan to name for `detail` or `completeness-audit`.
 - **What:** Today only `run` accepts a missing plan name and falls back to an
   interactive picker (`run_cmd.py:_select_open_plan` over `_open_plan_entries`,
   which keeps `e.plan is not None and not e.plan.all_steps_done`). `detail`
@@ -3459,7 +3461,7 @@ working straight down the tiers.
   the MALFORMED handling (`e.plan is None`) `cmd_list` already does so unparseable
   entries don't crash the picker.
 - **Dependencies:** none — every primitive already exists.
-- **Approach:** `plan-tool` — cross-cuts three command surfaces + a shared helper +
+- **Approach (when unparked):** `plan-tool` — cross-cuts three command surfaces + a shared helper +
   tests, a natural fit for the create→detail→run pipeline.
 - **Origin:** 2026-07-09 — requested to make the plan-consuming commands
   self-discoverable, extending `run`'s existing picker to `detail` and the
@@ -3563,6 +3565,8 @@ working straight down the tiers.
 
 **#381 — Measure whether lesson-equivalence confidence supports its drop threshold**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** instrumentation shows lessons are reused, or a wrong lesson drop (a false drop at the `0.6` floor) is observed.
 - **What:** judge a small, representative set of lesson duplicate and conflict
   pairs, including cases on both sides of the current `0.6` floor. Compare the
   model's reported confidence with correct duplicate/conflict decisions and
@@ -3584,7 +3588,7 @@ working straight down the tiers.
   write behavior changes in this item.
 - **Approach:** `direct` investigation; propose a scoped implementation only
   if the measured result warrants one.
-- **Status:** not started.
+- **Status:** parked 2026-11-14; no false drop observed, and lesson reuse is unconfirmed (`lessons-reuse-instrumentation` is idle).
 
 **#380 — Decide what the scope guard emits instead of an `out-of-scope-findings` plan stub**
 
@@ -3664,6 +3668,8 @@ working straight down the tiers.
 
 **#111 — Rework the `orphaned-deliverable` identity model — the per-condition directory-token tension is irreducible under a single symbol set**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** the detector misfires (a false positive or false negative) on a real plan.
 - **What:** `detect_orphaned_deliverable` (`plan_tool/review.py`) keys its four
   conditions on a deliverable's path-derived identity symbols. A five-round
   review of the shipped detector showed no single identity breadth satisfies all
@@ -3700,7 +3706,7 @@ working straight down the tiers.
 - **Effort:** small (the decision); the model that follows is a separate
   `plan-tool` item. **Approach:** decision first (`direct` write-up), then
   `plan-tool` if a model change is chosen.
-- **Dependencies:** none — #100 shipped the detector.
+- **Dependencies:** none — #100 shipped the detector. No misfire on a real plan is cited; the five-round review's tradeoffs are accepted.
 - **Origin:** 2026-07-09 — five-round high-effort workflow review of the
   `plan-self-consistency-gate` step commits; rounds 2–5 each fixed one direction
   of the tension and re-surfaced the other, converging only at "no CONFIRMED
@@ -3873,7 +3879,9 @@ working straight down the tiers.
 
 **#71 — [Decision] Define the `detail --reconcile` refusal-token shape (enforce vs. record)**
 
-- **Principle:** `converge-on-correct-plan` — the T2 band (P1/P3): a refusal token the apply layer can check.
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a `detail --reconcile` apply narrows scope or softens an acceptance criterion despite the prompt's prose refusal policy.
+- **Principle:** `converge-on-correct-plan` — a refusal token the apply layer can check.
 - **What:** Decide the shape of a machine-readable *refusal* marker for
   `detail --reconcile`'s plan-side audit — the token Claude emits when it
   declines an edit because it would `blocked`/narrow scope/soften an
@@ -3892,7 +3900,7 @@ working straight down the tiers.
     reason-coded marker (`scope-narrowing` / `criterion-softening` / `blocked`)?
   - **Enforce vs. record:** does the apply layer *enforce* the refusal
     (reject/halt the edit, like a guard) or merely *record* it (annotate the
-    finding, surface it, no action)? The prose policy works correctly today,
+    finding, surface it, no action)? The prose policy works correctly today (no failure observed),
     so enforcement is the riskier, higher-cost path; recording is the cheaper
     floor.
   - **Parser seam:** where it threads through `review.py` (alongside `Redirect`
@@ -3959,6 +3967,8 @@ working straight down the tiers.
 
 **#210 — Decide whether the per-step purity Claude pass earns its cost: it has never reported a finding, and 87.5% of its calls never return**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** an independently justified audit has invoked `--purity` and recorded an outcome (zero findings so far); decide keep, opt-in, or cut from those outcomes. Passive observation is settled and user-confirmed; no dedicated measurement.
 - **What:** the `completeness-audit` phase-1 per-step MIXED-STEP purity pass
   (`purity_scan` phase) spends one Claude call per step per audit. Decide,
   on measurement, whether to keep it, invert its default to off, or cut it
@@ -4008,7 +4018,7 @@ working straight down the tiers.
 - **Origin:** 2026-07-31, after a completeness tail timed out under
   `--purity` and the yield/cost census above was run to answer whether the
   check was worth it.
-- **Status:** passive observation only, settled 2026-08-20 (user-confirmed).
+- **Status:** parked; passive observation only, settled 2026-08-20 (user-confirmed).
 
 **#212 — `apply_finding` rewrites a step but can leave its `intent` stale: one instruction in `apply-finding.md`**
 
@@ -4211,7 +4221,7 @@ working straight down the tiers.
   widen a Roadmap source if the router treats its entries as requirements.
   Automatic mutation would make conversational observations look like durable
   decisions. The protocol must preserve a strict prompt/review boundary.
-- **Dependencies:** evidence-gated on the Integration AI-DLC-to-plan-tool register
+- **Dependencies:** gated on the Integration AI-DLC-to-plan-tool register
   and its first controlled Roadmap/seed reconciliation. That register is an
   external consumer example, not a required path or format dependency.
 - **Outcome:** a user can opt into one handoff register and receive consistent,
@@ -4244,14 +4254,15 @@ working straight down the tiers.
   finds no relevant accepted artifact, record `no roadmap impact` rather than
   inventing a plan row.
 - **Route:** `plan`.
-- **Readiness:** `evidence-gated`.
+- **Readiness:** `parked`.
+- **Unpark when:** Integration's first controlled register reconciliation shows a need the router could not meet by hand.
 - **Tier:** `architect` — defines an installed-skill contract at the boundary
   between external handoff context and plan-tool's authoritative artifacts.
 - **Origin:** 2026-09-17, Integration AI-DLC-to-plan-tool handoff work. The first
   register tracks cross-engine evidence without becoming Roadmap or seed input;
   the reusable capability is its optional, human-controlled reconciliation
   protocol rather than Integration-specific connector behavior.
-- **Status:** not started.
+- **Status:** parked 2026-11-14.
 
 ### D. Process / hygiene
 
@@ -4413,6 +4424,8 @@ working straight down the tiers.
 
 **#355 — "second-KeyboardInterrupt-safe" is a per-call-site convention in the roadmap candidate flows, not a property `RunLogWriter` enforces**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a lost or corrupt run log is attributed to a double Ctrl-C.
 - **What:** `RunLogWriter`'s `phase_end`, `run_end`, `parse_failure`, and
   `run_interrupted` methods do not guarantee that a second
   `KeyboardInterrupt` is best-effort only. The eight terminal-record calls
@@ -4470,7 +4483,7 @@ working straight down the tiers.
 - **Dependencies:** account for the related `claude_errors.py` entry in
   `BUG_BACKLOG.md`, the known gap above, and any further unguarded
   direct caller discovered by the inventory; none block the design decision.
-- **Approach:** `plan-tool` — this shared-class contract change needs its own
+- **Approach (when unparked):** `plan-tool` — this shared-class contract change needs its own
   scoped plan and bare/detail audit gates, rather than a direct edit.
 - **Origin:** 2026-09-04, roadmap candidate-context review pass 5; confirmed
   as the appropriate deferred structural concern by pass 6 on 2026-09-07
@@ -4480,10 +4493,12 @@ working straight down the tiers.
   `plan_tool/roadmap_candidate_review.py:728,885`, same caveat; a third
   site in the since-deleted `roadmap_revision_run.py`), per explicit user direction not
   to patch a fifth site inline.
-- **Status:** not started.
+- **Status:** parked 2026-11-14; the live gap (pre-`try` `phase_start`) affects a best-effort diagnostics write, not results.
 
 **#349 — Consider migrating the roadmap stage loop's hand-rolled status channel onto `progress.py`'s shared reporter**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** roadmap operators report silent long stages (for example, a missing heartbeat).
 - **What:** the stage-lifecycle status machinery this diff built
   (`_emit_roadmap_status`, `_emit_stage_retry_status`,
   `_StageStopReporter`/`_stage_run_guard`, `_bounded_status_text`) is a
@@ -4517,11 +4532,11 @@ working straight down the tiers.
 - **Effort:** large — a genuine cross-cutting migration, not a local
   refactor.
 - **Dependencies:** none (the former #342 is folded in).
-- **Approach:** decision first.
+- **Approach (when unparked):** decision first.
 - **Origin:** 2026-09-02, round-14 `/code-review` pass (full
   `77e1aeb7..HEAD` to-be-pushed range) on
   `2-roadmap-stage-lifecycle-output.md`'s landed diff.
-- **Status:** not started.
+- **Status:** parked 2026-11-14; no observed operator problem. This entry stays the single umbrella for the roadmap status-line cluster.
 
 **#326 — Reconsider where the sampler checkpoint lives (bolted onto `SavedReview`/`save_review`)**
 
@@ -4760,6 +4775,8 @@ working straight down the tiers.
 
 **#278 — `materialize_plan_seed` and `materialize_and_diff_one_plan` duplicate their "acquire-or-reuse a writer guard" branch**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** the next change touches either function's writer-guard logic; fold the extraction into that change.
 - **What:** Both functions in `plan_tool/roadmap.py` repeat an identical
   "acquire a fresh writer guard if none was supplied, else validate and
   reuse the caller's" branch before delegating to their own private twin
@@ -4769,7 +4786,7 @@ working straight down the tiers.
 - **Approach:** `direct`, but not fully mechanical — extraction needs
   `_materialize_plan_seed` to gain a `writer_token` parameter to forward,
   which it does not currently have.
-- **Status:** not started — backlog entry only.
+- **Status:** parked 2026-11-14; no observed drift between the two functions.
 - **Origin:** 2026-08-14, `/code-review` pass on the local-revision-observability
   merge's follow-up direct fixes.
 
@@ -5016,6 +5033,8 @@ working straight down the tiers.
 
 **#81 — Extract the byte-identical sub-blocks shared by the 4 convergence loops (NOT a unified driver)**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** the next fix has to touch the same sub-block in all four convergence loops; extract that block then.
 - **Principle:** `none` — extraction of sub-blocks shared by the convergence loops.
 - **What:** The `gates → apply_finding → re-audit` convergence loop is
   implemented four times (`create.py`, `detail.py`,
@@ -5048,7 +5067,7 @@ working straight down the tiers.
   autouse invoker gate in `tests/conftest.py` catches any accidental
   real-Claude spawn from the extracted apply-wrap. Keep the extracted
   helpers as leaves (don't add first-party imports to `convergence.py`).
-- **Approach:** plan-tool. Multi-module refactor; paper-trail worthy.
+- **Approach (when unparked):** plan-tool. Multi-module refactor; paper-trail worthy.
   **Bounded by Lesson 12 — stop at sub-block extraction; do not unify the
   loop driver.** If a sub-block can't be extracted without threading
   caller-specific state through it, that block IS part of the divergent
@@ -5147,6 +5166,8 @@ working straight down the tiers.
 
 **#177 — Decide how `create`'s slug proposal gets logged (it runs before the log exists)**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** the BUG_BACKLOG fix that makes the unsinked-call warning name its real caller lands; then default to option (c), a RUNBOOK note, unless the unlogged cost matters.
 - **What:** `create.py:suggest_slug` makes a Claude call that no run log can
   currently record. `cli/authoring.py` must resolve the slug **before**
   `RunLogWriter.start` because the log's path is keyed by the resolved slug
@@ -5161,7 +5182,7 @@ working straight down the tiers.
   `suggest_slug` is not the only unlogged call in `create`. Which call it is
   stays unproven until the warning can name its caller (BUG_BACKLOG, "The
   unsinked-call warning names the rate-limit retry loop instead of the call that
-  ran"); settle that before choosing among (a)–(c).
+  ran"); settle that before choosing among (a)–(c); that fix is the unpark condition.
 - **Why it matters:** every `create` makes this call, so it is a small but
   permanent hole in cost accounting — and (c) is a legitimate outcome, which
   is what makes this a decision entry rather than a fix.
@@ -5186,7 +5207,7 @@ working straight down the tiers.
   (c) has no code risk.
 - **Dependencies:** none.
 - **Effort:** small (c) to medium (a).
-- **Approach:** `decision first`, then `direct` — the implementation is small
+- **Approach (when unparked):** `decision first`, then `direct` — the implementation is small
   under every option; picking the option is the work.
 - **Quality:** `audit-coverage` — closes or documents a known hole in
   per-command cost accounting.
@@ -5330,6 +5351,8 @@ working straight down the tiers.
 
 **#185 — `scope-out --into-seed <path>`: carve into an existing seed instead of always minting a standalone**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a second hand-merge of a carved seed into an existing seed is needed (the first target seed has since been withdrawn).
 - **What:** `scope-out` always writes a new standalone seed, even when the
   carved scope already has a named owner. Observed 2026-07-29: the plan body of
   `jira-grade-01-detail-instrument` explicitly named
@@ -5366,7 +5389,7 @@ working straight down the tiers.
 - **Dependencies:** none.
 - **Effort:** small/medium — the rendering exists; the work is the append
   path and its ordering guarantee.
-- **Approach:** direct — a bounded option on an existing deterministic writer.
+- **Approach (when unparked):** direct — a bounded option on an existing deterministic writer.
 - **Quality:** `advice-quality` — the tool told the operator the scope's owner
   and then ignored it.
 - **Origin:** 2026-07-29, scope-out exercise (jira-grade-01 falsification
@@ -5641,6 +5664,8 @@ working straight down the tiers.
 
 **#294 — Model deployment units before treating a runtime/store pair as a roadmap contradiction**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a concrete roadmap needs the tool to reject an incompatible runtime/store pair.
 - **What:** introduce a per-deployable-unit representation only if a real
   roadmap needs the tool to reject an incompatible runtime/store pair. Bind a
   unit's execution model to the stores it owns or uses, then decide whether a
@@ -5658,14 +5683,15 @@ working straight down the tiers.
   unit.
 - **Dependencies:** the shipped hosting and store facts, because the future
   work consumes them.
-- **Priority:** high when a concrete roadmap needs the judgment; otherwise it
-  remains a deferred design, not a blocker for recording those facts.
+- **Priority:** unrated while parked; it is a deferred design, not a blocker for recording the hosting and store facts.
 - **Approach:** plan-tool — a new persisted relation and cross-artifact gate
   require staged design and migration decisions.
-- **Status:** not started.
+- **Status:** parked 2026-11-14.
 
 **#301 — Version saved conceptual-audit coverage records before their next additive field**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** the next additive `audit_coverage` field is proposed; version the record first.
 - **What:** Give persisted `audit_coverage` records an explicit schema version
   and a versioned reader, replacing the current exact-key-set recognition of
   legacy and current shapes.
@@ -5700,8 +5726,7 @@ working straight down the tiers.
   saved audit evidence as the format evolves.
 - **Origin:** 2026-08-20, `plan-quota-recovery` whole-feature review round 5,
   finding 3.
-- **Status:** deferred 2026-08-20; no live bug, retained for the next
-  intentional coverage-format change.
+- **Status:** parked (deferred 2026-08-20); no live bug.
 
 **#302 — Pin `on_nonsuccess` notification with a table-driven test over every arm of the rate-limit loop**
 
@@ -5746,6 +5771,8 @@ working straight down the tiers.
 
 **#303 — Compare saved audit history only with provenance-backed admission**
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** a convergence decision needs cross-invocation audit comparison; none has asked since #247.
 - **What:** add a separately scoped cross-invocation audit comparison only
   after saved evidence can prove the history is eligible for comparison.
 - **Why deferred:** #247 makes artifacts visible, but saved metadata alone
@@ -5774,7 +5801,7 @@ working straight down the tiers.
   uncertain history as an operator decision.
 - **Origin:** 2026-08-21 — user-directed reorientation of #247 after the
   expanded trajectory design did not yet have an adequate evidence boundary.
-- **Status:** deferred 2026-08-21; #247's delivered ledger is a prerequisite
+- **Status:** parked (deferred 2026-08-21); #247's delivered ledger is a prerequisite
   for visibility, not proof that comparison is safe.
 
 **#259 — Render a `depends_on` edge's consumption note in the detail-authoring prompt, the bridging-edge grounding block and the Jira story body**
@@ -5956,6 +5983,8 @@ working straight down the tiers.
 
 **#409 — `build_roadmap_diff`'s `predecessor_bytes`/`candidate_artifacts_bytes` are positional, unlike its own keyed `*_artifacts` parameters**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** `build_roadmap_diff`'s signature next changes; make the bytes keyed by construction then.
 - **What:** `roadmap_diff.py:build_roadmap_diff` takes
   `predecessor_artifacts`/`candidate_artifacts` as `Mapping[str,
   RoadmapArtifact]` keyed by artifact key, but `predecessor_bytes`/
@@ -5994,14 +6023,16 @@ working straight down the tiers.
   assertion (there's nothing to assert against — the bytes carry no label of
   their own today).
 - **Dependencies:** none.
-- **Approach:** `direct`, once verified against `roadmap_candidate.py`'s full
+- **Approach (when unparked):** `direct`, once verified against `roadmap_candidate.py`'s full
   suite, not just this feature's own tests.
 - **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
   plan's shipped implementation (`e77ebfa5..HEAD`).
-- **Status:** not started; low priority (latent, not reachable today).
+- **Status:** parked 2026-11-14; latent, not reachable today.
 
 **#417 — A pure reorder of an ordering row's `depends_on`/`assumption_targets` produces a "changed" card with an empty field summary**
 
+- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Unpark when:** an operator is actually misled by the empty-summary card on a same-membership reorder.
 - **What:** `OrderingEntry`'s only non-id fields (`depends_on`,
   `assumption_targets`) are both declared relation fields
   (`_RELATION_FIELD_NAMES[OrderingEntry]`), so `_changed_projected_fields`
@@ -6029,13 +6060,12 @@ working straight down the tiers.
   untested edge case (`test_ordering_entry_is_a_separate_comparison_card`
   only exercises a membership addition, not a same-membership reorder).
 - **Dependencies:** none.
-- **Approach:** `direct`, once a fix shape is chosen — needs a design
+- **Approach (when unparked):** `direct`, once a fix shape is chosen — needs a design
   decision (widen relation matching vs. special-case ordering), not just an
   implementation.
 - **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
   plan's shipped implementation (`e77ebfa5..HEAD`).
-- **Status:** not started; low priority (narrow — same-membership reorder
-  with no other field change).
+- **Status:** parked 2026-11-14; narrow (same-membership reorder with no other field change), and before/after still shows the change.
 
 ### E. Cosmetic / churn
 
