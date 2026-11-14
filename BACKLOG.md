@@ -630,16 +630,22 @@ working straight down the tiers.
     scored. Extra plans are listed separately for the owner to judge as useful
     or noise.
   - **Arms**, each from its own throwaway plan-tool branch carrying only that
-    arm's prompt edit, run twice unless noted:
-    - *baseline-4* — current prompts, `--from-stage 4` on the first version's
-      stage 1–3 artifacts, measuring run-to-run spread;
-    - *B* — a prompt-only work inventory at stage 4: list each flow hop, store,
-      constraint discharge, producer/consumer handoff and delivery concern
-      (build, deploy, environment), then assign every item to exactly one plan;
+    arm's prompt edit, run twice unless noted. Every arm names the commit it
+    runs from in the evidence section; only *R* and *R+D* run on the shipped
+    #533 prompts, so *baseline-1* against *R* isolates #533 and *baseline-4*
+    against *B* isolates the inventory:
+    - *baseline-4* — the pre-#533 prompts (a throwaway branch at `ae498e16a`,
+      the last `main` commit without #533), `--from-stage 4` on the first
+      version's stage 1–3 artifacts, measuring run-to-run spread;
+    - *B* — on the same `ae498e16a` base, a prompt-only work inventory at
+      stage 4: list each flow hop, store, constraint discharge,
+      producer/consumer handoff and delivery concern (build, deploy,
+      environment), then assign every item to exactly one plan;
       `--from-stage 4`. No new gate code;
     - *baseline-1* — the prompts as they were before #533 shipped (a throwaway
-      branch at `ae498e16a`, the last `main` commit without it), from the brief (all four stages), once; the
-      first stored version is the second sample;
+      branch at `ae498e16a`, the last `main` commit without it), from the
+      brief (all four stages), once; the first stored version is the second
+      sample;
     - *R* — the shipped #533 prompts (requirements stay; smallest proof governs
       how; the stage 4 small-plan preference), from the brief;
     - *R+D* — *R* plus one `roadmap-components.md` line requiring an owner for
