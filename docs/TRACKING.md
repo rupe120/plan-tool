@@ -98,14 +98,21 @@ Three labels, each with a short fixed list of values. They apply to both
 
 **Where the labels go.** In `BACKLOG.md`, the three labels and the Principle
 sit on one `- **Labels:** Route <route> · Readiness <readiness> · Tier <tier> ·
-Principle <principle>` line directly under the entry heading; an `Unpark when:`
-or `Escalate to plan if:` line is its own bullet. In `BUG_BACKLOG.md`, they stay
-the trailing `- **Route:** … · **Readiness:** … · **Tier:** …` line, because
-its entries have no Principle and open with Files, Symptom, and Fix.
+Principle <principle>` bullet directly under the entry heading, with each value
+in backticks and each label on its own physical line when the bullet is long, so
+`grep` finds every value. A label holds one value: a part of an entry with a
+different readiness or tier gets its own bullet, and an `Unpark when:` or
+`Escalate to plan if:` line is its own bullet too. An entry whose
+Principle is not yet judged carries the value `untriaged`, never an omitted
+Principle. In `BUG_BACKLOG.md`, the labels stay the trailing
+`- **Route:** … · **Readiness:** … · **Tier:** …` line, because its entries have
+no Principle and open with Files, Symptom, and Fix.
 
 **Older entries carry an `Approach:` tag instead.** Read `Approach: direct` /
 `plan-tool` as the Route, and read an `Approach:` that opens with "decision
-first" or "investigation" as Readiness `decision-needed`. An entry without a
+first" or "investigation" as Readiness `decision-needed`. When an entry carries both a `Labels:` line and an `Approach:` field, the
+labels decide route and readiness, and `Approach:` describes the method only.
+An entry without a
 Tier is not triaged into the tiers yet. Fill it in when you next touch the
 entry; a missing Tier says nothing about the entry's worth.
 
