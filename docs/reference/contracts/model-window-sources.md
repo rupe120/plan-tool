@@ -14,6 +14,8 @@ every lookup return "not known" and the advisory fall back to `(default)`; this 
 The usable Codex window is `context_window` × `effective_context_window_percent` / 100; the catalog also
 lists `max_context_window` (not read) and `supports_experimental_context`.
 
+Deliberately not read: `config.toml`'s `model_context_window` and `model_auto_compact_token_limit` (only its top-level `model` is read). A relative `CODEX_HOME` is resolved against plan-tool's working directory, which can differ from the one Codex ran in, so the catalog it finds may not be Codex's.
+
 One trimmed real sample of each shape is kept as a test fixture so a shape change is a failing test:
 `_REAL_CODEX_ENTRY` in `tests/test_context_window.py` and `_REAL_CLAUDE_MODEL_USAGE` in `tests/test_backend.py`. Neither CLI documents these keys as a
 stable interface.

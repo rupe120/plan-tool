@@ -4,7 +4,7 @@
 
 What stops a bad step before it lands, how each command reconciles a plan
 with the code — in the right direction — and what the completeness audit
-checks. For which gates fire on every run, see [`RUN_FLOW.md`](how-to/pipeline/run.md).
+checks. For which gates fire on every run, see [`docs/how-to/pipeline/run.md`](how-to/pipeline/run.md).
 
 ## Choose a check or reconcile route
 

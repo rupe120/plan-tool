@@ -113,9 +113,11 @@ Do not push automatically; push only when the user explicitly requests it.
     a superseded banner; its seed moved to `plan-seeds/archive/`. The
     evaluator-adapter and governance proposals tied to this evaluator were
     retired as moot; their former IDs do not identify current backlog work.
-    Live #376 and #369 carry the separate
-    `completeness-apply`/`apply_finding` authority migration, decoupled from
-    the evaluator's evidence gate.
+    #376 shipped in 1.2.0 (2026-11-05): `completeness-apply`, `direct-run`,
+    and `direct-jira` were removed and conceptual findings are applied by
+    judged edits in the driving session. #369 stays live for the remaining
+    `apply_finding` authority inventory, decoupled from the evaluator's
+    evidence gate.
 11. **#490 is `ready`.** Record an operator's decision on an audit finding
     (`declined`, `accepted-risk`, `reopened`, each with a reason) and show it
     to the next audit, so a settled finding is not re-reported as new while

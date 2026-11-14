@@ -134,6 +134,11 @@ every failing ticket; whether to rewrite one that already shipped (`Done`) is
 the user's call, not this skill's — the fix has no functional effect on closed
 work, only on the record.
 
+A ticket that predates a format rule is not rewritten once Done (decided
+2026-09-28 for `IPPT-10`). When the `Route:` line was added, only open
+`plan`-route tickets were retrofitted; open `direct`-route tickets without it
+are an accepted gap, not a finding.
+
 ## Description shape
 
 **Write for a reader who has not read the plan.** A ticket that reads smoothly
@@ -161,8 +166,8 @@ other tier has "Done when" instead (and may add "Precedent").
 
 Source: BACKLOG #N        (or: Source: BUG_BACKLOG "<entry heading, verbatim>")
 
-Route: plan — start with `plan-tool create --from-existing plan-seeds/<name>.md`, then `plan-tool detail` per step; see docs/TRACKING.md § "Jira board" for review and merge.
-Seed: `plan-seeds/<name>.md` — authored here; `create` archives it under `plan-seeds/archive/` as `<name>.replaced[.N].md`
+Route: plan — start with `plan-tool create --from-existing docs/implementation-plans/plan-seeds/<name>.md`, then follow the audit gates in integrations/shared/DIRECTIVES.md (bare-plan audit, `detail`, detail-grounded audit, `run`); see docs/TRACKING.md § "Jira board" for review and merge.
+Seed: `docs/implementation-plans/plan-seeds/<name>.md` — authored here; `create` archives it under `docs/implementation-plans/plan-seeds/archive/` as `<name>.replaced[.N].md`
 Plan: `docs/implementation-plans/<name>.md`      (added after `create`; omit before it)
 
 (or, `direct`-route, no `Seed:` line:)
@@ -253,6 +258,10 @@ the author and the reviewer.
 - `twg` reports errors as JSON on stdout, with nothing on stderr.
 - `twg jira workitem get` returns the description as Atlassian document JSON;
   the lint converts it back to markdown.
+- When replacing a `BUG_BACKLOG.md` entry with its stub, end the entry at the
+  next heading of any level, not the next `###`: the last severity entry is
+  followed by `## ROADMAP`, and an `###`-bounded edit deletes into it. Check
+  that the diff removes only the entry body.
 - Nothing here changes a ticket's status. Transitions and board columns are
   a separate approved action; the columns are Jira UI only.
 

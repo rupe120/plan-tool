@@ -13,6 +13,16 @@ These records support decisions; they do not replace the operating contracts.
 - [Integration context budget, 2026-10-09](integration-context-budget-2026-10-09/) — the historical refusal and measurements with a separately hashed sanitized payload example behind the shipped 384 KiB candidate context ceiling (PR #58) and the model-aware prompt-budget warning (PR #60 and its review follow-up) and `BACKLOG.md` #471; [sizing](integration-context-budget-2026-10-09/sizing.md) records how the ceiling was chosen
 - [CLAUDE.md measured incidents](claude-md-measured-incidents.md) — the multi-paragraph dated measurements behind `CLAUDE.md`'s rules, moved verbatim so that file keeps each rule and a short verdict
 
+## Saved reports
+
+Every saved report (completeness, detail-reconcile, run-reconcile) is committed,
+including intermediate rounds, because calibration questions (rounds to
+convergence, recurring finding classes, the effect of a directive change) need
+the full series. Raw reports are mined periodically into a distilled evidence
+page, which is what gets cited; the raw corpus is its reproducibility backing.
+If repository size becomes a cost, compact or archive already-distilled
+reports; recording new ones does not stop.
+
 ## Generic integration references
 
 **Naming.** "Integration" in this repository names an external application that consumes `plan-tool`. Paths and commits cited for it, such as `<integration-consumer-root>`, belong to that application's own repository and are not in this one. Entries that mention it are kept as dated provenance.

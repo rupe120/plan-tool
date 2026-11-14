@@ -125,7 +125,8 @@ over a tier doc whenever your session is already committed to its theme:
   through the bounded consumers that rely on them. Its items (#328, #242,
   #208, #366, the structured-upstream group #383–#384, and #385) are untiered —
   this arc is their sole router. #384's implementation and review tail are
-  complete; #383 remains the active structured-upstream route. The
+  complete; #383 is held until a named stage lacks essential grounded facts
+  (see its Status). The
   roadmap-to-plan subroute starts at #492; #493 and #494 remain gated follow-ons,
   and existing #462 retains its own advisory-audit scope.
 - [`backlog-arc-installed-skill.md`](docs/implementation-plans/backlog-arcs/backlog-arc-installed-skill.md)
@@ -326,9 +327,9 @@ lens exists to produce; keep it in sync as entries land or are added):
   structural-remedy gates block interrupted-`current`, not
   authored-`current`), **#314** (evidence decides whether advisory
   risk-profile context needs a declaration-authority or escalation guardrail),
-  **#217** (a stage that dies on an
-  unusable reply keeps no copy of it — the per-attempt event shipped, the byte
-  sink did not), **#472** (a Claude window before the
+  **#217** (consolidated provenance only; the terminal failure receipt
+  contract, including the response-bytes sidecar, is owned by the BUG_BACKLOG
+  entry it names), **#472** (a Claude window before the
   first call, so the first send and the reconcile refusal gate stop using the
   200K default).
 - **heuristic-tuning:** **#216** (the corpus-replay benchmark whose first
@@ -857,16 +858,16 @@ working straight down the tiers.
   purpose — a constraint register, a decision log, a prioritized backlog — and
   flattening it into one document is what forces a composer to choose between
   withholding grounding stage 2 needs and pasting a list stage 4 will return
-  one row per. Give `source.json` an optional `supplements` map keyed by stage
-  key, render it as `${supplements}`, and require each entry to declare a
+  one row per. Give the roadmap's recorded source an optional `supplements`
+  map keyed by stage key, render it as `${supplements}`, and require each entry to declare a
   **role** — `grounding` (facts a stage must use) versus `judgment` (material
   the stage is measured against afterward and must not enumerate from).
-- **Effort:** medium. `source.json` is read by
-  `plan_tool/roadmap_source.py:read_recorded_brief_source` and written by
-  `roadmap.py:_write_brief_source`; the prompt seam is one `variables` dict;
-  the four stage templates need the new placeholder. The volume is in the
-  identity contract: `roadmap_source_identity.py`'s digest must cover the
-  supplements or a receipt's currentness claim becomes false.
+- **Effort:** medium. The prompt seam is one `variables` dict; the four
+  stage templates need the new placeholder. The volume is in the identity
+  contract: `roadmap_source_identity.py`'s digest must cover the supplements
+  and each supplement's role declaration, or a receipt's currentness claim
+  becomes false. Where a supplement attaches to the stored brief of an
+  accepted version is undecided (see Precondition).
 - **Risks / fallout:** a supplement is another enumeration channel, which is
   the exact hazard the brief-shape lesson names — a `judgment`-role entry
   handed to stage 4 as grounding reproduces the nine-row outcome through a new
@@ -877,6 +878,22 @@ working straight down the tiers.
 - **Dependencies:** none. This remains separate from the shipped #384
   carried-decision input and must not reuse it as a general supplementary-source
   mechanism.
+- **Status:** held (2026-09-16 comparison,
+  [`roadmap-aidlc-intake-comparison-20260916.md`](docs/evidence/roadmap-aidlc-intake-comparison-20260916.md)).
+  Selected only when a named stage lacks essential grounded facts that cannot
+  safely fit in the approved one-file brief, with the stage, the facts, and
+  the failed safe representation recorded; more material in a composed input
+  is not evidence.
+- **Precondition:** `source.json`, `read_recorded_brief_source`, and
+  `_write_brief_source` were removed 2026-11-05 by
+  `roadmap-versioned-from-birth`; a stage run now refuses once an accepted head
+  exists. The carrier this entry describes must be re-grounded against the
+  immutable version store (the stored brief bytes of an accepted version)
+  before any plan is authored, and the owner decides how a supplement attaches
+  to that stored brief.
+- **Acceptance points (beyond the role enforcement above):** the identity
+  digest covers each supplement and its role declaration; a roadmap with only
+  a hand-written brief keeps current behavior.
 - **Review aids that become worth having once #383 ships (not in scope here):**
   each is read-only and small, and none changes what a stage receives. (1) A
   dry-run view of each stage's rendered prompt, so a pre-freeze review reads the
@@ -975,7 +992,7 @@ working straight down the tiers.
 
 - **What:** `integrations/shared/DIRECTIVES.md` § "Which model to run a
   subcommand with" names which *Codex* model to run each subcommand with
-  (GPT-6 Sol for `create`/`roadmap`, Terra elsewhere) but says nothing
+  (Sol, `gpt-6.1-sol`, for all Codex work) but says nothing
   about which *Claude* model to prefer for any subcommand, `roadmap`
   included. A driving session has to fall back to this user's own general
   standing rule (`~/.claude/CLAUDE.md` § "Spend the stronger model where a
@@ -1014,8 +1031,7 @@ working straight down the tiers.
   model ids into three skill files.
 - **Why:** a real Integration roadmap revision was launched as plain `plan-tool
   roadmap ...`, so it silently used the local Claude default. The shared
-  directives already require GPT-5.6 Sol for Codex `create` and `roadmap` and
-  Terra elsewhere, but the consuming Integration session had no installed plan-tool
+  directives already name `gpt-6.1-sol` for every Codex phase, but the consuming Integration session had no installed plan-tool
   skill exposed and therefore never loaded that guidance. A rule that exists
   only in the plan-tool development checkout does not govern an assistant in a
   consuming repository.
@@ -1048,8 +1064,7 @@ working straight down the tiers.
   - **Verification:** install each integration skill into a temporary project;
     verify its router reaches the shared model section; exercise command
     construction for Codex `create`, `roadmap`, `completeness-audit`, and
-    `run`; confirm the first two explicitly select Sol and the latter two
-    explicitly select Terra; verify an explicit user model choice still wins;
+    `run`; confirm all four explicitly select `gpt-6.1-sol`; verify an explicit user model choice still wins;
     and confirm skill absence produces no claim that the policy was applied.
   - **Stop / defer:** if the installed router cannot reliably know the backend
     selected by the driving session, limit the change to requiring an explicit
@@ -1279,6 +1294,12 @@ working straight down the tiers.
   `roadmap-brief-source-drift`, Finding 36; this dated closeout replaces the
   then-pending successor status.
 - **Status:** closed.
+- **Superseded (2026-11-05):** `roadmap-versioned-from-birth` removed
+  `--confirm-brief-rebind`, the recorded-baseline rebind lifecycle, and the
+  non-stage routes this record describes. A stage run now refuses once an
+  accepted head exists; a changed product definition goes through feedback and
+  candidate review or a successor lineage. This record is history, not current
+  behavior.
 
 **#519 — Decide the disposition of the unreachable granularity-split review-walk opt-in**
 
@@ -7544,9 +7565,9 @@ separate)**
   or another non-`KeyboardInterrupt` `BaseException` triggers it too, so the
   eventual fix should cover `BaseException` in general, not just the one
   named type.
-- **Still open — "stopped" after a successful write:** three windows
-  (`_write_brief_source`'s block, the post-`"wrote"` window, and the
-  post-`"re-gated without write"` window) can report "stopped" after the
+- **Still open — "stopped" after a successful write:** two windows (the
+  post-`"wrote"` window and the post-`"re-gated without write"` window; the
+  brief-source window was removed 2026-11-05 with `_write_brief_source`) can report "stopped" after the
   stage's real outcome is already known and reported — the guard's own
   docstring now says "stopped" means the *run* didn't confirm, not that
   nothing happened, but a status vocabulary that can say "published, but
@@ -9926,6 +9947,16 @@ longer describes current work. It is retained only as dated carve-out context.
      divergence (2026-09-21, round 5):** `_json_value` sorts `Mapping` keys
      in its output; `_wire_value`'s sites don't. Same rule applies — decide
      and test which behavior the consolidation keeps.
+  4. **Do-not-merge look-alikes** (not part of this consolidation; each
+     differs in input or contract, not only in naming):
+     `roadmap_compare.py:raw_evidence_identity` hashes raw patch text
+     byte-exact, not canonical JSON; `_ordered_raw_evidence` and
+     `_patch_by_artifact_key` take different input, and the former adds an
+     inventory check; `roadmap_compare_run.py:_build_snapshot` and
+     `RoadmapVersionContent.__post_init__` differ because working snapshots
+     carry no `brief_bytes`; `build_roadmap_diff`'s digests and
+     `roadmap_versions.py:sha256_digests` differ because the former is one
+     value, not a sequence.
 - **Effort:** small–medium — mechanical once identity is established; the
   4-site `_wire_value` duplication alone touches 4 files.
 - **Risks / fallout:** low if the checklist is followed; the risk is
@@ -10341,7 +10372,7 @@ longer describes current work. It is retained only as dated carve-out context.
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** not started; low priority.
 
-**#421 — `--compare`'s companion-mode rejection list is only tested for 2 of ~9 sibling modes**
+**#421 — `--compare`'s companion-mode rejection list is only tested for 1 of ~8 sibling modes**
 
 - **What:** `_roadmap_comparison_has_conflict` hand-enumerates roughly 9
   sibling mode-presence predicates (`_has_receipt_creation`,
@@ -10349,8 +10380,8 @@ longer describes current work. It is retained only as dated carve-out context.
   `_has_candidate_lifecycle_action`, `_broad_mode_companions_present`,
   etc.) that `--compare` must reject as companions. The guarantee is
   correct today (verified by reading the function), but
-  `tests/cli/test_roadmap_cmd.py` only exercises 2 of the ~9 groups
-  (`apply`, `confirm_brief_rebind`) against `--compare` — a future new
+  `tests/cli/test_roadmap_cmd.py` only exercises 1 of the ~8 groups
+  (`apply` only; the `confirm_brief_rebind` group was removed 2026-11-05) against `--compare` — a future new
   roadmap mode added without a matching entry in this enumeration, or a
   reordering of `cmd_roadmap`'s dispatch relative to the `has_comparison`
   check, would have no test catching the regression.
@@ -11431,8 +11462,9 @@ longer describes current work. It is retained only as dated carve-out context.
   approval seals that candidate and promotion alone advances the accepted head.
   Edit requires a fresh decision, and failed, rejected, interrupted, and stale
   proposals preserve canonical artifacts and seeds.
-- **Boundary:** structural escalation, decision settlement, impact analysis,
-  and exact-pair structural rewrite remain separate selector-shaped routes.
+- **Boundary:** decision settlement remains a separate selector-shaped route
+  (structural escalation, impact analysis, and exact-pair structural rewrite
+  were removed 2026-11-05 by `roadmap-versioned-from-birth`).
   Workflow authoring, automatic approval, grouping, and multi-user approval
   remain out of scope.
 - **Provenance:** opened 2026-09-21 from Integration focused-feedback retries; closed
@@ -12536,40 +12568,31 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` reconcile-code sweep 2, 2026-10-06.
 
-**#461 — Record the technology stack as a roadmap layer and call it out at publish and candidate review — PLAN-AUTHORED (`roadmap-stack-layer`)**
+**Closed (2026-10-09) — #461: Record the technology stack as a roadmap layer and call it out at publish and candidate review**
 
-- **What:** Stack facts have no single home and no "open" state, and the first stage run publishes without review, so stack choices and open stack questions are accepted unseen; a `stack` collection in `02-constraints.md` records each concern as chosen or open and is called out at first publish, in `INDEX.md`, and in every candidate review.
-- **Effort:** medium-large; crosses the constraints schema, gates, stage prompt, feedback/candidate operations, first-run output, `INDEX.md`, candidate review, and the format docs.
-- **Risks / fallout:** existing accepted versions lack the collection and must read as "stack not recorded", with stack totality binding only first runs and lineages that already carry it; stack rows are authoritative over hosting and store `product` fields, with no agreement gate or comparison rule (candidate review lists them side by side, decided 2026-10-08).
-- **Dependencies:** the shipped `## Stack` seed renderer (`_render_stack_section` in `plan_tool/roadmap.py`), which gains the stack collection.
-- **Outcome:** A roadmap records its technology stack as a distinct concern layer — each concern either chosen or explicitly open — called out to the reviewer at first publish and in every candidate review, so a stack choice or open stack question reaching acceptance by a first run or a candidate is never unseen (hand enrollment is deliberately excluded).
-- **In scope:** the `stack` collection's schema, parsing, totality gate, and feedback/candidate operations; constraints-stage authoring of chosen and open concerns (deployment platform, store engine, language/runtime); first-publish and `INDEX.md` callout; candidate-review stack summary and delta; inclusion in the `## Stack` seed rendering; format documentation.
-- **Out of scope / Non-goals:** a fifth roadmap artifact (deliberately not built, decided 2026-10-08); concerns beyond the three named; a closed vendor vocabulary; a narrative-evidence defect class or any approval block on stack content; judging choice quality; Integration's HTML review aid, which follows separately in Integration; regenerating existing accepted versions.
-- **Allowed behavior changes:** the constraints stage authors stack rows and records an open concern instead of inventing a choice; first-run output, `INDEX.md`, and candidate review display the stack; stack rows become feedback targets.
-- **Allowed reorganization:** none beyond the stated outcome.
-- **Verification:** a Integration-brief replay records the deployment platform as open and every required concern as chosen or open; first-run output and `INDEX.md` list open concerns separately; a candidate that opens, adds, or changes a stack row shows the delta in review; a version without the collection reads as "stack not recorded" and an unrelated candidate in that lineage is not refused for the absence; a stack row is feedback-targetable and revisable through a candidate; existing hosting gates and candidate-review evidence stay green.
-- **Stop / defer:** surface a stack concern the collection cannot express or a conflict with an accepted hosting or store choice without inventing one; route unrelated defects separately.
-- **Approach:** plan-tool.
-- **Route:** `plan` · **Readiness:** `ready` · **Tier:** `architect`. **Principle:** `write-for-the-human`.
+- **Delivered:** the `stack` collection in `02-constraints.md` records each
+  concern (deployment platform, store engine, language/runtime) as chosen or
+  open. It is called out at first publish, in `INDEX.md`, and in every
+  candidate review, and is rendered into the `## Stack` seed section. A
+  version without the collection reads as "stack not recorded".
+- **Decisions kept (2026-10-08):** no fifth roadmap artifact; stack rows are
+  authoritative over hosting and store `product` fields with no agreement gate
+  or comparison rule (candidate review lists them side by side); any bound
+  feedback item authorizes a stack-row add; the callout is display only and
+  never a defect class or an approval gate. Hand enrollment is deliberately
+  excluded from the callout.
+- **Evidence:** plan `docs/implementation-plans/archive/2-roadmap-stack-layer.md`
+  (completed; PR #46); contract in `ROADMAP_FORMAT.md` § stack collection.
 - **Arc assignment:** `backlog-arc-roadmap`.
-- **Seed:** `plan-seeds/archive/roadmap-stack-layer.replaced.md`; plan `docs/implementation-plans/archive/2-roadmap-stack-layer.md`.
-- **Origin:** Integration roadmap review, 2026-10-08: the brief's "no AWS account or specific service is fixed yet" left no trace in the accepted roadmap, whose root version (hand-enrolled 2026-09-21) never passed candidate review. Follows the shipped `## Stack` seed section; the Integration HTML review aid is brought up to date after this lands.
-
-```bash
-plan-tool create roadmap-stack-layer --iterate -y --from-existing plan-seeds/roadmap-stack-layer.md
-plan-tool completeness-audit roadmap-stack-layer --iterate -y
-plan-tool detail roadmap-stack-layer --commit -y
-plan-tool completeness-audit roadmap-stack-layer --iterate --commit -y
-plan-tool run roadmap-stack-layer --commit -y --step N
-plan-tool reconcile-code roadmap-stack-layer --all
-```
+- **Origin:** Integration roadmap review, 2026-10-08.
+- **Status:** closed.
 
 **#462 — Audit every plan derived from an accepted roadmap against its settled decisions and against each other, reported in one saved advisory report**
 
 - **What:** The per-plan completeness audit judges one plan against code at HEAD and never reads the accepted roadmap, so a plan that contradicts a settled roadmap decision or stack row, or two plans that each choose their own technology for a store the roadmap says is shared, pass unseen; a roadmap-level cross-plan audit holds the accepted roadmap version as its reference, puts it and every derived plan (optionally every draft seed) in front of one auditor, and saves the conflicts it reports.
 - **Effort:** medium; one new read-only audit surface (prompt, invoker seam, report persistence, CLI), plus derived-plan discovery from the roadmap's existing plan rows and seed state.
 - **Risks / fallout:** the property is semantic and unobservable, so the surface can grow into a checker; the not-built list below is the fence. Plan-vs-roadmap stack conflicts overlap the per-plan audit, since the shipped `## Stack` section carries the stack into the plan body, so the cross-plan audit's own value rests on what no single-plan audit can see. A shared report read as a verdict trains operators to treat silence as clearance.
-- **Dependencies:** the shipped `## Stack` section (the stack rendered into seeds and carried into plan bodies). Independent of #461's completion: a version without a `stack` collection is judged against its hosting and store rows and settled decisions.
+- **Dependencies:** the shipped `## Stack` section (the stack rendered into seeds and carried into plan bodies). Independent of #461 (shipped): a version without a `stack` collection is judged against its hosting and store rows and settled decisions.
 - **Outcome:** One command run against an accepted roadmap writes a saved report that names the accepted version id it was judged against, lists every derived plan (and draft seed, when included) it read, and records each conflict the auditor reports between a plan and a settled roadmap decision or stack row, or between two plans.
 - **In scope:** a read-only cross-plan audit command over one roadmap slug; resolving the accepted-head version; discovering derived plans from the roadmap's existing plan rows and seed state; an audit prompt carrying the accepted version's settled decisions, stores, hosting rows (and `stack` rows when present), and each derived plan's body and detail files; the saved report and its listing; the invoker seam and its `TESTING.md` neutralization row; `docs/cli/` regeneration; the how-to and `ROADMAP_FORMAT.md` cross-reference.
 - **Out of scope / Non-goals:** each of these is deliberately not built, with its reason:
@@ -13730,6 +13753,80 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; stop and report if a CLI has no headless mode or no capturable event stream rather than writing a parser from documentation alone.
 - **Dependencies:** #389 (promoted to IPPT-7), the hard-coded `install-skill --integration` list (`choices=("claude", "codex", "cursor")` in `plan_tool/cli/skill_cmd.py`). Do it first or as the first backend's step, so later backends need no edit there.
 - **Origin:** 2026-11-06, an estimate of what supporting other common CLIs would take.
+
+**#527 — The four public `demo/*` branches still show the needs-updating notice instead of current demo checkpoints**
+
+- **What:** `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` exist on both Bitbucket and GitHub (kept by owner decision, 2026-10-21) and every one points at the shared "mark preserved demo checkpoints as needing update" commit (2026-10-21). The maintained walkthroughs (`docs/demos/planning-demo.md`, `docs/how-to/roadmap-demo.md`) describe the seed, plan, detail and Jira stages, but no remote ref shows the current stage contents.
+- **Route:** direct · **Readiness:** decision-needed (which captured material each checkpoint holds, and the authorization to replace remote refs) · **Tier:** architect.
+- **Principle:** write-for-the-human.
+- **Arc assignment:** `backlog-arc-public-release`.
+- **Effort:** small to medium; mostly review and read-back, with no code change.
+- **Risks / fallout:** a remote ref replacement is hard to undo and is visible to every user; it needs exact-tip leases and private recovery bundles of both hosts' prior refs, as the sanitized-root replacement (2026-10-21) used.
+- **Outcome:** each of the four `demo/*` branches on both hosts presents deliberately chosen, current stage content, read back from both hosts after the update.
+- **In scope:** the four branch names on Bitbucket and GitHub, in these steps: (1) review the current implementation changes and the completed-plan evidence for the demo scenario; (2) choose the captured material for each checkpoint deliberately, separating captured output from authored reading samples; (3) recheck the local checkpoint refs, stage differences, private recovery bundles, and the old remote tips before proposing replacements; (4) obtain separate review and authorization for the remote update, then read both hosts back.
+- **Out of scope / Non-goals:** `main`, tags, repository visibility, and organization transfer (the release workflow in `docs/RELEASING.md` owns them); a fresh TTRPG roadmap run or browser interaction; renaming or removing a checkpoint branch; code, CLI, or skill changes; pushing any ref without the separate authorization in step 4.
+- **Allowed behavior changes:** remote `demo/*` ref contents only.
+- **Allowed reorganization:** none.
+- **Verification:** `git ls-remote` on both hosts shows the four branch names at the authorized tips, the tips match between hosts, and the private recovery bundles still verify.
+- **Stop / defer:** stop if a recovery bundle is missing or fails verification; file any defect found in the demo guides separately.
+- **Dependencies:** none; independent of #514 and #515.
+- **Approach:** direct; ref updates are a reviewed operational action, not a code change.
+- **Origin:** 2026-10-21 public-release preparation; the refresh was deferred when the checkpoints were marked as needing update.
+
+**#528 — Nothing reviews whether the stage-4 plan list in `04-roadmap.md` is a deliberate decomposition**
+
+- **What:** stage 4 maps accepted roadmap rows to plans, and every downstream artifact (draft seeds, `create`, detail) takes its boundaries from that list. Seed distillation has an explicit one-plan-or-many judgment grounded in shared implementation, but no review has compared the stage-4 guidance (`plan_tool/prompts/roadmap-plans.md`, which already requires bounded plan rows, rejects fixed plan counts, and forbids repository inspection) with it or looked at retained stage-4 outputs. An oversized or fragmented plan row is therefore noticed only after seeds or `create` expose it. No confirmed defect exists; this is an assessment.
+- **Route:** direct (an investigation that reports findings) · **Readiness:** ready · **Tier:** architect.
+- **Principle:** converge-on-correct-plan.
+- **Arc assignment:** `backlog-arc-roadmap`.
+- **Effort:** small to medium; reading, comparison, and a written report.
+- **Risks / fallout:** the property is semantic, so the assessment can grow into a checker; the fence below is the guard. Prompt-presence tests in `tests/test_roadmap.py` (`TestPlansPromptTemplate`) pin guidance wording, not model decomposition quality.
+- **Outcome:** one written report holds a comparison matrix (principle, current stage-4 provision, seed-side provision, justified altitude difference, remaining gap), the named retained stage-4 artifacts examined with exact paths and versions (unavailable evidence marked), and findings separated into demonstrated defects, hypotheses, and advisory questions; or it concludes that no material gap exists and closes without an implementation proposal.
+- **In scope:** `plan_tool/prompts/roadmap-plans.md`, `plan_tool/prompts/distill-seed.md` § "Decide: one plan, or many?", `plan_tool/prompts/roadmap-seed.md`, how `plan_tool/roadmap.py` composes the stage-4 instructions, `TestPlansPromptTemplate`, and a small explicitly named set of retained stage-4 outputs with their brief and upstream versions.
+- **Out of scope / Non-goals:** prompt, schema, or CLI changes in this item; repository grounding inside stage 4 (the seed-side file/function criterion is not copied into stage 4); new fields, automatic semantic gates, quality scores, fixed size or plan-count thresholds; changing seed cardinality or repartitioning accepted rows; new concurrency; live generation, rehearsal, or publication; a vocabulary matcher for a judged property. Materialization keeps surfacing an overly broad mapping through roadmap review and never repartitions an accepted row.
+- **Allowed behavior changes:** none.
+- **Allowed reorganization:** none.
+- **Verification:** the report names its evidence and its limits; when downstream seeds or `create` split a row, it compares the saved evidence with the accepted mapping to tell an original mapping gap from new code knowledge, a source change, or a materializer omission.
+- **Stop / defer:** if representative evidence is unavailable, report that limit before proposing new generation work. If existing rules already cover an observed issue, name the remedy as clearer review practice, a prompt-delivery defect, or an evidenced behavior failure; do not add another restatement because an output can be bad. A remedy that changes structure needs its own entry and a user decision.
+- **Dependencies:** none.
+- **Approach:** direct; the work is reading and reporting, with any remedy filed separately.
+- **Origin:** 2026-10-23 review request after the roadmap seed-materialization and plan-row selection work, which changed neither stage-4 decomposition nor its review.
+
+**#529 — Nothing checks that relative links in the live documentation resolve, so broken links accumulate**
+
+- **What:** no test scans `*.md` links. A scan on 2026-11-13 over tracked Markdown found 608 relative link targets that do not exist; 42 sit outside archived plans, plan-detail bundles, and saved reports (13 each in two `tests/fixtures/reformat/` files, five in each of the three `integrations/*/SKILL.md` routers, one in `lessons/general.md`). The routers link `DIRECTIVES.md` as a sibling because `plan-tool install-skill` installs both files into one directory, so a scan of the source tree flags links that are correct once installed.
+- **Route:** direct · **Readiness:** decision-needed (a guard test with exception groups, or a one-off triage of the live links) · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Effort:** small; a guard needs three exception groups (archived and frozen plan files, the installed-layout routers, link-shaped fixture text).
+- **Risks / fallout:** archived and audited plan files are frozen, because an edit makes their saved audit reports stale; a guard that scans them fails forever. A guard also adds a maintenance edge to every doc move.
+- **Outcome:** a documented decision between a guard test and a one-off triage, and the chosen one in place with the live-document links resolving.
+- **In scope:** a test over tracked `*.md` that skips the three exception groups above, or a repair of the 42 live targets, plus a documented reason for each retained exception.
+- **Out of scope / Non-goals:** editing archived plans, plan-detail files, or saved reports for link hygiene; checking heading anchors or external URLs; a readability check (the documentation style guide deliberately has none).
+- **Allowed behavior changes:** none to the CLI; one new test, or doc link edits.
+- **Allowed reorganization:** none.
+- **Verification:** the test fails when a live link target is removed and passes with the exception groups; or a rerun of the scan reports zero unexplained live targets.
+- **Stop / defer:** file any doc defect that a link repair would require reworking as a separate entry.
+- **Dependencies:** none.
+- **Approach:** direct.
+- **Origin:** 2026-11-13 triage of the live documentation after the temporary handoff files were retired.
+
+**#530 — Developer documentation readability review stops after the front-door batches, and no fresh-reader check covers the four reader journeys**
+
+- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped, but the section-by-section readability audit of the live developer documents covers only the high-traffic sections, and no reader outside the authors has walked the four journeys end to end from the documents alone. The audit's open batches are the contributor drive-or-review workflow (`CONTRIBUTING.md`), the module-ownership subsystem paragraphs (`docs/ARCHITECTURE.md`), default/optional/exception matrices for `docs/ITERATION.md` and `docs/GATES.md`, and the `docs/TRACKING.md` lifecycle (normal flow first, direct-versus-plan boundary and scope contract in linked subsections). The four journeys are install and begin, run or review a plan safely, change `plan-tool` itself, and find ownership, tracking, and escalation routes. #510 covers the first-task walkthrough for one of them.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Principle:** write-for-the-human.
+- **Effort:** large in total; each batch is small to medium (one document or closely related group, reshape only where a mapping, state matrix, or ordered flow reads as dense prose).
+- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact. A long paragraph is a review signal, not a defect: `keep` is a valid verdict.
+- **Outcome:** each batch above has a recorded `keep`, `reshape`, `relocate`, or `clarify` verdict per section with its fact fence, and one cross-document walkthrough by a reader with no prior context confirms that the four journeys expose their normal path, exceptions, and next action, with links, terminology, and authority boundaries in agreement.
+- **In scope:** the live developer-facing documents named above plus `README.md`, `docs/reference/commands.md`, `docs/how-to/common-workflows.md`, and the glossary; one fresh-context walkthrough after the batches, recording each place the reader cannot find the normal path, an exception, an owner, or a next action; fixes for material findings.
+- **Out of scope / Non-goals:** the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
+- **Allowed behavior changes:** none to the CLI or generated output; documentation structure and wording only.
+- **Allowed reorganization:** only the smallest relocation a reshape needs, naming the ownership boundary it fixes; no document moves for tidiness.
+- **Verification:** every command, path, anchor, state condition, and ordering rule named in a reshaped section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass; the walkthrough record names no unresolved finding.
+- **Stop / defer:** a defect or product gap that a reshape exposes becomes its own entry; a reshape that would change a contract stops and is filed instead.
+- **Dependencies:** none; the walkthrough runs after the batches it covers.
+- **Approach:** direct, one reviewable batch per document group, each with the session-directed review loop.
+- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13 for the batches and the walkthrough that remain.
 
 ## Adding a new entry
 

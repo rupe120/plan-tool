@@ -488,6 +488,13 @@ Depends on: 1
 - Strict spacing: exactly one blank line between top-level sections
   and around `Files:` blocks. No trailing whitespace. Single newline
   at EOF.
+- Commands that rewrite an existing plan (`write_plan`, which `scope-out`
+  uses, and concept synchronization) preserve the
+  body's bytes, including LF, CRLF and CR line endings and any unowned H1/H2
+  section. A replaced owned section ends at the next H1 or H2, as the reader
+  does. The frontmatter is reserialized with LF line endings, so a
+  newline-only frontmatter change alters the frontmatter hash that a stale
+  `scope-out` preview is checked against.
 
 ### Why strict shape matters
 

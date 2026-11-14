@@ -210,7 +210,7 @@ Implemented `--json` to print `{"count": 2}` while preserving numeric output wit
 
 Used plan-tool’s direct-change workflow and existing unittest approach. Both tests and `git diff --check` pass.
 
-Short account: [WORK_LOG.md](/tmp/overengineering-checkpoints-normal-task/WORK_LOG.md). All changes remain local and uncommitted.
+Short account: `WORK_LOG.md` in the run's scratch directory, which was local scratch and is not retained. All changes remain local and uncommitted.
 
 #### First entry reminder
 
@@ -222,7 +222,7 @@ Completion:
 
 Implemented `--json` to print `{"count": 2}` while preserving numeric output without the flag.
 
-Verified with `python3 -m unittest -v` and `git diff --check`; all passed. Added a short account in [WORK_LOG.md](/tmp/overengineering-checkpoints-normal-task-reminder/WORK_LOG.md).
+Verified with `python3 -m unittest -v` and `git diff --check`; all passed. Added a short account in `WORK_LOG.md` in the run's scratch directory, which was local scratch and is not retained.
 
 No remotes, dependencies, or user configuration were touched.
 

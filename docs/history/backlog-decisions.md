@@ -76,6 +76,22 @@ and [non-stage brief drift](../implementation-plans/archive/2-roadmap-non-stage-
 record the separate delivered boundaries. A matching recorded baseline keeps
 its existing route behavior; this decision grants no broader rebind authority.
 
+Superseded 2026-11-05: `roadmap-versioned-from-birth` removed
+`--confirm-brief-rebind` and the non-stage brief-drift routes. A stage run now
+refuses once an accepted head exists, and a changed product definition goes
+through feedback and candidate review or a successor lineage.
+
+### #384 — Carried settled decisions
+
+Completed by 2026-09-17 (plan archived that day). A closed set of confirmed upstream decisions reaches
+`roadmap` through the single brief as inherited decision rows that cite the
+confirmed answer that settled them; options an upstream question did not select
+are never recorded as rejected alternatives. The 2026-09-16 comparison selected
+it over per-stage supplements (#383): both inputs preserved the material facts
+but recast confirmed answers as `settled` Roadmap decisions without citation
+([evidence](../evidence/roadmap-aidlc-intake-comparison-20260916.md)). The plan
+is [`2-roadmap-carried-settled-decisions.md`](../implementation-plans/archive/2-roadmap-carried-settled-decisions.md).
+
 ## Resolved and retired bug-backlog records
 
 Records marked **Resolved** include a shipped behavior change and regression

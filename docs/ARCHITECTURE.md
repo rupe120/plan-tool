@@ -122,7 +122,7 @@ correlation.
 The observed-window registry keeps `(window, exact)` per backend and model:
 
 - **Exact:** the entry whose id equals the selected model, or the only entry in the result. It replaces any earlier value.
-- **Lower bound:** a mixed result gives only its smallest window. It never replaces an exact window, only rises, and errs toward warning; no alias is guessed.
+- **Lower bound:** a mixed result gives only its smallest window. It never replaces an exact window, only rises, and errs toward warning; no alias is guessed. Containment matching and a dominant-entry fallback were removed 2026-10-09 because each gave a model a window it did not have.
 - **No model selected:** the key holds one window for the whole process and assumes the CLI's default model does not change underneath the run. A mid-run change is not corrected by a later lower bound (a deliberate limit, not an oversight).
 - **Concurrency:** updates are lock-guarded, because each in-flight call has its own output pump thread.
 
@@ -131,6 +131,7 @@ Other contracts:
 - **The one refusal.** The selected run-reconcile prompt in `launcher.run_step` is the only budget verdict that refuses a send. It passes `observed=False`, so only the Codex catalog, a file, can change its verdict, never a window learned mid-run.
 - **Call sites.** Every `estimate_prompt_budget` / `maybe_warn_prompt_budget` call outside the leaf passes `context_window=active_context_window(...)`; `tests/test_context_window.py` pins the exact per-module counts by AST.
 - **File memo.** The Codex catalog and config are parsed once per file version `(mtime_ns, size, inode, device)`, under a lock. A content failure (malformed or wrongly shaped, including pathological nesting) is remembered per version; a read error (a descriptor limit, a momentary permission error) is not cached.
+- **Deliberately not.** Exact token counting, per-project window overrides, and a gate (an exit-code flip): the advisory stays advisory, and the one refusal is the run-reconcile send above. `prompt_budget.BYTES_PER_TOKEN` stays 3.5, which is more conservative than the 4.13 bytes/token measured on Codex 0.162.0 (2026-10-09, one 211,712-byte payload, one run; n=1, [sizing record](evidence/integration-context-budget-2026-10-09/sizing.md)).
 
 ## Progress reporting
 
@@ -395,7 +396,11 @@ through its own `"decision-settlement"` `PendingGeneration` kind, calling
 `recover_roadmap_publication` directly — the same general-purpose
 writer-token/journal/selector-swap primitives `promote_review_seal` also
 consumes, never that writer's model-authored admission/review/seal chain;
-`roadmap_decision_settlement_run.py` holds its result types. A receipt proves
+`roadmap_decision_settlement_run.py` holds its result types.
+`publish_roadmap_generation` journals each member's old and new bytes for
+recovery but never compares the old bytes with disk. A writer that must refuse a
+concurrent change passes a `before_replace` recheck; batch candidate storage and
+seal use `require_batch_state_unchanged`. A receipt proves
 completion for as long as the settled version stays in the accepted head's
 predecessor chain. `ROADMAP_FORMAT.md` owns the operator-visible command
 contract and refusal set.
@@ -410,7 +415,10 @@ regeneration (warned, never raised, never deleted by a read); only a
 brief-digest mismatch raises. `roadmap.py:_run_roadmap` publishes the version,
 ledger, and accepted head only after all four stages pass, writing the head
 last, then deletes the directory. The run refuses once an accepted head exists,
-and refuses a folder with no head that holds pre-head state. The directory is
+and refuses a folder with no head that holds pre-head state. Durable-write temp
+names (`fileio.is_write_temp_name`) are not pre-head state; any other stored
+file is. The resume directory chain is not fsynced on creation: a power loss
+costs only regeneration of held stages (accepted limit). The directory is
 not user-editable input. `ROADMAP_FORMAT.md` owns the operator-visible
 contract.
 
@@ -450,7 +458,7 @@ surface.
 
 **A stage is a row of data, not a branch:** `RoadmapStage` is `(prompt file, artifact path, parser, renderer, gate set)`. A later stage is a table entry and prompt file rather than an orchestrator branch. **Each stage consumes the previous stage's gate-clean text:** a stage that passes is held in the resume directory, and a resumed run re-gates each held stage before it runs the next one.
 
-The reviewer ledger remains mutable input outside artifact versions. `--propose-candidate` snapshots eligible items and derived context into one exact root/source batch, then validated typed operations classify an inert bounded or structural candidate; users never choose that route. Candidate evidence and `CandidateReviewSeal` are immutable review records. `--propose-candidate` sources a new batch from the active candidate, so batches stack. `roadmap_candidate_run.candidate_stack_route` derives the unpromoted stack above the recorded root from stored candidate records at use, and calls it structural when any hop stores a STRUCTURAL route; nothing about the stack is persisted. The stack-aware guards — answered-route entry, decision eligibility and edit acceptance, the promotion boundary, and recovery's seed predicate — all ask that one derivation. A structural approve/edit/reject decision acts on the active top candidate and covers the whole stack: `roadmap_candidate_review.build_candidate_stack_view` describes it and computes a stateless digest, approve is two invocations, and only the invocation whose `--confirm-stack-digest` matches the recomputed digest creates the `structural-approval` seal. Edit stores a replacement requiring a fresh decision and rejection releases only the active pointer, dropping the unpromoted hops. `promote_review_seal` alone turns an approved seal into journaled publication after accepted-root, active-candidate, stored-binding, and gate rechecks; it is the `AcceptedRoadmapHead` boundary and applies the seed-state effect when any hop above the recorded root stores a structural route. All other outcomes preserve canonical artifacts, seeds, and the accepted head. `roadmap_candidate_review.seal_review` and the structural approve path recompute narrative evidence from the stored candidate bytes through `roadmap_candidate_narrative`, refuse only the blocking class, and store nothing; `cli/roadmap_cmd.py` displays the same finding list (contract: `ROADMAP_FORMAT.md` § "Narrative review evidence").
+The reviewer ledger remains mutable input outside artifact versions. The candidate lifecycle reuses the version store, candidate store, review seal, promotion writer, publication journal and recovery; it adds no second version chain, candidate store, accepted-head writer or transaction system. `--propose-candidate` snapshots eligible items and derived context into one exact root/source batch, then validated typed operations classify an inert bounded or structural candidate; users never choose that route. Candidate evidence and `CandidateReviewSeal` are immutable review records. `--propose-candidate` sources a new batch from the active candidate, so batches stack. `roadmap_candidate_run.candidate_stack_route` derives the unpromoted stack above the recorded root from stored candidate records at use, and calls it structural when any hop stores a STRUCTURAL route; nothing about the stack is persisted. The stack-aware guards — answered-route entry, decision eligibility and edit acceptance, the promotion boundary, and recovery's seed predicate — all ask that one derivation. A structural approve/edit/reject decision acts on the active top candidate and covers the whole stack: `roadmap_candidate_review.build_candidate_stack_view` describes it and computes a stateless digest, approve is two invocations, and only the invocation whose `--confirm-stack-digest` matches the recomputed digest creates the `structural-approval` seal. Edit stores a replacement requiring a fresh decision and rejection releases only the active pointer, dropping the unpromoted hops. `promote_review_seal` alone turns an approved seal into journaled publication after accepted-root, active-candidate, stored-binding, and gate rechecks; it is the `AcceptedRoadmapHead` boundary and applies the seed-state effect when any hop above the recorded root stores a structural route. All other outcomes preserve canonical artifacts, seeds, and the accepted head. `roadmap_candidate_review.seal_review` and the structural approve path recompute narrative evidence from the stored candidate bytes through `roadmap_candidate_narrative`, refuse only the blocking class, and store nothing; `cli/roadmap_cmd.py` displays the same finding list (contract: `ROADMAP_FORMAT.md` § "Narrative review evidence").
 A failing stage gate retries the stage with its violations; an exhausted stage stops the arc. A preflight failure stops before an invocation. The verb is non-interactive: a load-bearing unanswered choice becomes a `pending` decision for review, not an implicit model decision. Roadmap artifacts are not plans, so nested roadmap files are not plan-discoverable and a run adds no plan manifest entry. `04-roadmap.md` is the final stage artifact; a successful replacement invalidates existing derived drafts without regenerating them. `--apply` is the separate confirm-gated seed mutation route. `roadmap_view.py` provides deterministic read-only traceability, decision-ledger, and reverse-citation views over the accepted version's artifacts, and `roadmap_html.py` adds the full-content, print-formatted `--view html` page for reading a roadmap rather than auditing its state — written to `<roadmap-dir>/review.html` by default (`--output PATH` chooses the destination; `--output -` prints to stdout instead). That page opens its domain section with an inline-SVG ER diagram of the entities and their reference fields; it draws no cardinality, because the domain artifact records none. `ROADMAP_FORMAT.md` owns the schema and route contract; `docs/how-to/roadmap.md` covers the end-to-end workflow.
 
 ## CLI reference generation

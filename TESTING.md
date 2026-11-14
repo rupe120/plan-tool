@@ -171,6 +171,8 @@ No real `agent` subprocess in tests.
 
 ## What writing tests should look like
 
+Verify a guard by mutation: break the code it names and confirm the test fails. A guard behind an overlapping guard survives a single mutation, so mutate both together.
+
 ### Default to unit tests
 
 When you're adding code, **start with unit tests**. They're cheap to

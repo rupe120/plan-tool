@@ -584,6 +584,8 @@ hosting and store choices. `create --from-existing` preserves it in the plan, an
 overwrites the edit, so change the roadmap through feedback instead. The
 contract is in [`ROADMAP_FORMAT.md`](../../ROADMAP_FORMAT.md#stack-section).
 
+The printed `create` handoff uses the selected row id as the plan slug.
+
 Once a draft is current and its content is accepted, promotion is optional. It
 is an apply-only copy operation: it does not rerun stages or invoke the backend.
 Materialization, digest acceptance, promotion, and ordinary create do not approve

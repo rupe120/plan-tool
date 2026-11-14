@@ -57,6 +57,8 @@ derived_context: []
 
 Candidate, review, and promotion records bind recorded root, direct source, batch items, context, and evidence; they cannot substitute later ledger state. A later unrelated ledger edit does not invalidate recorded evidence. A changed processing pair or admitted item that no longer matches its snapshot refuses candidate storage without consuming the reviewer edit or changing a candidate pointer. Promotion never rediscovers live ledger eligibility.
 
+Not built: workflow authoring, automatic approval, feedback grouping, multi-user approval, or a general transaction system; each needs its own decision and plan.
+
 Invalid output, failed gates, interruption, rejection, edit, and stale bindings are non-publication outcomes: they do not advance `AcceptedRoadmapHead`, rewrite canonical roadmap artifacts, or rewrite seeds. The lifecycle updates selected ledger items only where its stored records require it; unselected feedback remains unchanged.
 
 ## Settlement confirmation

@@ -342,6 +342,12 @@ the second attempt and fails the step like any other rejected parse. A
 cut-off envelope (no closing `-->`), or a marker-like line inside the body,
 takes the full-regeneration retry instead.
 
+Deliberately not part of this repair: appending an empty envelope automatically
+(the envelope exists so the model states its deferrals), repairing missing body
+sections, a third attempt or a fallback to full regeneration after a malformed
+repair reply, the same repair on the plan-audit and roadmap retries, and any
+change to the two-attempt limit.
+
 ## Parsing helpers (for consumers)
 
 - `parse_detail_file_sections(text) -> {token: body}` — splits a file into its

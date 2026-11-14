@@ -113,6 +113,16 @@ Durable re-open conditions for retired items are recorded in
   count and digest, and sidecar disposition with its safe path only when
   written. Recovered attempts remain observable, and sidecar I/O failure does
   not change the command outcome.
+- **Do-not-merge look-alike (checked 2026-11-13):** `plan_tool/launcher.py`'s
+  `_record_step_failure_receipt` repeats the sidecar-then-receipt sequence that
+  `plan_tool/roadmap.py`'s `record_model_failure_receipt` owns. The two are not
+  identical bodies (different `producer_slug` prefix `_run/` versus
+  `_roadmap/`, different `receipt_identity` and attempt inputs, and only the
+  roadmap one takes `retain_response`), so `tests/test_duplication.py` does not
+  flag them and a name-and-eyeball merge would change one of them. Neither
+  module imports the other today; a shared helper must live in a leaf both can
+  import (for example `plan_tool/model_response_sidecar.py`), not in
+  `roadmap.py`, which would add a `launcher` to `roadmap` import edge.
 - **Later migration slices:** migrate `create`, `detail`, candidate flows, and
   seed materialization deliberately. This remains the live work and prevents
   the completed roadmap class from claiming a cross-command migration.
@@ -1568,39 +1578,6 @@ not include them.
 - **Origin:** 2026-09-23, `/code-review high` pass 4 of the
   `roadmap-versioned-feedback-revision-chain` review.
 
-### `ruff` reports five undefined names in roadmap code and tests (`PendingGeneration`, `Any` twice, `Callable`), so the code check fails though nothing breaks at run time
-
-- **Severity:** MINOR
-- **Files:** `plan_tool/roadmap.py:1066,1071` (`PendingGeneration`, in
-  `_with_initial_feedback_ledger`'s annotations); `tests/cli/test_roadmap_cmd.py:3784`
-  (`Any`, twice); `tests/test_roadmap.py:8521` (`Callable`).
-- **Symptom:** `uv run ruff check plan_tool tests` reports each as `F821` (a name
-  that is used but never defined or imported). Nothing fails at run time: all
-  three modules have `from __future__ import annotations`, so the annotations
-  are never evaluated. Only the `ruff` check is red.
-- **Fix:** add `PendingGeneration` to the existing
-  `from plan_tool.roadmap_source_identity import (...)` at `roadmap.py:181`
-  (the class is defined at `roadmap_source_identity.py:110`, and that module
-  imports only `roadmap_json`, so there is no import cycle); add
-  `from typing import Any` to `tests/cli/test_roadmap_cmd.py`; add `Callable` to
-  the `from typing import Any, Optional, Sequence` at `tests/test_roadmap.py:24`.
-- **Out of scope:** the other nine `ruff` findings (seven `F811`, two `F841`),
-  and the sixth undefined name, in `tests/cli/test_completeness_cmd.py`
-  (IPPT-5).
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `beginner` — the same
-  small edit (add an import) at three named files.
-- **Where to start:** `roadmap.py:181` and the import lines of the two test
-  files.
-- **Precedent:** an existing pattern: the import at `roadmap.py:181` already
-  pulls sibling names from the same module.
-- **Settled decisions:** none.
-- **Done when:** `uv run ruff check plan_tool tests` reports no `F821` in these
-  three files (the whole-tree count falls by five, from 15 to 10) and the full
-  suite is green.
-- **Reviewer:** unassigned.
-- **Approach:** `direct` — three one-line imports.
-- **Origin:** 2026-09-24, found while writing IPPT-5.
-
 ### Approving or reviewing a stack of candidates crashes with a raw parser traceback, instead of refusing cleanly, when an earlier candidate's stored files no longer parse
 
 - **Severity:** RISK
@@ -2148,3 +2125,69 @@ not include them.
 - **Fix:** accept the flag after the subcommand too, or print a one-line hint naming the correct position in the error.
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** an external consuming application's plan runs, 2026-10-13; carried here when its runbook was removed, 2026-11-05.
+
+### `docs/ARCHITECTURE.md` omits the project `default_backend` from the backend precedence
+
+- **Severity:** MINOR
+- **Files:** `docs/ARCHITECTURE.md` (§ "Backend abstraction"); the correct order is in `docs/BACKENDS.md` (five-row priority table).
+- **Symptom:** the architecture page gives the precedence as explicit `--backend` flag → recognized `--model` family → `PLAN_TOOL_BACKEND` → `claude`, so a reader concludes a committed project `default_backend` has no effect. `docs/BACKENDS.md` ranks it fourth, ahead of `claude`.
+- **Fix:** add the project `default_backend` between `PLAN_TOOL_BACKEND` and `claude`, or replace the inline chain with a pointer to the `docs/BACKENDS.md` table.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** documentation inventory of the project-model-selection record, 2026-11-13.
+
+### `integrations/shared/DIRECTIVES.md` omits `root` from the commands that need no backend flag
+
+- **Severity:** MINOR
+- **Files:** `integrations/shared/DIRECTIVES.md` (the "Deterministic commands" sentence); `plan_tool/cli/app.py` (the project-selection preflight exemption names `list`, `root`, `status` and `validate`).
+- **Symptom:** the directive lists `list`, `status` and `validate` as the commands that need neither `--backend` nor `--model`. `root` is exempt from the same preflight in code, so an assistant following the directive passes a flag to `root` that it does not need.
+- **Fix:** add `root` to the directive's list. Any change to this file reaches every consuming repo, so keep the edit to that one word.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** documentation inventory of the project-model-selection record, 2026-11-13.
+
+### `ruff` reports undefined names in `plan_tool/launcher.py` and one test file (`Any` three times, `CandidateDelta`), so the code check fails though nothing breaks at run time
+
+- **Severity:** MINOR
+- **Files:** `plan_tool/launcher.py:791` (`_invoker_stats(invoker: Any)`) and `plan_tool/launcher.py:1537` (`run_logger: Any`), where `Any` is used but the module imports only `TYPE_CHECKING, Callable, Optional, Sequence, TextIO` from `typing`; `tests/test_roadmap_candidate.py:3416` (`_stack_delta(...) -> CandidateDelta`).
+- **Symptom:** `uv run ruff check plan_tool tests` reports each as `F821` (a name that is used but never defined or imported). Nothing fails at run time: both modules have `from __future__ import annotations`, so the annotations are never evaluated. Only the `ruff` check is red.
+- **Fix:** add `Any` to the `typing` import in `launcher.py`; import `CandidateDelta` in `tests/test_roadmap_candidate.py` from the module that defines it.
+- **Out of scope:** the remaining `ruff` findings (`F811` redefinitions, one `F841`), and the `Plan` undefined name in `tests/cli/test_completeness_cmd.py` (promoted to IPPT-5).
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Done when:** `uv run ruff check plan_tool tests --select F821` reports only the IPPT-5 name and the full suite is green.
+- **Origin:** `ruff` run on the documentation-cleanup branch, 2026-11-13; replaces the earlier entry for `PendingGeneration`, `Any` and `Callable`, whose names are now imported.
+
+### `check_files_coherence` reports a declared `.pdf` file as unmentioned because the detail-body path extractor does not recognize `pdf`
+
+- **Severity:** MINOR
+- **Files:** `plan_tool/detail.py:1995` (`_PATH_EXT_ALT`, the extension list behind `extract_path_mentions`); `plan_tool/review.py:1776` (`check_files_coherence`).
+- **Symptom:** a step that declares a `.pdf` path in `files:` or `creates:` and cites it in backticks in its detail body still gets a "declared path not mentioned" nit, because `extract_path_mentions` finds no `.pdf` citation (checked 2026-11-13: ``Edit `docs/guide.pdf` and `docs/guide.md` `` yields only `docs/guide.md`). Observed 2026-10-20 on the public-release content snapshot plan.
+- **Fix:** add `pdf` to `_PATH_EXT_ALT` with a test that a backticked `.pdf` citation counts as a mention. Until fixed, treat the finding as a known false positive and do not reword accurate detail prose to silence it.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** public-release review, 2026-10-20; carried here when its temporary handoff was retired, 2026-11-13.
+
+### `detail` and the legacy `scope-review` route accept a plan body whose headings collide, where `create` refuses it
+
+- **Severity:** RISK
+- **Files:** `plan_tool/detail.py:609` (`_candidate_buckets`' bootstrap, which calls only the empty-heading check and builds `{node.id: node.title}`); `plan_tool/cli/scope_review_cmd.py:156` (the legacy full-tree route calls `bootstrap_concepts` with neither check); `plan_tool/create.py:7871` (`_reject_repeated_concept_headings`, the refusal `create` runs).
+- **Symptom:** a concept id hashes the section name, so two body sections whose headings are the same after case, spacing, trailing `:` or `.`, and Unicode normalization get one id. `create` refuses such a body and names the headings. `detail` builds its deferral buckets into a dict keyed by that id, so the second heading silently replaces the first; the legacy `scope-review` route has no guard before `bootstrap_concepts`, and its outcome with such a body has not been exercised. No recorded reason separates these routes from `create`.
+- **Fix:** decide first whether `detail` and the legacy route refuse like `create` (share the check, per the existing `empty_concept_headings_message` pattern in `concept_bootstrap.py`) or keep their current behavior with a stated reason in `DETAIL_FORMAT.md` or `docs/ARCHITECTURE.md`; then pin either choice with a test on each route.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** review of the repeated-heading refusal in `create`; carried here when its temporary handoff was retired, 2026-11-13.
+
+### `test_no_existing_tests_were_modified` skips on any feature branch and asserts nothing otherwise
+
+- **Severity:** MINOR
+- **Files:** `tests/test_cli.py:3232`.
+- **Symptom:** the test diffs `tests/` against `main` and skips whenever any changed file falls outside a hard-coded allowlist of seven run-log plan test files, which is true on nearly every branch. When it does run, its final assertion repeats the condition it just skipped on, so it cannot fail. It guards nothing and reads as coverage in a test listing.
+- **Fix:** delete the test (the intended property, that an edit does not alter unrelated tests, is a review concern, not a test one).
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** test-suite review of the run-log plan, carried here when its temporary handoff was retired, 2026-11-13.
+
+### `review.fenced_spans` reads inline triple-backtick code as an unclosed fence
+
+- **Severity:** MINOR
+- **Files:** `plan_tool/review.py:492` (`fenced_spans`, `_FENCE_MARKER_RE`).
+- **Symptom:** a line that starts with three backticks and closes them on the same line (an inline code span written ``` ```inline``` ```) matches the fence-opening pattern, so the scanner treats the rest of the text as fenced. Reproduced 2026-11-13: `fenced_spans("para\n```inline``` wrapped text\nmore\n## Heading\n")` returns `[(5, 47)]`, covering the later `## Heading`. Callers that exclude fenced spans (the audit sub-block splitter `_split_audit_restated_and_fix`, `indent_bullet_body`) then ignore real headings after such a line.
+- **Fix:** decide whether an opening marker line that carries its own closing run, or any info string containing backticks, opens a fence (CommonMark does not open a backtick fence when the info string contains a backtick); change `fenced_spans` once, since it is the repo's single fence scanner, and pin the case with a test.
+- **Out of scope:** a second fence recognizer; changing tilde or length-matching behavior.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **Origin:** left as separate work when BACKLOG #308 (the fence-scanner relocation) shipped; carried here when its temporary handoff was retired, 2026-11-13.

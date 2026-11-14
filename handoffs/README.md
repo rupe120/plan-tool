@@ -19,7 +19,7 @@ longer exist. They are not edited, and a dead path there is expected.
 ## Naming
 
 A handoff or ledger file is a **workstream**: a long-lived area of work, named in a few
-lowercase words (`roadmap-feedback`, `release`), not one change and not a date. A change
+lowercase words (for example `tracking-and-jira`), not one change and not a date. A change
 joins the workstream it belongs to as a new section; a new file needs a new workstream.
 The workstream names are the list under § "Workstreams".
 
@@ -83,8 +83,10 @@ branch, and hand the updated settled-decision list to the next reviewer.
 Use the [selection record](../docs/evidence/public-release-content-snapshot.md)
 for content decisions, reference ownership and retained conclusions. Use the
 [verification receipt](../docs/evidence/public-release-content-snapshot-verification-20261020.md)
-for exact candidate identity, environment and measured results. The
-[release workstream](release.md) owns the next action.
+for exact candidate identity, environment and measured results.
+[`docs/RELEASING.md`](../docs/RELEASING.md) owns the release procedure; the
+[public-release arc](../docs/implementation-plans/backlog-arcs/backlog-arc-public-release.md)
+with `BACKLOG.md` #514, #515 and #523 owns the remaining distribution work and the next action.
 Keep decisions and finding explanations in their maintained owners when
 compressing or retiring a handoff.
 
@@ -92,17 +94,8 @@ compressing or retiring a handoff.
 
 | File | Scope |
 | --- | --- |
-| [roadmap-candidates.md](roadmap-candidates.md) | Candidate collection, capsules, envelopes, context ceilings and model-failure receipts in `roadmap`. |
-| [roadmap-feedback.md](roadmap-feedback.md) | Feedback, approval, versioning, brief drift, comparison and the stack layer in `roadmap`. |
-| [roadmap-plans.md](roadmap-plans.md) | Deriving plans and seeds from roadmap artifacts: investigation, derivation, breakdown, sibling inputs, selectors, seed rules. |
-| [roadmap-aidlc.md](roadmap-aidlc.md) | The Integration / AI-DLC seam: intake review, delivery record and resume order. |
 | [run-and-completeness.md](run-and-completeness.md) | `run` gates and receipts, completeness next steps and verdicts, loop behavior, hints and maintenance fixes. |
-| [create-and-detail.md](create-and-detail.md) | Seeds, step descriptions, concept sync, detail authoring and plan-file preservation. |
-| [docs-and-onboarding.md](docs-and-onboarding.md) | Documentation accuracy, placement and readability, demos, onboarding and skill-router guidance. |
-| [release.md](release.md) | Public release preparation, versioning, tagging and sanitized publication. |
 | [tracking-and-jira.md](tracking-and-jira.md) | Work tracking, the Jira board and tickets, backlog guards, branch hygiene and settled tracking decisions. |
-| [model-and-budget.md](model-and-budget.md) | Project model selection, prompt budgets and token-ledger logging. |
-| [review-process.md](review-process.md) | Standing review and proportionality checkpoints. |
 | [handoff-directory.md](handoff-directory.md) | This directory's own upkeep: scope fence, owner decisions, open items. |
 | [bug-backlog-drain.md](bug-backlog-drain.md) | Standing procedure, queue order, stop conditions and session log for draining `BUG_BACKLOG.md`. Kept as its own file because sessions append to its log; not a merge candidate. |
 

@@ -56,6 +56,10 @@ package with different defaults.
 | Codex | Install in a skill location supported by the current CLI, reload the session, and confirm discovery. Verify any required external tools separately. |
 | Cursor | Use the skill mechanism supported by the current Cursor Agent version and confirm discovery there. Do not assume an editor extension is available to the `agent` CLI. |
 
+The bundled `SKILL.md` routers link `DIRECTIVES.md` as a sibling because
+`plan-tool install-skill` installs both into one directory. A link scan of the
+source tree flags those links; they resolve once installed.
+
 The [installation guide](install-and-update.md) owns plan-tool installation and
 skill refresh. Use each companion skill's own instructions for its package;
 `plan-tool install-skill` installs the bundled plan-tool integration, not a

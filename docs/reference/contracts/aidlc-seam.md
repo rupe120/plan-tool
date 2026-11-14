@@ -2,7 +2,7 @@
 
 The boundary between an orchestration layer that runs the AI-DLC workflow framework and
 `plan-tool`'s `roadmap` verb: who owns what, which source material is grounding and which
-is not, and how a recorded source baseline is admitted. The integration overview is
+is not, and how a brief is admitted. The integration overview is
 [AI-DLC integration](../../integrations/aidlc-integration.md); the design behind this
 contract is [roadmap fit to the AI-DLC workflow framework](../../design-plans/roadmap-aidlc-inception-fit.md).
 
@@ -51,18 +51,18 @@ framework scope and execution lists, never widens product scope.
 
 ## Source admission
 
-- A stage run binds one recorded brief path and decoded-text digest.
-- Changed or legacy content at that path refuses before a stage writes, unless the operator
-  supplies both the recorded `--from-existing` path and `--confirm-brief-rebind`. That
-  acceptance replaces only the source baseline, never artifacts, feedback, or seeds.
-- Matching and initial stage runs keep their ordinary behavior. A different path stays
-  refused, and non-stage routes reject the confirmation flag.
-- Semantic changes to a brief go through owning-artifact feedback or a successor lineage.
-- Non-stage routes get no stage lifecycle and no same-path baseline-acceptance authority.
-  `--analyze-escalation` and `--enroll-version` refuse `changed-brief` and `legacy-brief`
-  with redacted status `1` and publish nothing; log-free `--view impact-analyses` returns
-  those states with status `0` and no route; `--rewrite-structural` refuses after
-  evaluator admission and guarded recovery, also with no publication.
+Source identity belongs to the accepted version, and no separate source baseline exists.
+
+- A first stage run reads the brief named by `--from-existing`. The published version
+  stores the brief's raw bytes as `brief.md` and records its digest beside the four stage
+  artifacts. Every later command reads that stored brief and never the original path.
+- A stage run refuses once an accepted head exists. A roadmap with a head changes only
+  through feedback and candidate review.
+- Before the head exists, held stages sit in a resume directory beside a `brief.digest`.
+  A brief whose text differs from that digest refuses before any backend call; the
+  operator restores the brief, deletes the directory by hand, or starts a successor slug.
+- A semantic change to the product definition goes through owning-artifact feedback or a
+  successor lineage. Nothing rebinds a changed brief to an existing roadmap.
 - Admission is not a generic framework. A later route reuses a helper only after its own
   authority and result semantics are selected and tested.
 
@@ -81,3 +81,19 @@ Per-stage supplementary sources with declared roles (`BACKLOG.md` #383) and a re
 shows a concrete need. Each needs its own seed, plan, two audit gates, execution,
 reconciliation, and independent review; a first production integration admits only the
 roles and capabilities that the frozen corpus and a controlled comparison show are needed.
+
+Each further capability needs named evidence and its own contract, and none rides in #383:
+
+| Capability | Selected when | Needs |
+| --- | --- | --- |
+| Settle-once questions | A load-bearing unresolved item is re-decided by current rows | Question identity, a stop or provisional policy, dependent-row invalidation |
+| Obligations | An approved accepted-risk finding needs a disposition | Exactly one disposition per obligation, and a gate |
+| Selected workflow rules | A named rule changes roadmap meaning and fits generic grounding | Section selection, citations, exclusion of runtime conduct |
+| Shared seam frame | A revision route changes artifact meaning outside the proven box | Deterministic frame bytes, request reach, ceilings, prompt authority |
+| Coverage projection | A real phase check needs machine-readable source-item coverage | Stable ids, coverage states, a boundary summary |
+| `--view status --json` (#385) | A connector consumer needs state between runs | A versioned read-only view, never execution authority |
+
+Stop and record a new decision when a role reader would change the stored source shape
+without a compatible read/write transition and legacy-record tests, or when a capability
+touches an Inception step that the orchestration layer has neither assigned to `roadmap`
+nor skipped in its workflow profile.

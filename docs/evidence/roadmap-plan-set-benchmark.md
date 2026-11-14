@@ -30,3 +30,14 @@ Current source supports component-to-several-plan `split` dispositions in `ROADM
 ## Comparison contract
 
 Use equivalent isolated baseline and candidate inputs, exact source/model/tool identities, and the same declared contextual evidence. Preserve generated roadmap mappings, seeds, raw base plans, authoring refusals and interventions. For stage-four comparisons, use fresh isolated first-run stores with equivalent concept and upstream inputs; never mutate the frozen accepted benchmark source. Review each witnessed obligation’s producer, consumers, dependency order, bounded implementation route and eventual acceptance evidence. Record unknowns and reviewer disagreement. Do not treat plan count, file count, a clean per-plan audit, or a single replay as semantic certification or measured efficiency.
+
+Attribute a lost obligation to the first stage that loses it:
+
+| First stage that loses it | Where the fix belongs |
+| --- | --- |
+| An absent or ambiguous source requirement | Roadmap feedback, not a seed |
+| A requirement with no producer or integration owner in the mapping | Stage-four guidance |
+| An accepted assignment that disappears from the seed | Per-row preservation, never repartitioning |
+| A seed outcome that `create` reduces to checks | `create` grounding guidance |
+| An unspecified internal mechanism | Unassessed at base-plan altitude; it belongs to detail |
+| References lost during `create` | A binary retention check under identical input |
