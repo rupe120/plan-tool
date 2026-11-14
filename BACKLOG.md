@@ -572,72 +572,104 @@ working straight down the tiers.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design and its
   Gate 1 rounds. Cut to a D-only label 2026-11-14.
 
-**#533 — `roadmap` seed materialization lacks the smallest-proof necessity test, and stage 4 does not prefer several small plans over one broad one**
+**#533 — The `roadmap` smallest-proof rule narrows the brief's requirements, so stage 1 can drop a feature the brief puts in scope**
 
 - **Labels:** Route `direct`
   · Readiness `ready`
   · Tier `experienced`
   · Principle `converge-on-correct-plan`
-- **What:** two prompt changes so a roadmap breaks into a broad array of small,
-  independently verifiable plans whose seeds carry only what the proof needs.
-  (1) `prompts/roadmap-seed.md` writes each draft seed but does not receive the
-  shared smallest-proof boundary that stages 1–4 get
-  (`roadmap-smallest-proof-boundary-header.md` / `-footer.md`, substituted in
-  `roadmap.py` at the `smallest_proof_boundary_header` variable); it carries its
-  own shorter paragraph (`roadmap-seed.md`, "The roadmap row is one part of the
-  roadmap's smallest end-to-end proof…") with no necessity test. `create`
-  preserves a seed's scope as its fence, so a design widened at
-  materialization is carried forward unchallenged. (2) `prompts/roadmap-plans.md`
-  (stage 4) already keeps a plan only when the proof needs it, splits "overly
-  broad scopes into bounded plan rows" and expects several plans per component
-  where needed, but states no preference between one broad plan and several
-  small ones inside the proof.
-- **Evidence:** read from the prompts at HEAD on 2026-11-14. No measured roadmap
-  run shows over-broad plans or over-scoped seeds; this is an owner direction
-  (Origin), not a measured defect.
-- **Effort:** small. Two prompt files and `_render_seed_materialize_prompt`'s
-  variables; no schema or gate change.
-- **Risks / fallout:** a granularity bias can tip into one plan per concern,
-  which `roadmap-plans.md` already forbids ("do not … create a separate plan for
-  every shared concern"); the new line must keep that and the no-target-count
-  rule. Prompt-assembly tests that pin `roadmap-seed.md`'s rendered text change.
-- **Dependencies:** none. Independent of #532, which also edits `roadmap-seed.md`
-  (guardrail headings); whichever lands second rebases its prompt edit.
+- **Settled rule (owner decision, 2026-11-14; do not re-open):** the brief's
+  requirements stay the requirements. The smallest-proof rule applies to *how*
+  each requirement is achieved (the fewest new abstractions, records,
+  boundaries and configuration surfaces) and to refusing work the brief does
+  not ask for. It never removes or narrows a requirement the brief states,
+  unless the brief or the owner directs that narrowing. Owner: "the
+  requirements should stay the requirements and the smallest proof should
+  apply to how the requirements are achieved, not narrowing down the
+  requirements unless directed to."
+- **What:** the roadmap prompts frame the proof as one selected path through
+  the brief and keep anything only when "that result cannot be true without
+  it", which licenses cutting stated requirements:
+  - the shared header (`roadmap-smallest-proof-boundary-header.md`, given to
+    stages 1–4): "the smallest end-to-end proof of the brief's central outcome,
+    not the eventual product capability";
+  - stage 1 (`roadmap-domain.md`): "Select one concrete path and an observable
+    result from the brief. Keep an entity, rule, workflow, or decision only when
+    that result cannot be true without it";
+  - stages 2 and 3 (`roadmap-constraints.md`, `roadmap-components.md`) constrain
+    and own "only" the path the domain artifact selected, so a stage 1 cut
+    carries forward;
+  - stage 4 (`roadmap-plans.md`): "Keep a plan only when that result cannot be
+    true without it";
+  - `roadmap-seed.md` ("one part of the roadmap's smallest end-to-end proof"),
+    which also does not receive the shared header;
+  - the contract and guide that restate it: `ROADMAP_FORMAT.md` (stage 4
+    purpose, "smallest end-to-end proof of the brief's central outcome") and
+    `docs/how-to/roadmap.md` § review ("Every row must be necessary to that
+    result").
+  Alongside the correction, stage 4 states a preference for several small,
+  independently verifiable plans over one broad plan for the same requirements.
+- **Deliberately unchanged, and why:** `synthesize-body.md`, `detail.md`,
+  `plan-audit.md`, `run.md` and `integrations/shared/DIRECTIVES.md` § "Smallest
+  proof first" already apply the rule to mechanism (each new abstraction or
+  record needs a requirement that fails without it), which is the settled rule.
+  `roadmap-revision.md` and `roadmap-revision-update-judgment.md` bound a
+  reviewer response, not the brief's requirements. The "do not add later roles,
+  workflows, integrations…" sentences in each stage prompt stay: they refuse
+  work the brief does not ask for.
+- **Evidence:** Loom's `loom-aidlc-mvp` first stored version (`9590a8964b…`)
+  recorded `decision-exclude-repo-browsing` at stage 1, leaving out the
+  read-only repository tree and file references because they were "not a
+  condition for" the central outcome, although the brief lists the feature and
+  its Scope Fence says "In scope: … read-only repository tree and file
+  references". A reviewer had to restore it as the
+  `repository-browse-and-reference` plan. Trace: #534.
+- **Effort:** small to medium. Wording in one shared header, five prompts, two
+  docs, `_render_seed_materialize_prompt`'s variables, and the prompt-assembly
+  tests; no schema or gate change.
+- **Risks / fallout:** removing "only when … cannot be true without it" could
+  let stages add work the brief does not ask for; the refusal of unrequested
+  roles, workflows and integrations stays to prevent that. A small-plan
+  preference can tip into one plan per concern, which `roadmap-plans.md`
+  already forbids; keep that and its no-target-count rule. Prompt-assembly tests
+  pinning the old wording change.
+- **Dependencies:** none. #532 also edits `roadmap-seed.md`; whichever lands
+  second rebases. #534's runs measure the effect; this entry does not wait for
+  them, because the rule is an owner decision rather than an experiment result.
 - **Scope contract:**
-  - **Outcome:** the seed-materialization prompt carries the shared
-    smallest-proof boundary plus a necessity test for seed scope, and the stage
-    4 prompt states a preference for several small, independently verifiable
-    plans over one broad plan within the proof.
-  - **In scope:** `prompts/roadmap-seed.md` (receive the shared header and
-    footer in place of its own paragraph, plus one necessity line: scope stays
-    in the seed only when the row's result cannot be true without it, and each
-    added abstraction, record or configuration surface needs a current
-    requirement that fails without it); `_render_seed_materialize_prompt`'s
-    substitution; `prompts/roadmap-plans.md` (one preference line: within the
-    proof, prefer several small plans, each with its own verifiable result, over
-    one broad plan, and split where a part can ship and be verified on its
-    own); the prompt-assembly tests.
-  - **Out of scope / Non-goals:** deliberately no target or minimum plan count,
-    no plan-size cap, and no gate, finding or exit-code change on plan or seed
-    size, since "small enough" is a judgment of content. No change to stages
-    1–3, to `create`'s `synthesize-body.md`, or to the roadmap artifact schema.
-  - **Allowed behavior changes:** the two prompts' text, so generated roadmaps
-    and draft seeds may differ.
+  - **Outcome:** every roadmap stage prompt and the seed-materialization prompt
+    keep the brief's stated requirements intact and apply the smallest-proof
+    rule only to how each is achieved and to refusing unrequested work, and
+    stage 4 prefers several small, independently verifiable plans.
+  - **In scope:** the shared header and footer; `roadmap-domain.md`,
+    `roadmap-constraints.md`, `roadmap-components.md`, `roadmap-plans.md` and
+    `roadmap-seed.md` (which receives the shared header and footer in place of
+    its own paragraph); `ROADMAP_FORMAT.md`'s stage 4 purpose;
+    `docs/how-to/roadmap.md`'s review guidance; the prompt-assembly tests.
+  - **Out of scope / Non-goals:** deliberately no gate or finding that checks a
+    roadmap against the brief's requirements (that is an agreement check
+    between two prose artifacts), no plan count, size cap or exit-code change,
+    no change to the plan-level prompts listed above, and no schema change.
+  - **Allowed behavior changes:** the prompts' text, so generated roadmaps and
+    draft seeds may differ.
   - **Allowed reorganization:** `roadmap-seed.md`'s own smallest-proof
     paragraph is replaced by the shared header and footer, because two copies
     of one rule drift.
-  - **Verification:** the rendered seed prompt contains the shared header,
-    footer and necessity line; the rendered stage 4 prompt contains the
-    preference line and still contains the no-target-count and
-    no-plan-per-shared-concern rules (assert keys, not prose). Optionally,
-    re-run a recorded brief and record the plan count as n=1 provenance in
-    `docs/evidence/roadmap-run-measurements.md`; it gates nothing.
-  - **Stop / defer:** if the preference produces fragmented plans on a real
-    run, record it as evidence and file the correction; do not add a count rule.
-- **Origin:** 2026-11-14, owner, after a review found the roadmap seed prompt
-  lacked the necessity test plan creation applies: "we should also include this
-  in the roadmap to plan/seed breakdown to encourage a broad array of smaller
-  plans."
+  - **Verification:** the rendered prompt for each stage and for seed
+    materialization contains the requirements-stay rule and the mechanism-only
+    smallest-proof rule, and no longer contains "only when that result cannot be
+    true without it" or "central outcome"; the stage 4 prompt contains the
+    small-plan preference and still contains its no-target-count and
+    no-plan-per-shared-concern rules (assert keys, not prose). #534's
+    requirements-stay arm records the effect on the Loom inputs; it gates
+    nothing.
+  - **Stop / defer:** if a real run shows the stages adding unrequested scope,
+    record it as evidence and file the correction; do not reinstate the
+    narrowing wording.
+- **Origin:** 2026-11-14. The small-plan preference: owner, "include this in the
+  roadmap to plan/seed breakdown to encourage a broad array of smaller plans".
+  The requirements correction: #534's trace, then the owner's settled rule
+  above.
 
 **#534 — Experiment: from Loom's original brief and artifacts, can the roadmap produce the plans a human later had to add?**
 
@@ -680,61 +712,70 @@ working straight down the tiers.
     clone's `.tmp/`. Never run against Loom's own files and never write to
     them. Using the first version's inputs keeps the reviewer's later feedback
     out of the input.
-  - **Reference list:** the accepted head's nine plans. Recall is how many of
-    them a run produces a matching plan for, matched by hand and recorded with
-    the reasoning. Extra plans are listed separately for the owner to judge as
-    useful or noise.
-  - **Arms**, each run twice from the same input with `--from-stage 4`, each
-    from its own throwaway plan-tool branch carrying only that arm's prompt
-    edit:
-    - *baseline* — the current `roadmap-plans.md`, measuring run-to-run spread;
-    - *A* — #533's stage 4 change, plus one line saying the necessity test caps
-      total scope, not the number of plans;
-    - *B* — a prompt-only work inventory: stage 4 first lists each flow hop,
-      store, constraint discharge, producer/consumer handoff and delivery
-      concern (build, deploy, environment) from the artifacts, then assigns
-      every item to exactly one plan. No new gate code;
-    - *upstream* — run only if the trace below shows the missing work is
-      absent before stage 4: the smallest prompt change at the stage where it
-      drops out (for example, `roadmap-components.md` naming an owner for
-      delivery and environment work), re-run from that stage with `--from-stage
-      N` and the baseline stage 4 prompt, twice.
-  - **Trace first:** before the arms run, read the first version's brief and
-    stage 1–3 artifacts for each of the four plans the human added, and record
-    the earliest stage where its work appears (or that it never does). This
-    costs no model calls and decides whether the *upstream* arm runs.
+  - **Trace result (2026-11-14, no model calls; recorded in the evidence
+    section):** `repository-browse-and-reference` is required by the brief and
+    was cut at stage 1 by the smallest-proof rule (now #533). The generic work
+    behind `cdk-infrastructure-and-environments` and `static-spa-delivery`
+    (deploy the two deployable units into the single environment; deliver the
+    UI unit) is stated in stage 2's hosting constraints and has no owner at
+    stage 3. The CDK, environment-array, S3/CloudFront and Bitbucket Pipelines
+    specifics, and all of `bitbucket-deployment-pipelines`, are in no input:
+    they are owner requirements added 2026-10-09 (feedback ledger).
+  - **Reference list:** what the inputs can support: the five original plans,
+    the repository plan, and a plan (or plans) that deploys the two units into
+    the single environment and delivers the UI. Recall is how many of these a
+    run produces a matching plan for, matched by hand and recorded with the
+    reasoning. The owner-added specifics are recorded as out of reach, not
+    scored. Extra plans are listed separately for the owner to judge as useful
+    or noise.
+  - **Arms**, each from its own throwaway plan-tool branch carrying only that
+    arm's prompt edit, run twice unless noted:
+    - *baseline-4* — current prompts, `--from-stage 4` on the first version's
+      stage 1–3 artifacts, measuring run-to-run spread;
+    - *B* — a prompt-only work inventory at stage 4: list each flow hop, store,
+      constraint discharge, producer/consumer handoff and delivery concern
+      (build, deploy, environment), then assign every item to exactly one plan;
+      `--from-stage 4`. No new gate code;
+    - *baseline-1* — current prompts from the brief (all four stages), once; the
+      first stored version is the second sample;
+    - *R* — #533's wording (requirements stay; smallest proof governs how; the
+      stage 4 small-plan preference), from the brief;
+    - *R+D* — *R* plus one `roadmap-components.md` line requiring an owner for
+      every stage 2 hosting, topology and environment constraint, from the
+      brief.
   - **Recorded per run:** plan count, disposition mix, recall against the
     reference with each match, extra plans, attempts, prompt bytes, wall time
-    and cost (§6 of `docs/evidence/roadmap-run-measurements.md` cost about
-    $2.73 per stage 4 run, so the six stage 4 runs cost roughly $15–20; an
-    *upstream* run re-runs more stages and costs more).
-  - **Decision the result feeds:** if A recovers the reference list, ship #533
-    with A's line and stop. If B recovers materially more than A, file the
-    work-inventory design (an inventory artifact plus an every-item-owned gate)
-    as a `plan` route at `architect` tier. If the *upstream* arm recovers what
-    the stage 4 arms cannot, file the change at the stage the trace named,
-    which may be the brief guidance rather than a prompt. The fixes can
-    combine; each is filed as its own entry.
-- **Effort:** small to medium. Copying artifacts, two prompt edits on throwaway
-  branches, six stage 4 runs, and one evidence section.
+    and cost. §6 of `docs/evidence/roadmap-run-measurements.md` measured about
+    $2.73 for one stage 4 run, so the four stage 4 runs cost roughly $11; a
+    run from the brief has not been costed and is recorded, five of them.
+  - **Decision the result feeds:** #533 ships on the owner's rule either way;
+    *R* shows its effect. If *R+D* recovers the delivery plans that *R* misses,
+    file the stage 3 ownership line as its own entry. If *B* recovers
+    materially more than *baseline-4*, file the work-inventory design (an
+    inventory artifact plus an every-item-owned gate) as a `plan` route at
+    `architect` tier. The fixes can combine; each is filed as its own entry.
+- **Effort:** medium. Copying artifacts, three prompt variants on throwaway
+  branches, four stage 4 runs and five runs from the brief, and one evidence
+  section.
 - **Risks / fallout:** n=2 per arm on one roadmap is provenance, not proof, and
   gates nothing. Hand-matching recall is a judgment, so each match is written
   down. The head's nine plans are one reviewer's answer, not ground truth.
-- **Dependencies:** none. Feeds #533 (hold its merge until arm A is read) and
-  any work-inventory entry filed after it.
+- **Dependencies:** none; *R* can run from a throwaway branch before #533
+  merges. Feeds a stage 3 ownership entry and a work-inventory entry if the
+  arms support them.
 - **Scope contract:**
   - **Outcome:** a dated section in `docs/evidence/roadmap-run-measurements.md`
     recording the stage where each missing plan's work first drops out, plan
     count and recall against the reference list for each run of every arm, and
     the decision it supports.
   - **In scope:** the throwaway input copy, the no-model trace across the
-    brief and stages 1–3, the stage 4 prompt variants and the conditional
-    *upstream* variant on throwaway branches, their runs, and the evidence
-    section.
+    brief and stages 1–3, the arms' prompt variants on throwaway branches,
+    their runs, and the evidence section.
   - **Out of scope / Non-goals:** deliberately no merged prompt change (#533
-    carries that, and upstream changes get their own entries), no new gate,
-    inventory artifact, schema change or stage split (splitting stage 4 into
-    several calls is considered only if every arm fails), no prompt-override flag added to plan-tool, no
+    carries the requirements correction, and other changes get their own
+    entries), no new gate, inventory artifact, schema change or stage split
+    (splitting stage 4 into several calls is considered only if every arm
+    fails), no prompt-override flag added to plan-tool, no
     write to Loom, and no change to Loom's roadmap or plans.
   - **Allowed behavior changes:** none in shipped code.
   - **Allowed reorganization:** none.
