@@ -596,6 +596,7 @@ Mirror source modules: `plan_tool/X.py` → `tests/test_X.py`. Default to **unit
 
 ## Reference docs
 
+- [`docs/history/README.md`](docs/history/README.md) — the by-area index of settled decisions, design plans and evidence. **Before designing, changing, or reviewing behavior in an area, read the area's contract, then its row there.** A decision recorded in `docs/history/backlog-decisions.md`, a design plan or an evidence page is settled unless new evidence reopens it, and the record names that evidence. Handoffs are temporary and are not a source of settled decisions; durable decisions move into these docs before a handoff is retired (`handoffs/README.md` § "Policy")
 - `MISSION.md` — project mission + the grounding principles the codebase is built to obey (each carries a stable `<!-- principle-id: … -->` kebab slug)
 - `CAPABILITIES.md` — app-level catalog mapping each CLI/orchestrator surface to the MISSION principle(s) it serves; kept honest by a no-Claude check in `plan-tool validate` (`plan_tool/capability_catalog.py`). **Distinct** from the per-plan `features:` registry (durable + outward vs transient + inward; no shared id space)
 - `docs/how-to/use-cases.md` — situation-first guide: is your work a good fit, which use case you're in, and which commands to reach for (the *when*, complementing CAPABILITIES' *what* and the command guides' *how*)
