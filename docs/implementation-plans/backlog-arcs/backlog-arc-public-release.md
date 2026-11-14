@@ -24,7 +24,7 @@ publication, remote changes, history rewriting, or independent team-policy chang
 The installed-skill arc owns #508/#509/#511/#512 and #377. The
 operator-workflow arc owns #510/#515. This coordination arc routes the separate
 remaining release prerequisite #514 and consults the other arcs for their lanes.
-Do not duplicate #378/#379 tracker-convention or stale-entry work.
+Do not duplicate #378's tracker-convention or stale-entry work.
 
 Next bounded action: review #514's [install/update instructions](../../how-to/install-and-update.md)
 and [shared-root sync procedure](../../RELEASING.md#keep-bitbucket-and-github-synchronized),

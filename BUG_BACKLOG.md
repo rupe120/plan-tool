@@ -2255,11 +2255,24 @@ not include them.
   diffing and refuse with the duplicated ids (read the "one exception" note on
   that gate before reusing it). Deliberately not: changing `_diff_by_id` or
   `artifact_row_diffs`, whose behavior candidate materialization relies on.
-  The `--compare` hardening entries BACKLOG #410, #416 and #421 touch the same
-  path and can land in the same change.
+  Three small hardening items on the same path land in this change (they were
+  BACKLOG #410, #416 and #421, merged 2026-11-14): (a) `_has_roadmap_comparison`
+  in `cli/roadmap_cmd.py` hand-inlines the one non-`None` default
+  (`--comparison-output`, `"cards"`); give `_option_occurrences` a `default=`
+  parameter so it reports no occurrence when the flag was not supplied (it
+  currently yields `("cards",)`). (b) `roadmap_artifacts.py:design_row_collections`
+  falls through to a `PlansArtifact`-shaped return with no
+  `isinstance(artifact, PlansArtifact)` check; add one fail-closed check at the
+  source, so `roadmap_revision_patch.py`, `roadmap_revision.py` and
+  `roadmap_structural_revision_proof.py` get a clear refusal instead of an
+  `AttributeError` or silently wrong data. (c) `--compare`'s companion-mode
+  rejection list (`_roadmap_comparison_has_conflict`, about nine sibling mode
+  predicates) is tested for one of about eight groups; pin the deliberate
+  carve-out with one parametrized test over every sibling mode.
 - **Approach:** `direct`.
 - **Verification:** a comparison with a duplicate id on either side refuses and
-  names the id; both row-kind and ordering-kind comparisons are covered.
+  names the id; both row-kind and ordering-kind comparisons are covered. The three
+  hardening items each have a failing-before test.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** 2026-09-21, `/code-review high` on the `roadmap-concept-comparison`
   implementation; moved from BACKLOG #411, 2026-11-14.

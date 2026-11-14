@@ -24,8 +24,8 @@ execution history remains on Integration-local branches; publication is not assu
 ## Proposed response and scope limits
 
 BACKLOG #492 owns the investigation and the staged handoff to #493, #462 and
-#494. Existing #490 owns finding-disposition records; #485 owns the separate
-deliberate-roadmap-departure decision; #484 owns fix-induced finding marks.
+#494. Existing #490 owns finding-disposition records; #490 also owns the deliberate-roadmap-departure decision
+(merged from #485); #484 owns fix-induced finding marks.
 Their contracts must not be duplicated under shared-context terminology.
 
 The first useful result is a reviewed decision about the smallest composition

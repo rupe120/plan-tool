@@ -15,7 +15,7 @@ outcome and failure receipt) shipped 2026-10-13; both left this arc.
 
 Adjacent items that stay routed elsewhere and are not owned here: #87 (the
 test-authoring gate's baseline; it also records the two causes seen in this
-run), #88 (memoizing a `run` step's `claude` call), and #488 (routing a failed step's receipt to roadmap feedback,
+run) and #488 (routing a failed step's receipt to roadmap feedback,
 routed by `backlog-arc-roadmap`).
 
 ## Details
@@ -37,7 +37,7 @@ each entry's first step is to read the code and may close it as already handled.
 A session is already committed to changing how `run` steps are prompted, gated,
 retried, or reported — not merely because a gate misbehaved during other work
 (file that as an out-of-scope finding instead). Do not choose it for the
-test-authoring gate's dirty-baseline problem (#87) or call memoization (#88).
+test-authoring gate's dirty-baseline problem (#87).
 
 ## Delivery cadence
 
@@ -49,7 +49,7 @@ push automatically; push only when the user explicitly requests it.
 
 1. **#454.** `ready`, `direct`, and independent: a prompt change.
 2. **#455 (a), then its decision (b).** The failure-list change is `direct`; the
-   repair-attempt decision follows #88's memoization so a repair does not re-spend
+   repair-attempt decision uses the gate re-evaluation absorbed from #88 so a repair does not re-spend
    a successful call.
 3. **#459** — a decision on its own; independent of the rest.
 4. **#457 and #458 wait on their gates** (a second non-reproducing gate failure;

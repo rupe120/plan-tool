@@ -43,7 +43,7 @@ Do not push automatically; push only when the user explicitly requests it.
    runner, rather than a bounded measurement. Keep #173 deferred and use fresh
    completeness audits. Re-open this route only after measured operational
    audit cost justifies a new, bounded decision. This id stays the withdrawn
-   coverage-replay record; later `response_contract` leftover work is #300
+   coverage-replay record; later `response_contract` leftover work is #79 (which absorbed #300)
    and is not this route.
 4. **Delivered 2026-08-20:** the direct `plan-quota-recovery` fixes preserve
    terminal quota diagnostics without changing the confirmed Cursor matcher.

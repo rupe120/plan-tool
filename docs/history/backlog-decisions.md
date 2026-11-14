@@ -1134,3 +1134,22 @@ Removed from `BACKLOG.md` after a value review against `MISSION.md` and the anti
 | #498 | Plan body should point to `plan-tool status` | The gain is one wording change. The cost is five pinned test files, the `annotate.md` placeholder check, and permanent recognition of both pointer strings. That tax outweighs a pointer that is read mostly by tools. |
 | #506 | Total budget across a multi-round audit loop | plan-tool doesn't own the multi-round loop; the external driver does, and it already has the shipped per-invocation `run_end.usage` totals (#505) to sum and stop on. Principle `none`. |
 | #516 | Which seed files directory-wide annotate includes | The entry says it is not evidence of a failure, and explicit file paths are unaffected. |
+
+## Merged entries, 2026-11-14
+
+Each entry below was folded into the entry named, which now carries its scope in an "Absorbs" bullet (the `--compare` items sit in a `BUG_BACKLOG.md` entry). The merged id stays citable here; the full text is recoverable with `git log -S` on the id.
+
+| ID | Folded into | What carried over |
+| --- | --- | --- |
+| #425 | #518 | The routers point at the shared model-selection rule. Not covered: a repository with no skill installed, which was #425's motivating incident. |
+| #388 | #518 | Router-table drift handled with the skill split; the generated-template versus drift-lint decision is settled there. |
+| #88 | #455 | Re-evaluate post-call gates against the tree on disk instead of re-spending the `run` call. Memoizing the call's output is dropped as the wrong frame. |
+| #151 | #210 | Over-requested purity-path grounding is decided only after #210 decides keep or cut; a narrow purity-only mode applies only if the pass is kept. |
+| #379 | #378 | The closing rule with its safeguards: verify first, citation sweep, surface instead of changing a parked or decision-needed entry, tracker-only commit, and the #337 and #315 incidents. |
+| #360 | #355 | The duplicate interruption-log write is removed if #355's `RunLogWriter` best-effort contract covers it, otherwise recorded there as accepted; no standalone helper. |
+| #342 | #349 | One design question: whether the status callback and the run logger are one seam. |
+| #300 | #79 | The two heading regexes migrate with the JSON slice; `_REDIRECT_HEADING_RE` keeps its blank-line anchoring. |
+| #257, #258 | #259 | One change renders the existing `depends_on_notes` entry in grounding, the Jira story body and the detail prompt. |
+| #410, #416, #421 | `--compare` entry in `BUG_BACKLOG.md` | A `default=` parameter on `_option_occurrences`, a fail-closed type check in `design_row_collections`, and one parametrized test of the companion-mode rejection list. |
+| #427 | #458 | Its 212 cited / 95 defined / 117 undefined test-name counts become #458's false-positive corpus. The archived plan's detail files are not rewritten. |
+| #485 | #490 | A deliberate departure from a roadmap row is a disposition of kind `departure`; the authority question is assigned to #490 to settle. |

@@ -116,7 +116,7 @@ Owner product decisions remain with the owner. O07 excludes app-server mode,
 O09 selects transactional invocations, O11 withdraws queueing/cancellation for
 now, and O14–O16 select the successor, pin direction and feedback route. Read
 those explicit decisions alongside earlier proposal prose. A pending departure
-or feedback id never replaces accepted-head authority; #485 owns that question.
+or feedback id never replaces accepted-head authority; #490 owns that question (#485 is merged into it).
 
 ## Minimum handoff and existing input delivery
 
@@ -161,7 +161,7 @@ contract to settle before an implementation seed, not implied by this result.
 | #462 cross-plan advisory | Conditional `build` | Coordinated shared-contract findings remain distinct from this layer-premise case. Preserve #462's own evidence gate; this study does not settle whether its prior one-sided detection/churn evidence meets that gate. A conditional recommendation neither promotes #462 nor makes #492 wait for it. |
 | #494 prerequisite status | `no-action` for this selected journey | `cli/inspect.py:_print_status` already shows progress/dependencies, stale-detail advice and pending concept decisions. The remaining provider question can be cited in the record/plan; this study does not show a distinct requirement for a new status projection or select its input contract. Keep its entry gated. |
 
-#490 retains finding-disposition ownership; #485 retains departure authority;
+#490 retains finding-disposition ownership, including the departure authority question (merged from #485);
 #262 retains the bare/detail advisory; #403 retains installation-readiness work.
 No follow-on is implemented, closed or promoted by this document. #492's stage
 arc stays the routing authority. This is a bounded use-existing result, not a
