@@ -122,7 +122,7 @@ correlation.
 The observed-window registry keeps `(window, exact)` per backend and model:
 
 - **Exact:** the entry whose id equals the selected model, or the only entry in the result. It replaces any earlier value.
-- **Lower bound:** a mixed result gives only its smallest window. It never replaces an exact window, only rises, and errs toward warning; no alias is guessed.
+- **Lower bound:** a mixed result gives only its smallest window. It never replaces an exact window, only rises, and errs toward warning; no alias is guessed. Containment matching and a dominant-entry fallback were removed 2026-10-09 because each gave a model a window it did not have.
 - **No model selected:** the key holds one window for the whole process and assumes the CLI's default model does not change underneath the run. A mid-run change is not corrected by a later lower bound (a deliberate limit, not an oversight).
 - **Concurrency:** updates are lock-guarded, because each in-flight call has its own output pump thread.
 
@@ -131,6 +131,7 @@ Other contracts:
 - **The one refusal.** The selected run-reconcile prompt in `launcher.run_step` is the only budget verdict that refuses a send. It passes `observed=False`, so only the Codex catalog, a file, can change its verdict, never a window learned mid-run.
 - **Call sites.** Every `estimate_prompt_budget` / `maybe_warn_prompt_budget` call outside the leaf passes `context_window=active_context_window(...)`; `tests/test_context_window.py` pins the exact per-module counts by AST.
 - **File memo.** The Codex catalog and config are parsed once per file version `(mtime_ns, size, inode, device)`, under a lock. A content failure (malformed or wrongly shaped, including pathological nesting) is remembered per version; a read error (a descriptor limit, a momentary permission error) is not cached.
+- **Deliberately not.** Exact token counting, per-project window overrides, and a gate (an exit-code flip): the advisory stays advisory, and the one refusal is the run-reconcile send above. `prompt_budget.BYTES_PER_TOKEN` stays 3.5, which is more conservative than the 4.13 bytes/token measured on Codex 0.162.0 (2026-10-09, one 211,712-byte payload, one run; n=1, [sizing record](evidence/integration-context-budget-2026-10-09/sizing.md)).
 
 ## Progress reporting
 

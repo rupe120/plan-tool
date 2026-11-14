@@ -795,6 +795,8 @@ dataclass's fields.
 exact UTF-8 prompt, with no prompt text stored. New events default to null
 when no prompt is available; older events lack the key. This additive field
 does not change the schema version or backend-specific token accounting.
+Equal hashes mean only equal rendered prompts; they do not imply equal settings,
+instructions, or repository state, and on their own do not show wasted tokens.
 
 **The event catalog is the `Event` union in `run_log.py`, not this doc.** Only the
 events registered in `plan_tool/data_contract.py` are drift-guarded here — the
