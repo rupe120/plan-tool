@@ -942,43 +942,16 @@ between narrative user-review checkpoints and assistant-reviewed batch artifacts
 
 ### Review passes
 
-1. Report-only review of `80dfaa78e..2aab4c878`: no material correctness or
-   completeness finding. Method: accepted plan/details, entire implementation
-   diff, owning contracts, source and existing tests; fixture round-trip and
-   whitespace checks. The live retry is pending at this snapshot, and no success
-   is inferred. Artifact: `.tmp/skill-led-demo-examples.review-1.md`.
-2. Independent report-only review of `80dfaa78e..81a83f5bb`: no material finding.
-   Method: full diff plus actual rehearsal files, report qualification, all six
-   artifact hashes, companion fingerprints, command lifecycle records and
-   unchanged application/test files. Artifact:
-   `.tmp/skill-led-demo-examples.review-2.md`.
+1. Report-only review of `80dfaa78e..2aab4c878`: no material finding (accepted plan/details, full diff, owning contracts, source, existing tests, fixture round-trip). The live retry was pending at that snapshot and no success was inferred.
+2. Independent report-only review of `80dfaa78e..81a83f5bb`: no material finding (full diff, rehearsal files, report qualification, all six artifact hashes, companion fingerprints, command lifecycle records, unchanged application/test files).
 
-The saved final responses identify their reviewed ranges and methods. Their
-conclusions are retained here because `.tmp/` paths may disappear. The second
-pass reviews the final evidence update independently; it does not assume the
-first pass's conclusion. No production logic changes in this range. The later one-line navigation
-correction (`49311e1a1`) is checked against the actual heading and the full
-changed-document fragment set; final closure metadata adds no behavioral claim.
+The second pass reviews the final evidence update without assuming the first pass's conclusion. No production logic changes in the range. The later one-line navigation correction (`49311e1a1`) is checked against the actual heading and the full changed-document fragment set.
 
 ### Reconciliation and closure
 
-`plan-tool --backend codex --model gpt-6.1-sol reconcile-code
-skill-led-demo-examples --all -y` exits 0 and reports no code steps to reconcile.
-All four steps are explicitly non-code; there is no eligible code sweep to
-repeat. Log: `.tmp/skill-led-demo-examples.reconcile-sweep-1.log`.
+`plan-tool --backend codex --model gpt-6.1-sol reconcile-code skill-led-demo-examples --all -y` exits 0 and reports no code steps to reconcile; all four steps are explicitly non-code, so no code sweep exists to repeat. The launcher completes and commits all four steps. The final `uv run pytest tests/ -q -n auto` passes (14,698 passed, 66 skipped). Local story lint checks one actual story without warnings, and the rehearsal's single baseline Node test passes. Neither result is described as proof of an unimplemented feature.
 
-The launcher completes and commits all four steps. The parent corrects the seed
-excerpt, files the skill observation separately, completes the bounded rehearsal,
-and synchronizes evidence/status. The final `uv run pytest tests/ -q -n auto`
-passes with 14,698 passed and 66 skipped. Local story lint checks one actual
-story without warnings, and the rehearsal's single baseline Node test passes.
-Neither suite result is described as proof of an unimplemented feature.
-
-The review loop closes as converged for the implemented documentation scope.
-The skill-router correction has its own repair and review record; it is separate
-from this demo implementation. Remote demo ref
-replacement, release publication, browser testing and any fresh TTRPG run retain
-their explicit boundaries; no merge or publication is performed by this review.
+**Closed as converged** for the implemented documentation scope (two consecutive independent passes with no material finding). The skill-router correction has its own record, separate from this demo implementation. Remote demo ref replacement, release publication, browser testing and any fresh TTRPG run retain their explicit boundaries; this review performs no merge or publication.
 
 ## Skill-router recipe repairs
 
@@ -990,372 +963,165 @@ their explicit boundaries; no merge or publication is performed by this review.
 | Source-fix snapshot | `8fcf1b1f7` on `fix/skill-router-recipes` |
 | Scope | Claude, Codex and Cursor routers; resolved backlog and evidence links |
 | Runtime changes | None |
-| Validation | Eight parent parser checks; 33 affected tests pass; full suite at `8fcf1b1f7`: 14,698 passed, 66 skipped in 61.41s |
-| Review state | Actual Claude Code passes 2–3 find no router correctness defect; record cleanup verified, see closure |
+| Validation | Eight parent parser checks; 33 affected tests pass; full suite at `8fcf1b1f7`: 14,698 passed, 66 skipped in 61.41s (the earlier pre-correction run: 14,698 passed, 66 skipped in 63.02s) |
+| Reviewers | Four Codex passes (all clean or one P2) and three actual Claude Code `code-review` Skill passes at high effort |
+| Disposition | **Stopped at exit 2 (direct-change self-seeded-edit exit).** Router convergence holds (Claude passes 2 and 3 find no router correctness defect); the record is not a wholly clean branch review |
 
 ### Property and sites
 
-The routers must agree with existing command behavior and the canonical
-[shared directives](../integrations/shared/DIRECTIVES.md) about authoring order,
-iteration, recovery, verification authority and exit status. This repair changes
-instructions; it adds no workflow gate and changes no CLI behavior.
-
-The pre-edit identifier search covers `detail --reconcile`, `reconcile-plan`,
-`[REDIRECT]`, `--iterate`, manual done-state editing and budget exhaustion.
-The vocabulary search covers the authoring pipeline, implemented work,
-headless examples, defaults, recovery, read-only checks and CI gates. Sites are
-the headless block, decision tree, pipeline summary, reconcile catalog and
-iteration summary in all three routers. A resolved-record sweep also finds
-two demo records linking the removed backlog heading; those links move here.
+The routers agree with existing command behavior and the canonical [shared directives](../integrations/shared/DIRECTIVES.md) on authoring order, iteration, recovery, verification authority and exit status. The repair changes instructions only: no workflow gate, no CLI behavior change. Sites are the headless block, decision tree, pipeline summary, reconcile catalog and iteration summary in all three routers; two demo records that linked the removed backlog heading now link here.
 
 ### Findings and dispositions
 
 | Finding | Disposition and evidence |
 | --- | --- |
 | Completeness recipe and pipeline omit the bare audit | **fixed `31fdf2f22`** — seed/create → bare audit → one-shot detail → grounded audit, with committed judged corrections and user review boundaries. |
-| Detail default and compatible iteration flags are misstated | **fixed `31fdf2f22`** — detail defaults off; actual parser checks reject `detail --reconcile --iterate` and standalone reconcile iteration flags. The examples use only valid combinations. |
-| Test-defect recovery suggests hand-editing done status | **fixed `31fdf2f22`** — commit the tested code/test correction without the plan, use `run --accept --commit` to run gates and advance, and retain the canonical unsuitable-implementation/no-gate escape routes. |
-| Verification/redirect recipes send produced work to plan mutation | **fixed `31fdf2f22`** — request report-only inspection with `run --step N --mode check`; qualify all plan-side recipes as pre-execution and judge post-run redirects without an automatic code-canonical plan rewrite. |
-| Summary promises budget exhaustion exits nonzero | **fixed `31fdf2f22`** — completed loops can exit zero; inspect saved outcome/qualification and use only supported CI flags. Existing exhaustion coverage explicitly asserts zero. |
-| Independent headless examples still resemble an unaudited sequence | **fixed `4c5b20e62`** — all three blocks are explicitly syntax examples, with sequential authoring routed to the staged recipe and canonical gates. |
+| Detail default and compatible iteration flags are misstated | **fixed `31fdf2f22`** — detail defaults off; parser checks reject `detail --reconcile --iterate` and standalone reconcile iteration flags; examples use only valid combinations. |
+| Test-defect recovery suggests hand-editing done status | **fixed `31fdf2f22`** — commit the tested code/test correction without the plan, use `run --accept --commit`; canonical escape routes retained. |
+| Verification/redirect recipes send produced work to plan mutation | **fixed `31fdf2f22`** — request report-only inspection with `run --step N --mode check`; plan-side recipes qualified as pre-execution. |
+| Summary promises budget exhaustion exits nonzero | **fixed `31fdf2f22`** — completed loops can exit zero; existing exhaustion coverage asserts zero. |
+| Independent headless examples resemble an unaudited sequence | **fixed `4c5b20e62`** — all three blocks are labeled syntax examples; sequential authoring routes to the staged recipe. |
 
-The original three-issue backlog record is fulfilled and removed. The two additional findings are the produced-work verification/redirect
-authority error and the budget-exhaustion exit-status claim listed above.
-They have provenance in local branch `docs/skill-router-follow-up-findings` at `c02aa3ff7`; that tracking
-commit is not a remaining fix and should not be replayed as pending work after
-this repair. The broader installed-skill portability and policy effort (#508)
-remains separate. A nested sandbox initialization limitation observed during
-the demo is resolved by parent access; it is not claimed as a skill runtime fix.
+The original three-issue backlog record is fulfilled and removed; the two additional findings (produced-work authority, exit status) have provenance in local branch `docs/skill-router-follow-up-findings` at `c02aa3ff7`, a tracking commit that is not a remaining fix. The broader installed-skill portability and policy effort (#508) remains separate. A nested sandbox initialization limit seen during the demo is resolved by parent access, not claimed as a skill runtime fix.
 
-### Validation and reviews
+### Codex reviews and installation
 
-- Real `build_parser().parse_args()` checks cover create, both audit gates,
-  one-shot detail, report-only step inspection, both plan-side reconcile routes
-  and gated acceptance without executing handlers.
-- `uv run pytest tests/cli/test_skill_cmd.py
-  tests/test_cli.py::TestCrossCuttingIterationCLI::test_budget_exhaustion_stderr_signal_create -q`:
-  33 pass, including installer/copy behavior and the documented zero-exit case.
-  After the headless correction the same affected set passes in 0.53s.
-- Initial full-suite run before the Claude corrections: `uv run pytest tests/ -q -n auto`,
-  14,698 pass and 66 skip in 63.02s. The later snapshot/result is in the header.
-  No tests matching prose are added.
-- Review 1, `94e259687..31fdf2f22`: no material finding; independently checks
-  parser variants, owning contracts, source and relevant existing tests.
-- Review 2, the same source snapshot: one P2 at the headless syntax block,
-  corrected class-wide in `4c5b20e62`; no other material finding. It validates
-  17 representative parser cases and the implemented authority boundaries.
-- Review 3, `94e259687..4c5b20e62`: no material finding after the correction;
-  independently checks the full identifier/vocabulary class, canonical rules,
-  source and tests, with 12 parser-only probes. The remaining deeper iteration
-  guide contradiction is tracked in BUG_BACKLOG.md rather than expanded into
-  this router repair.
-- Review 4, `94e259687..49f663dc4`, independently checks all eight changed
-  files, 19 parser probes, handlers, source/tests, resolved links and the
-  retained full-suite result; it reports no material findings. Saved artifacts
-  use `.tmp/skill-router-recipes.review-N.md`; these verdicts retain the
-  conclusions when scratch paths disappear.
+- Review 1, `94e259687..31fdf2f22`: no material finding.
+- Review 2, same snapshot: one P2 at the headless syntax block, **fixed class-wide `4c5b20e62`**; 17 parser cases validated.
+- Review 3, `94e259687..4c5b20e62`: no material finding; the deeper iteration-guide contradiction is tracked in BUG_BACKLOG.md (later resolved in § "Iteration route documentation repair").
+- Review 4, `94e259687..49f663dc4`: no material finding (eight files, 19 parser probes, links, retained full-suite result).
 
-No plan-tool execution plan or post-run code reconcile sweep is needed for this
-direct documentation correction. The direct-change accuracy/completeness loop
-applies; installation refresh and publication are recorded only when performed.
+No plan-tool execution plan or post-run reconcile sweep applies to this direct documentation correction. Installation: the installed Codex `SKILL.md`/`DIRECTIVES.md` matched the pre-fix source, so no custom content was overwritten; the global `install-skill --force` reported "already installed" while bundled-source resolution did not select this checkout's router (not evidence `--force` is broken). The explicit checkout invocation (`.venv/bin/python -c 'from plan_tool.cli.app import main; raise SystemExit(main(["install-skill", "--integration", "codex", "--user", "--force"]))'`) succeeds and both installed files byte-match the verified source. Claude/Cursor links are not retargeted. The push hook's full suite passes.
 
-### Installation and closure
+### Claude Code review passes (2026-10-21)
 
-Before refresh, the installed Codex `SKILL.md` and `DIRECTIVES.md` copies match
-the pre-fix source, so no custom content is overwritten. The global
-`plan-tool install-skill --integration codex --user --force` reports “already
-installed,” but a byte comparison still finds the old router. Its bundled-source
-resolution does not select this checkout's changed router; this is not evidence
-that `--force` is broken.
+The Codex reviews are not the directed Claude Code `/code-review` route; three actual built-in `code-review` Skill passes at high effort (Sonnet 5.5, separate sessions) follow.
 
-The explicit checkout invocation succeeds:
-
-```bash
-.venv/bin/python -c 'from plan_tool.cli.app import main; raise SystemExit(main(["install-skill", "--integration", "codex", "--user", "--force"]))'
-```
-
-Post-install byte checks confirm both installed files match the verified source.
-Existing Claude/Cursor installation links are not retargeted. The branch push's
-required full-suite hook also passes.
-
-Two consecutive independent post-correction Codex reviews are clean. They do not
-constitute the directed Claude Code `/code-review` route; that omission is
-identified on 2026-10-21 and the actual Claude loop follows below. The deeper
-iteration-guide mismatch remains separately tracked. No CLI behavior changes,
-new gates, default-branch pushes or pull-request merge are part of this repair.
-
-
-### Claude Code review pass 1 — 2026-10-21
-
-Scope: `94e259687..ef924797e`. Claude Sonnet 5.5 invokes the actual built-in
-`code-review` Skill with `high` effort in session
-`1b67de09-bf16-47ed-b385-4dc20c19831d`. The original CLI exits zero and writes
-`.tmp/skill-router-recipes.claude-review-1.md`; its stream records the Skill
-invocation. Local diff review only; no publication or code edits.
+Pass 1 (`94e259687..ef924797e`):
 
 | Finding | Disposition |
 | --- | --- |
-| F1 medium-low: check mode does not assess implementation | **refuted in part / clarified** — `prompts/check.md` explicitly requests mismatches between the step and code and forbids rewriting. A clean model report cannot prove delivery; the routers now state that limitation instead of promising read-only enforcement. Mutating `reconcile-code` is inappropriate for an inspection request. |
+| F1 medium-low: check mode does not assess implementation | **refuted in part / clarified** — `prompts/check.md` requests step/code mismatches and forbids rewriting; a clean model report cannot prove delivery, so routers state that limit; mutating `reconcile-code` is inappropriate for inspection. |
 | F2 medium-low: detail example lacks clean-tree precondition | **fixed** — all three detail syntax lines state the precondition and plan commit. |
-| F3 low: reconcile auto-apply warning loses “every” | **fixed** — all three lines state every recommendation is auto-applied without judgment. |
-| F4 low: local provenance is unreachable on this branch | **clarified** — the local branch is named beside the commit. The finding descriptions and dispositions are retained here without depending on that branch merging. |
-| F5 low: review 4 is embedded in review 3 | **fixed** — separate review bullet; remove incidental CLI narration. |
-| F6 nit: extra backlog separator | **fixed** — normalize heading separators. |
-| F7 nit: long completeness recipe duplicates directives | **declined** — the router must expose both audit gates, commits and user boundaries; its explicit clean-baseline instruction already covers the scenario. No additional workflow is introduced. |
+| F3 low: reconcile auto-apply warning loses "every" | **fixed** — all three lines say every recommendation is auto-applied without judgment. |
+| F4 low: local provenance unreachable on this branch | **clarified** — the local branch is named beside the commit; findings/dispositions are retained here. |
+| F5 low: review 4 embedded in review 3 | **fixed** — separate bullet; incidental CLI narration removed. |
+| F6 nit: extra backlog separator | **fixed** — heading separators normalized. |
+| F7 nit: completeness recipe duplicates directives | **declined** — the router must expose both gates, commits and user boundaries. |
 
-Pass-1 outcome: convergence remained pending fresh Claude Code reviews after
-these corrections.
-
-
-### Claude Code review pass 2 — 2026-10-21
-
-Scope: `94e259687..8fcf1b1f7`. Actual built-in `code-review` Skill at high effort,
-Claude Sonnet 5.5, fresh session `43e9f02a-db4b-48aa-9bc2-79190646a2a7`;
-CLI exits zero with `.tmp/skill-router-recipes.claude-review-2.md`.
+Pass 2 (`94e259687..8fcf1b1f7`):
 
 | Finding | Disposition |
 | --- | --- |
-| 1 medium-low: evidence page describes repaired recipes as current | **fixed** — date the observation and frame the former recipes as past; retain it as demo provenance. |
-| 2 low: header names an earlier source/test snapshot | **fixed** — name `8fcf1b1f7` and its fresh full-suite result (14,698 pass, 66 skip, 61.41s); affected set is 33 pass in 0.54s. |
-| 3 low: local provenance does not name its two findings | **fixed** — identify both defects explicitly beside the branch reference; their descriptions/dispositions remain in the finding table. |
-| 4 low: check mode is model-judged | **declined, residual limitation** — the existing caveat states that a clean report cannot prove delivery; no deterministic semantic guarantee is claimed. |
-| 5 nit: completeness recipe duplicates directives and omits output override | **declined** — retain both gates in the router; the independent syntax example's optional output override does not constrain the default-location recipe. |
-| 6 nit: backlog should include run reconciliation iteration | **refuted as proposed** — canonical directives explicitly describe `run --iterate` as reconcile-loop control; the unsupported detail combination is independently proven by the parser. Do not widen the backlog from an unverified claim that run ignores reconciliation iteration. |
+| 1 medium-low: evidence page describes repaired recipes as current | **fixed** — observation dated, former recipes framed as past, kept as demo provenance. |
+| 2 low: header names an earlier snapshot | **fixed** — names `8fcf1b1f7` and its fresh suite result (affected set 33 pass in 0.54s). |
+| 3 low: local provenance does not name its two findings | **fixed** — both defects named beside the branch reference. |
+| 4 low: check mode is model-judged | **declined, residual limitation** — caveat already states a clean report cannot prove delivery. |
+| 5 nit: completeness recipe duplicates directives, omits output override | **declined** — both gates stay; the optional override does not constrain the default recipe. |
+| 6 nit: backlog should include run reconciliation iteration | **refuted as proposed, later reversed** — directives describe `run --iterate` as reconcile-loop control and the detail combination is parser-proven; see the follow-up below, which finds this refutation incorrect. |
 
-The router instructions receive no further change in this pass. These record
-corrections do not reset their review window. Pass 2 reports no router correctness
-defect; another independent pass is required before Claude convergence is claimed.
-
-
-### Claude Code review pass 3 — 2026-10-21
-
-Scope: `94e259687..a575487d5`. Actual built-in `code-review` Skill at high effort,
-Claude Sonnet 5.5, session `a467cb5b-edf1-413e-aad8-c80585d634b4`, original CLI
-exit zero. Report: `.tmp/skill-router-recipes.claude-review-3.md`. Its summary
-count has a typo the reviewer could not edit after writing; the individual
-findings below govern (one low-medium, four low, one nit).
+Pass 3 (`94e259687..a575487d5`; its summary count has a reviewer typo, the individual findings govern):
 
 | Finding | Disposition |
 | --- | --- |
-| A1 low-medium: four live gates reference the removed bug entry | **fixed** — BACKLOG #510/#515 and the installed-skill/public-release arcs link this repair as satisfying recipe consistency. Their independent unfinished prerequisites stay. Identifier and vocabulary searches enumerate all four sites before editing. |
-| A2 low: iteration follow-up omits README sibling | **fixed tracking** — add README.md to the existing guide-accuracy backlog entry; leave actual guide changes to that bounded work. |
-| A3 low: repair table overstates check-mode enforcement | **fixed** — use “request report-only inspection”; the prompt directs no rewriting but does not enforce filesystem isolation. |
-| A4 low: index count differs from table rows | **clarified** — remove the count from the index; the finding table retains individual fixes and provenance. |
-| A5 low: two full-suite timings lack separate attribution | **clarified** — label the original run separately from the fresh `8fcf1b1f7` run. |
-| A6 nit: per-pass pending line reads as current | **fixed** — explicitly label the pass-1 outcome. |
+| A1 low-medium: four live gates reference the removed bug entry | **fixed** — BACKLOG #510/#515 and the installed-skill/public-release arcs link this repair; independent prerequisites stay; all four sites enumerated before editing. |
+| A2 low: iteration follow-up omits README sibling | **fixed tracking** — README.md added to the guide-accuracy backlog entry. |
+| A3 low: repair table overstates check-mode enforcement | **fixed** — "request report-only inspection"; the prompt does not enforce filesystem isolation. |
+| A4 low: index count differs from table rows | **clarified** — count removed from the index. |
+| A5 low: two full-suite timings lack attribution | **clarified** — original run labeled separately from the fresh `8fcf1b1f7` run. |
+| A6 nit: per-pass pending line reads as current | **fixed** — pass-1 outcome labeled. |
 
-Router convergence: passes 2 and 3 independently report no router correctness
-defect, with residual advisory limitations dispositioned. At the pass-3 snapshot, supporting-record
-verification remained pending; closure below records the completed sweep. This
-is not represented as a wholly clean branch review. The latest findings predominantly
-concern the repair's own record edits. Finish this bounded application and
-verify the named properties rather than repeatedly elaborating review prose.
+### Closure
 
+Passes 2 and 3 independently find no router correctness defect after the final router change (`8fcf1b1f7`); remaining limits and wording suggestions have explicit dispositions. This is router convergence, not zero findings across every record, and no fully clean whole-branch Claude verdict is claimed. The supporting-record correction is committed as `59796a8ad`: all four live prerequisite replacements resolve to this ledger, the removed-entry vocabulary has no remaining live gate in BACKLOG, BUG_BACKLOG or the arcs, all three routers carry the clean-tree, every-recommendation and delivery-evidence clarifications, `git diff --check` is clean, and the installed Codex skill byte-matches current sources. The record-only sweep changes no router or runtime behavior, so the 33-test and 14,698-test results remain the behavioral evidence.
 
-### Claude review closure
-
-The actual Claude Code route comprises three completed high-effort Skill
-invocations, with separate sessions, exact ranges and saved findings above.
-Passes 2 and 3 independently find no router correctness defect after the final
-router change (`8fcf1b1f7`); remaining model-judgment limitations and optional
-wording suggestions have explicit dispositions. This is router convergence,
-not a claim that those reports contain zero findings across every record.
-
-The final supporting-record correction is committed as `59796a8ad`. Verification
-confirms all four live prerequisite replacements resolve to this ledger, the
-removed-entry heading/vocabulary has no remaining live gate in BACKLOG,
-BUG_BACKLOG or the backlog arcs, and all three routers carry the clean-tree,
-every-recommendation and delivery-evidence clarifications. `git diff --check`
-is clean. The installed Codex skill and directives byte-match current sources.
-The final record-only sweep changes no router or runtime behavior, so the fresh
-33-test and 14,698-test results above remain the behavioral evidence.
-
-Stop under the direct-change self-seeded-edit exit: later findings predominantly
-concern these repair records; complete their bounded application and verify the
-properties instead of resampling unchanged routers. No further full review is
-claimed after `59796a8ad`, and no fully clean whole-branch Claude verdict is
-claimed. All reported findings have dispositions. The omission in the earlier
-execution is corrected; the skill already contains the Claude review requirement.
+**Stopped at exit 2 under the direct-change self-seeded-edit rule:** later findings predominantly concern these repair records, so no further full review is claimed after `59796a8ad`. All reported findings have dispositions. The skill already contains the Claude review requirement the earlier execution omitted.
 
 ### Follow-up correction — 2026-10-22
 
-Pass-2 finding 6 above is incorrectly refuted: the canonical directive itself
-contains a stale claim. `cmd_run` and its existing dispatch test explicitly
-reject `run --reconcile --iterate` with exit 2. The
-[iteration-route repair](docs-and-onboarding.md#iteration-route-documentation-repair)
-corrects the user-facing guides and directives against source/test evidence;
-protected CLAUDE.md policy and generated help remain separately tracked.
-The earlier no-router-defect verdict does not establish run-side flag support.
-
+Pass-2 finding 6 is incorrectly refuted: the canonical directive itself carries a stale claim. `cmd_run` and its dispatch test reject `run --reconcile --iterate` with exit 2. The [iteration-route repair](docs-and-onboarding.md#iteration-route-documentation-repair) corrects the guides and directives against source/test evidence. The earlier no-router-defect verdict does not establish run-side flag support.
 
 ### Iteration policy/help follow-up — 2026-10-22
 
-The protected-policy and CLI help/warning deferral is implemented in the
-[run iteration guidance repair](docs-and-onboarding.md#run-iteration-guidance-accuracy).
-That record owns current validation and review status; deferrals above retain
-the provenance of these earlier review snapshots, not a remaining open bug.
+The protected-policy and CLI help/warning deferral is implemented in the [run iteration guidance repair](docs-and-onboarding.md#run-iteration-guidance-accuracy), which owns current validation and review status; the deferrals above are provenance, not an open bug.
 
 ## Iteration route documentation repair
 
 *Opened 2026-10-22.*
 
-Base: `330441789` (merged PR #135). Scope: iteration examples/defaults and
-reconciliation-loop claims in README, iteration/operations/common-workflow
-guides, RUNBOOK, shared directives and the three skill routers. Runtime behavior
-is unchanged. The fulfilled guide bug is removed; protected policy/generated
-help mismatch remains in BUG_BACKLOG.md for architect-tier work.
+| Field | Record |
+| --- | --- |
+| Base | `330441789` (merged PR #135) |
+| Scope | Iteration examples/defaults and reconciliation-loop claims in README, iteration/operations/common-workflow guides, RUNBOOK, shared directives and the three skill routers; runtime behavior unchanged |
+| Branch | `fix/iteration-guide-routes` (committed; no push or PR) |
+| Checks | Full suite at `0ba7e8692`: 14,698 passed, 66 skipped in 63.72s; 58 affected tests pass; installed Codex and tracked Claude skill/directive files byte-match canonical sources; `git diff --check` clean |
+| Reviewer | Four actual Claude Code `code-review` Skill passes at high effort (Sonnet 5.5) |
+| Disposition | **Converged (low-yield):** reviews 3 and 4 are consecutive passes with no new medium-or-higher finding; not a clean review |
+
+The fulfilled guide bug is removed; the protected policy/generated help mismatch stays in BUG_BACKLOG.md for architect-tier work (implemented later in § "Run iteration guidance accuracy").
 
 ### Property and sites
 
-Only implemented loops are described as iterative. `create` defaults on;
-`detail` and `completeness-audit` default off. Detail stays one-shot unless
-explicitly requested. Detail reconciliation rejects either iteration flag;
-legacy run reconciliation rejects `--iterate`; standalone reconcile verbs do
-not accept it. Plan-side reconciliation remains pre-execution, with
-plan-canonical code reconciliation after execution.
+Only implemented loops are described as iterative. `create` defaults on; `detail` and `completeness-audit` default off. Detail stays one-shot unless requested. Detail reconciliation rejects either iteration flag; legacy run reconciliation rejects `--iterate`; standalone reconcile verbs do not accept it. Plan-side reconciliation stays pre-execution, with plan-canonical code reconciliation after execution. Sites: README, ITERATION, RUNBOOK, OPERATIONS, common-workflows, shared directive iteration paragraph, all three routers, later GATES, TRACKING, ARCHITECTURE, recovery and pipeline audit docs, BACKLOG recipes and the tracked Claude install. Archive plans/evidence describe retained history and stay. No prose-mirroring tests are added; existing `TestIterateFlagsDetail`, `TestDetailReconcileDispatch`, `TestRunReconcileDispatch` and `tests/cli/test_skill_cmd.py` pin the behavior.
 
-Identifier search covers both reconcile aliases and iteration flags; vocabulary
-search covers defaults, headless examples, loop counts, per-invocation budgets
-and checkpoint claims. Sites: README headless/defaults/table/use cases/budgets/
-checkpoint/gate summaries/reconcile example; ITERATION equivalents; RUNBOOK
-loop introduction/reconcile recipes; OPERATIONS headless examples;
-common-workflows create/run examples; shared directive iteration paragraph and
-all three routers. Protected policy and generated help are separately tracked.
+### Findings and dispositions
 
-### Validation
-
-Existing tests: `TestIterateFlagsDetail`, `TestDetailReconcileDispatch`,
-`TestRunReconcileDispatch` in tests/test_cli.py plus tests/cli/test_skill_cmd.py:
-58 passed in 0.66s. These pin authoring defaults, both reconciliation rejections,
-standalone dispatch and installation behavior without a live backend. No tests
-that mirror prose are added. Full-suite and review results are recorded below.
-
-### Review status
-
-Four actual Claude Code Skill reviews are complete. Reviews 3 and 4 are
-consecutive low-yield passes with no new medium-or-higher finding. Their
-advisories are dispositioned below; closure is low-yield, not wholly clean.
-
-### Claude review 1
-
-Range `330441789..9816a9482`; actual built-in `code-review` Skill at high effort,
-Sonnet 5.5, session `918ad21b-85d2-4e5f-905a-dccfd3471ef3`; CLI exits zero.
-Saved report: `.tmp/iteration-guide-routes.review-1.md`.
+Review 1 (`330441789..9816a9482`; suite 14,698 passed, 66 skipped):
 
 | Finding | Disposition |
 | --- | --- |
-| 1 medium: GATES guide still advertises reconcile iteration | Fixed: gate lists and example use implemented authoring routes. |
-| 2 medium: directives imply reconcile-run is the valid iterate route | Fixed: ordinary run is named as a no-op; reconcile rejection remains explicit. |
-| 3 medium: TRACKING prescribes removed mode/iteration | Fixed: phase 3b and examples use post-execution `reconcile-code`, with judged separate invocations. |
-| 4 low: headless explanations still reference obsolete loop | Fixed: explain deterministic authoring fixes, conceptual judgment, valid independent examples and actual completeness CI flag. |
-| 5 low: architecture/recovery/pipeline siblings | Fixed: supported route lists and time-budget coverage; internal helper references explicitly distinguish implementation from CLI availability. |
-| 6 low: runtime warning absent from follow-up | Filed in existing protected-policy/help bug; runtime behavior stays unchanged here. |
-| 7 low: router argument hints include ineffective iteration flags | Fixed: remove run-iteration budget flags from all three hints; authoring loops remain documented in the body. |
-| 8 low: voice and unnecessary churn | Fixed human-facing detail-request wording and headless paragraphs; retain equivalent README/guide facts while correcting stale route claims. No broad style rewrite. |
-| 9 info: whitespace | Fixed extra separators at changed sites. |
+| 1 medium: GATES guide advertises reconcile iteration | **fixed** — gate lists/example use implemented authoring routes. |
+| 2 medium: directives imply reconcile-run is the valid iterate route | **fixed** — ordinary run named a no-op; reconcile rejection explicit. |
+| 3 medium: TRACKING prescribes removed mode/iteration | **fixed** — phase 3b/examples use post-execution `reconcile-code` as separate judged invocations. |
+| 4 low: headless explanations reference obsolete loop | **fixed** — explain deterministic fixes, conceptual judgment, valid examples, actual completeness CI flag. |
+| 5 low: architecture/recovery/pipeline siblings | **fixed** — supported route lists and time-budget coverage; internal helper references labeled implementation-only. |
+| 6 low: runtime warning absent from follow-up | **tracked** — filed in the protected-policy/help bug (BUG_BACKLOG.md); runtime unchanged here. |
+| 7 low: router hints include ineffective iteration flags | **fixed** — run-iteration budget flags removed from all three hints. |
+| 8 low: voice and churn | **fixed** — human-facing detail wording and headless paragraphs; no broad style rewrite. |
+| 9 info: whitespace | **fixed** — extra separators removed. |
 
-Second sweep: identifier searches include `--mode reconcile`, `_iterate_reconcile_loop`,
-both aliases and iteration flags. Vocabulary includes gate surface lists,
-re-audit, per-step/per-run budgets, headless apply and time-budget coverage.
-Additional sites are GATES, TRACKING, ARCHITECTURE, recovery index/audit and
-pipeline audit; all receive route corrections or explicit internal-only labels.
-
-Full suite at `9816a9482`: 14,698 passed, 66 skipped in 54.73s. Parser-only probes
-confirm three defaults, four valid forms and four unsupported combinations;
-run-side rejection is pinned by its existing handler test. Review is not yet
-converged; the next pass reviews the corrected committed snapshot.
-
-
-### Claude review 2
-
-Range `330441789..99ffa33e6`; actual built-in `code-review` Skill at high effort,
-Sonnet 5.5, session `7cf66b91-f7dc-4e1e-af4c-66950cd54049`; CLI exits zero.
-Saved report: `.tmp/iteration-guide-routes.review-2.md`.
+Review 2 (`330441789..99ffa33e6`; suite 14,698 passed, 66 skipped; 58 affected pass):
 
 | Finding | Disposition |
 | --- | --- |
-| 1 medium: TRACKING retains run/reconcile iteration sentence | Fixed: describe separate invocations and actual completeness default. |
-| 2 low: plan-route rationale promises reconcile iteration | Fixed: name authoring audits plus separate reconciliation/review. |
-| 3 low: backlog recipes use removed mode | Fixed: three recipes use `reconcile-code`; source-investigation entry explicitly distinguishes dormant helper from available CLI route. |
-| 4 low: touched detail example has unsupported no-walk/no-save | Fixed: remove both lines; standalone reconcile-plan flags stay. |
-| 5 low: repo-local installed Claude copy remains stale | Refresh from canonical integration sources using the supported copy installer; retain copies as tracked artifacts, not a second authoring source. |
-| 6 low: handoff pending text is stale | Fixed: name completed review snapshots in the overview. |
-| 7 low: recovery entry-point list implies a live reconcile loop | Fixed: supported authoring entry points are separate from the retained internal helper, whose budget no CLI route enables. |
-| 8 info: reconcile-code has no automatic commit | Clarified: workflow example says verify and commit separately. |
-| 9 optional/unverified: detail iteration wording | Declined: current text explicitly requires a request for detail iteration and correctly states its off default. No conflicting claim is verified. |
+| 1 medium: TRACKING retains run/reconcile iteration sentence | **fixed** — separate invocations and actual completeness default. |
+| 2 low: plan-route rationale promises reconcile iteration | **fixed** — names authoring audits plus separate reconciliation/review. |
+| 3 low: backlog recipes use removed mode | **fixed** — three recipes use `reconcile-code`; the investigation entry distinguishes dormant helper from CLI route. |
+| 4 low: detail example has unsupported no-walk/no-save | **fixed** — both lines removed. |
+| 5 low: repo-local installed Claude copy stale | **fixed** — refreshed from canonical sources via the supported copy installer; copies are tracked artifacts, not a second authoring source. |
+| 6 low: handoff pending text stale | **fixed** — completed review snapshots named. |
+| 7 low: recovery entry-point list implies live reconcile loop | **fixed** — supported entry points separated from the retained internal helper. |
+| 8 info: reconcile-code has no automatic commit | **fixed** — workflow says verify and commit separately. |
+| 9 optional: detail iteration wording | **declined** — text already requires a request and states the off default. |
 
-Site enumeration expands to TRACKING's plan-route rationale and quality paragraph,
-BACKLOG's three removed-mode recipes and one investigation claim, recovery's
-session entry-point list, touched detail examples and the tracked Claude install.
-Archive plans/evidence describe retained implementation/history rather than live
-CLI recipes and stay. Protected CLAUDE.md, generated help and runtime warning
-stay under the explicit follow-up entry.
-
-Full suite at `99ffa33e6`: 14,698 passed, 66 skipped in 64.75s. Affected tests
-pass again (58 in 0.80s). No runtime implementation changes are introduced.
-
-
-### Claude review 3
-
-Range `330441789..0ba7e8692`; actual built-in `code-review` Skill at high effort,
-Sonnet 5.5, session `20aa6f74-8c4f-41fd-9db2-4bc2a8a9f3e6`; CLI exits zero.
-Report: `.tmp/iteration-guide-routes.review-3.md`. No medium-or-higher finding;
-the reviewer explicitly classifies the pass as low-yield.
+Review 3 (`330441789..0ba7e8692`; no medium-or-higher finding, classified low-yield):
 
 | Finding | Disposition |
 | --- | --- |
-| 1 low: ordinary-run iteration flags remain in backlog | Fixed: remove ineffective flags from the enumerated ordinary-run recipes and replace the wizard's loop claim with fixture coverage and post-run review. |
-| 2 low: hand-written run synopses list accepted but ineffective flags | Deferred with existing help-surface follow-up; add README and command reference to its Files list so help and synopses move together. |
-| 3 generated pointer repeats deferred issue | Already tracked; no new finding. |
-| 4 optional: restore iteration to run-oriented hints | Declined: iteration is documented at its authoring verbs, not ineffective run flags. |
-| 5 optional: show literal commit command | Declined: workflow explicitly requires verifying and committing separately; reconcile-code accepts no commit flag. |
-| 6 optional: capital letter after colon | Declined: no behavior/interpretation defect; avoid installer churn for typography. |
+| 1 low: ordinary-run iteration flags remain in backlog | **fixed** — ineffective flags removed from ordinary-run recipes; wizard loop claim replaced with fixture coverage and post-run review. |
+| 2 low: run synopses list accepted but ineffective flags | **tracked** — existing help-surface follow-up; README and command reference added to its Files list. |
+| 3 generated pointer repeats deferred issue | **tracked** — already filed; no new finding. |
+| 4 optional: restore iteration to run hints | **declined** — iteration is documented at its authoring verbs. |
+| 5 optional: literal commit command | **declined** — reconcile-code accepts no commit flag; workflow requires separate verify/commit. |
+| 6 optional: capitalization after colon | **declined** — typography only; avoids installer churn. |
 
-The third sweep covers ordinary-run ineffective iteration recipes, not only
-reconcile aliases. Tracked Claude files byte-match their canonical sources;
-review 3 independently verifies both copies. Full suite at `0ba7e8692`:
-14,698 passed, 66 skipped in 63.72s; affected tests 58 passed in 0.67s.
-Convergence window: one completed low-yield pass; independent confirmation pending.
-
-
-### Claude review 4 and closure
-
-Range `330441789..655c70b3a`; actual built-in `code-review` Skill at high effort,
-Sonnet 5.5, session `0cb2fa6f-c51e-464b-982f-0f9336172154`; original CLI exits
-zero. Report: `.tmp/iteration-guide-routes.review-4.md`. It independently
-re-runs the 58 affected tests (pass in 0.73s), probes defaults/rejections and
-verifies canonical/installed-copy equality. It reports no medium-or-higher issue
-and explicitly classifies the pass as low-yield.
+Review 4 (`330441789..655c70b3a`; re-ran the 58 tests, probed defaults/rejections, verified installed-copy equality; no medium-or-higher issue):
 
 | Finding | Disposition |
 | --- | --- |
-| 1 low: recovery audit intro/crash text still says both loops | Fixed: name only the completeness loop, and give detail reconciliation its separate scoped-walk interruption guidance. Identifier/vocabulary sweep covers intro, refresh comparison, crash section and internal helper table. |
-| 2 low: drift-detection module docstring advertises rejected invocation | Deferred in the existing policy/help follow-up: add the exact source docstring to its Files list. Runtime/source cleanup stays outside this instruction repair. |
-| 3–4: backlog examples lose an execute step | Refuted by reviewer after inspecting base: both already contain a rejected reconcile-mode recipe, not execution. No execute step is removed by this change. |
-| Optional: phase label, router typography/hints, operator voice | Retain existing dispositions; no newly verified route/default defect. |
-| Protected policy, generated help and runtime warning/synopses | Already deferred explicitly; do not silently broaden this repair. |
+| 1 low: recovery audit intro/crash text still says both loops | **fixed** — names only the completeness loop; detail reconciliation gets scoped-walk interruption guidance. |
+| 2 low: drift-detection module docstring advertises rejected invocation | **tracked** — added to the existing policy/help follow-up Files list (since implemented); source cleanup stays outside this repair. |
+| 3–4: backlog examples lose an execute step | **refuted** — both already contain a rejected reconcile-mode recipe, not execution. |
+| Optional: phase label, router typography/hints, operator voice | **declined** — existing dispositions stand. |
+| Protected policy, generated help, runtime warning/synopses | **tracked** — already deferred; not broadened here. |
 
-Convergence is **low-yield**: two consecutive completed independent passes
-(3 and 4) add only low/advisory findings, with no new material defect. Finish the
-bounded recovery-text application and retain the named follow-up; stop here
-under the repository policy rather than raising the pass cap for prose precision.
-There is no claim of zero findings or a clean whole-branch review after the
-final record/recovery edit.
+### Closure
 
-Final verification: the installed Codex and tracked Claude skill/directive
-files byte-match their canonical sources. `git diff --check` is clean. No
-runtime behavior or parser change is introduced. Full suite at `0ba7e8692` is
-14,698 passed / 66 skipped in 63.72s; later changes are backlog recipes,
-recovery prose and review records. All findings have dispositions. Changes are
-committed on `fix/iteration-guide-routes`; no push or PR is part of this action.
-
+**Closed as converged (low-yield), not a clean review.** Reviews 3 and 4 add only low/advisory findings, so the pass cap is not raised for prose precision; the bounded recovery-text application is finished and the named follow-up retained. No zero-findings or clean whole-branch claim is made after the final record/recovery edit; later changes are backlog recipes, recovery prose and review records, with no runtime or parser change. All findings have dispositions.
 
 ### Iteration policy/help follow-up — 2026-10-22
 
-The protected-policy and CLI help/warning deferral is implemented in the
-[run iteration guidance repair](docs-and-onboarding.md#run-iteration-guidance-accuracy).
-That record owns current validation and review status; deferrals above retain
-the provenance of these earlier review snapshots, not a remaining open bug.
+The protected-policy and CLI help/warning deferral is implemented in the [run iteration guidance repair](docs-and-onboarding.md#run-iteration-guidance-accuracy), which owns current validation and review status; the deferrals above are provenance, not an open bug.
 
 ## Run iteration guidance accuracy
 
@@ -1377,29 +1143,34 @@ unchanged. CLAUDE.md changes require architect-tier PR review.
 
 ### Findings
 
-Review 1, range `e4ecd6e8b..401644be8` (session `d112a224-c1dd-4f6b-90cf-f76f8d7d9a67`; report `.tmp/run-iteration-guidance.review-1.md`). Full suite at `401644be8`: 14,717 passed, 67 skipped.
+| Item | State |
+| --- | --- |
+| Reviews | Three Claude Code reviews: 1 at `e4ecd6e8b..401644be8` (suite 14,717 passed, 67 skipped), 2 at `e4ecd6e8b..1f99f9614` (callers, AST equivalence, 177 targeted tests), 3 at `e4ecd6e8b..488302fd5` (six candidates traced; six-module normalized AST comparison repeated) |
+| Disposition | **Converged (low-yield, not a clean review)** — see Closure |
 
-- F1 medium, fixed (range `..1f99f9614`): inherited run loop-option descriptions misleading; run_cmd's local compatibility parent (used only by p_run) now describes all nine options as compatibility/no-effect; names, defaults, types, actions unchanged.
-- F2 low, fixed (`..1f99f9614`): pipeline diagram labeled legacy value validation as a budget; now compatibility-only flags, no loop; validation stays.
-- F3 low, fixed (`..1f99f9614`): helper docstring promised removed `run --mode reconcile` iteration; prose corrected only.
-- F4 low, fixed (`..1f99f9614`): all-step dispatch bypasses the single-step warning; policy now says “may warn or reject”; no behavior change.
-- Optional warning/style text: declined (wording retained); pending evidence placeholder replaced with actual evidence.
+Review 1:
 
-Review 2, range `e4ecd6e8b..1f99f9614` (session `7a70785e-373d-4532-b4dc-34c1b9eeae82`; report `.tmp/run-iteration-guidance.review-2.md`). Verified by callers, AST equivalence after removing guidance strings/docstrings, 177 targeted tests. Full suite 14,717 passed, 67 skipped.
+- F1 medium, **fixed** (`..1f99f9614`): inherited run loop-option descriptions misleading; run_cmd's local compatibility parent (used only by p_run) now describes all nine options as compatibility/no-effect; names, defaults, types, actions unchanged.
+- F2 low, **fixed** (`..1f99f9614`): pipeline diagram labeled legacy value validation as a budget; now compatibility-only flags, no loop; validation stays.
+- F3 low, **fixed** (`..1f99f9614`): helper docstring promised removed `run --mode reconcile` iteration; prose corrected only.
+- F4 low, **fixed** (`..1f99f9614`): all-step dispatch bypasses the single-step warning; policy now says "may warn or reject"; no behavior change.
+- Optional warning/style text: **declined** (wording retained); pending evidence placeholder replaced with actual evidence.
 
-- F-A low, fixed (`..488302fd5`): time-budget help now preserves flag/environment value-validation information; run reference regenerated.
-- F-B low, fixed (`..488302fd5`): `_build_run_budget` has no production callers; docstring describes its retained compatibility delegation, as do the app re-export comment and the context test module's stale spy claim (comments only; the dated coverage baseline stays as provenance).
-- F-C low, fixed (`..488302fd5`): run owns a separate compatibility parent; register docstring's verbatim/shared-parent claim removed.
-- F-D declined: wording preference; existing warning is accurate.
-- F-E refuted: accept-mode warning code and its existing test.
-- F-F refuted: rejection tests and the recorded mutation; no prose-conformance test warranted.
+Review 2:
 
-Review 3, range `e4ecd6e8b..488302fd5` (session `c04a454e-d2fb-44cc-972b-4ead3d9b65d7`; report `.tmp/run-iteration-guidance.review-3.md`). Six candidates traced against dispatch/callers/tests; six-module normalized AST comparison repeated.
+- F-A low, **fixed** (`..488302fd5`): time-budget help preserves flag/environment value-validation information; run reference regenerated.
+- F-B low, **fixed** (`..488302fd5`): `_build_run_budget` has no production callers; docstring, app re-export comment and the context test module's stale spy claim describe its retained compatibility delegation (comments only; the dated coverage baseline stays as provenance).
+- F-C low, **fixed** (`..488302fd5`): run owns a separate compatibility parent; register docstring's verbatim/shared-parent claim removed.
+- F-D **declined**: wording preference; existing warning is accurate.
+- F-E **refuted**: accept-mode warning code and its existing test.
+- F-F **refuted**: rejection tests and the recorded mutation; no prose-conformance test warranted.
 
-- D1 low, fixed (closing application, after `488302fd5`): budget value validation runs on ordinary and `--all` paths, not early-return accept/reconcile paths; all four help clauses qualified, reference regenerated, every validation branch preserved.
-- D2 low, fixed (closing application): retained-wrapper/removed-alias comment sweep finished in the package header, tests/test_cli.py and both reconcile helper docstrings; package exports do not redirect handler globals, so comments describe command-module lookup ownership. No dormant code removed.
-- Warning wording, silent all-step dispatch, synopsis selection, diagram precision: declined (preferences or earlier dispositions).
-- Disabled-budget code removal: declined, out of scope. Backlog #517 stays tracking-only.
+Review 3:
+
+- D1 low, **fixed** (closing application, after `488302fd5`): budget value validation runs on ordinary and `--all` paths, not early-return accept/reconcile paths; all four help clauses qualified, reference regenerated, every validation branch preserved.
+- D2 low, **fixed** (closing application): retained-wrapper/removed-alias comment sweep finished in the package header, tests/test_cli.py and both reconcile helper docstrings; package exports do not redirect handler globals, so comments describe command-module lookup ownership. No dormant code removed.
+- Warning wording, silent all-step dispatch, synopsis selection, diagram precision: **declined** (preferences or earlier dispositions).
+- Disabled-budget code removal: **declined**, out of scope; backlog #517 stays tracking-only.
 
 ### Closure
 
@@ -1474,9 +1245,6 @@ publication or remote checkpoint update occurs in this task. Dark-mode remote
 checkpoint refresh and a fresh TTRPG rehearsal remain pending as the demo index
 and existing verification record state.
 
-Review 1 session: `1f7a2c46-d325-4d2c-86b5-c2070e9a660c`.
-
-Review 2 session: `16345ded-8227-4679-8e4c-bba6c593dbdd`.
 
 ## Direct-edit onboarding clarity
 
@@ -1596,13 +1364,6 @@ the generated roadmap CLI reference and the corrected common-workflows guide.
   in BUG_BACKLOG rather than expanded into this README-only correction.
   The legacy promotion-summary bug remains separately tracked.
 
-Review 1 session: `a10bbe21-8cac-4171-b3b5-69053cb2e38f`.
-
-Review 2 session: `bab1f073-2300-4b4f-b100-97637a7c34e2`.
-
-Review 3 session: `b2f31c7a-9405-40a4-b582-1cf2efede099`.
-
-Review 4 session: `53aa6943-968a-40b3-9f48-b6bd1b910690`.
 
 ## Use-case guidance correction
 
@@ -1663,13 +1424,6 @@ No repository link targets the renamed section-9 heading.
 - Final command-reference recheck: **10 passed**; links/anchors and whitespace
   checks pass again after the correction batch.
 
-Initial round 1 session: `bc379312-afed-43aa-bd9f-07d840f65a50`.
-
-Initial round 2 session: `8f750bc4-309f-4244-bb39-36555e53fb10`.
-
-Final round 3 session: `33918a2a-ae91-451e-ac9e-632712e85f4a`.
-
-Final round 4 session: `dc4c8019-0569-44b7-8f79-046680176630`.
 
 ## Onboarding guidance entry removal: code review ledger
 
