@@ -52,8 +52,8 @@ push automatically; push only when the user explicitly requests it.
    uses the gate re-evaluation absorbed from #88 so a repair does not re-spend
    a successful call; decide it after the failure list ships.
 3. **#459** — a decision on its own; independent of the rest.
-4. **#457 and #458 wait on their gates** (a second non-reproducing gate failure;
-   a measured false-positive rate). Do not build either before its evidence exists.
+4. **#457 is parked and #458 waits on its gate** (#457 unparks on a second
+   non-reproducing gate failure; #458 on a measured false-positive rate). Do not build either before its evidence exists.
 
 ## Decision gates
 
