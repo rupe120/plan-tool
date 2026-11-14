@@ -13004,32 +13004,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** seed-default review 3, 2026-10-22; advisory about a pre-existing
   recursive traversal, not evidence of data loss or a failed publication gate.
 
-**#531 — `roadmap_reader_guard` and `read_brief_text` have no production caller**
-
-- **What:** `plan_tool/roadmap_revision_publish.py:roadmap_reader_guard` (with
-  its helper `_acquire_reader_lock`) and `plan_tool/roadmap_source.py:
-  read_brief_text` are referenced only by tests
-  (`tests/test_roadmap_revision_publish.py`, `tests/test_roadmap_source.py`).
-  A grep over `plan_tool/` on 2026-11-14 finds one hit for `reader_guard` (the
-  definition) and one for `read_brief_text(` (the definition). Their consumer,
-  the impact-snapshot capture path, no longer exists, so the question a former
-  entry (#310) asked — whether the guard should cover the recorded-brief path —
-  has no live subject.
-- **Outcome:** an owner decision, applied: delete both helpers with their tests,
-  or keep them as the sanctioned primitives for a named future read-only
-  roadmap view and say so in their docstrings.
-- **In scope:** the two helpers, `_acquire_reader_lock` if it becomes unused,
-  and their tests.
-- **Out of scope / Non-goals:** `roadmap_writer_guard`, the writer lock file,
-  and any new reader that would need the guard.
-- **Allowed behavior changes:** none for any shipped command.
-- **Allowed reorganization:** none.
-- **Verification:** `grep -rn "reader_guard\|read_brief_text" plan_tool` shows
-  only the retained definitions (or none); the full suite passes.
-- **Stop / defer:** keep both if a roadmap reader is planned within the arc.
-- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
-- **Origin:** backlog reconciliation, 2026-11-14, while closing #310.
-
 ---
 
 

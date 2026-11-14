@@ -252,6 +252,3 @@ def digest_decoded_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def read_brief_text(brief_path: Path) -> str:
-    """Read a concept brief through the roadmap's UTF-8 text contract."""
-    return Path(brief_path).read_text(encoding="utf-8")

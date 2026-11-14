@@ -74,7 +74,6 @@ from plan_tool.roadmap_source import (
     CarriedDecision,
     CarriedDecisions,
     digest_decoded_text,
-    read_brief_text,
 )
 from plan_tool.roadmap_stage_resume import (
     RESUME_DIRNAME,

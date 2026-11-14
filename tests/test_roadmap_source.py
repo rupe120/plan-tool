@@ -18,7 +18,6 @@ from plan_tool.roadmap_source import (
     RoadmapSourceError,
     digest_decoded_text,
     parse_carried_decisions,
-    read_brief_text,
 )
 
 
@@ -178,19 +177,11 @@ def test_brief_text_and_digest_match_broad_decoded_text_contract(tmp_path: Path)
     source_bytes = b"first line\r\nsecond line\r\n"
     brief_path.write_bytes(source_bytes)
 
-    text = read_brief_text(brief_path)
+    text = brief_path.read_text(encoding="utf-8")
 
     assert text == "first line\nsecond line\n"
     assert digest_decoded_text(text) == hashlib.sha256(text.encode("utf-8")).hexdigest()
     assert digest_decoded_text(text) != hashlib.sha256(source_bytes).hexdigest()
-
-
-def test_non_utf8_recorded_brief_preserves_broad_read_failure(tmp_path: Path) -> None:
-    brief_path = tmp_path / "concept.md"
-    brief_path.write_bytes(b"\xff")
-
-    with pytest.raises(UnicodeDecodeError):
-        read_brief_text(brief_path)
 
 
 def test_source_module_does_not_import_roadmap_or_orchestrator_modules(

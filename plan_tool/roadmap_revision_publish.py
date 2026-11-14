@@ -158,29 +158,6 @@ def _acquire_writer_lock(file_descriptor: int) -> str:
     raise RoadmapWriterGuardError("no cross-process file-lock implementation is available")
 
 
-def _acquire_reader_lock(file_descriptor: int) -> str:
-    """Acquire an existing lock without initializing its lock byte."""
-    if _fcntl is not None:
-        _fcntl.flock(file_descriptor, _fcntl.LOCK_SH)
-        return "fcntl"
-    if _msvcrt is not None:
-        if os.fstat(file_descriptor).st_size < 1:
-            raise RoadmapWriterGuardError(
-                "roadmap reader lock must contain an initialized lock byte"
-            )
-        os.lseek(file_descriptor, 0, os.SEEK_SET)
-        for _attempt in range(_MSVCRT_LOCK_MAX_ATTEMPTS):
-            try:
-                _msvcrt.locking(file_descriptor, _msvcrt.LK_LOCK, 1)
-                return "msvcrt"
-            except OSError:
-                continue
-        raise RoadmapWriterGuardError(
-            f"roadmap reader lock could not be acquired after {_MSVCRT_LOCK_MAX_ATTEMPTS} attempts"
-        )
-    raise RoadmapWriterGuardError("no cross-process file-lock implementation is available")
-
-
 def _release_writer_lock(file_descriptor: int, implementation: str) -> None:
     """Release the advisory lock acquired by :func:`_acquire_writer_lock`."""
     if implementation == "fcntl" and _fcntl is not None:
@@ -223,63 +200,6 @@ def roadmap_writer_guard(plans_dir: Path, slug: str) -> Iterator[RoadmapWriterTo
                 body_error.add_note(f"roadmap writer lock could not be closed: {exc}")
             else:
                 raise
-
-
-@contextlib.contextmanager
-def roadmap_reader_guard(plans_dir: Path, slug: str) -> Iterator[None]:
-    """Serialize a read-only inspection with writers without creating a lock."""
-    lock_path = roadmap_writer_lock_path(plans_dir, slug)
-    body_error: BaseException | None = None
-    try:
-        descriptor = os.open(lock_path, os.O_RDWR)
-    except OSError as exc:
-        raise RoadmapWriterGuardError(
-            "roadmap reader requires an existing usable writer lock"
-        ) from exc
-    try:
-        try:
-            implementation = _acquire_reader_lock(descriptor)
-        except OSError as exc:
-            raise RoadmapWriterGuardError("roadmap reader lock could not be acquired") from exc
-        try:
-            yield
-        except BaseException as exc:
-            body_error = exc
-            raise
-        finally:
-            try:
-                _release_writer_lock(descriptor, implementation)
-            except OSError as exc:
-                if body_error is not None:
-                    body_error.add_note(f"roadmap reader lock could not be released: {exc}")
-                else:
-                    raise RoadmapWriterGuardError(
-                        "roadmap reader lock could not be released"
-                    ) from exc
-    finally:
-        try:
-            os.close(descriptor)
-        except OSError as exc:
-            if body_error is not None:
-                body_error.add_note(f"roadmap reader lock could not be closed: {exc}")
-            else:
-                raise RoadmapWriterGuardError(
-                    "roadmap reader lock could not be closed"
-                ) from exc
-
-
-def bootstrap_roadmap_reader_lock(plans_dir: Path, slug: str) -> None:
-    """Create the persistent lock needed by a legacy reader observation.
-
-    Call this before acquiring a reader lease; writer guards are non-reentrant.
-    """
-    if roadmap_writer_lock_path(plans_dir, slug).exists():
-        return
-    try:
-        with roadmap_writer_guard(plans_dir, slug):
-            pass
-    except OSError as exc:
-        raise RoadmapWriterGuardError("roadmap writer lock bootstrap failed") from exc
 
 
 def require_roadmap_writer_token(token: RoadmapWriterToken, *, plans_dir: Path, slug: str) -> None:

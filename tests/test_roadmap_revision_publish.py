@@ -54,11 +54,9 @@ from plan_tool.roadmap_revision_publish import (
     RoadmapRevisionPublishError,
     RoadmapWriterGuardError,
     build_enrolled_promotion_seed_state_member,
-    bootstrap_roadmap_reader_lock,
     publish_roadmap_generation,
     recover_roadmap_publication,
     require_roadmap_writer_token,
-    roadmap_reader_guard,
     roadmap_writer_lock_path,
     roadmap_writer_guard,
 )
@@ -100,17 +98,6 @@ def _hold_writer_guard(
     release: multiprocessing.synchronize.Event,
 ) -> None:
     with roadmap_writer_guard(Path(plans_dir), slug):
-        entered.set()
-        release.wait(5)
-
-
-def _hold_reader_guard(
-    plans_dir: str,
-    slug: str,
-    entered: multiprocessing.synchronize.Event,
-    release: multiprocessing.synchronize.Event,
-) -> None:
-    with roadmap_reader_guard(Path(plans_dir), slug):
         entered.set()
         release.wait(5)
 
@@ -255,174 +242,19 @@ def test_writer_guard_does_not_block_a_different_roadmap(tmp_path: Path) -> None
         _wait_for(second)
 
 
-def test_reader_guard_blocks_a_writer_for_the_same_roadmap(
-    tmp_path: Path,
-) -> None:
-    with roadmap_writer_guard(tmp_path, "demo"):
-        pass
-    context = multiprocessing.get_context("spawn")
-    entered = context.Event()
-    release = context.Event()
-    writer_entered = context.Event()
-    reader = context.Process(
-        target=_hold_reader_guard,
-        args=(str(tmp_path), "demo", entered, release),
-    )
-    writer = context.Process(
-        target=_hold_writer_guard,
-        args=(str(tmp_path), "demo", writer_entered, release),
-    )
-    reader.start()
-    assert entered.wait(5)
-    writer.start()
-    try:
-        assert not writer_entered.wait(0.2)
-        release.set()
-        assert writer_entered.wait(5)
-    finally:
-        release.set()
-        _wait_for(reader)
-        _wait_for(writer)
-
-
-@pytest.mark.skipif(
-    roadmap_revision_publish._fcntl is None,
-    reason="shared advisory locks are a POSIX capability",
-)
-def test_reader_guard_allows_concurrent_readers_for_the_same_roadmap(
-    tmp_path: Path,
-) -> None:
-    with roadmap_writer_guard(tmp_path, "demo"):
-        pass
-    context = multiprocessing.get_context("spawn")
-    entered = context.Event()
-    release = context.Event()
-    second_entered = context.Event()
-    first = context.Process(
-        target=_hold_reader_guard,
-        args=(str(tmp_path), "demo", entered, release),
-    )
-    second = context.Process(
-        target=_hold_reader_guard,
-        args=(str(tmp_path), "demo", second_entered, release),
-    )
-    first.start()
-    assert entered.wait(5)
-    second.start()
-    try:
-        assert second_entered.wait(5)
-    finally:
-        release.set()
-        _wait_for(first)
-        _wait_for(second)
-
-
-def test_reader_guard_does_not_block_a_writer_for_a_different_roadmap(
-    tmp_path: Path,
-) -> None:
-    with roadmap_writer_guard(tmp_path, "one"):
-        pass
-    context = multiprocessing.get_context("spawn")
-    entered = context.Event()
-    release = context.Event()
-    writer_entered = context.Event()
-    reader = context.Process(
-        target=_hold_reader_guard,
-        args=(str(tmp_path), "one", entered, release),
-    )
-    writer = context.Process(
-        target=_hold_writer_guard,
-        args=(str(tmp_path), "two", writer_entered, release),
-    )
-    reader.start()
-    assert entered.wait(5)
-    writer.start()
-    try:
-        assert writer_entered.wait(5)
-    finally:
-        release.set()
-        _wait_for(reader)
-        _wait_for(writer)
-
-
-def test_reader_guard_requires_an_existing_lock_without_creating_one(
-    tmp_path: Path,
-) -> None:
-    lock_path = roadmap_writer_lock_path(tmp_path, "demo")
-
-    with pytest.raises(RoadmapWriterGuardError, match="existing usable writer lock"):
-        with roadmap_reader_guard(tmp_path, "demo"):
-            pytest.fail("a missing lock must not yield a reader lease")
-
-    assert not roadmap_dir(tmp_path, "demo").exists()
-    assert not lock_path.exists()
-
-
-def test_reader_lock_bootstrap_translates_an_os_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    @contextmanager
-    def broken_writer_guard(_plans_dir: Path, _slug: str):
-        raise OSError("lock creation failed")
-        yield  # pragma: no cover - makes this a context-manager generator.
-
-    monkeypatch.setattr(roadmap_revision_publish, "roadmap_writer_guard", broken_writer_guard)
-
-    with pytest.raises(RoadmapWriterGuardError, match="lock bootstrap failed"):
-        bootstrap_roadmap_reader_lock(tmp_path, "demo")
-
-
-def test_reader_lock_bootstrap_skips_writer_acquisition_for_existing_lock(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    with roadmap_writer_guard(tmp_path, "demo"):
-        pass
-    monkeypatch.setattr(
-        roadmap_revision_publish,
-        "roadmap_writer_guard",
-        lambda *_args, **_kwargs: pytest.fail("an existing lock must not bootstrap again"),
-    )
-
-    bootstrap_roadmap_reader_lock(tmp_path, "demo")
-
-
-def test_reader_guard_preserves_lock_bytes_and_never_yields_a_writer_token(
-    tmp_path: Path,
-) -> None:
-    with roadmap_writer_guard(tmp_path, "demo"):
-        pass
-    lock_path = roadmap_writer_lock_path(tmp_path, "demo")
-    original = b"already initialized lock bytes"
-    lock_path.write_bytes(original)
-
-    with roadmap_reader_guard(tmp_path, "demo") as reader_token:
-        assert reader_token is None
-        with pytest.raises(RoadmapWriterGuardError):
-            require_roadmap_writer_token(reader_token, plans_dir=tmp_path, slug="demo")
-
-    assert lock_path.read_bytes() == original
-
-
 @pytest.mark.parametrize(
-    ("guard", "cleanup", "note"),
+    ("cleanup", "note"),
     (
-        ("reader", "release", "could not be released: release failed"),
-        ("reader", "close", "could not be closed: close failed"),
-        ("writer", "release", "could not be released: release failed"),
-        ("writer", "close", "could not be closed: close failed"),
+        ("release", "could not be released: release failed"),
+        ("close", "could not be closed: close failed"),
     ),
 )
-def test_roadmap_guards_preserve_body_error_when_cleanup_fails(
+def test_roadmap_writer_guard_preserves_body_error_when_cleanup_fails(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    guard: str,
     cleanup: str,
     note: str,
 ) -> None:
-    if guard == "reader":
-        with roadmap_writer_guard(tmp_path, "demo"):
-            pass
-
     if cleanup == "release":
         def release_failure(*_args: object) -> None:
             raise OSError("release failed")
@@ -440,10 +272,7 @@ def test_roadmap_guards_preserve_body_error_when_cleanup_fails(
         monkeypatch.setattr(roadmap_revision_publish.os, "close", close_failure)
 
     with pytest.raises(RuntimeError, match="body failure") as caught:
-        guard_context = (
-            roadmap_reader_guard if guard == "reader" else roadmap_writer_guard
-        )
-        with guard_context(tmp_path, "demo"):
+        with roadmap_writer_guard(tmp_path, "demo"):
             raise RuntimeError("body failure")
 
     assert any(note in entry for entry in caught.value.__notes__)
@@ -518,13 +347,14 @@ def test_legacy_stage_file_publishers_and_the_unenrolled_guard_are_gone_and_reco
         "StaleFeedbackPublicationError",
         "preinvalidate_roadmap_seeds",
         "reject_direct_artifact_deletions",
+        "roadmap_reader_guard",
+        "bootstrap_roadmap_reader_lock",
     ):
         assert getattr(roadmap_revision_publish, removed, missing) is missing, removed
     for kept in (
         "publish_roadmap_generation",
         "recover_roadmap_publication",
         "roadmap_writer_guard",
-        "roadmap_reader_guard",
         "build_enrolled_promotion_seed_state_member",
     ):
         assert callable(getattr(roadmap_revision_publish, kept, missing)), kept
