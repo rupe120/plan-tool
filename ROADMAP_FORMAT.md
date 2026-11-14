@@ -617,7 +617,7 @@ roadmap prose beyond inventory id presence, seed length, plan count, technology
 names in `## Stack` compared against the plan's design, and any note or conflict
 surfaced by `create` or `detail` (deliberately not built, decided 2026-10-08:
 recognizing that a design contradicts a stack is a semantic judgment the tool
-cannot observe; the plan audit is the contradiction check, and it is advisory).
+cannot observe; the plan audit is the contradiction check, and it is advisory; one bare-plan audit caught such a contradiction, [measurement 7](docs/evidence/roadmap-run-measurements.md)).
 
 **After `--apply`** — new promoted copies under `docs/implementation-plans/plan-seeds/` drop the provenance
 block and carry a machine-readable HTML comment that links the copy (and any
@@ -1230,7 +1230,7 @@ means the candidate's stored operations admitted none), `no-operation-evidence`
 unknown rather than empty), `not-applicable` (the target is not a stored
 candidate or the base is not a stored version), and `not-directly-bound` (the
 base is not the candidate's direct predecessor, so no binding is inferred from
-changed bytes). Malformed or unbindable candidate evidence refuses the
+changed bytes; a multi-hop ancestor walk with a `not-ancestor` outcome shipped 2026-09-29 and was replaced by direct-predecessor binding). Malformed or unbindable candidate evidence refuses the
 comparison. Patch output remains the raw Git patch and carries no annotations.
 
 Stable ids establish concept identity. A changed id is one removal and one
@@ -1285,6 +1285,8 @@ selector capsule at the ceiling that capsule recorded.
 Replaying the same proposal re-enters the stored lineage; a different feedback
 selector refuses before a model call, both before and after promotion.
 
+A batch candidate's payload is schema 2: a top-level `shared_source_spans` table, keyed by `(artifact_key, span_id)`, issues each span shared by several rows once, and a member names its shared spans in `shared_source_span_ids`; single-owner spans stay inline on the member in the schema-1 form. A selector payload stays schema 1, because a stored selector capsule is verified by exact recompilation and its bytes cannot change. A stored candidate's rows restore through a path distinct from model input: `_parse_stage_row` stays strict for model rows (a decision row's `source` is refused), while `_restore_stored_stage_row` admits `source` on a decision row, must round-trip to the stored wire form, and must match the member's identity id. A Decision row stored before `DecisionRow.source` existed does not restore and refuses.
+
 `plan_tool/roadmap_candidate.py:materialize_candidate()` returns exactly one
 `CandidateMaterializationResult` outcome in this order: a hard `refusal`, then
 a `review_required` candidate, then a gate-clean `candidate`. A hard refusal
@@ -1312,6 +1314,10 @@ automatically retries a model-facing phase: exact command replay returns the
 bound record or terminates with its recorded result. Model output remains inert
 until exact review-seal promotion. Promotion is terminal consumption of the
 exact review seal and changes only the accepted head.
+
+A batch candidate's question cannot anchor on a response: batch evidence deliberately persists no response patch or derived feedback, and the question route refuses such an anchor.
+
+Candidate retries keep the parser strict. A retry correction reports every missing and unknown field in one line, naming an unknown field only when it is a tool-defined field name and otherwise as `other`, so a correction never repeats arbitrary model text. A rejected reply stays rejected: no parse-time repair, even if a recurrence appears; a recurrence is filed with its stored responses.
 
 For every review-required-lineage replacement, including a gate-clean result,
 `plan_tool/roadmap_candidate_review.py:request_replacement()` recomputes
@@ -1535,7 +1541,7 @@ grows to include added rows by these rules, and only these:
 | it cites a reached predecessor row (an outgoing relation) | a new entity with a reference field to a reached entity |
 | it cites a reached added row | a new rule over the new entity above |
 | a reached predecessor row cites it (an incoming relation) | a reached entity replaced to reference a new value-only entity |
-| it is a `stack` row, which declares no relation; it grounds only a decision anchored to it, the one relation that can end at a stack row | a new `stack-platform` row |
+| it is a `stack` row, which declares no relation; it grounds only a decision anchored to it, the one relation that can end at a stack row (decided 2026-10-08: any bound feedback item authorizes the add, deliberately wider than the revision route, because the approver sees every added row in the stack callout) | a new `stack-platform` row |
 
 Every relation an added row owns must also end at a reached row. A group of
 added rows that only cite each other is not reached, in any artifact; one member

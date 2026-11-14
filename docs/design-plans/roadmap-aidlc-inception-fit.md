@@ -3,9 +3,11 @@
 ## Status
 
 **Exploratory design. The points under § "Settled decisions" are decided,
-and one of them is also applied to `BACKLOG.md`. The generic stage-run
-source-admission boundary — the strict half of change 1 — ships and its
-independent review converges on 2026-09-14; it neither selects multi-source
+and one of them is also applied to `BACKLOG.md`. The 2026-09-16 comparison
+confirmed #384 (carried settled decisions, shipped) and held #383; the
+stage-run source-admission boundary this design once described as shipping was
+removed 2026-11-05 by `roadmap-versioned-from-birth`, which made source identity a
+property of the accepted version. The design neither selects multi-source
 intake nor authorizes the remaining changes here. § "Open design choices"
 lists what is still undecided.** This is the approach-level design for how `roadmap` should evolve so it
 behaves as a well-fitting Inception implementation inside the AI-DLC workflow
@@ -23,9 +25,9 @@ The evidence base has two parts, kept separate on purpose:
   `awslabs/aidlc-workflows`, and from the first real corpus the AI-DLC runtime produced for
   Integration intent `260909-integration-mvp`. Verification Gate 1 is complete and the
   runtime is parked at the first Inception boundary without producing an
-  Inception artifact. Integration commit `0527be7` corrects four prose sites after
-  the recorded approval, so a fresh Gate receipt must bind that commit's
-  exact bytes before the corpus becomes the experiment's frozen source.
+  Inception artifact. Integration commit `7caeaec` revalidated the Gate 1
+  handoff and is the frozen corpus of the 2026-09-16 comparison
+  ([evidence](../evidence/roadmap-aidlc-intake-comparison-20260916.md)).
 
 ## The boundary this design keeps
 
@@ -215,8 +217,9 @@ Eight changes, each tied to a framework convention and expressed in
 
 - **Framework convention:** approvals bind artifact fingerprints; `feature`
   declares `change_control: relaxed`.
-- **Today:** one recorded path, no digest comparison, and a measured case of
-  one path serving two briefs.
+- **Today:** the accepted version stores one brief and its digest, and a stage
+  run refuses beside an accepted head (2026-11-05). The measured case of one
+  path serving two briefs no longer arises, since no command re-reads the path.
 - **Change:** the source record holds a set of sources, each with a role and
   a content digest, plus a root digest over the set. It binds at the first
   artifact write, reusing `roadmap_source_identity.py` rather than a second
@@ -816,6 +819,12 @@ index, but not the input format. Three options:
 - **Typed frontmatter on a single composed brief,** the ideas document's
   first idea.
 
+Any carrier reads its sources in a deterministic order, freezes their bytes or
+digests before the first backend call, states how duplicate, conflicting, stale,
+missing, symlinked and out-of-repository sources are handled, represents roles
+without trusting instructions inside the documents, and resumes an interrupted
+run without changing its source set.
+
 The format must let change 1's identity cover every source, and it must
 hold the citation index from § "Citation snapshots". Extending the recorded
 source is the lean, because change 1's identity and the citation index
@@ -823,8 +832,9 @@ already live there.
 
 ### What Integration's first roadmap run needs
 
-**Blocked on the experiment in § "What stays unproven".** This choice
-separates the changes that must exist before Integration's own first roadmap run
+**Not selected.** The 2026-09-16 comparison ran with a script-built
+role-sectioned arm and showed no per-stage grounding gap, so no generic manifest
+reader is selected. This choice separates the changes that must exist before Integration's own first roadmap run
 from the ones that can follow. It also covers the bootstrap. Integration's
 connector does not exist yet, so something else must map the corpus for the
 first run: a hand-written manifest, a script in Integration's repository, or
@@ -862,13 +872,13 @@ candidate review.
 
 ### Whether the frame reaches wording-only and read-only requests
 
-**Blocked on the experiment's revision pass.** Change 8 frames first the
-requests that can change what the artifacts mean. Two request types wait:
+**Not selected (2026-09-16).** The comparison's source-blind revision pass
+introduced no box drift in either arm, so the frame is not extended to these
+requests. Change 8 frames first the
+requests that can change what the artifacts mean. Two request types are affected:
 local feedback revision, which rewords one row, and candidate review
 questions, which write nothing. Rewording can still shift meaning, so the
-case is weaker, not absent. Extend the frame to them if the revision pass in
-§ "What stays unproven" shows drift outside the box; otherwise leave them as
-they are.
+case is weaker, not absent. Extend the frame to them only if a later revision shows drift outside the box.
 
 ### How far the frame reaches past `roadmap`
 
@@ -907,13 +917,16 @@ workflow profile.
 
 ## What stays unproven
 
-The three measured behaviors come from hand-written briefs. How much of them
-an AI-DLC corpus removes without any tool change is not yet measured. The
-framework-conformance arguments stand on their own, since they follow from the
-framework's stated rules, but the size of the benefit does not.
+The three measured behaviors come from hand-written briefs. The 2026-09-16
+comparison ran the experiment below on the Gate 1 corpus: both inputs preserved
+the material facts, both recast confirmed answers as uncited `settled` decisions,
+and neither disposed of the accepted-risk follow-through. Still unmeasured: pending
+rows per distinct open question (Gate 1 declares none), and a corpus with
+unresolved questions. The framework-conformance arguments stand on their own,
+since they follow from the framework's stated rules, but the size of the benefit
+does not.
 
-The A/B experiment in the ideas document should change one arm, add four
-measures, and add a revision pass:
+The experiment changed one arm, added four measures, and added a revision pass:
 
 - **Replace its composed-brief arm** with a deterministic, role-sectioned
   composition of the framework's own Inception inputs: intent statement, scope
@@ -955,10 +968,9 @@ measures, and add a revision pass:
 ## Scope fence
 
 - The settled decisions fix parts of the design; they select no change for
-  implementation. Only the #384 amendment is filed, and it changes a backlog
-  entry's wording, not shipped behavior.
-- No roadmap run is authorized; the intake review's preconditions still
-  govern.
+  implementation. #384 was selected by the 2026-09-16 comparison and has shipped;
+  no other change is selected.
+- No further roadmap run against the corpus is authorized by this design.
 - The connector mapping, rule selection, and question presentation are Integration
   application work and are recorded here only as the other half of each
   change.
@@ -966,8 +978,7 @@ measures, and add a revision pass:
   `roadmap` grows a capability, and Integration owns whether its workflow profile
   skips a step.
 - Anything this discussion settles for `plan-tool` is drafted as a
-  `BACKLOG.md` entry in this clone, pushed to `origin`, and pulled into the
-  canonical checkout before implementation.
+  `BACKLOG.md` entry before implementation.
 
 ## Next
 
@@ -978,7 +989,7 @@ measures, and add a revision pass:
    approach, the question-mode default, the source-set format, how the
    in-scope list appears in the frame, how fit to the box is checked, and
    the frame's reach and size.
-3. After Integration freezes its Ideation corpus, run the revised experiment in this
-   clone, then decide what Integration's first roadmap run needs and whether the
-   frame reaches the wording-only and read-only requests.
+3. Revisit the carrier and the frame's reach only when a comparison names a stage
+   and an essential grounded fact that cannot safely fit in the approved brief, or
+   a revision drifts outside the box.
 4. Settle framework requirement IDs after the coverage decision.

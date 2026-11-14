@@ -798,6 +798,8 @@ does not change the schema version or backend-specific token accounting.
 Equal hashes mean only equal rendered prompts; they do not imply equal settings,
 instructions, or repository state, and on their own do not show wasted tokens.
 
+Each model-calling roadmap candidate command writes a run-log lifecycle under its own phase: `roadmap-candidate-proposal`, `roadmap-candidate-question`, `roadmap-candidate-replacement`, `roadmap-candidate-structural-edit`. Reviewer prose stays out of the log. The commands that change candidate state without a model call (approve, reject, discard, seal, promote) write none (BACKLOG #434).
+
 **The event catalog is the `Event` union in `run_log.py`, not this doc.** Only the
 events registered in `plan_tool/data_contract.py` are drift-guarded here — the
 rest are documented by their dataclasses. A per-line size cap
@@ -987,7 +989,7 @@ provider transcripts, tool-input summaries, or sidecar-write error prose.
 `no-response` takes precedence when no response bytes exist, so both identity
 fields are `null` and no sidecar path is recorded. A failed or intentionally
 skipped sidecar write still preserves the response byte count and digest when
-the producer received response bytes.
+the producer received response bytes. Invalid arguments to the receipt builder (a negative byte count, a malformed digest, a written sidecar path outside the repository) raise `ValueError` as invariant checks and are not caught; "best-effort" covers only the sidecar write, whose failure is a valid `write-failed` outcome.
 
 **`plan-tool run` emits this receipt for a mutating step that fails on one of
 the five paths below** — not for a step that ends by exception (a raised

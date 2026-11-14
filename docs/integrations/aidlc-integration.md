@@ -82,12 +82,13 @@ rows.
 ### 2. Source identity and change control
 
 The source set (whatever roles are present) is frozen at the first artifact
-write: a content digest per source plus a root digest over the set, bound
-via `roadmap_source_identity.py`. On drift, behavior follows a declared
-policy — `strict` refuses and names the two supported routes (feedback rows
-or a successor lineage); `relaxed` records the change, announces it, and
-continues. The connector also passes the upstream approval receipt as
-provenance, so the set is provably the approved snapshot.
+write: a content digest per source plus a root digest over the set. Today the
+single brief is frozen as the accepted version's stored `brief.md` and recorded
+digest, and a stage run refuses once an accepted head exists. A changed source
+goes through feedback rows or a successor lineage; no route rebinds it. A
+multi-source set, and any declared drift policy beyond that refusal, are not
+built (see the status table). The connector also passes the upstream approval
+receipt as provenance, so the set is provably the approved snapshot.
 
 ### 3. Citation snapshots — finer-grained, item-level checking
 
@@ -143,19 +144,18 @@ scope."
 ## Current status
 
 **Design is settled; implementation is a narrow slice of it so far, and no
-`roadmap` run has ever used the real AI-DLC corpus.** Don't read "settled
+`roadmap` run has been driven through the orchestration layer.** Don't read "settled
 design" as "shipped code" — they're tracked separately below.
 
 | Item | Status | Reference |
 | --- | --- | --- |
 | The boundary, the role vocabulary, and touchpoints 1–7 above | Settled design, 2026-09-11; none reopened without new evidence | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "Settled decisions" |
-| Stage-run source-identity + strict/relaxed drift policy | **Shipped** | [`docs/reference/contracts/aidlc-seam.md`](../reference/contracts/aidlc-seam.md) § "Source admission" |
-| Changed-brief rebind confirmation (`BACKLOG` #367) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
-| Carried settled decisions with citations (`BACKLOG` #384) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
+| Single-brief identity | **Shipped** — the accepted version stores the brief and its digest; a stage run refuses beside an accepted head. A strict/relaxed drift policy, `--confirm-brief-rebind` (`BACKLOG` #367) and stage-run source admission were removed 2026-11-05 by `roadmap-versioned-from-birth` | [`docs/reference/contracts/aidlc-seam.md`](../reference/contracts/aidlc-seam.md) § "Source admission"; `docs/history/backlog-decisions.md` § "#367" |
+| Carried settled decisions with citations (`BACKLOG` #384) | **Shipped, closed** | `docs/history/backlog-decisions.md` § "#384" |
 | Per-stage supplementary sources with declared roles (`BACKLOG` #383) | **Held** — waiting on a comparison-proven per-stage grounding gap, not scheduled | `BACKLOG.md`, entry #383 |
 | `roadmap --view status --json` (`BACKLOG` #385) | **Held** — evidence-gated on an orchestration layer having a concrete connector consumer | `BACKLOG.md`, entry #385 |
 | Citation snapshots, obligations, the seam frame, coverage projection (touchpoints 3, 5, 6, 7) | Settled design; not yet built as running code | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "The design" |
-| An orchestrated `roadmap` run against the real AI-DLC corpus | **Has never happened** | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "What stays unproven" |
+| `roadmap` runs against the real Gate 1 corpus | **Ran 2026-09-16** (two disposable-clone arms) as operator-run commands, not through an orchestration layer. The accepted `integration-aidlc-mvp` version also exists; its brief's origin is not recorded here | [`docs/evidence/roadmap-aidlc-intake-comparison-20260916.md`](../evidence/roadmap-aidlc-intake-comparison-20260916.md) |
 
 **Explicitly still open** (not decided; don't treat any of these as settled).
 Only the source carrier has been decided, for now: #384 ships on the single

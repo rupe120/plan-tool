@@ -448,3 +448,15 @@ starting at `# Seed: the rulebook and the opening calendar`. Batch `-y` was
 deliberately not run, because eight destinations would write. The
 slug-directory draft was left unchanged and the promoted copy removed before
 commit, so the repo footprint stayed one file.
+
+## 7. Bare-plan audit on a stack contradiction, 2026-10-08
+
+One plan, one pair of conceptual passes (n=1, `limited`; gates nothing).
+
+A one-step plan carried a `## Stack` that named PostgreSQL while its Architecture
+and its step used a local SQLite file. `plan-tool completeness-audit --iterate`
+at the bare stage returned a HIGH `plan-correctness` finding quoting both texts
+in both conceptual passes. The audit prompt needed no change on this evidence.
+The result supports `ROADMAP_FORMAT.md` § "Stack section" naming the plan audit as
+the contradiction check; it does not show a hit rate, and the tool itself never
+judges the contradiction.
