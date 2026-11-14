@@ -22,8 +22,7 @@ This file provides guidance to AI coding assistants **developing `plan-tool` its
 > (owner decision, 2026-09-17), via the normal pull-request flow — see
 > `docs/TRACKING.md` § "Choosing the tier". This file keeps each rule and a
 > short verdict; the multi-paragraph dated measurements behind them live in
-> [`docs/evidence/claude-md-measured-incidents.md`](docs/evidence/claude-md-measured-incidents.md) (split decided in
-> `handoffs/team-handoff-open-decisions-proposal.md` § 6).
+> [`docs/evidence/claude-md-measured-incidents.md`](docs/evidence/claude-md-measured-incidents.md).
 
 ## What this is
 
