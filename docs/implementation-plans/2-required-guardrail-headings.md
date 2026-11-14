@@ -229,6 +229,7 @@ steps:
   - 6
   depends_on_notes:
     6: the shipped refusal and its message that the docs describe
+  detail: docs/implementation-plans/plan-details/required-guardrail-headings/07-update-docs-say-three-guardrail.md
   description: 'Update the docs to say the three guardrail headings are required,
     that `None` is a valid body, and that `_(TODO)_` is refused. The pages are `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence", `docs/how-to/pipeline/create-from-existing.md`,
