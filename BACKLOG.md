@@ -467,15 +467,20 @@ working straight down the tiers.
 - **Evidence:** `create.py:classify_file_backed_source` refuses only a missing,
   duplicate, empty or placeholder `## References`; `create.py`'s
   `OPTIONAL_PLAN_BODY_SECTION_SHAPES` labels the guardrail headings
-  "conditional". At 2026-11-14, 2 of 28 live seeds (6 in
-  `docs/implementation-plans/plan-seeds/`, 22 in `plan-seeds/`) carry `## Scope
-  guardrails`. `scope_fence._is_placeholder_section` matches only `TODO` forms,
+  "conditional". On 2026-11-14, 2 of 28 live seeds (6 in
+  `docs/implementation-plans/plan-seeds/`, 22 in `plan-seeds/`) carried `## Scope
+  guardrails` and none carried all three. Four tools write seeds and none
+  writes the headings: `roadmap.materialize_plan_seed`,
+  `annotate_render.render_create_seed`, `scope_out.render_carved_seed` /
+  `render_carved_region_seed`, and `reground.render_rebaseline_seed`.
+  `scope_fence._is_placeholder_section` matches only `TODO` forms,
   so `None` already reads as content, not as a placeholder.
 - **Effort:** medium. The refusal itself is small; the cost is the producers
-  that write seeds (`annotate_render.render_create_seed`, `roadmap` stage 4's
-  draft seeds), the live-seed sweep, and the docs.
+  that write seeds, which must populate the headings from what they already
+  read, the live-seed sweep, and the docs.
 - **Risks / fallout:** every seed written without the headings stops working,
-  including `annotate` and `roadmap` output already on disk. Test fixtures
+  including tool-written seeds already on disk. A carved or rebaselined seed
+  inherits its source plan's fence, which can be wrong for the narrower plan. Test fixtures
   that feed `--from-existing` a minimal seed will go red and need the headings.
 - **Dependencies:** none. Lands before the BUG_BACKLOG.md entry "`--commit`
   stages the whole working tree…" goes through `create` (owner ordering,
@@ -487,28 +492,33 @@ working straight down the tiers.
     explicit `None`.
   - **In scope:** the file-backed intake check; a test that an explicit `None`
     survives verbatim into the plan and downstream fence (the fence renderer
-    already carries it); `annotate`'s and `roadmap` stage 4's seed writers emitting all three
-    headings; the live seeds in both seed directories; `SEED_FORMAT.md`,
-    `PLAN_FORMAT.md` § "Scope fence" and
-    `docs/how-to/pipeline/create-from-existing.md`.
+    already carries it); the four seed-writing tools populating all three
+    headings (`roadmap --materialize` from its prompt; `annotate`, `scope-out`
+    and `reground` by copying the source plan's guardrails, with `annotate`'s
+    existing call writing them when the source has none, and a deterministic
+    renderer writing `_(TODO)_` when its source plan has none); the live seeds
+    in both seed directories, populated by hand; `SEED_FORMAT.md`,
+    `PLAN_FORMAT.md` § "Scope fence",
+    `docs/how-to/pipeline/create-from-existing.md` and `ROADMAP_FORMAT.md`.
   - **Out of scope / Non-goals:** deliberately not the tool-written `## Stack`
     heading, which only `roadmap` writes. Deliberately not `## Outcome` or `##
     In scope`, which have no guardrail capture; requiring them is a separate
     decision. Not inline `--from` or `--from-plan`, which have no seed file to
     hold a heading. Not archived seeds, which are not inputs to a future
-    `create`. No check of what a guardrail says beyond presence: no quality
+    `create`. No new model call in any tool to compose guardrails. No check of what a guardrail says beyond presence: no quality
     judgment, no agreement check with `Out of scope`, no length cap.
-  - **Allowed behavior changes:** the new refusal and its message; seeds
-    produced by `annotate` and `roadmap` gain the three headings.
+  - **Allowed behavior changes:** the new refusal and its message; the four
+    seed-writing tools write the three headings, and their printed next steps
+    name inherited or unfilled headings.
   - **Allowed reorganization:** none.
   - **Verification:** a seed missing any one heading is refused with no model
     call, naming the heading; a duplicated, empty or `TODO` heading is refused;
     a `None` heading is accepted and appears verbatim in the plan and the
-    downstream fence; `annotate` and `roadmap` seeds pass the new check; every live seed
-    passes it.
-  - **Stop / defer:** a seed producer that cannot state a fence without a new
-    model judgment emits `None` and files the follow-up; it does not invent
-    guardrail content.
+    downstream fence; a seed from each of the four tools passes the check when
+    its source carries guardrails; every live seed passes it.
+  - **Stop / defer:** a tool that cannot populate a heading from what it
+    already reads writes `_(TODO)_` for the operator to fill, never `None` on
+    the author's behalf; other discoveries are filed as their own entries.
 - **Origin:** 2026-11-14, owner: "I feel that the guardrails are critical to
   plan creation, even if those guardrail designations are specified as none."
 
