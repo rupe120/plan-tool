@@ -150,7 +150,7 @@ Follow the project's unit-first convention. Phase A's card renderer is a pure fu
 - New `detail` authoring requires the compact H2 set (Intent/Footprint/Approach/Done when — no ToC, no separate Why); low-complexity steps stay within the stated length caps in prompt guidance.
 - Legacy seven-section details still load for `run`, reconcile, completeness, and `--summary`.
 - Existing detail parse/quality tests are updated and green; the CLI reference is regenerated if flags change.
-- BACKLOG #149 is removed or marked shipped.
+- BACKLOG #149 is removed or marked shipped, and #49's seven-section assumptions are updated if that entry remains open.
 
 ## Deferred
 

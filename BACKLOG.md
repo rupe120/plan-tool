@@ -368,7 +368,7 @@ competes for the next session?"
 | **Next (evidence-gated)** | `quality-bench-01` (#216), position 01 | Preserve its noise-floor question, but first perform one disposable current-model observation rather than build its runner/CLI. A fresh plan is justified only if that exercise demonstrates a durable replay surface is needed. `roadmap-05` (#208) remains unauthored until a named framework-specific roadmap need exists. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
-| **Blocked** | #194 on #193 · `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
+| **Blocked** | #194 on #193 · #199 on #198 · `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
 | **Parked / defer** | #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
@@ -393,8 +393,8 @@ competes for the next session?"
   (contract-trace audit mode).
 - **T4 — grounding/workflow refinements (P3) + blocked:** **#69**, **#38**,
   **#30**.
-- **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#102**,
-  **#56**, **#89** (commit-hygiene
+- **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#49**, **#102**,
+  **#43**, **#55**, **#56**, **#89** (commit-hygiene
   coverage — observed orphaning gap on `reconcile-code`, see its entry's
   "Evidence it recurs"), and the Bucket D
   consolidation cluster **#79**–**#81** — where **#79 carries a warning**: four
@@ -1797,6 +1797,87 @@ evidence. It is not an active implementation contract.
 
 **#102 — Deterministic seed-extraction pre-fill for body sections (widen rung 2 before the stochastic loop)** → promoted to IPPT-11 (2026-09-27)
 
+**#43 — Synthesis output caching across reruns**
+
+- **Principle:** `none` — a cost and latency cache.
+- **What:** Cross-run cache keyed by
+  `hash(seed_content + prompt_version) → synthesized_body_json`. (The shipped
+  within-run memo keys on the seed bytes only, via
+  `create.py:_body_sections_input_hash`, not on the prompt version.)
+  Resumable checkpoints already cover within-run resume; this
+  would let repeated `create --reprocess` against an unchanged
+  seed reuse the prior synthesis without a Claude call.
+- **Effort:** small-medium. New cache file at
+  `.plan-tool/cache/body-sections/<hash>.json`, lookup in
+  `propose_body_sections` before the Claude call, TTL or LRU
+  expiry policy.
+- **Risks:** stale cache if the prompt template changes — must
+  include prompt version in the hash key. Confusion if cache hits
+  silently across plan iterations.
+- **Dependencies:** ✅ UNBLOCKED — body-synthesis shipped
+  (default-ON, `--no-synthesize-body`; `synthesize-body.md` +
+  `create.py` machinery, verified 2026-06-16). `propose_body_sections`
+  is the documented insertion point for the lookup; ready to schedule.
+- **Origin:** Deferred from
+  `2-from-existing-body-synthesis.md` (2026-05-22).
+- **Approach:** direct. Single helper + lookup + invalidation
+  key — no design ambiguity once prompt-version is part of the
+  hash.
+
+**#49 — `plan-tool detail` authoring wizard**
+
+- **Principle:** `untriaged` — guided-authoring UX; its text does not tie it to a principle.
+- **What:** Add an interactive wizard to `plan-tool detail`, mirroring
+  `create`'s step-entry wizard. Today `detail` is one-shot: it fires a
+  Claude call that drafts the whole seven-section template (Summary /
+  Why / Files / Implementation / Tests / Acceptance / Deferred) and
+  writes it, leaving the operator to read-and-edit after the fact. The
+  wizard makes that a guided flow on a TTY: pick the target step (the
+  ones still lacking a detail file are listed, à la the `run` picker),
+  optionally seed each section from a Claude draft, then walk the
+  sections — accept the draft, hand-edit it, or skip — before the file
+  is written. Confirm-before-write keeps a bad draft from landing
+  silently.
+- **Effort:** medium. New interactive flow in `detail.py` +
+  `cli/authoring.py` wiring; reuses the section template the prompt
+  already pins and the TTY/`-y` discipline `create`'s wizard
+  established. The step-picker is the same shape just landed for
+  `plan-tool run` (numbered list of incomplete steps, last-used
+  default).
+- **Risks:** the headless path must NOT prompt — `-y` / non-TTY keeps
+  today's one-shot draft-and-write behavior exactly, same as `create`'s
+  wizard fails fast under `--yes`. Merging a Claude draft with
+  per-section operator edits needs a clean "draft vs. final" model so a
+  half-edited section can't corrupt the seven-section gate that `detail`
+  enforces on write. Decide whether the wizard is opt-in (`--wizard`)
+  or the default-on-TTY behavior with `--no-wizard` to opt out.
+- **Dependencies:** none. Shares the interactive-picker pattern with the
+  `run` no-name picker; a shared "pick an incomplete step" helper could
+  back both.
+- **Approach:** plan-tool. Multi-surface (detail orchestrator + CLI
+  wiring + interactive section walk), an open design decision on
+  opt-in vs default-on-TTY and on the draft-vs-edit merge model, and
+  TTY/headless discipline to keep consistent with `create` — all
+  paper-trail material.
+- **Iterate:** default recipe. **Phase 3 load-bearing** on the
+  interactive section-walk step — the TTY/non-TTY split and the
+  seven-section write gate are exactly the acceptance criteria the
+  executed step must cover with fixtures, followed by plan-canonical
+  reconciliation and code review. **Phase 4** catches
+  drift between the new wizard path and `create`'s established wizard
+  conventions (both must honor the same `-y` / non-TTY contract).
+
+  ```bash
+  plan-tool create detail-authoring-wizard --iterate -y \
+    --output-dir .agents/skills/plan-tool/implementation-plans \
+    --from "..."
+  plan-tool detail detail-authoring-wizard --commit -y   # phase 1.5
+  plan-tool completeness-audit detail-authoring-wizard --iterate --commit -y   # phase 2
+  plan-tool reconcile-code detail-authoring-wizard -y --step N   # phase 3
+  plan-tool reconcile-code detail-authoring-wizard --all   # post-run tail
+  ```
+- **Status:** not started — design notes only.
+
 **#88 — Granular resume — mostly SUPERSEDED; narrowed to `run`-step claude memoization**
 
 - **Status (2026-07-12):** the original broad "per-stage operation manifest" is
@@ -2625,9 +2706,9 @@ evidence. It is not an active implementation contract.
   commits, and `--commit`-less runs. No trailer mechanism exists on these
   commits today (the operator's no-attribution policy rules out an
   AI-attribution trailer as that mechanism), so this introduces new
-  machinery rather than extending existing plumbing. The discarded #199
-  (delete archived plans) would have depended on a reliable git record; this
-  entry stands alone.
+  machinery rather than extending existing plumbing. **This entry is the
+  enabler for #199**: deleting plans from the filesystem is only safe once
+  the git record is reliable.
 - **Implementation recommendation:**
   - **(a) Trailers.** Add `Plan-Slug: <slug>` and `Plan-Step: <n>` to green
     commits, so `git log --grep='^Plan-Slug: foo' ` and `git
@@ -2656,7 +2737,7 @@ evidence. It is not an active implementation contract.
     (`verify-all --rollup`), which answers "was it actually done?" at the one
     moment the answer is cheap.
   - **(c) Reason.** `implemented` / `superseded` / `cut` — without it, "list of
-    implemented plans" is unanswerable.
+    implemented plans" is unanswerable and #199 becomes unsafe.
   - **Cover both archival routes.** A plan reaches "implemented" either by the
     `run` pipeline (green steps, trailers present) **or** by jira tickets
     shipping the work outside `run`. For the second, the join key already exists:
@@ -2672,7 +2753,7 @@ evidence. It is not an active implementation contract.
 - **Risks / fallout:** trailers only exist going forward; historical plans have
   subject-prose only. Do not back-fill by rewriting history — accept a
   `provenance: legacy` tier and let queries report it honestly.
-- **Dependencies:** none.
+- **Dependencies:** none. **Blocks #199.**
 - **Effort:** medium — trailer emission is small; the reason field and the
   ticket-route join are the design work.
 - **Scope contract:**
@@ -2681,7 +2762,7 @@ evidence. It is not an active implementation contract.
   - **In scope:** `plan_tool/cli/run_cmd.py` green-commit path, the archive
     path, the new `.plan-tool/archive-ledger.jsonl` plus its rebuild-from-log
     path, `list --archived` as the index surface, `DATA_CONTRACT.md`, tests.
-  - **Out of scope / Non-goals:** deleting plans from the filesystem (the discarded #199);
+  - **Out of scope / Non-goals:** deleting plans from the filesystem (#199);
     rewriting historical commits; a live jira backend integration beyond the
     already-exported story→step map; changing what `run` commits.
   - **Allowed behavior changes:** new trailers on green commits; new manifest
@@ -2704,6 +2785,67 @@ evidence. It is not an active implementation contract.
   what the filesystem archive duplicates, but nothing makes git *queryable* for
   which plans shipped.
 - **Status:** not started.
+
+**#199 — Git-native archive: delete the plan from the filesystem instead of moving it**
+
+- **What:** replace the `archive/` directory convention with deletion — `git rm`
+  the plan and its detail bundle, letting git history be the archive — plus a
+  retrieval verb so the workflow never requires hand git archaeology.
+- **Why:** the moved copy is redundant with git by construction (measured: an
+  archived detail copy was **byte-identical** to its committed baseline), and a
+  live `archive/` tree keeps superseded design in the working set where greps,
+  audits, and readers still hit it — the exact hazard `CLAUDE.md`'s
+  forward-looking-documentation directive names. Deleting also forces the
+  "which plans shipped?" question to be answered properly (#198) rather than by
+  listing a directory.
+- **Implementation recommendation:**
+  - **Retrieval is the load-bearing half.** Ship `plan-tool archive show <slug>`
+    (and `restore`) resolving through the manifest's recorded archive SHA
+    (#198b) to `git show <sha>:<path>` — O(1), no log search. Without this the
+    change trades rot for friction.
+  - **Fix the callers that read the archive from disk first.** `create
+    --reprocess` fills `_(TODO)_` placeholders from an archived predecessor;
+    `annotate --archive` writes numbered `.replaced.N` generations. Both need a
+    git-backed read path before deletion is safe.
+  - **Audit live citations before deleting anything.** Prose across the repo
+    cites archived artifacts by path — e.g. the jira-grade handoff cites
+    `docs/implementation-plans/archive/plan-details/jira-grade-detail-side-by-side-evaluation/reports/`
+    as spin evidence. A path-resolution sweep must run first, and surviving
+    citations must be rewritten to the retrieval form.
+  - **Gate on reason.** Delete only `implemented` and `superseded` plans.
+    A `cut` plan mid-decision should stay on disk until its decision lands.
+- **Risks / fallout:** the failure mode is discoverability, and it is silent —
+  nobody notices a plan is unfindable until they need it. Ship retrieval and
+  the citation sweep **before** the first deletion, and keep deletion an
+  explicit opt-in verb, never a side effect of completion.
+- **Dependencies:** **#198** (hard — deletion without a queryable git record
+  loses the plan). Composes with #200, which applies the same principle to
+  detail files.
+- **Effort:** medium.
+- **Scope contract:**
+  - **Outcome:** archiving a plan removes it from the working tree, and any
+    archived plan is retrievable by slug without hand git archaeology.
+  - **In scope:** the archive path, the retrieval verb, the git-backed read for
+    `create --reprocess`, the citation sweep, migration of existing plan-level
+    archives, tests.
+  - **Out of scope / Non-goals:** provenance capture (#198, a hard dependency);
+    per-detail `archive/` folders (#200/#201); `annotate --archive`'s
+    `.replaced.N` generations; deleting a `cut` plan whose decision is unsettled.
+  - **Allowed behavior changes:** archival deletes instead of moves; the new
+    retrieval verb.
+  - **Allowed reorganization:** none beyond removing the archive tree.
+  - **Verification:** an archived plan is absent from the working tree and
+    retrievable by slug; `create --reprocess` still resolves its predecessor;
+    no doc cites a path that no longer resolves.
+  - **Stop / defer:** if a caller needs archived content on disk in a way git
+    retrieval cannot serve, stop and keep moving that class rather than
+    weakening retrieval.
+- **Approach:** `plan-tool` — multi-surface with a migration and open retrieval
+  UX.
+- **Quality:** `audit-coverage` — removes superseded design from the surface
+  that audits and greps read.
+- **Origin:** 2026-07-30, user proposal during the lessons-store investigation.
+- **Status:** not started; blocked on #198.
 
 **#202 — Claim-to-test coverage: every acceptance criterion should name a test**
 
@@ -3986,19 +4128,20 @@ evidence. It is not an active implementation contract.
   compatibility), `plan_tool/cli/authoring.py`, `plan_tool/prompts/detail.md` +
   `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/how-to/pipeline/detail.md`, CLI-reference
   regen, and `tests/test_detail.py`. **Out of scope:** the retired Jira-grade
-  lane, an interactive detail wizard (the discarded #49), #133
+  lane, the #49 interactive wizard (only follows the contract change), #133
   purity-prompt size, and auto-rewriting historical detail files.
 - **Status:** a WIP plan `docs/implementation-plans/2-detail-verbosity-compact-summary.md`
   (status `planning`, 6 steps) is authored for this; its detail bundle is
   **incomplete** (steps 1–3 detailed, 4–6 pending) and it is
   registered in `.plan-tool/plans.json`. When the plan ships, its final step
-  removes/marks this entry. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
+  removes/marks this entry and updates #49's seven-section language if that
+  entry remains open. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
   detail bundle before phase B runs; it must not retain the removed module as
   a compatibility dependency. The former terminal companion (#293, superseded)
   is not this entry's target surface.
 - **Origin:** 2026-07-18 — filed to close the plan's dangling forward-reference
   to "BACKLOG #149" (the plan's step 6 and detail files cite it). Companion to
-  #38 (detail length as a drift signal).
+  #38 (detail length as a drift signal) and #49 (the detail wizard).
 
 **#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
@@ -5283,8 +5426,8 @@ evidence. It is not an active implementation contract.
   finding is advisory, never blocks). Parallelizing the independent
   per-step calls is **discouraged per CLAUDE.md's anti-parallelism
   directive** — prefer the other two levers first.
-- **Dependencies:** none (the related synthesis-caching and shorter-round-trip
-  ideas, #43 and #124, are discarded).
+- **Dependencies:** relates to #43 (synthesis caching) and #124 (shorten a
+  single long Claude round-trip; #124 is discarded).
 - **Approach:** `decision first` — profile before choosing trim vs. cache.
 - **Origin:** 2026-07-16 — diagnosed while making the purity check
   hang-resilient; the hang was fixed separately, this is the residual
@@ -5668,6 +5811,20 @@ evidence. It is not an active implementation contract.
   an `invoker=` seam, the other is deliberately zero-Claude). Skip unless a
   third actuator appears; (c) the two run-log behavior bugs named above —
   see `BUG_BACKLOG.md`, fixed independently of this refactor.
+
+**#55 — Performance: short-circuit `_compute_content_hash` via mtime**
+
+- **Principle:** `none` — performance; its own entry says the value is uncertain until profiled.
+- **What:** In `drift_detection.compute_content_hash` (the title's
+  `_compute_content_hash`), if a watched file's mtime is unchanged since the
+  snapshot was taken, skip the SHA-256 hash entirely. Cheap mtime
+  check + correct semantics (mtime change is a necessary precondition
+  for content change).
+- **Effort:** trivial.
+- **Value:** uncertain — only matters if profiling shows the hash
+  cost is meaningful on a real repo. Defer until there's a profile.
+- **Approach:** direct. Trivial change to a single function once
+  profiling motivates it.
 
 **#56 — Add a linter (ruff) + pre-commit gate**
 
@@ -6139,8 +6296,8 @@ evidence. It is not an active implementation contract.
   dirty, not the whole tree, or it blocks routine authoring on a normal working
   branch. If that proves too strict in practice, fall back to warn-and-proceed
   rather than reinstating the folder.
-- **Dependencies:** independent. **Git is the archive for detail files** (the plan-level form, #199, is
-  discarded). (An earlier
+- **Dependencies:** independent. **Same principle as #199 at file scope** — git
+  is the archive; #199 applies it to plans, this to detail files. (An earlier
   revision of this entry split them on a committed-vs-uncommitted line; that
   split dissolved once the collision sidecar was found to own the uncommitted
   case.)
@@ -6152,7 +6309,7 @@ evidence. It is not an active implementation contract.
   - **In scope:** `plan_tool/detail.py:_archive_orphan_details` and its callers,
     the `--force` precondition, tests, and docs naming the convention.
   - **Out of scope / Non-goals:** the change-collision sidecar (already correct);
-    plan-level archival (discarded #199); deleting existing `archive/` directories in any
+    plan-level archival (#199); deleting existing `archive/` directories in any
     repo; `annotate --archive`'s `.replaced.N` generations, which are a
     different mechanism with a different purpose.
   - **Allowed behavior changes:** the removed archive write and the new
@@ -6201,8 +6358,8 @@ evidence. It is not an active implementation contract.
     found with a recoverable/unrecoverable file count each. **Removal is a
     separate explicit opt-in** (a flag or a `manifest`-family subcommand),
     matching the standing detection-unconditional / mutation-gated rule.
-  - **Do not couple it to plan archival.** This sweeps directories; plan archival is
-    out of scope (#199 is discarded). A repo can run this today, before #198 lands.
+  - **Do not couple it to plan archival.** This sweeps directories; #199 decides
+    how plans get archived. A repo can run this today, before #198/#199 land.
   - **Ignore-file hygiene is in scope only as far as `.DS_Store`-class noise
     goes** — report it, do not grow a general gitignore linter here.
 - **Risks / fallout:** deleting a directory a doc still cites by path. The
@@ -6210,10 +6367,10 @@ evidence. It is not an active implementation contract.
   `docs/implementation-plans/archive/plan-details/jira-grade-detail-side-by-side-evaluation/reports/`
   as spin evidence, and citations like it must survive — so the sweep either
   skips plan-level `archive/` trees entirely (scoping to the per-detail
-  `archive/` folders #200 retires) or runs a citation sweep for them.
-  **Recommended: scope to the detail-level folders**, and leave plan-level
-  archival alone (#199 is discarded).
-- **Dependencies:** independent of #198. Pairs with **#200** — that entry
+  `archive/` folders #200 retires) or runs the same citation sweep #199
+  requires. **Recommended: scope to the detail-level folders**, and leave
+  plan-level archival to #199 where the citation problem is already owned.
+- **Dependencies:** independent of #198/#199. Pairs with **#200** — that entry
   stops the bleeding, this one cleans the wound. Landing this without #200
   means the directories come back.
 - **Effort:** small — a walk, a `git cat-file` check per file, a report, and a
@@ -6224,7 +6381,7 @@ evidence. It is not an active implementation contract.
   - **In scope:** the detection walk, the recoverability check, the report
     surface on `plan-tool validate`, the opt-in removal path, tests.
   - **Out of scope / Non-goals:** plan-level `docs/implementation-plans/archive/`
-    trees (out of scope; #199 is discarded); deleting
+    trees (#199 owns those, along with the citation sweep they need); deleting
     anything in another repo; a general gitignore linter; changing what writes
     archives (#200).
   - **Allowed behavior changes:** a new advisory in `validate` and the new
@@ -6236,7 +6393,8 @@ evidence. It is not an active implementation contract.
     reported and **left in place**; nested archives are found, not just
     top-level ones.
   - **Stop / defer:** if a doc-citation to a detail-level archive path turns up,
-    stop and keep that reference working rather than breaking it.
+    stop and fold the citation sweep in from #199 rather than breaking the
+    reference.
 - **Approach:** `direct` — a walk plus a gated delete, no open design choices
   once the scoping decision above is taken.
 - **Quality:** `audit-coverage` — removes superseded design from the surface
