@@ -638,6 +638,20 @@ any bound feedback item authorizes a stack-row add; the callout is display only
 and never a defect class or an approval gate. Hand enrollment is deliberately
 excluded from the callout.
 
+### #533 — Roadmap requirements stay; the smallest proof governs how they are met
+
+Shipped 2026-11-14. Settled owner rule, do not re-open: the brief's stated
+requirements are the roadmap's requirements, and the smallest-proof rule applies
+to how each is met and to refusing unrequested work, never to narrowing a stated
+requirement unless the brief or the owner directs it. The shared header
+`roadmap-smallest-proof-boundary-header.md` carries the rule to stages 1–4 and,
+since this change, to `roadmap-seed.md`; stage 1 records a `pending` decision
+instead of dropping a requirement it reads as optional; stage 4 prefers several
+small, independently verifiable plans without a count target. The cause was
+Loom's stage 1 cutting the brief-required repository browser
+(`docs/evidence/roadmap-run-measurements.md` §8). #534 measures the effect; #535
+owns the separate question of stage-authored `settled` decisions.
+
 ## Closed decisions
 
 ### #363 (authored-artifact upgrade route) — a release rule, not the roadmap #363 renumbered to #384

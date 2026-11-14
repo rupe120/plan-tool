@@ -572,109 +572,6 @@ working straight down the tiers.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design and its
   Gate 1 rounds. Cut to a D-only label 2026-11-14.
 
-**#533 — The `roadmap` smallest-proof rule narrows the brief's requirements, so stage 1 can drop a feature the brief puts in scope**
-
-- **Labels:** Route `direct`
-  · Readiness `ready`
-  · Tier `experienced`
-  · Principle `converge-on-correct-plan`
-- **Settled rule (owner decision, 2026-11-14; do not re-open):** the brief's
-  requirements stay the requirements. The smallest-proof rule applies to *how*
-  each requirement is achieved (the fewest new abstractions, records,
-  boundaries and configuration surfaces) and to refusing work the brief does
-  not ask for. It never removes or narrows a requirement the brief states,
-  unless the brief or the owner directs that narrowing. Owner: "the
-  requirements should stay the requirements and the smallest proof should
-  apply to how the requirements are achieved, not narrowing down the
-  requirements unless directed to."
-- **What:** the roadmap prompts frame the proof as one selected path through
-  the brief and keep anything only when "that result cannot be true without
-  it", which licenses cutting stated requirements:
-  - the shared header (`roadmap-smallest-proof-boundary-header.md`, given to
-    stages 1–4): "the smallest end-to-end proof of the brief's central outcome,
-    not the eventual product capability";
-  - stage 1 (`roadmap-domain.md`): "Select one concrete path and an observable
-    result from the brief. Keep an entity, rule, workflow, or decision only when
-    that result cannot be true without it";
-  - stages 2 and 3 (`roadmap-constraints.md`, `roadmap-components.md`) constrain
-    and own "only" the path the domain artifact selected, so a stage 1 cut
-    carries forward;
-  - stage 4 (`roadmap-plans.md`): "Keep a plan only when that result cannot be
-    true without it";
-  - `roadmap-seed.md` ("one part of the roadmap's smallest end-to-end proof"),
-    which also does not receive the shared header;
-  - the contract and guide that restate it: `ROADMAP_FORMAT.md` (stage 4
-    purpose, "smallest end-to-end proof of the brief's central outcome") and
-    `docs/how-to/roadmap.md` § review ("Every row must be necessary to that
-    result").
-  Alongside the correction, stage 4 states a preference for several small,
-  independently verifiable plans over one broad plan for the same requirements.
-- **Deliberately unchanged, and why:** `synthesize-body.md`, `detail.md`,
-  `plan-audit.md`, `run.md` and `integrations/shared/DIRECTIVES.md` § "Smallest
-  proof first" already apply the rule to mechanism (each new abstraction or
-  record needs a requirement that fails without it), which is the settled rule.
-  `roadmap-revision.md` and `roadmap-revision-update-judgment.md` bound a
-  reviewer response, not the brief's requirements. The "do not add later roles,
-  workflows, integrations…" sentences in each stage prompt stay: they refuse
-  work the brief does not ask for.
-- **Evidence:** Loom's `loom-aidlc-mvp` first stored version (`9590a8964b…`)
-  recorded `decision-exclude-repo-browsing` at stage 1, leaving out the
-  read-only repository tree and file references because they were "not a
-  condition for" the central outcome, although the brief lists the feature and
-  its Scope Fence says "In scope: … read-only repository tree and file
-  references". Stage 1 authored the decision as `settled`, never `pending`,
-  so it was never put to the owner as a question; the owner had affirmed the
-  repository tree at ideation (2026-09-11) and restored it through roadmap
-  feedback on 2026-10-01 (`fb-domain-repository-context`), which became the
-  `repository-browse-and-reference` plan. Trace and history: #534 and
-  `docs/evidence/roadmap-run-measurements.md` §8.
-- **Effort:** small to medium. Wording in one shared header, five prompts, two
-  docs, `_render_seed_materialize_prompt`'s variables, and the prompt-assembly
-  tests; no schema or gate change.
-- **Risks / fallout:** removing "only when … cannot be true without it" could
-  let stages add work the brief does not ask for; the refusal of unrequested
-  roles, workflows and integrations stays to prevent that. A small-plan
-  preference can tip into one plan per concern, which `roadmap-plans.md`
-  already forbids; keep that and its no-target-count rule. Prompt-assembly tests
-  pinning the old wording change.
-- **Dependencies:** none. #532 also edits `roadmap-seed.md`; whichever lands
-  second rebases. #534's runs measure the effect; this entry does not wait for
-  them, because the rule is an owner decision rather than an experiment result.
-- **Scope contract:**
-  - **Outcome:** every roadmap stage prompt and the seed-materialization prompt
-    keep the brief's stated requirements intact and apply the smallest-proof
-    rule only to how each is achieved and to refusing unrequested work, and
-    stage 4 prefers several small, independently verifiable plans.
-  - **In scope:** the shared header and footer; `roadmap-domain.md`,
-    `roadmap-constraints.md`, `roadmap-components.md`, `roadmap-plans.md` and
-    `roadmap-seed.md` (which receives the shared header and footer in place of
-    its own paragraph); `ROADMAP_FORMAT.md`'s stage 4 purpose;
-    `docs/how-to/roadmap.md`'s review guidance; the prompt-assembly tests.
-  - **Out of scope / Non-goals:** deliberately no gate or finding that checks a
-    roadmap against the brief's requirements (that is an agreement check
-    between two prose artifacts), no plan count, size cap or exit-code change,
-    no change to the plan-level prompts listed above, and no schema change.
-  - **Allowed behavior changes:** the prompts' text, so generated roadmaps and
-    draft seeds may differ.
-  - **Allowed reorganization:** `roadmap-seed.md`'s own smallest-proof
-    paragraph is replaced by the shared header and footer, because two copies
-    of one rule drift.
-  - **Verification:** the rendered prompt for each stage and for seed
-    materialization contains the requirements-stay rule and the mechanism-only
-    smallest-proof rule, and no longer contains "only when that result cannot be
-    true without it" or "central outcome"; the stage 4 prompt contains the
-    small-plan preference and still contains its no-target-count and
-    no-plan-per-shared-concern rules (assert keys, not prose). #534's
-    requirements-stay arm records the effect on the Loom inputs; it gates
-    nothing.
-  - **Stop / defer:** if a real run shows the stages adding unrequested scope,
-    record it as evidence and file the correction; do not reinstate the
-    narrowing wording.
-- **Origin:** 2026-11-14. The small-plan preference: owner, "include this in the
-  roadmap to plan/seed breakdown to encourage a broad array of smaller plans".
-  The requirements correction: #534's trace, then the owner's settled rule
-  above.
-
 **#534 — Experiment: from Loom's original brief and artifacts, can the roadmap produce the plans a human later had to add?**
 
 - **Labels:** Route `direct`
@@ -718,7 +615,7 @@ working straight down the tiers.
     out of the input.
   - **Trace result (2026-11-14, no model calls; recorded in the evidence
     section):** `repository-browse-and-reference` is required by the brief and
-    was cut at stage 1 by the smallest-proof rule (now #533). The generic work
+    was cut at stage 1 by the smallest-proof rule (fixed by #533). The generic work
     behind `cdk-infrastructure-and-environments` and `static-spa-delivery`
     (deploy the two deployable units into the single environment; deliver the
     UI unit) is stated in stage 2's hosting constraints and has no owner at
@@ -740,10 +637,11 @@ working straight down the tiers.
       constraint discharge, producer/consumer handoff and delivery concern
       (build, deploy, environment), then assign every item to exactly one plan;
       `--from-stage 4`. No new gate code;
-    - *baseline-1* — current prompts from the brief (all four stages), once; the
+    - *baseline-1* — the prompts as they were before #533 shipped (a throwaway
+      branch at its parent commit), from the brief (all four stages), once; the
       first stored version is the second sample;
-    - *R* — #533's wording (requirements stay; smallest proof governs how; the
-      stage 4 small-plan preference), from the brief;
+    - *R* — the shipped #533 prompts (requirements stay; smallest proof governs
+      how; the stage 4 small-plan preference), from the brief;
     - *R+D* — *R* plus one `roadmap-components.md` line requiring an owner for
       every stage 2 hosting, topology and environment constraint, from the
       brief.
@@ -752,8 +650,8 @@ working straight down the tiers.
     and cost. §6 of `docs/evidence/roadmap-run-measurements.md` measured about
     $2.73 for one stage 4 run, so the four stage 4 runs cost roughly $11; a
     run from the brief has not been costed and is recorded, five of them.
-  - **Decision the result feeds:** #533 ships on the owner's rule either way;
-    *R* shows its effect. If *R+D* recovers the delivery plans that *R* misses,
+  - **Decision the result feeds:** #533 shipped on the owner's rule; *R* shows
+    its effect. If *R+D* recovers the delivery plans that *R* misses,
     file the stage 3 ownership line as its own entry. If *B* recovers
     materially more than *baseline-4*, file the work-inventory design (an
     inventory artifact plus an every-item-owned gate) as a `plan` route at
@@ -764,9 +662,9 @@ working straight down the tiers.
 - **Risks / fallout:** n=2 per arm on one roadmap is provenance, not proof, and
   gates nothing. Hand-matching recall is a judgment, so each match is written
   down. The head's nine plans are one reviewer's answer, not ground truth.
-- **Dependencies:** none; *R* can run from a throwaway branch before #533
-  merges. Feeds a stage 3 ownership entry and a work-inventory entry if the
-  arms support them.
+- **Dependencies:** none; #533 shipped 2026-11-14
+  (`docs/history/backlog-decisions.md`). Feeds a stage 3 ownership entry and a
+  work-inventory entry if the arms support them.
 - **Scope contract:**
   - **Outcome:** a dated section in `docs/evidence/roadmap-run-measurements.md`
     recording the stage where each missing plan's work first drops out, plan
@@ -775,8 +673,8 @@ working straight down the tiers.
   - **In scope:** the throwaway input copy, the no-model trace across the
     brief and stages 1–3, the arms' prompt variants on throwaway branches,
     their runs, and the evidence section.
-  - **Out of scope / Non-goals:** deliberately no merged prompt change (#533
-    carries the requirements correction, and other changes get their own
+  - **Out of scope / Non-goals:** deliberately no merged prompt change (the
+    requirements correction shipped as #533, and other changes get their own
     entries), no new gate, inventory artifact, schema change or stage split
     (splitting stage 4 into several calls is considered only if every arm
     fails), no prompt-override flag added to plan-tool, no
@@ -832,7 +730,8 @@ working straight down the tiers.
   3. **A stage never writes `settled`.** Every stage decision is `pending` until
      an operator settles it. Simple, but every option point becomes owner work.
   4. **Keep the design and record the limit.** #533's requirements-stay rule
-     removes the prompt wording that produced this cut; the residual risk is
+     (shipped 2026-11-14) removed the prompt wording that produced this cut, and
+     stage 1 now records a `pending` decision instead of dropping a requirement; the residual risk is
      documented.
 - **Deliberately not an option:** judging from a decision's wording whether it
   narrows the brief or should have been `pending`. That is a content judgment
@@ -844,8 +743,8 @@ working straight down the tiers.
 - **Risks / fallout:** options 1–3 change how many decisions reach the owner;
   options 1 and 2 touch persisted artifacts and need a compatibility rule for
   existing roadmaps, whose stored versions are immutable.
-- **Dependencies:** none; complements #533. Decide after #533 lands, since its
-  wording change removes the cause seen here and may make option 4 enough.
+- **Dependencies:** none. #533 shipped 2026-11-14 and removed the cause seen
+  here; decide with its effect in view, since it may make option 4 enough.
 - **Scope contract:**
   - **Outcome:** a recorded owner decision among the options, and, for options
     1–3, a stage-written decision that no owner has confirmed is no longer
