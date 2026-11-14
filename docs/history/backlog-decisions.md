@@ -916,3 +916,45 @@ afterwards in `9f8c67e9b`.
 **Re-open only when** a quoted passage in a first-task path, a router or a
 how-to contradicts `DIRECTIVES.md`'s gate order or the parser's iteration
 defaults.
+
+## Closed owner decisions, 2026-11-14
+
+Three entries closed during the 2026-11-14 backlog reconciliation. Each
+record keeps the decision and its re-open condition.
+
+### #280 — Saved-audit lookup duplication between `completeness_phases.py` and `data_contract_cmd.py`
+
+Closed as no action. The entry's one remaining candidate compared a saved-audit
+sidecar load and "newest current, qualified audit" scan in
+`cli/completeness_phases.py` against `cli/data_contract_cmd.py`
+(`_load_payloads`, `_newest_saved_completeness_with_contract_payload`). At HEAD
+`completeness_phases.py` has no such lookup, so there is no second copy to
+consolidate; the other `is_current_final_qualified` consumers (`gate_status.py`,
+`cli/review_cmd.py`) read a different projection. **Re-open only when** a second
+module grows its own scan for the newest qualified saved audit.
+
+### #284 — Roadmap escalation/impact consolidation candidates
+
+Closed. Three of the four candidates (a shared runner lifecycle, closure
+traversal, and `RoadmapImpactSnapshot`'s parallel tuples) named
+`plan_tool/roadmap_impact_run.py` and `RoadmapImpactSnapshot`, which no longer
+exist. The fourth, a shared strict-JSON decoder, stays separate. An AST pass
+that normalizes docstrings, names, and annotations finds five
+`_reject_duplicate_keys` definitions (`concept_tree.py`,
+`roadmap_candidate.py`, `roadmap_candidate_run.py`,
+`roadmap_candidate_review.py`, `roadmap_revision.py`) with the same loop and
+five different bodies: each raises its own typed error with its own message
+(`InvalidConceptTreeError`, `CandidateDeltaError`,
+`CandidateProposalResponseError`, `CandidateQuestionResponseError`,
+`RevisionContractError`), and callers and tests pin those types. A shared
+helper would need the error type and message as parameters, which saves about
+six lines per site and adds an import edge. **Re-open only when** a sixth
+decoder is added or the duplicate-key policy changes in one of the five.
+
+### #310 — Whether `roadmap_reader_guard` should cover the recorded-brief path
+
+Closed as moot. The entry's subject was the impact-snapshot capture path
+reading the recorded brief while a reader guard was held. That path no longer
+exists: `roadmap_reader_guard` and `read_brief_text` have no production caller
+(tests only). The remaining question, whether to delete or keep the two
+helpers, is filed as #531.
