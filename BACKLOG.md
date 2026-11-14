@@ -886,8 +886,7 @@ working straight down the tiers.
   in #385's `--view status --json`, so the projection also answers "what fed
   this roadmap". File them as their own entries when #383 is selected. Origin:
   2026-09-11 intake-ideas handoff, retired 2026-09-29.
-- **Origin:** 2026-09-09, Integration's AI-DLC Ideation route
-  (`handoffs/2026-09-09-roadmap-from-ideation.md` there). Stage 2 requires one
+- **Origin:** 2026-09-09, Integration's AI-DLC Ideation route. Stage 2 requires one
   hosting row per facet and one disposition per quality attribute and guesses
   when the brief is silent; the facts exist in an upstream
   `constraint-register.md` that has no way to reach it except by being pasted
@@ -917,8 +916,7 @@ working straight down the tiers.
 - **Dependencies:** none. Complements the shipped stage-lifecycle stderr
   contract (#337) rather than extending it — that reports transitions during a
   run, this reports state between runs.
-- **Origin:** 2026-09-09, Integration's control-plane work
-  (`handoffs/2026-09-09-control-plane-mvp-shape.md` there). Integration presents two
+- **Origin:** 2026-09-09, Integration's control-plane work. Integration presents two
   engines through one contract; the other engine offers both an event log and
   `--status --json`, where `plan-tool` offers `plan-tool runs` and no state
   projection, so the presentation layer is asymmetric for reasons that are not
@@ -999,12 +997,10 @@ working straight down the tiers.
 - **Readiness:** `decision-needed` — the citation question above comes first.
 - **Tier:** `architect` — it changes the canonical directives every driving
   session reads.
-- **Origin:** 2026-09-16,
-  `handoffs/2026-09-16-roadmap-orchestration-primer.md` § "Model selection",
-  carried forward when that handoff was retired — its own stated retirement
-  condition (`DIRECTIVES.md` gaining roadmap operational guidance) covered
-  the file's router/how-to-use content, not this observation, which had no
-  other recorded home.
+- **Origin:** 2026-09-16, the roadmap orchestration primer's "Model selection"
+  section. The primer's retirement condition (`DIRECTIVES.md` gaining roadmap
+  operational guidance) covered its router/how-to-use content, not this
+  observation, which had no other recorded home.
 - **Status:** not started.
 
 **#425 — Installed skills make per-command model selection explicit before invoking plan-tool**
@@ -11542,8 +11538,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Renumbered:** filed as #425 on this branch on 2026-09-23 and cited that way in its commit history; renumbered to #428 on merging `main`, which had already allocated #425.
 - **Origin:** 2026-09-23, post-run review of
-  `roadmap-versioned-feedback-revision-chain`
-  (`handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`).
+  `roadmap-versioned-feedback-revision-chain`.
 - **Status:** not started.
 
 **#430 — Investigate whether the same-receipt re-entry return in the batch proposal path can ever fire**
@@ -11642,8 +11637,7 @@ longer describes current work. It is retained only as dated carve-out context.
   name needs a judgment about whether its behavior is covered.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-09-23, closing `roadmap-versioned-feedback-revision-chain`; the
-  coverage note in
-  `handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`.
+  review's coverage note.
 
 **#426 — Following 13 links in `RUNBOOK.md` and two dated handoffs lands on a missing file, because the docs they name were renamed or deleted** → promoted to IPPT-4 (2026-09-24)
 
@@ -11756,8 +11750,7 @@ longer describes current work. It is retained only as dated carve-out context.
   (it defines a persisted event contract). **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** the structural-feedback-approval review ledger's owner direction
-  of 2026-09-24 (`handoffs/2026-09-23-roadmap-structural-feedback-approval-code-review.md`,
-  "Wider run-log coverage"), filed 2026-09-29.
+  of 2026-09-24 ("Wider run-log coverage"), filed 2026-09-29.
 - **Status:** not started.
 
 **#435 — Decide whether candidate review needs a model-judged narrative review for contradictions a deterministic check cannot see**
@@ -13253,8 +13246,8 @@ plan-tool reconcile-code roadmap-stack-layer --all
   person's exact reason, an explicit reopen) and states "never infer either
   decision from generic revision feedback"
   (`aidlc-workflows` `core/aidlc-common/protocols/stage-protocol-reviewer.md`).
-- **Evidence:** the `no-edits-applied` review (2026-10-13,
-  `handoffs/2026-10-13-no-edits-applied-code-review.md`) re-stated its declined
+- **Evidence:** the `no-edits-applied` review (2026-10-13)
+  re-stated its declined
   items in every reviewer prompt by hand so later rounds would not re-raise them.
 - **Effort:** medium: a disposition store keyed by stable finding identity, a
   command to record one, and the audit prompt and report reading it.
@@ -13571,8 +13564,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
   unrelated restructuring.
 - **Verification:** Walk the instructions in a consuming repository; check links and
   command examples. Complete #377 seed-authoring support before calling the walkthrough complete.
-  The recipe-consistency prerequisite is satisfied by the
-  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md).
+  The recipe-consistency prerequisite is satisfied (skill-router repair).
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -13689,8 +13681,7 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Verification:** Record environment, commands, assistant/backend/model, observations
   and limitations. Require #377 and #508–#514 to be
   resolved or explicitly dispositioned before public onboarding sign-off. The
-  recipe-consistency prerequisite is satisfied by the
-  [skill-router repair](handoffs/2026-10-21-skill-router-recipes-code-review.md); missing
+  recipe-consistency prerequisite is satisfied (skill-router repair); missing
   credentials remain an explicit coverage gap.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.

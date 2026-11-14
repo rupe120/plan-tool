@@ -21,6 +21,7 @@ needed.
 - [AI-assisted development policy (an example)](ai-assisted-development-policy.md)
 - [Process contracts](contracts/process.md)
 - [Seed ingestion](contracts/seed-ingestion.md)
+- [AI-DLC seam contract](contracts/aidlc-seam.md)
 - [Human-input protocol](contracts/human-io.md)
 - [Codex CLI](contracts/codex-cli.md)
 - [Cursor Agent CLI](contracts/cursor-agent-cli.md)

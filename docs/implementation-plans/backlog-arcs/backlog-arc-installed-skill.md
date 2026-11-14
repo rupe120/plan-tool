@@ -144,7 +144,7 @@ already settled (one shared reference, not three).
 Choose #508 for portable guidance versus local team policy, #509 for consuming
 repository hosting configuration, #511 for installation/refresh clarity, and
 #512 for model choice and rationale. The recipe-consistency prerequisite is
-satisfied by the [skill-router repair](../../../handoffs/2026-10-21-skill-router-recipes-code-review.md). #377 remains the owner of
+satisfied (skill-router repair). #377 remains the owner of
 seed-authoring support; #378/#379 retain tracker convention discovery and
 stale-entry handling. #509 is a bounded extension of this arc into runtime
 configuration, limited to giving the installed session a verified hosting target;

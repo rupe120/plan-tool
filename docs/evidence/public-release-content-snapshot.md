@@ -2,8 +2,7 @@
 
 Use this record to choose release content, preserve the evidence behind current
 decisions, and verify a publication candidate. [The release backlog](../../BACKLOG.md)
-owns remaining distribution and onboarding work; [the pickup record](../../handoffs/2026-10-19-public-onboarding-and-release.md)
-owns the next action. The [verification receipt](public-release-content-snapshot-verification-20261020.md)
+owns remaining distribution and onboarding work and the next action. The [verification receipt](public-release-content-snapshot-verification-20261020.md)
 identifies measured candidate bytes and results.
 
 ## Content selection
@@ -38,7 +37,7 @@ vocabulary check, not proof that 81 MB of audit text holds nothing sensitive.
 The 2026-10-20 selection baseline contains 8,200 paths. The frozen candidate
 retained 2,584 of them, including both policy artifacts, and omitted its 5,616
 report paths (since restored; see [Content selection](#content-selection)). The
-owner-approved selection adds these 17 explicit records for a 2,601-path candidate:
+owner-approved selection adds 17 explicit records for a 2,601-path candidate. Two of them, the execution-review and reference-repair-review handoffs under `handoffs/`, were retired 2026-11-13 with the handoff cleanup; the frozen receipts still list them. The other 15:
 
 - `docs/evidence/public-release-audit-next-steps-comparison-20261021.md`
 - `docs/evidence/public-release-content-snapshot-verification-20261020.md`
@@ -55,8 +54,6 @@ owner-approved selection adds these 17 explicit records for a 2,601-path candida
 - `experiments/harness-instruction-loading/RESULTS.md`
 - `experiments/harness-instruction-loading/scored-results.json`
 - `experiments/token-ledger/REPORT.md`
-- `handoffs/2026-10-20-public-release-content-snapshot-execution-review.md`
-- `handoffs/2026-10-20-public-release-reference-repair-review.md`
 
 The experiment additions retain the protocol, results, scored measurements,
 recheck and retro that support their conclusions. Cleanup records retain the
@@ -121,10 +118,10 @@ qualification. Test and audit results apply to their named inputs.
 | Authored artifact versions | Version plan/detail formats explicitly and preserve refusal, byte-preservation and recovery contracts. A scoped backend result does not become a clean result merely because it contains no findings | [Structure-versioning record](authored-artifact-structure-versioning.md) |
 | Coverage replay | Keep the hermetic capture-runner proposal withdrawn: its proof system costs more than the bounded measurement it serves. A new need requires independent evidence | [Backlog decisions](../history/backlog-decisions.md) |
 | Jira-grade instrument and measurement | Separate building the instrument from measuring it; require correct audit grounding, independent baselines and a noise-aware comparison | [Planning guidance](../explanations/nondeterministic-plan-design.md) |
-| Convergence evaluator | Preserve the owner-selected withdrawal rather than expanding an interlocked proof mechanism in response to more findings | [Developer-docs decisions](../../handoffs/2026-09-14-developer-docs-and-tracking.md) |
-| Brief drift | Keep lifecycle ownership and source-baseline acceptance with the stage runner; non-stage routes retain their separate boundary | [Roadmap delivery decisions](../../handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md) |
-| Candidate collection guidance | Use actual collection names and verified source hints while preserving persisted capsule and receipt identity | [Candidate guidance](../../handoffs/2026-09-25-roadmap-candidate-vocabulary-retry.md) |
-| Snapshot design audit | The 2026-10-20 bare audit has zero conceptual findings at 0/6 details; the final detail audit has zero at 6/6 with confirmed-dry coverage. The false PDF diagnostic leaves the overall result `awaiting-human-action`; do not call it a clean tool verdict | [Design review](../../handoffs/2026-10-20-public-release-content-snapshot-plan-review.md) |
+| Convergence evaluator | Preserve the owner-selected withdrawal rather than expanding an interlocked proof mechanism in response to more findings | This record |
+| Brief drift | Keep lifecycle ownership and source-baseline acceptance with the stage runner; non-stage routes retain their separate boundary | This record |
+| Candidate collection guidance | Use actual collection names and verified source hints while preserving persisted capsule and receipt identity | This record |
+| Snapshot design audit | The 2026-10-20 bare audit has zero conceptual findings at 0/6 details; the final detail audit has zero at 6/6 with confirmed-dry coverage. The false PDF diagnostic leaves the overall result `awaiting-human-action`; do not call it a clean tool verdict | This record |
 
 ### Reference verification
 
@@ -135,18 +132,13 @@ store needed to run a new measurement; keep a new result separate from a dated
 study. Do not change a frozen experiment's conclusions to make it reproducible
 under different inputs.
 
-Report-dependent reader content belongs in these 13 document owners:
+Report-dependent reader content belongs in these 8 document owners:
 
 - `docs/evidence/authored-artifact-structure-versioning.md`
 - `docs/explanations/audit-pass-persistence.md`
 - `docs/explanations/nondeterministic-plan-design.md`
 - `docs/history/backlog-decisions.md`
 - `docs/implementation-plans/archive/2-jira-grade-01-detail-instrument.md`
-- `handoffs/2026-09-14-developer-docs-and-tracking.md`
-- `handoffs/2026-09-14-roadmap-aidlc-integration-delivery.md`
-- `handoffs/2026-09-25-roadmap-candidate-vocabulary-retry.md`
-- `handoffs/2026-10-19-public-onboarding-and-release.md`
-- `handoffs/2026-10-20-public-release-content-snapshot-plan-review.md`
 - `plan-seeds/archive/jira-grade-01-detail-instrument.distilled.replaced.md`
 - `plan-seeds/archive/jira-grade-01-detail-instrument.replaced.md`
 - `BACKLOG.md`

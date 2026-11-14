@@ -89,5 +89,4 @@ Demo, experiment, old-decision and correctness branches remain preserved.
    candidate from the chosen current source. Keep remote root replacement separate.
 
 Raw per-commit patch lists, branch statistics and evidence classifications are
-in `.tmp/public-release-outside-commit-triage.json`. The [pickup handoff](../../handoffs/2026-10-19-public-onboarding-and-release.md)
-owns the current route.
+in `.tmp/public-release-outside-commit-triage.json`.

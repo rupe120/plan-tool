@@ -15,7 +15,7 @@ The replay is retrospective, contains added owner decisions and session-directed
 
 ## Witnessed failures to retain
 
-The original Integration retrospective `handoffs/2026-10-10-roadmap-to-plans-retro.md` and seam study `docs/experiments/integration-cli-simulation/2026-10-13-seam-review-tier0-results.md` at the later source identify missing shared producers, extensions to existing contracts, ordering and composition gaps. The replay requires explicit readiness-correction intake, session-lifetime cleanup, safe output release, handoff content continuity, catalog revision identity, disconnected output indexing and submission reference binding. These corrections demonstrate useful benchmark cases, not proof that every case is caused by decomposition or fixed by more plans.
+The original Integration retrospective and seam study `docs/experiments/integration-cli-simulation/2026-10-13-seam-review-tier0-results.md` at the later source identify missing shared producers, extensions to existing contracts, ordering and composition gaps. The replay requires explicit readiness-correction intake, session-lifetime cleanup, safe output release, handoff content continuity, catalog revision identity, disconnected output indexing and submission reference binding. These corrections demonstrate useful benchmark cases, not proof that every case is caused by decomposition or fixed by more plans.
 
 Raw create replaces local References in all nine plans; the session restores them. Preserve this input-delivery confound in comparisons rather than attributing its effects to granularity. Broader shared-context machinery and #462’s independent gate are not justified by that observation alone.
 

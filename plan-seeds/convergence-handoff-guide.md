@@ -134,7 +134,3 @@ for proof of progress.
   — dated false-premise example.
 - `docs/evidence/claude-md-measured-incidents.md` — retained class-wide-application
   and remedy-verification evidence for the domain-constraints trajectory.
-- `handoffs/2026-09-12-roadmap-brief-source-drift-code-review.md` — retained code
-  reconcile and independent-review explanations, dispositions and closure. Its
-  finding explanations and closure labels show how to preserve judgment; use
-  locally generated reports and logs to document each new run.

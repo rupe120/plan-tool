@@ -40,7 +40,7 @@ These responsibilities span multiple consumers rather than one accidental extra 
 
 ## Current testing direction
 
-Owner decision, 2026-10-16: stop at base plans and focus further testing on application business logic. Do not create detail files or spend this loop redesigning infrastructure decomposition. The [business-logic testing handoff](../../handoffs/2026-10-16-roadmap-business-logic-base-plan-loop.md) owns the procedure, frozen inputs, gap attribution, token limits and pickup state.
+Owner decision, 2026-10-16: stop at base plans and focus further testing on application business logic. Do not create detail files or spend this loop redesigning infrastructure decomposition.
 
 Review shared producer operations using the captured application plans. Preserve scope and distinguish source omissions from mapping omissions, seed losses and create losses. Use bounded reruns of affected routes before proposing another tool adjustment. Keep unresolved implementation mechanics explicitly unassessed at base-plan altitude.
 

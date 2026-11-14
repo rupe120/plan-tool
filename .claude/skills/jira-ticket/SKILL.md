@@ -15,14 +15,14 @@ Jira operation: `jira.site_url`, `project_key`, `project_id`, `board_id` and
 for the target rather than inferring it from examples. `IPPT` and `IPPT-N`
 below are example keys; substitute the configured project key.
 The policy lives in `docs/TRACKING.md`; the promotion procedure and the lead's
-recurring loop live in `handoffs/2026-09-23-jira-management.md`. This file adds
+recurring loop live in `docs/how-to/jira-management.md`. This file adds
 the mechanics and the checks, and does not restate the rules, so **read those
 sections first, every time**: the tier rules were rewritten on 2026-09-24 after
 real tickets misfired.
 
 - `docs/TRACKING.md` § "Issue types", "Labels, statuses, and comments", "Priority",
   "Ticket contents", "Choosing the tier", "Promotion stubs"
-- `handoffs/2026-09-23-jira-management.md` § "Seeding and promotion"
+- `docs/how-to/jira-management.md` § "Seeding and promotion"
 
 ## Approval gate
 

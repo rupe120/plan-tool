@@ -7,8 +7,7 @@ notes, visibility rules, a link graph, marginalia, maps, calendars, timelines
 and two far-future AI features.
 
 This runbook describes preparation requests, not a completed demonstration.
-The [refresh handoff](../../handoffs/2026-10-21-demo-refresh.md#plan-scope-and-user-review)
-records preparation boundaries; retained measurements do not establish a fresh
+Retained measurements do not establish a fresh
 model run, qualified audit convergence or publication approval. Use the sibling
 [planning demo](planning-demo.md) for the smaller request → artifact → decision
 pattern.

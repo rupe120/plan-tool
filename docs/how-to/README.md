@@ -64,4 +64,6 @@ for a first contribution. For multi-step tool changes, use the
 For specialized workflows, see [when to use plan-tool](use-cases.md),
 [branch-awareness](branch-awareness.md), and the [roadmap walkthrough](roadmap.md).
 
+To promote backlog work to Jira and run the triage loop, see [Manage the Jira board](jira-management.md).
+
 To explore or present an example, start with [Demonstrations](../demos/README.md).

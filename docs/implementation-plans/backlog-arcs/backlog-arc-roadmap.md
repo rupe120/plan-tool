@@ -95,9 +95,7 @@ contract.
 
 On 2026-09-09, Integration changed how its brief is produced, and that supplied the
 next three capability findings plus one defect. Integration now authors its concept
-brief from an AI-DLC Ideation run rather than by hand (its
-`handoffs/2026-09-08-aidlc-authoring-route.md` and
-`handoffs/2026-09-09-roadmap-from-ideation.md`), which makes a structured
+brief from an AI-DLC Ideation run rather than by hand, which makes a structured
 upstream producer the normal case rather than a hypothetical one. Three
 consequences reach this arc. Stage 2 requires one hosting row per facet and
 one disposition per quality attribute and guesses when the brief is silent,
@@ -282,8 +280,7 @@ detail.
    roadmap work. An operator may accept current text only at the same recorded
    path, replacing the source baseline without re-grounding artifacts. Semantic
    changes remain owning-artifact feedback or a successor lineage. Its
-   independent review converges in
-   `handoffs/2026-09-12-roadmap-brief-source-drift-code-review.md`.
+   independent review converged.
 8. **Closed (2026-09-14).** The route-local brief-drift record gives each
    non-stage route a tested,
    route-local changed-brief and legacy-brief policy. Analysis creation and

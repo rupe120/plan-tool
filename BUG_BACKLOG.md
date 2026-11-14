@@ -1030,8 +1030,7 @@ Durable re-open conditions for retired items are recorded in
   `<digit>-` prefix is stripped, so `cp some-plan.md _roadmap.md &&
   plan-tool register _roadmap.md` registers a plan whose slug is literally
   `_roadmap`, colliding with the namespace root chosen specifically to rule
-  this out (round 2 of a `code-review-loop` pass on
-  `handoffs/2026-09-22-roadmap-model-failure-receipts-code-review.md`
+  this out (round 2 of a `code-review-loop` pass
   chose `_roadmap` believing no valid slug could start with `_`, which is
   true for every `create`-minted slug but not for a `register`-adopted
   one). No fixed literal namespace-root string can close this: `register`'s
@@ -1056,8 +1055,7 @@ Durable re-open conditions for retired items are recorded in
   whether the residual risk is worth either given it requires a
   deliberately-crafted `register`-adopted filename).
 - **Origin:** 2026-09-22, `/code-review high` round 3 of the
-  `code-review-loop` pass on `handoffs/2026-09-22-roadmap-model-failure-
-  receipts-code-review.md`, after rounds 1 and 2 each narrowed but did not
+  `code-review-loop` pass on the roadmap model-failure receipts, after rounds 1 and 2 each narrowed but did not
   close the same collision.
 
 ### `CLAUDE.md`, `TESTING.md`, and backlog entry #190 cite a reconcile prompt, `prompts/reconcile.md`, that has never existed in this repository, so readers cannot find the rules they describe
@@ -1399,7 +1397,7 @@ not include them.
   (`ROADMAP_FORMAT.md`) plus `run_roadmap`/`cmd_roadmap`, not scoped to one
   file.
 - **Origin:** 2026-09-21, `/code-review high` round 2 of the
-  `2026-09-21-unpushed-main-code-review` ledger. Predates this ledger's
+  `unpushed-main` code review. Predates this ledger's
   entire reviewed range (present in `origin/main` already); surfaced by
   analogy to a sibling bug the same round found and fixed in
   `_cmd_roadmap_materialize`'s own writer-guard teardown handling. Requires
@@ -1567,8 +1565,8 @@ not include them.
   (the ledger runner names the row for migration only).
 - **Approach:** `direct` — small, one validator plus its tests. Readiness
   `decision-needed` on the load-compatibility question above; Tier `beginner`.
-- **Origin:** 2026-09-23, `/code-review high` pass 4 of
-  `handoffs/2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md`.
+- **Origin:** 2026-09-23, `/code-review high` pass 4 of the
+  `roadmap-versioned-feedback-revision-chain` review.
 
 ### `ruff` reports five undefined names in roadmap code and tests (`PendingGeneration`, `Any` twice, `Callable`), so the code check fails though nothing breaks at run time
 
@@ -1633,8 +1631,8 @@ not include them.
   and asserts the "underivable" refusal at `_stack_is_structural` and the unknown (`None`) result at
   `_selected_promotion_is_structural`.
 - **Approach:** `direct` — one tuple entry and one test. Readiness `ready`; Tier `beginner`.
-- **Origin:** 2026-09-24, `/code-review high` pass 2 of
-  `handoffs/2026-09-24-roadmap-stack-aware-approval-code-review.md` (finding P2.1, low, PLAUSIBLE), deferred by the
+- **Origin:** 2026-09-24, `/code-review high` pass 2 of the
+  roadmap stack-aware approval review (finding P2.1, low, PLAUSIBLE), deferred by the
   owner.
 
 ### Confirmed structural approval contradicts the separate review-seal promotion command
@@ -1701,8 +1699,8 @@ not include them.
   appear in the one correction.
 - **Deliberately not:** widening the retry budget, or repairing any of these at parse time.
 - **Approach:** `direct` — one pre-pass extension and one test. Readiness `ready`.
-- **Origin:** 2026-09-27, `/code-review high` pass 1 of
-  `handoffs/2026-09-26-roadmap-candidate-envelope-diagnostics-code-review.md` (findings P1.3 and P2.2, low, PLAUSIBLE),
+- **Origin:** 2026-09-27, `/code-review high` pass 1 of the
+  roadmap candidate envelope diagnostics review (findings P1.3 and P2.2, low, PLAUSIBLE),
   deferred.
 
 ### `--promote-review-seal` idempotency covers only structural-approval seals, not answered-replacement ones
@@ -2087,7 +2085,7 @@ not include them.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-10-09, `/code-review high` pass 1 on `fix/roadmap-context-ceiling`
-  (`handoffs/2026-10-09-roadmap-context-ceiling-code-review.md`, finding 4).
+  (finding 4).
 
 ### `--apply` links promoted seed copies into `plan-seeds/` before it records `published`
 
