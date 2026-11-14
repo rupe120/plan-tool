@@ -3750,6 +3750,47 @@ class TestReproposalPreservesAcceptedIntent:
         )
         assert merged.status == StepStatus.DONE
 
+    @pytest.mark.parametrize("state", [StepStatus.DONE, StepStatus.CURRENT])
+    def test_status_does_not_travel_to_a_different_step_at_the_same_id(
+        self, state: StepStatus
+    ) -> None:
+        """Ids are positional, so a re-proposal that reorders or retitles puts
+        a different step under the same id. Carrying ``done`` across would make
+        a later ``run`` skip work that was never performed, and ``current`` would
+        mark a step in flight that no run started. Like intent and gate, status
+        needs the same id *and* the same title."""
+        prior = Step(id=3, title="Add the --no-backfill flag", status=state)
+        merged = _preserve_on_disk_step_fields(
+            Step(id=3, title="Write the parser round-trip tests"), prior
+        )
+        assert merged.status == StepStatus.PENDING
+
+    @pytest.mark.parametrize("state", [StepStatus.DONE, StepStatus.CURRENT])
+    def test_status_survives_when_id_and_title_both_match(
+        self, state: StepStatus
+    ) -> None:
+        prior = Step(id=2, title="Add retry logic", status=state)
+        merged = _preserve_on_disk_step_fields(
+            Step(id=2, title="Add retry logic"), prior
+        )
+        assert merged.status == state
+
+    def test_a_reworded_title_is_treated_as_a_different_step_and_resets_status(
+        self,
+    ) -> None:
+        """A deliberate trade-off, not an oversight. Ids are positional and the
+        re-proposal is regenerated, so identity is the exact title. A reworded
+        title of the same step therefore resets a finished step to ``pending``:
+        a visible re-run, where the old id-only rule could stamp ``done`` on a
+        different step and silently skip work. A stable step id would end the
+        trade-off (see BUG_BACKLOG, "A `create --iterate` re-proposal that
+        reuses a done or current step's id ...")."""
+        prior = Step(id=2, title="Add retry logic", status=StepStatus.DONE)
+        merged = _preserve_on_disk_step_fields(
+            Step(id=2, title="Add retry handling"), prior
+        )
+        assert merged.status == StepStatus.PENDING
+
     @pytest.mark.integration
     def test_accepted_intent_survives_a_full_iterate_run(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -15313,6 +15354,103 @@ class TestCreatePlanIterationLoop:
         captured = capsys.readouterr()
         assert "proposal dropped step 1" in captured.err, captured.err
         assert "execution work cannot be silently discarded" in captured.err
+
+    def test_iteration_never_hands_a_done_status_to_a_retitled_step(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        """A re-proposal that gives id 1 a different title must not inherit the
+        ``done`` that ``run`` recorded for the old step 1 -- ``run`` would skip
+        work that was never performed -- and the replaced step is named."""
+        from plan_tool import create as create_module
+
+        (tmp_path / ".git").mkdir()
+        out_dir = tmp_path / "plans"
+        out_dir.mkdir()
+        manifest = tmp_path / "m.json"
+
+        monkeypatch.setattr(
+            create_module,
+            "collect_deterministic_findings",
+            lambda *a, **kw: [_rec("X")],
+        )
+
+        def fake_apply_finding(plan_path, **kwargs):
+            plan = create_module.parse_plan(plan_path)
+            updated_steps = [
+                s.model_copy(
+                    update={
+                        "status": StepStatus.DONE
+                        if s.id == 1
+                        else StepStatus.CURRENT
+                    }
+                )
+                for s in plan.steps
+            ]
+            create_module.write_plan(
+                plan_path, plan.model_copy(update={"steps": updated_steps})
+            )
+            return _stub_apply_result()
+
+        monkeypatch.setattr(create_module, "apply_finding", fake_apply_finding)
+
+        propose_calls = {"n": 0}
+
+        def fake_propose_steps(*a, **kw):
+            propose_calls["n"] += 1
+            if propose_calls["n"] == 1:
+                return [
+                    Step(id=1, title="Step one", status=StepStatus.PENDING),
+                    Step(id=2, title="Step two", status=StepStatus.PENDING),
+                ]
+            return [
+                Step(id=1, title="A different first step"),
+                Step(id=2, title="Step two"),
+            ]
+
+        monkeypatch.setattr(
+            create_module, "propose_steps_from_claude", fake_propose_steps
+        )
+        monkeypatch.setattr(
+            create_module,
+            "propose_references_from_claude",
+            lambda *a, **kw: ReferenceResearchResult.from_references([]),
+        )
+
+        result = create_plan(
+            "demo",
+            repo_root=tmp_path,
+            output_dir_override=out_dir,
+            manifest_path=manifest,
+            from_description="build a thing",
+            input_fn=_queue_input(_basic_metadata_answers()),
+            claude_invoker=_iter_invoker({"n": 0}),
+            budget=_IterativeBudget(enabled=True, max_iterations=1),
+            skip_prose_reproposal=False,
+        )
+
+        final_plan = create_module.parse_plan(result.plan_path)
+        by_id = {s.id: s for s in final_plan.steps}
+        assert by_id[1].title == "A different first step"
+        assert by_id[1].status == StepStatus.PENDING, (
+            "a retitled step must not inherit the replaced step's done status"
+        )
+        assert by_id[2].status == StepStatus.CURRENT, (
+            "an unchanged-title step keeps its in-flight status through the loop"
+        )
+        assert "Step one" not in {s.title for s in final_plan.steps}, (
+            "positional ids cannot hold both steps; the replaced one leaves the plan"
+        )
+        err = capsys.readouterr().err
+        assert "proposal gave step 1 the title 'A different first step'" in err, err
+        assert "replacing 'Step one' (done)" in err, err
+        assert "will do it again unless its status is restored" in err, err
+        assert "proposal gave step 2" not in err, err
+        assert "cannot be silently discarded" not in err, (
+            "the warning must not claim a protection the loop does not give"
+        )
 
     def test_iteration_checkpoint_files_survive_failed_write(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch

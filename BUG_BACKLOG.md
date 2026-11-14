@@ -639,33 +639,6 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** 2026-11-13, pass 2 of the review of the `--iteration-budget` hints fix.
 
-### `create --iterate` carries a step's `status` onto a different step when a re-proposal inserts, drops, or reorders steps
-
-- **Files:** `plan_tool/create.py:_preserve_on_disk_step_fields` (the `status`
-  branch); `_parse_steps_json` (assigns step ids from `enumerate`); the tests
-  that assert status carry-over by id, including
-  `test_prior_status_still_outlives_the_reproposal`.
-- **Symptom:** the `create --iterate` loop merges a re-proposal onto the on-disk
-  plan by step id, and ids are positional. A round that inserts, drops, or
-  reorders steps puts a different step under the same id, and `status` is
-  carried across regardless. A `done` status stamped onto a different step makes
-  a later `run` skip work that was never performed, with no warning. The
-  `intent` field had the same defect and was fixed 2026-08-03 by requiring
-  `prior.title == proposed.title`; `status` kept its id-only keying because it
-  predates that branch.
-- **Fix:** apply the same title-equality gate to the `status` branch, so a
-  retitled step at the same id starts `pending`. Update the tests that pin
-  id-only carry-over, and state in `test_prior_status_still_outlives_the_reproposal`
-  what a retitled step keeps. Deliberately not: a stable step identity scheme
-  (a much larger change; file it separately if the title heuristic proves
-  insufficient), or moving where status transitions are owned.
-- **Approach:** `direct` — one condition, one decision, one test sweep.
-- **Verification:** a re-proposal that retitles the step at id N leaves it
-  `pending`; an unchanged title still carries status as today.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
-- **Origin:** 2026-08-03, xhigh review of `intent-required`, as the pre-existing
-  half of the intent finding; moved from BACKLOG #226, 2026-11-14.
-
 ## RISK
 
 ### `extract_h2_sections`'s `ignore_fenced_code`/`strip_fenced_code` default to off even though every current production caller opts in
@@ -877,6 +850,34 @@ Durable re-open conditions for retired items are recorded in
 - **Route:** plan · **Readiness:** ready · **Tier:** experienced.
 - **Origin:** 2026-07-31, caught mid-run; moved from BACKLOG #209, 2026-11-14.
   Lands before any widening of `--commit` to more verbs (BACKLOG #89).
+
+### A `create --iterate` re-proposal that reuses a done or current step's id for a different step drops the executed step from the plan, and a reworded title resets a finished step
+
+- **Severity:** RISK
+- **Files:** `plan_tool/create.py:_preserve_on_disk_step_fields` and
+  `_is_same_step` (the identity rule), and the merge in the iterate loop that
+  reads `existing_by_id`; the step-removal guard beside it.
+- **Symptom:** step ids are positional and the re-proposal runs from scratch, so
+  identity is "same id and same title". Two cases follow. (1) A re-proposal that
+  gives a `done` or `current` step's id to a different step replaces it: the
+  executed step is no longer in the plan and the loop only warns, because two
+  steps cannot share one id and the id-absent guard that keeps such steps does
+  not apply. (2) A re-proposal that rewords a step's title (case, punctuation, a
+  synonym) is read as a different step, so a finished step goes back to
+  `pending` and a later `run` repeats it. Both need a plan whose steps have
+  already run when `create --iterate` re-proposes them, which is rare.
+- **Fix:** decide what identifies a step. The choices are a stable step id the
+  re-proposal must keep, a refusal to merge when it would replace a `current` or
+  `done` step, or the current title heuristic with its limits recorded.
+  Deliberately not done: normalizing titles (a synonym cannot be normalized), or
+  renumbering the executed step under a new id (its `depends_on` references
+  would then point at different steps).
+- **Approach:** `plan-tool` — a decision about a persisted identity, taken
+  across `schema.py`, `create`, `run` and the manifest.
+- **Route:** plan · **Readiness:** decision-needed · **Tier:** architect.
+- **Origin:** 2026-11-14, review of the fix for the status carry-over bug (the
+  former BUG_BACKLOG entry on `create --iterate` carrying `status` onto a
+  different step).
 
 ## MINOR
 
