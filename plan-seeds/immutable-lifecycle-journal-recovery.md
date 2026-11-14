@@ -120,7 +120,7 @@ untouched and record the separate requirement in `BUG_BACKLOG.md` or
 ## References
 
 - `BUG_BACKLOG.md` — source bug and its fail-closed boundary.
-- `BACKLOG.md` #328 — closed immutable accepted-head lifecycle contract the
+- #328 (closed; `docs/history/backlog-decisions.md`) — immutable accepted-head lifecycle contract the
   recovery predicates consume; #329 remains separate root-enrollment hardening.
 - `plan_tool/roadmap_revision_publish.py:recover_roadmap_publication` — current
   generation recovery entry.

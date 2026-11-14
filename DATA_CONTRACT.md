@@ -798,7 +798,7 @@ does not change the schema version or backend-specific token accounting.
 Equal hashes mean only equal rendered prompts; they do not imply equal settings,
 instructions, or repository state, and on their own do not show wasted tokens.
 
-Each model-calling roadmap candidate command writes a run-log lifecycle under its own phase: `roadmap-candidate-proposal`, `roadmap-candidate-question`, `roadmap-candidate-replacement`, `roadmap-candidate-structural-edit`. Reviewer prose stays out of the log. The commands that change candidate state without a model call (approve, reject, discard, seal, promote) write none (BACKLOG #434).
+Each model-calling roadmap candidate command writes a run-log lifecycle under its own phase: `roadmap-candidate-proposal`, `roadmap-candidate-question`, `roadmap-candidate-replacement`, `roadmap-candidate-structural-edit`. Reviewer prose stays out of the log. The commands that change candidate state without a model call (approve, reject, discard, seal, promote) write none (decided no, #434; see `docs/history/backlog-decisions.md`).
 
 **The event catalog is the `Event` union in `run_log.py`, not this doc.** Only the
 events registered in `plan_tool/data_contract.py` are drift-guarded here — the

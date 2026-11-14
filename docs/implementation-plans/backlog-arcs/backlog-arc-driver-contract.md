@@ -5,9 +5,9 @@
 This file is the execution guide for what an unattended driver can read from
 `plan-tool` without inferring it: the result of `create` and `detail`, a
 refused `create`, a plan's gate verdict, each finding's triage label, and a
-run's usage totals. It routes #499, #502, and #506, filed
+run's usage totals. It routes #499 and #502, filed
 2026-10-19 from the design of Integration's Construction batch driver. `BACKLOG.md`
-owns each item; this file owns only their working order. The three items are
+owns each item; this file owns only their working order. The two items are
 untiered in the priority (mission-grounded) sense — this arc is their sole
 router. #501 (`run_end.result` for `create` and `detail`), #505 (`run_end.usage`
 totals), and #500 (`gate-status`) shipped 2026-10-19 and left this arc.
@@ -24,7 +24,6 @@ path a sibling roadmap plan creates.
 - **#499** — the audit's own altitude label and carried-to-detail flag per
   finding; the first slice covers D only.
 - **#502** — a record for a `create` refused before its slug resolves.
-- **#506** — an optional total budget across an audit loop; builds on the shipped `run_end.usage` totals.
 
 ## Choose this arc when
 
@@ -43,7 +42,6 @@ push automatically; push only when the user explicitly requests it.
 
 1. **#499 and #502** are `decision-needed`. Settle who owns the altitude label
    (#499) and where a pre-slug refusal records itself (#502) before building.
-2. **#506** waits on its own decision on unit and persistence.
 
 ## Decision gates
 
@@ -53,7 +51,7 @@ push automatically; push only when the user explicitly requests it.
   gated on.
 - **One definition of "converged".** `gate-status` reuses the existing audit
   `--json` field definitions; it never defines a second one.
-- **Persisted fields need `architect`-tier review**: #502 and #506 change `DATA_CONTRACT.md`.
+- **Persisted fields need `architect`-tier review**: #502 changes `DATA_CONTRACT.md`.
 
 ## Exit and handoff
 

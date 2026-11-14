@@ -66,7 +66,7 @@ permitted.
 - Changing the settled bare-plan bar or requiring a multi-pass clean streak.
 - Reviving retired #231 bad-fix provenance.
 - Generic `detail --commit` readiness/exit policy (#262) or any new reporting
-  work. #260 is parked pending a concrete misleading output fixture.
+  work. #260 is discarded (`docs/history/backlog-decisions.md`).
 - Persisting a new `Recommendation.domain` field or redesigning source
   taxonomy.
 - Treating agreement between plan prose and code as a new quality gate.
@@ -126,8 +126,8 @@ independent impact-overlay behavior at that caller.
 ## Deferred
 
 Generic readiness messaging after audit churn remains #262. Causal bad-fix
-provenance is retired (#231); this seed must not reactivate it. #260 is parked
-until a concrete misleading output warrants a small direct defect. Any new
+provenance is retired (#231); this seed must not reactivate it. #260 is discarded
+(file a small direct defect for a concrete misleading output). Any new
 quality judgment or prose-agreement gate is out of scope and is filed separately
 rather than added to this policy boundary.
 

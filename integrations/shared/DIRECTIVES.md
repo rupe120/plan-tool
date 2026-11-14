@@ -610,7 +610,7 @@ The severity-aware **stopping rule** (BACKLOG #125) governs audit pass budget
 and low-yield convergence — it is orthogonal to the stage bar.
 
 **Deferred reporting polish** (full stop-reason vocabulary, set-aside handoff,
-gate-2 tail copy): BACKLOG **#260**. BACKLOG **#261** settled (2026-08-11,
+gate-2 tail copy): discarded (#260, `docs/history/backlog-decisions.md`). BACKLOG **#261** settled (2026-08-11,
 closed) that create/detail/reconcile deliberately stay on their own
 predicates — not a pending unification.
 

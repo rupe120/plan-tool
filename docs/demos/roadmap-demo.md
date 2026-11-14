@@ -406,7 +406,7 @@ retry. Trim the brief's scope if a run has to be reliable.
   kind via a `retrying (attempt N) after <kind>` line per retry and a final
   `stopped after <kind>` line; open `.plan-tool/runs/<slug>/*.jsonl` for the
   specific violation message or parse detail, not to learn which kind failed.
-- **The unusable reply is not kept** (the open half of BACKLOG #217). Attempt
+- **The unusable reply is not kept** (a known gap; see #217 in `docs/history/backlog-decisions.md`). Attempt
   3's parse failure is undiagnosable: 400 characters survive of a 31,858-byte
   reply. Do not plan on root-causing a parse exhaustion.
 

@@ -44,20 +44,13 @@ push automatically; push only when the user explicitly requests it.
    Jira stories plus its paired developer handoff; do not preserve a second
    detail lane as compatibility.
 2. **#107** — deferred pending a demonstrated export blocker.
-3. **#49**, **#102**, **#43**, **#54**, **#55**, **#56** — read each item's
+3. **#102**, **#56** — read each item's
    full `BACKLOG.md` entry before acting.
-4. **#36** — theoretical; investigation may close with "no action."
-5. **#89** — commit-hygiene coverage (extend `--commit` to more mutating
+4. **#89** — commit-hygiene coverage (extend `--commit` to more mutating
    commands). Observed orphaning gap on `reconcile-code`; see the entry's
    "Evidence it recurs" bullet in `BACKLOG.md`.
-6. **#79–#81** — the Bucket D consolidation cluster. See the decision gate
+5. **#79–#81** — the Bucket D consolidation cluster. See the decision gate
    above before touching #79's claims specifically.
-7. **#366** — theoretical; survey `aidlc-workflows`'s multi-harness patterns
-   (core/adapter split, provider-agnostic tier aliasing, build-determinism
-   guard) for plan-tool applicability. Read-only against both repos; may
-   close with "no action" per its own Output-of-investigation gate. No
-   dependency on the items above — pick it independently of the rest of
-   this route.
 
 ## Exit and handoff
 

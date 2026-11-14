@@ -181,7 +181,7 @@ DO_NOT_MERGE: dict[str, tuple[str, list[tuple[str, str]]]] = {
         "unavailable lock support, telemetry treats its append lock as "
         "best-effort) lives entirely in the paired _acquire_* functions, "
         "which stay separate. A shared _release_advisory_lock leaf is "
-        "plausible; not done here — filed as BACKLOG #273",
+        "plausible; not done here — the discarded #273 (docs/history/backlog-decisions.md)",
         [
             ("plan_tool/roadmap_revision_publish.py", "_release_writer_lock"),
             ("plan_tool/telemetry.py", "_release_append_lock"),

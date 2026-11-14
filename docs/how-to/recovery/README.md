@@ -183,7 +183,7 @@ Completed rounds are durable at the stop via per-finding annotations, plan
 pointers, and `--commit` per-step commits (see
 [`DETAIL_RESUME_FLOW.md`](detail.md)). Because the cap is checked
 only at round boundaries, a single over-long round (one `claude` call) can still
-overrun it — the granularity floor (BACKLOG #124). The `run` per-step batch and the `detail` step-to-step boundary don't yet
+overrun it — the granularity floor, an accepted limit (a shorter or async round-trip, #124, is discarded; see `docs/history/backlog-decisions.md`). The `run` per-step batch and the `detail` step-to-step boundary don't yet
 consult the cap (BACKLOG #123 follow-up).
 
 ## Source map

@@ -180,7 +180,7 @@ claimed to reproduce it.
 - `docs/proposals/2026-10-15-roadmap-to-plan-collaborative-approach.md`, O03/O07/O09/O11/O14–O16 — owner decisions, distinct from accepted artifacts.
 - `docs/proposals/2026-10-15-live-runtime-next-plan-composition.md`, “New obligations” and successor scope — settled same-session requirement and proposed increment.
 - `engine_worker/runtime_contract.py:ChatCommand`, `DriverEvent`, `RuntimeDriver`; `integration/chat_input.py:ChatInput` — existing seam and guards.
-- [BACKLOG #492 and its staged arc](../../BACKLOG.md)
+- [#492 closure record](../history/backlog-decisions.md) and the staged arc in [BACKLOG.md](../../BACKLOG.md)
 - [Bounded Integration evidence summary](../evidence/integration-roadmap-to-plan-handoff.md)
 - [Roadmap authority contract](../../ROADMAP_FORMAT.md)
 - [Create](../../plan_tool/create.py), [detail](../../plan_tool/detail.py), [audit](../../plan_tool/review.py), [project context](../../plan_tool/project_profile.py) and [status](../../plan_tool/cli/inspect.py) — inspected consumer paths.

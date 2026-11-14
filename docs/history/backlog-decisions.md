@@ -8,9 +8,10 @@ short records preserve decisions that would otherwise invite re-investigation.
 ## Queue cleanup, 2026-09-16
 
 The following delivered IDs remain citable after queue cleanup. Their plans
-or the named contract carry implementation detail. #315, #327, #328, and
-#351 and the brief-drift closeouts also retain compact backlog completion
-records required by their plans.
+or the named contract carry implementation detail. The compact completion
+records that #315, #327, #328, #351 and the brief-drift closeouts once kept in
+`BACKLOG.md` live here and in the table below since 2026-11-14; `BACKLOG.md`
+holds open work only.
 
 On 2026-09-16, three roadmap compatibility entries that shared IDs with
 authored-artifact version work were renumbered: former roadmap #362 → #383
@@ -20,16 +21,16 @@ authored-artifact version work were renumbered: former roadmap #362 → #383
 | ID | Delivery record or current contract |
 | --- | --- |
 | #164 | The side-by-side Jira-grade detail route shipped 2026-07-30, stopped new authoring 2026-08-24, and is selected for full retirement by live #308. |
-| #181, #182 | [Risk-profile declaration](../implementation-plans/archive/2-risk-profile-1.md) and [advisory detail context](../implementation-plans/archive/2-risk-profile-2.md). #314 remains the separate evidence-gated follow-up. |
+| #181, #182 | [Risk-profile declaration](../implementation-plans/archive/2-risk-profile-1.md) and [advisory detail context](../implementation-plans/archive/2-risk-profile-2.md). #314 was a separate evidence-gated follow-up and is since discarded. |
 | #247 | The read-only saved-audit ledger in `plan_tool/review_persistence.py` and `plan_tool/completeness_report.py`; #303 remains the separate comparison proposal. |
 | #293 | [Jira developer handoff plan](../implementation-plans/archive/2-jira-developer-handoff-companion.md); the current paired export contract is `JIRA_FORMAT.md`. |
-| #295 | [Recommendation confidence plan](../implementation-plans/archive/2-recommendation-confidence.md); #316 and #382 remain independent follow-ups. |
+| #295 | [Recommendation confidence plan](../implementation-plans/archive/2-recommendation-confidence.md); #316 and #382 were independent follow-ups and are since discarded. |
 | #305 | `plan_tool.response_contract.coerce_response_id`, the shared cycle-free grammar for `gates`, `foundational_logic`, `create`'s dependency/note-key parsers, `intent_proposal`, and `concept_sync`; each caller keeps its own `None` disposition. |
-| #309 | The `retire-roadmap-v1-evidence` post-run review fixes, recorded in commits `55a989df`, `9a676e7d`, `74a4e23e` and the subsequent review commits cited by Git history. #311 owns the remaining independent efficiency work. |
+| #309 | The `retire-roadmap-v1-evidence` post-run review fixes, recorded in commits `55a989df`, `9a676e7d`, `74a4e23e` and the subsequent review commits cited by Git history. #311, which owned the remaining efficiency work, is since discarded. |
 | #315 | [Confirmed feedback reopen proof](../implementation-plans/archive/2-roadmap-confirmed-feedback-reopen.md); #242 remains a separate retention redesign. |
 | #327 | [Seed-ingestion routing plan](../implementation-plans/archive/2-seed-ingestion-routing.md) and the [seed-ingestion contract](../reference/contracts/seed-ingestion.md). #102 and #353 remain separate. |
-| #328 | [Immutable candidate versions plan](../implementation-plans/archive/2-roadmap-immutable-candidate-versions.md). #329 and #330 remain separate persistence-integrity work. |
-| #334 | [Mechanism-reach authoring plan](../implementation-plans/archive/2-mechanism-reach-01-authoring.md); #335 and #336 consume its shipped rule. |
+| #328 | [Immutable candidate versions plan](../implementation-plans/archive/2-roadmap-immutable-candidate-versions.md). #329 remains separate persistence-integrity work; #330 is since discarded. |
+| #334 | [Mechanism-reach authoring plan](../implementation-plans/archive/2-mechanism-reach-01-authoring.md); #336 consumes its shipped rule; #335 is since discarded. |
 | #337 | [Roadmap stage lifecycle output plan](../implementation-plans/archive/2-roadmap-stage-lifecycle-output.md). |
 | #351 | [Seed References fallback plan](../implementation-plans/archive/2-seed-source-references-fallback.md). |
 
@@ -58,11 +59,27 @@ is a suggestion and cannot amend the plan.
 
 ### #328 — Accepted-head versions and reader migration
 
-Closed 2026-09-01. Enrollment captures one immutable root; candidate,
-question, replacement, and review-seal records stay inert until exact
-promotion changes the accepted head. `plan_tool/roadmap_view.py:load_roadmap`
-is the completed direct-reader proof. Other reader migrations require their
-own selected scope; #329 and #330 retain independent hardening findings.
+- **Outcome:** enrollment captures one immutable root; an admitted feedback
+  lineage produces inert candidates, questions, answer-bound replacements, and
+  exact review seals; only exact promotion changes the accepted head. The
+  promoted version is the selected source for the completed downstream reader,
+  while every stored version remains immutable and legacy in-place writers
+  refuse an enrolled roadmap.
+- **Direct-reader migration boundary:** `plan_tool/roadmap_view.py:load_roadmap()`
+  is the completed proof. Defer accepted-head migration scope selection for:
+  `plan_tool/create.py:_load_roadmap_research_targets()`,
+  `plan_tool/cli/authoring.py:_confirm_invalidated_roadmap_seed()`,
+  and `plan_tool/cli/roadmap_cmd.py:cmd_roadmap()`.
+- **Real-backend observation (2026-09-01, redacted):** candidate phase;
+  13,212 prompt bytes; context membership is 2 full members and 19 inventory
+  entries; expansion is not used; terminal outcome is `failed`. This records
+  operational facts only, with no prompt, response, or model-quality claim.
+- **Deferred hardening:** #329 keeps a persistence-integrity finding that the
+  representative happy-path proof did not need; #330, the other, is since
+  discarded.
+- **Status:** closed 2026-09-01 after the deterministic lifecycle tests and
+  the recorded real-backend observation; moved here from `BACKLOG.md`
+  2026-11-14.
 
 ### #367 and non-stage routes — Brief rebind authority
 
@@ -186,8 +203,8 @@ reached a prompt, but cannot show that it changed the result or that the
 result would be unchanged without it. #193's citation store already
 records the injection-count residual, so no distinct bounded feature
 remains after the unsupported influence claim is cut. #193, #194, #195,
-and #197 retain their independent provenance, reconciliation, retrieval,
-and contradiction contracts.
+and #197 retained independent provenance, reconciliation, retrieval,
+and contradiction contracts; #197 is since discarded.
 
 ### #222 — Published-data-interface (ODCS) roadmap lens
 
@@ -288,8 +305,8 @@ evidence that changes no enforcement or outcome; Jira-grade audits suppress it.
 On 2026-08-17, a cross-route replay of create's combined and split proposal
 paths established the boundary: keep the missing property catchable and let
 detail select its delivery mechanism. #231's causal-provenance follow-on is
-retired; separate live work remains #241 (bare-prompt generation) and #262
-(detail-readiness guidance).
+retired; #241 (bare-prompt generation) is since discarded; #262
+(detail-readiness guidance) remains.
 
 ### #299 — Completeness coverage replay
 
@@ -357,7 +374,7 @@ fresh observable premise rather than a renamed fork path.
 Shipped 2026-08-10. Bare and detail-grounded audits use their separate
 conceptual bars, with the bare stage retaining named-property correctness gaps
 and deferring unselected implementation mechanics. Medium conceptual findings
-demote only when classified as documentation. Reporting polish is #260; #231's
+demote only when classified as documentation. Reporting polish (#260) is since discarded; #231's
 bad-fix-provenance proposal is retired.
 
 ## Shipped records
@@ -557,10 +574,10 @@ focus on application business logic):
   step-proposal prompt, so the two can drift.
 
 **Deliberately not filed:** a mapping-altitude audit (reopen only if a second
-route shows an unowned hop; see #435 for the advisory precedent) and a seed
+route shows an unowned hop; see the discarded #435 for the advisory precedent) and a seed
 audit verb (the seed-altitude audit stays a session procedure after
 `--materialize`). PR #105's separate plan-set layer was withdrawn as out of
-scope; do not reintroduce it under this id. #462, #493 and #494 stay separate.
+scope; do not reintroduce it under this id. #462 stays separate; #493 and #494 are since discarded.
 
 Evidence: [comparison](../evidence/roadmap-plan-derivation-comparison.md),
 [corrected-evidence iteration](../evidence/roadmap-corrected-evidence-iteration.md),
@@ -590,7 +607,72 @@ and Cursor installs were project symlinks that work only on the machine that
 made them. Do not reintroduce it for the skill route. PyPI or `uvx`
 distribution remains #514's decision.
 
+### #423 — Structural roadmap feedback goes through one revision approval gate
+
+Closed 2026-09-23 by the Roadmap Structural Feedback Approval plan, opened
+2026-09-21 from Integration focused-feedback retries. Ordinary ledger feedback
+validates typed operations into a bounded or structural inert candidate without
+user route selection. A structural candidate receives one exact
+approve/edit/reject decision; approval seals that candidate and promotion alone
+advances the accepted head. Edit requires a fresh decision, and failed,
+rejected, interrupted, and stale proposals preserve canonical artifacts and
+seeds. Decision settlement remains a separate selector-shaped route (structural
+escalation, impact analysis, and exact-pair structural rewrite were removed
+2026-11-05 by `roadmap-versioned-from-birth`). Workflow authoring, automatic
+approval, grouping, and multi-user approval stay out of scope.
+
+### #461 — The technology stack is a roadmap layer
+
+Shipped 2026-10-09 (PR #46; plan
+[`2-roadmap-stack-layer.md`](../implementation-plans/archive/2-roadmap-stack-layer.md);
+contract in `ROADMAP_FORMAT.md` § stack collection). The `stack` collection in
+`02-constraints.md` records each concern (deployment platform, store engine,
+language/runtime) as chosen or open. It is called out at first publish, in
+`INDEX.md`, and in every candidate review, and is rendered into the `## Stack`
+seed section. A version without the collection reads as "stack not recorded".
+
+Decisions kept (2026-10-08; do not reopen): no fifth roadmap artifact; stack
+rows are authoritative over hosting and store `product` fields with no
+agreement gate or comparison rule (candidate review lists them side by side);
+any bound feedback item authorizes a stack-row add; the callout is display only
+and never a defect class or an approval gate. Hand enrollment is deliberately
+excluded from the callout.
+
 ## Closed decisions
+
+### #269 — No hermetic roadmap-stage harness or production partial-stage mode
+
+Closed 2026-08-28. The existing `_Env` / injected-`StageInvoker` seam in
+`tests/test_roadmap.py` already supplies disposable roots, the real
+`run_roadmap` path, stage-output and no-write-on-failure assertions, and
+run-log / in-flight lifecycle coverage. Do not add a named harness, developer
+CLI, or external-backend smoke entry point: each would duplicate that proof and
+risk creating the production partial-stage mode the item forbade. A
+demonstrated transport or logging gap may add the smallest deterministic test
+to the existing seam. Reopen only when that seam cannot exercise a required
+stage behavior without a new production surface.
+
+### Retired conversational impact transaction
+
+Superseded 2026-08-31. The proposal let a model-authored impact manifest become
+the authority for a candidate transaction; its audit exposed recurring binding,
+route-admission, snapshot, and redaction contradictions. The WIP plan is
+archived as `2-roadmap-conversational-feedback.superseded.md`. Do not author or
+reopen this route; the immutable accepted-head lifecycle (#328) supersedes it.
+Its pre-merge branch-local `#325` label is unrelated to the live #325.
+
+### #492 — Shared application evidence for roadmap-derived plans: use existing
+
+Closed 2026-10-15. The reviewed record
+[`docs/explanations/roadmap-plan-handoff.md`](../explanations/roadmap-plan-handoff.md)
+identifies the accepted-head authority, separates the remaining provider
+question from settled owner decisions, and records `use-existing` for `create`,
+`detail`, and `completeness-audit`. Follow-on dispositions: #493 (shared-context
+delivery) and #494 (prerequisite view) are `no-action` unless a delivery or
+status-reporting need is separately demonstrated; #462 (cross-plan advisory)
+keeps its own evidence gate. Evidence:
+[Integration handoff evidence](../evidence/integration-roadmap-to-plan-handoff.md).
+Seed: `plan-seeds/archive/roadmap-plan-handoff-investigation.replaced.md`.
 
 ### #117 — Keep and instrument the code-reveals-a-split detector
 
@@ -961,3 +1043,92 @@ exists: `roadmap_reader_guard` and `read_brief_text` have no production caller
 family, and the tests that exercised them. **Re-open only when** a read-only
 roadmap view needs to hold a lock against a concurrent writer; the writer
 guard (`roadmap_writer_guard`) is unchanged.
+
+## Discarded entries, 2026-11-14
+
+Removed from `BACKLOG.md` after a value review against `MISSION.md` and the anti-creep rules in `CLAUDE.md`. Each row keeps the id citable and states why the entry is not worth its cost; none is scheduled. Re-file only with the new evidence the reason names or implies, as a fresh entry with its own scope contract. Deliberately not carried: the full entry text, which `git log -S` on the id recovers.
+
+| ID | Title | Reason |
+| --- | --- | --- |
+| #36 | Does per-plan `lessons.md` add value? | The opt-in still exists (`create.py:1717`, default off), but there are zero `plan-details/*/lessons.md` files in this repo. Nobody uses it, so there is nothing to investigate. If anything, file a one-line removal of the wizard prompt. |
+| #43 | Synthesis output caching across reruns | No measured cost. Within-run memo and checkpoints already cover resume, and a cross-run cache of stochastic synthesis silently defeats the usual reason to rerun (a fresh sample) while adding a stale-cache hazard. |
+| #49 | `detail` authoring wizard | An untriaged TTY UX feature for a pipeline driven almost entirely by headless sessions (including Loom). It adds a draft-vs-edit merge model to the seven-section write gate for no cited need. |
+| #54 | Lesson 7 audit on `_iterate_reconcile_loop` wiring | Rests on "may not be tested". No failure observed and no principle named. |
+| #55 | mtime short-circuit for content hash | No profile exists, and the premise is unsound: mtime can be preserved (checkout, `touch -r`, tools that copy mtime) or fall within the same coarse timestamp tick. Drift detection is P3-critical, so trading correctness for an unmeasured speedup is backwards. |
+| #74 | Speed up loops: remaining caching + parallelism levers | Everything cheap has shipped or been measured not worth doing. The only open lever is in-process per-step parallelism, which CLAUDE.md discourages. A future speed need should come back as a fresh, measured entry. Shipped slices that code and tests still cite as #74: the stream-json batch form with usage and cache capture, a cache-reusable static prompt prefix (lever A1), and the dedup lever; only the heavy slice (direct-API caching, per-step parallelism) is discarded. |
+| #82 | Deferred: structural-observation ledger | Its own reason (most #79 duplicate claims were false) argues against ever building it. The trigger is vague. |
+| #90 | `--worktree` convenience on run/detail | Pure sugar over a working two-command flow, with real risk surface (resolving the wrong tree's manifest, silent re-provisioning) and no demand cited since July. |
+| #97 | Per-step embed budget (remaining half) | The symbol-aware excerpt leaf has shipped to all five surfaces; only the cross-file budget remains, with no observed failure behind it. Audit and detail surfaces mandate Read/Grep, and the #95 advisory already flags clipping. It should not occupy the T3 band. |
+| #108 | Durable per-step run marker for structural gates | It closes a narrow SIGKILL window whose stated consequence is "soft mis-attribution" of one lesson. A new schema field, run wiring and three gate refinements are disproportionate to that harm. |
+| #124 | Floor-breaker: shorter or async `claude` calls | Its substrate #88 is itself marked mostly superseded. Async detached execution would add exactly the invoker/rate-limit complexity the architecture rules warn against, and splitting calls costs output quality. If one specific call is measured overrunning a real cap, file a per-verb entry for it. |
+| #126 | Concept publication-transaction machinery | The entry's own rationale settles it: git is the journal, fingerprints already trigger re-derivation, and this is a 13-step transaction manager for a single-user CLI. The revisit trigger has not fired in four months. |
+| #127 | Concept authoring-boundary validation residue | Its "revisit if malformed envelopes show up" trigger has not fired since 2026-07-13. The concept lane is dormant. |
+| #128 | Concept non-delivery ledger + lifecycle accounting | A 27-step second decision store. The entry itself says the bureaucracy grows faster than the failures it prevents, and existing nets (`concept-coverage`, decision fields) cover the case. |
+| #129 | Deferred program-scale decomposition observations | A placeholder with no work in it. The verdict layer is already retired, and "name a consumer first" applies to any new entry anyway. |
+| #130 | On-demand sub-concept drill | The entry admits the flat MVP fully closes the founding incident, and the drill would bring back a producer that was cut on purpose. No need has been observed. |
+| #131 | Migrate legacy full-tree `concepts.json` | Checked: the dual-shape `record_kind` branch is still in `concept_tree.py`. Retiring it is only worth doing as part of a wider decision on whether the concept subsystem stays at all, which nothing has asked for. |
+| #132 | Dismiss verb for wrong pending deferral | The entry says this is not a correctness need: an unconfirmed deferral is inert. |
+| #134 | E2E founding-incident test (detail→status) | A cheap hermetic test, but it protects a dormant feature whose producer and consumer already agree on the record shape. If the concept lane is ever reactivated, write it then as a 30-minute direct test. |
+| #136 | Generalize rate-limit helper family (shell/launcher) | Contradicts #79's measured do-not-merge list, which says the `_can_prompt_on_rate_limit` duplication *is* the injection seam. The remaining two helpers are coupled to deliberately distinct per-lane ContextVars. Consolidation would put backend-switch scoping at risk with no bug to fix. |
+| #139 | "Implementation-time" finding class | Largely superseded by the shipped bare/detail stage split: bare-stage completeness findings at medium don't block, the `bare_mechanism_findings` advisory exists, and detail-owned remedies are already routed to `detail`. The proposed classifier ("only a real run reproduces") is a semantic proxy that will have a high false-positive rate. |
+| #184 | Configurable repository seed directory | The original motivation (repo layout disagreed with the hardcoded path) went away when the nested default shipped. What's left is a speculative config knob ("a consuming repository can still need…"), and CLAUDE.md prefers a literal over a knob. |
+| #187 | Shorter carved-seed filenames | Cosmetic, and the entry itself says nothing consumes the filename. |
+| #191 | Conceptual audit treats `done` steps as context | The prompt half shipped and the enforcement half is #192, so this entry only restates. |
+| #197 | Contradiction gate: fence denylist vs injected content | A vocabulary denylist that has to handle negation is exactly the high-false-positive proxy the "kill, not tune" rule names. Its observed trigger (a lesson contradicting a fence) goes away once #195's reshape stops default injection. |
+| #199 | Git-native archive (delete instead of move) | Trades a cosmetic problem (greps hit `archive/`, which an exclude glob fixes) for a migration, a retrieval verb, a citation sweep and a silent loss of discoverability. Many live docs cite archive paths. The `docs/history` design depends on those artifacts staying readable. |
+| #207 | Concept-naming discontinuity detector (bundle) | n=1 (the depth/grade incident, which was caught and swept anyway). Deciding "which noun names a shipped surface" is itself semantic, the validation-feature trap CLAUDE.md says to treat as guilty until it names an observable. Its own stop rule is likely to fire. |
+| #217 | Roadmap rejected-response evidence (consolidated) | Provenance only; BUG_BACKLOG owns the remaining work. |
+| #234 | Last-attempt test-command cost bound | Everything with value shipped. The remainder ("evaluate a cost bound") names no decision that would use the answer. |
+| #241 | Narrow bare-plan audit prompt to correctness only | The premise conflicts with the current bare-gate policy. CLAUDE.md says bare-stage `plan-completeness` findings are read and corrected by hand-edit before `detail`, so they aren't "generated to be shelved", and the prompt already narrows detail-level findings. Suppressing them would remove input that the bare gate is designed to act on. |
+| #246 | Measure private-vs-public helper splits elsewhere | One case, and nothing consumes the measurement. The entry's own guardrail ("no visibility change without a named caller") means the default answer is no action. Fix visibility per site when a caller needs it. |
+| #256 | Defer automatic analogous-site sweeps | A "do not build" decision, gated on a labelled corpus nobody is building. Manual Check 0 is the standing rule in CLAUDE.md. |
+| #260 | Parked: stage-bar reporting polish | A placeholder whose own reopen trigger says "file a small direct defect instead", plus a commented-out superseded block that breaks the forward-looking-docs rule. |
+| #263 | scope-out seed lacks commit/report provenance | The entry admits nothing downstream reads the block. One instance, already fixed by hand. The blame/attribution logic costs more than the audit trail is worth. |
+| #266 | Page `roadmap --view` through a pager | Piping to `less` already solves it. A TTY-detecting pager wrapper plus a `--no-pager` flag is permanent test surface for a convenience. |
+| #273 | Shared advisory-lock-release leaf | Two ~6-line release functions in different modules. Merging them means a new leaf and new import edges for no correctness gain, which is the low-value consolidation CLAUDE.md warns about. The allowlist rationale has already been corrected, so leave the pair allowlisted. |
+| #277 | `roadmap_writer_guard` maybe redundant with repo lock | Even the entry says "not a confirmed bug". The guard has 10 call sites, carries the `writer_token` that the reuse/validate paths depend on, and is the finer lock that parked #353 (artifact contention) would want. Removing defense-in-depth to save "machinery" is risk with no payoff. |
+| #296 | Bound `render_detail_prompt`'s `prior_body_block` | Speculative: the advisory already names the block, truncation is ruled out by design, and the entry's own stop rule says close if no merge has approached `warn`. No such incident is cited. |
+| #304 | Evaluate shared feedback-operation lifecycle | Not work: it's a standing rule ("don't extract without a concrete cross-route change") written as an entry. The anti-creep rule already covers it. |
+| #311 | `load_pending_generation` decodes payloads for existence checks | Item 1 is done and item 2 is moot. Item 3 is a micro-efficiency with no measured cost, and its safe fix needs a shape change or a second parser, which is the drift the entry itself warns about. |
+| #314 | Risk-profile advisory: declaration-authority guardrail? | No observed failure is cited, and the default outcome is "retain advisory, no change". This is an investigation no decision is waiting on. |
+| #316 | Shared confidence-tag rendering helper | Cosmetic consistency across ~25 sites in 12 files whose grammars differ by surface (the original review declined a single formatter for that reason). No correctness stake, and it would churn a lot of pinned tests. |
+| #319 | Naming discontinuity, reconcile lane | Depends entirely on #207, which is discarded. |
+| #320 | Concept input/output alignment check | No observed instance, unknown effort, and every design question is open. The conceptual audit already judges interface contracts between steps. |
+| #330 | Revalidate persisted admission before resumed call | The only benefit is saving one model call on corrupt state the materialization boundary already rejects. Not worth a fixture. |
+| #335 | Audit lens for unjustified shared semantic commitments | A semantic-judgment lens with no cited incident, added to the convergence-sensitive audit loop. It is the "validate a semantic property" class CLAUDE.md says to kill, and its own stop rule anticipates low precision. plan-audit.md's proportionality rules already cover the intent. |
+| #339 | Open questions on stage-loop "stopped" emission (Ctrl-C gap, post-write vocabulary) | Both questions concern a stderr status line. On Ctrl-C the operator already knows the run stopped. The `BaseException`-from-callback case is hypothetical for a caller-supplied callback. The "published but run not confirmed" wording is cosmetic. The delivered `_stage_run_guard` closed the real issue. |
+| #340 | Bounded-truncate-with-digest idiom | Seven sites that agree only on policy (character vs byte budget, digest length, inline marker vs returned boolean). The entry itself shows that a naive merge would reintroduce a fixed crash (the lone-surrogate encode). Merging would be harmful, not just unhelpful. |
+| #341 | Shared `"stage N (name)"` format string | Four literals, each pinned by an exact-text test, with no drift observed. The churn is worth more than the dedup. |
+| #343 | Status-emission helper family's repeated patterns | Both patterns are "currently safe in practice", and the fix restructures four signatures for terminal status lines. If #349 is ever pursued, it replaces this family anyway. |
+| #345 | Test recorder fixture for `TestRoadmapStageStatus` | Test boilerplate hygiene with no defect behind it. |
+| #346 | "Stopped" emission relies on per-branch discipline | No live bug. The current branch is verified correct, and the concern is a hypothetical future branch. The durable run log, not the stderr status line, is the record. |
+| #352 | Phase-timing scaffold repeated in `create.py` | The sites differ in outcome classification and parameters, there is no bug, and it would need a context-manager design (the entry even routes it to plan-tool). This is the "validated-but-unnecessary" pattern. |
+| #357 | Judged bare-gap classifier on restated findings | It adds a second model judgement on whether a finding is "real", which is a semantic property with no binary observable. The deterministic `classify_bare_mechanism_advisory` already exists, and no failure is cited that it missed and this would catch. Validity is local, necessity is global, and nothing here shows the need. |
+| #358 | Compound condition computed twice | True (`create.py:3859`, `:3863`), but it is a two-line drive-by, not a backlog entry. As an entry it adds noise to triage. |
+| #359 | Four more path-display idioms (unverified) | By its own analysis, none of the four idioms may be merged with each other or into the existing helpers. That leaves no mergeable set, only resemblance. |
+| #361 | Consolidate candidate failure-diagnostics finalization (remainder) | The part that mattered (core fallback metadata under a second interrupt) is done (`3590939e`). What remains is deduplication of a block that is currently correct, justified by "could drift". |
+| #364 | Version-contract drift in completeness + registry fingerprint | `tests/test_data_contract.py` already pins the registry to the schema constants. The completeness drift channel reads plan-tool's own DATA_CONTRACT.md, so it only self-hosts. Wiring it in adds a second detector for drift CI already catches, with no consumer. |
+| #366 | Survey aidlc-workflows multi-harness patterns | No decision consumes the result, and it is "untriaged; may close with no action" by its own text. |
+| #369 | Inventory other `apply_finding` authorities | No decision consumes the inventory. The #376 it is "separate from" is gone, and lessons line 1181 already enumerates the four serial callers. It is an investigation without a consumer. |
+| #382 | Inspectable evidence-support provenance on findings | Speculative. It asks "which decisions would improve", with no observed misjudgement behind it. It also edges toward persisting a model self-score as if it were proof, which the entry itself flags as a risk. |
+| #407 | Verify/resolve JSON-value-projection duplication | The divergences already found (mapping-key sorting, coercion vs refusal) are real behavioral differences, and some of these functions feed canonical identity hashes, so merging could change persisted digests. High risk, no bug. |
+| #408 | Git subprocess per artifact on `--compare` | At most 4 subprocesses per interactive call, and the short-circuit shifts the documented "Git owns identical-or-not" boundary. A micro-optimization off the hot path. |
+| #412 | Relation matching O(n·m) | Unmeasured, and roadmap relation counts are in the tens to hundreds, so quadratic matching is negligible. The entry itself says not to act on the finding alone. |
+| #413 | Artifact bytes SHA-256'd up to 3× | The entry admits it's microseconds on KB-scale markdown. Threading digests through the shapes costs more than it saves. |
+| #414 | Each comparison output mode computes more than it uses | Unmeasured, and the inputs are KB-scale. Making it lazy would break the single shared read path that keeps the three modes consistent, which is a correctness property worth keeping. |
+| #415 | `CandidatePredecessorDiff` alias | Cosmetic rename across ~18 sites in the fragile candidate module. The drift risk is hypothetical: a `TypeAlias` can't grow fields without someone deliberately replacing it. |
+| #418 | `before_digest`/`after_digest` never consumed | They're part of the persisted candidate `predecessor_diff` shape and back an existing tamper-refusal test, so "unused" is false at the persistence layer. Removing them is a format change with no payoff. |
+| #420 | `raw_evidence_identity` stored though derived | Single construction site on a frozen model. The entry calls it "a simplification, not a fix", and a computed field adds serialization risk. |
+| #422 | Ordering-row card carve-out is a name check | The entry itself says not to build this until a second all-relation-fields row type exists. |
+| #424 | Record create-time plan-altitude re-cut evidence | Typed telemetry with no consumer, from n=1. The directive's detector-miss record can be a dated note in the evidence doc, not a new persisted fact. |
+| #434 | Should candidate decision commands write run logs? | The candidate lifecycle records already are the authority for decisions, so a run-log event duplicates them and adds a versioned contract. |
+| #435 | Model-judged narrative review for candidates | A semantic property with no binary observable (the CLAUDE.md "kill" class). One case, caught by a person. Four audit rounds already showed the shape spirals. |
+| #436 | Labeled prose-correction cards in comparison | Pure presentation. Approval time already shows the exact before and after, so nothing is hidden. |
+| #465 | Two absent stack-callout tests (self-labelled low value) | Self-admitted optional and low value. Display-only feature, structural tests already exist, and the new ones would be brittle output pins. |
+| #471 | Intern relation node identities in candidate context | The ceiling was raised (PR #58). The byte saving alone doesn't justify a new model-facing representation with readability risk. |
+| #476 | Bulk-convert `Approach:` to `Route:` with presence test | Backlog-format churn plus a new guard test. Label-on-touch already works. Pruning delivered, closed and discarded entries comes first; relabelling entries that are then deleted would be wasted work. |
+| #493 | Supply shared context to authoring/audits | #492 decided no-action for this entry. A gated entry kept "in case" is clutter; re-file on a demonstrated delivery need. |
+| #494 | Show unresolved prerequisites in `status` | #492 decided no-action. Same reasoning as #493. |
+| #498 | Plan body should point to `plan-tool status` | The gain is one wording change. The cost is five pinned test files, the `annotate.md` placeholder check, and permanent recognition of both pointer strings. That tax outweighs a pointer that is read mostly by tools. |
+| #506 | Total budget across a multi-round audit loop | plan-tool doesn't own the multi-round loop; the external driver does, and it already has the shipped per-invocation `run_end.usage` totals (#505) to sum and stop on. Principle `none`. |
+| #516 | Which seed files directory-wide annotate includes | The entry says it is not evidence of a failure, and explicit file paths are unaffected. |

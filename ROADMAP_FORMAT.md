@@ -1089,7 +1089,7 @@ Purpose: show a candidate reviewer when live prose still names a design row the
 candidate removed, computed from that candidate. This contract is evidence
 only. The correction is the prose-correction operation of IPPT-18
 ([`docs/implementation-plans/archive/2-candidate-prose-correction.md`](docs/implementation-plans/archive/2-candidate-prose-correction.md));
-the model-judged narrative review is BACKLOG #435; the response-basis check is
+the model-judged narrative review is discarded (#435, `docs/history/backlog-decisions.md`); the response-basis check is
 BACKLOG #437. The IPPT-18 correction operation ships as
 `plan_tool/roadmap_candidate.py:CandidateCorrectProse`. The check is
 `plan_tool/roadmap_gates.py:check_removed_ids_in_live_prose`, and the evidence
@@ -1190,12 +1190,12 @@ blocks.
 ### Deliberately not defined
 
 - **No judgment of pending versus settled, or current versus historical.** The
-  property is unobservable and a keyword proxy measures vocabulary; BACKLOG #435
-  owns it.
+  property is unobservable and a keyword proxy measures vocabulary; the discarded #435
+  (`docs/history/backlog-decisions.md`) records why.
 - **No keyword matching as the deciding rule.** The structural marker is the only
   historical signal.
 - **No stored or stamped evidence record and no reviewer dispositions.** Both
-  are BACKLOG #435.
+  are discarded with #435 (`docs/history/backlog-decisions.md`).
 - **No quality, length, or agreement check between prose artifacts.**
 - **No change to the stage gate tuples, feedback eligibility, or authority
   limits.**
@@ -1344,7 +1344,7 @@ a replacement or a seal.
 proof. It reads the accepted complete version, and a folder with no accepted
 head refuses. A reader never repairs version state, and promotion never
 rewrites a stored version. The remaining direct readers stay deferred in the
-closed `BACKLOG.md` #328 record; they are not candidate-version writers.
+closed #328 record in `docs/history/backlog-decisions.md`; they are not candidate-version writers.
 <!-- immutable-candidate-version-authority:end -->
 
 ## Closed vocabularies

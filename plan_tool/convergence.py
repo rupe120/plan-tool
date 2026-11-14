@@ -205,7 +205,7 @@ class IterativeBudget:
     ceiling instead of being SIGKILL'd mid-call. Distinct from the debounced
     ``budget_seconds`` stall deadline. ``0`` (default) disables it — no clock
     consulted, behavior unchanged. See ``docs/how-to/recovery/README.md`` for the full
-    contrast and the granularity floor (BACKLOG #124).
+    contrast and the granularity floor, an accepted limit (#124, discarded).
 
     ``max_stall_rounds`` is the net-progress safety valve. Convergence
     is detected by comparing finding-*ID* sets across rounds, but a
