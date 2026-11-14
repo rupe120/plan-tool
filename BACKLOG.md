@@ -5362,19 +5362,19 @@ separate)**
   sibling hygiene, C read-compat/migration). Touches `plan_tool/detail.py`
   (`_REQUIRED_H2_TOKENS`/`_REQUIRED_H2_DISPLAY`/parse gate + read
   compatibility), `plan_tool/cli/authoring.py`, `plan_tool/prompts/detail.md` +
-  `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/DETAIL_FLOW.md`, CLI-reference
+  `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/how-to/pipeline/detail.md`, CLI-reference
   regen, and `tests/test_detail.py`. **Out of scope:** the retired Jira-grade
   lane, the #49 interactive wizard (only follows the contract change), #133
   purity-prompt size, and auto-rewriting historical detail files.
 - **Status:** a WIP plan `docs/implementation-plans/2-detail-verbosity-compact-summary.md`
   (status `planning`, 6 steps) is authored for this; its detail bundle is
-  **incomplete** (steps 1–3 detailed, 4–6 pending) and it is **not yet
-  registered** in `.plan-tool/plans.json`. When the plan ships, its final step
+  **incomplete** (steps 1–3 detailed, 4–6 pending) and it is
+  registered in `.plan-tool/plans.json`. When the plan ships, its final step
   removes/marks this entry and updates #49's seven-section language if that
   entry remains open. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
   detail bundle before phase B runs; it must not retain the removed module as
-  a compatibility dependency. The terminal companion in #293 is a separate
-  projected handoff, not this entry's target surface.
+  a compatibility dependency. The former terminal companion (#293, superseded)
+  is not this entry's target surface.
 - **Origin:** 2026-07-18 — filed to close the plan's dangling forward-reference
   to "BACKLOG #149" (the plan's step 6 and detail files cite it). Companion to
   #38 (detail length as a drift signal) and #49 (the detail wizard).
@@ -5481,7 +5481,7 @@ separate)**
 
 - **What:** once enough audits carry `audit_pass_end` run-log events, compute
   how often audit passes 2 and 3 add a material finding that pass 1 did not,
-  and decide whether the default `--audit-samples` (3 passes) can drop. The
+  and decide whether the default `--audit-passes` (3 passes) can drop. The
   conceptual audit (`plan_audit`) was 47% of the tokens in a 1,480-call
   run-log ledger (193M of 406.8M non-cached input plus output tokens), and
   24.8% of saved audits (218 of 879) ended budget-limited at the 3-pass cap.
@@ -5736,9 +5736,9 @@ separate)**
   finding, its citation, and its restatement, classify it into a closed,
   anchored, recommend-only disposition (e.g. `bare-gap` / `likely-detail-owned`
   / `uncertain`) — the direct analog of the already-shipped, deterministic
-  `classify_likely_bare_mechanism` (`plan_tool/review.py:2526`) /
+  `classify_likely_bare_mechanism` (`plan_tool/review.py:2714`) /
   `classify_bare_mechanism_advisory`
-  (`plan_tool/convergence_diagnosis.py:1413`) pair, but judged instead of
+  (`plan_tool/convergence_diagnosis.py:1412`) pair, but judged instead of
   phrase-matched, and fed by the restatement's cleaner input.
 - **Output of investigation:** a decision, not yet an implementation. Before
   any `create`, name (a) the closed disposition vocabulary and its total
@@ -5919,8 +5919,8 @@ separate)**
   precision or an exact-match-only subset first. A false positive on a
   criterion legitimately delivered by a non-step mechanism gets an explicit
   carve plus a test, never a severity retreat.
-- **Scope contract** (carried forward from the folded-in #267, 2026-08-13 —
-  do not re-widen without updating this fence):
+- **Scope contract** (carried forward from an earlier folded-in entry,
+  2026-08-13 — do not re-widen without updating this fence):
   - **Outcome:** the measurement decides whether `claim-vs-delivery`
     promotes; if it does, promotion lands in both `create --iterate`'s
     deterministic loop and the completeness-audit smell layer, plus the
@@ -5952,13 +5952,14 @@ separate)**
   (`create --iterate`'s loop and the completeness-audit smell layer) plus
   the open precision decision above, which is exactly the multi-module/
   open-design-choice shape BACKLOG.md's own direct-vs-plan-tool heuristic
-  routes to a plan. This **supersedes** the folded-in #267's "direct, with
-  the hand convergence loop" note (2026-08-13) — reconciled rather than
+  routes to a plan. This **supersedes** the earlier folded-in entry's "direct,
+  with the hand convergence loop" note (2026-08-13) — reconciled rather than
   left standing beside it.
 - **Dependencies:** none — #100 shipped the detector.
 - **Origin:** 2026-07-09 — #100's `## Deferred` ("Promoting `claim-vs-delivery`
   to blocking … until its false-positive rate is measured") plus the high-effort
-  workflow review's fuzzy near-miss finding on `review.py:2449`.
+  workflow review's fuzzy near-miss finding on `review.py:3788`
+  (`detect_claim_vs_delivery`).
 
 **#87 — [Investigation] Harden the test-authoring gate against a dirty working tree (don't depend on `--commit` discipline)**
 
@@ -6070,8 +6071,9 @@ separate)**
 **#36 — Investigate whether `create`-generated per-plan `lessons.md` adds value**
 
 - **Principle:** `untriaged` — an investigation that may close with no action.
-- **What:** `plan-tool create` writes a `lessons.md` next to the plan
-  (e.g., `docs/implementation-plans/plan-details/app-parameter-standardization/lessons.md`).
+- **What:** `plan-tool create` can write a per-plan `lessons.md` (opt-in via
+  the wizard's "Enable lessons log?" prompt, default off; default path
+  `plan-details/<slug>/lessons.md`).
   It isn't clear whether these files surface enough signal to justify
   their existence, or whether they're noise that competes with the
   developer [lessons record](docs/explanations/lessons-learned.md).
@@ -6083,8 +6085,7 @@ separate)**
 - **Effort:** small. Have claude review several existing per-plan
   lessons files, compare against the developer lessons record,
   judge overlap and unique signal.
-- **Approach:** direct. Same shape as #19 — investigation, not
-  implementation.
+- **Approach:** direct. An investigation, not implementation.
 
 **#129 — Deferred: deterministic program-scale decomposition observations**
 
@@ -6418,8 +6419,8 @@ separate)**
   verifying #309's round-1 fixes) surfaced three inefficiencies, none
   introduced by #309's own diff and none addressed by it — incidentally
   discovered while reading the surrounding code, not caused by anything #309
-  changed. Item 1 is done; items 2 and 3 remain and turned out larger than
-  first scoped:
+  changed. Item 1 is done; item 2 is moot (its code is gone); item 3 remains
+  and turned out larger than first scoped:
   1. **Done (`4ab38889`):** `_load_requested_receipt`
      (`roadmap_impact_run.py`) called `scan_evidence`, which read the full
      bytes of *every* file in the escalations directory just to find the one
@@ -6431,28 +6432,17 @@ separate)**
      unreadable"` verdict distinction the run log depends on, with a direct
      test pinning both outcomes (`test_load_requested_receipt_
      distinguishes_missing_from_unreadable`).
-  2. **`build_impact_analysis`** re-derives `_snapshot_evidence` (full
-     canonicalization + SHA-256 hashing of all 4 stage artifacts) every time
-     it runs, even when its `RoadmapImpactSnapshot` argument came from
-     #309's own `snapshot_cache` cache hit and was already validated at
-     capture time. **Confirmed load-bearing, not dead work**: of
-     `build_impact_analysis`'s 3 call sites
-     (`roadmap_impact_run.py:299`, `roadmap_impact_run.py:578`,
-     `roadmap_structural_revision.py:173`), only the second ever receives a
-     cached snapshot — the other two always pass a freshly captured one this
-     revalidation is the only thing that checks. A safe fix needs a way to
-     tell "freshly captured, unvalidated by this path" apart from "cache hit,
-     already validated at capture time" — `RoadmapImpactSnapshot` carries no
-     such provenance today, so this is a real design question, not a
-     one-line skip.
-  3. **`load_pending_generation`** (`roadmap_source_identity.py:363`) fully
+  2. **Moot:** `build_impact_analysis`, `roadmap_impact_run.py`, and
+     `snapshot_cache` no longer exist at HEAD; nothing remains to fix.
+  3. **`load_pending_generation`** (`roadmap_source_identity.py:89`) fully
      JSON-parses the journal and base64-decodes every member's `old`/`new`
-     byte payload, even when the caller this session touched
-     (`_pending_generation_touches_baseline`) reads solely
-     `member.relative_path`. **Not a quick fix**: `load_pending_generation`
-     has 4 other call sites, at least one of which
-     (`recover_roadmap_publication`, `roadmap_revision_publish.py:315`)
-     genuinely needs the full decoded `old_bytes`/`new_bytes` to compare
+     byte payload, even for the existence-only callers
+     (`roadmap_decision_settlement_receipt.py:335` and
+     `roadmap_version_promotion.py:93` use only `is None`).
+     **Not a quick fix**: `load_pending_generation`
+     has another call site
+     (`recover_roadmap_publication`, `roadmap_revision_publish.py:337`)
+     that genuinely needs the full decoded `old_bytes`/`new_bytes` to compare
      against on-disk state for recovery. A safe fix needs either lazy
      per-member decoding (a real change to `GenerationMember`'s shape) or a
      second targeted reader — and a second reader risks re-deriving the
@@ -6465,16 +6455,16 @@ separate)**
   needs its own proportional fix. Bundling them into #309 would have been
   exactly the "while I'm here" scope creep this repo's own anti-creep rule
   refuses.
-- **Effort:** item 1 was genuinely small (done). Items 2 and 3 are medium,
-  not small — each needs a real design decision (snapshot provenance
-  tracking; lazy member decoding or a second reader that doesn't duplicate
-  the envelope parser) before a safe fix, not a quick patch.
-- **Approach:** `direct` — items 2 and 3 each need their design question
-  settled first, then a small, targeted fix; no plan-tool plan needed.
+- **Effort:** item 1 was genuinely small (done). Item 3 is medium,
+  not small — it needs a real design decision (lazy member decoding or a
+  second reader that doesn't duplicate the envelope parser) before a safe
+  fix, not a quick patch.
+- **Approach:** `direct` — item 3 needs its design question settled
+  first, then a small, targeted fix; no plan-tool plan needed.
 - **Dependencies:** none.
 - **Origin:** 2026-08-24, `/code-review 917fecc4..HEAD high` round 2 on
   BACKLOG #309's round-1 fixes.
-- **Status:** item 1 done, items 2 and 3 not started.
+- **Status:** item 1 done, item 2 moot, item 3 not started.
 
 **#391 — Optional handoff-register reconciliation in the installed `plan-tool` skill routers**
 
@@ -6628,9 +6618,10 @@ separate)**
   kind can't silently fall through to the generic fallback unnoticed — but
   nothing guarantees a new kind lands in the *correct* specific bucket, only
   that it lands in *some* bucket deliberately.
-- **Why:** four kinds already needed a hand-curated override
+- **Why:** five kinds already needed a hand-curated override
   (`duplicate-inherited-decision`, `duplicate-feedback-id`,
-  `duplicate-store-reference`, `ordering-plan-id-duplicate`) after shipping
+  `duplicate-store-reference`, `duplicate-stack-concern`,
+  `ordering-plan-id-duplicate`) after shipping
   with the wrong, rename-shaped remedy — direct evidence the prefix heuristic
   gets it wrong in practice, not just in theory. A future `VIOLATION_*` kind
   whose string happens to start with an already-claimed prefix but needs a
@@ -6647,7 +6638,7 @@ separate)**
 - **Scope contract:**
   - **Outcome:** a new `VIOLATION_*` kind cannot land in a wrong
     specifically-routed remedy bucket without a test failing.
-  - **In scope:** `Violation`'s shape, its ~90 construction sites in
+  - **In scope:** `Violation`'s shape, its ~95 construction sites in
     `roadmap_gates.py`, and `_gate_correction`'s dispatch.
   - **Out of scope / Non-goals:** any change to a violation's `message` text,
     to `_INTENTIONALLY_GENERIC_GATE_KINDS`'s membership, or to which kinds are
@@ -6667,7 +6658,7 @@ separate)**
 **#432 — `render_candidate_question_prompt` still reads its template with a bare, unguarded `read_text()`**
 
 - **What:** `roadmap_candidate_review.render_candidate_question_prompt` (two
-  call sites, lines ~767 and ~796) reads `roadmap-candidate-questions.md` via
+  call sites, lines ~768 and ~797) reads `roadmap-candidate-questions.md` via
   `(prompts_dir() / name).read_text(encoding="utf-8")`, with no domain-error
   mapping — unlike `roadmap_candidate_run.render_candidate_delta_prompt`,
   which reads its own template through `read_roadmap_text` with a small local
@@ -6734,7 +6725,7 @@ separate)**
 - **Approach:** direct bounded change, followed by the normal focused tests,
   caller/vocabulary sweep, and review convergence for the changed snapshot.
 - **Origin:** 2026-09-07, roadmap candidate-context review pass 6, finding 3
-  (`plan_tool/roadmap_candidate_run.py:828`).
+  (`plan_tool/roadmap_candidate_run.py:1438`, the inline `run_interrupted`).
 - **Status:** not started.
 
 **#361 — Consolidate candidate failure-diagnostics finalization across proposal and review flows**
@@ -6794,9 +6785,9 @@ separate)**
   it is the same consolidation, in the same two files, the moment this item
   lands.
 - **Origin:** 2026-09-07, roadmap candidate-context review pass 6, finding 2
-  (`plan_tool/roadmap_candidate_review.py:2088`); no-import-cycle detail and
+  (`plan_tool/roadmap_candidate_review.py:3292`, `_finish_log`); no-import-cycle detail and
   the test-closure duplication folded in from pass 7 on 2026-09-08, findings
-  3 and 4 (`plan_tool/roadmap_candidate_run.py:842`,
+  3 and 4 (`plan_tool/roadmap_candidate_run.py:1450`,
   `tests/test_roadmap_candidate_run.py:960`).
 - **Status:** partially complete — core fallback metadata is done; terminal
   finalization and test-helper consolidation are not started.
@@ -6810,9 +6801,9 @@ separate)**
   individually guarded today, but each future caller must remember the
   convention with no API, lint, or type-level enforcement — and the
   convention's own reach is incomplete: `logger.phase_start(...)` is called
-  *before* the `try:` block in all three candidate-flow entry points
+  *before* the `try:` block in all four candidate-flow entry points
   (`run_initial_candidate_proposal`, `generate_candidate_question`,
-  `request_replacement`), so a `KeyboardInterrupt` landing during that call
+  `request_replacement`, `_edit_structural_candidate`), so a `KeyboardInterrupt` landing during that call
   (a real `os.open`/`os.write` plus a lock-guarded in-flight snapshot write)
   still escapes every guard uncaught.
 - **Why deferred:** one live gap is now known (the pre-`try` `phase_start`
@@ -6854,9 +6845,10 @@ separate)**
   scoped plan and bare/detail audit gates, rather than a direct edit.
 - **Origin:** 2026-09-04, roadmap candidate-context review pass 5; confirmed
   as the appropriate deferred structural concern by pass 6 on 2026-09-07
-  (`plan_tool/roadmap_candidate_run.py:844`); two further live instances
-  deferred here by pass 7 on 2026-09-08 (`plan_tool/roadmap_candidate_run.py:628`,
-  `plan_tool/roadmap_candidate_review.py:728,885`; a third
+  (`plan_tool/roadmap_candidate_run.py:844`, line numbers as of that pass);
+  two further live instances deferred here by pass 7 on 2026-09-08
+  (`plan_tool/roadmap_candidate_run.py:628`,
+  `plan_tool/roadmap_candidate_review.py:728,885`, same caveat; a third
   site in the since-deleted `roadmap_revision_run.py`), per explicit user direction not
   to patch a fifth site inline.
 - **Status:** not started.
@@ -6870,8 +6862,7 @@ separate)**
   - **POSIX-forced, non-resolving** (`path.relative_to(repo_root).as_posix()`
     / `except ValueError: path.as_posix()`): `review.py`'s
     `_repo_relative_posix`, `annotate.py`'s `_repo_relative_excerpt_path`,
-    `cli/completeness_cmd.py`'s `_jira_grounding_line`, and the inline
-    directory-announcement branch in `launcher.py`'s
+    and the inline directory-announcement branch in `launcher.py`'s
     `preflight_step_paths` (kept inline deliberately in commit `87539cfa`
     — see that commit's message for why the platform-native swap was
     reverted there).
@@ -6893,8 +6884,9 @@ separate)**
     the fallback string), not a formatting one.
   - **Resolved target/root, POSIX-forced only on success** (`path.resolve().
     relative_to(repo_root.resolve()).as_posix()` / `except ValueError:
-    str(path)`): `cli/completeness_phases.py`'s persisted `plan_rel` value.
-    The lexical fallback is distinct from the fully resolved fallback above.
+    str(path)`): `cli/completeness_phases.py`'s persisted `plan_rel` value,
+    `launcher.py`'s two sites (~2609 and ~3254), and `cli/review_actions.py`'s
+    detail-written message (~413). The lexical fallback is distinct from the fully resolved fallback above.
   - This is a **resemblance observation, not verified evidence** — no
     AST-normalized comparison has been run, per this repo's CLAUDE.md
     consolidation-entry rule. The first two idioms were surfaced by
@@ -6911,8 +6903,7 @@ separate)**
   sides, platform-native). Four function bodies already carry their own
   docstrings asserting a specific, deliberate contract
   (`_repo_relative_posix`'s "the single labeler for both the finding paths
-  and `_format_audit_detail_bundle`'s bundle listing", `_jira_grounding_line`'s
-  "Deliberately POSIX-always ... unlike this file's `literal_path` use") —
+  and `_format_audit_detail_bundle`'s bundle listing") —
   a merge proposal must re-verify each of those claims against current
   callers, not assume the docstring is still accurate.
   `roadmap_seed_state.py:render_seed_state_marker` remains an intentional
@@ -6940,13 +6931,14 @@ separate)**
 **#352 — `propose_references_from_claude`'s phase-timing scaffold is a third repetition of a pattern already duplicated twice in `_prepare_create_plan`**
 
 - **What:** the new iteration-branch reference-research block
-  (`plan_tool/create.py`, ~line 9641) repeats the same
+  (`plan_tool/create.py`, ~line 9971) repeats the same
   `phase_start`/`t0 = time.monotonic()`/`outcome = "ok"`/
   `try: ... except Exception: outcome = "error"; raise`/
   `finally: phase_end(...)` scaffold already present at
-  `_prepare_create_plan`'s roadmap branch (~line 8643) and its
-  generic-origin branch (~line 8684) — three sites, not two, once this
-  plan landed.
+  `_prepare_create_plan`'s roadmap branch and its generic-origin branch —
+  three sites, not two, once this plan landed. The `outcome = "ok"` scaffold
+  now recurs at `create.py:9407`, `:9676`, `:9730`, `:9932`, `:9973`, and
+  `:10126`, so re-count before scoping.
 - **Why not filed as a strict consolidation entry:** verified by reading
   all three sites directly, not merely by resemblance — the SHAPE
   repeats but the bodies are not close to byte-identical: the new site
@@ -6971,7 +6963,7 @@ separate)**
 **#358 — `dump is not None and repo_root is not None` computed twice in the same unparseable-response branch**
 
 - **What:** `propose_references_from_claude`'s terminal-unparseable
-  branch (`plan_tool/create.py`, ~lines 3477 and 3481) computes
+  branch (`plan_tool/create.py`, ~lines 3859 and 3863) computes
   `dump is not None and repo_root is not None` twice in adjacent
   statements — once to gate the "raw response saved to ..." hint string,
   once to gate the `run_logger.parse_failure` call. Not a bug, purely
@@ -7019,12 +7011,12 @@ separate)**
 
 **#346 — The stage-run guard's "stopped" emission still relies on per-branch discipline, not structural enforcement**
 
-- **What:** `_stage_run_guard`/`_StageStopReporter` (`plan_tool/roadmap.py`) make a double "stopped" report impossible, but they don't make a *missing* report impossible: each of the six failure branches inside `_run_roadmap`'s per-stage loop still has to remember to call `stop_reporter.emit(...)` by hand before its `break` — a `break` never reaches the guard's own `except Exception:` backstop, so a future seventh failure branch that adds a `break` without calling `.emit()` first (and without raising) would silently stop the stage with no `"stopped"` status line ever printed.
-- **Why not fixed inline:** no live bug today — all six current branches already call `.emit()` correctly, verified in round 12's review and by this session's own trace. Closing the gap structurally means either converting every break-with-failure branch into a raise (so the guard's `except` becomes the *only* place "stopped" is reported), which is a real control-flow restructuring with correctness risk of its own, or accepting the current discipline-based design and relying on test coverage / code review to catch a future omission — a design call, not a proportional fix to make now against a hypothetical future site.
+- **What:** `_stage_run_guard`/`_StageStopReporter` (`plan_tool/roadmap.py`) make a double "stopped" report impossible, but they don't make a *missing* report impossible: the failure branch inside `_run_roadmap`'s per-stage loop (`roadmap.py:2536-2567`; currently one `stop_reporter.emit(...)` and one `break`) still has to remember to call `stop_reporter.emit(...)` by hand before its `break` — a `break` never reaches the guard's own `except Exception:` backstop, so a future second failure branch that adds a `break` without calling `.emit()` first (and without raising) would silently stop the stage with no `"stopped"` status line ever printed.
+- **Why not fixed inline:** no live bug today — the one current branch calls `.emit()` correctly (verified against `roadmap.py:2553`). Closing the gap structurally means either converting every break-with-failure branch into a raise (so the guard's `except` becomes the *only* place "stopped" is reported), which is a real control-flow restructuring with correctness risk of its own, or accepting the current discipline-based design and relying on test coverage / code review to catch a future omission — a design call, not a proportional fix to make now against a hypothetical future site.
 - **Effort:** medium if restructured to raise-based control flow; small if the answer is instead "add a completeness check/test that fails if a break site in this loop has no accompanying `.emit()` call" (a lower-cost alternative worth considering first).
 - **Dependencies:** none.
 - **Approach:** decision first.
-- **Origin:** 2026-09-02, round-12 `/code-review` pass (first at the corrected full to-be-pushed-range scope, `77e1aeb7..HEAD`) on `2-roadmap-stage-lifecycle-output.md`'s landed diff. A round-14 pass named a third option worth weighing alongside the two above: the five failure branches don't only repeat `stop_reporter.emit(...)`, each also hand-writes the same `run_logger.phase_end(...)` + build-a-`RoadmapResult`-via-`stage_invalid(...)` + `break` sequence around it — one shared helper taking the failure detail and returning the loop action could make omitting any one of the three steps structurally impossible, without the larger raise-based restructuring the first option needs.
+- **Origin:** 2026-09-02, round-12 `/code-review` pass (first at the corrected full to-be-pushed-range scope, `77e1aeb7..HEAD`) on `2-roadmap-stage-lifecycle-output.md`'s landed diff. A round-14 pass named a third option worth weighing alongside the two above: the then-five failure branches don't only repeat `stop_reporter.emit(...)`, each also hand-writes the same `run_logger.phase_end(...)` + build-a-`RoadmapResult`-via-`stage_invalid(...)` + `break` sequence around it — one shared helper taking the failure detail and returning the loop action could make omitting any one of the three steps structurally impossible, without the larger raise-based restructuring the first option needs.
 - **Status:** not started.
 
 **#345 — Share a fixture/recorder for `TestRoadmapStageStatus`'s repeated status-list boilerplate**
@@ -7126,23 +7118,24 @@ separate)**
 
 - **What:** the literal format `f"stage {stage.number} ({stage.name}) ..."`
   (or the equivalent with pre-bounded `number_label`/`name_label`) is
-  hand-repeated at 7 sites in `plan_tool/roadmap.py`: the new lifecycle-status
-  composition (`_emit_roadmap_status`, line 687) and six pre-existing error
-  messages (lines 1083, 1259, 1297, 1332, 1345, 1372).
+  hand-repeated at 4 sites in `plan_tool/roadmap.py`: the lifecycle-status
+  composition (`_emit_roadmap_status`, line 713) and three error messages
+  (lines 1050 and 1061, both prefixed `roadmap stage`, and 1351).
 - **How identity was established:** by grepping the literal `f"stage `
-  pattern across the file and reading each of the 7 matches — the format
-  itself (`stage {number} ({name})`) is identical at every site; what
-  follows it differs (a status fact vs. one of six distinct error messages).
+  pattern across the file and reading each of the 4 matches (re-counted
+  2026-11-14) — the format itself (`stage {number} ({name})`) is identical at
+  every site; what follows it differs (a status fact vs. one of three
+  distinct error messages).
 - **Do-not-merge look-alikes:** none identified yet — a shared formatter
-  would need to accept either a raw `RoadmapStage` (the six error-message
+  would need to accept either a raw `RoadmapStage` (the error-message
   sites) or the already-bounded `number_label`/`name_label` strings
   (`_emit_roadmap_status`, which bounds before composing for the terminal),
   so unifying the two calling shapes is part of the scoping work, not a
   given.
-- **Effort:** small — one shared formatter plus 7 call-site updates, each
+- **Effort:** small — one shared formatter plus 4 call-site updates, each
   already covered by an existing test asserting its exact message text.
 - **Risks / fallout:** none beyond the mechanical test-text churn from
-  routing 7 existing messages through one function instead of 7 literals.
+  routing 4 existing messages through one function instead of 4 literals.
 - **Approach:** direct.
 - **Origin:** 2026-09-02, second `/code-review` round on
   `2-roadmap-stage-lifecycle-output.md`'s landed diff.
@@ -7382,7 +7375,7 @@ separate)**
   that names a directory, carries a trailing separator on a path that
   doesn't exist yet, or raises `PermissionError` out of `Path.is_dir()` —
   with one specific message and exit code for each. `jira --output PATH`
-  (`cli/jira_cmd.py:158`, `Path(args.output).resolve() if args.output else
+  (`cli/jira_cmd.py:133`, `Path(args.output).resolve() if args.output else
   None`) performs none of this: the identical operator mistake
   (`jira <slug> --output some_dir/`) proceeds straight to opening a file at
   that path with no directory/trailing-slash check at all.
@@ -7420,8 +7413,9 @@ separate)**
   confident link. The same hazard is unaddressed for every other
   cross-artifact reference-id list `roadmap_html.py` renders:
   `component.pattern_ids`, `component.constraint_ids`, `component.store_ids`,
-  `plan.component_ids`, a decision/constraint row's `anchor_ids`, and
-  ordering's `depends_on` / `assumption_targets` — all still resolved
+  `plan.component_ids`, a decision/constraint row's `anchor_ids`, a row's
+  `consuming_plan_ids`, and ordering's `depends_on` / `assumption_targets` —
+  all still resolved
   through plain `_ref_list` / `resolve_id`, with no kind check. Separately,
   `roadmap_html.py:_plans_block` already hand-rolls its own one-off
   "ordering entry does not name a plan" check via a raw `resolve_id(...).status`
@@ -7478,7 +7472,7 @@ separate)**
     (multiple valid kinds per anchor), that's a separate design question,
     not a blocker — defer with a new entry rather than generalizing
     `resolve_id_of_kind` to accept multiple kinds speculatively.
-- **Effort:** small-to-medium (mechanical per site, ~7 call sites plus
+- **Effort:** small-to-medium (mechanical per site, ~8 call sites plus
   `_plans_block`'s consolidation). **Value:** closes the same defect class
   round 4/5 of the ER-diagram code-review loop fixed for entity references,
   for every other reference kind this file renders.
@@ -7533,16 +7527,16 @@ separate)**
 
 **#288 — Drop the redundant "Per-step test strategy" block from rendered plan bodies**
 
-- **What:** `create.py:6119`'s `_render_testing_strategy()` appends a
+- **What:** `create.py:8735`'s `_render_testing_strategy()` appends a
   "Per-step test strategy" block to every plan's `## Testing` section (called
-  from `_render_plan_body` at `create.py:6252`), one bullet per step. For
+  from `_render_plan_body` at `create.py:8904`), one bullet per step. For
   code steps the bullet text is byte-identical regardless of `change_type` —
-  `_TESTING_STRATEGY_BY_CHANGE_TYPE` at `create.py:367-377` maps both
+  `_TESTING_STRATEGY_BY_CHANGE_TYPE` at `create.py:417` maps both
   `refactor` and `feature` to the same sentence ("tests covering the
   behavior this step changes; green before completion."); only `non_code`
   differs. Nothing downstream reads the rendered block back: the run-time
-  test-authoring gate (`launcher.py:890`'s `_test_directive()` and
-  `launcher.py:953`'s `_step_requires_test_authoring()`) derives its
+  test-authoring gate (`launcher.py:990`'s `_test_directive()` and
+  `launcher.py:1053`'s `_step_requires_test_authoring()`) derives its
   directive from `step.change_type` directly, independent of plan-body
   prose. Remove the rendered block; leave `change_type` and its real
   consumers (`launcher.py`, `detail.py`) untouched.
@@ -7571,7 +7565,7 @@ separate)**
     the rendered block.
   - **Out of scope / Non-goals:** the three-way duplication of
     per-`change_type` phrasing across `create.py`/`detail.py`/`launcher.py`
-    (flagged but explicitly deferred by `create.py:360-366`'s own comment) —
+    (flagged but explicitly deferred by the comment above `create.py:417`) —
     do not consolidate those copies here; any change to `launcher.py`'s
     run-time test directive or `detail.py`'s authoring prompt; retrofitting
     already-authored plan files to strip the section from existing
@@ -7880,7 +7874,8 @@ separate)**
     permanently, not just for now.
   - **`backend.py`'s `_*_batch_argv`/`_*_streaming_argv` pairs (×3)** —
     identical today, but two distinct contract points pinned by
-    `docs/CODEX_CLI_CONTRACT.md` / `docs/CURSOR_AGENT_CLI_CONTRACT.md` and
+    `docs/reference/contracts/codex-cli.md` /
+    `docs/reference/contracts/cursor-agent-cli.md` and
     their fixtures. Divergence is the expected evolution.
   - **`bench.py`'s six 2-line `to_dict`** — merging means a shared base class
     across six unrelated result records.
@@ -7926,14 +7921,13 @@ separate)**
 
 - **Principle:** `none` — consolidation of shared argparse parents.
 - **What:** Shared flag groups are rebuilt per command module instead of
-  in the `parser.py` leaf: `yes_parent` (**15** construction sites as of
-  2026-08-02, **12 byte-identical** by an exhaustive args+kwargs AST compare —
-  several carry the comment "mirroring the other command modules until the
-  shared flag is consolidated into `plan_tool.cli.parser`"),
+  in the `parser.py` leaf. `yes_parent` is consolidated for the byte-identical
+  sites (`make_yes_parent()`, `parser.py:315`); four sites keep their own
+  variant (see the Caveat). Still local:
   `fail_on_findings_parent` (3×: `inspect`/`review_cmd`/`completeness_cmd`),
   `iterate_parent` (~60-line block ×3: `run_cmd`/`completeness_cmd`/`authoring`),
   and the `name` plan positional + its help string (14×, 13 identical).
-  Add `make_yes_parent()`, `make_fail_on_findings_parent()`,
+  Add `make_fail_on_findings_parent()`,
   `make_iterate_parent()`, `add_plan_name_arg()` to `parser.py`; each
   `register()` calls them. **Folds in the time-budget cleanup follow-up** — the shared
   `add_iterate_args(parser)` builder that registers the `--iterate` companions
@@ -7941,14 +7935,13 @@ separate)**
 - **Caveat:** keep the `--iterate`/`--no-iterate` **action itself**
   per-subparser — its default differs (ON for create, OFF for run) and
   argparse parents copy by reference (NOTE at `run_cmd.py:1536`).
-  Consolidate only the *companion* iterate flags, not `--iterate`. **Three**
-  intentional help-text outliers take an override variant and must keep their
-  own text: `gates_cmd.py:216` (where `-y` means "print the suggested gates as
+  Consolidate only the *companion* iterate flags, not `--iterate`. **Four**
+  intentional help-text outliers keep their own text: `gates_cmd.py:214` (where `-y` means "print the suggested gates as
   a report instead of prompting" — *different flag semantics* under the same
-  name, so the generic string would be actively false), `scope_out_cmd.py:160`
-  (documents the `--apply` mutation gate), and `worktree_cmd.py:509` (explicit
-  `dest`/`default`; added with the `worktree` verb group after this entry was
-  first written, which is why the count moved from 14 to 15). Re-derive the
+  name, so the generic string would be actively false), `scope_out_cmd.py:163`
+  (documents the `--apply` mutation gate), `worktree_cmd.py:508` (explicit
+  `dest`/`default`), and `roadmap_cmd.py:2426` (the `--apply` promote
+  confirmation's second opt-in). Re-derive the
   identical set before consolidating — compare every
   `yes_parent.add_argument(...)` call's args **and** kwargs after implicit
   string-concatenation folds, not the source text, or the differently-wrapped
@@ -8011,7 +8004,7 @@ separate)**
 
 - **Principle:** `untriaged` — a test-coverage slice; which principle it serves is a judgment call.
 - **What:** `cmd_completeness`'s auto-reconcile path is well-tested;
-  the equivalent wiring in `_iterate_reconcile_loop`, `create_plan`,
+  the equivalent wiring in `cli/reconcile.py:_iterate_reconcile_loop`, `create_plan`,
   and `generate_detail` may not be. Mirror the test pattern to each.
 - **Effort:** small per call site.
 - **Approach:** direct. Pattern-mirror across three call sites with
@@ -8020,7 +8013,8 @@ separate)**
 **#55 — Performance: short-circuit `_compute_content_hash` via mtime**
 
 - **Principle:** `none` — performance; its own entry says the value is uncertain until profiled.
-- **What:** If a watched file's mtime is unchanged since the
+- **What:** In `drift_detection.compute_content_hash` (the title's
+  `_compute_content_hash`), if a watched file's mtime is unchanged since the
   snapshot was taken, skip the SHA-256 hash entirely. Cheap mtime
   check + correct semantics (mtime change is a necessary precondition
   for content change).
@@ -8546,25 +8540,21 @@ separate)**
   comparison survived a numbering sweep and cost an extra audit round.
 - **Concrete findings already in hand** (2026-07-29 scan, so this is not a
   vague cleanup task):
-  - **Dead module `plan_tool/iteration_lock.py`, cited by four docs** —
-    `TESTING.md`, `docs/RESUME_FLOW.md`, `docs/AUDIT_RESUME_FLOW.md`,
-    `docs/DETAIL_RESUME_FLOW.md` (plus `tests/test_iteration_lock.py`). The
-    file does not exist; `plan_tool/repo_lock.py` is the likely successor and
-    the name still appears inside `plan_tool/drift_detection.py`. Determine
-    which, then fix all four. Highest-value item here.
-  - Other dead citations: `reformat.py` and `prompts/reconcile.md`
-    (`TESTING.md`), `plan-seeds/jira-grade-01-detail-instrument.md`
-    (`docs/NONDETERMINISM_PLAN_DESIGN.md` — consumed into a plan),
+  - **Dead module `plan_tool/iteration_lock.py`, cited by `TESTING.md:228`**
+    (the `docs/*RESUME_FLOW.md` docs that also cited it no longer exist). The
+    file does not exist; `plan_tool/repo_lock.py` is the likely successor.
+    Determine whether it is, then fix the citation. Highest-value item here.
+  - Other dead citations: `reformat.py` (`TESTING.md:235`) and
+    `prompts/reconcile.md` (`TESTING.md:229`),
     `plan-seeds/escalate-structural-findings-to-split-redecomposed.md`
     (`RUNBOOK.md`).
   - Change-narration to rewrite as current-state, ~8 sites, mostly
-    `RUNBOOK.md`: "keep the **old behavior**" (519), "the staleness that
-    **used to** make reuse a gamble" (1108), "saved reconciles **used to**
-    drift into" (1131), "you **no longer** edit `status:` by hand" (1891),
-    "you **no longer have to** eyeball" (2452), "citations **no longer** flag"
-    (2702), "**no longer** falls through" (3051); plus `README.md` 989 ("want
-    the **old behavior**"), `docs/AUDIT_FLOW.md` 159, `docs/RUN_FLOW.md` 289.
-    `reconcile-plan is no longer exposed as a --mode` (`RUNBOOK.md` 3664) is
+    `RUNBOOK.md`: "keep the **old behavior**" (770), "the staleness that
+    **used to** make reuse a gamble" (1366), "saved reconciles **used to**
+    drift into" (1391), "you **no longer** edit `status:` by hand" (2205),
+    "citations **no longer** flag" (2943), "**no longer** falls through"
+    (3292). Re-run the method below to re-derive the full set.
+    `reconcile-plan is no longer exposed as a --mode` (`RUNBOOK.md` 3958) is
     the one worth **keeping** — mark it as past rather than deleting, since it
     stops a reader hunting a removed flag.
 - **Explicitly not defects** (the scan's false positives — do not "fix"):
@@ -8749,7 +8739,7 @@ separate)**
 **#209 — `--commit` should stage only the files the verb touched, not `git add -A`**
 
 - **What:** every `--commit` surface routes through
-  `plan_tool/cli/gitcommit.py:182` `commit_all(repo_root, subject)`, which runs
+  `plan_tool/cli/gitcommit.py:178` `commit_all(repo_root, subject)`, which runs
   a bare **`git add -A`** and so commits *whatever is in the working tree* —
   not what the verb produced. Give `commit_all` an explicit touched-path set
   and stage `git add -A -- <paths>` instead, so a `--commit` run can only ever
@@ -8772,7 +8762,7 @@ separate)**
   assumption is also increasingly wrong by the tool's own direction: it ships
   parallel plan worktrees and `--clone` full isolation; concurrent sessions
   can also write to one repo.
-- **The precedent already exists.** `gitcommit.py:42`
+- **The precedent already exists.** `gitcommit.py:37`
   `unexpected_dirty_paths(repo_root, expected)` already takes a
   caller-supplied *expected*-path set and reasons about nesting and
   `--untracked-files=all`; `launcher._git_changed_paths_or_none` already
@@ -8846,13 +8836,13 @@ separate)**
 **#241 — Narrow the conceptual-audit prompt on a bare plan, so it stops generating findings the report withholds**
 
 - **What:** on a bare plan (`bundle_status.is_bare`), the conceptual audit runs
-  the full finding taxonomy and the report then **withholds** the
-  completeness half — `completeness_report.py:823`, "Completeness gaps are
-  withheld on a bare plan", with `:832` filtering `advisory_conceptual` out.
-  But `prompts/plan-audit.md` carries **no bare-plan narrowing at all**; the
-  word appears there only in unrelated prose-style rules. So every pass pays
-  full generation cost for a category that is shelved on arrival. Tell the
-  prompt it is judging a bare plan and to produce `plan-correctness` only.
+  the full finding taxonomy. `prompts/plan-audit.md` receives the bundle's
+  detail coverage through `review.py:_format_detail_bundle_status_block` and
+  narrows detail-level findings, and bare-stage `plan-completeness` findings
+  are recorded as non-blocking. But the prompt carries **no instruction to emit
+  `plan-correctness` only**, so every pass still pays full generation cost for
+  a category that is non-blocking on arrival. Tell the prompt it is judging a
+  bare plan and to produce `plan-correctness` only.
 - **Why now:** measured 2026-08-06 on the TTRPG demo's `visibility-gate`
   (bare, 6 steps, 0 detailed). Three passes cost **353s / 379s / 462s ≈ 20
   minutes** and produced 26 unique findings, of which **17 were withheld** —
@@ -8890,8 +8880,8 @@ separate)**
   - **In scope:** `plan_tool/prompts/plan-audit.md`, the call site that selects
     the prompt variant, and the tests pinning the prompt's keys.
   - **Out of scope / Non-goals:** changing the pass count or its default;
-    changing which findings the **report** withholds (that half is correct
-    today); the detailed-plan prompt; `--audit-passes`, `arm-clustering`, the
+    changing how the **report** records bare-stage completeness findings
+    (that half is correct today); the detailed-plan prompt; `--audit-passes`, `arm-clustering`, the
     convergence policy, or `Recommendation`. Explicitly **not** a concurrency
     or `--jobs` change.
   - **Allowed behavior changes:** fewer emitted completeness findings on a
@@ -8979,9 +8969,10 @@ longer describes current work. It is retained only as dated carve-out context.
   machine-response contract (format instructions + parser) so the two can't
   drift apart, and most `## Findings` / `## Verdict` / two-section audit
   regexes were migrated onto it. Two known sibling regexes of the identical
-  shape were not: `launcher.py:845 _VALIDATION_RE` and `review.py`'s
-  `_REDIRECT_HEADING_RE` (~line 5656), both hand-rolled `^##\s*<Heading>\b`
-  patterns that predate the shared contract.
+  shape were not: `launcher.py:927 _VALIDATION_RE` and `review.py:5881
+  _REDIRECT_HEADING_RE`, hand-rolled `##\s*<Heading>\b` patterns that
+  predate the shared contract (the Redirect one is anchored on a blank-line
+  boundary, `(?:\A|\r?\n[ \t]*\r?\n)`, not `^`).
 - **Why:** a future correctness fix to heading-matching (trailing-content
   tolerance, case handling, retry wiring) applied to `MarkdownSectionsContract`
   / `VerdictContract` won't reach either regex — the same "fix the class, not
@@ -8997,7 +8988,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Dependencies:** none.
 - **Outcome:** both regexes sourced from a `response_contract.py` contract
   instead of a local pattern.
-- **In scope:** `plan_tool/launcher.py:845`, `plan_tool/review.py`'s
+- **In scope:** `plan_tool/launcher.py:927`, `plan_tool/review.py`'s
   `_REDIRECT_HEADING_RE`, and their existing tests.
 - **Out of scope / Non-goals:** the 7 still-local JSON-envelope slice sites
   tracked separately under #79.
@@ -9330,13 +9321,14 @@ longer describes current work. It is retained only as dated carve-out context.
   ignore rules are currently split across five places: the tracked root
   `.gitignore`; one tracked nested `experiments/refactor-characterization-replay/.gitignore`
   (narrowly scoped, single regenerable file, correctly explained — a good
-  model to match); this machine's `.git/info/exclude`, which carries nine
+  model to match); this machine's `.git/info/exclude`, which carries ten
   `**/.claude/*` runtime-state patterns (`scheduled_tasks.lock`,
   `scheduled_tasks.json`, `routines/.state/`, `worktrees/`, `checkpoints/`,
   `mailbox/`, `agent-registry.json`, `agent-memory-local`,
   `assistant-daemon-state.json`, `first-run`); and this user's global
   `~/.config/git/ignore`, which carries `**/.claude/settings.local.json`.
-  None of those ten patterns ship with the repo — `git ls-files .claude/`
+  The tracked root `.gitignore` carries only `.claude/local/` (line 51), which
+  covers none of them. None of those eleven patterns ship with the repo — `git ls-files .claude/`
   returns empty today only because nothing has collided yet, not because
   anything tracked protects a fresh clone. Any other contributor (or this
   user on another machine) has zero built-in protection against
@@ -9413,7 +9405,7 @@ longer describes current work. It is retained only as dated carve-out context.
   prompt, CLI, and JSON grammars — but the underlying inconsistency itself
   was not disputed, only deferred as out of that sweep's proportion.
 - **Effort:** small-medium — no design ambiguity in `confidence_label`
-  itself; touches ~13 files at ~31 call sites, each a mechanical
+  itself; touches 12 files at 20 call sites, each a mechanical
   string-format edit with existing test coverage to catch drift.
 - **Risks:** low individually; the volume is what makes an unswept partial
   pass worse than either finishing or not starting — a half-migrated
@@ -9454,54 +9446,43 @@ longer describes current work. It is retained only as dated carve-out context.
   outcome" rule).
 - **Stop / defer:** if a call site's surrounding format encodes information
   the shared fragment can't represent generically (e.g.
-  `review_walk.py:715`'s trailing "already ..." clause), defer that one
+  `review_walk.py:738`'s trailing "already ..." clause), defer that one
   site with a stated reason rather than force it, and record the exclusion
   here or in the follow-up plan.
 - **Evidence:** identity established 2026-08-26 by
   `grep -rn "confidence_label(\|confidence_value(" plan_tool/` (not by
   inspection; re-verified 2026-08-26 during that plan's `/code-review` pass,
   which caught the original count drifting from re-running the same grep —
-  keep this number reproducible-checked, not copied forward) — 31 call sites
-  of `confidence_label` across 13 files outside
-  `review.py`'s own definition, plus 5 `confidence_value` sites confined to
+  keep this number reproducible-checked, not copied forward; re-run
+  2026-11-14) — 20 call sites of `confidence_label` across 12 files outside
+  `review.py` (plus 5 inside `review.py`), and 5 `confidence_value` sites confined to
   `completeness_phases.py`'s `--json` rendering. At least four distinct
   surrounding-format families confirmed: bracketed `[...]` (majority —
   `completeness_phases.py`, `launcher.py`, `review_actions.py`,
   `inspect.py`, `reconcile.py`, `data_contract_cmd.py`, `review_cmd.py`,
   `detail.py`, and `review.py`'s own report/prompt renders),
-  parenthesized-with-trailing-clause (`review_walk.py:715`,
+  parenthesized-with-trailing-clause (`review_walk.py:738`,
   `"(...; already ...)"`), middle-dot-joined with no brackets
-  (`review_walk.py:905`, `"source: X · confidence_label"`), and
-  em-dash-suffixed with no brackets (`create.py:5584`). **Do-not-merge
+  (`review_walk.py:933`, `"source: X · confidence_label"`), and
+  em-dash-suffixed with no brackets (`create.py:6562`). **Do-not-merge
   exclusion:** the 5 `completeness_phases.py` `confidence_value` sites are a
   distinct, deliberate raw-enum JSON projection and must not be folded into
   the human-facing helper.
 
   **Re-confirmed 2026-08-26 by a follow-up `/code-review high` pass on this
-  same diff, surfacing 5 additional concrete duplicate-pair instances (all
-  already inside the "In scope" file list above, none new in scope) plus
-  one genuine functional divergence, not merely cosmetic:**
-  `plan_tool/cli/completeness_phases.py:_render_grouped_report` hand-rolls
-  the confidence-tagged bullet 6 times (`correctness_recs`,
-  `data_contract_recs`, `conceptual_recs`, `smell_recs`,
-  `self_consistency_recs`, `purity_coverage_recs`) instead of calling
-  `plan_tool/completeness_report.py:_fmt_finding_line`, which already
-  builds the identical bullet — and 5 of the 6 copies use
-  `f" \`[{rec.anchor}]\`" if rec.anchor else ""` (omits the tag entirely on
-  a falsy anchor) while `_fmt_finding_line` uses `_anchor_value(rec)` =
-  `rec.anchor or rec.id` (always renders something) — verified by reading
-  both, not by report alone. Also confirmed:
-  `plan_tool/completeness_report.py:_fmt_finding_line`/`_fmt_pending_line`
-  are near-duplicate formatters edited in lockstep for this diff (the
-  latter's own docstring already says "the same shape as
-  `_fmt_finding_line`"); `plan_tool/cli/reconcile.py`'s `_walk_saved` and
+  same diff, surfacing further concrete duplicate-pair instances (all
+  already inside the "In scope" file list above, none new in scope).** The
+  `_render_grouped_report` hand-rolled bullets and the
+  `_fmt_finding_line`/`_fmt_pending_line` duplication are resolved by
+  `completeness_report.format_finding_bullet`; the remaining named sites are:
+  `plan_tool/cli/reconcile.py`'s `_walk_saved` and
   `_save_and_walk_run_reconcile` print an identical two-line `[REDIRECT]`
   block; `plan_tool/cli/review_actions.py`'s resolves/introduces
   validation-print pair duplicates the same format string; and
   `plan_tool/cli/review_cmd.py`'s `_cmd_review_body` and `cmd_review_walk`
   contain a byte-identical non-interactive recommendation-listing loop
-  body. Fold these named sites and the anchor-fallback divergence into the
-  eventual fix rather than re-deriving them.
+  body. Fold these named sites into the eventual fix rather than re-deriving
+  them.
 - **Approach:** `direct` — mechanical string-format migration across
   enumerated call sites with existing test coverage to catch drift; no
   design decision large enough to need a plan.
@@ -9579,8 +9560,9 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Checklist:**
   1. Run the normalized-body comparison `test_duplication.py` uses (or
      equivalent) across `_json_value`, `_wire_value` (all 4 sites),
-     `_canonical_value`, `roadmap_json.unwrap_enum_value`, and
-     `roadmap.py`'s `_prompt_json_value` to see which pairs actually match
+     `_canonical_value`, `roadmap_json.unwrap_enum_value`,
+     `roadmap.py`'s `_prompt_json_value`, and
+     `roadmap_feedback_ledger.py:_json_value` (line 529) to see which pairs actually match
      past docstrings/names/params, and which only resemble each other.
   2. For each confirmed-identical pair, consolidate onto one shared helper
      (`roadmap_json.py` is the existing shared home) with a test pinning the
@@ -9946,9 +9928,12 @@ longer describes current work. It is retained only as dated carve-out context.
 
 - **What:** `build_roadmap_diff` computes `hashlib.sha256(...).hexdigest()`
   for both `before_digest` and `after_digest` on every changed artifact, but
-  no caller anywhere in the codebase reads either field — only
-  `.artifact_key` is ever consumed (`roadmap_compare.py:117`,
-  `tests/test_roadmap_diff.py`). The comparison feature's JSON output
+  no caller reads either field by name — only `.artifact_key` is consumed
+  (`roadmap_compare.py:117`, `tests/test_roadmap_diff.py`). The fields are
+  carried in the stored candidate `predecessor_diff`, and
+  `tests/test_roadmap_candidate_run.py` edits `after_digest` and expects the
+  reload to refuse it, so removal changes the persisted shape and that
+  tamper check. The comparison feature's JSON output
   already surfaces per-artifact digests through a different, more complete
   path (`RoadmapComparisonSnapshot.artifact_digests`, covering all 4
   artifacts, changed or not), making these two fields redundant as well as
@@ -9997,10 +9982,9 @@ longer describes current work. It is retained only as dated carve-out context.
 **#421 — `--compare`'s companion-mode rejection list is only tested for 1 of ~8 sibling modes**
 
 - **What:** `_roadmap_comparison_has_conflict` hand-enumerates roughly 9
-  sibling mode-presence predicates (`_has_receipt_creation`,
-  `_has_structural_rewrite`, `_has_feedback_reopen`,
-  `_has_candidate_lifecycle_action`, `_broad_mode_companions_present`,
-  etc.) that `--compare` must reject as companions. The guarantee is
+  sibling mode-presence predicates (`_has_decision_settlement`,
+  `_has_candidate_lifecycle_action`, `revise_feedback`,
+  `_broad_mode_companions_present`, etc.) that `--compare` must reject as companions. The guarantee is
   correct today (verified by reading the function), but
   `tests/cli/test_roadmap_cmd.py` only exercises 1 of the ~8 groups
   (`apply` only; the `confirm_brief_rebind` group was removed 2026-11-05) against `--compare` — a future new
@@ -10010,7 +9994,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Effort:** small — add one test case per untested companion group
   (~7 more), following the existing pattern in
   `test_comparison_rejects_companion_modes_before_comparison_loading` and
-  its sibling `--confirm-brief-rebind` test.
+  the existing `apply` case.
 - **Risks / fallout:** none — pure test-coverage addition, no production
   code change implied.
 - **Dependencies:** none.
@@ -10065,7 +10049,9 @@ longer describes current work. It is retained only as dated carve-out context.
   (`check_component_constraint_references`,
   `check_prioritized_constraint_discharge`). The prose name and the schema
   name don't match, which reads as if `discharges` were a quotable field name
-  when it isn't one.
+  when it isn't one. `ROADMAP_FORMAT.md:442` already pairs the prose with
+  `(constraint_ids)` and the gate table (lines 1734-1735) names the field, so
+  what remains is wording only (lines 21, 288, 421).
 - **Effort:** small — doc wording only, no code or schema change.
 - **Approach:** direct.
 - **Origin:** 2026-09-17, noticed incidentally while reading
@@ -10137,7 +10123,8 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Quality:** `grounding` — stops a positional collision from asserting work
   was done.
 - **Origin:** 2026-08-03, xhigh review of `intent-required`; surfaced as the
-  pre-existing half of the intent finding at `create.py:4919`.
+  pre-existing half of the intent finding in `_preserve_on_disk_step_fields`
+  (`create.py:7781`).
 - **Status:** not started.
 
 **#263 — `scope-out`'s forward-seed doesn't reference the commits/reports carrying the carved region's prior design work**
@@ -10212,7 +10199,7 @@ longer describes current work. It is retained only as dated carve-out context.
   registry leaf" — the ≥2-samples rule lives in whatever caller builds that
   mapping today (same-execution multi-pass), not in the detector. Meanwhile
   `classify_impact_recurrence` / `classify_edit_drift`
-  (`plan_tool/convergence_diagnosis.py:895,950`) already read
+  (`plan_tool/convergence_diagnosis.py:1437,1352`) already read
   `build_collapsed_completeness_passes(history)` — cross-round persisted-history
   plumbing that a caller could equally use to build `consensus_targets` from
   round-over-round findings instead of live same-invocation passes. Nothing
@@ -10239,7 +10226,9 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** 2026-08-12, mid-audit on `batch-authoring-observability`,
   discussing why `--audit-passes 1` and `arm-clustering` are currently
   mutually exclusive.
-- **Status:** not started.
+- **Status:** plan-authored: `docs/implementation-plans/2-arm-clustering-cross-round-consensus.md`
+  (status `planning`, registered in `.plan-tool/plans.json`); implementation
+  has not started.
 
 **#265 — `split` (and similar detail-authoring commands) should default to `--no-detail` when the target plan is bare**
 
@@ -10324,8 +10313,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **What:** `plan_tool/roadmap_seed_state.py`'s `load_seed_state`/
   `write_seed_state` read the whole sidecar, let a caller mutate it, and write
   it back with no lock. Every entry point that touches an individual plan's
-  entry — `--refresh-seeds`, `--apply`, and (once
-  `roadmap-seed-materialization` ships) `--materialize` and `--accept-seed` —
+  entry — `--refresh-seeds`, `--apply`, `--materialize`, and `--accept-seed` —
   goes through this same unlocked cycle. Two concurrent operator-run
   processes touching the same roadmap's sidecar (even for different plan
   ids) silently drop whichever wrote first, with no warning either side
@@ -10361,7 +10349,7 @@ longer describes current work. It is retained only as dated carve-out context.
   "match the code that exists now." The four stage prompts deliberately never
   read the repository, so this prompt is the roadmap arc's only repo-aware
   surface — and it has no posture for a repository with no code yet.
-  `_render_seed_materialize_prompt` (`plan_tool/roadmap.py:2263`) interpolates
+  `_render_seed_materialize_prompt` (`plan_tool/roadmap.py:3386`) interpolates
   only `slug`, `plan_id`, and the four artifact texts; nothing tells the model
   the tree is empty, so on a greenfield run the model is left to infer
   structure from a README or invent plausible file paths, and the seed carries
@@ -10579,8 +10567,9 @@ longer describes current work. It is retained only as dated carve-out context.
   enforcement, while a broad telemetry or policy system would create a new
   cross-pipeline authority surface without proving it helps. The evidence set
   therefore remains bounded and source-linked.
-- **Dependencies:** **#181** supplies the persisted declaration; **#182**
-  supplies the completed advisory authoring context.
+- **Dependencies:** **#181** and **#182** (the persisted declaration and the
+  completed advisory authoring context) shipped via the archived
+  `2-risk-profile-1.md` and `2-risk-profile-2.md` plans.
 - **Outcome:** one dated record, linked from
   `plan-seeds/risk-profile-3-advisory-effectiveness.md`, classifies each
   reviewed case and records a user-selected disposition: retain advisory
@@ -10625,9 +10614,9 @@ longer describes current work. It is retained only as dated carve-out context.
   (`ECONNRESET`, `network error`, `timeout`, `connection reset`, matched by
   `backend._CLAUDE_TRANSIENT_PATTERN`) gets only
   `DEFAULT_MAX_TRANSIENT_RETRIES=2` attempts at
-  `DEFAULT_TRANSIENT_BASE_DELAY=2.0`s exponential backoff (`shell.py:156-157`)
+  `DEFAULT_TRANSIENT_BASE_DELAY=2.0`s exponential backoff (`shell.py:157-158`)
   before `TERMINAL`, halting `run_step()`'s blocking claude-call gate
-  (`docs/RUN_FLOW.md` step [6]) within ~6 seconds with no automatic resume.
+  (`docs/how-to/pipeline/run.md` step [6]) within ~6 seconds with no automatic resume.
   Long-running: a call already deep into real work whose connection dies
   silently blocks; `backend_runner.py`'s heartbeat kills it after 900s
   (`_KILL_AFTER_SILENCE_S`), recording `TerminationReason.SILENCE_TIMEOUT` and
@@ -10684,11 +10673,11 @@ longer describes current work. It is retained only as dated carve-out context.
   unless a caller needs a non-default override), `plan_tool/shell.py`
   (`claude_invoke`/`claude_invoke_outcome` gain the new opt-out parameter and
   forward it — `run_with_rate_limit_recovery` has only two direct call sites,
-  `launcher.py:679` and `shell.py:760`, and `shell_local_revision_invoker`
+  `launcher.py:716` and `shell.py:768`, and `shell_local_revision_invoker`
   reaches the leaf two layers down through `claude_invoke`, which already
   declares and forwards `wait_on_rate_limit`/`max_transient_retries` by name
   with no generic passthrough), `roadmap_revision_run.py:shell_local_revision_invoker`
-  (sets the new opt-out), `docs/RUN_FLOW.md`, `DATA_CONTRACT.md` (the
+  (sets the new opt-out), `docs/how-to/pipeline/run.md`, `DATA_CONTRACT.md` (the
   `backend_recovery_wait.reason` table, `DATA_CONTRACT.md:850`, currently
   documents only `"rate_limit"` / `"transient"`), `RUNBOOK.md`, `TESTING.md`,
   `tests/`. **Not** `plan_tool/backend_runner.py` — it already exposes the
@@ -10742,7 +10731,7 @@ longer describes current work. It is retained only as dated carve-out context.
 
 - **What:** evaluate and migrate the remaining prompt and human-availability
   routes through the landed record protocol or a deliberately revised
-  successor. `HUMAN_IO_FORMAT.md`, the focused review-walk proof, and the
+  successor. `docs/reference/contracts/human-io.md`, the focused review-walk proof, and the
   completed closed `cmd_review` non-TTY entry establish the narrow starting
   point; they do not select a repository-wide policy.
 - **Why:** the remaining routes can have different destructive-confirmation,
@@ -10786,8 +10775,9 @@ longer describes current work. It is retained only as dated carve-out context.
 
 **#329 — Validate the exact root-enrollment journal before pre-enrollment recovery**
 
-- **What:** Before `plan_tool/roadmap.py:enroll_roadmap_root()` recovers a
-  pending root-enrollment journal, verify that its members are exactly the
+- **What:** Before `plan_tool/roadmap.py:_publish_root_version` (via
+  `build_root_enrollment_generation` and `publish_roadmap_generation`)
+  recovers a pending root-enrollment journal, verify that its members are exactly the
   root version record, brief, fixed artifact inventory, and final accepted-head
   selector for one root version. Refuse any other journal without recovery or
   capture.
@@ -10953,7 +10943,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Dependencies:** the current narrow `_archive_normalized_artifact`
   correction must first stabilize its boundary: recover an observed
   pre-existing collision, retry publication once, and leave a reappearing
-  destination untouched. `HUMAN_IO_FORMAT.md` and #322 provide the existing
+  destination untouched. `docs/reference/contracts/human-io.md` and #322 provide the existing
   headless request/resolution proof, but this item must explicitly decide
   whether that record shape can carry artifact contention rather than assume
   it generalizes.
@@ -11198,7 +11188,7 @@ longer describes current work. It is retained only as dated carve-out context.
 **#430 — Investigate whether the same-receipt re-entry return in the batch proposal path can ever fire**
 
 - **What:** `_run_batch_candidate_proposal` in
-  `plan_tool/roadmap_candidate_run.py` (~line 1445) returns the stored active
+  `plan_tool/roadmap_candidate_run.py` (line 1587) returns the stored active
   candidate without a model call when
   `active.evidence.batch_receipt == capsule.receipt`. While a candidate is
   active, the new capsule is built with that candidate as its `source`
@@ -11258,16 +11248,16 @@ longer describes current work. It is retained only as dated carve-out context.
   `docs/implementation-plans/archive/plan-details/roadmap-versioned-feedback-revision-chain.3/`
   name tests in backticks. Machine-verified 2026-09-23 (method: every backticked
   `test_*` identifier in a detail file, matched against every `def test_*` in
-  `tests/**/*.py`): 212 names cited, 116 defined, 96 not defined. Per step
-  (cited/defined): 1: 15/10, 2: 8/1, 3: 12/0, 4: 16/2, 5: 34/25, 6: 34/22,
-  7: 22/13, 8: 29/20, 9: 17/17, 10: 16/2, 11: 9/4. The executor may have covered a
+  `tests/**/*.py`; re-run 2026-11-14): 212 names cited, 95 defined, 117 not
+  defined. Per step (cited/defined): 1: 15/9, 2: 8/0, 3: 12/0, 4: 16/2,
+  5: 34/24, 6: 34/8, 7: 22/10, 8: 29/19, 9: 17/17, 10: 16/2, 11: 9/4. The executor may have covered a
   behavior under another name, so a missing name is a claim to check, not proof the
   behavior is untested. Equally, a defined name does not prove the test asserts what
   the detail says; this entry does not audit that.
 - **Why:** a detail that names tests that do not exist misleads its readers and
   re-triggers the same `reconcile-code` finding. The run's `enforce_step_tests` gate
   only checks that a test file was touched, so it cannot catch this.
-- **Effort:** medium — 96 names, about 40 of them in steps 3, 4 and 10. Each is a
+- **Effort:** medium — 117 names, about 40 of them in steps 3, 4 and 10. Each is a
   lookup (is the behavior covered under another name?) followed by a corrected
   citation, a new test, or a dropped claim.
 - **Risks / fallout:** small. Detail edits are text and any new test is additive.
@@ -11788,17 +11778,17 @@ longer describes current work. It is retained only as dated carve-out context.
 - **What:** `roadmap-versioned-from-birth` step 12 swept the roadmap docs, but
   these live docs still name a removed route (`--from-stage`,
   `--confirm-brief-rebind`, `--enroll-version`, `--reopen-feedback`, escalation,
-  impact analysis, or structural rewrite) or link a deleted `ROADMAP_FORMAT.md`
-  anchor: `CAPABILITIES.md` (including its `#stage-re-entry-selection-and-bounded-feedback`
-  link), `docs/how-to/use-cases.md`, `docs/how-to/common-workflows.md`,
-  `docs/reference/commands.md`, `docs/reference/contracts/codex-cli.md`, and
-  `BUG_BACKLOG.md`'s settled-decision source-admission entry.
+  impact analysis, or structural rewrite): `CAPABILITIES.md` (not yet in the
+  guard's file list) and `docs/reference/contracts/codex-cli.md` (§ "Structural
+  evaluator capability profile"). `docs/how-to/use-cases.md`,
+  `docs/how-to/common-workflows.md`, `docs/reference/commands.md`, and
+  `BUG_BACKLOG.md` are already in `_REMOVED_ROUTE_DOC_FILES` and pass.
 - **Why:** each reads as current behavior and sends a reader to a refusal.
 - **Effort:** small — doc edits plus extending the removed-route guard's file list.
 - **Approach:** `direct`.
 - **Outcome:** no live doc names a removed roadmap route outside dated history.
-- **In scope:** the files above; adding them to `_REMOVED_ROUTE_DOC_FILES` in
-  `tests/test_roadmap_format.py`.
+- **In scope:** the two files above; adding `CAPABILITIES.md` to
+  `_REMOVED_ROUTE_DOC_FILES` in `tests/test_roadmap_format.py`.
 - **Out of scope / Non-goals:** any replacement route for structural rewrite or
   revision restore.
 - **Verification:** the extended `test_live_roadmap_docs_name_no_removed_route`
@@ -11830,7 +11820,7 @@ longer describes current work. It is retained only as dated carve-out context.
     `roadmap.py` sets them (no `replace(result, ...)` either), so the three CLI
     helpers that read them (`_feedback_summary_lines`,
     `_newly_settled_summary_lines`, `_seed_invalidation_summary_lines`, called
-    at `cli/roadmap_cmd.py:533-537`) always print nothing in production; only
+    at `cli/roadmap_cmd.py:554-558`) always print nothing in production; only
     `tests/cli/test_roadmap_cmd.py` builds results that populate the fields;
   - producer-less stage-loop names (added 2026-10-06, code review 2; checked with
     `rg -n "\bNAME\b" plan_tool tests`): the `source_recheck` parameter of
@@ -12052,11 +12042,11 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Verified (2026-10-08, partial):** a retry's prompt carries no failure
   information at all. `plan_tool/prompts/run.md` has no `status_note` variable,
   and `plan_tool/renderer.py` never reads `status_note`. The note exists only in
-  the plan file: the first 400 characters (`launcher.py:1982`) of the
-  500-character tail that `_run_test_gate` returns (`launcher.py:931`). So (a)
+  the plan file: the first 400 characters (`launcher.py:2228`, `:2278`) of the
+  500-character tail that `_run_test_gate` returns (`launcher.py:965`). So (a)
   renders the previous gate's failed test ids into the retry prompt, not only a
   longer note. A run that advances the step clears the note
-  (`launcher.py:2087`). A stale note survives only a hand-advanced step, which
+  (`launcher.py:2345`). A stale note survives only a hand-advanced step, which
   `run --accept` (shipped 2026-10-10) closes. Second instance: `roadmap-stack-propagation` step 1, observed
   2026-10-08. After `.tmp/roadmap-stack-propagation.run.log` failed on one test,
   the re-run (`run-step1-retry2.log`, 48 s) modified no declared file.
@@ -12290,27 +12280,28 @@ longer describes current work. It is retained only as dated carve-out context.
 - **What:**
   - 12 assertions in 4 test files match a phrase containing a hard line break
     taken from hard-wrapped prose:
-    - `tests/test_create.py:16872`
-    - `tests/test_roadmap_candidate_run.py:1642`, `:1856`, `:1907`, `:1909`,
-      `:1941`, and `:2000`
-    - `tests/test_roadmap_format.py:544`, `:547`, and `:549`
+    - `tests/test_create.py:17205`
+    - `tests/test_roadmap_candidate_run.py:1675`, `:1942`, `:1993`, `:1995`,
+      `:2027`, and `:2086`
+    - `tests/test_roadmap_format.py:550`, `:553`, and `:555`
     - `tests/cli/test_inspect_cmds.py:704` and `:706` (against `CLAUDE.md`)
   - This contradicts the rule the repository already states at
-    `tests/test_roadmap.py:889-895` (`_flattened`): "a rewrap that changes no
+    `tests/test_roadmap.py:959` (`_flattened`): "a rewrap that changes no
     words must not redden a check".
   - Count method: a search over `tests/` for quoted literals containing
     `[a-z,;:\`)]\n[a-z\`(]` followed by ` in `. Structural line breaks were
     then excluded: heading-then-body, fenced blocks, paragraph boundaries, and
     multi-line record bodies. Those are `tests/test_concept_sync.py:177` and
-    `:193`, `tests/test_jira.py:956` and `:974`, `tests/test_create.py:11508`,
-    `:15767`, `:15783`, `:15801`, and `:15802`,
+    `:193`, `tests/test_jira.py:956` and `:974`, `tests/test_create.py:11867`,
+    `:16045`, `:16061`, `:16079`, and `:16080`,
     `tests/test_roadmap_revision_patch.py:672-673`, and
     `tests/cli/test_roadmap_cmd.py:6908`. Those excluded assertions pin
     structure, not wrapping, and stay.
 - **Why:** a no-word rewrap fails a test, and the fix that comes naturally is
   restoring the old wrap rather than correcting the test. Observed 2026-10-08:
   the step-2 hand fix of `roadmap-stack-propagation` was "restoring a pinned
-  prompt line break" (`b77efc10`) for `tests/test_create.py:16872`.
+  prompt line break" (`b77efc10`) for the `tests/test_create.py:17205`
+  assertion.
 - **Effort:** small. The same edit at 12 named sites.
 - **Risks / fallout:** none expected. The flattened phrase still pins the words
   and their order.
@@ -12321,7 +12312,7 @@ longer describes current work. It is retained only as dated carve-out context.
   with whitespace-collapsed text.
 - **Out of scope / Non-goals:**
   - Consolidating the whitespace normalizers that already exist in several test
-    files (`tests/test_roadmap.py:889`, `tests/test_roadmap_feedback_format.py:91`,
+    files (`tests/test_roadmap.py:959`, `tests/test_roadmap_feedback_format.py:89`,
     `tests/test_data_contract.py:840`, `tests/test_detail.py:1144`,
     `tests/test_roadmap_format.py:354`). That is consolidation without
     machine-verified identity evidence.
@@ -12339,8 +12330,8 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Route:** `direct` · **Readiness:** `ready` · **Tier:** `beginner`.
   **Principle:** `none` (test hygiene, and no principle is served directly).
 - **Start here:** the 4 test files above.
-- **Precedent:** `_flattened` at `tests/test_roadmap.py:889-895` and its uses at
-  `:1316`, `:1409`, `:1416`, and `:1545`.
+- **Precedent:** `_flattened` at `tests/test_roadmap.py:959` and its uses, for
+  example at `:1391`, `:1484`, `:1491`, and `:1502`.
 - **Settled decisions to respect:** assert keys, not words, where a key exists
   (`CLAUDE.md` § "Tests"). Changes to `CLAUDE.md` need `architect` review, but
   `tests/cli/test_inspect_cmds.py` only reads `CLAUDE.md`, so this item does not
@@ -12534,8 +12525,8 @@ longer describes current work. It is retained only as dated carve-out context.
 **#476 — Convert the legacy `Approach:` tag to Route/Readiness in one mechanical pass and guard it with a presence test**
 
 - **What:** two label vocabularies coexist. `BACKLOG.md` has 204
-  `- **Approach:**` lines and 41 `- **Route:**` lines; `BUG_BACKLOG.md` has
-  47 and 18. `docs/TRACKING.md:99-101` teaches readers to map the older
+  `- **Approach:**` lines and 72 `- **Route:**` lines; `BUG_BACKLOG.md` has
+  51 and 36. `docs/TRACKING.md:99-101` teaches readers to map the older
   `Approach:` tag onto Route. `:129-131` says "Label an entry when you next
   touch it. No bulk pass over the untouched entries", because
   keyword-style bulk *sizing* misjudged tiers.
@@ -12562,15 +12553,15 @@ longer describes current work. It is retained only as dated carve-out context.
 
 **#477 — Give `BUG_BACKLOG.md` entries stable ids so code and tests cite them by id instead of by title**
 
-- **What:** `docs/TRACKING.md:756-757` says "`BUG_BACKLOG.md` entries are
+- **What:** `docs/TRACKING.md:771-772` says "`BUG_BACKLOG.md` entries are
   titled headings with no id", and `tests/test_backlog_ids.py` deliberately
   skips that file. Code therefore cites bugs by title or not at all: there
-  are 23 `BUG_BACKLOG` mentions under `plan_tool/`, three of them a bare
-  "See BUG_BACKLOG." with no title (`create.py:11787`,
-  `data_contract.py:631`, `review.py:1776`). Two title citations no longer
-  resolve, and only git history says why: `tests/test_launcher.py:2784`
+  are 21 `BUG_BACKLOG` mentions under `plan_tool/`, four of them a bare
+  "See BUG_BACKLOG." with no title (`create.py:12022`,
+  `data_contract.py:643`, `review.py:1837`, `review.py:1862`). Two title citations no longer
+  resolve, and only git history says why: `tests/test_launcher.py:2853`
   cites "`run` advances a step whose `creates:`…", an entry removed when the
-  bug was fixed (`4fc168027`); `completeness_report.py:1293` cites "The
+  bug was fixed (`4fc168027`); `completeness_report.py:1502` cites "The
   persisted report withholds ``suggested_action``", fixed in `72de18d29`,
   a title no backlog file has ever carried. Both are stale citations of
   fixed bugs, to be cleaned up with the rest. A title is not a stable
@@ -12595,8 +12586,8 @@ longer describes current work. It is retained only as dated carve-out context.
 
 **#478 — Separate tracking guidance from the catalog and split the backlog catalog by area**
 
-- **What:** `BACKLOG.md` is 12,943 lines, `docs/TRACKING.md` is 1,095, and
-  `BUG_BACKLOG.md` is 1,849. Guidance (rules, recipes, label tables) is
+- **What:** `BACKLOG.md` is about 13,500 lines, `docs/TRACKING.md` is 1,107, and
+  `BUG_BACKLOG.md` is 2,155. Guidance (rules, recipes, label tables) is
   mixed in with the catalog, so a reader or a session loads most of a file
   to find one entry or one rule, and duplicated guidance drifts (the TRACKING.md recipe skipped the bare-plan audit until 2026-10-10).
 - **Outcome:** a decision on whether to split. If yes, guidance lives only
@@ -12712,10 +12703,12 @@ longer describes current work. It is retained only as dated carve-out context.
 
 - **What:** `detail` runs a completeness audit after authoring and writes a
   report under `plan-details/<plan>/reports/`. `detail --help` states this
-  only under `--no-completeness`, and the run does not announce it. Integration
-  operators found the reports only by listing the reports folder during the
+  only under `--no-completeness`. The run's console output already names the
+  audit (`cli/authoring.py:2269`) and the saved report path
+  (`cli/completeness_phases.py:4029`); the `detail` subparser has no
+  description. Integration operators found the reports only by listing the reports folder during the
   2026-10-10 roadmap-to-plan run.
-- **Effort:** small; help text, one console line, and the directive.
+- **Effort:** small; the argparse description and the directive.
 - **Risks / fallout:** none beyond help-text golden tests.
 - **Dependencies:** none.
 - **Outcome:** `detail --help`'s description and the run's console output
@@ -12750,8 +12743,11 @@ longer describes current work. It is retained only as dated carve-out context.
   scoping and isolation claims only for resources whose creation pattern it
   defines; resources the toolchain creates and needs to operate are out of
   scope and stated as such.
-- **Effort:** small to medium; a directive and a Gate 2 prompt clause, plus an
-  audit-report field listing the plan's declared exceptions.
+- **Effort:** small to medium; the directive ships at
+  `integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
+  for resources the plan creates". Remaining: a Gate 2 prompt clause in
+  `plan-audit.md` plus an audit-report field listing the plan's declared
+  exceptions.
 - **Risks / fallout:** an exception list can hide a real gap; the list must be
   explicit, each entry carrying its reason, and visible in the report.
 - **Dependencies:** none.
@@ -13011,7 +13007,8 @@ longer describes current work. It is retained only as dated carve-out context.
 
 **#493 — Supply selected shared application context to plan authoring and completeness audits**
 
-- **What:** if #492 establishes missing delivery, make the approved shared
+- **What:** if a delivery need is separately demonstrated (#492 closed
+  `no-action` for the studied journey), make the approved shared
   composition record visible to `create`, `detail` and `completeness-audit`
   with its selected source and revision, without asking each plan to restate it.
 - **Effort:** medium; bounded input/provenance threading through three consumers
@@ -13057,7 +13054,9 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Route:** `plan` · **Readiness:** `evidence-gated` · **Tier:** `architect`.
   **Principle:** `converge-on-correct-plan`.
 - **Arc assignment:** `backlog-arc-roadmap`, roadmap-to-plan subroute.
-- **Seed:** none until #492 settles the handoff and build decision.
+- **Seed:** none. #492 closed with a `no-action` disposition for this entry
+  (`docs/explanations/roadmap-plan-handoff.md`); retain the gated entry only
+  for a separately demonstrated delivery need.
 - **Origin:** Integration roadmap-to-plan evidence and owner direction, 2026-10-15.
 
 **#494 — Show a plan's recorded unresolved prerequisites separately from its execution progress**
@@ -13108,7 +13107,9 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Route:** `plan` · **Readiness:** `evidence-gated` · **Tier:** `architect`.
   **Principle:** `deterministic-non-determinism`.
 - **Arc assignment:** `backlog-arc-roadmap`, roadmap-to-plan subroute.
-- **Seed:** none until #492 establishes the distinct need and representation.
+- **Seed:** none. #492 closed with a `no-action` disposition for the studied
+  journey (`docs/explanations/roadmap-plan-handoff.md`); the entry stays gated
+  on a newly demonstrated need.
 - **Origin:** Integration roadmap-to-plan pilot, 2026-10-15.
 
 **#516 — Decide which seed files directory-wide annotate includes**
