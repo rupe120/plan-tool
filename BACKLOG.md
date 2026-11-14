@@ -626,6 +626,7 @@ working straight down the tiers.
 
 **#365 — Reconcile authored-artifact documentation and planning-manifest discoverability**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** document `plan_tool/detail_artifacts.py` as the owner of the live
   run-grade detail version contract in `docs/ARCHITECTURE.md`, and reconcile
   the `Authored plans` manifest with the current planning-plan set (including
@@ -708,6 +709,7 @@ working straight down the tiers.
 
 **#385 — `roadmap --view status --json`: one machine-readable state projection**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** no roadmap view emits JSON
   (`--view {summary,walk,ledger,index,seeds,html}` are all human renders). A caller that wants to know where a roadmap *is* — whether it has an
   accepted head and which version, which feedback rows are open or awaiting
@@ -1066,6 +1068,7 @@ working straight down the tiers.
 
 **#332 — Install the run-log sink for developer-doc research in `create`**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
 - **What:** the developer-doc research call (`propose_references`) runs with no
   run-log sink, so its usage, cost and failure evidence are lost and the call
   warns that nothing saved them. Install the run-log sink for it, so the
@@ -1177,6 +1180,7 @@ working straight down the tiers.
 
 **#175 — Jira-readiness deterministic checks: HEAD-anchor verification and footprint coherence in `jira --lint` / `validate`**
 
+- **Labels:** Route `direct` · Readiness `decision-needed` · Tier `experienced`
 - **What:** extend `jira --lint` / `validate` with two deterministic checks
   that judge a detailed plan against one question — *can each step be handed
   to an implementer as an atomic story?* — with no model call and no new verb:
@@ -1373,6 +1377,7 @@ working straight down the tiers.
 
 **#66 — Contract-trace / path-enumeration audit mode (deterministic complement to the conceptual sampler)**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `architect`
 - **Principle:** `deterministic-non-determinism` — the T3 band: a deterministic complement to the conceptual sampler.
 - **What:** A second completeness-audit mode that, instead of asking Claude to
   read the plan's prose and stochastically reason about it, materializes the
@@ -1455,6 +1460,7 @@ working straight down the tiers.
 
 **#312 — Ground `detail` authoring in the plan's fetched reference-doc content instead of a bare link list**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
 - **What:** `detail.py` hands each step's authoring prompt only the plan's
   `## References` bullets — title/url/one-line description, lifted verbatim
   by `extract_plan_references` — and instructs the subprocess to
@@ -1509,6 +1515,7 @@ working straight down the tiers.
 
 **#156 — Make the conceptual-audit sampler key on the `[out-of-scope-deferred]` tag (currently prompt/operator convention only)**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** The scope-contract reconciliation (see [Scope contract and
   anti-creep](docs/TRACKING.md#scope-contract-and-anti-creep) and `prompts/plan-audit.md`) has
   the audit emit valid-but-adjacent findings tagged `[out-of-scope-deferred]`
@@ -1650,6 +1657,7 @@ working straight down the tiers.
 
 **#120 — Close the partial-mutation retry guard's baseline-instant fail-open**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** the shipped response-A guard
   (`plan_tool/git_state.py:make_partial_mutation_retry_guard`) detects partial
   mutations via a git changed-**paths** delta. A baseline read that fails
@@ -1696,6 +1704,7 @@ working straight down the tiers.
 
 **#230 — Extend the shipped `--time-budget` stop to durable batch boundaries**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
 - **What:** `--time-budget` already stops the convergence loops cleanly. Extend
   the same cooperative deadline posture to the two long-lived surfaces that do
   not route through `convergence.should_continue`: the non-reconcile `run`
@@ -1725,6 +1734,7 @@ working straight down the tiers.
 
 **#135 — Concurrent `reconcile-code` invocations should fail with a clear message**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **Shipped 2026-08-16:** `reconcile-code <name> --all` sweeps every plan step
   in order (including `done` steps, skipping explicit `non-code` steps). The
   documented "no remaining drift" signal is the full sweep's printed per-step
@@ -1758,6 +1768,7 @@ working straight down the tiers.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** A read-only sweep that scans a Jira project and links each local
   plan-story ID (the epic-scoped label the plans use, e.g. `AIHARD-S38b`,
   `VNDSFTP-S29`, `NOTIF-S01`) to its real Jira issue key (e.g. `PS-197`) and
@@ -1826,6 +1837,7 @@ working straight down the tiers.
 
 **#143 — Code-truth verification of status divergences: feed #142's divergent stories through the existing step-coverage verifiers, report only**
 
+- **Labels:** Route `plan` · Readiness `blocked-on #142` · Tier `experienced`
 - **What:** a follow-up to #142 that takes its divergence list and runs each
   divergent story, **serially**, through the existing step-coverage verifiers
   (`verify-all` / `reconcile-code`), reading the story's acceptance criteria
@@ -1876,6 +1888,7 @@ working straight down the tiers.
 
 **#190 — Refuse `reconcile-plan` on steps an execution already implemented**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `reconcile-plan` is code-canonical — it treats the code on disk as
   truth and mutates the plan/detail to match. That is correct **before**
   execution (re-grounding a plan whose codebase moved on since authoring) and a
@@ -1963,6 +1976,7 @@ working straight down the tiers.
 
 **#192 — Conceptual findings carry a machine-readable step id**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** every conceptual finding (`plan-correctness` / `plan-completeness`)
   is saved with `step_id = None`; all eight findings in the reviewed sample
   carry that value. The step is named only in prose ("Step 9 (`slug`)"). Have the audit prompt attribute
@@ -2152,6 +2166,7 @@ working straight down the tiers.
 
 **#195 — Inject lessons into `detail` authoring only behind the `--lessons` opt-in**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `render_lessons_block(load_lessons(...))` runs on every `detail`
   authoring prompt (`plan_tool/detail.py`, the `${lessons_block}` render)
   unconditionally, over a 1.6 MB store matched by `when:` conditions. Gate that
@@ -2207,6 +2222,7 @@ working straight down the tiers.
 
 **#198 — Plan provenance in git: structured trailers on green and archive commits, and `list --archived` read from the git log**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** make "which plans were actually implemented, and where did that land
   in git?" answerable by machine, using git as the only store. Two parts:
   **(a)** structured `Plan-Slug: <slug>` and `Plan-Step: <n>` trailers on
@@ -2273,6 +2289,7 @@ working straight down the tiers.
 
 **#202 — Acceptance-criterion test references: each criterion names its test, and the check verifies the test exists**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** the run-grade detail format requires each `## Acceptance criteria`
   bullet to name the test function(s) that assert it, and a deterministic check
   verifies that every named test function exists in the repo. A criterion with
@@ -2394,6 +2411,7 @@ working straight down the tiers.
 
 **#216 — A quality benchmark for plan-tool's own output, floors first** *(anchor entry for the `quality-bench-NN-*` seed group)*
 
+- **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
 - **What:** one disposable observation of each metric's own rerun spread,
   run **only when a concrete "did change X help?" question exists** that the
   spread would let someone answer. A corpus replay that stores artifacts and
@@ -2668,6 +2686,7 @@ working straight down the tiers.
 
 **#395 — Selector-era candidate lineage has no discard route: check whether any enrolled roadmap holds one**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `--reject-candidate` and `--discard-candidate` release only an active
   *batch* candidate: `roadmap_candidate_review.py:_release_active_candidate`
   refuses a candidate with no batch receipt or root ("terminal review resolution
@@ -2769,6 +2788,7 @@ working straight down the tiers.
 
 **#403 — `plan-tool doctor`: fix the stale `docs/GATES.md` reference and file readiness checks individually**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** no `plan-tool doctor` command is built. Three bounded actions replace
   the former spike: (1) fix or remove the `plan-tool doctor` line in
   `docs/GATES.md` § "Correctness checks (shipped, follow-ups deferred)", which
@@ -2823,6 +2843,7 @@ working straight down the tiers.
 
 **#404 — Decide the completeness audit's intent-fidelity boundary**
 
+- **Labels:** Route `plan` · Readiness `decision-needed` · Tier `architect`
 - **What:** settle whether and how the bare-plan completeness audit judges a
   generated plan against its declared intent and originating seed. Replace the
   current blanket instruction — “do not raise a finding that work disagrees
@@ -3174,6 +3195,7 @@ working straight down the tiers.
 
 **#262 — Bare-stage report header: one static line that detail is the next step**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** the bare-stage completeness report (the one that labels exact
   detail coverage) carries one static line in its header: *"Remaining
   detail-owned remedies are expected; with no HIGH/CRITICAL plan-correctness
@@ -3236,6 +3258,7 @@ working straight down the tiers.
 
 **#167 — Make plain English the default writing style for every generated plan-detail file**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `experienced`
 - **What:** Change the `plan-tool detail` prompts so every generated per-step
   detail file is understandable in plain English on a first read. The change is
   a prompt-rubric delta: compare the rubric below with what
@@ -3339,6 +3362,7 @@ working straight down the tiers.
 
 **#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
+- **Labels:** Route `plan` · Readiness `ready` · Tier `architect`
 - **What:** make `plan-tool detail` output less verbose with a **compact
   required detail schema** that changes what `detail` authors by default: merge
   Summary+Why into a single `Intent` and drop the Table of Contents. This is
@@ -3414,7 +3438,7 @@ working straight down the tiers.
 
 **#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
-- **Labels:** Route `plan` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `plan` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** a human operator reports difficulty discovering which plan to name for `detail` or `completeness-audit`.
 - **What:** Today only `run` accepts a missing plan name and falls back to an
   interactive picker (`run_cmd.py:_select_open_plan` over `_open_plan_entries`,
@@ -3564,7 +3588,7 @@ working straight down the tiers.
 
 **#381 — Measure whether lesson-equivalence confidence supports its drop threshold**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** instrumentation shows lessons are reused, or a wrong lesson drop (a false drop at the `0.6` floor) is observed.
 - **What:** judge a small, representative set of lesson duplicate and conflict
   pairs, including cases on both sides of the current `0.6` floor. Compare the
@@ -3667,7 +3691,7 @@ working straight down the tiers.
 
 **#111 — Rework the `orphaned-deliverable` identity model — the per-condition directory-token tension is irreducible under a single symbol set**
 
-- **Labels:** Route `direct` · Readiness `parked` · Tier not yet triaged
+- **Labels:** Route `direct` · Readiness `parked` · Tier `experienced`
 - **Unpark when:** the detector misfires (a false positive or false negative) on a real plan.
 - **What:** `detect_orphaned_deliverable` (`plan_tool/review.py`) keys its four
   conditions on a deliverable's path-derived identity symbols. A five-round
@@ -3714,6 +3738,7 @@ working straight down the tiers.
 
 **#110 — Measure `claim-vs-delivery` false-positive rate (incl. fuzzy near-miss misses) and decide its status**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What:** `detect_claim_vs_delivery` (shipped in #100) is deliberately
   **advisory** on `smell_recs` — it never flips rc — until its false-positive
   rate is measured on real plans. This entry is the measurement and the
@@ -3778,6 +3803,7 @@ working straight down the tiers.
 
 **#87 — Hash test files before the call so the test-authoring gate does not depend on `--commit` discipline**
 
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
 - **What (the build, 2026-11-14):** hash each test file before the backend call
   and count a changed content hash after the call as authored, in place of the
   *post-call git-changed delta against a pre-call baseline of dirty paths*. A
