@@ -565,6 +565,94 @@ working straight down the tiers.
   in the roadmap to plan/seed breakdown to encourage a broad array of smaller
   plans."
 
+**#534 — Experiment: from Loom's original stage 1–3 artifacts, can stage 4 produce the plans a human later had to add?**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **What:** a bounded experiment on Loom's `loom-aidlc-mvp` roadmap to choose
+  between the fixes for a thin stage 4 plan list, before building any of them.
+  The plan list is the weak point of the roadmap workflow: it tends to mirror
+  the component list, and nothing checks it for completeness below
+  "every component is on some plan" (`roadmap_gates.check_component_plan_coverage`).
+- **Evidence (Loom at `44c22cc`, read 2026-11-14):**
+  - `loom-aidlc-mvp`'s first stored version (`9590a8964b…`) derived **5 plans
+    from 5 components**, all `keep`. The accepted head (`c7743c56d7…`, recorded
+    in `.roadmap-versions/accepted-head.json`) has **9 plans from the same 5
+    components**, after 21 versions of reviewer feedback. The four plans a
+    human had to add are `repository-browse-and-reference`,
+    `cdk-infrastructure-and-environments`, `static-spa-delivery` and
+    `bitbucket-deployment-pipelines`. All nine were then created in Loom; seven
+    are completed.
+  - Across Loom's seven roadmap lineages, plans per component run 5/5, 5/6, 7/9,
+    9/7, 7/6, 11/7 and 5/5 (lineage folders' `04-roadmap.md`); `split` is rare.
+  - Loom's handoffs record a related finding: "an enumeration in the brief
+    becomes a row count in the roadmap"
+    (`loom/handoffs/2026-09-08-roadmap-exercise-reframe.md`).
+  - The added plans are mostly delivery and infrastructure work that no
+    component owned, so component coverage could not have caught them.
+- **The experiment:**
+  - **Input:** `loom-aidlc-mvp`'s source brief and the stage 1–3 artifacts of
+    its first stored version, copied into a throwaway repository under this
+    clone's `.tmp/`. Never run against Loom's own files and never write to
+    them. Using the first version's inputs keeps the reviewer's later feedback
+    out of the input.
+  - **Reference list:** the accepted head's nine plans. Recall is how many of
+    them a run produces a matching plan for, matched by hand and recorded with
+    the reasoning. Extra plans are listed separately for the owner to judge as
+    useful or noise.
+  - **Arms**, each run twice from the same input with `--from-stage 4`, each
+    from its own throwaway plan-tool branch carrying only that arm's prompt
+    edit:
+    - *baseline* — the current `roadmap-plans.md`, measuring run-to-run spread;
+    - *A* — #533's stage 4 change, plus one line saying the necessity test caps
+      total scope, not the number of plans;
+    - *B* — a prompt-only work inventory: stage 4 first lists each flow hop,
+      store, constraint discharge, producer/consumer handoff and delivery
+      concern (build, deploy, environment) from the artifacts, then assigns
+      every item to exactly one plan. No new gate code.
+  - **Recorded per run:** plan count, disposition mix, recall against the
+    reference with each match, extra plans, attempts, prompt bytes, wall time
+    and cost (§6 of `docs/evidence/roadmap-run-measurements.md` cost about
+    $2.73 per stage 4 run, so six runs cost roughly $15–20).
+  - **Decision the result feeds:** if A recovers the reference list, ship #533
+    with A's line and stop. If B recovers materially more than A, file the
+    work-inventory design (an inventory artifact plus an every-item-owned gate)
+    as a `plan` route at `architect` tier. If neither recovers the delivery
+    plans, check whether the stage 1–3 inputs mention delivery at all before
+    blaming stage 4: that is an input finding, and it goes to the brief and
+    constraints stages instead.
+- **Effort:** small to medium. Copying artifacts, two prompt edits on throwaway
+  branches, six stage 4 runs, and one evidence section.
+- **Risks / fallout:** n=2 per arm on one roadmap is provenance, not proof, and
+  gates nothing. Hand-matching recall is a judgment, so each match is written
+  down. The head's nine plans are one reviewer's answer, not ground truth.
+- **Dependencies:** none. Feeds #533 (hold its merge until arm A is read) and
+  any work-inventory entry filed after it.
+- **Scope contract:**
+  - **Outcome:** a dated section in `docs/evidence/roadmap-run-measurements.md`
+    recording plan count and recall against the reference list for each run of
+    the three arms, and the decision it supports.
+  - **In scope:** the throwaway input copy, the two prompt variants on
+    throwaway branches, the six runs, and the evidence section.
+  - **Out of scope / Non-goals:** deliberately no merged prompt change (#533
+    carries that), no new gate, inventory artifact, schema change or stage
+    split (option C, splitting stage 4 into several calls, is only considered
+    if A and B both fail), no prompt-override flag added to plan-tool, no
+    write to Loom, and no change to Loom's roadmap or plans.
+  - **Allowed behavior changes:** none in shipped code.
+  - **Allowed reorganization:** none.
+  - **Verification:** the evidence section lists, per run, the command, the
+    arm's prompt diff, the counts, and each recall match with its reason.
+  - **Stop / defer:** a defect met while running (a gate, a parse failure, a
+    resume problem) is filed in BUG_BACKLOG.md and the experiment continues if
+    it can.
+- **Origin:** 2026-11-14, owner: "I feel like the list of plans in the roadmap
+  is a tripping point and a weak spot in the overall workflow right now," and
+  "create a backlog item to setup an experiment based on the loom artifacts to
+  attempt to build a more comprehensive list of plans."
+
 **#502 — A refused `create` prints a stable reason token an external driver can read**
 
 - **Labels:** Route `direct`
