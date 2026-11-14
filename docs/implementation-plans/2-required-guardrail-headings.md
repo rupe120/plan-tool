@@ -123,6 +123,7 @@ steps:
   - 1
   depends_on_notes:
     1: the shared guardrail-presence predicate
+  detail: docs/implementation-plans/plan-details/required-guardrail-headings/04-make-roadmap-materialize-refresh-seeds.md
   description: 'Make `roadmap --materialize` and `--refresh-seeds` produce draft seeds
     that carry all three guardrail headings. In `plan_tool/prompts/roadmap-seed.md`,
     add `Scope guardrails`, `Audit guardrails` and `Expected placement` to the required
