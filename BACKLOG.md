@@ -498,6 +498,73 @@ working straight down the tiers.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design and its
   Gate 1 rounds. Cut to a D-only label 2026-11-14.
 
+**#533 — `roadmap` seed materialization lacks the smallest-proof necessity test, and stage 4 does not prefer several small plans over one broad one**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **What:** two prompt changes so a roadmap breaks into a broad array of small,
+  independently verifiable plans whose seeds carry only what the proof needs.
+  (1) `prompts/roadmap-seed.md` writes each draft seed but does not receive the
+  shared smallest-proof boundary that stages 1–4 get
+  (`roadmap-smallest-proof-boundary-header.md` / `-footer.md`, substituted in
+  `roadmap.py` at the `smallest_proof_boundary_header` variable); it carries its
+  own shorter paragraph (`roadmap-seed.md`, "The roadmap row is one part of the
+  roadmap's smallest end-to-end proof…") with no necessity test. `create`
+  preserves a seed's scope as its fence, so a design widened at
+  materialization is carried forward unchallenged. (2) `prompts/roadmap-plans.md`
+  (stage 4) already keeps a plan only when the proof needs it, splits "overly
+  broad scopes into bounded plan rows" and expects several plans per component
+  where needed, but states no preference between one broad plan and several
+  small ones inside the proof.
+- **Evidence:** read from the prompts at HEAD on 2026-11-14. No measured roadmap
+  run shows over-broad plans or over-scoped seeds; this is an owner direction
+  (Origin), not a measured defect.
+- **Effort:** small. Two prompt files and `_render_seed_materialize_prompt`'s
+  variables; no schema or gate change.
+- **Risks / fallout:** a granularity bias can tip into one plan per concern,
+  which `roadmap-plans.md` already forbids ("do not … create a separate plan for
+  every shared concern"); the new line must keep that and the no-target-count
+  rule. Prompt-assembly tests that pin `roadmap-seed.md`'s rendered text change.
+- **Dependencies:** none. Independent of #532, which also edits `roadmap-seed.md`
+  (guardrail headings); whichever lands second rebases its prompt edit.
+- **Scope contract:**
+  - **Outcome:** the seed-materialization prompt carries the shared
+    smallest-proof boundary plus a necessity test for seed scope, and the stage
+    4 prompt states a preference for several small, independently verifiable
+    plans over one broad plan within the proof.
+  - **In scope:** `prompts/roadmap-seed.md` (receive the shared header and
+    footer in place of its own paragraph, plus one necessity line: scope stays
+    in the seed only when the row's result cannot be true without it, and each
+    added abstraction, record or configuration surface needs a current
+    requirement that fails without it); `_render_seed_materialize_prompt`'s
+    substitution; `prompts/roadmap-plans.md` (one preference line: within the
+    proof, prefer several small plans, each with its own verifiable result, over
+    one broad plan, and split where a part can ship and be verified on its
+    own); the prompt-assembly tests.
+  - **Out of scope / Non-goals:** deliberately no target or minimum plan count,
+    no plan-size cap, and no gate, finding or exit-code change on plan or seed
+    size, since "small enough" is a judgment of content. No change to stages
+    1–3, to `create`'s `synthesize-body.md`, or to the roadmap artifact schema.
+  - **Allowed behavior changes:** the two prompts' text, so generated roadmaps
+    and draft seeds may differ.
+  - **Allowed reorganization:** `roadmap-seed.md`'s own smallest-proof
+    paragraph is replaced by the shared header and footer, because two copies
+    of one rule drift.
+  - **Verification:** the rendered seed prompt contains the shared header,
+    footer and necessity line; the rendered stage 4 prompt contains the
+    preference line and still contains the no-target-count and
+    no-plan-per-shared-concern rules (assert keys, not prose). Optionally,
+    re-run a recorded brief and record the plan count as n=1 provenance in
+    `docs/evidence/roadmap-run-measurements.md`; it gates nothing.
+  - **Stop / defer:** if the preference produces fragmented plans on a real
+    run, record it as evidence and file the correction; do not add a count rule.
+- **Origin:** 2026-11-14, owner, after a review found the roadmap seed prompt
+  lacked the necessity test plan creation applies: "we should also include this
+  in the roadmap to plan/seed breakdown to encourage a broad array of smaller
+  plans."
+
 **#502 — A refused `create` prints a stable reason token an external driver can read**
 
 - **Labels:** Route `direct`
