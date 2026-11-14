@@ -108,10 +108,11 @@ uv run pytest tests/test_review.py::TestSomething -q   # single test/class
 
 ## Model selection
 
-**Use the strongest tier for conceptual work (Codex `gpt-6.1-sol`; Claude
-`claude-opus-5-5`) and the working tier for audit, implementation, and validation
-(Codex `gpt-5.6-terra`; Claude `claude-sonnet-5-5`). Cursor passes no `--model`
-and uses Auto.** The general
+**Use the strongest tier for conceptual work (Claude `claude-opus-5-5`) and the
+working tier for audit, implementation, and validation (Claude
+`claude-sonnet-5-5`). Codex uses `gpt-6.1-sol` for both (owner instruction,
+2026-10-14, recorded in `integrations/shared/DIRECTIVES.md`). Cursor passes no
+`--model` and uses Auto.** The general
 rule and its rationale live in the owner's personal user-level `CLAUDE.md` (not in this repository) § "Spend the stronger model
 where a mistake compounds"; the per-subcommand mapping lives in
 [`integrations/shared/DIRECTIVES.md`](integrations/shared/DIRECTIVES.md) §
