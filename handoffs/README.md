@@ -61,29 +61,6 @@ branch, and hand the updated settled-decision list to the next reviewer.
 
 ## Retention
 
-- A **handoff** is deleted, not archived in place, when its work ships or its
-  route is retired; anything durable moves to its canonical home first
-  (`BACKLOG.md`, a plan, `docs/evidence/`). Keep the decisions and evidence needed to continue the work in their canonical documents.
-- A **review ledger** is compressed when its loop closes: keep the summary
-  table, settled decisions, one line per finding with a disposition from the
-  closed set above, the closure paragraph, and every `tracked`/`pending` item.
-  The compressed file keeps the evidence and reasoning needed to understand each decision. Do not remove the sole explanation of a finding or its disposition.
-- A ledger records **how** it closed: converged (two consecutive low-yield
-  passes), stopped by the owner, closed by owner decision, or stopped at exit 2
-  (the loop was auditing its own edits, so it is neither converged nor clean;
-  `CLAUDE.md` § "Driving the convergence loops"). The four are not
-  interchangeable, and a compressed ledger keeps its own label; rows closed
-  before this rule keep the label they carry.
-- Every file in this directory except `README.md` is linked from at least one section
-  below, and every link resolves. Check with
-  `for f in *.md; do [ $f = README.md ] || grep -qF "]($f)" README.md || echo "NOT INDEXED: $f"; done; grep -oE '\]\(([^)#]+\.md)' README.md | sed 's/](//' | sort -u | while read l; do [ -e "$l" ] || echo "DEAD: $l"; done`;
-  empty output means both hold. Run it from `handoffs/`. It does not count sections: a link anywhere in this
-  file counts as indexed, so check that each
-  file also has its own entry in a list or table. A section that routes to a file
-  listed in another section (the release pickup) may link it twice.
-
-## Retention
-
 - A **handoff or workstream section** is deleted, not archived in place, when its work ships or its
   route is retired; anything durable moves to its canonical home first
   (`BACKLOG.md`, a plan, `docs/evidence/`). Keep the decisions and evidence needed to continue the work in their canonical documents.

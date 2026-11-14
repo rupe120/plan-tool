@@ -1397,7 +1397,7 @@ not include them.
   (`ROADMAP_FORMAT.md`) plus `run_roadmap`/`cmd_roadmap`, not scoped to one
   file.
 - **Origin:** 2026-09-21, `/code-review high` round 2 of the
-  `2026-09-21-unpushed-main-code-review` ledger. Predates this ledger's
+  `unpushed-main` code review. Predates this ledger's
   entire reviewed range (present in `origin/main` already); surfaced by
   analogy to a sibling bug the same round found and fixed in
   `_cmd_roadmap_materialize`'s own writer-guard teardown handling. Requires

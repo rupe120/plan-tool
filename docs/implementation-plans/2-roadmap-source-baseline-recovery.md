@@ -64,7 +64,6 @@ steps:
   - tests/test_roadmap_impact_run.py
   - tests/test_roadmap_structural_revision.py
   - docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md
-  - handoffs/2026-08-27-integration-roadmap-evidence-preflight.md
   complexity: medium
   change_type: feature
   status: pending
@@ -101,8 +100,6 @@ are a recovery subsystem, not the smallest proof for one blocked receipt.
 - `ROADMAP_FORMAT.md` — defines canonical roadmap source and admission requirements.
 - `docs/implementation-plans/backlog-arcs/backlog-arc-roadmap.md` — records the
   blocked Integration roadmap evidence arc and this deferral's re-entry condition.
-- `handoffs/2026-08-27-integration-roadmap-evidence-preflight.md` — preserves the exact
-  receipt evidence and operational boundary.
 - `plan-seeds/archive/roadmap-source-baseline-recovery.replaced.md` — retains the
   earlier proposal as history; it is not an active implementation specification.
 

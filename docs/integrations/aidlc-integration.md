@@ -149,13 +149,13 @@ design" as "shipped code" — they're tracked separately below.
 | Item | Status | Reference |
 | --- | --- | --- |
 | The boundary, the role vocabulary, and touchpoints 1–7 above | Settled design, 2026-09-11; none reopened without new evidence | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "Settled decisions" |
-| Stage-run source-identity + strict/relaxed drift policy | **Shipped** | `docs/history/backlog-decisions.md` |
+| Stage-run source-identity + strict/relaxed drift policy | **Shipped** | [`docs/reference/contracts/aidlc-seam.md`](../reference/contracts/aidlc-seam.md) § "Source admission" |
 | Changed-brief rebind confirmation (`BACKLOG` #367) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Carried settled decisions with citations (`BACKLOG` #384) | **Shipped, closed** | `docs/history/backlog-decisions.md` |
 | Per-stage supplementary sources with declared roles (`BACKLOG` #383) | **Held** — waiting on a comparison-proven per-stage grounding gap, not scheduled | `BACKLOG.md`, entry #383 |
 | `roadmap --view status --json` (`BACKLOG` #385) | **Held** — evidence-gated on an orchestration layer having a concrete connector consumer | `BACKLOG.md`, entry #385 |
-| Citation snapshots, obligations, the seam frame, coverage projection (touchpoints 3, 5, 6, 7) | Settled design; not yet built as running code | Same handoff, § "The design" |
-| An orchestrated `roadmap` run against the real AI-DLC corpus | **Has never happened** | The design doc and the intake comparison both state this |
+| Citation snapshots, obligations, the seam frame, coverage projection (touchpoints 3, 5, 6, 7) | Settled design; not yet built as running code | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "The design" |
+| An orchestrated `roadmap` run against the real AI-DLC corpus | **Has never happened** | [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) § "What stays unproven" |
 
 **Explicitly still open** (not decided; don't treat any of these as settled).
 Only the source carrier has been decided, for now: #384 ships on the single

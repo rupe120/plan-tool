@@ -10,8 +10,8 @@ intake nor authorizes the remaining changes here. § "Open design choices"
 lists what is still undecided.** This is the approach-level design for how `roadmap` should evolve so it
 behaves as a well-fitting Inception implementation inside the AI-DLC workflow
 framework. It answers the earlier question of how a brief should reach
-`roadmap`; that intake-ideas handoff was retired 2026-09-29, and its § "How
-this re-ranks the earlier intake ideas" records what became of each idea.
+`roadmap`; the retired intake-ideas handoff's dispositions live in § "How this
+re-ranks the earlier intake ideas" below.
 
 The evidence base has two parts, kept separate on purpose:
 

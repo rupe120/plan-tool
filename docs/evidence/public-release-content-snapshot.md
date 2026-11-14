@@ -37,7 +37,7 @@ vocabulary check, not proof that 81 MB of audit text holds nothing sensitive.
 The 2026-10-20 selection baseline contains 8,200 paths. The frozen candidate
 retained 2,584 of them, including both policy artifacts, and omitted its 5,616
 report paths (since restored; see [Content selection](#content-selection)). The
-owner-approved selection adds these 17 explicit records for a 2,601-path candidate:
+owner-approved selection adds 17 explicit records for a 2,601-path candidate. Two of them, the execution-review and reference-repair-review handoffs under `handoffs/`, were retired 2026-11-13 with the handoff cleanup; the frozen receipts still list them. The other 15:
 
 - `docs/evidence/public-release-audit-next-steps-comparison-20261021.md`
 - `docs/evidence/public-release-content-snapshot-verification-20261020.md`
