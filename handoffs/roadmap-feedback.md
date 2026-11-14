@@ -524,18 +524,17 @@ those capabilities requires a separate decision and plan.
 
 *Opened 2026-09-23.*
 
-> **2026-09-24:** the interim refusal of a `--propose-candidate` batch under a structural candidate (`ae3fb0bc`) was superseded by `roadmap-stack-aware-approval`. Passes 2–4 below record that refusal as it stood.
+> **2026-09-24:** the interim refusal of a `--propose-candidate` batch under a structural candidate (`ae3fb0bc`) was superseded by `roadmap-stack-aware-approval`. P2.1 below records that refusal as it stood.
 
 ### Summary
 
 | Field | Value |
 | --- | --- |
 | Plan | `roadmap-structural-feedback-approval` (`docs/implementation-plans/archive/2-roadmap-structural-feedback-approval.md`), 7 steps (6 code, step 7 non-code), all green |
-| Branch | `codex/roadmap-structural-approval-handoff` (base `main` at `30484873`, PR #18 merged) |
-| Run head (all steps green) | `471aa057` |
-| Checks run | Detail-grounded `completeness-audit --iterate` clean at 7/7 detail coverage (`20260923-220408-completeness.md`); three complete `reconcile-code --all` sweeps over the six code steps (commits `6fa71bfa`, `e15ac3e1`, `d1d2921a`); final full suite green at `75664e74` (13,730 passed, 190 skipped; log `.tmp/roadmap-structural-approval-review.p4-fixes.pytest.log`) |
-| `/code-review` | Pass 1 (`high`, `eb68ba19..d1d2921a`): 8 findings (7 reviewed, P1.8 found during P1.1 class enumeration), 2 high. Pass 2 (`high`, `d1d2921a..65802426`): 3 findings, 1 high. Pass 3 (`high`, `65802426..4561ff6e`): logic and coverage clean, 4 low documentation findings. Pass 4 (`high`, `65802426..b3685c47`): no correctness defect after 51,000 executed transitions, 1 medium coverage and 2 low documentation findings. All findings dispositioned. |
-| Current disposition | Closed by owner decision (2026-09-24), not by the two-consecutive-pass stopping rule: the strict count against the latest logic commit `ae3fb0bc` is one (pass 3), because pass 4 returned a medium finding. See § "Convergence status". The stack direction shipped as `roadmap-stack-aware-approval`; wider run-log coverage stays open (§ "Open owner directions"). |
+| Range | Branch `codex/roadmap-structural-approval-handoff` (base `main` at `30484873`, PR #18 merged); run head `471aa057`; review range `eb68ba19..b3685c47` |
+| Checks | Detail-grounded `completeness-audit --iterate` clean at 7/7 detail coverage (`20260923-220408-completeness.md`); three complete `reconcile-code --all` sweeps over the six code steps (`6fa71bfa`, `e15ac3e1`, `d1d2921a`; no per-sweep triage recorded beyond the commits); final full suite green at `75664e74` (13,730 passed, 190 skipped) |
+| Reviewer | Four independent headless `high` `/code-review` passes: P1 `eb68ba19..d1d2921a` (8 findings, 2 high), P2 `d1d2921a..65802426` (3, 1 high), P3 `65802426..4561ff6e` (logic and coverage clean, 4 low documentation), P4 `65802426..b3685c47` (no correctness defect after 51,000 executed transitions; 1 medium coverage, 2 low documentation) |
+| Disposition | **Closed by owner decision (2026-09-24)**, not by the two-consecutive-pass rule (see Closure) |
 
 ### Settled decisions (hand these to every reviewer)
 
@@ -568,158 +567,48 @@ invalid, not deferrable.
   approval of the whole unpromoted stack (`roadmap-stack-aware-approval`, 2026-09-24).
 - **Run-log coverage.** Every model-calling candidate lifecycle command writes a run-log lifecycle under its own
   phase and mode (propose, question, replacement, and — since `85177a89` — structural edit); reviewer prose stays
-  out of the log (owner direction, 2026-09-24). Decision commands are not covered; see § "Open owner directions".
+  out of the log (owner direction, 2026-09-24). Decision commands are not covered; see Tracked.
 - **Deliberately not** a semantic or quality check on candidate content, a second structural gate on the answered
   route, or a check needing a new persisted field without a consumer the finding breaks.
 - **Documentation-only corrections** are tested for accuracy but do not reset the logic-convergence window.
 - **Project rule edits** need architect-tier review in the PR; this loop does not edit rules.
+- **Whole-stack presentation (decided 2026-09-24; do not reopen).** The interim batch refusal is gone; every approval or
+  confirmation presents the entire unpromoted stack (supersedes the last-hop-only disclosure weighed in passes 3 and 4).
+  There is deliberately no read-only show command: an unconfirmed approve prints the stack and writes nothing, and
+  `--propose-candidate` cannot re-show a candidate because a re-run builds on the active one (#430).
 
 ### Findings
 
-Ids: P1.x pass 1 (`eb68ba19..d1d2921a`), P2.x pass 2, P3.x pass 3, P4.x pass 4. Each pass was an independent
-headless `high` review.
+- **P1.1 — Answered route promotes a structural candidate** (high, correctness): only `--decide-candidate` consulted the stored route. **Disposition:** fixed `bf3c7fda` — guards at `generate_candidate_question`, the shared admitted-initial loader, and the answered-seal branch of `_load_complete_sealed_candidate`; `reject_candidate_review` deliberately unguarded; tests in `tests/test_roadmap_candidate_review.py`, `tests/test_roadmap_version_promotion.py`.
+- **P1.2 — Structural edit refusal and failure branches unpinned** (medium, coverage). **Disposition:** fixed `03bc3f49` — tests only, mutation-verified; the expansion-request branch is unreachable (`allow_expansion=False` raises first) and deliberately not pinned.
+- **P1.3 — Prior candidate's lost eligibility unpinned on the decision surface** (medium, coverage). **Disposition:** fixed `03bc3f49` — tests only; partly refuted (the publication recheck `_require_active_structural_candidate` also refuses unsealed superseded candidates), but the loader is the sole guard for a sealed-then-superseded candidate.
+- **P1.4 — Legacy route-less evidence pinned as ineligible for approve only** (low, coverage). **Disposition:** fixed `03bc3f49` (library) and `3722f7a6` (CLI) — tests only, mutation-verified.
+- **P1.5 — CLI prints the full approval disclosure before eligibility is checked** (low). **Disposition:** fixed `3722f7a6` — the handler compares the id with `admission.candidate_version_id` before rendering; the library still re-checks; deliberately not a new public eligibility function.
+- **P1.6 — Structural edit has no run-log lifecycle and requires an argument it discards** (low). **Disposition:** fixed `85177a89` — declined at first, reversed by the owner 2026-09-24; phase `roadmap-candidate-structural-edit`, mode `candidate-structural-edit`, logged invoker, interrupt and terminal records, rejected reply in the parse-failure sidecar, reviewer text out of the log; six outcomes tested, mutation-verified.
+- **P1.7 — Two claims wider than the code** (low, documentation): `DATA_CONTRACT.md` retention sentence and `--promote-review-seal` help. **Disposition:** fixed `bf3c7fda` — narrowed, `docs/cli/roadmap.md` regenerated.
+- **P1.8 — Presentation-only candidate takes a structural replacement through the answered route** (high; class completion of P1.1): `_store_batch_replacement` never consulted the replacement's computed classification. **Disposition:** fixed `41a1ae44` — refusal reads that classification (no persisted field); regression test, mutation-verified. Deliberately not: a persisted classification on replacements, or a promotion-side re-check of stored answered replacements; the selector-era `_store_replacement` stays outside the plan (BACKLOG #429).
+- **P2.1 — Structural content reaches the head as ancestry of a stacked presentation-only candidate** (high): a batch sourced from an active structural C1 classifies presentation-only relative to C1. **Disposition:** fixed `ae3fb0bc` — reproduced by probe first; the batch source in `roadmap_candidate_run.py` refuses when the active candidate's stored route is STRUCTURAL, after `no eligible work` and before the first model call; owner-flagged reversible call, smaller than cumulative classification or a promotion-side ancestor refusal; later superseded by `roadmap-stack-aware-approval`.
+- **P2.2 — Legacy route-less carve-out pinned only on the decision side** (medium, coverage). **Disposition:** fixed `ffceb1e8` — test only; entry and promotion guards keyed on absence go red under mutation.
+- **P2.3 — Retention sentence says prompts are not retained** (low, documentation): the capsule persists the model-facing payload. **Disposition:** fixed `19682e8f` — corrected; batch block and answered-route refusal stated in `docs/how-to/roadmap.md`, `ROADMAP_FEEDBACK_FORMAT.md`, `docs/ARCHITECTURE.md`.
+- **P3.1 — Ledger named the review tooling and tier** (low, documentation). **Disposition:** fixed (pass-3 documentation commit; hash not recorded) — four sites reworded.
+- **P3.2 — "No raw model reply is retained" contradicted by the failure sidecar** (low, documentation). **Disposition:** fixed (pass-3 documentation commit; hash not recorded) — claim scoped to evidence and seals.
+- **P3.3 — "approve, edit, or reject ends it" misstates edit** (low, documentation). **Disposition:** fixed (pass-3 documentation commit; hash not recorded) — approval with promotion or rejection ends the block; an edit continues it.
+- **P3.4 — Ordering rationale rests on a re-entry return that cannot fire** (low, documentation): the batch receipt binds `source`. **Disposition:** fixed (ledger text only); the never-firing branch is tracked as BACKLOG #430 (evidence-gated, may be no action).
+- **P4.1 — States that keep the batch block pinned by no test** (medium, coverage): a guard narrowed to ignore an approved-unpromoted or edit-produced structural candidate kept 830 tests green. **Disposition:** fixed `68a3749f` — tests only; refusal test parametrized over initial, approved-not-promoted, and edit-produced states; each narrowed-guard mutant fails its own cell. The pass-3 triage had wrongly judged this redundant.
+- **P4.2 — Seed-state member described as journaled for every promotion** (low, documentation). **Disposition:** fixed `75664e74` — `DATA_CONTRACT.md` and `docs/ARCHITECTURE.md` corrected.
+- **P4.3 — Route-less batch evidence described as legacy only** (low, documentation): answered-review replacements also persist neither field. **Disposition:** fixed `75664e74`.
 
-#### Pass 1
+Out-of-range findings: _(none)_ — weighed and dropped: an unreachable `assert` in `_classify_validated_operations`; consolidation candidates; an edit reproducing an existing candidate (fails closed as an identity collision); pre-plan structural answered replacements and route-less candidates (settled legacy contract); a hand-edited stored route (outside the threat model); the same-receipt return (P3.4, #430); a promotion-generation crash window (interrupted enrolled generations refuse recovery by design).
 
-- **P1.1 — Answered route promotes a structural candidate** (high, correctness): only `--decide-candidate`
-  consulted the stored route, so the answered chain advanced the head with no decision or seed invalidation.
-  **Disposition:** fixed `bf3c7fda` — guards at `generate_candidate_question`, the shared admitted-initial loader,
-  and the answered-seal branch of `_load_complete_sealed_candidate`; `reject_candidate_review` deliberately
-  unguarded; tests in `tests/test_roadmap_candidate_review.py`, `tests/test_roadmap_version_promotion.py`.
-- **P1.2 — Structural edit refusal and failure branches unpinned** (medium, coverage): deleting the
-  non-structural-replacement check stayed green. **Disposition:** fixed `03bc3f49` — tests only, mutation-verified;
-  the expansion-request branch is unreachable (`allow_expansion=False` raises first) and deliberately not pinned.
-- **P1.3 — Prior candidate's lost eligibility unpinned on the decision surface** (medium, coverage).
-  **Disposition:** fixed `03bc3f49` — tests only; the claim is partly refuted (the publication recheck
-  `_require_active_structural_candidate` also refuses unsealed superseded candidates), but the loader is the sole
-  guard for a sealed-then-superseded candidate (`approved-then-superseded-by-edit` cell). The edit-path loader
-  mutant is equivalent by design.
-- **P1.4 — Legacy route-less evidence pinned as ineligible for approve only** (low, coverage). **Disposition:**
-  fixed `03bc3f49` (library) and `3722f7a6` (CLI) — tests only, mutation-verified.
-- **P1.5 — CLI prints the full approval disclosure before eligibility is checked** (low, correctness).
-  **Disposition:** fixed `3722f7a6` — the handler compares the id with `admission.candidate_version_id` before
-  rendering; the library still re-checks, so the CLI check is presentation only. Deliberately not a new public
-  eligibility function.
-- **P1.6 — Structural edit has no run-log lifecycle and requires an argument it discards** (low, coverage /
-  consistency). **Disposition:** fixed `85177a89` — declined at first (no criterion required a trail), reversed by
-  the owner 2026-09-24 (comprehensive log coverage); phase `roadmap-candidate-structural-edit`, mode
-  `candidate-structural-edit`, logged invoker, interrupt and terminal records, rejected reply kept in the
-  parse-failure sidecar, reviewer text out of the log; six outcomes tested, mutation-verified.
-- **P1.7 — Two claims wider than the code** (low, documentation): the `DATA_CONTRACT.md` retention sentence and the
-  `--promote-review-seal` help. **Disposition:** fixed `bf3c7fda` — narrowed, `docs/cli/roadmap.md` regenerated
-  (`tests/cli/test_cli_reference.py`).
-- **P1.8 — Presentation-only candidate takes a structural replacement through the answered route** (high,
-  correctness; class completion of P1.1, found during its enumeration): `_store_batch_replacement` never
-  consulted the replacement's computed classification. **Disposition:** fixed `41a1ae44` — refusal reads that
-  classification (no persisted field); regression test and mutation verified. Deliberately not: a persisted
-  classification on replacements, or a promotion-side re-check of stored answered replacements. The selector-era
-  `_store_replacement` stays outside the plan (BACKLOG #429).
+### Tracked
 
-#### Pass 2
+- **tracked** `BACKLOG.md` #430 — the never-firing same-receipt re-entry branch (P3.4); evidence-gated.
+- **tracked** `BACKLOG.md` #434 — wider run-log coverage (owner aim, 2026-09-24): the decision commands that change state (approve, reject, discard, promote) write no run log; whether and how to log them is undecided. #434 records the decision and its fence.
+- **tracked** `BACKLOG.md` #429 — the unreachable selector-era `_store_replacement` runner.
 
-- **P2.1 — Structural content reaches the head as ancestry of a stacked presentation-only candidate** (high,
-  correctness): a batch sourced from an active structural C1 classifies presentation-only relative to C1 and the
-  answered chain promotes it with C1's changes. **Disposition:** fixed `ae3fb0bc` — reproduced by probe first; the
-  batch source in `roadmap_candidate_run.py` (the only producer of a descendant of an active candidate's content)
-  refuses when the active candidate's stored route is STRUCTURAL, keyed on the value, after `no eligible work` and
-  before the first model call. Owner-flagged reversible call narrowing the prerequisite plan's stacking rule;
-  smaller than cumulative classification or a promotion-side ancestor refusal (which strands the chain). Refusal
-  later superseded by `roadmap-stack-aware-approval`.
-- **P2.2 — Legacy route-less carve-out pinned only on the decision side** (medium, coverage). **Disposition:**
-  fixed `ffceb1e8` — test only; mutation executed (entry and promotion guards keyed on absence go red).
-- **P2.3 — Retention sentence says prompts are not retained** (low, documentation): the capsule persists the
-  model-facing payload. **Disposition:** fixed `19682e8f` — sentence corrected; batch block and answered-route
-  refusal stated in `docs/how-to/roadmap.md`, `ROADMAP_FEEDBACK_FORMAT.md`, `docs/ARCHITECTURE.md`.
+### Closure
 
-#### Pass 3 (logic and coverage clean against `ae3fb0bc`)
-
-- **P3.1 — Ledger named the review tooling and tier** (low, documentation). **Disposition:** fixed (pass-3
-  documentation commit; hash not recorded in the source) — four sites reworded.
-- **P3.2 — "No raw model reply is retained" contradicted by the failure sidecar** (low, documentation).
-  **Disposition:** fixed (pass-3 documentation commit; hash not recorded) — claim scoped to evidence and seals; the
-  sidecar is named.
-- **P3.3 — "approve, edit, or reject ends it" misstates edit** (low, documentation): an edit stores another
-  structural candidate. **Disposition:** fixed (pass-3 documentation commit; hash not recorded) — approval with
-  promotion or rejection ends the block; an edit continues it.
-- **P3.4 — Ordering rationale rests on a re-entry return that cannot fire** (low, documentation): the batch receipt
-  binds `source`, so the same-receipt return never matches while a candidate is active. **Disposition:** fixed
-  (ledger text only); the never-firing branch is tracked as BACKLOG #430 (evidence-gated, may be no action).
-
-#### Pass 4 (no correctness defect; 51,000 transitions, 0 violations)
-
-- **P4.1 — States that keep the batch block pinned by no test** (medium, coverage): a guard narrowed to ignore an
-  approved-unpromoted or edit-produced structural candidate kept 830 tests green. **Disposition:** fixed
-  `68a3749f` — tests only; refusal test parametrized over initial, approved-not-promoted, and edit-produced
-  states; each narrowed-guard mutant fails its own cell. The pass-3 triage had wrongly judged this redundant.
-- **P4.2 — Seed-state member described as journaled for every promotion** (low, documentation). **Disposition:**
-  fixed `75664e74` — `DATA_CONTRACT.md` and `docs/ARCHITECTURE.md` corrected.
-- **P4.3 — Route-less batch evidence described as legacy only** (low, documentation): answered-review replacements
-  also persist neither field. **Disposition:** fixed `75664e74` — paragraph corrected.
-
-### Reconcile-code sweeps
-
-Three complete `reconcile-code --all` sweeps over the six code steps ran before review (commits `6fa71bfa`,
-`e15ac3e1`, `d1d2921a`). The source records no per-sweep finding triage beyond these commits.
-
-### Out-of-range findings
-
-_(none)_ — weighed and dropped: an unreachable `assert` in `_classify_validated_operations`; consolidation
-candidates (belong in `BACKLOG.md` with machine-verified evidence); an edit reproducing an existing candidate is
-refused as an identity collision (fails closed); pre-plan structural answered replacements and route-less
-candidates (settled live legacy contract); a hand-edited stored route (outside the threat model); the same-receipt
-return (P3.4, #430); a promotion-generation crash window (interrupted enrolled generations refuse recovery by
-design).
-
-### Open owner directions
-
-**Whole-stack presentation and confirmed approval — shipped as `roadmap-stack-aware-approval` (decided
-2026-09-24; do not reopen).** The interim batch refusal is gone; a structural approval covers everything built on
-the approved candidate. Every approval or confirmation presents the entire unpromoted stack (supersedes the
-last-hop-only disclosure weighed in passes 3 and 4). Approve is confirmed in a separate invocation with a
-stateless stack digest. There is deliberately no read-only show command: an unconfirmed approve prints the stack
-and writes nothing; `--propose-candidate` cannot re-show a candidate because a re-run builds on the active one
-(see #430).
-
-One owner direction remains open.
-
-**Wider run-log coverage (owner aim, 2026-09-24; not done).** Only propose, question, replacement, and now
-structural edit write run logs. The decision commands that change state — approve, reject, discard, and promote —
-write none. Whether and how to log them is undecided.
-
-**Tracked 2026-09-29:** `BACKLOG.md` #434 records the decision and its fence.
-
-### Convergence status
-
-Closed by owner decision, not by the strict stopping rule (see the decision below). Passes 1 and 2 were not clean and needed four
-logic-changing commits (`bf3c7fda`, `41a1ae44`, `3722f7a6`, `ae3fb0bc`). Against the newest, `ae3fb0bc`, pass 3
-was low-yield (logic and coverage clean, four low documentation findings). Pass 4 found no correctness defect,
-and its executed evidence is the strongest yet (51,000 transitions, an oracle independent of the stored route,
-guard mutants detected), but it returned one medium coverage finding on the central guard. A medium finding is
-not advisory-severity, so under `integrations/shared/DIRECTIVES.md` § "After `run` finishes a plan" and the
-severity-aware stopping rule the streak restarts after its fix. The fixes are test-only and documentation-only
-and leave the logic head unchanged.
-
-**Owner decision (2026-09-24): stop here and accept convergence.** This deliberately does **not** satisfy the
-two-consecutive-clean-or-low-yield-pass rule: the strict count against `ae3fb0bc` is one (pass 3), because pass 4
-returned a medium finding. The owner judged the executed evidence sufficient instead of spending passes 5 and 6:
-no correctness defect in passes 3 or 4; a randomized state-machine search over the real library functions
-(51,000 transitions, an oracle that judges structural change from artifact content and never from the stored
-route, guard mutants detected) with 0 violations; the full suite green at `75664e74` (13,730 passed, 190
-skipped); and every finding across the four passes dispositioned. Deliberately not done: passes 5 and 6, and any
-mutation or crash-window testing beyond what pass 4 executed. The closure did not cover the two owner directions
-open at the time, which were follow-on work: the stack direction shipped as `roadmap-stack-aware-approval`, and
-wider run-log coverage remains open. That plan's logic commits (steps 1–7) post-date this closure, and this ledger
-records no review pass over them. A later logic-changing commit reopens the window,
-and a new finding of the recurring class (structural content reaching the head without a decision) should be
-treated as a non-converging signal and surfaced rather than patched by another per-route guard; the alternative
-recorded for that case is to enforce the property once at promotion by measuring what the promoted version
-changes against the accepted head.
-
-Trajectory across the four passes, by identity and severity: the high correctness finding recurred in the same
-class twice more (P1.8, P2.1) and did not recur in passes 3 or 4; the non-documentation tail went from three
-coverage findings and three low findings (pass 1), to one coverage finding (pass 2), to none (pass 3), to one
-coverage finding (pass 4) that pass 3 had explicitly dropped; the documentation tail is the retention and
-publication-contract wording, corrected four times, each time narrower.
+Closure label: **closed by owner decision (2026-09-24)**, not converged by the strict stopping rule: against the newest logic commit `ae3fb0bc` the strict count is one (pass 3), because pass 4 returned a medium coverage finding. Passes 1 and 2 needed four logic-changing commits (`bf3c7fda`, `41a1ae44`, `3722f7a6`, `ae3fb0bc`). The owner judged the executed evidence sufficient instead of passes 5 and 6: no correctness defect in passes 3 or 4; a randomized state-machine search over the real library functions (51,000 transitions, an oracle that judges structural change from artifact content and never from the stored route, guard mutants detected) with 0 violations; full suite green at `75664e74`; every finding dispositioned. Deliberately not done: passes 5 and 6, and mutation or crash-window testing beyond pass 4. The closure did not cover the stack direction (shipped as `roadmap-stack-aware-approval`, whose logic commits post-date this closure and have no pass in this ledger) or wider run-log coverage (#434). A later logic-changing commit reopens the window. A new finding of the recurring class (structural content reaching the head without a decision) is a non-converging signal to surface rather than patch with another per-route guard; the recorded alternative is to enforce the property once at promotion by measuring what the promoted version changes against the accepted head.
 
 ## Roadmap versioned feedback revision chain — post-run review ledger
 
@@ -730,13 +619,12 @@ publication-contract wording, corrected four times, each time narrower.
 | Field | Value |
 | --- | --- |
 | Plan | `roadmap-versioned-feedback-revision-chain` (`docs/implementation-plans/archive/2-roadmap-versioned-feedback-revision-chain.md`), 11 steps, all `done`; `status: completed` (2026-09-23) |
-| Branch | `codex/roadmap-feedback-batch-revision`; pushed through `2ba267a3` only, every commit since (from `25c7c737`) is local (the pre-push hook runs the full suite) |
-| Run head (all steps green) | `c2c64ef4` |
-| Checks run | `reconcile-code --all` sweep 1 (`gpt-5.6-terra`, `reports/20260923-144352…145713-run-reconcile.json`); sweep 2 (10 code steps, step 11 non-code, `reports/20260923-165831…171047-run-reconcile.json`, committed `0ac4b4a0`); full suite 13367 passed / 191 skipped at run head, 13601 passed / 190 skipped at `8e978039` |
-| `/code-review` | Pass 1 (`high`, report-only, `e9a3e30b..HEAD` at `f00c1d95`): 10 ranked + 5 below-cap, 14 fixed (P1.5-P1.7 by a deliberately narrower remedy), 1 declined (P1.12). Pass 2 (`f00c1d95..93e0bac4`): 3, none high, fixed. Pass 3 (`93e0bac4..8a2b455d`): 3, none high, fixed by one rework. Pass 4 (`8a2b455d..cd4a3c4a`): 1 low, fixed. Pass 5 (`cd4a3c4a..54521e4f`): 2 low, fixed. Converged at the low-yield level |
-| Current disposition | Both post-run tails done; no third `reconcile-code` sweep (no finding is a safety or authority failure); plan closed. Follow-ups: BACKLOG #427, #428, #429, #395 and one `BUG_BACKLOG.md` entry |
+| Range | Branch `codex/roadmap-feedback-batch-revision`; pushed through `2ba267a3` only, every commit since `25c7c737` is local (the pre-push hook runs the full suite); run head `c2c64ef4`; final head `8e978039` |
+| Checks | `reconcile-code --all` sweep 1 (`reports/20260923-144352…145713-run-reconcile.json`) and sweep 2 (10 code steps, step 11 non-code, `reports/20260923-165831…171047-run-reconcile.json`, committed `0ac4b4a0`); full suite 13367 passed / 191 skipped at run head, **13601 passed / 190 skipped, 0 failures at `8e978039`** |
+| Reviewer | Five report-only `/code-review high` passes: P1 `e9a3e30b..HEAD` at `f00c1d95`, P2 `f00c1d95..93e0bac4`, P3 `93e0bac4..8a2b455d`, P4 `8a2b455d..cd4a3c4a`, P5 `cd4a3c4a..54521e4f` |
+| Disposition | **Converged at the low-yield level; plan closed.** No third `reconcile-code` sweep (no finding is a safety or authority failure) |
 
-**Next:** nothing in this plan; it is closed and the loop is converged. Follow-ups: BACKLOG #427, #428, #429, #395. A logic-changing commit after `8e978039` re-opens the loop: run `/code-review high` (report-only, no `--fix`; never `ultra`, do not drift to `max`) over the diff since `8e978039` via the `code-review-loop` skill, into this one doc (no `-roundN` files), and disposition each finding before any further pass. Pass 5's fix changed no behavior, so it does not re-open the loop.
+A logic-changing commit after `8e978039` re-opens the loop; P5's fix changed no behavior.
 
 ### Settled decisions (hand these to any reviewer)
 
@@ -752,124 +640,101 @@ Decided by the user during plan authoring; a finding contradicting one is invali
 6. Fix-round rules: a legacy row with a blank request imports as a `closed` marker item, not skipped or refused. The smallest-proof rule (the smallest proof that completes the intent, not the eventual capability) narrowed P1.5 and P1.6. By judgment: the id normalization and null-selected fingerprint for an unresolvable target; `legacy_source` with no schema bump (ledger not on `main`); `RemovalRecord`s and `feedback_reopen` records not imported; P1.4 refuses rather than supersedes.
 7. **Deliberately not built:** persisting `response_patch` and `derived_feedback` on the initial batch candidate's evidence. It would restore the `response` anchor and let batch evidence recompute its identity (closing the S4 residual), but nothing needs either today.
 
-### Fix guidance
+### Findings
 
-- Verify every guard by mutation (revert the fix, watch the test go red). A RED with an empty failure line is a collection error: pass `-k` expressions as separate arguments. A guard behind an overlapping guard survives a single mutation by design: mutate the pair.
-- `reconcile-code --all` audits only; `enforce_step_tests` checks only that a test file was touched, so a green step proves little about coverage.
-- `publish_roadmap_generation` never compares a member's recorded old bytes with disk, so batch store and seal run `require_batch_state_unchanged` (pointer plus exact ledger bytes) in `before_replace`.
-- Full suite: `uv run pytest tests/ -q -n auto` (~255 s; background it, tee to `.tmp/<slug>.*.log`). `plan-tool … --commit` needs a clean tree; use `--model gpt-5.6-terra` except for `create`/`roadmap`.
-
-### Self-found during the run
+Self-found during the run:
 
 - **Optional fields with no default broke the `exclude_none` evidence round-trip** (`ReviewerItemSnapshot.proposal`, `CandidateProposalEvidence.feedback`). **Disposition:** fixed `926273cb`.
 - **Same class** (`CandidateQuestionInventory.feedback`, `RoadmapRowDiff.before/after`, `CandidateRowImpactAtom.before/after`; add-row/remove-row candidates refused as "evidence is invalid"), plus batch replacement parsing the legacy `{"delta": …}` wrapper. **Disposition:** fixed `8689d1fe` — model-graph guard test, mutation-verified.
 - **`DATA_CONTRACT.md` section for `RoadmapLocalRevisionPreflight` deleted by step 11** while the event is still emitted. **Disposition:** fixed in the step 11 commit.
-- **Every batch after a promotion refused `candidate processing pair changed`** (the plan's headline outcome was false): the pointer's root was compared with the head before checking whether it names a candidate. **Disposition:** fixed `a3a10610` — only a pointer naming an active candidate is judged against the current root; all `load_candidate_admission` readers swept; mutation-verified both directions.
+- **Every batch after a promotion refused `candidate processing pair changed`**: the pointer's root was compared with the head before checking whether it names a candidate. **Disposition:** fixed `a3a10610` — only a pointer naming an active candidate is judged against the current root; all `load_candidate_admission` readers swept; mutation-verified both directions.
 - **Same class, settlement:** `_admission_blocks_settlement` refused forever (`unpromoted-candidate-lineage`) after reject/discard released a batch pointer. **Disposition:** fixed `cd31d12f` — applies only to a selector-era admission (`root_version_id is None`); legacy refusals stay pinned by `test_unpromoted_lineage_*`.
 - **Acceptance test compared two empty dicts** (read a nonexistent `.plan-tool/versions`). **Disposition:** fixed `6d98c0d6` — `test_cli_candidate_lifecycle_promotes_only_the_reviewer_displayed_answer_incorporated_replacement` un-skipped, mutation-verified.
-- **Promotion's own `source_ancestry_to_root` call is redundant** with `load_stored_candidate_proposal` plus the root check; removing it stays green. **Disposition:** declined — kept as defense in depth.
+- **Promotion's own `source_ancestry_to_root` call is redundant.** **Disposition:** declined — kept as defense in depth.
 
-### Reconcile-code sweep 1
+Reconcile-code sweep 1 (12 high / 9 medium):
 
-- **F1 — `_find_exact_row` scans legacy `FeedbackRow`s** (high): a ledger item targeting one fingerprinted, then the batch refused `incomplete-closure`. **Disposition:** fixed `e8d7894d` — probe-verified; now `design_row_collections`, two tests, mutation-verified.
-- **F2 — missing step 1 lifecycle/stale-target tests** (medium, lead): **Disposition:** tracked #427 (five step 1 detail names have no matching test).
-- **F3 — missing step 3 tests** (medium, lead): **Disposition:** fixed by S1 `744201da`; cited names in #427.
-- **F4 — `build_candidate_context` keeps the selector overload** (medium): **Disposition:** fixed `4cd8acdf` — detail 03 states the legacy selector boundary (ledger-less route and re-verification of stored selector-era capsules).
-- **F5 — batch artifacts always re-rendered** (medium, lead): **Disposition:** fixed by S2 `aa77ce05`.
-- **F6 — storage-window `migration-required`/changed pair/changed item surface as `failed`, not `refused`** (high): **Disposition:** fixed `4286be3a` — `CandidateStorageRefusal` at every deterministic raise site of the batch path (exit 2), six mutation-verified tests; the selector path `_store_candidate` keeps `failed` deliberately (pre-plan contract).
-- **F7 — no supersession relation beside the former active candidate** (high): **Disposition:** fixed `ce810c45` — `CandidateSupersession` and `build_supersession_member`, written in the pointer-replacing generation; a pre-existing record fails the generation; history only; mutation-verified.
-- **F8 — `CandidateTerminalResolution` accepts arbitrary identity strings** (medium, lead): **Disposition:** fixed by S5 `dba3c5eb`.
-- **F9 — no third successor: context accepts only a root or its direct candidate** (high): **Disposition:** fixed `cd2f0532` — `source_ancestry_to_root` used by evidence validation, the batch runner and promotion; `build_candidate_context` verifies the chain and stays fail-closed at one hop without one.
-- **F10 — `_processing_source()` does not validate stored evidence** (high): **Disposition:** refuted — `load_resolved_stored_version` digest-verifies every member, step 6 needs only the source's bytes, the spec does not ask for it, and the pointer is written only by step 5's guarded publication.
-- **F11 — ledger-run tests are 4 helper-level tests** (high, lead): **Disposition:** fixed by S7 `41cab1b1` and the migration tests since.
-- **F12 — settlement always uses `matching_feedback_rows`** (high): root cause was the file missing from plan frontmatter `files:`; corrected. **Disposition:** fixed `e2f9ecaf` (+ `48eeb59c` CLAUDE.md, architect-tier review needed in the PR, own commit) — ledger evidence when the ledger path exists; new verdicts `feedback-not-eligible`, `migration-required`; the digest hashes only reviewer-authored fields because an `open` item can carry a hand-flipped proposal (`test_ledger_evidence_digest_binds_the_reviewer_request_and_ignores_a_model_proposal`); 30 leaf tests, six mutations red. #394 removed, #395 narrowed at closure.
-- **F13 — settlement writes no `CandidateTerminalResolution(settled)`** (high): the old `_before_replace` guard made an affirmed settlement with an active candidate impossible. **Disposition:** fixed `834875d4` (code), `25c7c737` (tests + detail 07) — mutation-verified three ways.
-- **F14 — enrolled-settlement tests skip affirmed-atomic, settled history, drift, receipt-window cases** (medium, lead): **Disposition:** fixed in substance by `25c7c737`, `16ca0ee2`, `92280d95` and existing window tests (not matched one by one; cited names in #427).
-- **F15 — embedded-feedback assertions kept for enrolled roadmaps** (medium): **Disposition:** fixed — ledger cases added with `e2f9ecaf`; embedded tests kept for ledger-less enrolled roadmaps.
-- **F16 — replacement flow is selector-era** (high): also found: R was unreadable without its own `candidate-evidence.json`; promotion's identity recheck omitted the response patch and derived feedback. **Disposition:** fixed — binding `8dbc044d`, records `c58cf505`, request/store `2a4aaec3`, seal swap `f4d4adb1`, promotion `eaa4d8ca` (with `a3a10610`, `cd31d12f`, `180902cf`, tests `6d98c0d6`, docs `44e8e465`, `81de8da4`, `4cd8acdf`, `b148f302`). R applies the delta to S using C1's stored capsule; `seal_review` publishes seal, supersession, pointer swap and ledger patch (skips reopened/edited/closed/deferred items); selector-era seal bytes pinned by `_LEGACY_SEAL_BYTES`; 16 promotion tests incl. multi-hop; mutation-verified.
-- **F17 — records do not persist root/source/batch identities** (high): **Disposition:** fixed `c58cf505`.
-- **F18 — review tests are one synthetic assertion** (medium, lead): **Disposition:** fixed by S11 `008f6b81`, `e1ea0e3e`; cited names in #427.
-- **F19 — selector-era admission branches retained in review** (medium): **Disposition:** refuted as stated — live legacy for ledger-less roadmaps and on-disk records; branch once on `batch_receipt is not None` (landed with F16).
-- **F20 — promotion accepts root-less admissions and does not release the slot** (high): **Disposition:** partly refuted, fixed `eaa4d8ca` — `roadmap_version_promotion.py:95` already releases the pointer (now really tested); the root-less admission is live legacy (detail 09); the real gap was promoting a batch replacement.
-- **F21 — CLI passes `feedback_selector=None` to a `str` parameter** (high): untidy, nothing reads run-log argv. **Disposition:** fixed `180902cf` — `str | None`, argv omits it.
+- **F1 — `_find_exact_row` scans legacy `FeedbackRow`s** (high): batch refused `incomplete-closure`. **Disposition:** fixed `e8d7894d` — now `design_row_collections`, two tests, mutation-verified.
+- **F2 — missing step 1 lifecycle/stale-target tests** (medium). **Disposition:** tracked #427.
+- **F3 — missing step 3 tests** (medium). **Disposition:** fixed by S1 `744201da`; cited names in #427.
+- **F4 — `build_candidate_context` keeps the selector overload** (medium). **Disposition:** fixed `4cd8acdf` — detail 03 states the legacy selector boundary.
+- **F5 — batch artifacts always re-rendered** (medium). **Disposition:** fixed by S2 `aa77ce05`.
+- **F6 — storage-window `migration-required`/changed pair/changed item surface as `failed`, not `refused`** (high). **Disposition:** fixed `4286be3a` — `CandidateStorageRefusal` at every deterministic raise site of the batch path (exit 2), six mutation-verified tests; selector path `_store_candidate` keeps `failed` deliberately (pre-plan contract).
+- **F7 — no supersession relation beside the former active candidate** (high). **Disposition:** fixed `ce810c45` — `CandidateSupersession` and `build_supersession_member`, written in the pointer-replacing generation; history only; mutation-verified.
+- **F8 — `CandidateTerminalResolution` accepts arbitrary identity strings** (medium). **Disposition:** fixed by S5 `dba3c5eb`.
+- **F9 — no third successor: context accepts only a root or its direct candidate** (high). **Disposition:** fixed `cd2f0532` — `source_ancestry_to_root` used by evidence validation, the batch runner and promotion; context stays fail-closed at one hop without a chain.
+- **F10 — `_processing_source()` does not validate stored evidence** (high). **Disposition:** refuted — `load_resolved_stored_version` digest-verifies every member, step 6 needs only the source's bytes, the pointer is written only by step 5's guarded publication.
+- **F11 — ledger-run tests are 4 helper-level tests** (high). **Disposition:** fixed by S7 `41cab1b1` and the migration tests since.
+- **F12 — settlement always uses `matching_feedback_rows`** (high): root cause was the file missing from plan frontmatter `files:`. **Disposition:** fixed `e2f9ecaf` (+ `48eeb59c` CLAUDE.md, architect-tier review needed in the PR) — ledger evidence when the ledger path exists; new verdicts `feedback-not-eligible`, `migration-required`; the digest hashes only reviewer-authored fields (`test_ledger_evidence_digest_binds_the_reviewer_request_and_ignores_a_model_proposal`); 30 leaf tests, six mutations red. #394 removed, #395 narrowed at closure.
+- **F13 — settlement writes no `CandidateTerminalResolution(settled)`** (high). **Disposition:** fixed `834875d4` (code), `25c7c737` (tests + detail 07) — mutation-verified three ways.
+- **F14 — enrolled-settlement tests skip affirmed-atomic, settled history, drift, receipt-window cases** (medium). **Disposition:** fixed in substance by `25c7c737`, `16ca0ee2`, `92280d95`; cited names in #427.
+- **F15 — embedded-feedback assertions kept for enrolled roadmaps** (medium). **Disposition:** fixed — ledger cases added with `e2f9ecaf`; embedded tests kept for ledger-less enrolled roadmaps.
+- **F16 — replacement flow is selector-era** (high): R was unreadable without its own `candidate-evidence.json`; promotion's identity recheck omitted the response patch and derived feedback. **Disposition:** fixed — binding `8dbc044d`, records `c58cf505`, request/store `2a4aaec3`, seal swap `f4d4adb1`, promotion `eaa4d8ca` (with `a3a10610`, `cd31d12f`, `180902cf`, tests `6d98c0d6`, docs `44e8e465`, `81de8da4`, `4cd8acdf`, `b148f302`); R applies the delta to S using C1's stored capsule; `seal_review` publishes seal, supersession, pointer swap and ledger patch; selector-era seal bytes pinned by `_LEGACY_SEAL_BYTES`; 16 promotion tests incl. multi-hop; mutation-verified.
+- **F17 — records do not persist root/source/batch identities** (high). **Disposition:** fixed `c58cf505`.
+- **F18 — review tests are one synthetic assertion** (medium). **Disposition:** fixed by S11 `008f6b81`, `e1ea0e3e`; cited names in #427.
+- **F19 — selector-era admission branches retained in review** (medium). **Disposition:** refuted as stated — live legacy for ledger-less roadmaps and on-disk records; one branch on `batch_receipt is not None` (landed with F16).
+- **F20 — promotion accepts root-less admissions and does not release the slot** (high). **Disposition:** partly refuted, fixed `eaa4d8ca` — `roadmap_version_promotion.py:95` already releases the pointer (now tested); root-less admission is live legacy (detail 09); the real gap was promoting a batch replacement.
+- **F21 — CLI passes `feedback_selector=None` to a `str` parameter** (high). **Disposition:** fixed `180902cf` — `str | None`, argv omits it.
+- **Coverage note** — 212 step-detail test names cited, 116 defined, 96 not (a missing name is a claim to check, not a confirmed gap). **Disposition:** tracked #427.
 
-**Coverage note.** 212 step-detail test names cited, 116 defined, 96 not (a missing name is a claim to check, not a confirmed gap). **Disposition:** tracked #427.
+Reconcile-code sweep 2 (9 high / 3 medium):
 
-### Reconcile-code sweep 2 (9 high / 3 medium, down from 12 / 9)
+- **S1 — step 3 batch tests missing** (medium). **Disposition:** fixed `744201da`; the repeatability test pins determinism and has no natural mutation.
+- **S2 — step 4 batch assembly re-renders every member** (high). **Disposition:** fixed `aa77ce05`.
+- **S3 — derived feedback hashed in the model's order** (high). **Disposition:** fixed `1b862a7c` — sorted by `context_id`.
+- **S4 — batch evidence accepts a capsule differing from its receipt** (high): six edits accepted by probe. **Disposition:** fixed `1ff3e546`; residual: a capsule and receipt edited consistently together is undetectable (no response patch in batch evidence).
+- **S5 — terminal resolution and release builder do not bind root/source/candidate** (high). **Disposition:** fixed `dba3c5eb` — validators and builder check; reject/discard report `refused`.
+- **S6 — a request edit keeps the old fingerprint and stays ineligible** (high). **Disposition:** refuted — plan line 269 says a changed target stays ineligible until retargeted; rebinding on edit would approve a changed target.
+- **S7 — step 6 ledger-run coverage** (high): every reviewer action and migration published with no in-window byte comparison. **Disposition:** fixed `41cab1b1` — exact-byte recheck in `_publish_ledger`, 8 new tests.
+- **S8 — settlement binding omits the active candidate's source and terminal state** (high). **Disposition:** refuted — probe shows refusal before any receipt, `source-changed` inside the window; tests `16ca0ee2`.
+- **S9 — settlement falls back to embedded feedback for a ledger-less enrolled roadmap** (medium): deliberate, two tests pin it. **Disposition:** fixed `38ffe921` (detail 07).
+- **S10 — `_publish_batch_seal` checks migration readiness, forbidden by detail 08** (high). **Disposition:** fixed `5d885743` (detail 08), test `008f6b81`; code kept.
+- **S11 — step 8 tests omit rejection, discard, stale release, anchors** (high). **Disposition:** fixed `008f6b81`, `e1ea0e3e`; dead "idempotent replay" branch removed.
+- **S12 — CLI tests keep the retired selector-bound contract** (medium). **Disposition:** fixed `868a89eb`; the ~15 `run_local_feedback_revision` monkeypatches and `_revise_feedback_has_conflict` alias stay with #429.
 
-- **S1 — step 3 batch tests missing** (medium, PARTLY): **Disposition:** fixed `744201da` (tests); the repeatability test pins determinism and has no natural mutation.
-- **S2 — step 4 batch assembly re-renders every member** (high, PARTLY): retention gated on `not feedback_free`, unreachable today. **Disposition:** fixed `aa77ce05`.
-- **S3 — derived feedback hashed in the model's order** (high, TRUE): **Disposition:** fixed `1b862a7c` — sorted by `context_id`.
-- **S4 — batch evidence accepts a capsule differing from its receipt** (high, TRUE): six edits accepted by probe. **Disposition:** fixed `1ff3e546`. Residual: a capsule and receipt edited consistently together is undetectable (no response patch in batch evidence).
-- **S5 — terminal resolution and release builder do not bind root/source/candidate** (high, PARTLY): **Disposition:** fixed `dba3c5eb` — validators and builder check; reject/discard report `refused`.
-- **S6 — a request edit keeps the old fingerprint and stays ineligible** (high, REFUTED): **Disposition:** refuted — plan line 269 says a changed target stays ineligible until retargeted; rebinding on edit would approve a changed target.
-- **S7 — step 6 ledger-run coverage** (high, TRUE): also found every reviewer action and migration published with no in-window byte comparison. **Disposition:** fixed `41cab1b1` — exact-byte recheck in `_publish_ledger`, 8 new tests.
-- **S8 — settlement binding omits the active candidate's source and terminal state** (high, REFUTED): probe shows refusal before any receipt, `source-changed` inside the window. **Disposition:** refuted, tests `16ca0ee2` (the `elif confirmed_binding is not None` branch is redundant with the next; the pair is pinned).
-- **S9 — settlement falls back to embedded feedback for a ledger-less enrolled roadmap** (medium, TRUE plan-side): deliberate, two tests pin it. **Disposition:** fixed `38ffe921` (detail 07).
-- **S10 — `_publish_batch_seal` checks migration readiness, forbidden by detail 08** (high, PARTLY): a hand-set `migration-pending` is reachable. **Disposition:** fixed `5d885743` (detail 08), test `008f6b81`; code kept.
-- **S11 — step 8 tests omit rejection, discard, stale release, anchors** (high, TRUE): `--reject-candidate`/`--discard-candidate` had no test. **Disposition:** fixed `008f6b81`, `e1ea0e3e`; dead "idempotent replay" branch removed.
-- **S12 — CLI tests keep the retired selector-bound contract** (medium, TRUE low risk): **Disposition:** fixed `868a89eb`; the ~15 `run_local_feedback_revision` monkeypatches and `_revise_feedback_has_conflict` alias stay with #429.
+Review pass 1 (fixes `ee323b71`–`8a121008`, docs `7a47a593`; 13587 passed at `8a121008`):
 
-### Review pass 1 (fixes `ee323b71`–`8a121008`, docs `7a47a593`; 13587 passed at `8a121008`)
+- **P1.1 — one delta prompt serves only the batch shape** (high): selector-era proposals ended `response-rejected`. **Disposition:** fixed `ce48d805` — pre-range template restored (from `bde7990b`) as `roadmap-candidate-delta-selector.md`, chosen by capsule type; mutation-verified.
+- **P1.2 — `_content_identity` changes every selector-era identity** (high). **Disposition:** fixed `ee323b71` — keys added only when `response_patch is not None`; `_LEGACY_SEAL_BYTES` replaced with bytes from `e9a3e30b`; mutation-verified.
+- **P1.3 — legacy migration cannot import legal rows** (high): removed-row target, same id in two artifacts, unsafe ids, empty response. **Disposition:** fixed `1e10274e`, `8d0f3356` — unresolvable target imports ineligible, unsafe or repeated ids become `legacy-<artifact>-<12 hex>`, empty response imports as no proposal, every item records `legacy_source`, blank request imports as a `closed` `LEGACY_BLANK_REQUEST_MARKER` item; a stale branch ledger must be re-created (no `LEDGER_SCHEMA_VERSION` bump).
+- **P1.4 — batch route overwrites an unpromoted selector-era admission** (medium). **Disposition:** fixed `ee323b71` — refuses `unpromoted-candidate-lineage` under a deliberately narrower predicate than settlement's (a selector lineage has no discard route, #395); mutation-verified.
+- **P1.5 — batch `_validate_candidate_evidence` skips reproductions** (medium). **Disposition:** fixed in part, by design `12b47511` — `predecessor_diff` recomputed; `content_identity` refuted (record binding refuses an edit); `gate_evidence`, `review_requirement`, capsule reproduction deliberately not recomputed.
+- **P1.6 — batch question cannot be grounded in a proposed response** (medium). **Disposition:** fixed by narrowing `5dc8ffd4` — `response` anchor withdrawn and refused with a reason; details 05, 08 and the plan body corrected; persisting the patch not chosen.
+- **P1.7 — settlement evidence not rechecked in the publication window** (low). **Disposition:** fixed (narrow), other half declined `92280d95` — `decision_settlement_candidate_is_current` compares the evidence digest; window C declined (no ledger member in settlement's generation, so no lost update; only a hand edit reaches it).
+- **P1.8 — batch route records no failure diagnostics** (low). **Disposition:** fixed `ae416327` — `last_response`, `response_accepted`, `call_count` set; parse-failure receipt written.
+- **P1.9 — ledger-less enrolled roadmap reported as corrupt ledger** (low). **Disposition:** fixed `07e223d0` — load gated on `ledger_path.exists()`.
+- **P1.10 — CLI error-handling gaps** (low): reject/discard drop `result.detail`; ledger handler omits `RoadmapWriterGuardError`. **Disposition:** fixed `2eff39f9`.
+- **P1.11 — dead aliases and a pass-through wrapper** (cleanup). **Disposition:** fixed `28854ee9`.
+- **P1.12 — `_confirmation_result` attaches undeclared attributes; evidence published before gates** (low). **Disposition:** declined — `object.__setattr__` keeps the shared result at four fields (`test_result_is_the_shared_redacted_run_result`); evidence before gates is the settled handshake.
+- **P1.13 — `_anchor_resolves` accepts new anchor kinds for selector-era candidates** (low). **Disposition:** fixed `28854ee9`, three-kind test.
+- **P1.14 — per-item artifact parsing in `eligible_reviewer_items`** (low). **Disposition:** fixed `8a121008` — per-call cache, spy-pinned.
+- **P1.15 — settlement handshake and reject/discard/migrate flows missing from the how-to** (low). **Disposition:** fixed `7a47a593`; #394 and #395 reconciled at closure.
+- **P2.1 — reopening a blank-request marker item makes the marker eligible reviewer text.** **Disposition:** fixed `7f3d64ed`, placement corrected by `a50964d2` — an item with `legacy_source` and the marker request cannot be reopened, target-edited or retargeted (named error, bytes unchanged); a real-text edit is the exit; mutation-verified.
+- **P2.2 — legacy migration re-parses the target artifact per row** (incomplete P1.14 sweep). **Disposition:** fixed `96fdb5c2` — shared `parsed` cache.
+- **P2.3 — `legacy_source` does not identify a row when an id repeats within one artifact** (low). **Disposition:** fixed (documentation) `572af8b7`; storing row position declined.
+- **P3.1 — the invariant keys on text equality: a legacy row whose own words are the marker sentence blocks migration** (seeded by `7f3d64ed`). **Disposition:** fixed `a50964d2` — rule lives only at the two opening actions; residual: refused on reopen once closed, a text-supplying edit clears it.
+- **P3.2 — as a model validator, a hand-edited ledger becomes unloadable.** **Disposition:** fixed `a50964d2` — the guard covers tool actions, not hand edits.
+- **P3.3 — refusals reach the CLI as a raw pydantic dump.** **Disposition:** fixed `a50964d2` — `RoadmapFeedbackLedgerError` naming the item id, bytes unchanged. (Pass 3 was the "auditing your own edits" pattern: the remedy was the local shape at both actions, not a schema patch.)
+- **P4.1 — the guard refuses only the exact marker sentence, so a whitespace-only edit opens a marker item** (low). **Disposition:** fixed `507660d6` — uses migration's predicate `not request.strip()`; the pre-existing whitespace-only reviewer request looseness is tracked in `BUG_BACKLOG.md` ("The feedback ledger accepts a whitespace-only reviewer request"), `1693e4ae`.
+- **P5.1 — the whitespace clause fires for every migrated item and its message misdescribes one with real text** (low). **Disposition:** fixed `8e978039` — message names the missing text and rule; docs say any migrated item; behavior unchanged.
+- **P5.2 — the test pins the whitespace refusal only on the marker item** (low). **Disposition:** fixed `8e978039` — `test_a_blank_edit_cannot_open_any_migrated_item_and_refuses_with_the_named_error`, mutation-verified.
 
-P1.3, P1.7, P1.9, P1.10, P1.14 were built in a worktree and cherry-picked; hashes are branch commits.
+Out-of-range / recall-mode findings: _(none)_.
 
-- **P1.1 — one delta prompt serves only the batch shape** (high, CONFIRMED): selector-era proposals ended `response-rejected`. **Disposition:** fixed `ce48d805` — pre-range template restored (from `bde7990b`) as `roadmap-candidate-delta-selector.md`, chosen by capsule type; mutation-verified.
-- **P1.2 — `_content_identity` changes every selector-era identity** (high, CONFIRMED): also the admission no longer round-tripped. **Disposition:** fixed `ee323b71` — keys added only when `response_patch is not None`; `_LEGACY_SEAL_BYTES` had been captured post-change and is replaced with bytes from `e9a3e30b`; mutation-verified.
-- **P1.3 — legacy migration cannot import legal rows** (high, CONFIRMED by read): removed-row target, same id in two artifacts, unsafe ids, empty response. **Disposition:** fixed `1e10274e`, `8d0f3356` — all four probed; unresolvable target imports ineligible, unsafe or repeated ids become `legacy-<artifact>-<12 hex>`, empty response imports as no proposal, every item records `legacy_source`, blank request imports as a `closed` `LEGACY_BLANK_REQUEST_MARKER` item; a stale branch ledger must be re-created (no `LEDGER_SCHEMA_VERSION` bump).
-- **P1.4 — batch route overwrites an unpromoted selector-era admission** (medium, PLAUSIBLE): **Disposition:** fixed `ee323b71` — refuses `unpromoted-candidate-lineage` under a deliberately narrower predicate than settlement's (a selector lineage has no discard route, #395); mutation-verified.
-- **P1.5 — batch `_validate_candidate_evidence` skips reproductions** (medium, PLAUSIBLE): **Disposition:** fixed in part, by design `12b47511` — `predecessor_diff` (the only consumed stored field) is recomputed; `content_identity` refuted (record binding refuses an edit); `gate_evidence`, `review_requirement`, capsule reproduction deliberately not recomputed (identity would need the persisted patch, the unbuilt capability).
-- **P1.6 — batch question cannot be grounded in a proposed response** (medium, PLAUSIBLE): **Disposition:** fixed by narrowing `5dc8ffd4` — the `response` anchor is withdrawn and refused with a reason; details 05, 08 and the plan body corrected; persisting the patch not chosen.
-- **P1.7 — settlement evidence not rechecked in the publication window** (low, PLAUSIBLE): **Disposition:** fixed (narrow), other half declined `92280d95` — `decision_settlement_candidate_is_current` compares the evidence digest (window A). Window C (edit after `is_current`) declined: no ledger member in settlement's generation so no lost update (`test_settled_root_owns_no_derived_context_from_the_released_candidate_and_the_ledger_is_untouched`), and only an out-of-band hand edit reaches it.
-- **P1.8 — batch route records no failure diagnostics** (low, CONFIRMED): **Disposition:** fixed `ae416327` — `last_response`, `response_accepted`, `call_count` set; parse-failure receipt written.
-- **P1.9 — ledger-less enrolled roadmap reported as corrupt ledger** (low, PLAUSIBLE): **Disposition:** fixed `07e223d0` — load gated on `ledger_path.exists()`.
-- **P1.10 — CLI error-handling gaps** (low, CONFIRMED/PLAUSIBLE): reject/discard drop `result.detail`; ledger handler omits `RoadmapWriterGuardError`. **Disposition:** fixed `2eff39f9` (second half narrower than stated, added anyway).
-- **P1.11 — dead aliases and a pass-through wrapper** (cleanup, CONFIRMED): **Disposition:** fixed `28854ee9`.
-- **P1.12 — `_confirmation_result` attaches undeclared attributes; evidence published before gates** (low, PLAUSIBLE): **Disposition:** declined — `object.__setattr__` keeps the shared result at four fields (`test_result_is_the_shared_redacted_run_result`); evidence before gates is the settled handshake (gates rerun at the response; evidence inert).
-- **P1.13 — `_anchor_resolves` accepts new anchor kinds for selector-era candidates** (low, PLAUSIBLE): **Disposition:** fixed `28854ee9`, three-kind test.
-- **P1.14 — per-item artifact parsing in `eligible_reviewer_items`** (low, PLAUSIBLE): **Disposition:** fixed `8a121008` — per-call cache, spy-pinned.
-- **P1.15 — settlement handshake and reject/discard/migrate flows missing from the how-to** (low, PLAUSIBLE): **Disposition:** fixed `7a47a593`; #394 and #395 reconciled at closure.
+### Tracked
 
-### Review pass 2 (`f00c1d95..93e0bac4`)
-
-- **P2.1 — reopening a blank-request marker item makes the marker eligible reviewer text** (severity not stated): three routes (reopen, target-only edit, retarget) opened a marker item. **Disposition:** fixed `7f3d64ed`, placement corrected by `a50964d2` — an item with `legacy_source` and the marker request cannot be reopened, target-edited or retargeted (named error, bytes unchanged); a real-text edit is the exit; reviewer-written items with the same sentence reopen normally (asserted); mutation-verified.
-- **P2.2 — legacy migration re-parses the target artifact per row** (severity not stated): incomplete P1.14 sweep. **Disposition:** fixed `96fdb5c2` — shared `parsed` cache; parse count equal for one row and five.
-- **P2.3 — `legacy_source` does not identify a row when an id repeats within one artifact** (low): needs a hand-edited artifact past `check_feedback_integrity`. **Disposition:** fixed (documentation) `572af8b7` — sentence narrowed; storing row position declined.
-
-### Review pass 3 (`93e0bac4..8a2b455d`; all seeded by the `7f3d64ed` schema-level placement)
-
-- **P3.1 — the invariant keys on text equality: a legacy row whose own words are the marker sentence blocks migration** (probed): **Disposition:** fixed `a50964d2` — rule lives only at the two opening actions; `test_a_legacy_row_whose_own_words_are_the_marker_sentence_migrates_as_an_ordinary_open_item`. Residual: refused on reopen once closed; a text-supplying edit clears it.
-- **P3.2 — as a model validator, a hand-edited ledger becomes unloadable** (by read): **Disposition:** fixed `a50964d2` — `test_a_marker_item_hand_edited_to_open_still_loads_and_the_named_exit_still_runs`; the guard covers tool actions, not hand edits.
-- **P3.3 — refusals reach the CLI as a raw pydantic dump** (by read): **Disposition:** fixed `a50964d2` — a `RoadmapFeedbackLedgerError` naming the item id, no validation residue, bytes unchanged.
-
-Pass 3 was the "auditing your own edits" pattern: the schema placement was the wrong shape, so the remedy was the local shape at both actions, not a schema patch.
-
-### Review pass 4 (`8a2b455d..cd4a3c4a`)
-
-- **P4.1 — the guard refuses only the exact marker sentence, so a whitespace-only edit opens a marker item** (low): **Disposition:** fixed `507660d6` — uses migration's predicate `not request.strip()`; `test_an_edit_that_supplies_only_whitespace_cannot_open_a_blank_request_marker_item`. The pre-existing whitespace-only reviewer request looseness is tracked in `BUG_BACKLOG.md` ("The feedback ledger accepts a whitespace-only reviewer request"), `1693e4ae` (tightening `_requires_request` would change parse-time loading).
-
-### Review pass 5 (`cd4a3c4a..54521e4f`)
-
-- **P5.1 — the whitespace clause fires for every migrated item and its message misdescribes one with real text** (low): **Disposition:** fixed `8e978039` — message names the missing text and rule; docs say any migrated item; behavior unchanged.
-- **P5.2 — the test pins the whitespace refusal only on the marker item** (low): **Disposition:** fixed `8e978039` — `test_a_blank_edit_cannot_open_any_migrated_item_and_refuses_with_the_named_error`, mutation-verified against the narrowing the pass describes.
-
-### Out-of-range / recall-mode findings
-
-_(none)_
-
-### Filed in backlog
-
-- **#427** — 96 step-detail test names with no matching test; absorbs F2, F14 and the citation gaps.
-- **#428** — proposal current-or-stale status defined but never computed from `ProposalFields.candidate_version_id`.
-- **#429** — `plan_tool/roadmap_revision_run.py` is CLI-unreachable but still emits `RoadmapLocalRevisionPreflight`; retiring it is outside this plan.
-- **#395** — narrowed to the selector-era lineage (#394 removed). **`BUG_BACKLOG.md`** — whitespace-only reviewer request (`1693e4ae`).
+- **tracked** `BACKLOG.md` #427 — 96 step-detail test names with no matching test; absorbs F2, F14 and the citation gaps.
+- **tracked** `BACKLOG.md` #428 — proposal current-or-stale status defined but never computed from `ProposalFields.candidate_version_id`.
+- **tracked** `BACKLOG.md` #429 — `plan_tool/roadmap_revision_run.py` is CLI-unreachable but still emits `RoadmapLocalRevisionPreflight`; retiring it is outside this plan.
+- **tracked** `BACKLOG.md` #395 — narrowed to the selector-era lineage (#394 removed).
+- **tracked** `BUG_BACKLOG.md` — whitespace-only reviewer request (`1693e4ae`).
 - #428 and #429 were filed as #425 and #426 (still so in older commits, e.g. `9a4d34a2`) and renumbered at the `main` merge.
 
-### Convergence status
+### Closure
 
-Converged at the low-yield level; the plan is closed. Pass 1: 3 high / 3 medium / 4 low + 5 below-cap. Pass 2: 3 findings (P2.1 broke a stated invariant, material, reset the streak). Pass 3: 3 findings, all seeded by the pass 2 fix, two regressions (still material). Pass 4: 1 low, not a regression. Pass 5: 2 low, both about the pass 4 change. Passes 4 and 5 are two consecutive low-yield passes against the latest logic-changing commit `507660d6`: low-yield convergence, not a clean audit; advisory findings are retained above. Sweeps 1 and 2 are triaged and every true finding is fixed and mutation-verified. Follow-ups: #427, #428, #429, #395.
+Closure label: **converged** at the low-yield level; the plan is closed. P1: 3 high / 3 medium / 4 low + 5 below-cap. P2: 3 findings (P2.1 broke a stated invariant, material, reset the streak). P3: 3 findings, all seeded by the P2 fix. P4: 1 low. P5: 2 low, both about the P4 change. P4 and P5 are two consecutive low-yield passes against the latest logic-changing commit `507660d6`: low-yield convergence, not a clean audit. Sweeps 1 and 2 are triaged and every true finding is fixed and mutation-verified. Final suite 13601 passed / 190 skipped at `8e978039` (earlier checkpoints: 13367 run head; 13406 `cd2f0532`; 13439 `f4d4adb1`; 13455 `eaa4d8ca`; 13463 `4cd8acdf`; 13526 `868a89eb`; 13587 `8a121008`; 13595 `a50964d2`; 13597 `507660d6`).
 
-Final full suite: **13601 passed / 190 skipped, 0 failures at `8e978039`**. Earlier: 13367 run head; 13406 `cd2f0532`; 13439 `f4d4adb1`; 13455 `eaa4d8ca`; 13463 `4cd8acdf`; 13526 `868a89eb`; 13587 `8a121008`; 13593 pass 2 fixes; 13595 `a50964d2`; 13597 `507660d6`.
+Verification practices carried by this ledger: verify every guard by mutation (a RED with an empty failure line is a collection error: pass `-k` expressions as separate arguments; a guard behind an overlapping guard survives a single mutation, so mutate the pair); `publish_roadmap_generation` never compares a member's recorded old bytes with disk, so batch store and seal run `require_batch_state_unchanged` in `before_replace`; `reconcile-code --all` audits only and `enforce_step_tests` checks only that a test file was touched.
 
 ## Roadmap stack-aware approval — post-run review ledger
 
@@ -880,11 +745,10 @@ Final full suite: **13601 passed / 190 skipped, 0 failures at `8e978039`**. Earl
 | Field | Value |
 | --- | --- |
 | Plan | `roadmap-stack-aware-approval` (`docs/implementation-plans/archive/2-roadmap-stack-aware-approval.md`), 8 steps (7 code, step 8 non-code), all green. Source: `BACKLOG.md` #431; Jira `IPPT-9`. |
-| Branch | `codex/roadmap-stack-aware-approval-seed`, based on `origin/main` at `950365c2` (PR #19 merged). Local only; publishing needs a force-push. |
-| Range | Baseline `aba83968`; run head `f62aad66`; reconcile-code reports committed at `d942827d`. Product code net +378 lines, tests net +3,573. |
-| Checks run | Four bare-plan `completeness-audit --iterate` rounds and one detail-grounded audit (`20260924-235704-completeness.md`), each `no-qualified-current-evidence` at the pass cap; loop stopped by exit 2. Full suite green after every step and at the end: 13,936 passed, 190 skipped. One `reconcile-code --all` sweep (`20260925-014553` through `20260925-015848` `-run-reconcile.json`): 0 critical/high/medium, 1 nit. |
-| `/code-review` | Pass 1 (`high`, report-only, `aba83968..b64880d9`): no logic findings. Pass 2 (`high`, independent, `aba83968..40fdb416`): no critical/high/medium; one low PLAUSIBLE finding, three nits. |
-| Current disposition | **Converged (2026-09-25).** Sweep nit declined. P1.1 fixed, P1.2 and P1.3 declined, P1.4 trimmed, P1.5 left. P2.1 declined and filed in `BUG_BACKLOG.md`, P2.2 declined, P2.3 and P2.4 fixed. |
+| Range | Branch `codex/roadmap-stack-aware-approval-seed` on `origin/main` at `950365c2` (PR #19 merged), local only (publishing needs a force-push); baseline `aba83968`; run head `f62aad66`; reconcile-code reports committed at `d942827d`. Product code net +378 lines, tests net +3,573. |
+| Checks | Four bare-plan `completeness-audit --iterate` rounds and one detail-grounded audit (`20260924-235704-completeness.md`), each `no-qualified-current-evidence` at the pass cap; loop stopped by exit 2. Full suite green after every step and at the end: 13,936 passed, 190 skipped. One `reconcile-code --all` sweep (`20260925-014553` through `20260925-015848` `-run-reconcile.json`): 0 critical/high/medium, 1 nit. |
+| Reviewer | Pass 1 (`high`, report-only, `aba83968..b64880d9`): no logic findings. Pass 2 (`high`, independent, `aba83968..40fdb416`): no critical/high/medium; one low PLAUSIBLE finding, three nits. |
+| Disposition | **Converged (2026-09-25).** |
 
 ### Settled decisions (hand these to every reviewer)
 
@@ -900,42 +764,29 @@ From `BACKLOG.md` #431, the plan's Architecture, and the owner's decisions of 20
 - **Old seals.** Not migrated; an unpromoted one stays promotable only while its candidate is active.
 - **Deliberately not:** semantic judgment of stack content; a content-derived cumulative classifier; a second structural gate or per-hop approval; a new persisted stack or binding field; auto-approval; a terminal prompt; changes to the promotion writer's authority, publication journal, recovery machinery (beyond its stack-aware predicate), or the version and candidate stores; run-log lifecycles for decision commands; the ledger's current/stale label (#428); the unreachable selected-local runner (#429); behavior changes for legacy candidates without a route or root.
 
-### Reconcile-code sweep 1 — triage
+### Findings
 
-- **Nit (step 6, `impact: low`)** — `_render_structural_reject_effect` (`plan_tool/cli/roadmap_cmd.py`) inlines `tuple(hop.version_id for hop in view.hops)`, the same expression as `CandidateStackView.promoted_version_ids` (`plan_tool/roadmap_candidate_review.py:1483`). **Disposition:** declined — the property is named for what a promotion carries while the note lists what a reject drops, and `test_reject_note_lists_every_dropped_hop_and_says_nothing_is_promoted` fails if the note stops naming every hop.
+- **Sweep nit (step 6, low)** — `_render_structural_reject_effect` (`plan_tool/cli/roadmap_cmd.py`) inlines `tuple(hop.version_id for hop in view.hops)`, the same expression as `CandidateStackView.promoted_version_ids` (`plan_tool/roadmap_candidate_review.py:1483`). **Disposition:** declined — the property names what a promotion carries while the note lists what a reject drops; `test_reject_note_lists_every_dropped_hop_and_says_nothing_is_promoted` fails if the note stops naming every hop.
+- **P1.1 — Comment and test docstring overclaim "gains no failure mode"** (nit, CONFIRMED): an unreadable lower hop exits 1 after the proposal is stored (fail-closed, pinned by `test_proposal_stack_failure_after_a_stored_proposal_prints_the_stored_lines_and_exits_incomplete`). **Disposition:** fixed `5949f8fa` — wording only.
+- **P1.2 — Approve and non-approve branches build and render the view identically** (nit): `roadmap_cmd.py:1351-1370`. **Disposition:** declined — no plan property depends on it, step 5's detail split them on purpose, and a refactor would reset the convergence window for a nit.
+- **P1.3 — One confirmed approve derives the stack seven times** (low, CONFIRMED by count). **Disposition:** declined — the guarded repeats inside the writer guard are independent re-checks by design, stack depth is small, sharing adds coupling.
+- **P1.4 — Prose and vocabulary pins in `tests/test_roadmap_feedback_format.py`** (proportionality): five new tests (+116 lines) including a retired-wording scan and two pins on the earlier ledger; agreement checks between prose artifacts are the shape the development guide refuses. **Disposition:** fixed `cce75613` (trimmed) — scan, both earlier-ledger tests, and helpers removed (73 lines); the two format-doc phrase tests stay; suite after: 13,936 passed, 190 skipped.
+- **P1.5 — CLI label tests, flag-plumbing rows, stated redundancy** (proportionality): about fifteen cases pin labels, line order, and flag misuse exiting 2. **Disposition:** declined (left) — they pin producer-to-consumer seams stubs cannot show and are cheap; removal is churn.
+- **P2.1 — A hop whose stored artifacts fail today's parser escapes as a raw exception** (low, PLAUSIBLE, not reproduced): `_require_reproducible_batch_diff` (`plan_tool/roadmap_candidate_run.py:927`) catches `ValueError` but not `RoadmapArtifactError` (`plan_tool/roadmap_artifacts.py:378`), so the hop gives a traceback instead of the underivable refusal; no write on any path. **Disposition:** declined and filed in `BUG_BACKLOG.md` (section ROADMAP, severity RISK, commit `62785adc`) — contrived trigger, a logic-changing fix would reset the window; owner, 2026-09-25. Fix on file: add `RoadmapArtifactError` to the catch tuple with one test in `tests/test_roadmap_candidate_run.py`.
+- **P2.2 — Reject note printed in the indicative before the decision applies** (nit, CONFIRMED): on a library refusal stdout shows "released … dropped" above `structural decision: reject refused`, exit 2; order pinned by `test_reject_over_a_real_stack_prints_every_hop_and_the_drop_note_before_releasing_the_pointer`. **Disposition:** declined — the final line and exit status are correct; owner, 2026-09-25.
+- **P2.3 — `_ROOT` left unused by the P1.4 trim** (nit, CONFIRMED). **Disposition:** fixed `718a3a7c`.
+- **P2.4 — Ledger named the review model, tool invocation, and a session id** (nit, convention; repeat of the earlier ledger's P3.1 class). **Disposition:** fixed `48a7aefa` — both sites say "an independent review pass"; the pre-push grep found no other hit.
 
-### Review pass 1 (2026-09-24)
+Out-of-range findings: _(none)_. Pass 1 found no logic findings (route sweep, guard inventory, carve-out pinning tests, confirm step and block removal `db4e1809` matched the code); pass 2's twelve traced attacks were clean. Considered and not reported (settled and pinned): the boundary check "untested" (refuted by `test_seal_requirement_holds_at_the_boundary_when_the_review_guards_are_bypassed`); old single-command seals (`test_an_approval_of_a_lower_hop_cannot_promote_after_a_later_batch_stacks_on_it`); retroactive refusal of pre-change stored state (the defect the plan closes); a stacked batch orphaning a sealed-but-unpromoted approval; stack-view failure blocking edit and reject; recovery failing closed on lower-hop load problems; reject note printed before the decision, exit 1 after a stored proposal, route-less and legacy hops failing validation.
 
-No logic findings; the route sweep, guard inventory, carve-out pinning tests, confirm step, and block removal (`db4e1809`) matched the code.
+### Tracked
 
-- **P1.1 — Comment and test docstring overclaim** (nit, documentation, CONFIRMED): `plan_tool/cli/roadmap_cmd.py:1207-1209` and `test_proposal_output_keeps_todays_output_when_the_stack_has_no_structural_hop` say "gains no failure mode", but an unreadable lower hop exits 1 after the proposal is stored (fail-closed, pinned by `test_proposal_stack_failure_after_a_stored_proposal_prints_the_stored_lines_and_exits_incomplete`). **Disposition:** fixed `5949f8fa` — wording only.
-- **P1.2 — Approve and non-approve branches build and render the view identically** (nit, simplification): `roadmap_cmd.py:1351-1370`; suggestion is to hoist. **Disposition:** declined — no plan property depends on it, step 5's detail split them on purpose, and a refactor would reset the convergence window for a nit.
-- **P1.3 — One confirmed approve derives the stack seven times** (low, efficiency, CONFIRMED by count): repeats inside the writer guard are independent re-checks. **Disposition:** declined — the guarded repeats are the design, stack depth is small, and sharing the pre-guard derivations adds coupling.
-- **P1.4 — Prose and vocabulary pins in `tests/test_roadmap_feedback_format.py`** (proportionality, not a logic verdict): five new tests (+116 lines), including a retired-wording scan that admits a new spelling escapes, and two pins on the earlier ledger § "Roadmap structural feedback approval — post-run review ledger"; agreement checks between prose artifacts are the shape the development guide refuses. **Disposition:** fixed `cce75613` (source word: "trimmed") — scan, both earlier-ledger tests, and their helpers removed (73 lines); the two format-doc phrase tests stay. Full suite after: 13,936 passed, 190 skipped.
-- **P1.5 — CLI label tests, flag-plumbing rows, stated redundancy** (proportionality, not a logic verdict): about fifteen cases pin labels, line order, and flag misuse exiting 2. **Disposition:** declined (source word: "left") — they pin producer-to-consumer seams stubs cannot show and are cheap; removal is churn.
+- **tracked** `BUG_BACKLOG.md` (section ROADMAP, severity RISK, `62785adc`) — P2.1, the `RoadmapArtifactError` catch gap.
+- The reconcile-code sweep ran once; a further full sweep is warranted only after a verified class-wide correction.
 
-Considered and not reported (refuted or settled): the boundary check "untested" (refuted by `test_seal_requirement_holds_at_the_boundary_when_the_review_guards_are_bypassed`); old single-command seals (pinned by `test_an_approval_of_a_lower_hop_cannot_promote_after_a_later_batch_stacks_on_it`); reject note printed before the decision, exit 1 after a stored proposal, route-less hops, and legacy hops failing validation (all settled and pinned).
+### Closure
 
-### Review pass 2 (2026-09-24)
-
-Scope `aba83968..40fdb416` (comment, docstring, and test changes since pass 1). No critical, high, or medium finding; twelve traced attacks were clean, and pass 1's claims re-checked against the code.
-
-- **P2.1 — A hop whose stored artifacts fail today's parser escapes as a raw exception** (low, error path, PLAUSIBLE): `_require_reproducible_batch_diff` (`plan_tool/roadmap_candidate_run.py:927`) catches `ValueError` but not `RoadmapArtifactError` (`class RoadmapArtifactError(Exception)`, `plan_tool/roadmap_artifacts.py:378`), so such a hop gives a traceback instead of the underivable refusal. No write happens on any path; only the refusal shape is wrong. Not reproduced. **Disposition:** declined and filed in `BUG_BACKLOG.md` (section ROADMAP, severity RISK, commit `62785adc`) — contrived trigger, and a logic-changing fix would reset the convergence window; owner, 2026-09-25. Fix on file: add `RoadmapArtifactError` to the catch tuple with one test in `tests/test_roadmap_candidate_run.py`.
-- **P2.2 — Reject note printed in the indicative before the decision applies** (nit, output wording, CONFIRMED): `roadmap_cmd.py:1371-1372`; on a library refusal stdout shows "released … dropped" above `structural decision: reject refused`, exit 2. Order is pinned by `test_reject_over_a_real_stack_prints_every_hop_and_the_drop_note_before_releasing_the_pointer`. **Disposition:** declined — the final line and exit status are correct; owner, 2026-09-25.
-- **P2.3 — `_ROOT` left unused by the P1.4 trim** (nit, dead code, CONFIRMED): `tests/test_roadmap_feedback_format.py`. **Disposition:** fixed `718a3a7c`.
-- **P2.4 — This ledger named the review model, tool invocation, and a session id** (nit, convention; reviewer PLAUSIBLE, verified CONFIRMED): a repeat of the earlier ledger's P3.1 class. **Disposition:** fixed `48a7aefa` — both sites say "an independent review pass"; the pre-push grep found no other hit.
-
-Considered and not reported (settled): retroactive refusal of pre-change stored state (the defect the plan closes); a stacked batch orphaning a sealed-but-unpromoted approval; stack-view failure blocking edit and reject; recovery failing closed on lower-hop load problems.
-
-### Out-of-range findings
-
-_(none)_
-
-### Convergence status
-
-**Converged (2026-09-25).** Pass 1 was clean on logic. Pass 2 added one low PLAUSIBLE finding (P2.1, declined and filed as a `RISK` in `BUG_BACKLOG.md`) and three nits (P2.2 declined, P2.3 and P2.4 fixed), with no new material issue. Two consecutive clean or low-yield passes against the latest logic-changing commit `db4e1809` (step 7) satisfy `integrations/shared/DIRECTIVES.md`, "After `run` finishes a plan". Every commit since is a comment, docstring, test, or document change (`5949f8fa`, `cce75613`, `718a3a7c`, `48a7aefa`, `62785adc`, and the ledger commits), so the window was never reset. No further pass launches.
-
-Not covered: P2.1 stays open in the bug backlog; the reconcile-code sweep ran once (a further full sweep is warranted only after a verified class-wide correction). The full suite passed at the end of the loop (13,936 passed, 190 skipped) on the tree holding every code, test, and backlog commit.
+Closure label: **converged (2026-09-25).** Pass 1 was clean on logic; pass 2 added one low PLAUSIBLE finding (P2.1, declined and filed) and three nits (P2.2 declined, P2.3 and P2.4 fixed), no new material issue. Two consecutive clean or low-yield passes against the latest logic-changing commit `db4e1809` (step 7) satisfy `integrations/shared/DIRECTIVES.md`, "After `run` finishes a plan". Every commit since is comment, docstring, test, or document (`5949f8fa`, `cce75613`, `718a3a7c`, `48a7aefa`, `62785adc`, and the ledger commits), so the window was never reset. Full suite passed at the end of the loop (13,936 passed, 190 skipped). No further pass launches.
 
 ## Roadmap versioned-from-birth — code review ledger
 
@@ -959,44 +810,45 @@ Not covered: P2.1 stays open in the bug backlog; the reconcile-code sweep ran on
 
 ### Findings
 
-Every claim was static reading; each was reproduced (failing test first) or checked in the driving session before a fix. "fixed" below means fixed in this change set (no per-finding commit is recorded).
+Every claim was static reading; each was reproduced (failing test first) or checked before a fix. "fixed" means fixed in this change set (no per-finding commit is recorded).
 
 Pass 1 (`7b021100`):
 
-1. medium, fixed: recovery did not recognize a completed root generation because the ledger member was missing from the expected member list (`roadmap_revision_publish.py`; a crash after the head write left a journal every guarded writer refused). The recognizer now expects the version record, brief, four artifacts, the initial ledger (`old=None`), then the selector; the masking test now feeds `captured[0]` unmodified; two sibling tests that pinned the old shape publish the real member list. New: `test_recognizer_accepts_the_real_root_member_list_including_the_initial_ledger`, `test_recognizer_refuses_a_root_member_list_that_is_not_exactly_the_published_one`. Mutation removing the ledger member turns five tests red.
-2. low-medium, fixed: a corrupt or missing version store was an uncaught exception in `create --from-existing` on a roadmap-promoted seed (`RoadmapVersionError`). `_confirm_invalidated_roadmap_seed` prints and returns `False`; `_load_roadmap_research_targets` raises `CreateError`; missing head still raises `NoPublishedRoadmapVersionError`. Tests `test_corrupt_accepted_head_is_an_error_message_not_a_traceback`, `test_corrupt_accepted_head_is_a_create_error_not_a_traceback` fail with the fix stashed.
-3. low-medium, tracked #446: dead stage-feedback revision path and never-populated `RoadmapResult` fields. The review's "only test callers" claim was partly wrong (machine-verified counts in #446: `_run_bounded_stage_feedback`, `_check_predecessor_review_rows`, `_awaiting_review_count`, `_newly_settled_decision_ids`, `_feedback_counts_by_state`, `_has_open_feedback` have no caller anywhere; three result fields are set by neither construction). `invalidated_seed_count` in `run_log.py` is a different record (#444), not in #446.
-4. low, fixed: `DATA_CONTRACT.md` and `docs/OPERATIONS.md` described removed run-log events and preflight categories; `check` list now names the emitted values, `RoadmapStageWritten` describes one event per held stage with `replaced` always `false`, removed bullets dropped. Declined: adding the categories to a drift test (documented prose; no consumer needs it closed).
+1. medium, fixed: recovery did not recognize a completed root generation because the ledger member was missing from the expected member list (`roadmap_revision_publish.py`; a crash after the head write left a journal every guarded writer refused). The recognizer now expects version record, brief, four artifacts, the initial ledger (`old=None`), then the selector; `test_recognizer_accepts_the_real_root_member_list_including_the_initial_ledger`, `test_recognizer_refuses_a_root_member_list_that_is_not_exactly_the_published_one`; mutation removing the ledger member turns five tests red.
+2. low-medium, fixed: a corrupt or missing version store was an uncaught exception in `create --from-existing` on a roadmap-promoted seed (`RoadmapVersionError`). `_confirm_invalidated_roadmap_seed` prints and returns `False`; `_load_roadmap_research_targets` raises `CreateError`; missing head still raises `NoPublishedRoadmapVersionError`. Tests `test_corrupt_accepted_head_is_an_error_message_not_a_traceback`, `test_corrupt_accepted_head_is_a_create_error_not_a_traceback`.
+3. low-medium, tracked #446: dead stage-feedback revision path and never-populated `RoadmapResult` fields (machine-verified counts in #446: `_run_bounded_stage_feedback`, `_check_predecessor_review_rows`, `_awaiting_review_count`, `_newly_settled_decision_ids`, `_feedback_counts_by_state`, `_has_open_feedback` have no caller anywhere; the review's "only test callers" claim was partly wrong). `invalidated_seed_count` in `run_log.py` is a different record (#444).
+4. low, fixed: `DATA_CONTRACT.md` and `docs/OPERATIONS.md` described removed run-log events and preflight categories; `check` list names the emitted values, `RoadmapStageWritten` is one event per held stage with `replaced` always `false`. Declined: adding the categories to a drift test (no consumer needs it closed).
 5. low, fixed: operator/model-visible text still described on-disk artifacts and stage re-entry (`roadmap_cmd.py` help/docstring, `roadmap.py` docstrings, four `roadmap-*.md` stage prompts); `docs/cli/roadmap.md` regenerated; the byte-stable key comment untouched.
-6. low, fixed: `_create_handoff_lines` `plans_dir` fallback computed the roadmap folder; `plans_dir` is now a required keyword (test comment corrected, not the fixture line).
-7. low, fixed: backlog entries described removed rollback/checkpoint/enrollment routes; after verifying each subject is gone, #398, #399, #400, #401, #274, #275, #429 and two `BUG_BACKLOG.md` entries deleted, dead clauses trimmed from #355 and one receipt entry; `BUG_BACKLOG.md` joins `_REMOVED_ROUTE_DOC_FILES`. Dated closed entries and the connectivity-recovery entry (its design decision) left as written.
-8. low, fixed in part: `current =` spacing and a ledger-less-roadmap comment corrected. Declined: the successor-slug remedy on the missing-ledger read (different site from decision settlement, where absence is supported; reachable only by hand-deleting the ledger; no test pins a new message).
+6. low, fixed: `_create_handoff_lines` `plans_dir` fallback computed the roadmap folder; `plans_dir` is now a required keyword.
+7. low, fixed: backlog entries described removed rollback/checkpoint/enrollment routes; after verifying each subject is gone, #398, #399, #400, #401, #274, #275, #429 and two `BUG_BACKLOG.md` entries deleted, dead clauses trimmed from #355 and one receipt entry; `BUG_BACKLOG.md` joins `_REMOVED_ROUTE_DOC_FILES`.
+8. low, fixed in part: `current =` spacing and a ledger-less-roadmap comment corrected. Declined: the successor-slug remedy on the missing-ledger read (different site from decision settlement; reachable only by hand-deleting the ledger).
 
 Pass 2 (`db82e058`; six findings, no wrong-content or store-corruption defect; not clean):
 
-9. medium, fixed: a SIGKILL during a durable write left `.<name>.<random>.tmp` that `_pre_head_state_paths` counted, blocking every retry with `RoadmapPreHeadStateError`. `fileio.is_write_temp_name` (leading dot, `.tmp` suffix, at least three dots) is skipped; any other stored file still counts. Tests `test_stray_durable_write_temp_files_are_not_pre_head_state`, `test_a_real_stored_file_still_refuses_even_when_it_resembles_a_temp_name`; mutations (drop filter; loosen to `endswith(".tmp")`) turn them red. Declined: unlinking temp siblings in recovery (inert once ignored).
-10. medium-low, fixed in part, tracked in part (#447): after a crash between head write and journal unlink no ordinary writer recovers and the refusal named no route. Fixed: the refusal names the journal path and `plan-tool roadmap <slug> --from-existing <brief>`; `docs/how-to/roadmap.md` § 3 and `RUNBOOK.md` updated; test `test_publish_beside_a_leftover_journal_names_the_recovery_command_and_changes_nothing`. Deferred, tracked #447: recover-before-publish in the shared writer guard and unrecoverable non-root journal kinds beside a head (design decision).
-11. low-medium, fixed: `delete_resume` failing after the head commit reported a published roadmap as a failed run; the call warns and returns the completed result. Test `test_a_failing_resume_cleanup_after_the_head_commit_warns_and_still_completes`; mutation (catch `ZeroDivisionError`) red.
-12. low, fixed: the completed-root recognizer re-implemented initial-ledger construction; `roadmap_feedback_ledger.initial_ledger(slug, ledger_state)` is the one construction. Test `test_initial_ledger_bytes_are_one_construction_shared_by_publisher_and_recognizer`.
-13. low, fixed in part: first-run stage loop sent revision-era correction text and rationale; retry correction now reads in first-run terms, predecessor branches deleted (`_authored_review_rows` takes the artifact alone), CLI exhaustion line updated. Test `test_the_retry_correction_names_the_dropped_entries_in_first_run_terms`. Producer-less names tracked #446 (`source_recheck` of `_run_stage`, `RoadmapSourceAdmissionError` raises/handlers, `_StageOutcome.invalid_detail` and `.reused_predecessor`, `OUTCOME_STAGE_INVALID`/`_print_invalid`, `OUTCOME_COMPLETED_NO_CHANGE`/`_print_completed_no_change`); not deleted here per the settled decision.
-14. low, fixed: resume-directory files were written without fsync; both writers use `durable_write_bytes` and `read_held_stages` skips write-temp names silently while other strays still warn. Tests `TestResumeWritesAreDurable`, `TestInterruptedWriteLeftoversAreNotWarnedAbout`.
+9. medium, fixed: a SIGKILL during a durable write left `.<name>.<random>.tmp` that `_pre_head_state_paths` counted, blocking every retry with `RoadmapPreHeadStateError`. `fileio.is_write_temp_name` (leading dot, `.tmp` suffix, at least three dots) is skipped; any other stored file still counts. Tests `test_stray_durable_write_temp_files_are_not_pre_head_state`, `test_a_real_stored_file_still_refuses_even_when_it_resembles_a_temp_name`; mutations turn them red. Declined: unlinking temp siblings in recovery (inert once ignored).
+10. medium-low, fixed in part, tracked in part (#447): after a crash between head write and journal unlink no ordinary writer recovers and the refusal named no route. Fixed: the refusal names the journal path and `plan-tool roadmap <slug> --from-existing <brief>`; `docs/how-to/roadmap.md` § 3 and `RUNBOOK.md` updated; test `test_publish_beside_a_leftover_journal_names_the_recovery_command_and_changes_nothing`. Tracked #447: recover-before-publish in the shared writer guard and unrecoverable non-root journal kinds beside a head (design decision).
+11. low-medium, fixed: `delete_resume` failing after the head commit reported a published roadmap as a failed run; the call warns and returns the completed result. Test `test_a_failing_resume_cleanup_after_the_head_commit_warns_and_still_completes`.
+12. low, fixed: the completed-root recognizer re-implemented initial-ledger construction; `roadmap_feedback_ledger.initial_ledger(slug, ledger_state)` is the one construction (`test_initial_ledger_bytes_are_one_construction_shared_by_publisher_and_recognizer`).
+13. low, fixed in part: first-run stage loop sent revision-era correction text; retry correction reads in first-run terms, predecessor branches deleted, CLI exhaustion line updated (`test_the_retry_correction_names_the_dropped_entries_in_first_run_terms`). Producer-less names tracked #446 (`source_recheck` of `_run_stage`, `RoadmapSourceAdmissionError` raises/handlers, `_StageOutcome.invalid_detail` and `.reused_predecessor`, `OUTCOME_STAGE_INVALID`/`_print_invalid`, `OUTCOME_COMPLETED_NO_CHANGE`/`_print_completed_no_change`).
+14. low, fixed: resume-directory files were written without fsync; both writers use `durable_write_bytes`, and `read_held_stages` skips write-temp names silently while other strays still warn (`TestResumeWritesAreDurable`, `TestInterruptedWriteLeftoversAreNotWarnedAbout`).
 
 Pass 3 (`8a5ea497..HEAD`; none above low-medium; low-yield by severity):
 
-15. low-medium, fixed: `_require_no_accepted_head` called `delete_resume` unguarded, turning the head refusal into a raw `OSError` and skipping the index refresh; `_delete_resume_or_warn` serves both sites. Test `test_a_failing_resume_cleanup_beside_an_accepted_head_still_refuses_and_refreshes_the_index`; mutation red.
-16. low-medium, fixed: stage files after a gap or damaged stage were warned as "not held" but left on disk, so a later run could re-gate a stale stage; `_run_roadmap` calls `discard_stages_from(repo_root, slug, len(held.stages) + 1)` after the digest check. Test `test_stages_after_a_damaged_stage_are_discarded_so_a_later_run_cannot_regate_them`; mutation red.
-17. low, declined (no code change): continuing in memory when the resume directory is unwritable would break the owner-decided resume guarantee; failing at the first write bounds loss to one stage reply (`cannot hold stage 1 for resume (...)` via `RoadmapEnvironmentalError`); `docs/how-to/roadmap.md` § 3 states it.
-18. low, fixed: `roadmap-plans.md` still told the model it may author `feedback` and `removals`; sentence replaced and "a newly authored or revised row" became "a newly authored row" after a vocabulary sweep of all four stage prompts and the other roadmap prompts (remaining hits legitimate).
+15. low-medium, fixed: `_require_no_accepted_head` called `delete_resume` unguarded, turning the head refusal into a raw `OSError` and skipping the index refresh; `_delete_resume_or_warn` serves both sites (`test_a_failing_resume_cleanup_beside_an_accepted_head_still_refuses_and_refreshes_the_index`).
+16. low-medium, fixed: stage files after a gap or damaged stage were warned as "not held" but left on disk, so a later run could re-gate a stale stage; `_run_roadmap` calls `discard_stages_from(repo_root, slug, len(held.stages) + 1)` after the digest check (`test_stages_after_a_damaged_stage_are_discarded_so_a_later_run_cannot_regate_them`).
+17. low, declined: continuing in memory when the resume directory is unwritable would break the owner-decided resume guarantee; failing at the first write bounds loss to one stage reply (`RoadmapEnvironmentalError`); `docs/how-to/roadmap.md` § 3 states it.
+18. low, fixed: `roadmap-plans.md` still told the model it may author `feedback` and `removals`; sentence replaced after a vocabulary sweep of all four stage prompts and the other roadmap prompts.
 19. low, tracked #447: root-journal recognizer pins initial ledger bytes, so a hand edit between a crash and recovery makes recovery refuse with no remedy; same class as 10. Remedy options recorded there: exempt the ledger member once the head names the published version, or name the hand-removal remedy in the refusal.
-20. low, declined (documented): the newly created resume directory chain is not fsynced; a power loss costs only regeneration of held stages, nothing published or corrupted.
+20. low, declined (documented): the newly created resume directory chain is not fsynced; a power loss costs only regeneration of held stages.
 
 Pass 4 (`49a1663b~1..HEAD`; five low, no medium; eleven crash points walked):
 
-21. low, tracked #448 (a), `decision-needed`: resume directory keyed by (repo root, slug) while head and writer guard are keyed by plans directory, so two plans dirs sharing a slug can delete/reuse each other's held stages; scoping choice (path vs recorded owner) is a design decision, bounded loss, nothing published affected. Verified by reading only.
-22. low, fixed: `discard_stages_from` could raise at preflight on a stray entry the resume module promises only to warn about (side effect of the finding 16 fix); each entry is unlinked in `try/except OSError`, warning and continuing. Test `test_discard_warns_and_continues_when_an_entry_cannot_be_removed`; mutation red.
-23. low, tracked #448 (b), `decision-needed`: one unreadable historic record makes `INDEX.md` stale (still labeling the previous version `accepted head`) instead of marking it; remedies (stale marker, absence, partial rows) change what the index promises, so the owner chooses. Verified by reading only.
-24. low, fixed: `roadmap-plans.md` gave a false rationale ("reviewers add those rows after the roadmap is published"); now "A first run authors `decisions` only; do not author `feedback` or `removals` rows." Sweep over the four stage prompts found no other live hit.
-25. low, fixed: `_print_exhausted` told the operator to delete the resume directory without naming it; it now prints the directory via `roadmap.stage_resume_directory` (the CLI must not import the resume module; `test_resume_directory_is_referenced_only_by_the_stage_run_and_its_owner`) and says deleting restarts at stage 1. Test `test_gates_exhaustion_names_the_resume_directory_and_that_deleting_it_restarts`; mutation red.
+21. low, tracked #448 (a), `decision-needed`: resume directory keyed by (repo root, slug) while head and writer guard are keyed by plans directory, so two plans dirs sharing a slug can delete/reuse each other's held stages; scoping choice (path vs recorded owner) is a design decision, bounded loss. Verified by reading only.
+22. low, fixed: `discard_stages_from` could raise at preflight on a stray entry the resume module promises only to warn about (side effect of the finding 16 fix); each entry is unlinked in `try/except OSError` (`test_discard_warns_and_continues_when_an_entry_cannot_be_removed`).
+23. low, tracked #448 (b), `decision-needed`: one unreadable historic record makes `INDEX.md` stale (still labeling the previous version `accepted head`) instead of marking it; remedies change what the index promises, so the owner chooses. Verified by reading only.
+24. low, fixed: `roadmap-plans.md` gave a false rationale ("reviewers add those rows after the roadmap is published"); now "A first run authors `decisions` only; do not author `feedback` or `removals` rows."
+25. low, fixed: `_print_exhausted` told the operator to delete the resume directory without naming it; it prints the directory via `roadmap.stage_resume_directory` (the CLI must not import the resume module; `test_resume_directory_is_referenced_only_by_the_stage_run_and_its_owner`) and says deleting restarts at stage 1 (`test_gates_exhaustion_names_the_resume_directory_and_that_deleting_it_restarts`).
+
 
 ### Closure
 
@@ -1075,12 +927,7 @@ section's parser-level shape error is superseded. Do not report as a finding.
 
 ### Run record
 
-- Step 1: the test-authoring gate misfired (the model had modified a test file); recovered by hand, committed `e7f80792`, `done` flipped as a separate commit.
-- Step 2: failed the full suite on two sibling tests pinning the old gate set; fixed by hand (`bb7a94e9`).
-- Step 3: a bare `git checkout` of one file discarded the model's uncommitted edits, so the step was reset and re-run; the re-run wrote no tests (gate failed correctly), so tests were applied from the first attempt's saved patch and adapted, one stale invariant test rewritten (`test_every_addable_row_type_has_a_valid_add_row_shape`, mutation-checked) (`9269f33a`).
-- Step 5: failed 8 index tests because the fixtures wrote no recorded brief; fixed in the fixtures (`e21d0be6`). The `done` flip is a replacement when the previous step's commit has already written `status: current`; a first attempt inserted a duplicate key and was caught in `git diff`.
-- Steps 4, 6-8: green, committed by the tool.
-- `reconcile-code` sweep 1 findings were missing detail-promised tests; writing them exposed two code defects, both fixed: the candidate route refused the first stack add (`_prepare_operations`), and `artifact_row_diffs` raised pairing a stack-less artifact with a stack-bearing one.
+Steps 1-3 needed hand recovery (test-authoring gate misfire `e7f80792`; two sibling tests pinning the old gate set `bb7a94e9`; a discarded-edits re-run with tests applied from the saved patch, `test_every_addable_row_type_has_a_valid_add_row_shape` rewritten and mutation-checked `9269f33a`); step 5 fixtures fixed `e21d0be6`; steps 4 and 6-8 were committed by the tool. `reconcile-code` sweep 1 findings were missing detail-promised tests; writing them exposed two code defects, both fixed: the candidate route refused the first stack add (`_prepare_operations`), and `artifact_row_diffs` raised pairing a stack-less artifact with a stack-bearing one.
 
 ### Findings
 
@@ -1213,14 +1060,7 @@ Converged. The window restarted at each of `df4397f5` and `ec368b44`; after `ec3
 
 ### Run record
 
-Steps 3 and 4 were committed by the tool. Steps 1 and 2 were accepted by hand
-(`RUNBOOK.md` § "Accept as complete"): each failed the full-suite gate on a defect in the
-step's own test or a pinned prompt line break; fixed, suite green, step committed
-(`2621def3`, `9a771741`), status set to `done` (`edabfee5`, `b77efc10`). A bare re-run
-after a hand fix cannot advance a step (the model changes nothing, so the test-authoring
-gate fails, and `--commit` refuses a dirty tree). The recovery is written into
-`integrations/shared/DIRECTIVES.md` on branch `docs/directives-hand-fix-on-step-test-failure`;
-the gap is tracked below.
+Steps 3 and 4 were committed by the tool. Steps 1 and 2 were accepted by hand (`RUNBOOK.md` § "Accept as complete") after failing the full-suite gate on a defect in the step's own test or a pinned prompt line break: step commits `2621def3`, `9a771741`, `done` flips `edabfee5`, `b77efc10`. A bare re-run after a hand fix cannot advance a step; the recovery is written into `integrations/shared/DIRECTIVES.md` on branch `docs/directives-hand-fix-on-step-test-failure`, and the gap is tracked below.
 
 ### Tracked
 
@@ -1239,13 +1079,7 @@ merged (`49ec6c5f`).
 
 ### Audit replay
 
-Owed by plan step 3; gates nothing. A throwaway bare one-step plan whose `## Stack` listed
-`store-app-db` as PostgreSQL while its `## Architecture` and step 1 used a local SQLite
-file was run through `plan-tool --model claude-sonnet-5-5 completeness-audit <plan>
---iterate -y` (2 conceptual passes, bare-plan stage). Both passes reported the
-contradiction as a HIGH `plan-correctness` finding quoting both texts, with a fix offering
-either choice. One sample, bare-plan stage, `limited` confidence; no detail-grounded replay
-or Integration-sized plan. The audit prompt needs no change on this evidence.
+Owed by plan step 3; gates nothing. A throwaway bare one-step plan whose `## Stack` listed `store-app-db` as PostgreSQL while its `## Architecture` and step 1 used a local SQLite file was run through `plan-tool --model claude-sonnet-5-5 completeness-audit <plan> --iterate -y` (2 conceptual passes, bare-plan stage). Both passes reported the contradiction as a HIGH `plan-correctness` finding quoting both texts. One sample, bare-plan stage, `limited` confidence; the audit prompt needs no change on this evidence.
 
 ### Next session — pickup
 
