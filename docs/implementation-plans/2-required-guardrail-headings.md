@@ -271,9 +271,8 @@ command for the operator.
   A seed writer whose source carries no guardrail heading the rule accepts
   (absent, empty, duplicated or `_(TODO)_`, as in a plan that predates this
   change) writes `_(TODO)_` under it, which `create`
-  refuses, and its printed next step says to fill the heading in. This is the
-  only case left to a hand edit, because filling it would need a model call the
-  renderer does not make.
+  refuses, and its printed next step says to fill the heading in. An `annotate` response that returns no guardrail bodies is rendered the same
+  way. These are the only cases left to a hand edit.
 - **`annotate`'s guardrail instruction is prompt guidance only.** It carries
   the proportionality rule `synthesize-body.md` applies to plan bodies, in one
   line in `prompts/annotate.md`; whether a written fence is proportionate is not
@@ -370,7 +369,8 @@ assert that `None` stays outside the placeholder pattern.
   and the downstream fence.
 - `roadmap --materialize`, `annotate`, `scope-out` and `reground` write all
   three headings from their existing sources, with `_(TODO)_` only where a
-  deterministic renderer's source plan has none.
+  seed writer's source has no accepted heading or an `annotate` response returns
+  no guardrail bodies; `create` refuses both until the operator fills them in.
 - Every live seed in both seed directories passes the check.
 - The docs describe the headings as required.
 - BACKLOG #532 is removed in the final step.
