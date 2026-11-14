@@ -96,6 +96,13 @@ Three labels, each with a short fixed list of values. They apply to both
 | **Readiness** | `ready` · `decision-needed` · `evidence-gated` · `blocked-on #N` · `parked` | Can someone start today, or does a decision, a measurement, or another item come first? |
 | **Tier** | `beginner` · `experienced` · `architect` | The least experienced kind of work that could own this item through to merge, with normal review. |
 
+**Where the labels go.** In `BACKLOG.md`, the three labels and the Principle
+sit on one `- **Labels:** Route <route> · Readiness <readiness> · Tier <tier> ·
+Principle <principle>` line directly under the entry heading; an `Unpark when:`
+or `Escalate to plan if:` line is its own bullet. In `BUG_BACKLOG.md`, they stay
+the trailing `- **Route:** … · **Readiness:** … · **Tier:** …` line, because
+its entries have no Principle and open with Files, Symptom, and Fix.
+
 **Older entries carry an `Approach:` tag instead.** Read `Approach: direct` /
 `plan-tool` as the Route, and read an `Approach:` that opens with "decision
 first" or "investigation" as Readiness `decision-needed`. An entry without a
