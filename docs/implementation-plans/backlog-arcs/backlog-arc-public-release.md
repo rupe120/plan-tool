@@ -43,8 +43,9 @@ with their separate work items.
   prose. A search hit is a review candidate, not proof of private ownership.
 - Current-tree cleanup does not certify Git history. #514 needs an explicit
   owner decision before a history rewrite, public remote or publication action.
-- Provider selection must have a defined reader; a configuration example alone
-  cannot deliver #509. Git hosting does not imply Jira or team approval policy.
+- Provider selection is router guidance (detect from the remote, confirm with the
+  user), not a configuration reader (#509). Git hosting does not imply Jira or
+  team approval policy.
 - Distinguish model recommendations from inherited defaults, published token
   prices from measured task cost, and API billing from subscription allowances.
 

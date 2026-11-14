@@ -559,25 +559,21 @@ Durable re-open conditions for retired items are recorded in
 
 ### `BACKLOG.md` `Iterate:` recipes run `detail` straight after `create`, skipping the bare-plan gate
 
-- **Files:** `BACKLOG.md` (eleven `Iterate:` or `Iteration:` command blocks: the
-  `mechanism-reach-02-audit`, `incremental-completeness-audit`,
-  `conceptual-pass-impact-sweep`, `jira-readiness-audit-lane`,
-  `detail-authoring-wizard`, `partial-mutation-snapshot-restore`,
-  `partial-mutation-guard-hardening`, `roadmap-05-framework-lenses`,
-  `detail-readiness-advisory`, `connectivity-pause-and-poll` and
-  `artifact-contention-handoff` recipes); authority
+- **Files:** `BACKLOG.md` (four `Iterate:` or `Iteration:` command blocks remain: the
+  `incremental-completeness-audit`, `partial-mutation-snapshot-restore`,
+  `roadmap-05-framework-lenses` and `artifact-contention-handoff` recipes; the
+  other seven found on 2026-11-13 left with their entries); authority
   `integrations/shared/DIRECTIVES.md` Gate 1.
 - **Symptom:** each block runs `detail` straight after `create` and audits only
   after it, so an operator who copies it skips the bare-plan audit that Gate 1
   runs before `detail`. Found 2026-11-13 by a sweep of fenced blocks
   in the tracked documents for a `plan-tool detail` command that follows a
   `plan-tool create` within 80 lines with no `plan-tool completeness-audit`
-  between; its 24 hits were these eleven, two real gaps in `docs/how-to/roadmap.md`
+  between; its 24 hits included eleven such blocks, two real gaps in `docs/how-to/roadmap.md`
   (since corrected), and independent syntax or opt-in examples. The routers carry
   both gates, so this reaches only an operator who copies a queue entry's recipe.
-  Two of the entries (`roadmap-05-framework-lenses`, `detail-readiness-advisory`)
-  tell the reader to follow the current directives directly above a recipe that
-  skips Gate 1.
+  One of the entries (`roadmap-05-framework-lenses`) tells the reader to follow
+  the current directives directly above a recipe that skips Gate 1.
 - **Fix:** insert `plan-tool completeness-audit <slug> --iterate --commit -y`
   after `create` in each block, as each entry is next touched, with the routers'
   caveat to commit the plan first (`--commit` refuses a dirty working tree).

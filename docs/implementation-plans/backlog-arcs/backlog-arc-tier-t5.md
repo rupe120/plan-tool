@@ -46,8 +46,8 @@ push automatically; push only when the user explicitly requests it.
 2. **#107** — deferred pending a demonstrated export blocker.
 3. **#102**, **#56** — read each item's
    full `BACKLOG.md` entry before acting.
-4. **#89** — commit-hygiene coverage (extend `--commit` to more mutating
-   commands). Observed orphaning gap on `reconcile-code`; see the entry's
+4. **#89** — extend `--commit` to `reconcile-code`/`reconcile-plan` (lands
+   after the BUG_BACKLOG.md entry on `--commit` staging the whole tree). Observed orphaning gap on `reconcile-code`; see the entry's
    "Evidence it recurs" bullet in `BACKLOG.md`.
 5. **#79–#81** — the Bucket D consolidation cluster. See the decision gate
    above before touching #79's claims specifically.

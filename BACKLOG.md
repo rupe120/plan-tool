@@ -283,18 +283,17 @@ lens exists to produce; keep it in sync as entries land or are added):
   a greenfield roadmap's first plan toward the runnable substrate later
   plans' verification presumes).
 - **audit-coverage:** **#66** (contract-trace / path-enumeration deterministic
-  audit mode — complements the stochastic sampler), **#175** (jira-readiness audit
-  lane — deterministic anchor verification, frontmatter↔detail footprint
-  coherence, and decided-scope compliance as a minutes-scale gate on `jira`
-  export, reporting only ticket-blocking findings), and the run-log coverage
+  audit mode — complements the stochastic sampler), **#175** (jira-readiness
+  deterministic checks in `jira --lint` / `validate` — HEAD-anchor
+  verification and frontmatter↔detail footprint coherence, no model call), and the run-log coverage
   arc **#176** / **#177** (four verbs spend Claude with no log at all;
   `create`'s slug call precedes its own log; an unsinked call now warns once
   per process naming its call site, so the remaining gaps announce themselves),
   **#295** (give `Recommendation` a confidence signal distinct from severity,
   so a shakily-supported finding stops rendering with the same authority as a
   well-grounded one), **#301** (version saved conceptual-audit coverage before
-  the next additive field), and **#302** (one checked completion path preserves
-  rate-limit recovery notification coverage).
+  the next additive field), and **#302** (a table-driven test pins
+  rate-limit recovery notification coverage across the loop's arms).
 - **convergence:** **#164** (invert the detail
   contract — author at jira grade so a scope change invalidates one paragraph
   instead of a bundle of stale implementation facts; the largest observed
@@ -307,9 +306,10 @@ lens exists to produce; keep it in sync as entries land or are added):
   scope-bound audit converges instead of grinding on correctly-deferred
   adjacent findings), **#181** (proportionality detection at create time; also
   `heuristic-tuning`),
-  **#262** (surface a non-gating detail-readiness recommendation after repeated
-  bare-plan audits, so a user advances to the artifact that can resolve the
-  remaining implementation contracts rather than re-sampling the same plan).
+  **#262** (one static bare-stage report line saying detail-owned remedies are
+  expected and `detail` is the next step, so a user advances to the artifact
+  that can resolve the remaining implementation contracts rather than
+  re-sampling the same plan).
 - **gate-signal:** the shipped calibrated impact-aware convergence policy
   (high-impact findings and high/critical severities block; evidence-qualified
   low-impact medium findings may be demoted), the settled four-loop blocking
@@ -365,11 +365,11 @@ competes for the next session?"
 |---|---|---|
 | **Now — bug triage** | `BUG_BACKLOG.md` | Work from the live BUG section and its triage rules; the earlier bounded direct batch is no longer the current queue. |
 | **Roadmap — Integration** | Replay the prose-only follow-up on candidate c886d0f | The 384 KiB candidate context ceiling shipped (PR #58): the follow-up's 211,712-byte context should now be admitted once this build is installed. The model-aware budget warning shipped (PR #60 and its review follow-up); #472 (a Claude window before the first call) is the next item; #468 (targeted retry) stays parked. Existing ROADMAP bug entries remain tracked. |
-| **Next (evidence-gated)** | `quality-bench-01` (#216), position 01 | Preserve its noise-floor question, but first perform one disposable current-model observation rather than build its runner/CLI. A fresh plan is justified only if that exercise demonstrates a durable replay surface is needed. `roadmap-05` (#208) remains unauthored until a named framework-specific roadmap need exists. |
+| **Next (evidence-gated)** | `roadmap-05` (#208) | Remains unauthored until a named framework-specific roadmap need exists. |
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | #194 on #193 · `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
+| **Parked / defer** | #216 quality benchmark (`quality-bench-01`; one disposable observation, run only when a named A/B question needs it) · #353 Integration-compatible artifact-contention handoff · `security-check-command` (10 steps, open design issues in-plan) · #173 incremental completeness cache (deferred; #299 coverage-replay withdrawn 2026-08-20) · Bucket D consolidation #79–#81 | #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; the rest are edge / dormant / evidence-gated — and #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
 
@@ -394,8 +394,8 @@ competes for the next session?"
 - **T4 — grounding/workflow refinements (P3) + blocked:** **#69**, **#38**,
   **#30**.
 - **T5 — export leg / UX / hygiene / cosmetic:** **#107** (deferred pending a demonstrated export blocker), **#102**,
-  **#56**, **#89** (commit-hygiene
-  coverage — observed orphaning gap on `reconcile-code`, see its entry's
+  **#56**, **#89** (`--commit` for
+  `reconcile-code`/`reconcile-plan` — observed orphaning gap, see its entry's
   "Evidence it recurs"), and the Bucket D
   consolidation cluster **#79**–**#81** — where **#79 carries a warning**: four
   of its five original "duplicated helper" claims were wrong in the direction
@@ -420,12 +420,11 @@ the highest-leverage move (e.g. a `heuristic-tuning` unlock).
 - **Theoretical (decide/investigate first):** **#71** (refusal-token shape —
   the one theoretical item in a top tier),
   **#111** (orphaned-deliverable identity model), **#110** (claim-vs-delivery
-  FP rate), **#87** (test-authoring gate hardening), **#141** (jira story-size floor vs. the
-  configurable ceiling), **#210** (keep/cut the purity pass — passive
-  observation only; do not schedule a dedicated audit), **#381** (lesson-confidence threshold measurement), plus **#499**, **#502**
+  FP rate measurement), **#210** (keep/cut the purity pass — passive
+  observation only; do not schedule a dedicated audit), **#381** (lesson-confidence threshold measurement), plus **#499**
   and **#504** (each `decision-needed`). One more carries a
   **spike-gated front** — theoretical before its concrete build: **#66**
-  (validate the trace approach). The
+  (validate contract extraction from plan prose). The
   archived `review.py` decision is the worked example of this lens paying off:
   the investigation cost a read and returned "don't build it", which is the
   outcome a theoretical item is *supposed* to be allowed to have.
@@ -451,79 +450,89 @@ working straight down the tiers.
 > **#66** sits at T3. Everything else here sits below it.
 
 
-**#499 — Audit sidecars record each finding's triage label and carry-forward status**
+**#499 — Audit sidecars record each bare-stage finding's detail-level (D) label**
 
-- **What:** the version-4 completeness sidecar has no field for a finding's
-  altitude (R, B, P, D, I or T) or for whether the finding is carried to
-  `detail`. The label exists only in the session that triages the report.
-  Record the audit's own altitude classification per finding, and mark the
-  findings a bare audit withholds as detail-level.
+- **What:** the version-4 completeness sidecar has no field marking a bare
+  audit's finding as detail-level (D). The label exists only in the session
+  that triages the report. Record the audit's own D classification per
+  finding, as a closed boolean-shaped label, after a measurement shows passes
+  agree on it.
 - **Why:** an external driver cannot verify the directive's normal Gate 1
   exit ("after three bare rounds, proceed to `detail` when the remaining
   findings are D, I, or about text the previous round added"). Integration's
   Construction batch driver therefore asks the owner to confirm that case with
-  `proceed`, trusting the session's labels. A recorded label lets the driver
-  check the D arm itself; I (settled by code or a platform spike) is not one an
-  audit can reliably assign, so it stays a session or owner gate. The third arm ("about text the previous round
-  added") is a finding's relation to the last edit, which an altitude label
-  cannot express, so that arm keeps its human gate unless a separate
-  mechanism is chosen.
-- **Effort:** medium; a prompt field, the sidecar schema (a version bump in
-  `DATA_CONTRACT.md`), and the parser. Related to #192 (findings carry a step
-  id), which touches the same finding record.
+  `proceed`, trusting the session's labels. A recorded D label lets the driver
+  check that one arm itself. The other two arms stay human gates: I (settled
+  by code or a platform spike) is not one an audit can reliably assign, and
+  "about text the previous round added" is a finding's relation to the last
+  edit, which an altitude label cannot express.
+- **Effort:** medium; the agreement measurement first, then a prompt field,
+  the sidecar schema (a version bump in `DATA_CONTRACT.md`), and the parser.
+  Lands with #192 (findings carry a step id), which edits the same finding
+  record, so the two share one version bump.
 - **Scope contract:**
-  - **Outcome:** each saved conceptual finding carries a closed altitude
-    label and a carried-to-detail flag at the bare stage. The label does not
-    decide the "about the previous round's text" arm.
-  - **In scope:** the audit prompt's output field, the sidecar schema and
-    its version, the reader.
+  - **Outcome:** after the agreement measurement passes, each saved
+    conceptual finding at the bare stage carries a D-or-not label. The label
+    does not decide the I arm or the "about the previous round's text" arm.
+  - **In scope:** a label-agreement measurement across audit passes on
+    existing bare reports; then the audit prompt's output field, the sidecar
+    schema and its version (shared with #192), the reader.
   - **Out of scope / Non-goals:** changing blocking predicates or exit codes;
     auto-routing findings by label; recording a finding's relation to the
-    previous round's edit (a separate decision if the driver needs it).
-  - **Allowed behavior changes:** new sidecar fields under a new version.
+    previous round's edit; labelling I, P, R, B or T; deliberately not a
+    full altitude label, because a model-judged semantic label consumed by an
+    external driver becomes a gate bypass for the arms the audit cannot
+    assign.
+  - **Allowed behavior changes:** a new sidecar field under a new version,
+    only after the measurement.
   - **Allowed reorganization:** none.
-  - **Verification:** a bare audit of a plan with a known D-level finding
-    saves that finding with label D and the carried flag.
+  - **Verification:** the measurement records pass-to-pass agreement on the D
+    label; then a bare audit of a plan with a known D-level finding saves that
+    finding with the D label.
   - **Stop / defer:** if label agreement between passes is too low to be
-    useful, record the measurement and stop.
-- **Route:** `plan` · **Readiness:** `decision-needed` (who owns the label: the
-  audit or the triaging session. I means settled by code or a platform spike
-  and P means an owner's product decision, so an audit may not be able to
-  assign either; the first slice may cover D only) · **Tier:** `architect`.
+    useful, record the measurement and stop before any schema bump.
+- **Route:** `plan` · **Readiness:** `decision-needed` (the measurement
+  result, and who owns the D label: the audit or the triaging session) ·
+  **Tier:** `architect`.
 - **Principle:** `converge-on-correct-plan`.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design and its
-  Gate 1 rounds.
+  Gate 1 rounds. Cut to a D-only label 2026-11-14.
 
-**#502 — A refused `create` leaves a record an external driver can read**
+**#502 — A refused `create` prints a stable reason token an external driver can read**
 
 - **What:** `create` refuses on the seed paths before it resolves a slug and
   opens its run log, for example when a roadmap-tracked seed's accepted
-  version is absent. The run log is keyed by the resolved
-  slug, so those refusals have no log to write to, and a later branch-collision
-  decline also opens none by design.
-- **Why:** an external driver cannot tell a refused `create` from one that
-  never ran, so Integration's design needs a special rule mapping "no run log" to a
-  create failure. `DATA_CONTRACT.md` does not promise a run log for every
-  invocation, so this is a capability gap and not a bug.
-- **Effort:** small to medium; the open question is where a pre-slug refusal
-  records itself.
+  version is absent. The run log is keyed by the resolved slug, so those
+  refusals have no log to write to, and a later branch-collision decline also
+  opens none by design. Print a stable closed reason token on stderr for each
+  pre-slug refusal.
+- **Why:** the driver that invoked `create` already sees a non-zero exit, so
+  "refused" versus "never ran" needs no new persisted location; what it lacks
+  is a machine-readable reason. `DATA_CONTRACT.md` does not promise a run log
+  for every invocation, so this is a capability gap and not a bug.
+- **Effort:** small; one closed token set and one stderr line per pre-slug
+  refusal path.
 - **Scope contract:**
-  - **Outcome:** a `create` refused on a seed path leaves a record naming the
-    refusal and its closed reason, at a location settled by the decision.
-  - **In scope:** the pre-slug seed refusal paths, the record's location and
-    outcome value (reusing an existing `run_end` outcome where one fits),
-    `DATA_CONTRACT.md`, tests.
+  - **Outcome:** a `create` refused on a seed path before slug resolution
+    prints one stderr line carrying a closed reason token from a documented
+    set.
+  - **In scope:** the pre-slug seed refusal paths, the token set and its line
+    format, `DATA_CONTRACT.md` (the token vocabulary), tests.
   - **Out of scope / Non-goals:** other subcommands (file separately if they
     share the gap); a log for a bad plan name (`detail` deliberately opens no
-    ghost JSONL for an unknown name, and `create` keeps the same rule).
-  - **Allowed behavior changes:** a record on a pre-slug refusal.
+    ghost JSONL for an unknown name, and `create` keeps the same rule);
+    deliberately not a persisted run record or record location, because the
+    invoking driver already observes the non-zero exit and a pre-slug record
+    would need an `architect`-tier run-record-location decision; deliberately
+    not a `--json` result, because `create` has no `--json` surface.
+  - **Allowed behavior changes:** one added stderr line on a pre-slug
+    refusal; exit codes unchanged.
   - **Allowed reorganization:** none.
-  - **Verification:** each pre-slug `create` refusal path produces the record
-    with the closed reason, and a successful `create` is unchanged.
-  - **Stop / defer:** if the decision is a log keyed by the seed's filename
-    slug, confirm it cannot collide with a real plan slug before building.
-- **Route:** `direct` · **Readiness:** `decision-needed` (the record's key and
-  location) · **Tier:** `architect` (a persisted run-record contract).
+  - **Verification:** each pre-slug `create` refusal path prints the token
+    line with its closed reason, and a successful `create` is unchanged.
+  - **Stop / defer:** if a driver needs the record after the process has
+    exited, file a persisted-record entry then; do not build it here.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
 - **Principle:** `deterministic-non-determinism`.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design §2.2.
 
@@ -692,80 +701,34 @@ working straight down the tiers.
   or re-verify anything about the shipped plan/detail classes through this
   entry.
 
-**#363 — Ship the authored-artifact raw-upgrade operator route at the first legacy refusal**
-
-- **What:** version 1 exposes raw plan and detail upgrade entry points as
-  library APIs because it newly refuses no previously supported on-disk
-  representation. The first format release that makes a previously supported
-  live plan or run-grade detail artifact hit a reader or writer refusal must
-  ship an operator-invocable route for the affected class in that same release.
-  It must preflight reader/writer compatibility before every affected mutating
-  command's first state change, then prove upgrade-and-rerun leaves no partial
-  state.
-- **Effort:** medium when triggered — the exact command set depends on the
-  format break, but the raw entry points and compatibility contract already
-  exist as seams.
-- **Dependencies:** a concrete post-version-1 plan or detail format change
-  that causes an existing on-disk representation to reach a refusal. Nothing
-  in version 1 blocks on this entry.
-- **Scope contract:**
-  - **Outcome:** an operator encountering the newly live refusal gets a named
-    route that upgrades the affected raw artifact before a mutating command
-    changes plan-adjacent state.
-  - **In scope:** the selected operator command, both raw upgrade entry points
-    as needed, the affected mutating-command preflights, command help, and
-    upgrade-then-rerun/no-partial-state tests.
-  - **Out of scope / Non-goals:** a version-1 command surface, upgrade-on-read,
-    a general migration engine, multi-hop conversion, roadmap staged artifacts
-    (#362), and a transform for a version that has not been designed.
-  - **Verification:** exercise each affected class from a real legacy fixture;
-    prove refusal before preflight mutation, successful explicit upgrade, and a
-    clean rerun with no partially changed plan state.
-  - **Stop / defer:** if the proposed break cannot state which live artifact
-    representation refuses and why, stop at a fresh bare plan rather than
-    inventing a generic command.
-- **Approach:** `plan-tool` — this is a cross-command behavior change whose
-  exact route is selected by the future format break.
-- **Re-entry trigger:** the first approved plan or detail format bump that
-  makes a previously supported live on-disk artifact reach a reader or writer
-  refusal.
-- **Origin:** filed 2026-09-09 while restructuring the authored-artifact
-  format-version plan after its detail-grounded audit identified the missing
-  operator route for reader-only detail breaks.
-- **Status:** deferred until the re-entry trigger fires.
-
 **#365 — Reconcile authored-artifact documentation and planning-manifest discoverability**
 
 - **What:** document `plan_tool/detail_artifacts.py` as the owner of the live
-  run-grade detail version contract in `docs/ARCHITECTURE.md`, reconcile the
-  `Authored plans` manifest with the current planning-plan set (including the
-  missing `roadmap-source-baseline-recovery` row), and review the three
-  `CLAUDE.md` reference-doc bullets for a bounded drift guard only if the sweep
-  shows one is justified.
-- **Effort:** small for the documentation and manifest sweep; any automated
-  guard remains a separate decision after that evidence exists.
+  run-grade detail version contract in `docs/ARCHITECTURE.md`, and reconcile
+  the `Authored plans` manifest with the current planning-plan set (including
+  the missing `roadmap-source-baseline-recovery` row).
+- **Effort:** small; a direct documentation and manifest edit.
 - **Dependencies:** the authored-artifact plan and detail contract landing for
   the architecture entry; the manifest repair itself is otherwise independent.
 - **Scope contract:**
   - **Outcome:** an architecture reader can discover the detail version owner,
-    the planning manifest matches its stated coverage, and the reference-doc
-    guard decision has explicit evidence rather than an assumed need.
-  - **In scope:** `docs/ARCHITECTURE.md`, the authored-plans manifest in
-    `BACKLOG.md`, the three existing `CLAUDE.md` reference-doc bullets, and a
-    focused read of their current consumers.
+    and the planning manifest matches its stated coverage.
+  - **In scope:** `docs/ARCHITECTURE.md` and the authored-plans manifest in
+    `BACKLOG.md`.
   - **Out of scope / Non-goals:** changing artifact-version behavior, making
     `CLAUDE.md` itself versioned, a broad documentation linter, and #362's
-    roadmap design.
+    roadmap design; deliberately not a drift guard over the `CLAUDE.md`
+    reference-doc bullets, because a guard on reference-bullet prose is
+    semantic-doc linting (`CLAUDE.md` § "Validating a semantic property you
+    cannot observe").
   - **Verification:** compare the manifest to the current `status: planning`
-    plans, verify the architecture entry names the correct owning module and
-    contract, and record the guard decision with its evidence.
-- **Approach:** `direct` for the bounded sweep; decide separately before adding
-  an automated guard.
+    plans, and verify the architecture entry names the correct owning module
+    and contract.
+- **Approach:** `direct`.
 - **Origin:** filed 2026-09-09 while restructuring the authored-artifact plan
-  after the detail-grounded audit surfaced the architecture/manifest and
-  reference-doc discoverability gaps.
-- **Status:** ready for the documentation and manifest sweep; guard work is
-  decision-gated.
+  after the detail-grounded audit surfaced the architecture/manifest
+  discoverability gaps. Guard half cut 2026-11-14.
+- **Status:** ready.
 
 **#383 — Per-stage supplementary sources for `roadmap`, with declared roles**
 
@@ -830,18 +793,20 @@ working straight down the tiers.
 **#385 — `roadmap --view status --json`: one machine-readable state projection**
 
 - **What:** no roadmap view emits JSON
-  (`--view {summary,walk,ledger,index,seeds,html}` are all human renders). A caller that wants to know where a roadmap *is* — which stages have
-  artifacts, which are baseline-enrolled, which feedback rows are open or
-  awaiting review, which draft seeds classify `current`, and the last run's
+  (`--view {summary,walk,ledger,index,seeds,html}` are all human renders). A caller that wants to know where a roadmap *is* — whether it has an
+  accepted head and which version, which feedback rows are open or awaiting
+  review, which draft seeds classify `current`, and the last run's
   outcome — has to parse human output or re-implement the classifiers. Add one
-  read-only projection over facts the tool already computes:
-  `classify_draft_seeds`, the baseline records, the feedback collections, and
-  the run log's terminal event.
+  read-only projection over facts the tool already computes: the accepted-head
+  versions (`load_accepted_head`), `classify_draft_seeds`, the feedback
+  collections, and the run log's terminal event. The field list is grounded on
+  the versioned-from-birth store: no baseline-enrolment or baseline-record
+  field exists, because a roadmap has no baseline.
 - **Effort:** small to medium. Every input already has a function; the work is
   the schema, its `DATA_CONTRACT.md` registration, and the fail-closed
   behavior when a roadmap is partially written.
 - **Risks / fallout:** a state projection invites callers to treat it as
-  authority. It is a *view*: the artifacts and their baselines remain the
+  authority. It is a *view*: the accepted-head versions remain the
   record, exactly as the run log is a monitoring projection rather than the
   execution record. Version it from the first release or a consumer will pin
   its field names by accident.
@@ -903,27 +868,30 @@ working straight down the tiers.
   principle instead of another enumerated patch.
 - **Status:** not started.
 
-**#518 — An installed plan-tool skill is one router plus one long reference, so a driving session reads fragments of it and skips phase rules such as the audit stopping rule**
+**#518 — An installed plan-tool skill's router does not name the phase rules a driving session must read, so it skips them (for example the audit stopping rule)**
 
-- **Labels:** Route `plan` · Readiness `decision-needed` · Tier `architect` ·
+- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced` ·
   Principle `converge-on-correct-plan`
-- **Absorbs #425 and #388 (merged 2026-11-14):** (a) the core skill and each
-  phase skill point to `integrations/shared/DIRECTIVES.md` § "Which model to
-  run a subcommand with", so a driving session states the backend and model
-  before any model-backed command and passes them explicitly; the mapping
-  stays in the directives and no model ids are copied into the routers. This
-  does not cover a repository with no skill installed, which was #425's
-  motivating case and is an install-readiness issue. (b) The split removes
-  most of the three hand-maintained copies of the routers' decision-tree and
-  subcommands tables; settle with it whether a generated template or a drift
-  lint covers what remains (#388's open decision). Neither part adds a
-  router-template refactor beyond what the split needs.
-- **What:** split the single installed skill into a small core skill plus one
-  skill per pipeline phase (authoring, auditing, running and the post-run
-  tail, roadmap). Each phase skill's body carries that phase's rules
-  directly, so the skill the host invokes for a phase loads the rules for that
-  phase. Today the router loads and the rules sit in a sibling
-  `DIRECTIVES.md` that the session has to choose to read.
+- **Absorbs #425 and #388 (merged 2026-11-14):** (a) the router's must-read
+  list names `integrations/shared/DIRECTIVES.md` § "Which model to run a
+  subcommand with", so a driving session states the backend and model before
+  any model-backed command and passes them explicitly; the mapping stays in
+  the directives and no model ids are copied into the routers. This does not
+  cover a repository with no skill installed, which was #425's motivating case
+  and is an install-readiness issue. (b) #388's router-table drift decision
+  (generated template or drift lint over the three hand-maintained copies of
+  the decision-tree and subcommands tables) stays open and is not part of this
+  slice: it is decided only if the full split below is ever taken, because the
+  split is what removes most of those copies.
+- **What:** ship the smallest version of the fix. Each integration's router
+  (`integrations/{claude,codex,cursor}/`) names, per phase (authoring,
+  auditing, running and the post-run tail, roadmap), the
+  `DIRECTIVES.md` sections the session must read in full before acting in that
+  phase, and inlines a short checklist of the specific rules the measured
+  incident broke. The router keeps loading and the rules keep living in the
+  sibling `DIRECTIVES.md`; the router tells the session which sections it may
+  not skip. Re-measure on the next consuming-repo run; split the skill into a
+  core plus per-phase skills only if the broken rules recur.
 - **Why:** measured 2026-10-28 in a consuming repo (discord-config), driving
   a milestone plan through both audit gates and a post-run tail with the
   Claude Code skill installed (`.claude/skills/plan-tool/`, whose
@@ -956,105 +924,76 @@ working straight down the tiers.
     § "Invocation and discovery" to § "Escape hatch" with about 30 sections.
     A session in one phase has no cue to read the whole section it needs
     rather than the first match.
-- **Outcome:** when a driving session invokes the plan-tool skill for a
-  phase, that phase's rules are in its context without a further read: for
-  `completeness-audit`, the two gates, the session-directed loop, the
-  plan-gap map, product questions, fix-the-class and the three exits; for
-  `run`, `--commit`, failed-step recovery and the post-run tail.
+- **Outcome:** a driving session that invokes the plan-tool skill for a phase
+  finds, in the router itself, that phase's must-read `DIRECTIVES.md` sections
+  and a short checklist of the rules the incident broke: for
+  `completeness-audit`, the three-snapshot minimum window is not a stopping
+  point, a scope move is surfaced to the user first, owner answers are
+  recorded as dated decision lines, and findings are presented as the
+  plan-gap map; for `run`, the plan runs through `run` with `--commit`, and
+  `reconcile-code --all` plus a code-review pass follow the last green step.
 - **Scope contract:**
   - **In scope:**
-    - **A core skill and per-phase skills** under each of
-      `integrations/{claude,codex,cursor}/`. The core keeps invocation,
-      headless form, backend selection, discovery and the decision table, plus
-      the short existing rules every phase shares, moved verbatim rather than
-      paraphrased: § "Pause on a product question — ask, don't infer"
-      (including recording each answer as one decision line with its date and
-      the audit report id) and the override rule in § "Before applying
-      anything: audit the why, not the what". Deliberately not a new "validate before committing" rule: today's
-      `DIRECTIVES.md` has none, and this entry adds no rules.
-    - **Phase skills with narrow, non-overlapping
-      `description`/`when_to_use`/`paths` triggers,** each of which tells the
-      session to load the core first.
-    - **The phase sources** in `integrations/shared/`. Each rule lives in
-      exactly one phase source, which keeps #370's write-once property.
-    - **Installing the set:** `plan-tool install-skill`
-      (`plan_tool/cli/skill_cmd.py:cmd_install_skill`) installs it for every
-      `--integration`, including `--copy` and `--user`.
-    - The install, format and help or catalog tests that pin today's
-      router-and-`DIRECTIVES.md` pair.
-    - **The model-selection pointer (from #425):** the core and each phase
-      skill name § "Which model to run a subcommand with" and tell the session
-      to state the backend and model, and pass them explicitly, before a
-      model-backed command. No model ids are copied into the skills.
-    - **The router-table drift decision (from #388):** what remains of the
-      decision-tree and subcommands tables after the split is covered by a
-      generated template or a drift lint, chosen under **Decision needed**.
+    - **The three routers** under `integrations/{claude,codex,cursor}/`: a
+      per-phase must-read section list and an inlined phase checklist, kept in
+      parity across the three (#386: state the relationship, not one side's
+      instances). The checklist items restate existing rules by pointer to
+      their `DIRECTIVES.md` section; no rule is reworded or added.
+    - **The model-selection pointer (from #425):** each router names §
+      "Which model to run a subcommand with" in its must-read list.
+    - The install, format and help or catalog tests that pin today's router
+      text.
   - **Out of scope / Non-goals:**
     - Any change to plan-tool CLI subcommands or their behavior.
+    - Deliberately not the core-plus-per-phase skill split, the splitting of
+      `integrations/shared/DIRECTIVES.md` by phase, or the install-set change
+      in `plan-tool install-skill`: the split is large, Codex and Cursor
+      routing between several skills is unverified, and the smaller change has
+      not yet been measured to fail. Taken only if the re-measurement shows
+      the broken rules recurring; then file it as its own entry with the
+      phase-boundary, core-content and shared-source decisions.
+    - Deliberately not a router-table template or drift lint (#388's
+      decision), for the reason under **Absorbs**.
     - A gate in the tool that refuses `detail` while the latest bare audit
       has open blocking findings. That is invocation-time enforcement, which
       #370 excluded; file it as its own entry if wanted.
     - Drift-detection machinery on guidance content
       (`backlog-arc-installed-skill.md` § "Decision gates").
     - Rewording or adding rules, except the model-selection pointer absorbed
-      from #425, which operationalizes an existing rule. Content moves between
-      files; the rules stay the same.
+      from #425, which operationalizes an existing rule.
     - Changing what the machine-local `~/.claude/directives/plan-tool.md`
-      symlink and the project-`CLAUDE.md` pointer reach. Both keep resolving
-      to complete content, which constrains the shared-sources decision
-      below.
+      symlink and the project-`CLAUDE.md` pointer reach.
     - Seed-authoring guidance (#377) and capture rules (#378, including the
-      former #379), beyond putting each in the right phase file.
-  - **Allowed behavior changes:**
-    - The installed skill becomes several skills.
-    - A session triggered for one phase gets that phase's rules loaded.
-  - **Allowed reorganization:** splitting `integrations/shared/DIRECTIVES.md`
-    by phase is the reorganization this entry exists for. The blocker it fixes
-    is the evidence under **Why**: rules a session never loads don't govern it.
-    Nothing else moves.
+      former #379).
+  - **Allowed behavior changes:** the installed router's text grows by the
+    must-read lists and phase checklists.
+  - **Allowed reorganization:** none.
   - **Verification:**
     - Install each integration into a temporary project, with and without
-      `--copy`.
-    - Check that every rule heading in today's `DIRECTIVES.md` appears in
-      exactly one installed file.
-    - In Claude Code, confirm that asking to audit a plan triggers the audit
-      skill, and that its loaded body contains § "Trajectory, stopping, and
-      the three exits".
-    - Check that `~/.claude/directives/plan-tool.md` and the project-`CLAUDE.md`
-      pointer still reach every rule heading.
-    - Check that the core and each phase skill name the model-selection
-      section (binary).
-    - Run the existing install and format tests, updated for the new file set.
-  - **Stop / defer:**
-    - **If a host can't route between several skills,** keep one skill for
-      that host with the phase files as references, and record which host and
-      why. Codex and Cursor routing is unverified here.
-    - **If a rule fits no single phase,** it goes in the core, not in two
-      phases.
-- **Decision needed:**
-  - **Phase boundaries.** Does reconcile join run, join audit, or get its own
-    skill?
-  - **What the core carries.**
-  - **Router-table drift (from #388).** Whether a generated template or a
-    drift lint covers the decision-tree and subcommands tables that remain
-    after the split; this entry adds neither unless that choice requires it.
-  - **Whether the shared sources stay one file split by markers** (one file
-    stays easy to read whole) or become separate files. Either way the
-    write-once property has to hold, and so does the symlink constraint under
-    Out of scope. With separate files, that means a generated whole file or
-    an index naming every phase file.
+      `--copy`, and check that each router names every phase's must-read
+      sections and carries the checklist (binary).
+    - Check that each router names the model-selection section (binary).
+    - Check that every section a router names exists as a heading in
+      `DIRECTIVES.md`.
+    - Run the existing install and format tests, updated for the new router
+      text.
+    - Re-measure on the next consuming-repo run that drives a plan through both
+      audit gates and the post-run tail, and record whether the four rules
+      were broken again.
+  - **Stop / defer:** if the re-measurement shows the rules still skipped,
+    stop and file the full split as its own entry; do not widen this one. If a
+    rule fits no single phase, it goes in the checklist for the phase that
+    needs it and the shared-rule list once, not in two phases.
 - **Dependencies:** #370, shipped 2026-09-16, is the base this changes.
-  The router-table template (#388) and the model-selection pointer (#425)
-  are folded into this entry (see "Absorbs" above), so nothing needs coordinating.
-- **Approach:** `plan-tool`. The change crosses three integrations, the
-  installer and the canonical directives (tier `architect`), and needs a
-  citation sweep for every `DIRECTIVES.md § ...` reference in code, docs and
-  tests.
-- **Iterate:** default recipe. Gate 1 is load-bearing, because the phase
-  boundaries are the design decision.
+  #388 and #425 are folded into this entry (see "Absorbs" above), so nothing
+  needs coordinating.
+- **Approach:** `direct`. The change edits three router files and their
+  tests; the `architect`-tier phase-boundary decisions belong to the deferred
+  split.
 - **Origin:** 2026-10-28, a driving session in discord-config. The user
-  proposed splitting the skill, not the CLI, to improve skill routing.
-- **Status:** not started.
+  proposed splitting the skill, not the CLI, to improve skill routing; the
+  scope was cut to the router-only slice 2026-11-14.
+- **Status:** ready.
 
 **#389 — A newly added backend is rejected by `plan-tool install-skill --integration` with "invalid choice" until someone edits its hard-coded list of three names** → promoted to IPPT-7 (2026-09-24)
 
@@ -1197,54 +1136,53 @@ working straight down the tiers.
   #334 has shipped (archived plan `2-mechanism-reach-01-authoring`), then drive the resulting plan through the normal gates.
 - **Status:** not started.
 
-**#332 — Preserve developer-doc research failure evidence in create run logs**
+**#332 — Install the run-log sink for developer-doc research in `create`**
 
-- **What:** make an unsuccessful developer-doc research call diagnosable from
-  the create run record. The run must retain the call's phase, attempt,
-  transport outcome, token/cost fields when supplied by the backend, and a
-  bounded pointer to parse-failure evidence instead of only printing a
-  progress-line summary.
+- **What:** the developer-doc research call (`propose_references`) runs with no
+  run-log sink, so its usage, cost and failure evidence are lost and the call
+  warns that nothing saved them. Install the run-log sink for it, so the
+  existing `claude_call_*` and `parse_failure` events land in the create run
+  record.
 - **Scope contract:**
   - **Outcome:** a create run that reaches `propose_references` always has an
     active compatible run-log sink for the Claude invocation, and an
-    unparseable response produces a queryable failure record distinct from an
-    intentional empty reference result.
-  - **In scope:** the create caller-to-invoker logging seam; existing
+    unparseable response produces a queryable `parse_failure` record distinct
+    from an intentional empty reference result.
+  - **In scope:** the create caller-to-invoker logging seam; the existing
     `claude_call_*`, backend-termination, and `parse_failure` event carriers;
-    a size-capped, secret-redacted diagnostic artifact with a run-log pointer;
     and hermetic command-level tests for success, an unparseable response, and
     an injected/alternate invoker path.
   - **Out of scope / Non-goals:** unrestricted raw model-response retention;
     a new cross-command telemetry framework; changing the reference-selection
-    policy; or making a developer-doc research failure fatal. The failure
-    policy belongs to the linked bug.
-  - **Allowed behavior changes:** the run log may add a reference-research
-    failure event and a bounded diagnostic artifact, and the command may name
-    its saved report path. It must not expose secrets or make an otherwise
-    successful create fail only because persistence of optional diagnostics
-    fails.
+    policy; or making a developer-doc research failure fatal (the failure
+    policy belongs to the linked bug); deliberately not a new redacted
+    diagnostic-artifact file or run-log pointer to one, because the sink alone
+    may close the observed gap. File the artifact as its own entry only if the
+    sink proves insufficient.
+  - **Allowed behavior changes:** the run log gains the `claude_call_*` and
+    `parse_failure` events for the reference-research call.
   - **Allowed reorganization:** reuse the current run-log writer and shell
-    sink lifecycle; extract at most one local create helper for the failure
-    artifact/pointer. Do not introduce a general telemetry abstraction.
+    sink lifecycle. Do not introduce a general telemetry abstraction.
   - **Verification:** command-level fake-backend tests prove the reference
     call has `claude_call_end` token/cost fields, the unparseable path records
-    its phase/reason and a bounded pointer, the empty-list path has neither
-    parse-failure record nor artifact, and a sink-installation regression emits
-    no unsinked-call warning. Tests also prove the artifact is redacted and
-    capped.
-  - **Stop / defer:** if an alternate invoker cannot provide raw response or
-    usage safely, record that capability as unavailable with the parse reason;
-    do not synthesize missing fields or add backend-specific persistence.
+    a `parse_failure` event with its phase and reason, the empty-list path has
+    no parse-failure record, and a sink-installation regression emits no
+    unsinked-call warning.
+  - **Stop / defer:** if an alternate invoker cannot provide usage safely,
+    record that capability as unavailable with the parse reason; do not
+    synthesize missing fields or add backend-specific persistence. If the
+    sink alone leaves a failure undiagnosable, stop and file the diagnostic
+    artifact separately.
 - **Dependencies:** related to the developer-doc research parse-failure bug in
   `BUG_BACKLOG.md`; neither item blocks the other.
-- **Approach:** `plan-tool` — this adds narrowly scoped failure observability
-  across create, shell/run-log integration, and their contract tests.
+- **Approach:** `plan-tool` — a narrow observability change across create and
+  shell/run-log integration, with contract tests.
 - **Quality:** `failure-evidence` — makes a non-happy-path model call
   inspectable without widening the create plan's product scope.
 - **Origin:** observed 2026-09-01 alongside the developer-doc research parse
   failure: the only diagnostic was the progress-line summary, and the call
   warned that no run-log sink saved its raw response, usage, cost, or lower-
-  level failure evidence.
+  level failure evidence. Diagnostic-artifact half cut 2026-11-14.
 - **Status:** not started.
 
 **#268 — Per-step contract asks in the step proposal (failure modes and criterion mapping)**
@@ -1392,101 +1330,70 @@ evidence. It is not an active implementation contract.
 
 -->
 
-**#175 — Jira-readiness audit lane: goal-directed, ticket-blocking findings only, deterministic-first**
+**#175 — Jira-readiness deterministic checks: HEAD-anchor verification and footprint coherence in `jira --lint` / `validate`**
 
-- **What:** a fast audit lane (`jira-readiness <name>`, or
-  `completeness --jira`) that judges a detailed plan against one
-  question — *can each step be handed to an implementer as an atomic
-  story?* — instead of exhaustive conceptual completeness. Four checks,
-  cheapest first: (1) **deterministic anchor verification** — extract the
-  grep-verifiable code claims detail files make about HEAD (backticked
-  paths, symbols, config keys, version pins in Input / "verified at
-  HEAD" sections) and verify them against the repo with no model call,
-  reporting only broken anchors; (2) **frontmatter↔detail footprint
+- **What:** extend `jira --lint` / `validate` with two deterministic checks
+  that judge a detailed plan against one question — *can each step be handed
+  to an implementer as an atomic story?* — with no model call and no new verb:
+  (1) **HEAD-anchor verification** — extract the grep-verifiable code claims
+  detail files make about HEAD (backticked paths, symbols, config keys,
+  version pins in Input / "verified at HEAD" sections) and verify them against
+  the repo, reporting only broken anchors; (2) **frontmatter↔detail footprint
   coherence** — each step's `files:`/`creates:` lists match the detail's
-  declared footprint, including detail-flagged "noted additions";
-  (3) **decided-scope compliance** — findings whose remedy falls inside a
-  plan's explicit decided/guardrail sections (a decided threat model, a
-  hard-boundary file list) are auto-rejected and logged as
-  `rejected-by-decided-scope`, not surfaced as gaps; (4) **ticket-blocking
-  triage** — only contradictions, deliverables with no owning step, and
-  test suites with no runnable owner block; everything else is advisory.
+  declared footprint, including detail-flagged "noted additions".
 - **Why (evidence 2026-07-22, example-app `mobile-initial-release-password-gate`):**
-  a full completeness-audit round costs 30+ min and its conceptual sweep
-  re-derives already-decided scope — the plan's first incarnation spun 3
-  rounds re-surfacing pool-level-enforcement findings the re-scoped plan
-  had explicitly decided against (the re-scope wrote a "decided threat
-  model — do not re-derive" section precisely to fence this, but no audit
-  lane reads it). A hand audit reached jira-ready confidence in ~10 min:
-  read 9 detail files, batch-grep-verified ~35 HEAD anchors (all held),
-  found exactly one ticket-blocking gap (step 8's detail declared a test
-  file absent from the step's `creates:` — check 2), and dismissed
-  vocabulary false positives (the suppression-shape smell tripping on a
-  feature literally named "gate" with "bypass" semantics). Everything
-  that mattered for story generation was deterministic or
-  near-deterministic; the expensive conceptual sweep contributed nothing
-  at that stage.
-- **Effort:** medium — checks 1–2 are extraction + file/grep work (the
-  detail format's backticked-citation convention is already
-  near-machine-readable); check 3 needs a marker convention for decided
-  sections plus a filter in the finding pipeline; check 4 is a triage
-  policy on existing finding kinds.
+  a full completeness-audit round costs 30+ min. A hand audit reached
+  jira-ready confidence in ~10 min: read 9 detail files, batch-grep-verified
+  ~35 HEAD anchors (all held), and found exactly one ticket-blocking gap
+  (step 8's detail declared a test file absent from the step's `creates:` —
+  check 2). Everything that mattered for story generation was deterministic;
+  the expensive conceptual sweep contributed nothing at that stage.
+- **Effort:** small to medium — extraction plus file/grep work (the detail
+  format's backticked-citation convention is already near-machine-readable).
 - **Risks / fallout:** anchor extraction can misread speculative prose as
   a HEAD claim — scope extraction to citation-bearing sections (Input,
   acceptance-criteria greps) and treat "dependency contract" /
-  "verification limit" labels as exempt; the decided-scope filter could
-  suppress genuine findings if guardrail sections are abused — reject
-  only findings whose remedy is inside the explicit boundary list, log
-  every rejection visibly, and never filter correctness findings *within*
-  the decided scope.
+  "verification limit" labels as exempt.
 - **Dependencies:** complements **#173** (fingerprint-gated completeness
-  — that caches the expensive lane, this adds a cheap goal-directed
-  lane); output could gate `jira` story generation (green
-  jira-readiness before export). It remains independent of the terminal
-  developer-handoff projection in #293.
+  — that caches the expensive lane, this adds cheap deterministic checks).
+  It remains independent of the terminal developer-handoff projection in
+  #293. Reconcile with the authored `jira-sweep-deterministic` plan and the
+  `jira-sweep-verify-code-truth` seed before planning: both read Jira
+  ticket state through `jira-cli` (the plan's `plan_tool/jira_cli.py` leaf,
+  #142/#143), which looks like a different question (ticket status versus
+  plan readiness) with no anchor or footprint check; confirm the overlap is
+  nil, or fold this entry into whichever owns the shared surface.
 - **Scope contract:**
-  - **Outcome:** a jira-gating audit verdict produced in minutes without
-    a full conceptual sweep, reporting only ticket-blocking findings,
-    each labeled with the check that produced it.
-  - **In scope:** a new audit lane/verb and its report format; anchor
-    extraction over `DETAIL_FORMAT.md`-shaped detail files; a
-    decided-section marker convention documented in `PLAN_FORMAT.md`;
-    triage policy for the lane; tests with a fixture plan.
+  - **Outcome:** `jira --lint` / `validate` reports broken HEAD anchors and
+    footprint mismatches on a detailed plan in seconds, with zero model
+    calls, each finding labeled with the check that produced it.
+  - **In scope:** the two checks and their report lines; anchor extraction
+    over `DETAIL_FORMAT.md`-shaped detail files; tests with a fixture plan.
   - **Out of scope / Non-goals:** changing the full completeness audit's
-    behavior or prompts; #173's caching substrate; the suppression-shape
-    smell's domain-vocabulary false positives (separate heuristic-tuning
-    entry if pursued); auto-fixing findings.
-  - **Allowed behavior changes:** the new verb/flag and its report;
-    `jira` may learn an advisory warning when the lane has not been run.
+    behavior or prompts; #173's caching substrate; auto-fixing findings; a new
+    audit verb or lane; deliberately not a decided-scope filter that
+    auto-rejects findings inside a plan's "decided" sections (a semantic
+    filter that can suppress real findings, and its marker convention in
+    `PLAN_FORMAT.md`); deliberately not a ticket-blocking triage policy over
+    conceptual finding kinds (triage policy, not a binary observable).
+  - **Allowed behavior changes:** new lint/validate findings from the two
+    checks.
   - **Allowed reorganization:** none.
-  - **Verification:** on a fixture plan with (a) one broken anchor,
-    (b) one undeclared detail-noted file, (c) one finding inside a
-    decided boundary, the lane reports exactly (a) and (b) as blocking
-    and (c) as rejected-by-decided-scope, with zero model calls for
-    checks 1–2.
-  - **Stop / defer:** convergence-verdict interaction (a no-progress trend
-    driven by re-audits with no intervening edits is BUG_BACKLOG territory);
-    story-quality linting beyond what `jira --lint` already
-    does; the smell-vocabulary tuning.
-- **Approach:** `plan-tool` — the anchor-citation and decided-section
-  conventions are cross-cutting format design; the deterministic checks
-  alone would qualify for `direct`, but landing them without the
-  conventions bakes in ad-hoc parsing.
+  - **Verification:** on a fixture plan with (a) one broken anchor and (b) one
+    undeclared detail-noted file, the checks report exactly (a) and (b), with
+    zero model calls.
+  - **Stop / defer:** the reconciliation under **Dependencies** comes first;
+    stop if it shows the checks already ship elsewhere. Story-quality linting
+    beyond what `jira --lint` already does.
+- **Approach:** `direct` once reconciled — the two deterministic checks need no
+  new format convention.
 - **Quality:** `audit-coverage` + `gate-signal` — a deterministic
   complement to the sampled conceptual audit, aimed at the one exit
   signal (`jira` export) that hands work to humans; `grounding` — anchor
   verification keeps detail claims tied to HEAD at story-generation time.
-- **Iterate:** default recipe.
-
-  ```bash
-  plan-tool create jira-readiness-audit-lane --iterate -y --from-existing plan-seeds/jira-readiness-audit-lane.md
-  plan-tool detail jira-readiness-audit-lane --commit -y
-  plan-tool completeness-audit jira-readiness-audit-lane --iterate --commit -y
-  ```
 - **Status:** not started. Use the example-app-amplify password-gate plan at
   `docs/implementation-plans/2-mobile-initial-release-password-gate.md` as a
-  representative case: its decided scope, detail bundle and Jira-story artifacts
-  show the readiness questions this lane must address.
+  representative case. Cut to checks 1–2 2026-11-14.
 
 **#163 — Claude-judged fold detector for dropped guardrail sections**
 
@@ -1617,9 +1524,14 @@ evidence. It is not an active implementation contract.
   outcomes/verdicts, and the call-site list — into a checkable skeleton, then
   **walks the `(caller × outcome × edge-input)` grid** and reports cells that
   are uncovered, crash, or violate a declared contract. Runs *alongside* the
-  conceptual sampler, not instead of it. The spike step is done:
-  `experiments/contract-trace-audit/` (`spike.py`, `LESSONS.md`) validated the
-  grid walk on the `escalate-structural-findings-to-split` fixture.
+  conceptual sampler, not instead of it. What is validated and what is not:
+  `experiments/contract-trace-audit/` (`spike.py`, `LESSONS.md`) validated only
+  the downstream grid walk over a **hand-encoded** contract model on the
+  `escalate-structural-findings-to-split` fixture. The unproven half is
+  **extracting the contract model from plan prose**, which is where the value
+  and the risk sit; if extraction needs a Claude call, the determinism win
+  largely evaporates. The next step is a narrowly bounded extraction spike,
+  not the build.
 - **Why:** The conceptual sampler catches **control-flow / contract-coverage**
   bugs only *stochastically* — each sample hits random cells of the path matrix,
   which is the root of the sampling-variance "long tail" (the now-reverted
@@ -1638,7 +1550,8 @@ evidence. It is not an active implementation contract.
   criterion) need the prose reasoning the sampler does — a trace has no opinion
   on intent. Two columns: control-flow/contract → trace (deterministic);
   conceptual/intent → sampler (judgment).
-- **Effort:** large; **spike first.** Open design questions: how to extract the
+- **Effort:** a small extraction spike first; the build is large and is not
+  planned until the spike passes. Open design questions: how to extract the
   declared contracts from plan/detail prose without a full executable mock; how
   to keep it at *plan altitude* (check only what the plan declares, not invent
   implementation); how to avoid auditing **mock artifacts** (the exact false-
@@ -1653,9 +1566,26 @@ evidence. It is not an active implementation contract.
   sample-count tuning experiment — this is the structural answer to "is deep
   sampling worth it" for the control-flow finding class. Pairs with the
   granularity advisor's structural view.
-- **Approach:** `plan-tool` (after a `direct` spike to validate the
-  skeleton-extraction approach produces deterministic findings without
-  mock-artifact noise on the escalate plan's three known findings as a fixture).
+- **Scope contract:**
+  - **Outcome:** a recorded verdict on whether the contract model can be
+    extracted from plan prose deterministically.
+  - **In scope:** an extraction spike under `experiments/contract-trace-audit/`
+    run on the original `escalate-structural-findings-to-split` fixture plus
+    one recent plan; the verdict recorded in `LESSONS.md`.
+  - **Out of scope / Non-goals:** the audit-mode build, a new
+    `completeness-audit` mode or flag, and a full executable mock;
+    deliberately not planning the large build before the spike passes,
+    because the unproven extraction half decides whether it should exist.
+  - **Allowed behavior changes:** none (experiment code only).
+  - **Allowed reorganization:** none.
+  - **Verification:** the spike either reproduces the three known findings
+    from extracted (not hand-encoded) contracts with no Claude call and no
+    mock-artifact findings, or the entry closes.
+  - **Stop / defer:** close the entry if extraction is not deterministic or
+    produces mock-artifact findings; record the measurement in `LESSONS.md`
+    and remove the entry.
+- **Approach:** `direct` for the bounded extraction spike; a `plan-tool` plan
+  for the audit mode only if the spike passes.
 - **Quality:** `audit-coverage` — a deterministic, path-enumerating audit mode that
   catches the contract/control-flow gaps the stochastic conceptual sampler surfaces
   only intermittently (the motivating HIGH an 11-sample run missed).
@@ -1663,7 +1593,8 @@ evidence. It is not an active implementation contract.
   the escalate plan's control-flow findings stochastically across multiple audit
   runs (a HIGH that an earlier 11-sample run missed), asked whether tracing logic
   paths through a mock implementation would find correctness/completeness gaps
-  more reliably than feeding the plan prose.
+  more reliably than feeding the plan prose. Narrowed to the extraction spike
+  2026-11-14.
 
 **#312 — Ground `detail` authoring in the plan's fetched reference-doc content instead of a bare link list**
 
@@ -1862,61 +1793,51 @@ evidence. It is not an active implementation contract.
 - **Origin:** deferred response B of the transient-retry-partial-mutation-guard
   plan (shipped response A closed the `BUG_BACKLOG.md` RISK), 2026-07-11.
 
-**#120 — Harden the partial-mutation retry guard against git-read and path-level blind spots**
+**#120 — Close the partial-mutation retry guard's baseline-instant fail-open**
 
-- **What:** Close the residual robustness gaps in the shipped response-A guard
-  (`plan_tool/git_state.py:make_partial_mutation_retry_guard`), which detects partial
-  mutations via a git changed-**paths** delta. Three accepted-but-imperfect
-  limits: (a) **same-path masking** — a file already dirty in the baseline that
-  the aborted turn edits *further* has an empty delta, so the re-drive
-  double-applies (only mitigated today by the `--commit` mandate, which keeps
-  the between-step tree clean); (b) **git-read uncertainty** — `git status` can
-  transiently fail (an `index.lock` during a concurrent git op), and a single
-  read can't tell "not a git repo" (→ inert) from "real repo, momentarily
-  unreadable" (→ should fail closed); the guard fails closed on a mid-run error
-  but stays inert on a baseline-instant error (a narrow fail-open residual), and
-  a spurious mid-run failure now converts a recoverable transient into a step
-  failure; (c) **benign-artifact false STOP** — an untracked-non-ignored write
-  the turn causes as a side effect (e.g. `__pycache__` in a repo that doesn't
-  gitignore it) trips the guard even though no source was partially mutated.
-- **Why:** (a) is a latent double-apply *corruption* in the no-`--commit` path;
-  (b) and (c) are resilience/UX regressions (safe direction — a surfaced failure,
-  never corruption — but they turn previously-auto-recovered transients into
-  manual re-runs). Surfaced by two adversarial code-review rounds on the shipped
-  guard; each round ping-pongs fail-open↔fail-closed because the fixes are
-  structural, not one-liners.
-- **Design sketch:** (a) content-level detection — hash the baseline paths and
-  compare at the guard check so a further edit to an already-dirty file is
-  caught, not just a *new* path; (b) detect whether `spawn_cwd` is a git work
-  tree once (e.g. `git rev-parse --is-inside-work-tree`) to split "non-git tree"
-  (inert) from "real repo unreadable" (retry the read on lock with short
-  backoff, then fail closed), removing the baseline-instant fail-open; (c)
-  optionally scope the delta to the step's declared/expected files or ignore a
-  configurable artifact set.
-- **Effort:** medium — touches the guard closure and `_git_changed_paths_or_none`
-  plus tests; no leaf change (the `RETRY`/`STOP` contract is unaffected).
-- **Risks:** content-hashing adds I/O per baseline path; the read-retry must not
-  stall the loop; over-scoping the delta to declared files could *miss* a real
-  out-of-declared-scope partial mutation (weakening the guard) — the scoping
-  must stay conservative.
-- **Dependencies:** builds on shipped response A; independent of #119 (response B),
-  though B's snapshot mechanism could share the content-capture from (a).
-- **Approach:** `plan-tool` — a guard-correctness design decision (detection
-  granularity + git-read policy), not a one-line fix.
-- **Iterate:** default recipe (author + converge). Load-bearing: `create`,
-  one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit` per step and the post-run
-  `reconcile-code --all` tail.
-
-  ```bash
-  plan-tool create partial-mutation-guard-hardening --iterate -y --from-existing plan-seeds/partial-mutation-guard-hardening.md
-  plan-tool detail partial-mutation-guard-hardening --commit -y
-  plan-tool completeness-audit partial-mutation-guard-hardening --iterate --commit -y
-  plan-tool run partial-mutation-guard-hardening --commit -y
-  ```
+- **What:** the shipped response-A guard
+  (`plan_tool/git_state.py:make_partial_mutation_retry_guard`) detects partial
+  mutations via a git changed-**paths** delta. A baseline read that fails
+  because of a transient `index.lock` returns `None` and leaves the guard
+  inert, the same as a non-git tree, so a real repo that was momentarily
+  unreadable at baseline has no guard for that call (a narrow fail-open). Add
+  one `git rev-parse --is-inside-work-tree` probe to split "non-git tree"
+  (inert) from "real repo unreadable" (retry the baseline read on a lock with
+  a short backoff, then fail closed), which closes the fail-open and avoids a
+  false failure on a transient lock.
+- **Why:** a surfaced failure is the safe direction, but an inert guard on a
+  real repo can let a retry double-apply an unseen partial mutation. Surfaced
+  by two adversarial code-review rounds on the shipped guard.
+- **Effort:** small — the guard closure and `changed_paths_or_none` plus
+  tests; no leaf change (the `RETRY`/`STOP` contract is unaffected).
+- **Risks:** the read-retry must not stall the loop (bounded, short backoff).
+- **Dependencies:** builds on shipped response A; independent of #119
+  (response B).
+- **Scope contract:**
+  - **Outcome:** a baseline-instant git-read failure in a real work tree
+    retries briefly and then fails closed, while a non-git tree stays inert.
+  - **In scope:** the `rev-parse` probe, the bounded baseline-read retry, and
+    focused tests for lock-then-success, lock-persisting, and non-git tree.
+  - **Out of scope / Non-goals:** deliberately not content-level detection of
+    a further edit to an already-dirty baseline file (same-path masking),
+    because it only bites without `--commit`, which the standing mandate
+    already avoids; deliberately not scoping the delta to declared files or
+    ignoring a benign-artifact set (`__pycache__` false STOP), because that
+    case is hypothetical and over-scoping could weaken the guard. File each
+    separately if it is ever observed.
+  - **Allowed behavior changes:** a retry on a locked baseline read, and a
+    fail-closed stop where the guard was inert on a real repo.
+  - **Allowed reorganization:** none.
+  - **Verification:** a fake reader that fails once then succeeds yields an
+    active guard; one that keeps failing in a real work tree yields a STOP;
+    a non-git tree still returns `None`.
+  - **Stop / defer:** if the probe cannot distinguish the cases without
+    changing the leaf's contract, stop and record why.
+- **Approach:** `direct` — one probe and a bounded retry in the guard.
 - **Status:** not started — backlog entry only.
 - **Origin:** two adversarial `/code-review` rounds on the shipped
-  transient-retry-partial-mutation-guard response A, 2026-07-11.
+  transient-retry-partial-mutation-guard response A, 2026-07-11. Cut to the
+  baseline-instant fix 2026-11-14.
 
 **#230 — Extend the shipped `--time-budget` stop to durable batch boundaries**
 
@@ -1947,42 +1868,38 @@ evidence. It is not an active implementation contract.
 - **Origin:** retired cooperative-time-budget follow-up, 2026-08-04.
 - **Status:** not started.
 
-**#135 — `reconcile-code` needs a real drift-check signal, and concurrent invocations should fail cleanly**
+**#135 — Concurrent `reconcile-code` invocations should fail with a clear message**
 
-- **Shipped 2026-08-16:** the `--all` sweep gap this item originally opened with is
-  closed. `reconcile-code <name> --all` now sweeps every plan step in order
-  (including `done` steps — the point of a post-run sweep is checking landed code,
-  not skipping it), skips steps declared explicit `non-code`, is mutually
-  exclusive with both `--step` and
-  `--reuse-id` (a pinned save can't mean anything sensible across N steps), and
-  halts on the first per-step *execution* failure (a redirect or critical finding
-  does not halt it — read each step's printed verdict, per
-  `_cmd_run_reconcile`'s docstring). CLAUDE.md's run-tail loop 1 now cites `--all`
-  directly. What remains open is gap 2 below, plus the concurrency note.
-- **What (remaining):** `--dry-run` only *renders the prompt* (no Claude, no audit),
-  yet the "no remaining drift" convergence signal a run-tail loop needs has no cheap
-  form today — you must run the full per-step audit (`--no-walk`) to learn whether
-  drift remains. Either add a real drift-summary mode (a `--check`/rollup that
-  reports per-step drift counts without walking or landing edits) or keep leaning on
-  the full sweep's printed verdicts as the signal (already the documented behavior;
-  see CLAUDE.md's run-tail loop 1).
-- **Also (smaller, unchanged):** concurrent `reconcile-code` on the same plan should
-  either serialize safely or fail with a clear message instead of a bare exit-2
-  collision.
-- **Shared-sweep boundary:** `_cmd_detail_reconcile_all` (skips
-  `done` steps), `_cmd_run_reconcile_all` (includes them, filters non-code instead),
-  and `_cmd_run_sweep` (runs executable steps) are three distinct sweep-loop shapes
-  across `cli/reconcile.py` and `cli/run_cmd.py`. A 2026-08-16 `/code-review` pass
-  left a shared abstraction deferred because their selection and persistence policies
-  differ; revisit it if a behavior change requires common machinery or the paths
-  drift out of sync.
-- **Effort:** small — the drift-check is either a doc fix (already applied) or a
-  no-walk rollup summarizer.
+- **Shipped 2026-08-16:** `reconcile-code <name> --all` sweeps every plan step
+  in order (including `done` steps, skipping explicit `non-code` steps). The
+  documented "no remaining drift" signal is the full sweep's printed per-step
+  verdicts (`_cmd_run_reconcile`'s docstring; `CLAUDE.md`'s run-tail loop 1).
+- **What:** concurrent `reconcile-code` on the same plan should fail with a
+  clear message instead of a bare exit-2 collision.
+- **Effort:** small.
 - **Approach:** `direct`.
+- **Scope contract:**
+  - **Outcome:** a second `reconcile-code` invocation on a plan that another
+    invocation is reconciling exits non-zero with a message naming the
+    concurrent run.
+  - **In scope:** the concurrent-invocation detection in the `reconcile-code`
+    path and a focused test.
+  - **Out of scope / Non-goals:** deliberately not a `--check` drift rollup,
+    because the full sweep's printed verdicts are the documented signal;
+    deliberately not a shared-sweep abstraction across
+    `_cmd_detail_reconcile_all`, `_cmd_run_reconcile_all` and
+    `_cmd_run_sweep`, because their selection and persistence policies differ
+    and no evidence calls for common machinery; serializing concurrent runs.
+  - **Allowed behavior changes:** a clear failure message for a concurrent
+    invocation.
+  - **Allowed reorganization:** none.
+  - **Verification:** a second invocation against a plan held by a first fails
+    with the clear message, and a single invocation is unchanged.
+  - **Stop / defer:** if the collision comes from a shared lock owned elsewhere,
+    reuse that lock's message and stop; do not build a new lock.
 - **Origin:** 2026-07-16 — lazy-deferral run-tail loop 1; friction driving
-  `reconcile-code` step-by-step across a completed plan. `--all` sweep shipped
-  2026-08-16 in the `reconcile-code-all` diff, applying its own `/code-review`
-  round-1 findings.
+  `reconcile-code` step-by-step across a completed plan. Narrowed to the
+  concurrency message 2026-11-14.
 
 **#142 — Jira ID-linking sweep: map local plan-story IDs to real Jira keys via summary bracket-token**
 
@@ -2052,13 +1969,14 @@ evidence. It is not an active implementation contract.
   (bracket-token join across 99 stories / 3 Jira epics) — see #143's Origin
   for what happened next when the naive trust-Jira version was tried.
 
-**#143 — Code-truth verification pass: adjudicate status divergences (and spot-check agreements) against real code, not Jira**
+**#143 — Code-truth verification of status divergences: feed #142's divergent stories through the existing step-coverage verifiers, report only**
 
-- **What:** a follow-up to #142 that takes its divergence list (plus a sample
-  of stories where local and Jira *agree*, since agreement isn't proof) and
-  produces a third, independent verdict per story — Done / Partial / Absent —
-  by reading each story's acceptance criteria and files-in-scope against the
-  actual working tree, rather than trusting either recorded status.
+- **What:** a follow-up to #142 that takes its divergence list and runs each
+  divergent story, **serially**, through the existing step-coverage verifiers
+  (`verify-all` / `reconcile-code`), reading the story's acceptance criteria
+  and files-in-scope against the actual working tree. It reports a verdict per
+  story (Done / Partial / Absent) and writes nothing: no local `[status:]`
+  marker and no Jira field changes.
 - **Why:** #142 (and any Jira-status sweep) can say two records disagree but
   can't say which is right. Tested for real: a code-blind sync that trusted
   Jira's "Done" and overwrote local `todo` markers was wrong for 24 of 29
@@ -2066,19 +1984,40 @@ evidence. It is not an active implementation contract.
   (an eligibility flag hardcoded to `true` behind a "Temporarily disable"
   comment, and a gate commented out entirely, both with their test suites
   rewritten to assert the disabled behavior) as "done" work.
-- **Full design authored as a seed:** `plan-seeds/jira-sweep-verify-code-truth.md`
-  — the 10-parallel-agent architecture, the two special-case classifiers
-  (behavioral-regression detection, superseded-plan detection), and the
-  cost/effort profile all live there rather than here. Already sequenced in
+- **Design source:** `plan-seeds/jira-sweep-verify-code-truth.md` holds the
+  original design, whose 10-parallel-agent architecture and special-case
+  classifiers are **not** the plan: in-process fan-out carries the
+  parallelism burden of proof (`CLAUDE.md` § "Architecture"), and the
+  verifiers it would rebuild already exist. The seed is reshaped to this
+  entry's scope before `create`. Sequenced in
   `docs/implementation-plans/backlog-arcs/backlog-arc-operator-workflow.md`'s
-  Ordered route (step 2): execute `jira-sweep-deterministic` (#142) first,
-  then evaluate this one.
+  Prioritized selection: execute `jira-sweep-deterministic` (#142) first, then
+  evaluate this one.
+- **Scope contract:**
+  - **Outcome:** each divergent story from #142's list has a printed
+    Done / Partial / Absent verdict derived from the existing verifiers'
+    reading of the working tree, with no file or Jira write.
+  - **In scope:** a serial driver over #142's divergence list that calls the
+    existing step-coverage verifiers and prints the verdicts; focused tests
+    with a fake verifier.
+  - **Out of scope / Non-goals:** auto-writing local status or Jira status;
+    deliberately not 10-parallel agents, because in-process fan-out needs
+    explicit sign-off and the serial path has not been shown too slow;
+    deliberately not new behavioral-regression or superseded-plan
+    classifiers, because the existing verifiers already judge coverage; a
+    sample of agreeing stories (file separately if wanted).
+  - **Allowed behavior changes:** a new read-only report over #142's output.
+  - **Allowed reorganization:** none.
+  - **Verification:** on a fixture divergence list, each story gets a verdict
+    from a fake verifier, the run is serial, and no status marker changes.
+  - **Stop / defer:** if the existing verifiers cannot take a story's criteria
+    as input without a new prompt, stop and file that gap before building.
 - **Dependencies:** #142 (needs its divergence list as input).
 - **Origin:** 2026-07-17 — directly follows the #142 dry run; the manual
-  10-parallel-agent run (`example-app-amplify`) is the reference
-  implementation the seed is built from.
-- **Status:** seed authored, blocked on #142 executing first (per the
-  operator-workflow arc's ordered route).
+  10-parallel-agent run (`example-app-amplify`) is the evidence the design is
+  built from. Reshaped to a serial, report-only driver 2026-11-14.
+- **Status:** blocked on #142 executing first (per the operator-workflow
+  arc's ordering); the seed needs reshaping before `create`.
 
 **#190 — Refuse `reconcile-plan` on steps an execution already implemented**
 
@@ -2257,7 +2196,7 @@ evidence. It is not an active implementation contract.
   3. *Capture timing* (bug) — biggest single win, **no new data model**, independent.
   4. **#193** provenance — enables #194.
   5. **#194** reconciliation sweep — needs #193.
-  6. **#195** retrieval instead of wholesale injection — independent of #193/#194.
+  6. **#195** gate injection behind `--lessons` — independent of #193/#194.
 
   **Retired 2026-08-19:** #196 does not infer lesson influence or add an
   eviction policy (see `docs/history/backlog-decisions.md`).
@@ -2270,7 +2209,7 @@ evidence. It is not an active implementation contract.
   policy shift. The **capture-side** entries (this one, the two capture defects
   in `BUG_BACKLOG.md`) still describe real defects but accrue new instances only
   on opt-in runs — their cost-of-delay dropped, their fix did not change. The
-  **injection-side** entry (**#195** retrieval)
+  **injection-side** entry (**#195** gate injection behind `--lessons`)
   is untouched: every run still injects the full matching set from the 1,462
   records already on disk, so a stale or contradicting entry keeps reaching
   authoring whether or not anything new is captured. **If this cluster is
@@ -2291,7 +2230,7 @@ evidence. It is not an active implementation contract.
   - **In scope:** `plan_tool/lessons.py`, the distill call site in
     `plan_tool/detail.py`, `DATA_CONTRACT.md`, tests.
   - **Out of scope / Non-goals:** reconciliation itself (#194); retrieval
-    (#195); contradiction detection (discarded #197); back-filling
+    (#195 injection gate); contradiction detection (discarded #197); back-filling
     historical anchors; any embedding or vector dependency.
   - **Allowed behavior changes:** the new citation fields only.
   - **Allowed reorganization:** none.
@@ -2336,7 +2275,7 @@ evidence. It is not an active implementation contract.
   - **In scope:** the sweep over `~/.plan-tool/lessons` + the per-repo store,
     the anchor re-resolution, the report surface, tests.
   - **Out of scope / Non-goals:** editing or deleting any lesson (recommend-only);
-    provenance capture (#193); retrieval (#195); back-filling
+    provenance capture (#193); injection gating and any later ranking (#195); back-filling
     anchors onto pre-provenance records.
   - **Allowed behavior changes:** the new report only — no store mutation.
   - **Allowed reorganization:** none.
@@ -2350,153 +2289,134 @@ evidence. It is not an active implementation contract.
 - **Origin:** 2026-07-30, jira-grade authoring-model probe.
 - **Status:** not started; blocked on #193.
 
-**#195 — Retrieve relevant lessons instead of injecting the matching set wholesale**
+**#195 — Inject lessons into `detail` authoring only behind the `--lessons` opt-in**
 
-- **What:** replace `when:`-condition matching over a 1.6 MB store with
-  relevance-ranked selection of the top-k lessons for the step being authored,
-  with a floor below which nothing is injected.
-- **Why:** two costs, one of which is correctness. Prompt budget is the obvious
-  one. The other is that **every injected lesson is a chance to contradict the
-  plan** — the rendered `detail` prompt for one step carried a plan fence
-  forbidding export gates and a lesson asserting one, ~90 lines apart. Fewer,
-  better-targeted lessons shrink that surface directly, which is why this
-  outranks building a detector (the discarded #197).
-- **Implementation recommendation:** stay deterministic first. Rank on signals
-  already available — anchor overlap with `step.files`/`creates`, `change_type`
-  match, recency, and citation count — before reaching for embeddings. If
-  lexical ranking proves insufficient, `sqlite-vec` is the smallest step up (a
-  single file, no service) and should be justified against a measured miss rate,
-  not adopted by default. The determinism ladder in
-  `docs/explanations/nondeterministic-plan-design.md` applies.
-- **Risks / fallout:** a relevance floor can drop a lesson that would have
-  helped; that failure is silent. Log what was withheld, per the no-silent-caps
-  rule.
-- **Dependencies:** independent. Benefits from #193's anchors for ranking, but
-  does not require them.
-- **Effort:** medium.
+- **What:** `render_lessons_block(load_lessons(...))` runs on every `detail`
+  authoring prompt (`plan_tool/detail.py`, the `${lessons_block}` render)
+  unconditionally, over a 1.6 MB store matched by `when:` conditions. Gate that
+  injection behind the same `--lessons` opt-in that gates lesson capture, so a
+  run that did not opt in receives no lessons block. Measure whether injected
+  lessons help at all before building any ranking.
+- **Why:** every injected lesson is a chance to contradict the plan — the
+  rendered `detail` prompt for one step carried a plan fence forbidding export
+  gates and a lesson asserting one, ~90 lines apart. With injection
+  unconditional, that contradiction risk is live on every `detail` call. Gating
+  the injection removes the surface for runs that did not ask for it, which is
+  why this outranks building a detector (the discarded #197).
+- **Measurement before ranking:** use the authored
+  `lessons-reuse-instrumentation` plan to measure whether injected lessons help
+  at all. Relevance-ranked top-k selection (anchor overlap with
+  `step.files`/`creates`, `change_type` match, recency, citation count, with a
+  floor below which nothing is injected) is built only if that measurement
+  shows lessons help and the wholesale set is the problem; stay deterministic
+  first, and justify `sqlite-vec` against a measured miss rate, not by default
+  (`docs/explanations/nondeterministic-plan-design.md`'s determinism ladder).
+- **Risks / fallout:** gating injection changes what an existing `detail`
+  invocation without `--lessons` receives; the change is the point, and the
+  prompt-rendering tests that assume a lessons block need updating.
+- **Dependencies:** independent. Benefits from #193's anchors if ranking is
+  ever built.
+- **Effort:** small.
 - **Scope contract:**
-  - **Outcome:** `detail` receives a ranked, bounded lesson set instead of every
-    `when:`-matching entry, and logs what it withheld.
-  - **In scope:** the lesson selection path feeding `${lessons_block}`, the
-    ranking signals, the withheld-count log line, tests.
-  - **Out of scope / Non-goals:** changing lesson *content* or capture (#193 and
-    the BUG_BACKLOG capture-timing entry); contradiction detection (discarded #197);
-    adopting an embedding or vector dependency without a measured miss rate
-    justifying it.
-  - **Allowed behavior changes:** which lessons reach the prompt, and the new
-    withheld-count line.
+  - **Outcome:** a `detail` authoring run without `--lessons` renders no
+    lessons block; a run with `--lessons` renders it as today.
+  - **In scope:** the lesson-injection render in `plan_tool/detail.py`
+    feeding `${lessons_block}` and the `--lessons` gate, tests.
+  - **Out of scope / Non-goals:** changing lesson *content* or capture (#193
+    and the BUG_BACKLOG capture-timing entry); contradiction detection
+    (discarded #197); deliberately not relevance-ranked top-k selection, a
+    relevance floor, or a withheld-count log line, because it is unproven that
+    lessons help at all and ranking is built only after the measurement;
+    adopting an embedding or vector dependency without a measured miss rate.
+  - **Allowed behavior changes:** `detail` without `--lessons` stops receiving
+    the lessons block.
   - **Allowed reorganization:** none.
-  - **Verification:** an authoring run injects at most k lessons; the withheld
-    count is logged (no silent caps); a store with no relevant entry injects
-    none rather than filler.
-  - **Stop / defer:** if lexical ranking cannot beat `when:`-matching on a
-    measured sample, stop and record that rather than escalating to embeddings.
-- **Approach:** `plan-tool` — ranking policy is an open design call.
+  - **Verification:** a prompt render without `--lessons` has an empty lessons
+    block and one with `--lessons` has the matching set; existing capture
+    behavior is unchanged.
+  - **Stop / defer:** if the measurement shows lessons do not help, stop and
+    record that; if it shows they help and the wholesale set is the problem,
+    file ranking as its own entry.
+- **Approach:** `direct` — a gate on one injection site.
 - **Quality:** `audit-coverage` — fewer irrelevant lessons means fewer invented
   requirements downstream.
-- **Origin:** 2026-07-30, jira-grade authoring-model probe.
+- **Origin:** 2026-07-30, jira-grade authoring-model probe. Narrowed from
+  ranked retrieval to the injection gate 2026-11-14.
 - **Status:** not started.
 
-**#198 — Plan provenance in git: structured trailers, a rebuildable archive ledger, and an archive *reason***
+**#198 — Plan provenance in git: structured trailers on green and archive commits, and `list --archived` read from the git log**
 
 - **What:** make "which plans were actually implemented, and where did that land
-  in git?" answerable by machine. Three parts: **(a)** structured trailers on
-  per-step green commits; **(b)** a rebuildable archive ledger recording the
-  landing SHAs;
-  **(c)** an explicit archive **reason**, because implemented and superseded
-  plans are indistinguishable today.
+  in git?" answerable by machine, using git as the only store. Two parts:
+  **(a)** structured `Plan-Slug: <slug>` and `Plan-Step: <n>` trailers on
+  per-step green commits, plus a `Plan-Archive-Reason:` trailer on archive
+  commits carrying an explicit archive **reason** (`implemented` /
+  `superseded` / `cut`), because implemented and superseded plans are
+  indistinguishable today; **(b)** `list --archived`, which reads the git log
+  for those trailers.
 - **Why:** the only durable trail now is the green-commit *subject*
   (`plan(<slug>): step N green — <title>`, `cli/run_cmd.py:_green_commit_subject`),
   which is prose parsed by `--grep` and breaks on hand-advanced steps, hand
   commits, and `--commit`-less runs. No trailer mechanism exists on these
   commits today (the operator's no-attribution policy rules out an
   AI-attribution trailer as that mechanism), so this introduces new
-  machinery rather than extending existing plumbing. The discarded #199
-  (delete archived plans) would have depended on a reliable git record; this
-  entry stands alone.
-- **Implementation recommendation:**
-  - **(a) Trailers.** Add `Plan-Slug: <slug>` and `Plan-Step: <n>` to green
-    commits, so `git log --grep='^Plan-Slug: foo' ` and `git
-    interpret-trailers` both work without parsing prose. Consider
-    `Plan-Fingerprint:` for the plan revision the step ran against.
-  - **(b) Archive ledger — and it has nowhere to live today.** The manifest
-    (`.plan-tool/plans.json`) is a **bare list of repo-relative paths with no
-    metadata field of any kind**, and an archived plan is *dropped from it
-    entirely* — so there is currently **no index of archived plans at all**, and
-    `list` has no `--archived` (only `--status`, over active plans). Add an
-    append-only `.plan-tool/archive-ledger.jsonl`, one line per archived plan,
-    rather than growing the manifest: the manifest answers "what is live", and
-    mixing dead entries into it makes every consumer filter.
-  - **The ledger must be a rebuildable cache, not a second source of truth.**
-    Every field it holds is derivable from the archive commit's trailers, so a
-    lost or stale ledger is regenerated by walking the log — never reconciled by
-    hand. That property is what keeps this from repeating the archive-folder
-    mistake (#200): a parallel store that drifts from the thing it mirrors. Same
-    shape as the re-derivable grounding baseline behind
-    `reconcile-plan --refresh`.
-  - **Context worth capturing at archive time** — chosen because each is cheap
-    then and expensive to reconstruct later: slug and title; archive **reason**
-    (see (c)); the archive commit SHA and the step→landing-SHA map; a diffstat
-    or touched-file summary; a **superseded-by** pointer to the plan or seed
-    that replaced it; and the **verification verdict at archive time**
-    (`verify-all --rollup`), which answers "was it actually done?" at the one
-    moment the answer is cheap.
-  - **(c) Reason.** `implemented` / `superseded` / `cut` — without it, "list of
-    implemented plans" is unanswerable.
-  - **Cover both archival routes.** A plan reaches "implemented" either by the
-    `run` pipeline (green steps, trailers present) **or** by jira tickets
-    shipping the work outside `run`. For the second, the join key already exists:
-    `plan-tool jira` emits stories carrying `steps:` and `<EPIC>-S<N>` ids, so a
-    ticket→step map is derivable from the export without a backend call. Ticket
-    *status* does need a backend query — keep that opt-in and treat its absence
-    as "unknown", never as "not implemented".
-  - **The strongest signal is neither**, and is worth naming as the fallback:
-    `verify-all --rollup` / `reconcile-code` read whether the code actually
-    covers each step's declared deliverables. That is process-independent — it
-    works for a plan implemented by hand, by tickets, or by `run` — and should
-    be the tiebreaker when the trailer record and the ticket record disagree.
+  machinery rather than extending existing plumbing. An archived plan is
+  dropped from the manifest (`.plan-tool/plans.json`, a bare list of
+  repo-relative paths with no metadata field), so no index of archived plans
+  exists and `list` has no `--archived`. The discarded #199 (delete archived
+  plans) would have depended on a reliable git record; this entry stands alone.
+- **Implementation recommendation:** `git log --grep='^Plan-Slug: foo'` and
+  `git interpret-trailers` both work without parsing prose. `list --archived`
+  walks the log for archive-commit trailers, so there is no second store that
+  can drift from git (the archive-folder mistake, #200). Consider
+  `Plan-Fingerprint:` for the plan revision the step ran against.
 - **Risks / fallout:** trailers only exist going forward; historical plans have
   subject-prose only. Do not back-fill by rewriting history — accept a
   `provenance: legacy` tier and let queries report it honestly.
 - **Dependencies:** none.
-- **Effort:** medium — trailer emission is small; the reason field and the
-  ticket-route join are the design work.
+- **Effort:** small to medium — trailer emission is small; the reason field is
+  the design work.
 - **Scope contract:**
   - **Outcome:** every newly landed plan step and every newly archived plan is
-    locatable in git by structured query, with its archive reason recorded.
+    locatable in git by structured query, with its archive reason recorded, and
+    `list --archived` names archived plans with their reason from the log.
   - **In scope:** `plan_tool/cli/run_cmd.py` green-commit path, the archive
-    path, the new `.plan-tool/archive-ledger.jsonl` plus its rebuild-from-log
-    path, `list --archived` as the index surface, `DATA_CONTRACT.md`, tests.
-  - **Out of scope / Non-goals:** deleting plans from the filesystem (the discarded #199);
-    rewriting historical commits; a live jira backend integration beyond the
-    already-exported story→step map; changing what `run` commits.
-  - **Allowed behavior changes:** new trailers on green commits; new manifest
-    fields. Commit *subjects* stay byte-identical — they are load-bearing for
-    existing greps.
+    commit path, `list --archived` reading git log, `DATA_CONTRACT.md` (the
+    trailer vocabulary), tests.
+  - **Out of scope / Non-goals:** deleting plans from the filesystem (the
+    discarded #199); rewriting historical commits; changing what `run`
+    commits; deliberately not an archive ledger file
+    (`.plan-tool/archive-ledger.jsonl`) or its rebuild path, a ticket-to-step
+    join over the jira export, or capturing a `verify-all` verdict at archive
+    time, because git trailers answer the question without a second store;
+    build any of them only once a query actually needs it, and file it as its
+    own entry.
+  - **Allowed behavior changes:** new trailers on green and archive commits and
+    the `list --archived` surface. Commit *subjects* stay byte-identical — they
+    are load-bearing for existing greps.
   - **Allowed reorganization:** none.
-  - **Verification:** a `--commit` run emits parseable trailers; `list
-    --archived` names every archived plan with its reason; an archived plan
-    resolves to its landing SHAs from the ledger alone; **deleting the ledger
-    and rebuilding it from the log reproduces it byte-for-byte** (the property
-    that makes it a cache); legacy plans report `legacy` rather than a wrong
-    answer.
-  - **Stop / defer:** if the ticket-status query needs credentials or a network
-    call in a code path that must stay offline, defer that route and ship the
-    `run` + `verify-all` routes.
-- **Approach:** `plan-tool` — multi-surface with an open reason/tier design call.
+  - **Verification:** a `--commit` run emits parseable `Plan-Slug` and
+    `Plan-Step` trailers; an archive commit emits `Plan-Archive-Reason`;
+    `list --archived` names every archived plan with its reason from the log;
+    legacy plans report `legacy` rather than a wrong answer.
+  - **Stop / defer:** if an archive path makes no commit to carry the trailer,
+    record that route as unsupported rather than adding a second store.
+- **Approach:** `plan-tool` — two surfaces with an open reason-value design
+  call.
 - **Quality:** `grounding` — replaces prose-parsed provenance with a queryable
   record.
 - **Origin:** 2026-07-30, from the archive-redundancy finding: git already holds
   what the filesystem archive duplicates, but nothing makes git *queryable* for
-  which plans shipped.
+  which plans shipped. Cut to trailers plus `list --archived` 2026-11-14.
 - **Status:** not started.
 
-**#202 — Claim-to-test coverage: every acceptance criterion should name a test**
+**#202 — Acceptance-criterion test references: each criterion names its test, and the check verifies the test exists**
 
-- **What:** compare a step's declared `## Acceptance criteria` against its
-  `## Tests` roster and the test functions actually present, and surface
-  criteria with no corresponding case.
-- **Why — measured this session, not hypothetical.** Four of the eight executed
+- **What:** the run-grade detail format requires each `## Acceptance criteria`
+  bullet to name the test function(s) that assert it, and a deterministic check
+  verifies that every named test function exists in the repo. A criterion with
+  no named test, or naming a test that does not exist, is surfaced.
+- **Why — measured, not hypothetical.** Four of the eight executed
   steps shipped **a named guarantee with no assertion behind it**, and every one
   passed the test-authoring gate, its step gate, and the full 6,749-test suite:
   - step 2: an assertion that passed **vacuously** (the fixture carried no
@@ -2508,49 +2428,57 @@ evidence. It is not an active implementation contract.
   - step 7: an acceptance criterion naming **three** side effects the guard must
     precede, with tests asserting **two**.
   All four are the same shape: *a claim in the detail with no test behind it.*
-- **Why the tool can check this at all:** both halves are already
-  machine-readable and required by the run-grade contract. Nothing compares
-  them today.
-- **Implementation recommendation:** model it on
-  `review.py:detect_claim_vs_delivery`, which already does claim-vs-delivery for
-  *deliverables* — this is the same shape applied to *assertions* for
-  run-grade detail. Deterministic, no Claude. **Ship it advisory (`info`),
-  not blocking**, matching the existing
-  fuzzy claim matcher's own calibration (*"fuzzy prose matching can
-  false-positive, so this never blocks"*); promote only on measured precision.
+- **Why a binary check and not a name matcher.** Fuzzy matching between
+  criterion prose and test names is a semantic proxy: operators learn to ignore
+  it, and it would not have caught the vacuous or under-asserted cases above
+  (only mutation does). The observable the tool can assert is binary: the
+  criterion names a test, and that test function exists. Whether the test
+  asserts the criterion stays with the human and the reviewer.
 - **Scope note: there is no longer a `refactor` pre-change contract to cover.**
   A sibling entry once proposed verifying that a refactor step's tests pass
   against **pre-change** code. It was measured and **withdrawn 2026-07-30** —
   81–89% of real refactor steps cannot satisfy it for legitimate reasons (see
   `CLAUDE.md` § "Withdrawn: the per-`change_type` test-ordering contract").
   This entry stands on its own and must **not** be widened to revive it.
-- **Risks / fallout:** naming-level matching is fuzzy in both directions — one
-  test can satisfy several criteria, and one criterion can need several tests.
-  Report unmatched criteria, never "excess" tests.
+- **Risks / fallout:** the format requirement changes `DETAIL_FORMAT.md`, so
+  the format version and its legacy-bundle handling are decided explicitly in
+  the plan, not left implicit. One test can legitimately be named by several
+  criteria, and one criterion can name several tests; report only criteria with
+  a missing or non-existent reference, never "excess" tests.
 - **Dependencies:** none.
-- **Effort:** medium — the extraction is easy, the matching heuristic and its
-  precision calibration are the work.
+- **Effort:** medium — the format-contract change, the extraction of named
+  tests, and the existence check; no matching heuristic and no precision
+  calibration.
 - **Scope contract:**
-  - **Outcome:** an advisory finding per acceptance criterion with no
-    identifiable test case.
-  - **In scope:** the run-grade claim/roster extraction, the matcher, its
-    registry entry, and tests.
-  - **Out of scope / Non-goals:** blocking on the finding before precision is
-    measured; reviving any refactor pre-change ordering check; mutation testing; coverage
-    thresholds; judging test *quality* beyond existence.
-  - **Allowed behavior changes:** one new advisory finding source.
+  - **Outcome:** a finding per acceptance criterion that names no test, or
+    names a test function that does not exist.
+  - **In scope:** the `DETAIL_FORMAT.md` requirement (with its format-version
+    handling), the detail authoring prompt line, the run-grade
+    criterion/test-reference extraction, the existence check, its registry
+    entry, and tests.
+  - **Out of scope / Non-goals:** deliberately not a fuzzy name or prose
+    matcher between criteria and tests (a semantic proxy that operators learn
+    to ignore, and one that would not catch vacuous or under-asserted cases);
+    judging whether a named test really asserts the criterion; mutation
+    testing; coverage thresholds; reviving any refactor pre-change ordering
+    check; flipping any exit code.
+  - **Allowed behavior changes:** one new finding source, and the
+    detail-format requirement that criteria name their tests.
   - **Allowed reorganization:** none.
-  - **Verification:** a step whose criterion has no test is flagged; a step whose
-    criteria are all covered is silent; the finding never flips an exit code.
-  - **Stop / defer:** if precision is poor enough that operators learn to ignore
-    it, stop and report the rate rather than tuning indefinitely — a
-    always-ignored advisory is worse than none.
-- **Approach:** `plan-tool` — the matching heuristic is an open design call.
+  - **Verification:** a criterion naming no test is flagged; a criterion naming
+    a non-existent test function is flagged; a step whose criteria all name
+    existing tests is silent; the finding never flips an exit code.
+  - **Stop / defer:** if the format requirement forces churn across existing
+    bundles that the version handling cannot absorb, stop and report rather
+    than adding a matcher.
+- **Approach:** `plan-tool` — the format-version handling is the open design
+  call.
 - **Quality:** `audit-coverage` — closes the gap between what a step promises
   and what it proves.
-- **Origin:** 2026-07-30, from a 15-mutation spot-check over this session's
+- **Origin:** 2026-07-30, from a 15-mutation spot-check over a session's
   shipped guards (14 caught, 1 unasserted guarantee) plus four review findings
-  of the same shape.
+  of the same shape. Reshaped 2026-11-14 from a fuzzy claim-to-test matcher to
+  the binary named-test check.
 - **Status:** not started.
 
 **#208 — `roadmap` arc position 05: framework lenses** *(anchor entry for the `roadmap-NN-*` seed group)*
@@ -2665,13 +2593,18 @@ evidence. It is not an active implementation contract.
 
 **#216 — A quality benchmark for plan-tool's own output, floors first** *(anchor entry for the `quality-bench-NN-*` seed group)*
 
-- **What:** a corpus replay (note: a `plan-tool bench {run,report}` group already
-  exists for backend × task-family comparison, and this replay and its noise
-  floor are not built there) that replays a fixed corpus of seeds through
-  an authoring stage, stores the artifacts, and reports metric deltas between
-  two labelled runs **against each metric's own measured rerun spread**. The
-  point is to make "did this change help?" answerable over time. The arc
-  deliberately ships **no model-scored metric in position 01**.
+- **What:** one disposable observation of each metric's own rerun spread,
+  run **only when a concrete "did change X help?" question exists** that the
+  spread would let someone answer. A corpus replay that stores artifacts and
+  reports deltas between labelled runs against that spread (note: a
+  `plan-tool bench {run,report}` group already exists for backend × task-family
+  comparison, and this replay is not built there) is a possible later route,
+  not current scope. The arc deliberately ships **no model-scored metric in
+  position 01**.
+- **Trigger — no question named today.** Measurement is worth doing only when
+  a decision consumes it. Nothing consumes it now: position 02 is unauthored
+  and no pending A/B question is named, so the observation is **not scheduled**
+  and the entry is off the board's "Next" lane. A named question promotes it.
 - **Why floors come first, and why this entry is not #164 again.** Nobody
   knows what any of these metrics do when *nothing changes*. Measured on
   `roadmap` stage 2, 2026-08-01, three runs on byte-identical input (all three
@@ -2715,18 +2648,19 @@ evidence. It is not an active implementation contract.
   01 establishes the corpus and noise floors needed before confidence claims
   are generalized or calibrated. This order keeps risk (change impact),
   confidence (evidence support), and benchmark evidence distinct.
-- **Re-triage (2026-08-28):** retain position 01's noise-floor question, but
-  withdraw its current three-step plan. Even after its earlier scope reset,
-  that plan builds a corpus format, persisted record, runner, CLI, and
-  documentation before one current-model exercise demonstrates that a durable
-  replay surface is needed. First run one disposable two-item, serial stage-2
-  observation with an explicit Codex backend and record only the three factual
-  measurements. It must create no new command or reusable storage. A fresh
-  bare plan is justified only if that observation cannot answer the question or
-  demonstrates a repeated durable replay need. It receives completed risk and
-  confidence surfaces only as context for what later claims might concern; it
-  does not score either field, turn either into a decision rule, or merge their
-  contracts. Renderer consolidation (the discarded `#316`) stays out.
+- **Re-triage (2026-08-28; reshaped 2026-11-14):** position 01's noise-floor
+  question is retained and its three-step plan is withdrawn: that plan builds a
+  corpus format, persisted record, runner, CLI, and documentation before one
+  current-model exercise shows a durable replay surface is needed. The
+  observation is one disposable two-item, serial stage-2 run with an explicit
+  Codex backend that records only the three factual measurements. It creates no
+  new command or reusable storage, and it runs only once the trigger above
+  fires. A fresh bare plan is justified only if that observation cannot answer
+  the question or shows a repeated durable replay need. It receives completed
+  risk and confidence surfaces only as context for what later claims might
+  concern; it does not score either field, turn either into a decision rule, or
+  merge their contracts. Renderer consolidation (the discarded `#316`) stays
+  out.
 - **Prior scope reset (2026-08-27; historical):** the seven-step
   `quality-bench-01-corpus-and-noise-floor` plan received repeated
   completeness-stage `split=1` then `split=2` assessments (for example,
@@ -2736,9 +2670,23 @@ evidence. It is not an active implementation contract.
   three-step smallest-proof feasibility effort, not a reusable benchmark
   subsystem. That conclusion reduced the plan but did not make its runner and
   CLI necessary; the plan is now historical, not the selected scope.
-- **Current effort:** a single low-cost observation. Any future verb group,
-  metric registry, artifact store, or data-contract row needs fresh evidence
-  from that observation rather than inheriting this entry's old product shape.
+- **Current effort:** a single low-cost observation, run only on the trigger
+  above. Any future verb group, metric registry, artifact store, or
+  data-contract row needs fresh evidence from that observation rather than
+  inheriting this entry's old product shape.
+- **Current scope contract (the observation):**
+  - **Outcome:** the three factual rerun measurements for one two-item stage-2
+    replay, recorded against the named A/B question that triggered the run.
+  - **In scope:** one disposable serial run and a short evidence note.
+  - **Out of scope / Non-goals:** deliberately not a command, runner, corpus
+    format, artifact store, or `DATA_CONTRACT.md` row (a durable surface needs
+    the observation's evidence first); deliberately not running without a named
+    question (nothing would consume the result); any model-scored metric.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** the note states the A/B question, the backend, and the
+    three measurements.
+  - **Stop / defer:** with no named question, do nothing.
 - **Risks:** the corpus is a **recurring Claude spend** — the roadmap smoke run
   was ~$2.50 for two stages, so R reruns × N items is the whole budget
   conversation, and a floor needs R > 1 by construction. A corpus that drifts
@@ -2753,8 +2701,8 @@ evidence. It is not an active implementation contract.
   `docs/history/backlog-decisions.md`), the `gate_violations` run-log event (shipped
   2026-08-02), which makes gate-attempt metrics diagnosable rather than merely
   countable.
-- **Future capability boundary** (not current scope; a later evidence-backed
-  seed pins its own):
+- **Future capability boundary** (not current scope, not on the board; a later
+  evidence-backed seed pins its own):
   - **Outcome:** a repeatable corpus replay that reports metric deltas between
     two labelled runs against each metric's measured rerun spread.
   - **In scope:** the `bench` verb group, the corpus directory format and its
@@ -2787,7 +2735,8 @@ evidence. It is not an active implementation contract.
 - **Origin:** 2026-08-01, user request for a systematic LLM-judged quality
   suite to track the impact of changes over time; re-ordered floors-first
   against the rerun-variance data the same session produced.
-- **Status:** no active position-01 seed or plan. The withdrawn plan and its
+- **Status:** parked until a concrete A/B question names a consumer for the
+  measurement. No active position-01 seed or plan. The withdrawn plan and its
   audit reports preserve the rejected runner/CLI shape as history. Position 02
   remains unauthored until a future, reviewed floor record exists.
 
@@ -2910,7 +2859,7 @@ evidence. It is not an active implementation contract.
   confirmation proof remains input to a later retention redesign, not a
   solution to it.
 
-**#395 — A selector-era candidate lineage on an enrolled roadmap has no discard route**
+**#395 — Selector-era candidate lineage has no discard route: check whether any enrolled roadmap holds one**
 
 - **What:** `--reject-candidate` and `--discard-candidate` release only an active
   *batch* candidate: `roadmap_candidate_review.py:_release_active_candidate`
@@ -2926,51 +2875,42 @@ evidence. It is not an active implementation contract.
   admission slot for the roadmap's life. While it sits unpromoted on the current
   accepted head it refuses enrolled decision settlement and the ledger-batch
   route, both as `unpromoted-candidate-lineage`.
-- **Why now:** the exposure is legacy-only and matters when a ledger-less or
+- **Why now:** the exposure is legacy-only and matters only when a ledger-less or
   freshly migrated roadmap holds an unfinished selector-era candidate.
-  Ledger-batch candidates release through the routes above.
-- **Outcome:** an operator can abandon a stalled, unpromoted selector-era candidate
-  lineage on an enrolled roadmap, freeing the one candidate-admission slot, without
-  weakening the "one admission per roadmap" invariant that protects a lineage still
-  in progress.
-- **Out of scope / Non-goals:** any change to `promote_review_seal` or the
+  Ledger-batch candidates release through the routes above. No evidence yet
+  shows that any enrolled roadmap holds such a lineage, so the first step is to
+  check rather than design.
+- **Outcome:** a recorded answer to "does any enrolled roadmap hold a
+  selector-era candidate lineage (an admission with `root_version_id` of
+  `None`)?". If none does, the selector-era route is retired or a hand recovery
+  for it is documented. If one does, that lineage is recovered by hand and the
+  entry closes with the recovery recorded.
+- **In scope:** inspecting the admission file of each enrolled roadmap the owner
+  names; then either retiring the selector-era route or documenting the hand
+  recovery (for example in `docs/how-to/roadmap.md`).
+- **Out of scope / Non-goals:** deliberately not a new discard route, and
+  deliberately not "stalled"-versus-slow semantics or an operator confirmation
+  for them (the exposure is legacy-only, so a designed state machine is
+  disproportionate); any change to `promote_review_seal` or the
   sealed-promotion boundary; discarding a lineage that has already produced a
   sealed, promotable review; the batch reject and discard routes; widening the
   narrower `unpromoted-candidate-lineage` predicate the batch route uses.
-- **Approach:** `plan-tool` — needs a design decision (what counts as "stalled"
-  versus merely slow, whether discard requires an explicit operator confirmation
-  comparable to `--reopen-feedback`'s, or whether to retire the selector-era route
-  instead, since it is legacy) before a bounded implementation.
+- **Allowed behavior changes:** retiring the selector-era route, only if the
+  check finds no lineage; otherwise none.
+- **Allowed reorganization:** none.
+- **Verification:** the entry states which roadmaps were checked and what each
+  admission held; a retirement is covered by a test that the retired route is
+  refused with an actionable message.
+- **Stop / defer:** if a selector-era lineage exists on a roadmap the owner
+  cannot inspect, leave the entry open and record the unknown.
+- **Approach:** direct — an inspection, then either a small retirement or a
+  documented hand recovery.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-09-18, `roadmap-decision-settlement` bare-plan audit round 5,
   finding `enrolled-lineage-block-exit`; narrowed 2026-09-23 when
   `roadmap-versioned-feedback-revision-chain` shipped reject and discard for batch
-  candidates.
-
-**#396 — Decision-settlement's receipt read-back proof has no operator-facing entry point**
-
-- **What:** `roadmap_decision_settlement_receipt.py:decision_settlement_receipt_proves_completion`
-  (and its helpers) — fully built and tested — has no caller anywhere outside
-  its own module and its tests, and no `--view` or status command exposes it
-  (`roadmap --view` offers summary, walk, ledger, index, seeds, and html).
-  `roadmap-decision-settlement`'s own plan schedules no such step (step 7 is
-  documentation-only).
-- **Why now:** found 2026-09-18 during `roadmap-decision-settlement`'s
-  post-run `/code-review` loop (round 3). Likely intentional — the plan's own
-  design treats receipt visibility as living in git history rather than a
-  dedicated view — but nothing records that as a deliberate choice, so the
-  gap was previously undocumented.
-- **Outcome:** an operator can ask, for a given roadmap, whether a named
-  decision-settlement receipt still proves its settlement completed, without
-  reading git history or writing a throwaway script against the internal
-  function.
-- **Out of scope / Non-goals:** any change to the read-back proof rule
-  itself; a general-purpose evidence-browsing UI beyond this one predicate.
-- **Approach:** `plan-tool` — likely a `--view decision-settlements` (or
-  similar) addition to `cli/roadmap_cmd.py`, following the shape of the
-  existing `--view` choices; small enough to scope directly once picked up.
-- **Origin:** 2026-09-18, `roadmap-decision-settlement` post-run `/code-review`
-  round 3.
+  candidates; reshaped 2026-11-14 from a discard-route design to a check-then-retire
+  decision.
 
 **#525 — Validate copied plan-tool skills in the current project so stale instructions are visible**
 
@@ -2985,8 +2925,8 @@ evidence. It is not an active implementation contract.
   check makes stale copied instructions visible before they guide work.
 - **Route:** direct.
 - **Readiness:** decision-needed — select the existing validation surface and
-  when it runs; coordinate with #403's doctor spike without requiring a new
-  doctor command or its broader readiness inventory.
+  when it runs; #403 builds no doctor command, so this check ships on the
+  existing skill-install surface without a broader readiness inventory.
 - **Tier:** experienced.
 - **Principle:** deterministic-non-determinism.
 - **Effort:** small — project installation discovery, byte comparison against
@@ -2995,7 +2935,8 @@ evidence. It is not an active implementation contract.
   describe a difference without judging instruction quality or overwriting it.
   Missing packaged sources must report inability to compare, not a match.
 - **Dependencies:** no implementation dependency; coordinate ownership with
-  #403, which already considers stale copied skills among its candidate checks.
+  #403, which owns the doctor-reference cleanup and assigns stale copied skills
+  to this entry.
 - **Scope contract:**
   - **Outcome:** an operator can determine whether a copied plan-tool skill in
     the current project matches the installed package's corresponding files.
@@ -3014,111 +2955,64 @@ evidence. It is not an active implementation contract.
     stale directives only, missing companion/source, both project skill roots,
     the Codex copy default, and symlink exclusion. Verify no files change.
   - **Stop / defer:** resolve the validation-surface choice before implementation;
-    file broader readiness checks separately or leave them with #403.
+    file broader readiness checks as separate entries (#403's revisit condition).
 - **Origin:** explicit owner request, 2026-11-12, during project model
   configuration design.
 - **Status:** not started.
 
-**#403 — Spike: define a read-only `plan-tool doctor` readiness contract**
+**#403 — `plan-tool doctor`: fix the stale `docs/GATES.md` reference and file readiness checks individually**
 
-- **What:** investigate and design a small, reliable `plan-tool doctor` command
-  that tells an operator whether the local installation and current repository
-  are ready for ordinary plan-tool work. The spike inventories current checks,
-  their owners, their cost, their failure modes, and their actionable repair
-  routes before selecting the command's first released check set and output
-  schema. It then produces a reviewed recommendation or a tightly scoped seed
-  for implementation; it does not ship a speculative kitchen-sink command.
-- **Why:** `docs/GATES.md` already names `plan-tool doctor` as a deferred
-  pre-everything gate, but the CLI has no doctor subcommand. Operators must
-  separately discover whether the installed package contains the required
-  bundled skill/directives, whether a configured skill installation still
-  resolves to that package, and whether `.gitignore` excludes plan-tool state
-  that must be shared or fails to exclude known local runtime state. Some
-  narrow primitives already exist, including
-  `cli.gitcommit.ignored_recommended_paths` for durable `.plan-tool` files and
-  `cli.skill_cmd`'s packaged-source/destination classification, but there is no
-  coherent read-only readiness report or ownership boundary for assembling
-  them.
-- **Spike questions:**
-  - Which existing checks can be reused unchanged, and which would need a new
-    read-only primitive rather than importing a mutating command handler?
-  - Which conditions are universal prerequisites, and which are relevant only
-    when an operator uses a particular feature such as installed skills,
-    roadmap, a backend, Jira, or a commit-capable workflow?
-  - How should doctor distinguish `pass`, `advisory`, `not-applicable`, and
-    `cannot-determine` so a missing optional integration never reads as an
-    installation failure?
-  - Which Git-ignore rules concern plan-tool-owned paths that are known to be
-    shared or local, without expanding into the general `.gitignore` audit
-    already tracked by #318?
-  - How should the command verify a skill install: bundled sources exist,
-    symlinks resolve to the installed package, copied bytes still match, and
-    the router's shared directives are present, while respecting project and
-    user skill roots?
-  - What JSON and terminal contracts let a human, an installed skill, and a
-    CI wrapper consume the same report without making doctor a policy gate?
-  - Does the stale `docs/GATES.md` reference describe the selected command, or
-    should the documentation instead point to a narrower existing surface?
-- **Candidate check inventory for evaluation:** packaged version and required
-  resource availability; repository/worktree discovery; known durable
-  `.plan-tool` paths accidentally ignored; known local plan-tool runtime paths
-  accidentally unignored; skill-router and shared-directives installation
-  state; supported configured backend executable availability without a model
-  call; selected roadmap lifecycle files that are unreadable or malformed;
-  and the presence of a usable Git executable. The spike must justify every
-  selected check from an existing command or documented operator outcome; it
-  may recommend deferring any candidate that lacks a clear owner or remedy.
+- **What:** no `plan-tool doctor` command is built. Three bounded actions replace
+  the former spike: (1) fix or remove the `plan-tool doctor` line in
+  `docs/GATES.md` § "Correctness checks (shipped, follow-ups deferred)", which
+  names a unified pre-everything gate the CLI does not have; (2) ship the
+  copied-skill staleness check as #525 on the existing skill-install surface
+  (`cli.skill_cmd`), not on a new command; (3) file each further readiness
+  check as its own backlog entry when an operator observes the need.
+- **Why:** the entry was triggered by one incident (a persistent local writer
+  lock that needed a precise `.gitignore` rule), and its candidate inventory
+  (version and resources, worktree discovery, ignore rules, skill state,
+  backend executable, malformed roadmap files, Git executable) was a kitchen
+  sink with no shared owner, remedy, or observed demand. One observed check
+  does not justify a top-level command, status vocabulary, or JSON contract.
+  Narrow primitives already exist: `cli.gitcommit.ignored_recommended_paths`
+  for durable `.plan-tool` files and `cli.skill_cmd`'s packaged-source and
+  destination classification.
+- **Revisit condition:** reopen a `doctor` design only once three or more
+  individually owned checks exist, each with a stable remedy, so the shared
+  report shape is drawn from real checks. The general `.gitignore` audit stays
+  #318.
 - **Scope contract:**
-  - **In scope:** current-code and documentation inventory; check ownership
-    map; selected initial check set; status vocabulary; terminal and JSON
-    report proposal; remediation text; false-positive and platform analysis;
-    direct reuse candidates; and a narrow implementation seed or a recorded
-    decision not to proceed.
-  - **Out of scope / Non-goals:** changing `.gitignore` rules across arbitrary
-    repositories; modifying skill installations; authenticating or invoking a
-    model provider; changing project state, Git state, roadmap artifacts,
-    baselines, seeds, receipts, or run logs; a general security scanner;
-    broad environment inventory; and implementing doctor before the check set
-    is selected.
-  - **Allowed behavior changes:** none during the spike. A follow-up may add
-    one read-only command only after its inputs, statuses, and remedies are
-    explicitly selected.
-  - **Verification:** reproduce the candidate checks in fixtures covering a
-    healthy repository, ignored durable state, visible local runtime state,
-    missing packaged integrations, valid and dangling skill symlinks, stale
-    copied skill content, an unavailable optional backend, a non-Git directory,
-    and platform path differences. Verify that every proposed doctor check is
-    read-only and that every non-pass result names a specific, safe next step
-    or reports `cannot-determine`.
-  - **Stop / defer:** if the inventory cannot identify a small shared set of
-    checks with stable remedies, document the existing command-specific checks
-    and do not introduce a top-level doctor command. Any generic ignore-file
-    linter remains #318.
-- **Existing logic to evaluate for reuse:**
-  `plan_tool.cli.gitcommit.path_is_gitignored` and
-  `ignored_recommended_paths`; `plan_tool.cli.skill_cmd`'s bundled-source and
-  destination classification; repository-root resolution in
-  `plan_tool.cli.context`; backend/package discovery in `plan_tool.backend`;
-  command registration in `plan_tool.cli.parser` and `plan_tool.cli.app`; and
-  the existing read-only `status`, `validate`, `convergence`, and roadmap-view
-  output conventions. The resulting doctor reader must not call mutating
-  helpers merely because they contain nearby inspection code.
+  - **Outcome:** `docs/GATES.md` no longer names a doctor command that does not
+    exist (or names it as deliberately deferred with the revisit condition),
+    and the doctor-related readiness checks have owners: #525 for skill
+    staleness, individual entries for anything else observed.
+  - **In scope:** the `docs/GATES.md` line; the #525 cross-reference; filing
+    individual check entries as observed.
+  - **Out of scope / Non-goals:** deliberately not a `plan-tool doctor`
+    command, status vocabulary, or JSON report now (one incident does not
+    support a framework; reopen at three owned checks); deliberately not a
+    spike or inventory of the candidate list; changing `.gitignore` rules
+    across arbitrary repositories (#318); modifying skill installations;
+    authenticating or invoking a model provider; a general security scanner.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** `docs/GATES.md` agrees with the CLI's actual subcommands
+    (`plan-tool --help` lists no `doctor`, and the doc does not claim one).
+  - **Stop / defer:** any readiness check without a clear owner or remedy stays
+    unfiled until observed.
 - **Risks / fallout:** an over-broad doctor can become a misleading release
-  gate, report machine-local optional tooling as failure, or duplicate checks
-  that should remain feature-specific. A check without a clear remedy creates
-  noise rather than readiness. The spike must keep the command advisory and
-  separate health facts from policy decisions.
-- **Dependencies:** related to #318's broad ignore-rule audit but does not
-  depend on it. The installed-skill entries #377–#378 are input to the skill
-  inventory; this spike does not reopen their shipped routing behavior.
-- **Approach:** `plan-tool` — the work spans CLI architecture, packaged
-  resources, Git semantics, skill installation, documentation, and a new
-  output contract. Start with a seed grounded in the inventory rather than a
-  direct implementation.
+  gate or duplicate checks that belong to the feature that owns them; the
+  revisit condition keeps that from being designed early.
+- **Dependencies:** #525 ships the skill-staleness check independently; related
+  to #318's broad ignore-rule audit but does not depend on it. The
+  installed-skill entries #377–#378 are not reopened.
+- **Approach:** direct — a one-line doc fix and bookkeeping.
 - **Origin:** 2026-09-21, a Integration roadmap run left a persistent local writer
   lock that needed a precise `.gitignore` rule, alongside questions about the
-  active plan-tool installation and installed skill readiness.
-- **Status:** not started; spike only.
+  active plan-tool installation and installed skill readiness; reshaped
+  2026-11-14 from a doctor-contract spike.
+- **Status:** not started.
 
 **#404 — Decide the completeness audit's intent-fidelity boundary**
 
@@ -3264,13 +3158,14 @@ evidence. It is not an active implementation contract.
 
 **#378 — Installed skills route discoveries outside a plan's intent, proportionality, or scope into the host repo's tracker**
 
-- **What:** give the installed shared reference one rule for a discovery the
-  driving session will not act on because it falls outside the plan's stated
-  intent, the proportionality bound, or the scope contract. The rule picks the
-  sink by the host repo's convention, checks for an existing record, writes a
-  minimum-content entry, commits it on its own, and reports it. Every directive
-  site that says "defer", "present separately", or "file it" without saying how
-  cites that rule instead of restating it.
+- **What:** one direct edit adds a single section to the installed shared
+  reference (`integrations/shared/DIRECTIVES.md`) for a discovery the driving
+  session will not act on because it falls outside the plan's stated intent,
+  the proportionality bound, or the scope contract. The section states four
+  things: the sink order, the ask-once fallback with an explicit "not filed"
+  report, an existing-record search before filing, and the entry's own commit.
+  Every directive site that says "defer", "present separately", or "file it"
+  without saying how cites that section instead of restating it.
 - **Absorbs #379 (merged 2026-11-14):** closing an already-addressed entry, as
   a subsection beside this entry's rule. Tier stays `architect`: it governs
   when a session may remove a record another author wrote. When a session
@@ -3357,61 +3252,47 @@ evidence. It is not an active implementation contract.
     scope) to <path>` and writes a stub whose `kept-by-impact` section records
     a scope expansion that already landed — a review item, not a deferral.
     #380 owns the tool side.
-- **Proposed defaults (2026-09-16; confirm or revise before `create`):**
-  1. **Triggers.** An `[out-of-scope-deferred]` finding; a finding declined
-     under the proportionality rule; an out-of-scope sibling from check 0; a
-     review or reconcile-tail remainder kept out of the verdict or deferred on
-     an unavailable capability; a broader fix declined by the smallest-change
-     rule; a scope-guard stub's reverted records; a defect noticed in passing,
-     duplication included; a `plan-tool` defect found while driving another
-     repo; an exit-3 item. **Not a trigger:** an in-scope advisory tail, which
-     its saved report already retains.
-  2. **Sink, in order.** The host repo's stated convention (its instruction
+- **The section's four rules (reshaped 2026-11-14 from six defaults):**
+  1. **Sink, in order.** The host repo's stated convention (its instruction
      file, or a contributing or tracking doc); an existing forward-work and
      defect tracker pair such as `BACKLOG.md` / `BUG_BACKLOG.md`, choosing by
      "would a user filing this as an issue be right?"; the plan's own
      `## Deferred` for later scope or an open decision that belongs to that
-     plan; otherwise ask the user once. Unanswered in a headless run, the item
-     is listed in the final report under an explicit *Not filed — no tracker
-     identified* heading. Never create a tracker, or file into a
-     similarly named artifact with another purpose, without the user. A
-     `plan-tool` defect goes to `plan-tool`'s tracker, not the host's; with no
-     writable `plan-tool` checkout, surface it with the evidence needed to
-     file it.
+     plan. A `plan-tool` defect goes to `plan-tool`'s tracker, not the host's;
+     with no writable `plan-tool` checkout, surface it with the evidence needed
+     to file it.
+  2. **Ask once, else "not filed".** With no sink identified, ask the user
+     once. Unanswered in a headless run, the item is listed in the final report
+     under an explicit *Not filed — no tracker identified* heading. Never
+     create a tracker, or file into a similarly named artifact with another
+     purpose, without the user.
   3. **Existing record first.** Search by identifier and by vocabulary (check
      0's two searches) and extend a matching entry with the new provenance
      rather than duplicating it.
-  4. **Minimum content.** What was found; provenance (plan slug, command or
-     phase, report path and finding anchor, or commit); the fence that
-     excluded it, quoted — intent, proportionality, an explicit Non-goal, or a
-     later stage; evidence status (verified at HEAD with an anchor, or marked
-     unverified); and the host repo's entry format when it has one. No design
-     beyond what the evidence supports.
-  5. **When and how.** Recorded once classified and before the next
-     `plan-tool` invocation's pre-call commit, as its own tracker-only commit
-     and never inside a plan-correction batch. A chat message, handoff note,
-     or scratch file is not a record.
-  6. **Authority.** Recording belongs to the session and is reported by
-     location in the user-facing response. Deferring a material,
-     in-scope-looking finding that no explicit fence excludes, or accepting a
-     `kept-by-impact` expansion, is a scope decision that the existing
-     override rule surfaces first.
-- **Effort:** medium — one new reference section, citation edits in the nine
-  sections above plus the router pointers, and three hand-walk fixtures. No
-  code.
-- **Risks:** filing noise if the trigger list reads as "record every finding"
-  — default 1's advisory-tail exclusion is load-bearing; drift if sites
-  paraphrase the rule instead of citing it; misrouting in a repo with an
-  unusual convention, which default 2's ask-once fallback contains. (Touching
-  the Claude router's lines twice was a risk only while the router/reference
-  split, formerly #370, hadn't landed; it shipped 2026-09-16, so the routers
-  are already thin.)
+  4. **Own commit.** Record once classified and before the next `plan-tool`
+     invocation's pre-call commit, as its own tracker-only commit and never
+     inside a plan-correction batch. A chat message, handoff note, or scratch
+     file is not a record. The session reports each record by location.
+  The section applies to a discovery outside the plan's fence (an
+  `[out-of-scope-deferred]` finding, a finding declined under the
+  proportionality rule, an out-of-scope sibling from check 0, a broader fix the
+  smallest-change rule declines, a scope-guard stub's reverted records, an
+  exit-3 item, a `plan-tool` defect found while driving another repo). An in-scope advisory tail is not covered; its
+  saved report already retains it. Deferring a material, in-scope-looking
+  finding that no explicit fence excludes remains a scope decision that the
+  existing override rule surfaces first.
+- **Effort:** small to medium — one new reference section, citation edits in
+  the nine sections above plus the router pointers, and two hand-walk checks.
+  No code.
+- **Risks:** filing noise if the section reads as "record every finding" — the
+  advisory-tail exclusion is load-bearing; drift if sites paraphrase the rule
+  instead of citing it; misrouting in a repo with an unusual convention, which
+  the ask-once fallback contains.
 - **Dependencies:** none — the shared reference is the installed
   `DIRECTIVES.md` file, shipped 2026-09-16 as the skill-router-and-shared-reference
   plan (formerly tracked as #370); that plan's own Non-goals excluded
   directive content changes beyond relocating roadmap guidance. This item
-  edits the same files as #377 (and, before it shipped 2026-09-17, #371);
-  sequence after #377 if it is also taken.
+  edits the same files as #377; sequence after #377 if it is also taken.
 - **Outcome:** a session driving `plan-tool` through an installed skill
   reaches, from every site that defers, one rule that turns an out-of-scope
   discovery into a record in the host repo's own tracker or an explicit,
@@ -3421,7 +3302,12 @@ evidence. It is not an active implementation contract.
   citation in each section above); the router pointers as the shipped
   router/reference plan (formerly #370) leaves them; install and format tests
   only where the edits require it.
-- **Out of scope / Non-goals:** a command that detects or closes addressed
+- **Out of scope / Non-goals:** deliberately not a plan route (guidance text
+  with an explicit Verification, reviewed through the normal pull request at
+  `architect` tier, needs no plan decomposition); deliberately not the six
+  numbered defaults the entry first proposed (a required minimum-content
+  template and a separate authority default restate content the host's own
+  entry format and the existing override rule already carry); a command that detects or closes addressed
   entries; closing items in an external issue tracker; this repo's closure
   convention in `docs/TRACKING.md`; the scope guard's stub output (#380); seed-time
   source-entry reconciliation (#377 and the existing "Backlog-derived seeds"
@@ -3453,9 +3339,8 @@ evidence. It is not an active implementation contract.
     source checkout (extends the install test from the shipped
     router/reference plan, formerly #370).
   - A hand walk of the rule reaches a sink or an explicit "not filed" for
-    (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md`, (b) a Integration-shaped
-    repo with no tracker and a backlog-named ideation file, and (c) one real
-    saved `[out-of-scope-deferred]` finding plus a synthetic scope-guard stub.
+    (a) a scratch repo with `BACKLOG.md` / `BUG_BACKLOG.md` and (b) a
+    Integration-shaped repo with no tracker and a backlog-named ideation file.
   - A hand replay of the closing rule reaches the right outcome on the three
     measured incidents: #337 (the plan-specific retention rule beats general
     removal), #315 (the sweep finds the arc-doc citation), and `2b0273cc`'s
@@ -3466,116 +3351,90 @@ evidence. It is not an active implementation contract.
 - **Stop / defer:** if sink selection cannot be stated without a tool-side
   key, ship the ask-once and "not filed" fallback and file the key as its own
   entry.
-- **Route:** `plan` — nine citation sites and an authority line whose paper
-  trail matters; the bare-plan gate catches a missed site or a mis-drawn
-  authority boundary before detail multiplies it.
+- **Route:** `direct` — guidance text in one reference file plus citations; a
+  missed site is caught by the binary citation check in Verification.
 - **Readiness:** `ready` — the router/reference split it depended on (formerly
   #370) shipped 2026-09-16.
 - **Tier:** `architect` — it changes the canonical directives every driving
   assistant follows.
-- **Iterate:** standard recipe. The seed is not yet authored.
-
-  ```bash
-  plan-tool create skill-backlog-capture --iterate -y --from-existing plan-seeds/skill-backlog-capture.md
-  plan-tool completeness-audit skill-backlog-capture --iterate --commit -y
-  plan-tool detail skill-backlog-capture --commit -y
-  plan-tool completeness-audit skill-backlog-capture --iterate --commit -y
-  plan-tool run skill-backlog-capture --commit -y --step N
-  plan-tool reconcile-code skill-backlog-capture --all
-  ```
 - **Origin:** 2026-09-16, a user-directed review of the installed skills and
   this backlog for orchestration-layer duties when work surfaces outside a
-  plan's intent, proportionality, or scope.
+  plan's intent, proportionality, or scope; reshaped 2026-11-14 to one direct
+  section.
 - **Status:** not started.
 
 ### B. Significant UX changes
 
-**#262 — Surface a detail-readiness advisory after repeated bare-plan audit churn**
+**#262 — Bare-stage report header: one static line that detail is the next step**
 
-- **What:** when a plan remains bare after several fresh completeness audits,
-  deterministic checks are clean, and no CRITICAL/HIGH conceptual-correctness
-  finding remains, emit one report and terminal advisory that the next useful
-  validation surface is step detail. The advisory names the qualifying bare-audit
-  count, the remaining findings/owning steps, and the detail command; it says
-  plainly that this is a stage-transition recommendation, **not** proof that the
-  plan is complete. A budget-limited or still-discovering audit remains
-  unconfirmed coverage, not a reason to hide the recommendation.
+- **What:** the bare-stage completeness report (the one that labels exact
+  detail coverage) carries one static line in its header: *"Remaining
+  detail-owned remedies are expected; with no HIGH/CRITICAL plan-correctness
+  finding, `detail` is the next step."* The line is fixed text. It counts
+  nothing, reads no audit history, and is not conditioned on how many bare
+  audits ran.
 - **Why:** a bare plan has no detail bundle for the audit to ground against, so
   repeated conceptual samples can keep discovering increasingly fine
-  implementation contracts. The retired #231 planning session reached eight
-  bare-plan audits; initial high-level gaps were resolved, but later MEDIUM
-  findings were schema, timestamp, event-history, and rendering choices that
-  step details are designed to pin. The existing stage bars correctly preserve
-  correctness findings; they do not tell the operator that further bare-plan
-  sampling now has lower value than authoring detail.
-- **Effort:** medium — this is a cross-plan audit/report policy with history
-  filtering, stable report/JSON rendering, CLI summary copy, and fixture
-  coverage; it must not be an uncalibrated counter hidden in a prompt.
-- **Risks / fallout:** a premature recommendation could teach users to defer a
-  genuinely unsound design into detailed prose, while an over-strict predicate
-  recreates the current silent churn. Audit histories include legacy and
-  checkpoint sidecars, so the counter must use only eligible final
-  completeness reports and must degrade to no recommendation when the evidence
-  is absent. Copy must not imply a changed exit code, bar, or pass/fail verdict.
-- **Dependencies / related:** the settled bare-vs-detail convergence bar. this
-  item consumes the shipped stage facts without adding a second blocking rule.
+  implementation contracts. The need is mostly covered already: the bare-stage
+  bar does not block on `plan-completeness` medium findings, the
+  severity-aware low-yield exit exists, the `bare_mechanism_findings` advisory
+  exists, and `CLAUDE.md` already says a confirmed-dry re-audit plus a fresh
+  unchanged snapshot is enough to proceed to `detail`. What is missing is the
+  same sentence at the point where an operator reads a bare-stage report.
+- **Cut 2026-11-14 (do not re-open without new evidence):** a history-counting
+  policy (the qualifying bare-audit count, saved-history eligibility filtering,
+  a JSON advisory payload) and its plan route. Its only evidence was one
+  retired planning session (n=1, the #231 plan's eight bare-plan audits), and
+  an uncalibrated counter over legacy and checkpoint sidecars is a
+  maintenance cost the static line avoids.
+- **Effort:** small — one header line in the report renderer, and a test that
+  the line renders on a bare-stage report and not on a detail-stage report.
+- **Risks / fallout:** a fixed line could teach users to skip a genuinely
+  unsound design into detailed prose; the HIGH/CRITICAL condition in the line
+  states the exception, and the existing correctness findings are unchanged.
+  Copy must not imply a changed exit code, bar, or verdict.
+- **Dependencies / related:** the settled bare-vs-detail convergence bar; this
+  item consumes the shipped stage facts without adding a blocking rule.
   Narrowing the bare prompt (the discarded #241) and a separate
-  implementation-time finding class (the discarded #139) are not a substitute
-  for telling the operator when detail is the better next artifact.
-  The shipped plan-mass snapshot (`PlanMass`, `DATA_CONTRACT.md`) provides
-  supporting evidence but must not become a growth threshold.
+  implementation-time finding class (the discarded #139) are not a substitute.
 - **Scope contract:**
-  - **Outcome:** eligible bare-plan audits render a deterministic,
-    recommendation-only detail-readiness signal with its evidence and a precise
-    next command; ineligible audits render nothing new.
-  - **In scope:** `plan_tool/review_persistence.py` history readers and saved
-    audit metadata, `plan_tool/completeness_report.py` report/JSON display,
-    `plan_tool/cli/completeness_cmd.py` terminal summary, relevant CLI/report
-    fixtures, and user-facing CLI documentation.
-  - **Out of scope / Non-goals:** changing conceptual finding severity or
-    source; suppressing, auto-applying, or reclassifying findings; modifying
-    `--audit-passes`; changing the bare/detail blocking bars or exit codes;
-    automatically invoking `detail`; and adding a plan-mass or audit-count gate.
-  - **Allowed behavior changes:** one informational report/terminal advisory
-    and, if needed for machine consumers, a clearly non-blocking JSON advisory
-    payload. Existing audit verdicts, findings, and exit codes stay unchanged.
-  - **Allowed reorganization:** none beyond a small pure eligibility/rendering
-    helper shared by the report and terminal surfaces.
-  - **Verification:** fixtures cover (a) an eligible sequence of final bare
-    reports with only MEDIUM-or-lower correctness findings, (b) a HIGH/CRITICAL
-    correctness finding suppressing the signal, (c) a completed or partial
-    detail bundle suppressing it, (d) checkpoint/legacy/unreadable reports not
-    inflating the count, and (e) budget-limited coverage retaining its existing
-    unconfirmed warning beside—not replaced by—the advisory. Assert unchanged
-    return codes and blocking JSON fields.
-  - **Stop / defer:** if replay across saved histories shows the predicate is
-    either nearly universal or never useful, record the measurement and close
-    this as a no-op rather than tuning thresholds to the retired #231 planning
-    session.
-- **Approach:** `plan-tool` — policy, persistence/history selection, two render
-  surfaces, JSON compatibility, and calibration require a scoped plan rather
-  than a direct copy edit.
+  - **Outcome:** a bare-stage completeness report states, in one fixed line,
+    that detail-owned remedies are expected and that `detail` is the next step
+    absent a HIGH/CRITICAL plan-correctness finding; detail-stage reports are
+    unchanged.
+  - **In scope:** the bare-stage header in `plan_tool/completeness_report.py`,
+    its fixture, and the CLI documentation line that describes the report.
+  - **Out of scope / Non-goals:** deliberately not a history count, an
+    eligibility predicate over saved audits, or a JSON advisory payload (the
+    cut above); changing conceptual finding severity or source; suppressing,
+    auto-applying, or reclassifying findings; modifying `--audit-passes`;
+    changing the bare/detail blocking bars or exit codes; automatically
+    invoking `detail`; adding a plan-mass or audit-count gate.
+  - **Allowed behavior changes:** one informational line in the bare-stage
+    report. Existing verdicts, findings, JSON fields, and exit codes stay
+    unchanged.
+  - **Allowed reorganization:** none.
+  - **Verification:** a bare-stage report renders the line; a detail-stage
+    report does not; return codes and blocking JSON fields are unchanged.
+  - **Stop / defer:** if the line cannot be placed without touching a JSON
+    contract, render it in the terminal summary only and record that.
+- **Approach:** direct — a fixed header line and one test.
 - **Quality:** `convergence` and `gate-signal` — sharpens the operator's next
   action without weakening the audit's correctness or coverage verdicts.
-- **Iteration:** use the current `integrations/shared/DIRECTIVES.md`
-  authoring and audit gates. The scope fence is enforced by the plan's
-  contract; it does not require a one-shot `create` pass.
-
-  ```bash
-  plan-tool create detail-readiness-advisory --iterate -y --from-existing BACKLOG.md
-  plan-tool detail detail-readiness-advisory --commit -y
-  plan-tool completeness-audit detail-readiness-advisory --iterate --commit -y
-  plan-tool reconcile-code detail-readiness-advisory -y --step N
-  ```
 - **Origin:** 2026-08-11, operator decision during eight bare-plan audits of
   the now-retired #231 plan: the plan was materially ready for detail, but the
-  audit offered only more findings and no stage-transition signal.
+  audit offered only more findings and no stage-transition signal; reshaped
+  2026-11-14 from a history-counting advisory to one static line.
 - **Status:** not started.
 
 **#167 — Make plain English the default writing style for every generated plan-detail file**
 
-- **What:** Change `plan-tool detail` so every generated per-step detail file is
-  understandable in plain English on a first read. Keep concrete file paths,
+- **What:** Change the `plan-tool detail` prompts so every generated per-step
+  detail file is understandable in plain English on a first read. The change is
+  a prompt-rubric delta: compare the rubric below with what
+  `plan_tool/prompts/detail.md` already says (it already carries a plain-language
+  top rule, a swap list, and an active-voice rule) and add only the missing
+  items. Keep concrete file paths,
   symbol anchors, constraints, test intent, acceptance criteria, and any required
   call order or compatibility rule. Those technical facts are non-negotiable;
   rewrite only the prose around them into short, direct sentences and familiar
@@ -3588,28 +3447,28 @@ evidence. It is not an active implementation contract.
   over-prescriptive prose. Plain English improves reviewability and supports
   #164's lower-altitude contract without removing the evidence an implementer
   needs to find the right code.
-- **Design sketch:**
-  1. Define a shared writing rubric for run-grade detail: lead with the outcome;
-     use active voice and short sentences; **be to the point — say each thing
-     once, no filler, no restated context**; expand or explain project
-     abbreviations; separate required constraints from suggested implementation;
-     and use a small concrete example instead of a dense abstract paragraph.
-     Both directives (plain English and conciseness) target the descriptive
-     prose only — they never reduce code anchors, paths, symbols, examples, or
-     stated constraints.
-  2. Update run-grade detail prompts and quality-review prompts to use that
-     rubric. Preserve every full repo-relative path, symbol anchor,
-     identifier, test reference, and required mechanical/compatibility sequence;
-     make the explanatory sentences around those anchors easier to read instead
-     of removing or generalizing the anchors themselves.
-  3. Add conservative checks for mechanical signals (such as excessive sentence
-     length, undefined acronyms, and outcomes buried under mechanics), plus model
-     review guidance for clarity that heuristics cannot judge. Findings recommend
-     a rewrite; they never silently delete facts. Sentence- and paragraph-length
-     thresholds are stated directly in this repo's own words (see Decision
-     below), not sourced from an external standard.
-  4. Provide an opt-in re-author/review path for existing bundles. New detail is
-     the default target; do not bulk-rewrite the corpus on upgrade.
+- **Design (reshaped 2026-11-14 from four steps to two):**
+  1. Define the rubric delta for run-grade detail: lead with the outcome; **be
+     to the point — say each thing once, no filler, no restated context**;
+     expand or explain project abbreviations; separate required constraints
+     from suggested implementation; and use a small concrete example instead of
+     a dense abstract paragraph. Both directives (plain English and
+     conciseness) target the descriptive prose only — they never reduce code
+     anchors, paths, symbols, examples, or stated constraints. Add each item
+     that `detail.md` does not already say to `detail.md`, and the reviewer
+     wording to `detail-quality.md`. Preserve every full repo-relative path,
+     symbol anchor, identifier, test reference, and required
+     mechanical/compatibility sequence.
+  2. Land it together with #497's shared plain-words swap list, so the swap list
+     and the rubric are edited in one pass rather than twice.
+- **Cut 2026-11-14 (do not re-open without new evidence):** mechanical
+  readability checks (sentence length, undefined acronyms, buried outcomes) and
+  an opt-in re-author path for existing bundles. The checks are a
+  semantic-property proxy that fires on legitimate prose, which `CLAUDE.md`
+  § "Validating a semantic property you cannot observe" and #497 refuse; a
+  clarity finding comes from the model reviewer reading the rubric in
+  `detail-quality.md`, not from a heuristic. New detail is the target; existing
+  bundles are not rewritten.
 - **Decision (2026-08-27): plain, self-stated rubric — not an external writing
   standard.** An earlier version of this entry proposed sourcing the
   sentence-length/mechanical-signal thresholds from ASD-STE100 (Simplified
@@ -3622,42 +3481,45 @@ evidence. It is not an active implementation contract.
   corresponding benefit — a restricted-redistribution PDF to store and
   hand-transcribe, and a controlled dictionary that would have flagged
   legitimate API names (`invoker`, `fingerprint`, `worktree`) as violations had
-  it been adopted. Do not re-open without a concrete case where a self-stated
-  threshold produced a materially worse result than a sourced one would have.
-- **Effort:** medium — `plan_tool/prompts/detail*.md`,
-  `plan_tool/prompts/detail-quality.md`, `plan_tool/detail.py`,
-  `DETAIL_FORMAT.md`, fixtures, and quality tests.
-- **Risks / fallout:** simplistic readability rules can erase necessary precision
-  or flag legitimate API names. Treat paths, symbols, identifiers, code spans,
-  test references, and stated mechanical/compatibility constraints as immutable
-  facts; keep heuristic signals advisory and pin both plain-English and
-  precision-preserving technical fixtures.
-- **Dependencies:** complements #149 (compact structure). Jira-grade detail is
-  retired, so this entry applies only to supported run-grade detail.
+  it been adopted. With the mechanical checks cut, no thresholds remain to
+  source. Do not re-open without a concrete case where a self-stated rubric
+  produced a materially worse result than a sourced one would have.
+- **Effort:** small — `plan_tool/prompts/detail.md`,
+  `plan_tool/prompts/detail-quality.md`, and the prompt-rendering tests; no
+  parser or check code.
+- **Risks / fallout:** simplistic readability rules can erase necessary precision.
+  Treat paths, symbols, identifiers, code spans, test references, and stated
+  mechanical/compatibility constraints as immutable facts and keep the rubric
+  scoped to descriptive prose.
+- **Dependencies:** lands together with #497 (shared swap list); complements
+  #149 (compact structure). Jira-grade detail is retired, so this entry applies
+  only to supported run-grade detail.
 - **Scope contract:**
   - **Outcome:** newly authored plan detail is clear, direct plain English while
     retaining the actionable technical facts needed to implement and verify it.
-  - **In scope:** detail prompts, detail-quality prompts/checks, the detail
-    parser/quality loop as needed, `DETAIL_FORMAT.md`, fixtures, and tests.
-  - **Out of scope / Non-goals:** changing plan-body prose; removing, weakening,
+  - **In scope:** `detail.md` and `detail-quality.md` rubric text (the delta
+    against what they already say), and prompt-rendering tests.
+  - **Out of scope / Non-goals:** deliberately not mechanical readability checks
+    or thresholds (sentence length, undefined acronyms, buried outcomes) — a
+    semantic-property proxy that fires on legitimate prose, refused by
+    `CLAUDE.md` and #497; deliberately not an opt-in re-author path or any
+    rewrite of existing bundles; changing plan-body prose; removing, weakening,
     or generalizing required evidence, file paths, symbols, tests, acceptance
-    criteria, or mechanical constraints; changing implementation behavior; bulk
-    rewriting existing bundles without opt-in; sourcing thresholds from an
-    external writing standard (decided above).
-  - **Allowed behavior changes:** new detail output and clarity findings may be
-    more concise and less prescriptive; existing read compatibility remains.
-  - **Allowed reorganization:** only the prompt/quality helpers required to
-    use one rubric for supported run-grade detail.
-  - **Verification:** tests demonstrate that clear detail passes, jargon-heavy or
-    overly dense surrounding prose gets a targeted clarity finding, and every
-    technical anchor/constraint stays byte-for-byte present through the rewrite.
-    Review samples from each grade for direct, outcome-first language without loss
-    of anchors.
-  - **Stop / defer:** if a clarity check cannot distinguish verbosity from
-    necessary precision, keep it advisory and defer blocking or auto-rewrite
-    behavior rather than degrading implementation guidance.
-- **Approach:** `plan-tool`, direct. The output contract and quality loop own
-  this behavior; it does not require an open architectural experiment.
+    criteria, or mechanical constraints; changing implementation behavior;
+    sourcing thresholds from an external writing standard (decided above).
+  - **Allowed behavior changes:** new detail output may be more concise and less
+    prescriptive; existing read compatibility remains.
+  - **Allowed reorganization:** only the prompt text needed to use one rubric
+    for supported run-grade detail, shared with #497's swap list.
+  - **Verification:** a prompt-rendering test shows each rubric item appears in
+    the rendered `detail.md` and `detail-quality.md` once, with the rubric
+    stating that paths, symbols, examples, and constraints are never reduced.
+    Review a sample run-grade detail for direct, outcome-first language without
+    loss of anchors.
+  - **Stop / defer:** if the delta against `detail.md` is empty, close this entry
+    with that finding rather than adding text.
+- **Approach:** `plan-tool`, direct. Prompt text only; no open architectural
+  experiment.
 - **Status:** not started. 2026-07-22 — two directives recorded: (1) the
   rubric explicitly includes **conciseness** (prose to the point, not
   verbose) alongside plain English, both aimed at descriptions only — code
@@ -3668,25 +3530,31 @@ evidence. It is not an active implementation contract.
   prose** (`create` output) is outside this entry's fence — promote it to
   its own entry when scheduling this work.
 
-**#149 — Compact `detail` output: `--summary` review cards + a compact required-H2 authoring schema — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
+**#149 — Compact `detail` output: a compact required-H2 authoring schema (phase B is the only phase) — PLAN-AUTHORED (`detail-verbosity-compact-summary`)**
 
-- **What:** make `plan-tool detail` output less verbose in two reinforcing
-  layers. (1) A read-only **summary review surface** (`plan-tool detail <name>
-  --summary`) prints one compact review card per step from existing detail
-  files (Intent/Summary + Footprint/Files + Done-when/Acceptance + short
-  Tests/Deferred), spending no Claude and always exiting 0. (2) A **compact
-  required detail schema** that changes what `detail` authors by default:
-  merge Summary+Why into a single `Intent` and drop the Table of Contents.
+- **What:** make `plan-tool detail` output less verbose with a **compact
+  required detail schema** that changes what `detail` authors by default: merge
+  Summary+Why into a single `Intent` and drop the Table of Contents. This is
+  the only phase, because it is the part that reduces tokens and stale prose.
   **Deferred for run-grade re-baseline:** this plan's compact-schema authority
   names the retired Jira-grade lane. Do not preserve `plan_tool/jira_grade.py` as an
   alias source. Re-baseline the compact-schema phase on a run-grade-owned
   contract before execution; a complexity gate can then keep `low` steps
   always-compact while `medium`/`high` may expand only the section carrying
-  the approach.
+  the approach. The format version changes **explicitly through
+  `DETAIL_FORMAT.md`** and its format-version marker, not as an implicit side
+  effect of a prompt change.
   Legacy seven-section files stay valid on the **read** path via dual-token
-  lookup — nothing is force-migrated; the write path emits compact only. The
-  read-only `--summary` layer (1) is untouched by the re-baseline: it renders from
-  whatever sections a file has.
+  lookup — nothing is force-migrated; the write path emits compact only.
+- **Optional, demoted — the `--summary` review surface (phase A).** A read-only
+  `plan-tool detail <name> --summary` that prints one compact review card per
+  step from existing detail files (spending no Claude, always exiting 0) is
+  optional and not part of this entry's outcome. It renders from whatever
+  sections a file has, so it does not depend on the compact schema and does not
+  block it. The WIP plan still lists it as step 1 ("Phase A — ship first"), so
+  the re-baseline this entry's Status requires also removes that step and
+  wording from the plan; until then, do not run the plan as written. Take the
+  cards only if the compact schema has shipped and an operator still wants them.
 - **Why:** `_REQUIRED_H2_TOKENS` hard-requires seven sections, so even a
   one-line change authors ~70 lines and denser steps land at ~120–170; ToC is
   ceremony, Why duplicates Summary, and Implementation inflates into call-site
@@ -3695,26 +3563,47 @@ evidence. It is not an active implementation contract.
   re-inflates new files. Length also compounds cost: `run` injects the full
   detail body into the implementer prompt (relates to #38's detail-length
   drift signal).
-- **Approach:** `plan-tool` — its own decomposition (~6 steps across three
-  phases: A summary cards, B compact authoring contract + complexity gate +
-  sibling hygiene, C read-compat/migration). Touches `plan_tool/detail.py`
+- **Approach:** `plan-tool` — the existing plan, re-baselined: phase B
+  (compact authoring contract + complexity gate + sibling hygiene) and phase C
+  (read-compat via dual-token lookup) are the scope; phase A is optional.
+  Touches `plan_tool/detail.py`
   (`_REQUIRED_H2_TOKENS`/`_REQUIRED_H2_DISPLAY`/parse gate + read
   compatibility), `plan_tool/cli/authoring.py`, `plan_tool/prompts/detail.md` +
   `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/how-to/pipeline/detail.md`, CLI-reference
-  regen, and `tests/test_detail.py`. **Out of scope:** the retired Jira-grade
-  lane, an interactive detail wizard (the discarded #49), purity-prompt
-  size (the discarded #133), and auto-rewriting historical detail files.
+  regen, and `tests/test_detail.py`.
+- **Scope contract:**
+  - **Outcome:** newly authored run-grade detail uses the compact required-H2
+    set, at a stated format version in `DETAIL_FORMAT.md`; legacy seven-section
+    files still read.
+  - **In scope:** the compact schema and its explicit format-version change, the
+    complexity gate, sibling-body hygiene, dual-token read compatibility, and
+    their prompts, docs, and tests.
+  - **Out of scope / Non-goals:** deliberately not the `--summary` cards as part
+    of this outcome (optional and demoted above); the retired Jira-grade lane;
+    an interactive detail wizard (the discarded #49); purity-prompt size (the
+    discarded #133); auto-rewriting historical detail files.
+  - **Allowed behavior changes:** `detail` authors the compact schema; the
+    format version changes through `DETAIL_FORMAT.md`.
+  - **Allowed reorganization:** the parse-gate token tables the dual-token read
+    requires.
+  - **Verification:** a freshly authored step has no Table of Contents and a
+    single `Intent` section; a legacy seven-section file still parses; the
+    format-version marker rejects an unsupported value as `DETAIL_FORMAT.md`
+    states.
+  - **Stop / defer:** if the re-baselined schema cannot name a run-grade-owned
+    authority, stop and report rather than retaining the removed module.
 - **Status:** a WIP plan `docs/implementation-plans/2-detail-verbosity-compact-summary.md`
   (status `planning`, 6 steps) is authored for this; its detail bundle is
   **incomplete** (steps 1–3 detailed, 4–6 pending) and it is
-  registered in `.plan-tool/plans.json`. When the plan ships, its final step
-  removes/marks this entry. **Deferred:** the former Jira-grade schema authority is removed. Re-baseline the WIP plan and its incomplete
-  detail bundle before phase B runs; it must not retain the removed module as
-  a compatibility dependency. The former terminal companion (#293, superseded)
-  is not this entry's target surface.
+  registered in `.plan-tool/plans.json`. Re-baseline the WIP plan and its
+  incomplete detail bundle on phase B before it runs (the former Jira-grade
+  schema authority is removed, and the plan must not retain the removed module
+  as a compatibility dependency); the plan's phase A step becomes optional. When
+  the plan ships, its final step removes/marks this entry. The former terminal
+  companion (#293, superseded) is not this entry's target surface.
 - **Origin:** 2026-07-18 — filed to close the plan's dangling forward-reference
   to "BACKLOG #149" (the plan's step 6 and detail files cite it). Companion to
-  #38 (detail length as a drift signal).
+  #38 (detail length as a drift signal); reshaped 2026-11-14 to phase B only.
 
 **#114 — Give `detail` and `completeness-audit` the same no-name plan-picker `run` already has, filtered to each command's applicable state**
 
@@ -3880,7 +3769,7 @@ evidence. It is not an active implementation contract.
   real borderline pairs are not. Preserve each pair, model output, and judged
   disposition so another reader can reproduce the comparison.
 - **Dependencies:** none for a disposable measurement. Coordinate with #216's
-  corpus/noise-floor route before creating a durable benchmark, calibrated
+  noise-floor observation (parked until a named A/B question exists) before creating a durable benchmark, calibrated
   probability, or shared confidence policy.
 - **Outcome:** a short evidence table and a recommendation to keep, change,
   or stop using the numeric floor for lesson-drop decisions. No threshold or
@@ -4010,83 +3899,88 @@ evidence. It is not an active implementation contract.
   finding, accepted PLAUSIBLE tradeoffs" (the `stop-patching-file-a-backlog-entry`
   rule for a non-converging region).
 
-**#110 — Measure `claim-vs-delivery` false-positive rate (incl. fuzzy near-miss misses) and decide promotion to blocking**
+**#110 — Measure `claim-vs-delivery` false-positive rate (incl. fuzzy near-miss misses) and decide its status**
 
 - **What:** `detect_claim_vs_delivery` (shipped in #100) is deliberately
   **advisory** on `smell_recs` — it never flips rc — until its false-positive
-  rate is measured on real plans; a follow-up then decides whether to promote it
-  onto the blocking `self_consistency_recs` bucket. This entry rescues that
-  follow-up from #100's now-archiving `## Deferred` section and pins a concrete
-  data point: the fuzzy match `_claim_delivered` uses `SequenceMatcher.ratio()
+  rate is measured on real plans. This entry is the measurement and the
+  decision it supports, nothing more. It pins a concrete data point: the fuzzy
+  match `_claim_delivered` uses `SequenceMatcher.ratio()
   >= _NEAR_MISS_RATIO` (0.85) over whole tokens, so a claim clearly delivered by
   a related-but-differently-named symbol misses (`parse_plan` vs a declared
-  `parser` scores ~0.75) and is reported as undelivered — advisory noise today,
-  but exactly the kind of FP that must be characterized (and the threshold /
-  tokenization tuned) before any promotion.
-- **Output of investigation:** run the detector across the repo's real plans,
-  bucket the findings into true/false positives, and either (a) "precision is
-  adequate" → spawn a Bucket A/D item to promote it to the gate-read bucket, or
-  (b) "FP rate too high" → tune `_NEAR_MISS_RATIO` / token normalization (or keep
-  it advisory) with the measured rate as justification.
-- **Where to promote it, once precision is adequate:** both `create --iterate`'s
-  own deterministic loop and the completeness-audit smell layer — the former
-  doesn't run this check at all today, which is why a seam can surface rounds
-  later in the audit instead of at `create` time — plus the inverse direction
-  (a step whose headline intent maps to no acceptance criterion), which the
-  current detector checks neither way.
+  `parser` scores ~0.75) and is reported as undelivered — advisory noise today.
+- **Output of investigation:** run the detector across the repo's real plans
+  (no Claude), bucket the findings into true/false positives, and record the
+  rate. Apply `CLAUDE.md` § "Validating a semantic property you cannot observe"
+  rule 5 (a high false-positive rate means kill, not tune):
+  - **FP rate at or below about 1 in 5:** the detector stays advisory with the
+    measured rate recorded; promotion to a blocking bucket is a separate
+    follow-up (below), filed only on this result.
+  - **FP rate above about 1 in 5:** keep it advisory or remove it. Do **not**
+    tune `_NEAR_MISS_RATIO` or the token normalization to buy a lower rate.
+- **Follow-ups, filed only if the measurement supports promotion (not part of
+  this entry):** wiring the check into `create --iterate`'s own deterministic
+  loop and the completeness-audit smell layer (`create --iterate` does not run
+  it today, so a seam can surface rounds later in the audit), and the inverse
+  check (a step whose headline intent maps to no acceptance criterion), which
+  the current detector checks neither way. Each is its own entry.
 - **Risks / fallout:** the detector's advisory status is a **settled
   decision, not an oversight** — `detect_claim_vs_delivery`'s docstring pins
   "stays advisory" on fuzzy-matching false positives (this entry's own
-  `_NEAR_MISS_RATIO` data point above is exactly that risk). Promotion must
-  not adopt the raw fuzzy `SequenceMatcher` matcher wholesale — measured
-  precision or an exact-match-only subset first. A false positive on a
-  criterion legitimately delivered by a non-step mechanism gets an explicit
-  carve plus a test, never a severity retreat.
-- **Scope contract** (carried forward from an earlier folded-in entry,
-  2026-08-13 — do not re-widen without updating this fence):
-  - **Outcome:** the measurement decides whether `claim-vs-delivery`
-    promotes; if it does, promotion lands in both `create --iterate`'s
-    deterministic loop and the completeness-audit smell layer, plus the
-    inverse (intent with no criterion) direction.
-  - **In scope:** `plan_tool/review.py`'s `detect_claim_vs_delivery` and its
-    deterministic-collector wiring; `create`'s convergence severity mapping;
-    the plan-side `smell_recs`→`self_consistency_recs` routing move (below);
-    tests.
-  - **Out of scope / Non-goals:** any Claude-judged check on claim quality;
-    the completeness-audit conceptual bar (`is_blocking_finding`); step
-    schema changes (that is #268's carrier decision, not this entry's);
+  `_NEAR_MISS_RATIO` data point above is exactly that risk). Any later
+  promotion must not adopt the raw fuzzy `SequenceMatcher` matcher wholesale —
+  measured precision or an exact-match-only subset first.
+- **Scope contract** (cut back to the measurement 2026-11-14; the
+  `create --iterate` wiring, the inverse check, and the severity/routing move
+  are follow-ups, do not re-widen without updating this fence):
+  - **Outcome:** a recorded true/false-positive count over the repo's real
+    plans and a stated decision: stay advisory with the rate, or keep advisory
+    or remove it because the rate is above about 1 in 5.
+  - **In scope:** a no-Claude run of `plan_tool/review.py`'s
+    `detect_claim_vs_delivery` over the repo's plans, the bucketed counts, and
+    the decision note.
+  - **Out of scope / Non-goals:** deliberately not tuning `_NEAR_MISS_RATIO`
+    or token normalization (rule 5: a high false-positive rate means kill, not
+    tune); deliberately not promoting the detector to `self_consistency_recs`
+    or changing `create`'s convergence severity mapping; deliberately not the
+    `create --iterate` wiring or the inverse (intent with no criterion) check
+    — each is a follow-up filed only if the result supports promotion; any
+    Claude-judged check on claim quality; the completeness-audit conceptual bar
+    (`is_blocking_finding`); step schema changes (#268's carrier decision);
     exit-code conventions.
-  - **Allowed behavior changes:** `create --iterate` may iterate (or stop
-    with a blocking finding) on a criterion↔step mismatch it previously
-    converged past at INFO.
-  - **Allowed reorganization:** the `smell_recs`→`self_consistency_recs`
-    routing move `#100`'s Architecture already describes for
-    `suppression-shape`; no other reorganization.
-  - **Verification:** the measurement's bucketed true/false-positive counts;
-    once promoted, unit tests for both directions including the
-    previously-INFO-would-have-converged case now blocking, and one carve
-    asserted as a deliberate exemption.
+  - **Allowed behavior changes:** none.
+  - **Allowed reorganization:** none.
+  - **Verification:** the measurement's bucketed true/false-positive counts and
+    the recorded decision.
   - **Stop / defer:** newly noticed criterion patterns needing judgment (not
     delivery tracing) go to the backlog, not into this check.
-- **Effort:** small (the measurement); the promotion/tuning that follows is a
-  separate item, medium once create-loop wiring and the inverse check are
-  included. **Approach:** `direct` for the measurement; if promotion is
-  chosen, `plan-tool` for the wiring — it now spans two integration points
-  (`create --iterate`'s loop and the completeness-audit smell layer) plus
-  the open precision decision above, which is exactly the multi-module/
-  open-design-choice shape BACKLOG.md's own direct-vs-plan-tool heuristic
-  routes to a plan. This **supersedes** the earlier folded-in entry's "direct,
-  with the hand convergence loop" note (2026-08-13) — reconciled rather than
-  left standing beside it.
-- **Dependencies:** none — #100 shipped the detector.
+- **Effort:** small — a no-Claude measurement and a decision note.
+  **Approach:** `direct`.
+- **Dependencies:** none — #100 shipped the detector. #268 waits on this
+  decision.
 - **Origin:** 2026-07-09 — #100's `## Deferred` ("Promoting `claim-vs-delivery`
   to blocking … until its false-positive rate is measured") plus the high-effort
   workflow review's fuzzy near-miss finding on `review.py:3788`
-  (`detect_claim_vs_delivery`).
+  (`detect_claim_vs_delivery`); cut to the measurement 2026-11-14.
 
-**#87 — [Investigation] Harden the test-authoring gate against a dirty working tree (don't depend on `--commit` discipline)**
+**#87 — Hash test files before the call so the test-authoring gate does not depend on `--commit` discipline**
 
-- **What:** The test-authoring gate isolates a step's test coverage as the
+- **What (the build, 2026-11-14):** hash each test file before the backend call
+  and count a changed content hash after the call as authored, in place of the
+  *post-call git-changed delta against a pre-call baseline of dirty paths*. A
+  step's edit to an already-dirty shared test module changes its hash and
+  counts, so the gate no longer depends on `--commit` to clear the tree between
+  steps. The gate's observable stays binary (a test file's content changed
+  during the call); test quality is not graded. A no-edit retry with no declared
+  files stays on `run --step N --accept`; the hash check does not pass an
+  unchanged file.
+- **Why this is the build, not a question:** this is the most recurring gate
+  problem in the history below (2026-07, 2026-10-06, 2026-10-08, 2026-10-15),
+  and hand-added `enforce_test_authoring: false` exemptions are left sitting in
+  plan frontmatter afterward. The `--commit` mandate in `CLAUDE.md` is a
+  workaround that depends on operator discipline; a per-file hash removes that
+  dependency.
+- **Problem statement.** The test-authoring gate isolates a step's test coverage as the
   *post-call git-changed delta against a pre-call baseline* (`launcher.py`). On a
   multi-step `run` **without `--commit`**, an earlier step's edits to a shared
   test file (e.g. `tests/test_split_criteria.py`) stay dirty, so a later step's
@@ -4107,14 +4001,9 @@ evidence. It is not an active implementation contract.
   `--commit`):** (1) a retry whose tests were already in the tree from an earlier
   attempt made no edits, so the delta was empty and the gate failed it (step 3,
   attempt 3); `enforce_test_authoring: false` was then added by hand to steps 3
-  through 9 so a retry could advance. (2) *(Fixed 2026-10-22: the gate now unions the working-tree delta with backend-committed test paths, `launcher.py` `committed_changed_paths`.)* The model committed its own work inside
+  through 9 so a retry could advance. (2) *(Fixed 2026-10-22: the gate now unions the working-tree delta with backend-committed test paths, `launcher.py` `committed_changed_paths`; the per-file hash build keeps that union.)* The model committed its own work inside
   the call (a 49-file commit, step 10), so the working-tree delta was empty, the
-  gate reported "no test file modified", and the suite gate never ran. Candidate
-  fixes for the open question below: pass when the step's declared test files
-  already differ from the last green commit, and compute the delta from the
-  pre-call HEAD to the post-call tree *and* HEAD (or state in the run prompt that
-  the model must not commit; a prompt rule alone is not a guarantee). The gate's
-  observable stays binary; test quality is not graded. Exemptions added by hand
+  gate reported "no test file modified", and the suite gate never ran. Exemptions added by hand
   persist in plan frontmatter after the run. Related: #455.
 - **Cause (1) again, 2026-10-08 (`roadmap-stack-propagation`):**
   - Two times, a re-run after a hand fix of the step's own failing test changed
@@ -4129,9 +4018,9 @@ evidence. It is not an active implementation contract.
   - `run --step N --accept` (shipped 2026-10-10) gives the hand-fix case a route
     that needs no re-run. Since 2026-10-13 a no-edit re-run of a step that
     declares files is reported as "no edits applied" before this gate runs, so
-    whether the gate should pass a no-edit retry whose tests already differ from
-    the last green commit stays this entry's open question only for steps that
-    declare no files.
+    a no-edit retry whose tests already differ from the last green commit, for
+    a step that declares no files, stays on `run --step N --accept` (decided
+    2026-11-14: the hash check does not pass an unchanged file).
 - **Cause (2) again, 2026-10-15 (`sibling-planned-input-paths`):** steps 1
   and 2 start clean under `run --all --commit`, author regression tests, and
   commit them inside the backend call (`373997be9`, `bf44003f3`). Both return
@@ -4140,18 +4029,39 @@ evidence. It is not an active implementation contract.
   coverage; `run --step N --accept --commit` runs the suite again and advances
   each step. No gate exemption is needed. This reproduces the committed-delta
   case independently of the dirty-baseline case; keep both in any remedy matrix.
-- **Open question:** should the gate be made robust to a dirty baseline
-  (e.g. snapshot each step's pre-call state per-file and diff against that, rather
-  than the raw working tree) so correctness doesn't depend on operator `--commit`
-  discipline — or is the documented `--commit` mandate a sufficient floor?
-- **Effort:** small (decision) → medium (if the gate baseline is reworked).
-- **Approach:** decision first (`direct` write-up), then `plan-tool` if a gate
-  change follows.
+- **Scope contract:**
+  - **Outcome:** a step that edits a test file passes the authorship gate when
+    that file was already dirty before the call, with no `--commit` needed
+    between steps, and a step that changes no test file's content still fails
+    it.
+  - **In scope:** the pre-call per-file content-hash snapshot and the
+    post-call comparison in `launcher.py`'s test-authoring gate (keeping the
+    committed-path union), and tests.
+  - **Out of scope / Non-goals:** deliberately not passing a no-edit retry whose
+    tests merely differ from the last green commit (that stays on
+    `run --step N --accept`); grading test quality; a prompt rule telling the
+    model not to commit (not a guarantee); removing the `--commit` mandate from
+    `CLAUDE.md` in the same change (a follow-up once the gate ships); the
+    #455 failure-receipt work.
+  - **Allowed behavior changes:** the gate stops blocking a step whose edit to
+    an already-dirty test file the old path-delta masked.
+  - **Allowed reorganization:** none.
+  - **Verification:** a test with a dirty shared test file edited by the next
+    step passes; a test where the step changes no test file fails; a test
+    where the model commits its own test edit inside the call still passes;
+    verify by mutation that reverting to the path delta turns the first test
+    red.
+  - **Stop / defer:** if hashing every test file is too slow on a large tree,
+    hash only the step's declared and changed-candidate test files and record
+    the choice.
+- **Effort:** medium — a snapshot and comparison in the gate, plus the tests.
+- **Approach:** `direct` — one gate in `launcher.py` with a settled design.
 - **Dependencies:** the `--commit`-on-multi-step-`run` mandate in CLAUDE.md is the
-  current workaround this would supersede.
+  current workaround this supersedes.
 - **Origin:** 2026-07-04 — surfaced running visualize-split-criteria without
   `--commit`; root cause corrected 2026-07-05 after the `--commit` known-limit
-  rule landed upstream.
+  rule landed upstream; turned from an investigation into the per-file hash
+  build 2026-11-14.
 
 **#71 — [Decision] Define the `detail --reconcile` refusal-token shape (enforce vs. record)**
 
@@ -4191,7 +4101,7 @@ evidence. It is not an active implementation contract.
   refusal-signal work as a forward-looking design decision, not a correctness
   bug.
 
-**#141 — Decide how the fixed 4h jira story-size floor relates to the configurable `--max-hours` ceiling**
+**#141 — Document the 4h jira story-size floor against a `--max-hours` below it, and warn on `--max-hours < 4`**
 
 - **What:** The jira story-size soft floor (`_STORY_SIZE_SOFT_FLOOR_HOURS = 4`
   in `plan_tool/jira.py`, feeding `lint_story_size` and the `prompts/jira.md`
@@ -4203,27 +4113,41 @@ evidence. It is not an active implementation contract.
   but `lint_story_size` still advisory-warns every one of them as "below the 4h
   floor." Both surfaces are advisory-only (exit 0, never block a write), so this
   is noise, not a correctness break — but the noise fires on the whole export.
-- **Why deferred (not patched):** two high-effort review rounds churned on this
-  exact region. A first attempt clamped the *prompt* floor to `min(4, max_hours)`
-  but left the *lint* floor fixed, which made the two diverge (worse). Making
-  them agree requires either (a) threading `max_hours` into `lint_story_size` /
-  `partition_lint_findings` / `_emit_story_warnings` — but the `jira --lint`
-  path lints an existing artifact with **no `--max-hours` context** (it would
-  default to 8, so the surfaces still disagree between `export` and `--lint`), or
-  (b) forbidding / clamping `--max-hours` below the floor (changes `--max-hours`
-  semantics), or (c) accepting the overlap as a pathological-config non-issue and
-  documenting it. The current shipped state is a **fixed 4h floor everywhere**
-  (lint + prompt), with the prompt prose deferring to a lower `--max-hours`
-  target so the *prompt* is self-consistent; only the lint-vs-prompt overlap at
-  `--max-hours < 4` remains.
-- **Effort:** small (option c: one doc line + maybe a `--max-hours < 4` warning)
-  → small–medium (option a/b: signature threading or arg validation). **Approach:**
-  `direct` — narrow, single-surface, no plan needed once the option is chosen.
+- **Decision (2026-11-14): option (c), then close.** The overlap is advisory
+  noise reachable only with a pathological config, and two high-effort review
+  rounds already churned on this exact region: a first attempt clamped the
+  *prompt* floor to `min(4, max_hours)` but left the *lint* floor fixed, which
+  made the two diverge (worse). The work is one doc line in `JIRA_FORMAT.md`
+  stating that a `--max-hours` below the 4h floor makes every story advisory-lint
+  as below the floor, plus a one-line warning when `--max-hours < 4`. The
+  current shipped state is a **fixed 4h floor everywhere** (lint + prompt), with
+  the prompt prose deferring to a lower `--max-hours` target.
+- **Scope contract:**
+  - **Outcome:** `JIRA_FORMAT.md` documents the `--max-hours < 4` overlap and
+    `jira` prints a one-line warning when `--max-hours` is below 4; the entry
+    then closes.
+  - **In scope:** the `JIRA_FORMAT.md` line, the `--max-hours < 4` warning in
+    `plan_tool/cli/jira_cmd.py`, and a test for the warning.
+  - **Out of scope / Non-goals:** deliberately not threading `max_hours` into
+    `lint_story_size` / `partition_lint_findings` / `_emit_story_warnings`
+    (option a: `jira --lint` has no `--max-hours` context, so the surfaces would
+    still disagree between `export` and `--lint`); deliberately not forbidding
+    or clamping `--max-hours` below the floor (option b: changes `--max-hours`
+    semantics); changing the 4h constant or the lint's advisory status.
+  - **Allowed behavior changes:** one stderr warning on `--max-hours < 4`; exit
+    code unchanged.
+  - **Allowed reorganization:** none.
+  - **Verification:** `--max-hours 3` prints the warning and exits as before;
+    `--max-hours 4` and the default print none.
+  - **Stop / defer:** if the warning needs plumbing beyond `jira_cmd.py`, ship
+    the doc line alone.
+- **Effort:** small. **Approach:** `direct` — one doc line and one warning.
 - **Quality/accuracy lens:** low — advisory-only noise reachable only by a
   ceiling-below-floor misconfiguration; the default (`--max-hours 8`) is unaffected.
 - **Origin:** 2026-07-16 — surfaced by the round-2 code review of the story-size
   floor feature (the fixed-floor-vs-configurable-ceiling tension), deferred here
-  rather than patched a third time per the convergence escape hatch.
+  rather than patched a third time per the convergence escape hatch; narrowed
+  to option (c) 2026-11-14.
 
 **#210 — Decide whether the per-step purity Claude pass earns its cost: it has never reported a finding, and 87.5% of its calls never return**
 
@@ -4278,16 +4202,27 @@ evidence. It is not an active implementation contract.
   check was worth it.
 - **Status:** passive observation only, settled 2026-08-20 (user-confirmed).
 
-**#212 — `apply_finding` rewrites a step but never clears its `intent`, leaving an authoritative stale why**
+**#212 — `apply_finding` rewrites a step but can leave its `intent` stale: one instruction in `apply-finding.md`**
 
 - **What:** `Step.intent` has shipped (plan `2-intent-scope-fence.md`), and
   `plan_tool/launcher.py:apply_finding` rewrites a step's title, files, and
   acceptance criteria from an audit finding while leaving `intent` untouched.
-  The result is a one-line why that no longer describes the step but still
+  The result can be a one-line why that no longer describes the step but still
   renders into the `detail`, `run`, and conceptual-audit prompts as
   authoritative input — the "a stale intent is worse than an absent one" hazard
   that plan's Risks section names, arriving through a verb that plan does not
-  cover.
+  cover. The remedy is **one instruction in `plan_tool/prompts/apply-finding.md`**
+  telling the model to keep `intent` consistent with the step when it rewrites
+  the step (revise the one-line why to match, or leave it when the rewrite does
+  not change the step's purpose). `apply_finding` is a Claude-driven edit, so
+  the consistency decision belongs in that prompt, not in a code path.
+- **Decision (2026-11-14): do not clear `intent`.** The earlier remedy, a code
+  rule that clears the field on a rewrite, conflicts with the shipped
+  intent-required rule (`CLAUDE.md` § "The two intent reversals"): a missing
+  intent is a `medium` self-consistency finding that blocks completeness
+  convergence, so clearing a rewritten step's intent would create a blocking
+  finding. Conceptual findings are also now applied by hand, so
+  `apply_finding` rarely rewrites steps.
 - **Why it is filed rather than folded in:** `2-intent-scope-fence.md` scopes
   propagation to the four **structural** verbs (`split`, `merge`, `scope-out`,
   `reground`). `apply_finding` is not one of them, and that plan's
@@ -4297,27 +4232,31 @@ evidence. It is not an active implementation contract.
   not expanding the plan.
 - **Dependencies:** none — `2-intent-scope-fence.md` shipped the field, so the
   one blocker this entry had is clear.
-- **Effort:** small — one clearing rule plus a test, if the answer is "clear
-  it". Deciding *whether* a rewritten step should keep, clear, or re-derive its
-  intent is the actual work.
+- **Effort:** small — one prompt instruction and a prompt-rendering test.
 - **Scope contract:**
-  - **Outcome:** a step rewritten by `apply_finding` never carries an intent
-    that contradicts it.
-  - **In scope:** `apply_finding`'s step-rewrite path and its tests.
-  - **Out of scope / Non-goals:** re-deriving a new intent with a Claude call;
+  - **Outcome:** the `apply-finding` prompt tells the model to keep a rewritten
+    step's `intent` consistent with the step.
+  - **In scope:** one instruction in `plan_tool/prompts/apply-finding.md` and
+    its prompt-rendering test.
+  - **Out of scope / Non-goals:** deliberately not clearing `intent` in
+    `apply_finding` (it would create a blocking missing-intent finding, above);
+    a code path that rewrites or re-derives intent; a separate Claude call to
+    re-derive it;
     any intent-vs-work agreement check (permanently refused — see CLAUDE.md
     § "Validating a semantic property you cannot observe", "The two intent
     reversals"); the four structural verbs, which `2-intent-scope-fence.md`
     already owns.
-  - **Allowed behavior changes:** one field cleared on one existing path.
+  - **Allowed behavior changes:** `apply_finding` prompt text only.
   - **Allowed reorganization:** none.
-  - **Verification:** a step carrying an intent, rewritten by `apply_finding`,
-    ends with no stale intent; a step with no intent is byte-identical to today.
-  - **Stop / defer:** if clearing proves wrong for some finding classes, record
-    which and defer the per-class rule rather than widening.
-- **Approach:** `direct` — one path, one rule, one test.
+  - **Verification:** the rendered `apply-finding` prompt contains the
+    instruction; no code path changes, so a step with no intent is
+    byte-identical to today.
+  - **Stop / defer:** park this entry if `apply_finding` is found to rarely
+    rewrite steps in practice; record that as the reason.
+- **Approach:** `direct` — one prompt line and one test.
 - **Quality:** `grounding` — keeps an authoritative input from going stale.
-- **Origin:** 2026-08-01, round-1 conceptual audit of `2-intent-scope-fence.md`.
+- **Origin:** 2026-08-01, round-1 conceptual audit of `2-intent-scope-fence.md`;
+  remedy changed from clearing to a prompt instruction 2026-11-14.
 - **Status:** not started; unblocked (that plan's step 1 landed the field).
 
 **#228 — A deterministic enumeration/count drift check across a plan and its detail bundle**
@@ -4553,7 +4492,7 @@ evidence. It is not an active implementation contract.
 - **Principle:** `write-for-the-human`.
 - **Origin:** 2026-10-19 review of generated plan and roadmap prose.
 
-**#431 — `_gate_correction`'s kind→remedy classification is a vocabulary-prefix matcher with hand-curated exceptions, not a type-checked decision**
+**#431 — `_gate_correction`'s prefix matcher → one exhaustive `kind → remedy` table**
 
 - **What:** `roadmap_candidate._gate_correction` routes each `Violation.kind`
   to a remedy string by matching `kind.startswith((...))` prefix tuples, with
@@ -4579,31 +4518,53 @@ evidence. It is not an active implementation contract.
   different remedy will silently render the wrong retry instruction to a
   model, and the exhaustiveness test stays green because it only checks
   generic-vs-specific, never specific-vs-*correct*-specific.
-- **Approach sketch:** an explicit `remedy_shape` (or similar closed
-  enum/field) set at each `Violation(...)` construction site in
-  `roadmap_gates.py`, read directly by `_gate_correction` instead of
-  re-derived from the kind string in a different module. Turns "does this
-  kind's vocabulary look like X" into "did the check that raised this
-  violation say it needs X" — a decision made once, where the defect's actual
-  shape is known, not guessed at a distance.
+- **Approach sketch (reshaped 2026-11-14):** replace the prefix tuples and
+  `_DROP_EXTRA_ROWS_GATE_KINDS` with one exhaustive `kind → remedy` table in
+  `roadmap_candidate.py` covering every `VIOLATION_*` constant in
+  `roadmap_gates.py` (currently 81), and read the remedy from the table in
+  `_gate_correction`. Add a test that every `VIOLATION_*` constant appears in
+  the table, so a new kind fails the test until someone chooses its remedy.
+  This makes the decision explicit per kind, where the author adds the kind,
+  without touching the ~95 `Violation(...)` construction sites.
+- **Deliberately not a `remedy_shape` field on `Violation`:** setting the remedy
+  at each of ~95 construction sites is more churn than the property needs. The
+  table gives the same per-kind explicitness and the same new-kind failure at a
+  fraction of the change. Revisit only if the table drifts from the checks
+  that raise the kinds.
 - **Scope contract:**
-  - **Outcome:** a new `VIOLATION_*` kind cannot land in a wrong
-    specifically-routed remedy bucket without a test failing.
-  - **In scope:** `Violation`'s shape, its ~95 construction sites in
-    `roadmap_gates.py`, and `_gate_correction`'s dispatch.
-  - **Out of scope / Non-goals:** any change to a violation's `message` text,
-    to `_INTENTIONALLY_GENERIC_GATE_KINDS`'s membership, or to which kinds are
-    routed where today — this is a mechanism change, not a remedy re-audit
-    (the current mapping is already verified correct).
-- **Effort:** medium — touches every `Violation(...)` call site in
-  `roadmap_gates.py`, a stdlib-plus-leaves module with no first-party
-  dependents besides its own consumers; mechanical but wide.
-- **Approach:** direct, or a small plan if the construction-site sweep proves
-  large enough to want its own convergence loop.
+  - **Outcome:** a new `VIOLATION_*` kind cannot land without an explicit
+    remedy choice: a test fails until the kind has a row in the
+    `kind → remedy` table.
+  - **In scope:** the `kind → remedy` table in `roadmap_candidate.py`,
+    `_gate_correction`'s dispatch from it, retiring the prefix tuples and
+    `_DROP_EXTRA_ROWS_GATE_KINDS`, and the every-constant-is-in-the-table test.
+  - **Out of scope / Non-goals:** deliberately not changing `Violation`'s shape
+    or its ~95 construction sites in `roadmap_gates.py` (the table delivers the
+    explicit per-kind decision without that churn); any change to a violation's
+    `message` text, or to which remedy each existing kind gets today — this is
+    a mechanism change, not a remedy re-audit (the current mapping is already
+    verified correct; kinds in `_INTENTIONALLY_GENERIC_GATE_KINDS` map to the
+    generic remedy explicitly in the table).
+  - **Allowed behavior changes:** none; every existing kind renders the same
+    correction text.
+  - **Allowed reorganization:** the table replaces the prefix tuples in
+    `_gate_correction`.
+  - **Verification:** a test that every `VIOLATION_*` constant in
+    `roadmap_gates.py` is a key of the table, and a test that each existing
+    kind's rendered correction equals today's (captured before the change);
+    verify by mutation that adding a constant without a table row turns the
+    first test red.
+  - **Stop / defer:** if a kind's remedy depends on the violation's fields
+    rather than the kind alone (as the ordering-reference condition does), keep
+    that field-keyed branch and table the kind to it explicitly.
+- **Effort:** small — one table, one dispatch change, and two tests; no
+  construction-site sweep.
+- **Approach:** direct.
 - **Origin:** 2026-09-27, roadmap-candidate gate-correction review pass 5,
   finding 3 (`plan_tool/roadmap_candidate.py:_gate_correction`) — raised after
   three prior passes (R1.5, P2.1, P3.1) each fixed one more instance of the
-  same false-friend-prefix shape.
+  same false-friend-prefix shape; reshaped 2026-11-14 from a construction-site
+  `remedy_shape` field to an exhaustive table.
 - **Status:** not started.
 
 **#432 — `render_candidate_question_prompt` still reads its template with a bare, unguarded `read_text()`**
@@ -4779,21 +4740,24 @@ evidence. It is not an active implementation contract.
   one of them is a moderate structural change, not a one-line patch), but the
   *pattern* recurring across three independently-run review passes is a
   stronger signal than any single finding — it means the current home is
-  fighting the abstractions it's built on rather than fitting them. A
-  redesign (e.g., migrating to `checkpoint.py`'s primitive, or giving the
-  sampler checkpoint its own persisted shape instead of overloading
-  `SavedReview`) is a deliberate architectural decision, not something to
-  hand-apply mid-review per this file's own "Audit the why" convention.
-- **Effort:** medium-to-large — touches the writer (`save_sampler_checkpoint`),
-  every reader (`list_saved_reviews`, `load_audit_evidence_ledger`,
-  `resolve_saved_review`, the CLI ineligibility predicates), and their tests.
-  **Value:** removes the recurring special-casing at every one of those sites
-  (a fixed, non-timestamped filename living alongside timestamped saved
-  reviews already needs a `path != checkpoint_path` / `path.name !=
-  SAMPLER_CHECKPOINT_FILENAME` exclusion at each reader today) and the
-  parameter-bloat/role-overload findings above.
-- **Approach:** decision first — plan-tool (the redesign itself, once scoped,
-  is squarely a `create`/`detail`/`run` effort, not a direct edit).
+  fighting the abstractions it's built on rather than fitting them. A full
+  redesign (migrating to `checkpoint.py`'s primitive, or a purpose-built
+  persisted shape) is a deliberate architectural decision, not something to
+  hand-apply mid-review; only the path move below is in scope.
+- **Effort:** small — the first slice moves one path constant and its
+  writer/reader sites. **Value:** readers of the reports directory no longer
+  need a `path != checkpoint_path` / `path.name != SAMPLER_CHECKPOINT_FILENAME`
+  exclusion (today a fixed, non-timestamped filename lives alongside
+  timestamped saved reviews, so each reader needs one), which removes the
+  hazard waiting for the next reader.
+- **Approach:** direct change. First slice: move the sampler checkpoint file
+  out of the plan's `reports/` directory into its own path
+  (`sampler_checkpoint_path` in `review_persistence.py`), then delete the
+  per-reader exclusions. **Deliberately not** the migration to
+  `checkpoint.py`'s content-hash primitive or a purpose-built persisted shape
+  in this slice: migrate only if the remaining `save_review` special-casing
+  (`_checkpoint_path`, `sampler_state`, `checkpoint_audit_revision`) causes a
+  defect. Reshaped 2026-11-14 from a medium-to-large redesign.
 
 **#323 — Share the ordering/plan reconciliation between `--view walk` and `--view html`**
 
@@ -4834,7 +4798,7 @@ evidence. It is not an active implementation contract.
   `roadmap_view.py`'s walk was fixed inline afterward. A shared classifier
   would have made that one fix instead of two.
 
-**#324 — Move `--output` directory/trailing-slash/permission validation to shared CLI infrastructure**
+**#324 — `jira --output` lacks the directory/trailing-separator check `roadmap --view html --output` has**
 
 - **What:** `roadmap --view html --output PATH`
   (`cli/roadmap_cmd.py:cmd_roadmap`, the html branch) rejects a destination
@@ -4845,103 +4809,61 @@ evidence. It is not an active implementation contract.
   None`) performs none of this: the identical operator mistake
   (`jira <slug> --output some_dir/`) proceeds straight to opening a file at
   that path with no directory/trailing-slash check at all.
-- **Why now — not fixed alongside `--view html`:** the validation was
-  authored and hardened for one new surface; `jira_cmd.py` is
-  pre-existing, unrelated code this session's diff never touched. Moving
-  the check to shared infrastructure is a real improvement but changes a
-  second command's behavior, which is out of the scope that motivated the
-  `roadmap --view html` work.
-- **Fix:** extract the validation
-  (`plan_tool/cli/roadmap_cmd.py`'s destination-name / `is_dir()` /
-  trailing-separator / `PermissionError` handling) into a small shared
-  helper — e.g. `plan_tool/cli/console.py` or a new leaf — returning either
-  a validated `Path` or an error message + exit code, and have both
-  `roadmap --view html --output` and `jira --output` call it. Every future
-  `--output`-shaped flag inherits the same behavior for free.
-- **Also closes a CLI-layering gap in the same spot:** `cmd_roadmap`'s
-  `--view html` branch (`cli/roadmap_cmd.py:_cmd_roadmap_view`) inlines the
-  full validation-plus-exception-to-return-code mapping directly in the
-  dispatcher, unlike every sibling `--view` branch (a one/two-line call into
-  a renderer). CLAUDE.md's CLI-layering rule keeps handlers thin and the
-  real work in top-level orchestrators; extracting the shared helper this
-  entry already calls for resolves both complaints with one change, not two.
-- **Effort:** small. **Value:** one operator mistake gets one consistent
-  experience across every `--output` surface instead of per-command
-  reinvention (or, for `jira`, none at all).
+- **Why now — not fixed alongside `--view html`:** `jira_cmd.py` is
+  pre-existing, unrelated code the `--view html` work never touched, and
+  fixing it changes a second command's behavior.
+- **Fix:** give `jira --output` the same directory / trailing-separator
+  check `roadmap --view html --output` performs (one message and exit code
+  per case). Extract the existing roadmap helper only if it lifts out
+  trivially; otherwise a small `jira`-local check is enough.
+- **Deliberately not:** a "shared CLI infrastructure" framing (a shared
+  `--output` validator in `cli/console.py` or a new leaf, plus thinning the
+  `--view html` branch of `_cmd_roadmap_view`). Two surfaces do not justify
+  it; revisit when a third `--output` surface exists. Reshaped 2026-11-14.
+- **Effort:** small. **Value:** `jira <slug> --output some_dir/` gets the same
+  clear error as the roadmap command instead of failing at file open.
 
-**#325 — Extend `resolve_id_of_kind`'s wrong-kind check past entity-typed references**
+**#325 — Check a valid id of the wrong row kind in reference lists once, in the gates**
 
-- **What:** the domain entity ER diagram work (`--view html`) added
-  `roadmap_view.resolve_id_of_kind` and wired it into every place a
-  `REFERENCE`-typed field or an `entity_ids` list is rendered
-  (`roadmap_html.py`'s table/diagram, `roadmap_view.py`'s `--view walk`),
-  so a resolved-but-wrong-row-kind id now warns instead of rendering a
-  confident link. The same hazard is unaddressed for every other
-  cross-artifact reference-id list `roadmap_html.py` renders:
-  `component.pattern_ids`, `component.constraint_ids`, `component.store_ids`,
-  `plan.component_ids`, a decision/constraint row's `anchor_ids`, a row's
-  `consuming_plan_ids`, and ordering's `depends_on` / `assumption_targets` —
-  all still resolved
-  through plain `_ref_list` / `resolve_id`, with no kind check. Separately,
-  `roadmap_html.py:_plans_block` already hand-rolls its own one-off
-  "ordering entry does not name a plan" check via a raw `resolve_id(...).status`
-  branch, duplicating the general mechanism's purpose for one specific kind.
-- **Why now — not fixed alongside the ER diagram work:** `design_row_index`
-  is one shared id→entries map across every row kind in the roadmap, so an
-  id collision across kinds is exactly as reachable for a `pattern_id` /
-  `constraint_id` / `store_id` / `component_id` / `anchor_id` reference as
-  it was for the `entity_id` references that work fixed — this is
-  pre-existing behavior, not something the ER diagram introduced, and the
-  diagram itself only draws entities and entity-to-entity edges, so it has
-  zero interaction with these other reference kinds. Extending the fix to
-  every cross-artifact reference-id list in the file is a substantially
-  broader change than "add an ER diagram" — explicitly deferred rather than
-  pulled in while touching the same file. (Found and scoped out
-  2026-08-31; user confirmed leaving it deferred rather than extending in
-  the same session.)
-- **Fix:** `resolve_id_of_kind(ref_id, loaded, *, kind: str)` takes exactly
-  one expected kind, but `component.pattern_ids` resolves across **both**
-  `KIND_SYSTEM_PATTERN` and `KIND_COMPONENT_PATTERN` per
-  `ROADMAP_FORMAT.md`'s "resolves across both" contract — the signature
-  needs a multi-kind form (e.g. `kind: str | tuple[str, ...]`) before that
-  site can use it, not just a new call site. `component.constraint_ids`
-  routes through `kind=KIND_CONSTRAINT`, `component.store_ids` through
-  `kind=KIND_STORE`, `plan.component_ids` through `kind=KIND_COMPONENT`,
-  and each row kind's `anchor_ids` through whatever kind vocabulary anchors
-  actually resolve against (anchors may be polymorphic too — check before
-  assuming a single `kind=` fits, the same discovery that already applies
-  to `pattern_ids`). Fold `_plans_block`'s ad hoc "does not name a plan"
-  branch into a `resolve_id_of_kind(..., kind=KIND_PLAN)` call so there is
-  one mechanism, not two. `depends_on` / `assumption_targets` need the same
-  treatment.
+- **What:** `roadmap_view.resolve_id_of_kind` warns at render time when an
+  entity-typed reference (a `REFERENCE`-typed field or an `entity_ids` list)
+  resolves to a row of the wrong kind. Other cross-artifact reference-id lists
+  rendered by `roadmap_html.py` (`component.pattern_ids`,
+  `component.constraint_ids`, `component.store_ids`, `plan.component_ids`, a
+  row's `anchor_ids` / `consuming_plan_ids`, ordering's `depends_on` /
+  `assumption_targets`) resolve through plain `_ref_list` / `resolve_id` with
+  no kind check, so a *valid id of the wrong kind* in one of them renders as a
+  confident link.
+- **Premise (checked 2026-11-14):** cross-kind id *collisions* cannot reach a
+  gated version: `check_duplicate_row_ids` (`duplicate-row-id`,
+  `roadmap_gates.py`) requires row ids to be unique across every row kind in
+  every artifact. What remains is a reference whose id exists but names the
+  wrong kind of row.
+- **Fix:** if that gap matters, check it once in the gates, where a violation
+  is retried and remedied, rather than as render-time warnings at about 8 view
+  sites. First step: confirm whether an existing reference-resolution gate
+  already covers these lists and which of them it leaves open; add a gate
+  check only for the open ones. Otherwise close this entry as not worth doing.
 - **Scope contract:**
-  - **Outcome:** every `_ref_list`-rendered id in `roadmap_html.py` warns
-    on a resolved-but-wrong-kind target the same way entity references
-    already do, with no remaining ad hoc kind check duplicating
-    `resolve_id_of_kind`.
-  - **In scope:** `plan_tool/roadmap_html.py` (every remaining
-    `_ref_list`/`resolve_id` call site listed above, and `_plans_block`'s
-    hand-rolled check), `plan_tool/roadmap_view.py` only if an equivalent
-    gap exists there for these same fields (not yet audited — check first).
-  - **Out of scope / Non-goals:** the entity-typed sites this backlog entry
-    describes as already fixed; any change to `resolve_id_of_kind`'s own
-    signature or `KIND_*` vocabulary beyond adding call sites; the ER
-    diagram's own rendering (`roadmap_er.py`) — it has no reference-id-list
-    concept at all.
-  - **Allowed behavior changes:** a wrong-kind id in any of the listed
-    fields now renders a warning marker instead of a confident link/label;
-    no other output changes.
-  - **Verification:** a fixture per newly-covered field with a same-page
-    kind collision, asserting the warning marker and no link — mirroring
-    the existing entity-typed tests in `tests/test_roadmap_html.py`.
-  - **Stop / defer:** if anchors turn out to be genuinely polymorphic
-    (multiple valid kinds per anchor), that's a separate design question,
-    not a blocker — defer with a new entry rather than generalizing
-    `resolve_id_of_kind` to accept multiple kinds speculatively.
-- **Effort:** small-to-medium (mechanical per site, ~8 call sites plus
-  `_plans_block`'s consolidation). **Value:** closes the same defect class
-  round 4/5 of the ER-diagram code-review loop fixed for entity references,
-  for every other reference kind this file renders.
+  - **Outcome:** a wrong-kind reference in the listed fields is a gate
+    violation with a retryable remedy, or the entry is dropped.
+  - **In scope:** `plan_tool/roadmap_gates.py` (one reference-kind check over
+    the listed fields) and its tests.
+  - **Out of scope / Non-goals:** deliberately not render-time warnings at the
+    `roadmap_html.py` / `roadmap_view.py` call sites (the gate makes them
+    unreachable for gated versions); deliberately not folding
+    `_plans_block`'s ad hoc "does not name a plan" branch into
+    `resolve_id_of_kind` here; no change to `resolve_id_of_kind`'s signature
+    or `KIND_*` vocabulary; no multi-kind generalization.
+  - **Allowed behavior changes:** a wrong-kind reference fails the gate.
+  - **Verification:** a fixture per newly-checked field with a wrong-kind id,
+    asserting the violation names the field and id.
+  - **Stop / defer:** if anchors are genuinely polymorphic (several valid
+    kinds per anchor), defer those fields with a new entry rather than
+    guessing a single expected kind.
+- **Effort:** small. **Value:** low — closes a narrow remaining gap at the
+  point where it can be retried. Reshaped 2026-11-14 from a render-time
+  sweep over about 8 view sites.
 
 **#270 — `CliBackend.batch_output` is set by every backend but never read**
 
@@ -5043,35 +4965,19 @@ evidence. It is not an active implementation contract.
 - **Origin:** 2026-08-14, `/code-review` pass on the local-revision-observability
   merge's follow-up direct fixes.
 
-**#89 — Extend `--commit` to more mutating commands (wider, consistent commit-hygiene coverage)**
+**#89 — Extend `--commit` to `reconcile-code` / `reconcile-plan` (orphaned saved reports)**
 
 - **Principle:** `untriaged` — commit hygiene; it may bear on `survive-interruption`, which the entry does not say.
-- **What:** `--commit` today is accepted by only four surfaces — `run` (per-step
-  green commits), `detail`, `completeness-audit`, and
-  `manifest sweep`/archive. Several other commands *mutate the repo* (plan files,
-  detail files, or code) but leave the working tree dirty for the operator to
-  commit by hand. Extend the flag — with each command committing **its own**
-  authoring/mutation edits (the `detail`-style meaning, not `run`'s per-step
-  green commits) — so unattended pipelines end on a clean tree.
-- **Candidates (audit each for a sensible commit unit):**
-  - `create` — commit the authored plan file + `.plan-tool/plans.json` manifest
-    update + seed archival as one "plan authored" commit. (Today it writes all
-    three and leaves them staged-by-hand; this session committed them manually.)
-  - `reconcile-plan` / `reconcile-code` — commit the reconcile edits (plan-side or
-    code-side) the audit applied, **and** the saved audit report itself:
-    `save_review` (`review_persistence.py`) writes `<ts>-run-reconcile.json` /
-    `<ts>-detail-reconcile.json` to `plan-details/<slug>/reports/`
-    unconditionally (unless `--no-save`) with no git operation of its own, so
-    the report is exactly as orphan-prone as the code/plan edits the audit
-    makes.
-  - `split` / `merge` / `scope-out` — commit the structural mutation (renumber +
-    detail migrate/rename, or the narrowed plan + carved seed) atomically.
-  - `annotate` — commit the `<name>.annotated.md` + `<name>.seed.md` (and the
-    `--archive` move) it emits.
-- **Why:** consistency (one flag, one meaning of "commit what you just did"), and
-  it closes the manual-commit gap after every mutating verb — the same
-  clean-tree discipline the `run --commit` mandate enforces between steps, which
-  also avoids the dirty-tree test-authoring-gate masking (see [#87](#c-investigations--decision-making)).
+- **What:** `--commit` is accepted by four surfaces — `run` (per-step green
+  commits), `detail`, `completeness-audit`, and `manifest sweep`/archive.
+  `reconcile-plan` and `reconcile-code` mutate the repo (plan-side or
+  code-side edits) and also write a saved audit report, but leave the working
+  tree dirty. Extend `--commit` to those two verbs, each committing **its
+  own** edits **and** the saved report: `save_review`
+  (`review_persistence.py`) writes `<ts>-run-reconcile.json` /
+  `<ts>-detail-reconcile.json` to `plan-details/<slug>/reports/`
+  unconditionally (unless `--no-save`) with no git operation of its own, so
+  the report is exactly as orphan-prone as the edits the audit makes.
 - **Evidence it recurs:** two `reconcile-code` `run-reconcile.json` reports
   (`audit-pass-persistence`, step 3, 2026-08-31 23:12/23:18 UTC) sat orphaned
   — untracked, uncommitted — for a day. The operating habit at the time was to
@@ -5079,20 +4985,37 @@ evidence. It is not an active implementation contract.
   reconcile-code reports", `881f8ba3`), but that habit lapsed once six
   subsequent code-fix commits (`08af949d` through `306c9bd9`) landed
   back-to-back with no report files staged at all — nothing in the tool
-  forced or reminded either commit to happen. Confirms this entry's
-  `reconcile-code` candidate is a real, observed gap, not a theoretical one.
-- **Design notes:** keep the two meanings distinct in help text (`run`'s per-step
-  green commits vs the other verbs' single authoring-edit commit — CLAUDE.md
-  already draws this line). Respect "commit only when the user asks": `--commit`
-  is the explicit opt-in. Bounded-commits rule still applies — one concern per
-  commit, so a verb touching unrelated areas should say so or stay opt-out.
-- **Effort:** small per command (each is a `git add <its outputs> + commit`
-  behind the flag), medium in aggregate; do it as one sweep for a consistent UX.
-- **Approach:** `plan-tool` (a flag + commit-unit decision per verb, worth a
-  paper trail) or `direct` if scoped to one verb at a time.
-- **Dependencies:** none; complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
+  forced or reminded either commit to happen.
+- **Scope contract:**
+  - **Outcome:** `reconcile-plan` and `reconcile-code` accept `--commit` and
+    end on a clean tree, with the reconcile edits and the saved report in the
+    commit.
+  - **In scope:** `--commit` on those two verbs (the `detail`-style meaning:
+    one authoring-edit commit, not `run`'s per-step green commits), the
+    help text distinguishing the two meanings, and tests.
+  - **Out of scope / Non-goals:** deliberately not `create`, `split`, `merge`,
+    `scope-out`, or `annotate` (cut 2026-11-14): no gap has been observed on
+    them, and each would need its own commit-unit decision; re-open one only
+    when someone observes it orphaning files. No change to `run`'s per-step
+    commits or to the clean-tree precondition.
+  - **Allowed behavior changes:** the two verbs gain an opt-in flag; no
+    default changes.
+  - **Verification:** a reconcile run with `--commit` leaves no untracked
+    report and no dirty edit; without the flag behavior is unchanged.
+  - **Stop / defer:** if a verb cannot enumerate its footprint without new
+    bookkeeping, ship the other and file the rest.
+- **Design notes:** respect "commit only when the user asks": `--commit` is the
+  explicit opt-in. Bounded-commits rule still applies — one concern per commit.
+- **Effort:** small per verb (a `git add <its outputs> + commit` behind the
+  flag), medium overall.
+- **Approach:** `plan-tool` (a flag + commit-unit decision per verb) or `direct`
+  one verb at a time.
+- **Dependencies:** land the BUG_BACKLOG.md entry "`--commit` stages the whole working tree with
+  `git add -A` ..." first (`commit_all` stages with a bare
+  `git add -A`; extending `--commit` to more verbs would spread its
+  over-staging hazard). Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
 - **Origin:** 2026-07-05 — user, after `create` had to be hand-committed while
-  building the auto-bridge-structural-remedies plan.
+  building the auto-bridge-structural-remedies plan; narrowed 2026-11-14.
 
 **#83 — End-to-end bare-plan action-surface regression harness**
 
@@ -5249,39 +5172,36 @@ evidence. It is not an active implementation contract.
   concern per commit; check per site that `JsonResponseContract` accepts the
   input each site accepts today, and leave a site local if it does not. The
   same rule applies to the two heading regexes.
+- **Closure:** the migration batch is the only remaining work. The
+  do-not-merge list is a settled record, not work: it moves into
+  `docs/history/` (or next to `DO_NOT_MERGE` in `tests/test_duplication.py`,
+  which already cites it), after which this entry closes. Until that move
+  lands, the list above stays authoritative. Reshaped 2026-11-14.
 
-**#80 — Consolidate duplicated argparse parent parsers into `parser.py`**
+**#80 — Consolidate the duplicated `iterate_parent` companion flags into `parser.py`**
 
 - **Principle:** `none` — consolidation of shared argparse parents.
-- **What:** Shared flag groups are rebuilt per command module instead of
-  in the `parser.py` leaf. `yes_parent` is consolidated for the byte-identical
-  sites (`make_yes_parent()`, `parser.py:315`); four sites keep their own
-  variant (see the Caveat). Still local:
-  `fail_on_findings_parent` (3×: `inspect`/`review_cmd`/`completeness_cmd`),
-  `iterate_parent` (~60-line block ×3: `run_cmd`/`completeness_cmd`/`authoring`),
-  and the `name` plan positional + its help string (14×, 13 identical).
-  Add `make_fail_on_findings_parent()`,
-  `make_iterate_parent()`, `add_plan_name_arg()` to `parser.py`; each
-  `register()` calls them. **Folds in the time-budget cleanup follow-up** — the shared
-  `add_iterate_args(parser)` builder that registers the `--iterate` companions
-  (incl. `--time-budget`) once belongs in this consolidation.
+- **What:** the `--iterate` companion flags (`--time-budget` and the others,
+  a ~60-line block ×3 in `run_cmd`/`completeness_cmd`/`authoring`) are rebuilt
+  per command module instead of in the `parser.py` leaf. A flag added to one
+  command is silently missing from the others, which is the drift risk this
+  entry closes. Add one shared `add_iterate_args(parser)` builder (or
+  `make_iterate_parent()`) to `parser.py` that registers the companions once;
+  each `register()` calls it. **Folds in the time-budget cleanup follow-up.**
+- **Deliberately not (cut 2026-11-14):** the `name` plan positional + its help
+  string (14×) and `fail_on_findings_parent` (3×) — cosmetic duplication with
+  no drift risk worth a sweep. `yes_parent` is already consolidated for its
+  byte-identical sites (`make_yes_parent()`) and is not touched here.
 - **Caveat:** keep the `--iterate`/`--no-iterate` **action itself**
   per-subparser — its default differs (ON for create, OFF for run) and
   argparse parents copy by reference (NOTE at `run_cmd.py:1536`).
-  Consolidate only the *companion* iterate flags, not `--iterate`. **Four**
-  intentional help-text outliers keep their own text: `gates_cmd.py:214` (where `-y` means "print the suggested gates as
-  a report instead of prompting" — *different flag semantics* under the same
-  name, so the generic string would be actively false), `scope_out_cmd.py:163`
-  (documents the `--apply` mutation gate), `worktree_cmd.py:508` (explicit
-  `dest`/`default`), and `roadmap_cmd.py:2426` (the `--apply` promote
-  confirmation's second opt-in). Re-derive the
-  identical set before consolidating — compare every
-  `yes_parent.add_argument(...)` call's args **and** kwargs after implicit
-  string-concatenation folds, not the source text, or the differently-wrapped
-  `bench_cmd.py` copy reads as a variant when it is not.
-- **Effort:** small. ~300+ lines removed, mechanical.
-- **Risks:** low. `--help` text becomes consistent (a behavior change, but
-  a desired one). Guard with the existing CLI-reference drift test
+  Consolidate only the *companion* iterate flags, not `--iterate`. Per-command
+  help-text variants of `-y` (`gates_cmd.py`, `scope_out_cmd.py`,
+  `worktree_cmd.py`, `roadmap_cmd.py`) stay as they are; they are outside this
+  entry.
+- **Effort:** small. ~120 lines removed, mechanical.
+- **Risks:** low. `--help` text for the companions becomes consistent (a
+  behavior change, but a desired one). Guard with the existing CLI-reference drift test
   (`tests/cli/test_cli_reference.py`) — regenerate `docs/cli/` after.
 - **Approach:** direct. Explicitly TODO'd in-code; natural home already
   exists.
@@ -5466,7 +5386,7 @@ evidence. It is not an active implementation contract.
   initial read wrongly called it a mechanical sink wrap; the ordering
   constraint is what makes it a decision.
 
-**#180 — Make structural renumbering comprehensive: split/merge/scope-out must update detail-file headings and cross-references, not just file names**
+**#180 — Structural renumbering: fix detail-file H1s and report surviving step references after split/merge/scope-out**
 
 - **What:** `plan-tool split` (and the same renumber path used by `merge` and
   `scope-out`) renames detail files and repairs `depends_on`, but leaves every
@@ -5475,7 +5395,8 @@ evidence. It is not an active implementation contract.
   in sibling detail files and the plan body (`step 7 owns …`, `steps 3–7
   shipped …`, `owned by step 9`); execution-order strings such as
   `1 → 2 → 3 → 5 → 6 → 7 → 4`; and Deferred/Input bullets that assign ownership
-  by step number.
+  by step number. This entry ships the first slice only: rewrite the
+  detail-file H1 and report surviving step references (see the scope contract).
 - **Evidence:** two consecutive splits of `jira-grade-01-detail-instrument`
   (2026-07-28/29) each required a hand sweep afterwards — roughly 90
   references across eleven detail files plus the plan body, and both times a
@@ -5494,7 +5415,7 @@ evidence. It is not an active implementation contract.
   step. That misleads silently. For carved ids, the rewrite cannot renumber;
   it must flag each surviving reference to the removed step ("referred to the
   carved step; now in <seed>") and let the operator resolve the sentence —
-  reporting, not guessing, same as the ambiguity policy below.
+  reporting, not guessing.
 - **Why it matters:** the renumber is *already* the tool's job — it repairs
   `depends_on` precisely because dangling ids are a correctness problem. Prose
   references are the same class of dangling pointer, just unenforced: nothing
@@ -5502,50 +5423,50 @@ evidence. It is not an active implementation contract.
   step reads. It also undercuts the structural remedies the tool recommends: an
   operator told to `split` pays an invisible hand-fix tax, which is a reason not
   to take the advice.
-- **Staged first slice — ship the read-only report before any rewriting.**
-  After a renumber or carve, grep the surviving detail files and plan body for
-  `[Ss]tep N` references to moved or carved ids and print them ("7 references
-  to carved step 10 survive — review these"), rewriting nothing. This needs no
-  ambiguity policy, so it can land first and independently; it turns the manual
-  sweep into a checklist even before the rewriter exists, and the rewriter then
-  reuses its scan.
-- **Sketch:** the renumber already computes an old→new id map. Apply it to (a)
-  the H1 of each detail file it renames, (b) `[Ss]tep N` / `[Ss]teps A–B`
-  references in every detail file and the plan body. Do it in one pass with the
-  map applied atomically (descending, or via a single-pass regex) so shifts do
-  not cascade. Ambiguity is real — a reference may mean either half of a split
-  step — so report what it rewrote and flag references it could not resolve
-  rather than guessing silently.
+- **First slice (this entry):** the renumber already computes an old→new id
+  map. (a) Rewrite the `# Step N — …` H1 of each detail file it renames; the
+  mapping is unambiguous. (b) After a renumber or carve, scan the surviving
+  detail files and plan body for `[Ss]tep N` / `[Ss]teps A–B` references to
+  moved or carved ids and print them ("7 references to carved step 10 survive
+  — review these"), rewriting nothing. The report needs no ambiguity policy
+  and turns the manual sweep into a checklist.
+- **Deferred until the report shows it is still needed:** a prose rewriter for
+  `[Ss]tep N` references and its ambiguity policy (a reference may mean either
+  half of a split step). Revisit once the report shows how often operators
+  still hand-rewrite the listed references.
 - **Scope contract:**
-  - **Outcome:** after a `split`/`merge`/`scope-out`, no detail file's H1 names
-    a stale step number and no `[Ss]tep N` prose reference points at an id the
-    renumber moved; anything ambiguous is reported, not silently rewritten.
+  - **Outcome:** after a `split`/`merge`/`scope-out`, no renamed detail file's
+    H1 names a stale step number, and every surviving `[Ss]tep N` prose
+    reference to a moved or carved id is listed in the command's output.
   - **In scope:** the shared renumber path (`plan_tool/scope_out.py`'s
     `apply_narrow` / the split executor's migrate-and-renumber), the detail-file
-    H1, prose references in detail files and the plan body, and a report of
-    what changed.
-  - **Out of scope / Non-goals:** rewriting prose that names a step by *title*
-    rather than number; touching archived plans; renaming test functions or
-    code symbols that embed a step number; any change to `depends_on` repair,
-    which already works.
-  - **Allowed behavior changes:** split/merge/scope-out diffs grow to include
-    sibling detail files and the plan body — that is the point, and it must be
-    visible in the command's summary so the operator can review it.
-  - **Allowed reorganization:** extracting the renumber's reference-rewriting
-    into a small helper shared by the three verbs.
+    H1 rewrite, and a read-only report scanning detail files and the plan body.
+  - **Out of scope / Non-goals:** deliberately not rewriting prose references
+    (`[Ss]tep N`, execution-order strings, Deferred/Input ownership bullets) in
+    this slice, because the ambiguity policy is undecided and the report may
+    show rewriting is unnecessary; rewriting prose that names a step by
+    *title* rather than number; touching archived plans; renaming test
+    functions or code symbols that embed a step number; any change to
+    `depends_on` repair, which already works.
+  - **Allowed behavior changes:** the H1 of each renamed detail file changes,
+    and the command's summary gains a list of surviving references; no sibling
+    file or plan-body prose is edited.
+  - **Allowed reorganization:** extracting the reference scan into a small
+    helper shared by the three verbs.
   - **Verification:** a test that splits a fixture plan whose detail files carry
-    H1s and cross-references, and asserts every H1 matches its step id and no
-    reference points at a moved id; plus a case pinning that an ambiguous
-    reference is reported rather than rewritten.
-  - **Stop / defer:** if disambiguating "which half of the split does this
-    reference mean" needs a Claude call, stop — report the ambiguous references
-    and let the operator resolve them. This entry is deterministic text
-    rewriting, not a judgment surface.
+    H1s and cross-references, asserting every H1 matches its step id and every
+    surviving reference to a moved id is reported while the files' prose is
+    byte-unchanged; plus a carve case asserting references to the carved id
+    are reported.
+  - **Stop / defer:** if a reference cannot be classified without a Claude
+    call, stop — this entry is deterministic text scanning, not a judgment
+    surface.
 - **Dependencies:** none.
-- **Effort:** medium — the map exists; the work is applying it widely and
-  deciding the ambiguity policy.
+- **Effort:** small-to-medium — the map exists; the work is the H1 rewrite and
+  the scan.
 - **Approach:** `plan-tool` — touches three verbs' shared renumber path and
-  changes what a mutation writes, so it goes through a plan.
+  changes what a mutation writes, so it goes through a plan. Narrowed
+  2026-11-14 to the H1 rewrite plus the read-only report.
 - **Quality:** `audit-coverage` — stale cross-references are a recurring source
   of completeness findings that the tool itself creates.
 - **Origin:** 2026-07-29, after two splits of `jira-grade-01-detail-instrument`
@@ -5835,12 +5756,15 @@ evidence. It is not an active implementation contract.
   to keep the folder for uncommitted content, then retired once
   `change_collision.py` was found to already own that case.
 - **Status:** not started.
-**#201 — Detect and clean up the archive folders #200 retires**
+**#201 — One-time scripted cleanup of the redundant detail-level `archive/` directories #200 retires**
 
-- **What:** find existing `archive/` directories under
-  `docs/implementation-plans/` and remove the ones whose contents are fully
-  recoverable from git. #200 stops *writing* them and deliberately leaves
-  existing ones alone; this is the sweep that clears what is already on disk.
+- **What:** remove, in this repo, the per-detail `archive/` directories under
+  `docs/implementation-plans/` whose contents are fully recoverable from the
+  version history. #200 stops *writing* them and deliberately leaves existing
+  ones alone; this is the one-time sweep that clears what is already on disk.
+  It is a scripted `git rm`, not a product feature: deliberately not a
+  `validate` advisory and not an opt-in removal subcommand, because the
+  cleanup runs once (cut 2026-11-14).
 - **Measured scale in this repo (2026-07-30):** **14** archive directories,
   **1,290** files, of which **1,289 are tracked** — so the redundancy is near
   total, and the cleanup is almost entirely mechanical. Two shapes worth knowing
@@ -5859,16 +5783,17 @@ evidence. It is not an active implementation contract.
   Anything that fails the check is **reported, never removed**, and left for a
   human. A sweep that deletes unrecoverable prose to tidy a directory is
   strictly worse than the noise it removes.
-- **Implementation recommendation:**
-  - **Detection is read-only and belongs where plan health is already reported**
-    — `plan-tool validate` is the natural surface, listing archive directories
-    found with a recoverable/unrecoverable file count each. **Removal is a
-    separate explicit opt-in** (a flag or a `manifest`-family subcommand),
-    matching the standing detection-unconditional / mutation-gated rule.
-  - **Do not couple it to plan archival.** This sweeps directories; plan archival is
-    out of scope (#199 is discarded). A repo can run this today, before #198 lands.
-  - **Ignore-file hygiene is in scope only as far as `.DS_Store`-class noise
-    goes** — report it, do not grow a general gitignore linter here.
+- **Procedure:** a throwaway script walks the detail-level `archive/`
+  directories (nested ones included), verifies each file with `git cat-file`,
+  and `git rm`s only the directories whose files all pass. Anything that
+  fails is reported and left for a human. The script is not committed to the
+  tool. After #200 lands, add one line to the release notes telling consuming
+  repos they can remove their own redundant `archive/` directories the same
+  way.
+- **Do not couple it to plan archival.** This sweeps directories; plan archival
+  is out of scope (#199 is discarded).
+- **Ignore-file hygiene:** report `.DS_Store`-class noise; do not grow a general
+  gitignore linter here.
 - **Risks / fallout:** deleting a directory a doc still cites by path. The
   jira-grade handoff cites
   `docs/implementation-plans/archive/plan-details/jira-grade-detail-side-by-side-evaluation/reports/`
@@ -5877,32 +5802,30 @@ evidence. It is not an active implementation contract.
   `archive/` folders #200 retires) or runs a citation sweep for them.
   **Recommended: scope to the detail-level folders**, and leave plan-level
   archival alone (#199 is discarded).
-- **Dependencies:** independent of #198. Pairs with **#200** — that entry
-  stops the bleeding, this one cleans the wound. Landing this without #200
-  means the directories come back.
-- **Effort:** small — a walk, a `git cat-file` check per file, a report, and a
-  gated delete.
+- **Dependencies:** runs after **#200** — that entry stops the bleeding, this
+  one cleans the wound. Landing this without #200 means the directories come
+  back.
+- **Effort:** small — one script run and one commit.
 - **Scope contract:**
-  - **Outcome:** every per-detail `archive/` directory whose contents are fully
-    recoverable from git is reported and, under an explicit opt-in, removed.
-  - **In scope:** the detection walk, the recoverability check, the report
-    surface on `plan-tool validate`, the opt-in removal path, tests.
-  - **Out of scope / Non-goals:** plan-level `docs/implementation-plans/archive/`
-    trees (out of scope; #199 is discarded); deleting
-    anything in another repo; a general gitignore linter; changing what writes
-    archives (#200).
-  - **Allowed behavior changes:** a new advisory in `validate` and the new
-    opt-in removal.
+  - **Outcome:** every per-detail `archive/` directory in this repo whose
+    contents are fully recoverable from git is removed in one commit; the
+    release notes carry one line for consuming repos.
+  - **In scope:** the scripted, `git cat-file`-verified `git rm` of the
+    detail-level folders in this repo, and the release-notes line.
+  - **Out of scope / Non-goals:** deliberately not a `plan-tool validate`
+    advisory or an opt-in removal subcommand (a one-time cleanup does not earn
+    product surface); plan-level `docs/implementation-plans/archive/` trees
+    (#199 is discarded); deleting anything in another repo; a general
+    gitignore linter; changing what writes archives (#200).
+  - **Allowed behavior changes:** none to the tool.
   - **Allowed reorganization:** none.
-  - **Verification:** a repo with a redundant detail `archive/` reports it and,
-    with the opt-in, ends with the directory gone and the tracked history
-    intact; a directory holding a file whose exact bytes are absent from git is
-    reported and **left in place**; nested archives are found, not just
-    top-level ones.
+  - **Verification:** after the run, no detail-level `archive/` directory
+    remains whose files were all recoverable; any directory holding a file
+    whose exact bytes are absent from git is reported and left in place; git
+    history for the removed paths is intact.
   - **Stop / defer:** if a doc-citation to a detail-level archive path turns up,
     stop and keep that reference working rather than breaking it.
-- **Approach:** `direct` — a walk plus a gated delete, no open design choices
-  once the scoping decision above is taken.
+- **Approach:** `direct` — a one-time script and a commit.
 - **Quality:** `audit-coverage` — removes superseded design from the surface
   greps and audits read.
 - **Origin:** 2026-07-30, user request while retiring the archive convention.
@@ -5972,38 +5895,44 @@ evidence. It is not an active implementation contract.
 - **Status:** deferred 2026-08-20; no live bug, retained for the next
   intentional coverage-format change.
 
-**#302 — Funnel rate-limit recovery notifications through one checked completion path**
+**#302 — Pin `on_nonsuccess` notification with a table-driven test over every arm of the rate-limit loop**
 
-- **What:** Restructure `run_with_rate_limit_recovery` so every non-success
-  result records its retry outcome once and one shared completion path invokes
-  `on_nonsuccess`.
-- **Why:** The loop currently invokes the callback at nine separate exits. A
-  future recovery arm could otherwise omit the notification or give it the
-  wrong retry state, losing quota-drift telemetry.
-- **Effort:** medium — the loop has distinct guard, switch, prompt, wait, and
-  transient branches whose visible retry behavior must remain unchanged.
-- **Risks / fallout:** a control-flow rewrite can regress retry counts,
-  backend switching, prompt handling, or the raw-exit suppression signal.
+- **What:** `run_with_rate_limit_recovery` reaches `on_nonsuccess` through one
+  local helper, `_notify_nonsuccess`, called from each exit arm. Add one
+  table-driven test that asserts the callback count and both retry booleans for
+  every arm.
+- **Why:** a future recovery arm could otherwise omit its `_notify_nonsuccess`
+  call or give it the wrong retry state, losing quota-drift telemetry. The test pins that
+  property: a new arm that skips the callback fails it.
+- **Effort:** small — one focused test over existing arms.
+- **Risks / fallout:** low; the loop is not edited.
 - **Dependencies:** the shipped #101 recovery-loop extraction. This is
   separate from #136's caller-side helper consolidation.
 - **Scope contract:**
-  - **Outcome:** each non-success attempt invokes `on_nonsuccess` exactly once
-    with the same actual and predicted retry signals it has today.
-  - **In scope:** `plan_tool/rate_limit_loop.py` and its focused tests.
-  - **Out of scope / Non-goals:** shell/launcher seam consolidation (#136),
-    retry-policy changes, new recovery actions, and telemetry-format changes.
+  - **Outcome:** each non-success attempt is asserted to invoke
+    `on_nonsuccess` exactly once with the actual and predicted retry signals it
+    has today.
+  - **In scope:** `tests/test_rate_limit_loop.py` (or the existing focused test
+    module for the loop).
+  - **Out of scope / Non-goals:** deliberately not restructuring the loop into
+    one shared completion path (cut 2026-11-14): that control-flow rewrite is
+    the risky part and is unnecessary once the test pins the property;
+    shell/launcher seam consolidation (#136), retry-policy changes, new
+    recovery actions, and telemetry-format changes.
   - **Allowed behavior changes:** none.
-  - **Allowed reorganization:** the loop's internal exit control flow only.
-  - **Verification:** a table-driven test covers every existing terminal and
-    re-invoking arm, asserting callback count and both retry booleans.
-  - **Stop / defer:** any behavior change discovered while consolidating exits
-    becomes a separate decision rather than an incidental refactor.
-- **Approach:** `plan-tool` — preserving nine recovery arms requires an
-  explicit behavior matrix before restructuring them.
+  - **Allowed reorganization:** none.
+  - **Verification:** the table covers every existing terminal and re-invoking
+    arm, asserting callback count and both retry booleans; deleting the
+    `_notify_nonsuccess` call from any one arm turns the test red, and the
+    table's arms are checked against the loop's exits so a new arm without a
+    row fails.
+  - **Stop / defer:** if the table exposes an arm whose behavior is wrong,
+    that becomes a separate decision rather than an incidental fix.
+- **Approach:** `direct` — a test over shipped behavior, no design choice.
 - **Quality:** audit-coverage — keeps terminal quota-drift observation
   complete as new recovery exits are added.
 - **Origin:** 2026-08-20, `plan-quota-recovery` whole-feature review round 5,
-  finding 4.
+  finding 4; narrowed 2026-11-14 from a loop restructure to the test.
 - **Status:** deferred 2026-08-20; no live bug, retained for a deliberate
   recovery-loop hardening pass.
 
@@ -6168,7 +6097,7 @@ evidence. It is not an active implementation contract.
   `.claude/*` runtime-state patterns currently live only in machine-local
   git config, not in any tracked file.
 
-**#406 — `roadmap_diff.py`/`roadmap_compare_run.py` import `plan_tool.roadmap`, contradicting the documented read-only layering**
+**#406 — `docs/ARCHITECTURE.md` says the comparison branch avoids `plan_tool.roadmap`; the import graph does not**
 
 - **What:** `docs/ARCHITECTURE.md` § "Read-only snapshot comparison" states the
   comparison branch (`roadmap_compare_run.py`, `roadmap_compare.py`,
@@ -6177,39 +6106,44 @@ evidence. It is not an active implementation contract.
   or invoke roadmap writers." At HEAD, `roadmap_diff.py` imports
   `RoadmapStage` and `roadmap_compare_run.py` imports `STAGES`, both from
   `plan_tool.roadmap` — the stage-execution/backend-invoking module the
-  claim says this branch avoids. `RoadmapStage`/`STAGES` are themselves pure
-  data (no functional dependency on the backend stack); the coupling is an
-  artifact of where they happen to be defined. A second edge (2026-09-29):
+  claim says this branch avoids. `RoadmapStage`/`STAGES` are pure data; the
+  coupling is an artifact of where they are defined. A second edge:
   `roadmap_compare_run.py` imports `load_stored_candidate_proposal` from
   `roadmap_candidate_run.py`, which imports `roadmap_revision_publish`,
   `roadmap_feedback_ledger`, `shell`, and `RunLogWriter`; the comparison route
-  only reads through it, but the graph reaches writer modules. Fix by moving
-  the stored-candidate loader into a read-only leaf. Not a merge of look-alikes:
-  the loader is a single function with one comparison caller.
-- **Effort:** small in isolation (extract `RoadmapStage`/`STAGES` into a new
-  leaf module importing only `roadmap_artifacts.py`/`roadmap_gates.py`,
-  re-exported from `roadmap.py` for its own callers) — **but see Risks**.
-- **Risks / fallout:** a same-session attempt at this exact extraction
-  (2026-09-21) broke `roadmap_candidate.py`'s `GateCleanCandidate` Pydantic
-  model: moving `RoadmapStage` out of `roadmap.py` changed import-order
-  timing enough that `RoadmapGateOutcome`'s nested forward-ref
-  (`violations: tuple[Violation, ...]`) stopped auto-resolving at class
-  build, and neither an explicit `Violation` import into
-  `roadmap_candidate.py` nor several other attempted workarounds fixed it
-  within a reasonable session budget — the failure traced into
-  Pydantic v2/Python 3.14 `annotationlib` internals for nested plain
-  dataclasses resolved through an unrelated model's namespace. Revert
-  commit/diff for the attempted fix is available in this session's history
-  if useful as a starting point. Whoever picks this up should budget time to
-  either fully understand that resolution path first, or land the
-  extraction with `GateCleanCandidate`/`RoadmapGateOutcome` explicitly
-  re-verified (not just the touched files' own test suites) before calling
-  it done.
+  only reads through it, but the graph reaches writer modules.
+- **Fix:** correct the `ARCHITECTURE.md` sentence so it describes the actual
+  import graph: the branch reads through the stage table and the stored-
+  candidate loader, both defined in modules that also reach writers, and owns
+  no lifecycle transition itself.
+- **Deliberately not (cut 2026-11-14):** moving `RoadmapStage`/`STAGES` or the
+  stored-candidate loader into read-only leaves. The 2026-09-21 attempt at that
+  extraction broke `roadmap_candidate.py`'s `GateCleanCandidate` Pydantic
+  model: moving `RoadmapStage` out of `roadmap.py` changed import-order timing
+  enough that `RoadmapGateOutcome`'s nested forward-ref
+  (`violations: tuple[Violation, ...]`) stopped auto-resolving at class build,
+  and the failure traced into Pydantic v2/Python 3.14 `annotationlib`
+  internals. Re-open the extraction only if the read-only layering becomes an
+  enforced contract, for example via an import-graph test; whoever does so must
+  re-verify `GateCleanCandidate`/`RoadmapGateOutcome` explicitly, not only the
+  touched files' own test suites.
+- **Scope contract:**
+  - **Outcome:** the `ARCHITECTURE.md` description of the comparison branch's
+    imports is true at HEAD.
+  - **In scope:** the one `docs/ARCHITECTURE.md` sentence (and any restatement
+    of it found by grepping the comparison branch's layering vocabulary).
+  - **Out of scope / Non-goals:** any module move or import change; an
+    import-graph test (the trigger for re-opening the extraction).
+  - **Allowed behavior changes:** none.
+  - **Verification:** each import the sentence names or denies is checked
+    against the module's imports at HEAD.
+  - **Stop / defer:** if making the sentence true requires describing an
+    import the owner would rather remove, stop and file that as its own entry.
+- **Effort:** small — a documentation edit.
 - **Dependencies:** none.
-- **Approach:** `direct`, once the Pydantic risk above is retired — this is
-  a pure import-graph fix with no behavior change, not new capability.
+- **Approach:** `direct` — documentation only.
 - **Origin:** 2026-09-21, `/code-review high` pass on the `roadmap-concept-comparison`
-  plan's shipped implementation (`e77ebfa5..HEAD`).
+  plan's shipped implementation (`e77ebfa5..HEAD`); reshaped 2026-11-14.
 - **Status:** not started; the doc claim remains inaccurate at HEAD.
 
 **#409 — `build_roadmap_diff`'s `predecessor_bytes`/`candidate_artifacts_bytes` are positional, unlike its own keyed `*_artifacts` parameters**
@@ -6637,128 +6571,76 @@ evidence. It is not an active implementation contract.
   processes of the tool are long running" — not a one-off worth a narrow fix
   alone.
 
-**#317 — Pause-and-poll for restored connectivity instead of exhausting the transient retry budget**
+**#317 — Longer bounded transient backoff so a short network outage does not halt `run`**
 
 - **What:** a real network outage (WiFi drop, laptop sleep/wake, VPN
-  reconnect) is indistinguishable today from an ordinary blip in both shapes a
-  backend call can fail in, and both under-serve it. Fast:
+  reconnect) is indistinguishable today from an ordinary blip.
   `rate_limit_loop.run_with_rate_limit_recovery`'s `TRANSIENT` arm
   (`ECONNRESET`, `network error`, `timeout`, `connection reset`, matched by
   `backend._CLAUDE_TRANSIENT_PATTERN`) gets only
   `DEFAULT_MAX_TRANSIENT_RETRIES=2` attempts at
   `DEFAULT_TRANSIENT_BASE_DELAY=2.0`s exponential backoff (`shell.py:157-158`)
   before `TERMINAL`, halting `run_step()`'s blocking claude-call gate
-  (`docs/how-to/pipeline/run.md` step [6]) within ~6 seconds with no automatic resume.
-  Long-running: a call already deep into real work whose connection dies
-  silently blocks; `backend_runner.py`'s heartbeat kills it after 900s
-  (`_KILL_AFTER_SILENCE_S`), recording `TerminationReason.SILENCE_TIMEOUT` and
-  classifying `ClaudeFailureKind.TIMEOUT` — deliberately terminal, never
-  retried (`claude_errors.py:98-100`, `:576-580`). Add a real, injectable
-  connectivity probe so a call in either shape, with local connectivity
-  *confirmed* down, pauses and polls, resubmitting only once a fresh probe
-  confirms it is actually back — never on a blind fixed delay — instead of
-  burning a fixed budget or surfacing terminal within seconds.
-- **Effort:** medium — a new probe/poll-wait seam pair (default implementation
-  in `claude_errors.py`, mirroring `make_backend_recovery_wait_seam` /
-  `make_backend_recovery_sleep_seam`), a widened retry-candidate computation in
-  the stdlib-only leaf (`rate_limit_loop.py`) that must still route through the
-  existing partial-mutation `retry_guard`
-  (`git_state.make_partial_mutation_retry_guard`) before polling, a
-  poll-eligibility rule keyed on the existing `get_last_termination_reason()`
-  to admit a `SILENCE_TIMEOUT` kill while permanently excluding a caller's own
-  `CONFIGURED_TIMEOUT`, a new budget-independent opt-out (mirroring the
-  existing `recover_rate_limit` toggle) so the candidate flow's
-  explicitly no-recovery `shell_candidate_proposal_invoker` and
-  `shell_candidate_review_invoker` (both `wait_on_rate_limit=False`,
-  `max_transient_retries=1`) don't silently gain recovery they disclaim, a new `backend_recovery_wait` `reason="connectivity"`
-  value, and tests for both callers (`shell.claude_invoke`,
-  `launcher.shell_invoker`).
-- **Risks / fallout:** a captive-portal/proxy false-positive (probe reaches a
-  public IP; the actual backend stays unreachable) could poll-succeed into
-  another immediate transient failure — the design self-corrects this since
-  the ordinary transient-attempt count is never advanced while polling, so the
-  bounded-backoff budget is still fully available on the next attempt. An
-  unattended/no-TTY run needs a real ceiling (mirroring
-  `MAX_RATE_LIMIT_WAIT_SECONDS`'s existing 86400s cap) or a permanently broken
-  network spins forever with no operator watching to abort it.
-  `SILENCE_TIMEOUT` and `CONFIGURED_TIMEOUT` currently produce the identical
-  `ClaudeFailureKind.TIMEOUT` and `BACKEND_TIMEOUT_SENTINEL` text, so getting
-  the exclusion wrong would either make a caller's explicit elapsed-time
-  ceiling connectivity-contingent or leave the motivating long-running-call
-  case unrecovered — mitigated by keying exclusively off
-  `get_last_termination_reason()`'s enum value, never stderr text. Any new
-  test that doesn't stub the probe risks a real socket call and
-  machine-dependent flakiness.
+  (`docs/how-to/pipeline/run.md` step [6]) within ~6 seconds with no automatic
+  resume. Raise the transient backoff to a bounded window of minutes, not
+  seconds, with an interruptible wait, so a laptop sleep or WiFi drop recovers
+  without operator action. No incident is cited yet; the concern is a P4
+  robustness gap.
+- **Parked (not in this entry):** a real, injectable connectivity probe and a
+  pause-and-poll path that resubmits only once a fresh probe confirms
+  connectivity is back, including admitting a `SILENCE_TIMEOUT`-killed
+  long-running call (`backend_runner.py`'s 900s heartbeat kill,
+  `_KILL_AFTER_SILENCE_S`, classified `ClaudeFailureKind.TIMEOUT`, deliberately
+  terminal today per `claude_errors.py`). That design adds a probe/poll-wait
+  seam pair, a widened retry-candidate computation in the stdlib-only
+  `rate_limit_loop.py` leaf, a poll-eligibility rule keyed on
+  `get_last_termination_reason()`, a new opt-out, and a third
+  `backend_recovery_wait.reason` value: a lot of new state in the retry leaf.
+  Re-open it only when a real outage halts a run that a longer backoff would
+  not have saved. `plan-seeds/connectivity-pause-and-poll.md` describes the
+  parked design and is not the seed for this slice.
+- **Effort:** small — raise the transient delay/attempt constants (or give the
+  transient arm a bounded total-wait cap), make the wait interruptible, and
+  update tests and docs.
+- **Risks / fallout:** a longer wait keeps a run blocked on a genuinely broken
+  network for the whole window before `TERMINAL`; the window must be bounded.
+  The wait must stay interruptible on a TTY, and the partial-mutation
+  `retry_guard` (`git_state.make_partial_mutation_retry_guard`) must still gate
+  every retry. The candidate flow's `shell_candidate_proposal_invoker` and
+  `shell_candidate_review_invoker` pass `max_transient_retries=1` and
+  `wait_on_rate_limit=False` and must not gain the longer window.
 - **Dependencies:** none. Independent of #119/#120 (snapshot-restore-then-retry
-  and retry-guard hardening) — those harden *what happens when a retry is
-  allowed*; this changes *how long the loop waits before giving up*, and both
-  compose through the same `retry_guard` ordering fence.
-- **Outcome:** a backend call whose failure is plausibly a local connectivity
-  loss — fast `TRANSIENT`, or a `SILENCE_TIMEOUT`-killed long-running call,
-  never a `CONFIGURED_TIMEOUT` — pauses and polls (interruptible on a TTY,
-  capped on a non-TTY run) and resubmits only once connectivity is confirmed
-  back, instead of exhausting a fixed budget or surfacing `TERMINAL` within
-  seconds.
-- **In scope:** `plan_tool/rate_limit_loop.py` (widened retry-candidate
-  computation, new opt-out), `plan_tool/claude_errors.py` (default probe +
-  poll-wait, the poll-eligibility rule reading the existing
-  `get_last_termination_reason()`), `plan_tool/launcher.py` (wiring, unchanged
-  unless a caller needs a non-default override), `plan_tool/shell.py`
-  (`claude_invoke`/`claude_invoke_outcome` gain the new opt-out parameter and
-  forward it — `run_with_rate_limit_recovery` has only two direct call sites,
-  `launcher.py:716` and `shell.py:768`, and the two candidate invokers
-  reach the leaf two layers down through `claude_invoke`, which already
-  declares and forwards `wait_on_rate_limit`/`max_transient_retries` by name
-  with no generic passthrough),
-  `roadmap_candidate_run.py:shell_candidate_proposal_invoker` and
-  `roadmap_candidate_review.py:shell_candidate_review_invoker` (set the new
-  opt-out), `docs/how-to/pipeline/run.md`, `DATA_CONTRACT.md` (the
-  `backend_recovery_wait.reason` table, `DATA_CONTRACT.md:1133`, currently
-  documents only `"rate_limit"` / `"transient"`), `RUNBOOK.md`, `TESTING.md`,
-  `tests/`. **Not** `plan_tool/backend_runner.py` — it already exposes the
-  termination-reason accessor read-only.
-- **Out of scope / Non-goals:** any new `ClaudeFailureKind`, `AttemptCategory`,
-  or `TerminationReason` member; making a `CONFIGURED_TIMEOUT` kill
-  poll-eligible under any condition; making a `SILENCE_TIMEOUT` kill
-  poll-eligible when connectivity reads up (stays exactly as terminal as
-  today); a new CLI flag (poll interval / non-interactive cap / probe hosts
-  stay code-level constants, matching how `max_transient_retries` and
-  `_KILL_AFTER_SILENCE_S` are handled today); probing the backend's own API
-  host (conflates "my network is down" with "the provider is down," which
-  `RATE_LIMIT`/`PLAN_QUOTA`/ordinary `TRANSIENT` already own); any change to
-  `backend_runner.py`'s kill ladder or thresholds.
-- **Allowed behavior changes:** the new poll-instead-of-terminal path for a
-  connectivity-confirmed-down `TRANSIENT` failure and for a
-  `SILENCE_TIMEOUT`-killed call; a third `backend_recovery_wait.reason` value
-  (`"connectivity"`). No change to ordinary transient-blip behavior with
-  connectivity up, a `CONFIGURED_TIMEOUT` kill, a genuinely wedged call with
-  connectivity up, `RATE_LIMIT`/`PLAN_QUOTA` handling, or the partial-mutation
-  guard's precedence.
+  and retry-guard hardening), which harden *what happens when a retry is
+  allowed*; this changes *how long the loop waits before giving up*.
+- **Outcome:** a `TRANSIENT` backend failure retries over a bounded window of
+  minutes with an interruptible wait before surfacing `TERMINAL`, instead of
+  exhausting two ~2s retries.
+- **In scope:** `plan_tool/rate_limit_loop.py` and `plan_tool/shell.py` (the
+  transient delay/attempt defaults and the interruptible wait),
+  `docs/how-to/pipeline/run.md`, `RUNBOOK.md`, and focused tests with a stubbed
+  clock/sleep.
+- **Out of scope / Non-goals:** deliberately not the connectivity probe, the
+  pause-and-poll path, or `SILENCE_TIMEOUT` recovery (parked above, with the
+  reason); making a `CONFIGURED_TIMEOUT` kill retry-eligible; any new
+  `ClaudeFailureKind`, `AttemptCategory`, or `TerminationReason` member; a new
+  CLI flag; any change to `backend_runner.py`'s kill ladder or thresholds;
+  changing `RATE_LIMIT`/`PLAN_QUOTA` handling.
+- **Allowed behavior changes:** a `TRANSIENT` failure waits longer before
+  `TERMINAL`. No change to a `CONFIGURED_TIMEOUT` kill, a wedged call, the
+  candidate invokers' no-recovery posture, or the partial-mutation guard's
+  precedence.
 - **Allowed reorganization:** none.
-- **Verification:** § Testing of the seed below — the ordering fence
-  (`retry_guard` still refuses a poll-eligible retry over a dirty tree), the
-  `SILENCE_TIMEOUT`/`CONFIGURED_TIMEOUT` exclusion, the self-correcting budget
-  property, the non-TTY cap, and that no test exercises a real socket.
-- **Stop / defer:** any CLI-flag surface, and probing the backend's own host,
-  become their own backlog entries if real operator demand emerges; anything
-  the iteration loop surfaces outside this fence goes to `BACKLOG.md` /
-  `BUG_BACKLOG.md`, never applied as plan expansion.
-- **Approach:** `plan-tool` — a design decision (probe target, ordering fence
-  relative to the partial-mutation guard, non-interactive cap), not a
-  one-line fix.
-- **Iterate:** default recipe (author + converge). Load-bearing: `create`,
-  one-shot `detail --commit`, a `completeness-audit --iterate --commit`
-  pass, then `run --commit` per step and the post-run
-  `reconcile-code --all` tail.
-
-  ```bash
-  plan-tool create connectivity-pause-and-poll --iterate -y --from-existing plan-seeds/connectivity-pause-and-poll.md
-  plan-tool detail connectivity-pause-and-poll --commit -y
-  plan-tool completeness-audit connectivity-pause-and-poll --iterate --commit -y
-  plan-tool run connectivity-pause-and-poll --commit -y
-  ```
-- **Status:** plan-seed authored at
-  `plan-seeds/connectivity-pause-and-poll.md`; `create` not yet run.
+- **Verification:** a stubbed-clock test shows a transient failure retried over
+  the new window and then surfacing `TERMINAL`; an interrupt ends the wait; the
+  candidate invokers still stop after one retry; `retry_guard` still refuses a
+  retry over a dirty tree; no test sleeps for real.
+- **Stop / defer:** if the longer window needs the probe to be safe (for
+  example because it masks a captive-portal failure), stop and file the
+  parked design as its own entry; anything surfaced outside this fence goes to
+  `BACKLOG.md` / `BUG_BACKLOG.md`.
+- **Approach:** `direct` — a bounded change to existing retry constants and
+  wait, no new seam.
+- **Status:** not started; narrowed 2026-11-14 from the probe-and-poll design.
 - **Origin:** 2026-08-26, investigation requested into making long-running
   `plan-tool` processes resistant to a lack of connectivity.
 
@@ -6949,59 +6831,49 @@ evidence. It is not an active implementation contract.
 
 ---
 
-**#405 — Suggest focused roadmap feedback subsets after a failed revision**
+**#405 — Document focused feedback subsets for a failed broad roadmap revision**
 
-- **What:** add a read-only diagnostic for a failed `plan-tool roadmap`
-  feedback revision. It analyzes the active feedback rows and suggests a small,
-  ordered set of coherent subsets that can be processed through the existing
-  full revision, approval, commit, and enrollment lifecycle one at a time.
+- **What:** add a short "submit focused feedback subsets" guidance paragraph to
+  `docs/how-to/roadmap.md` § 6. When a revision over many related feedback rows
+  returns responses without material structural change, the operator keeps the
+  full ledger, exposes one focused cross-artifact concern in the working
+  artifacts, and reruns the normal revision lifecycle, repeating per concern.
 - **Why:** Integration's first full-MVP revision attempted 23 related requests at once
   and produced responses without material structural changes. The recovery was
   to retain the 23-row ledger, expose only one focused cross-artifact concern
-  in the working artifacts, and rerun the normal revision lifecycle.
-- **Effort:** medium. The diagnostic needs failure evidence, relation-aware
-  grouping, dependency ordering, and an operator-readable report, but no writer
-  or new roadmap lifecycle.
-- **Risks:** suggestions must not imply that semantic completeness is proven;
-  grouping by artifact alone can split one concern across stages, while overly
-  broad groups can recreate the original failure.
-- **Dependencies:** reuse current roadmap parsing, feedback metadata, reverse
-  references, and failed-run evidence. It must not depend on or extend writer,
-  accepted-head, candidate, structural-rewrite, or seed authority.
-- **Outcome:** after a failed broad revision, an operator receives a justified
-  breakdown of every active feedback row into ordered, cross-artifact subsets,
-  with no row omitted or duplicated and with dependencies called out.
-- **In scope:** classify whether the failed attempt is plausibly a
-  breadth/heterogeneity failure rather than a transport, parse, response-
-  protocol, gate, source-admission, or writer failure; read-only detection of a
-  likely breadth/heterogeneity failure;
-  suggested subset membership; reasons for each assignment; dependency order;
-  coverage accounting over all active rows; and a handoff/checklist suitable
-  for manually exposing one subset before rerunning `roadmap`.
-- **Out of scope / Non-goals:** modifying artifacts or feedback state; applying
-  revisions; creating a group manifest; atomic publication; automatic approval;
-  inferred acceptance; concurrent revision management; or a general roadmap
-  editor.
-- **Allowed behavior changes:** one optional read-only diagnostic/report path;
-  every existing roadmap writer and approval command remains unchanged.
-- **Allowed reorganization:** none unless a current read-only relation owner
-  prevents complete row accounting.
-- **Verification:** use a 23-row four-artifact fixture plus focused parse- and
-  gate-failure fixtures; prove non-breadth failures receive no breakdown
-  suggestion, every grouped row appears
-  exactly once, concern-spanning rows stay together, dependencies are ordered,
-  the report performs no writes or logging mutations beyond ordinary diagnostic
-  telemetry, and ambiguous evidence is reported instead of guessed.
-- **Stop / defer:** stop at suggestions. Any request to edit feedback, execute a
-  subset, approve a revision, or publish artifacts belongs to the existing
-  roadmap lifecycle or a separate backlog item.
-- **Approach:** `plan-tool` — the grouping judgment and failure classification
-  need an explicit design and grounded examples before implementation.
+  in the working artifacts, and rerun the normal revision lifecycle. One case
+  (n=1) supports the guidance, not a diagnostic.
+- **Effort:** small — one documentation paragraph.
+- **Risks:** the paragraph must not imply that semantic completeness is proven,
+  or that grouping by artifact alone is sufficient; a concern can span stages.
+- **Dependencies:** none.
+- **Outcome:** an operator whose broad revision fails to change the roadmap
+  finds, in the how-to, the focused-subset recovery and how to keep a concern
+  that spans artifacts together.
+- **In scope:** the `docs/how-to/roadmap.md` paragraph (and a pointer from any
+  failure-recovery text there that names a broad revision).
+- **Out of scope / Non-goals:** deliberately not a diagnostic or report that
+  classifies a failure as a breadth failure and groups feedback rows into
+  subsets (cut 2026-11-14): "is this a breadth failure" and coherent grouping
+  are semantic judgments with a high false-positive risk on one observed case.
+  Also out: modifying artifacts or feedback state; applying revisions; a group
+  manifest; atomic publication; automatic approval; concurrent revision
+  management; a general roadmap editor.
+- **Allowed behavior changes:** none; documentation only.
+- **Allowed reorganization:** none.
+- **Verification:** the paragraph states only steps that the existing roadmap
+  commands support, checked against `docs/reference/commands.md`'s roadmap
+  flags.
+- **Stop / defer:** re-open a diagnostic only if several observed failures show
+  a groupable pattern a deterministic check could name; any request to edit
+  feedback, execute a subset, approve a revision, or publish artifacts belongs
+  to the existing roadmap lifecycle or a separate backlog item.
+- **Approach:** `direct` — documentation only.
 - **Quality:** `gate-signal` — makes an over-broad revision failure actionable
   without weakening existing publication authority.
-- **Origin:** 2026-09-21, Integration full-MVP roadmap review.
-- **Status:** not started; use the Integration 23-row failure as the first design
-  fixture.
+- **Origin:** 2026-09-21, Integration full-MVP roadmap review; reshaped
+  2026-11-14 from a read-only diagnostic to guidance.
+- **Status:** not started.
 
 **#428 — A ledger proposal's current-or-stale status is defined but never computed**
 
@@ -7048,7 +6920,7 @@ evidence. It is not an active implementation contract.
 - **Stop / defer:** an unclear promoted-version case is settled by the plan's
   definition above; anything wider becomes a separate entry.
 - **Approach:** `direct` — one pure function and one rendering site.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `standard` — a
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced` — a
   read-only derived label with no persisted state.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Renumbered:** filed as #425 on this branch on 2026-09-23 and cited that way in its commit history; renumbered to #428 on merging `main`, which had already allocated #425.
@@ -7113,38 +6985,38 @@ evidence. It is not an active implementation contract.
   direction. It sits outside that plan's range and breaks nothing.
 - **Status:** not started.
 
-**#433 — Expose truthful terminal progress for ledger-batch candidate proposals**
+**#433 — Print a periodic stderr heartbeat during ledger-batch candidate proposals**
 
-- **What:** make `plan-tool roadmap <slug> --propose-candidate` report concise
-  stderr lifecycle status while a ledger-batch candidate proposal is running:
-  batch accepted, model attempt started, periodic local-process progress with
-  elapsed and backend-silence time, response validation, retry/correction,
-  stored candidate, and terminal rejection or failure.
+- **What:** make `plan-tool roadmap <slug> --propose-candidate` print a periodic
+  stderr heartbeat while a ledger-batch candidate proposal is running, built
+  from the `claude_call_progress` events the run already emits: elapsed time
+  and backend-silence time.
 - **Why:** Integration candidate proposals commonly take one to four minutes. The
   command currently writes `claude_call_progress` events into
   `.plan-tool/runs/<slug>/...jsonl` every 20 seconds, but prints no incremental
   terminal status. An operator cannot tell whether the local process is still
   alive without manually locating and tailing the run log.
-- **Effort:** medium. The underlying run-log events and candidate attempt
-  lifecycle already exist, but the command needs a bounded stderr reporter,
-  stable wording, tests, and a decision on reuse of the existing status seam.
-- **Risks / fallout:** progress output must not claim that the backend is
-  healthy merely because the local process emits a timer tick. It must say
-  elapsed time and backend silence explicitly, preserve machine-readable
-  command output, avoid model/prompt content, and never report candidate
-  storage or approval before the corresponding durable transition succeeds.
+- **Effort:** small. The run-log events already exist; the command needs a
+  bounded stderr line on each progress event, stable wording, and tests.
+- **Risks / fallout:** the heartbeat must not claim that the backend is healthy
+  merely because the local process emits a timer tick. It must say elapsed time
+  and backend silence explicitly, preserve machine-readable command output, and
+  avoid model/prompt content.
 - **Dependencies:** evaluate `#349`'s `progress.py`/roadmap-status seam before
   adding another reporter. This item may reuse that reporter but must not
   expand `#337`'s completed stage-run contract by implication.
 - **Outcome:** a terminal operator can see that a ledger-batch candidate
-  proposal is locally progressing or has reached a named terminal result
-  without inspecting JSONL files by hand; a quiet backend remains visibly
-  "waiting" rather than being represented as confirmed backend progress.
-- **In scope:** batch `--propose-candidate` status only; attempt start,
-  periodic elapsed/silence reports, response-received validation, retry with a
-  closed correction category, stored/rejected/failed terminal lines, stderr
-  routing, and focused CLI/reporter tests.
-- **Out of scope / Non-goals:** streaming model output or prompts; job control,
+  proposal is locally alive, with elapsed time and backend-silence time, without
+  inspecting JSONL files by hand; a quiet backend remains visibly "waiting"
+  rather than being represented as confirmed backend progress.
+- **In scope:** batch `--propose-candidate` only; one stderr line per existing
+  `claude_call_progress` event carrying elapsed and silence time; stderr
+  routing; focused CLI/reporter tests.
+- **Out of scope / Non-goals:** deliberately not a lifecycle vocabulary (batch
+  accepted, attempt started, response validation, retry/correction, stored,
+  rejected, failed) and not a new reporter-seam design (cut 2026-11-14): the
+  heartbeat answers the operator's actual question, "is it still alive", at
+  small cost. Also out: streaming model output or prompts; job control,
   cancellation, dashboards, persistent live-job state, candidate review or
   promotion status, generic status expansion across all commands, and changing
   JSONL schema or candidate authority.
@@ -7152,22 +7024,21 @@ evidence. It is not an active implementation contract.
   batch candidate proposals. Candidate bytes, feedback state, retries, exit
   codes, and machine-readable output retain their existing semantics.
 - **Allowed reorganization:** only the smallest extraction needed to reuse a
-  current progress/status reporter after the `#349` seam decision; do not
-  refactor unrelated roadmap status paths.
-- **Verification:** use an injected delayed candidate invoker to assert ordered
-  start, periodic waiting, validation, retry, stored, and rejected messages;
-  assert silence time is labelled as silence rather than success; verify no
-  model content appears; and prove JSONL lifecycle records and command results
-  remain unchanged.
+  current progress/status reporter if `#349` has produced one; do not refactor
+  unrelated roadmap status paths.
+- **Verification:** use an injected delayed candidate invoker to assert one
+  heartbeat line per progress event; assert silence time is labelled as silence
+  rather than success; verify no model content appears; and prove JSONL
+  lifecycle records and command results remain unchanged.
 - **Stop / defer:** if `#349` selects a shared reporter contract that changes
   the implementation shape, route this item through that contract rather than
-  adding a second status channel. A request for real backend liveness or job
-  control is separate work.
-- **Approach:** `plan-tool` — user-visible lifecycle semantics and the shared
-  reporter boundary need a focused design.
-- **Route:** `plan` · **Readiness:** `decision-needed` · **Tier:** `standard`.
+  adding a second status channel. A request for lifecycle status, real backend
+  liveness, or job control is separate work.
+- **Approach:** `direct` — a small stderr hook over existing events.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
 - **Arc assignment:** `backlog-arc-roadmap`.
-- **Origin:** Integration ledger-batch candidate acceptance attempts on 2026-09-28.
+- **Origin:** Integration ledger-batch candidate acceptance attempts on 2026-09-28;
+  narrowed 2026-11-14 from a full lifecycle reporter.
 - **Status:** not started.
 
 **#437 — Let a candidate reconciliation response state its basis, and show when it does not**
@@ -7219,20 +7090,21 @@ evidence. It is not an active implementation contract.
 - **Origin:** the IPPT-19 plan carve, 2026-10-02.
 - **Status:** not started.
 
-**#438 — Widen the narrative check's removed-id source to a candidate's own removals and a stack's root**
+**#438 — Widen the narrative check's removed-id source to a candidate's own `remove-row` operations**
 
 - **What:** IPPT-19's narrative check finds live prose that names a removed row,
   but only for removals recorded in the candidate artifact's own carried
   `removals` (or, for a feedback-free candidate, its immediate predecessor's).
-  Two removals escape it: a row dropped by the candidate's own `remove-row`
-  operation, which writes no removal record, and a removal recorded at the
-  accepted root of a stack of feedback-free batches, which the tip's immediate
-  predecessor no longer carries. This entry is the option to derive the set from
-  the row-id difference between predecessor and candidate, and from the recorded
-  root's removals, so those cases show the same evidence.
-- **Why:** the code review of IPPT-19 (round 6, 2026-10-05) found both by static
-  reading. Integration Group 5 now supplies observed evidence for the candidate's
-  own-removal case; the stacked-root case remains unobserved.
+  A row dropped by the candidate's own `remove-row` operation writes no removal
+  record, so it escapes. This entry derives the removed ids for that observed
+  case, so it shows the same evidence as a carried removal.
+- **Why:** the code review of IPPT-19 (round 6, 2026-10-05) found the gap by
+  static reading, and Integration Group 5 supplies observed evidence for the
+  candidate's own-removal case (below).
+- **Deliberately not (cut 2026-11-14):** the stacked-root case, a removal
+  recorded at the accepted root of a stack of feedback-free batches that the
+  tip's immediate predecessor no longer carries. It remains unobserved; re-open
+  it only if a real stack shows it.
 - **Evidence:** in the Integration repository, candidate
   `8a802c3cca9a73b7bf543e86b4abfa9173bc88f03b9ba65ff063ad1c800db95f`
   stores a `remove-row` for `assumption-connector-inputs-checkable` under
@@ -7247,30 +7119,37 @@ evidence. It is not an active implementation contract.
   `d063e01dd10e9336cc5d995640927e80babea2c4696b4cb09eb31b1494c625fa` returns
   no blocking findings and no evidence items (2026-10-05), so approval would
   pass both stale references unflagged.
-- **Effort:** medium. A second removed-id source in `check_removed_ids_in_live_prose`
-  and `compute_candidate_narrative_evidence`, a root load for stacked tips, the
-  contract section "Source of the removed ids", and tests for each source.
-- **Risks / fallout:** a row-id difference counts a row the candidate replaced
-  under a new id as removed, so the ambiguous kind needs a second look; the
-  check stays evidence-only and a widened source widens the blocking class, so
-  the false-positive rate on real candidates must be measured first.
+- **Effort:** small-to-medium. A second removed-id source (the candidate's own
+  `remove-row` operations) in `check_removed_ids_in_live_prose` and
+  `compute_candidate_narrative_evidence`, the contract section "Source of the
+  removed ids", and tests.
+- **Risks / fallout:** a widened source widens the blocking class, so the
+  false-positive rate on real candidates must be measured before the source
+  blocks anything. Deriving ids from `remove-row` operations (not a row-id
+  difference) avoids counting a row replaced under a new id as removed.
 - **Dependencies:** IPPT-19 lands first.
-- **Outcome:** a candidate that removes a row itself, or a stack whose root
-  records a removal, shows the same removed-id evidence as a carried removal.
-- **In scope:** the removed-id source and its contract text.
-- **Out of scope / Non-goals:** any model-judged review (#435); a new defect
-  class; changing what blocks approval or the operator exits; storing evidence.
+- **Outcome:** a candidate that removes a row through its own `remove-row`
+  operation shows the same removed-id evidence as a carried removal.
+- **In scope:** the removed-id source for the candidate's own `remove-row`
+  operations, a false-positive measurement over real candidates, and the
+  contract text.
+- **Out of scope / Non-goals:** the stacked-root case (see above); deriving the
+  set from a predecessor/candidate row-id difference; any model-judged review
+  (#435); a new defect class; changing what blocks approval or the operator
+  exits; storing evidence.
 - **Allowed behavior changes:** more candidates are shown, and may be refused,
   for prose that names a removed id.
 - **Allowed reorganization:** none.
-- **Verification:** a candidate with its own `remove-row` and prose naming the row
-  is refused with both exits; a three-hop stack whose root carries a removal is
-  checked at the tip; the existing carried-removal cases are unchanged.
-- **Stop / defer:** if the row-id difference mislabels replaced rows as removed
-  on real candidates, stop and record the rate here.
+- **Verification:** the false-positive rate on real stored candidates is
+  measured and recorded here before the source blocks; a candidate with its own
+  `remove-row` and prose naming the row is refused with both exits (the
+  Integration candidate above is the first fixture); the existing
+  carried-removal cases are unchanged.
+- **Stop / defer:** if the measured false-positive rate on real candidates is
+  not low, stop and record the rate here.
 - **Approach:** `plan-tool`.
 - **Route:** `plan` · **Readiness:** `decision-needed` (own-removal case
-  observed above; stacked-root case remains traced) · **Tier:**
+  observed above; the false-positive measurement comes first) · **Tier:**
   `architect` (widens a blocking policy source).
   **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
@@ -7543,60 +7422,42 @@ evidence. It is not an active implementation contract.
 - **Origin:** `roadmap-versioned-from-birth` code review 1, 2026-10-06; producer-less
   stage-loop names added from code review 2, 2026-10-06.
 
-**#453 — Scope the first-run resume directory by plans directory, and stop `INDEX.md` from naming a stale accepted head after a failed refresh**
+**#453 — Stop `INDEX.md` from naming a stale accepted head after a failed refresh**
 
-- **What:** two derived-state scoping gaps from the version-only stage run.
-  (a) The resume directory is `.plan-tool/runs/<slug>/roadmap-stage-resume/`,
-  keyed by (repo root, slug) in `roadmap_stage_resume.resume_dir_path`, while the
-  accepted head and the writer guard are keyed by plans directory. Two plans
-  directories (`--plans-dir` or `PLAN_TOOL_PLANS_DIR`) in one repo that share a
-  slug share one resume directory: `_require_no_accepted_head` deletes it beside
-  plans dir A's head although plans dir B's aborted run holds paid stages in it,
-  and a first run against B reuses stages an aborted run against A held when the
-  brief text matches. `brief.digest` records only the brief digest, and the
-  writer lock does not span the two plans directories.
-  (b) `refresh_roadmap_index` warns and returns when `collect_index_rows` raises
-  `RoadmapVersionError` (one unreadable `version.json`, `candidate-evidence.json`,
-  terminal resolution, or admission file), so the previous `INDEX.md` stays on
-  disk after a promotion and still labels the old version `accepted head`.
-- **Why:** (a) a destructive cleanup and a reuse check act on state they cannot
-  show belongs to the current plans directory; (b) a file generated for people
-  can name the wrong head with only a transient stderr line as the signal.
-- **Verified:** by reading `roadmap_stage_resume.py` (`resume_dir_path`,
-  `delete_resume`, `write_brief_digest`), `roadmap.py` (`_require_no_accepted_head`,
-  `_run_roadmap`, `refresh_roadmap_index`, `load_accepted_head(plans_dir=...)`),
-  and `roadmap_index.py` (`collect_index_rows`, `write_roadmap_index`). No
-  program was run for (a) or (b); a reproducing test is the first step of the fix.
-- **Effort:** small — (a) one scoping decision and its tests; (b) one degrade
-  rule and its tests.
-- **Approach:** `direct`; the scoping choice for (a) is a design decision to
-  settle first: a plans-dir digest in the directory path, or the resolved plans
-  dir recorded beside `brief.digest` and a mismatch treated like a digest
-  mismatch. For (b): unlink `INDEX.md`, rewrite it with a one-line could-not-refresh
-  body, or degrade per version in `collect_index_rows` (list an unreadable
-  version with status `unreadable`).
+- **What:** `refresh_roadmap_index` warns and returns when `collect_index_rows`
+  raises `RoadmapVersionError` (one unreadable `version.json`,
+  `candidate-evidence.json`, terminal resolution, or admission file), so the
+  previous `INDEX.md` stays on disk after a promotion and still labels the old
+  version `accepted head`.
+- **Why:** a file generated for people can name the wrong head with only a
+  transient stderr line as the signal.
+- **Verified:** by reading `roadmap.py` (`refresh_roadmap_index`) and
+  `roadmap_index.py` (`collect_index_rows`, `write_roadmap_index`). No program
+  was run; a reproducing test is the first step of the fix.
+- **Effort:** small — one degrade rule and its tests.
+- **Approach:** `direct`; on a refresh failure, rewrite `INDEX.md` with a
+  one-line could-not-refresh body naming the failure, so the file never names a
+  superseded head as current.
 - **Dependencies:** none; independent of the BUG_BACKLOG.md ROADMAP entry
   "A publication journal left by a crash blocks most roadmap writers until a
   stage run, and a non-root journal beside a head can only be removed by hand".
-- **Outcome:** a resume directory is only deleted or reused by the plans directory
-  that wrote it, and a refresh failure never leaves an `INDEX.md` that names a
+- **Outcome:** a refresh failure never leaves an `INDEX.md` that names a
   superseded accepted head without saying it is stale.
-- **In scope:** `roadmap_stage_resume.py`, its call sites in `roadmap.py`,
-  `roadmap_index.py`, `refresh_roadmap_index`, and the tests and docs
-  (`ROADMAP_FORMAT.md`, `docs/how-to/roadmap.md` § 3) that pin them.
+- **In scope:** `refresh_roadmap_index`, `roadmap_index.py`, and the tests and
+  docs (`ROADMAP_FORMAT.md`, `docs/how-to/roadmap.md` § 3) that pin them.
 - **Out of scope / Non-goals:** changing the head, journal, or version-store
-  formats; a cross-plans-dir lock; resuming across plans directories.
-- **Allowed behavior changes:** the resume path (or its recorded owner) changes;
-  a refresh failure rewrites or removes `INDEX.md`.
+  formats; per-version degrade in `collect_index_rows` (deliberately not taken:
+  the could-not-refresh body is the smaller change); scoping the first-run
+  resume directory by plans directory (deliberately not taken, cut 2026-11-14:
+  it needs two plans directories sharing a slug in one repo, which no run has
+  produced; revisit only if one is observed); a cross-plans-dir lock.
+- **Allowed behavior changes:** a refresh failure rewrites `INDEX.md`.
 - **Allowed reorganization:** none.
-- **Verification:** a test with two plans directories sharing a slug (one with a
-  head, one holding stages) showing the held stages survive the head refusal and
-  are not reused across directories; a test with one unreadable historic record
-  after a promotion showing `INDEX.md` does not name the old head as current; the
-  full suite passes.
-- **Stop / defer:** if scoping the directory needs a migration for existing
-  held stages, discard them (they cost only regeneration) and record that here.
-- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
+- **Verification:** a test with one unreadable historic record after a
+  promotion showing `INDEX.md` does not name the old head as current; the full
+  suite passes.
+- **Stop / defer:** none beyond the fence above.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
   **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** `roadmap-versioned-from-birth` code review 4, 2026-10-06.
@@ -7649,25 +7510,22 @@ evidence. It is not an active implementation contract.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` run, 2026-10-06.
 
-**#455 — Give a failed `run` step's retry the complete failure list, and decide whether the run gets one bounded repair attempt**
+**#455 — Give a failed `run` step's retry the complete failure list**
 
-- **What:** (a) the failure note a retry sees keeps a short pytest tail. In step 3
+- **What:** the failure note a retry sees keeps a short pytest tail. In step 3
   attempt 2, 3 of the first 6 failures were not visible to the model, and the step
   needed manual repair. A stale tail also persists in `status_note` after the step
-  later advances. (b) The run halts after one failed suite gate with no in-run
-  repair attempt: it halted at steps 3 through 9, and steps 4, 5, 7, 8, and 9 were
-  small mechanical fixes (a comment, an import, a helper, snapshot helpers,
-  fixtures) that each cost a manual round trip and a WIP commit.
-- **Absorbs #88 (merged 2026-11-14):** a `run` step whose `claude` call
-  succeeded but whose post-call test-authoring or drift gate failed re-spends
-  the whole call on re-run. The remedy is to re-evaluate the post-call gates
-  against the tree already on disk without a new call, which is the
-  bounded-repair question in part (b); the call's output is tree edits already
-  on disk, so memoizing it is the wrong frame. Acceptance: a post-gate failure
-  re-runs without a new model call when inputs are unchanged. Reuse
-  `checkpoint.py` only if the re-evaluation needs saved state. Resume is
-  otherwise already durable per `claude` call in `detail` and
-  `completeness-audit`; no second stage ledger.
+  later advances.
+- **Absorbs #88 (merged 2026-11-14), parked:** a `run` step whose `claude`
+  call succeeded but whose post-call test-authoring or drift gate failed
+  re-spends the whole call on re-run. The remedy is to re-evaluate the
+  post-call gates against the tree already on disk without a new call; the
+  call's output is tree edits already on disk, so memoizing it is the wrong
+  frame. Acceptance: a post-gate failure re-runs without a new model call when
+  inputs are unchanged. Reuse `checkpoint.py` only if the re-evaluation needs
+  saved state. Resume is otherwise already durable per `claude` call in
+  `detail` and `completeness-audit`; no second stage ledger. This remains
+  open and is parked with the bounded-repair attempt (see Parked below).
 - **Why:** a retry that cannot see the failures it must fix cannot fix them, and a
   halt costs a human turn for failures the model could repair when shown the
   full list.
@@ -7685,35 +7543,41 @@ evidence. It is not an active implementation contract.
   `run --accept` (shipped 2026-10-10) closes. Second instance: `roadmap-stack-propagation` step 1, observed
   2026-10-08. After `.tmp/roadmap-stack-propagation.run.log` failed on one test,
   the re-run (`run-step1-retry2.log`, 48 s) modified no declared file.
-- **Effort:** small for (a); medium for (b), which interacts with the attempt
-  limits and with the no-re-spend rule absorbed from #88 (a repair attempt must not
-  re-spend an already-successful call).
-- **Approach:** (a) `direct`: carry the failed test ids with one error line each
-  (`pytest -rf` summary) and clear the note when the step advances. (b) decide
-  first: a bounded repair attempt that passes the full failure list back, or keep
-  halting and rely on (a).
+- **Effort:** small.
+- **Approach:** `direct`: carry the failed test ids with one error line each
+  (`pytest -rf` summary) into the retry prompt and clear the note when the step
+  advances.
+- **Parked (split from this entry, cut 2026-11-14):** an in-run bounded
+  repair attempt. The run halts after one failed suite gate: it halted at steps
+  3 through 9, and steps 4, 5, 7, 8, and 9 were small mechanical fixes (a
+  comment, an import, a helper, snapshot helpers, fixtures) that each cost a
+  manual round trip and a WIP commit. Whether to add the attempt is decided
+  after this entry ships and its effect on retries is observed; it interacts
+  with the attempt limits and with the no-re-spend rule absorbed from #88. It
+  needs its own entry with an id when taken up; this paragraph is its
+  placeholder.
 - **Dependencies:** #87 (same gate family).
 - **Outcome:** a retry sees every failed test id from the previous gate with a
-  one-line error; (b) has a recorded decision. A step whose call succeeded but
-  whose post-call gate failed re-evaluates that gate against the tree on disk
-  without a new model call (absorbed from #88).
-- **In scope:** failure-note construction, `status_note` lifecycle, the decision
-  on (b), the post-gate re-evaluation without a new call, and their tests.
-- **Out of scope / Non-goals:** raising the attempt limit by default; changing
-  what the gate checks; unattended retry loops without a bound.
+  one-line error, and a stale note does not outlive the step's advance.
+- **In scope:** failure-note construction, rendering the ids into the retry
+  prompt, `status_note` lifecycle, and their tests.
+- **Out of scope / Non-goals:** the in-run bounded repair attempt and the
+  post-gate re-evaluation absorbed from #88 (deliberately not in this slice:
+  both wait on this slice's observed effect; see Parked); raising the attempt
+  limit by default; changing what the gate checks; unattended retry loops
+  without a bound.
 - **Allowed behavior changes:** failure notes get longer; a stale note is cleared.
 - **Allowed reorganization:** none.
 - **Verification:** a test with more failures than the old tail holds, showing all
   ids reach the retry prompt; a test showing the note is cleared on advance; the
   full suite passes.
-- **Stop / defer:** if (b) needs a new run state machine, file it separately and
-  ship (a) alone. Shipping (a) alone leaves the post-gate re-evaluation
-  absorbed from #88 open here; the entry is not done until it ships or is
-  recorded as declined. Before building it, state how the test-authoring
+- **Stop / defer:** the parked repair attempt and the #88 re-evaluation stay
+  open after this slice ships; the entry's removal waits until they ship or are
+  recorded as declined. Before building them, state how the test-authoring
   gate's pre-call baseline survives a tree the first attempt already dirtied
   (#87's known limit).
-- **Route:** `direct` for (a); `plan` if (b) is taken · **Readiness:**
-  `decision-needed` (on (b)) · **Tier:** `experienced`. **Principle:** `untriaged`.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+  **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` run, 2026-10-06.
 
@@ -8067,99 +7931,107 @@ evidence. It is not an active implementation contract.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** deferred follow-up from the model-aware prompt-budget code review (2026-10-09).
 
-**#477 — Give `BUG_BACKLOG.md` entries stable ids so code and tests cite them by id instead of by title**
+**#477 — Fix the stale and bare `BUG_BACKLOG` citations in code**
 
 - **What:** `docs/TRACKING.md:771-772` says "`BUG_BACKLOG.md` entries are
-  titled headings with no id", and `tests/test_backlog_ids.py` deliberately
-  skips that file. Code therefore cites bugs by title or not at all: there
-  are 21 `BUG_BACKLOG` mentions under `plan_tool/`, four of them a bare
-  "See BUG_BACKLOG." with no title (`create.py:12022`,
-  `data_contract.py:643`, `review.py:1837`, `review.py:1862`). Two title citations no longer
-  resolve, and only git history says why: `tests/test_launcher.py:2853`
+  titled headings with no id", so code cites bugs by title or not at all. Of
+  21 `BUG_BACKLOG` mentions under `plan_tool/`, seven are a bare
+  "See BUG_BACKLOG." with no title (`create.py:12024`, `data_contract.py:643`,
+  `review.py:1837`, `review.py:1862`, `detail.py:1542`, `detail.py:2041`,
+  `cli/completeness_phases.py:2278`). Two title citations no longer resolve,
+  and only git history says why: `tests/test_launcher.py:2853`
   cites "`run` advances a step whose `creates:`…", an entry removed when the
   bug was fixed (`4fc168027`); `completeness_report.py:1502` cites "The
   persisted report withholds ``suggested_action``", fixed in `72de18d29`,
-  a title no backlog file has ever carried. Both are stale citations of
-  fixed bugs, to be cleaned up with the rest. A title is not a stable
-  reference, because titles change and fixed entries are deleted.
-- **Outcome:** each `BUG_BACKLOG.md` entry carries a stable id with its own
-  prefix (for example `B-N`), code and tests cite that id, and the id guard
-  covers it.
-- **In scope:** ids on the live bug entries, the TRACKING.md rule,
-  extending `tests/test_backlog_ids.py`, and rewriting the existing
-  citations under `plan_tool/` and `tests/`.
-- **Out of scope / Non-goals:** checking that a cited id is still live
-  (removed entries stay cited from history, as in `BACKLOG.md`), and
-  renumbering `BACKLOG.md`.
-- **Verification:** the id test fails on a duplicate bug id, and no
-  `BUG_BACKLOG "<title>"` citation remains under `plan_tool/` or `tests/`.
-- **Stop / defer:** stop if promotion stubs (`docs/TRACKING.md` §
-  "Promotion stubs") need a different id form; decide that before
-  numbering.
+  a title no backlog file has ever carried.
+- **Outcome:** no bare or stale `BUG_BACKLOG` citation remains under
+  `plan_tool/` or `tests/`.
+- **In scope:** the two stale and seven bare citations: name the live entry's
+  title, or delete the citation when the entry is gone or the comment stands
+  alone.
+- **Out of scope / Non-goals:** stable bug ids (`B-N`), extending
+  `tests/test_backlog_ids.py` to `BUG_BACKLOG.md`, and the TRACKING.md rule
+  change (deliberately not taken, cut 2026-11-14: nine citations cost minutes
+  to fix; adopt ids only if bug citations from code keep rotting after this
+  cleanup); checking that a cited title is still live; renumbering
+  `BACKLOG.md`.
+- **Verification:** a grep shows no bare "See BUG_BACKLOG." and neither stale
+  title under `plan_tool/` or `tests/`.
+- **Stop / defer:** if a citation names a title that exists in
+  `BUG_BACKLOG.md`, keep it.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
 
-**#478 — Separate tracking guidance from the catalog and split the backlog catalog by area**
+**#478 — Prune delivered, closed and no-action backlog entries, then re-measure before splitting the catalog**
 
 - **What:** `BACKLOG.md` is about 13,500 lines, `docs/TRACKING.md` is 1,107, and
-  `BUG_BACKLOG.md` is 2,155. Guidance (rules, recipes, label tables) is
-  mixed in with the catalog, so a reader or a session loads most of a file
-  to find one entry or one rule, and duplicated guidance drifts (the TRACKING.md recipe skipped the bare-plan audit until 2026-10-10).
-- **Outcome:** a decision on whether to split. If yes, guidance lives only
-  in TRACKING.md and the directives, and the catalog is split by area (for
-  example by arc assignment) with an index. Ids, the id test, and
-  promotion stubs keep working across the split.
-- **In scope:** the decision, and the split once it is approved.
-- **Out of scope / Non-goals:** the entry format and the labels (#476,
-  #477).
-- **Verification:** the id test sees every split file, and every existing
-  `BACKLOG.md#…` link still resolves or is rewritten.
+  `BUG_BACKLOG.md` is 2,155. A reader or a session loads most of a file to find
+  one entry or one rule, and duplicated guidance drifts (the TRACKING.md recipe
+  skipped the bare-plan audit until 2026-10-10). A value review of one range of
+  the catalog found about 18 entries that are delivered, closed, no-action, or
+  self-admitted low value; splitting the file by area would carry them along.
+- **Outcome:** the delivered, closed, no-action and self-admitted-low-value
+  entries are removed under `docs/TRACKING.md`'s removal rules, and the
+  catalog's size and lookup cost are re-measured afterwards. A split decision
+  waits on that measurement.
+- **In scope:** the pruning, and the re-measurement (line counts, and whether
+  sessions still fail to find entries or rules: missed duplicates, misapplied
+  recipes).
+- **Out of scope / Non-goals:** splitting the catalog by area now (deliberately
+  not taken, cut 2026-11-14: a split preserves the bloat; reconsider only if
+  the re-measurement still shows a cost); moving guidance out of the catalog;
+  the entry format and the labels (#476, #477).
+- **Verification:** the id test and the readability guard pass after the
+  pruning; every removed id's citations elsewhere resolve to a closed or
+  stub record or are rewritten.
 - **Stop / defer:** stop if the readability guard
-  (`tests/test_backlog_readability.py`) or external Jira links depend on a
-  single file.
-- **Route:** plan · **Readiness:** decision-needed · **Tier:** architect.
-- **Evidence gate:** before splitting, measure whether sessions currently
-  fail to find entries or rules (missed duplicates, misapplied recipes).
-  Closing with "no action" is a valid outcome.
+  (`tests/test_backlog_readability.py`) or external Jira links depend on an
+  entry slated for removal. If the re-measurement shows no remaining cost,
+  close with "no action".
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
 
-**#484 — Mark each completeness finding that a plan edit since the previous audit introduced, so fix-induced scope growth is visible**
+**#484 — Mark each finding the `edit_drift` advisory attributes to the previous apply, and count them**
 
-- **What:** the audit reports findings without lineage, so a finding against
-  surface the previous round's fix added reads the same as a defect in what
-  the plan always promised. A loop can then chase a widening scope while each
-  round looks like new evidence of an unsound plan.
+- **What:** the `edit_drift` advisory (`convergence_diagnosis.py`,
+  `classify_edit_drift`) says only that a strict majority of new findings match
+  the prior-apply set. The report does not say which findings those are, so a
+  finding against surface the previous round's fix added reads the same as a
+  defect in what the plan always promised.
 - **Evidence:** a Integration fix added a deployment-role construct to
   `cdk-infrastructure-and-environments`. The next round produced 8 new HIGH
   findings across that plan and `bitbucket-deployment-pipelines`, all on the
   new construct (Integration reports under
   `plan-details/<plan>/reports/20261010-*-completeness.md`).
-- **Effort:** medium; the previous audit's committed snapshot is already the
-  re-audit baseline, so the work is a diff-to-finding attribution and its
-  rendering.
-- **Risks / fallout:** attribution from a text diff to a finding is a
-  judgment; a wrong "fix-induced" mark could teach operators to dismiss a
-  real defect.
+- **Effort:** small to medium; `classify_edit_drift` already builds the
+  window-local prior-apply set, so the work is exposing its matches per finding
+  and rendering them.
+- **Risks / fallout:** the match is a judgment; a wrong mark could teach
+  operators to dismiss a real defect.
 - **Dependencies:** none.
-- **Outcome:** a re-audit's report marks each finding whose cited plan
-  region changed since the previous audit's snapshot, and states the count of
-  marked findings beside the total.
-- **In scope:** the completeness report and its JSON sidecar; the console
-  summary line.
-- **Out of scope / Non-goals:** suppressing, demoting, or excluding a marked
-  finding from the blocking set; changing the stopping rule (#125).
-- **Allowed behavior changes:** the new mark and count only.
+- **Outcome:** `EditDriftAdvisory` carries the matched findings, and the
+  `edit_drift` rendering (`_edit_drift_lines`) marks each one and states the
+  count of marked findings beside the total.
+- **In scope:** `classify_edit_drift`, `EditDriftAdvisory`,
+  `_edit_drift_lines`, and their tests.
+- **Out of scope / Non-goals:** a separate attribution rule or a plan-snapshot
+  diff-to-finding mapping (deliberately not taken, cut 2026-11-14: it overlaps
+  the shipped `edit_drift` match); a new completeness-report field; marking
+  when the advisory does not fire; suppressing, demoting, or excluding a marked
+  finding from the blocking set; changing the stopping rule (#125) or any
+  continuation or exit behavior (`edit_drift` stays recommend-only).
+- **Allowed behavior changes:** the per-finding mark and count in the existing
+  advisory output only.
 - **Allowed reorganization:** none.
-- **Verification:** a fixture with two audits around an edit that adds one
-  section asserts that findings citing the new section are marked and others
-  are not.
-- **Stop / defer:** stop if a finding's cited region cannot be located in the
-  plan text without inferring from prose; surface that rather than guess.
-- **Approach:** plan-tool; it adds an audit report field and an attribution
-  rule.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
+- **Verification:** a fixture where `classify_edit_drift` fires asserts the
+  advisory lists exactly the matched findings and the rendering marks them and
+  gives the count; an unmatched finding is not marked.
+- **Stop / defer:** stop if a match cannot be tied to a finding without
+  inferring from prose; surface that rather than guess.
+- **Approach:** direct; extend the existing advisory.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
   **Principle:** `converge-on-correct-plan`.
 - **Quality:** `convergence` — separates fix-induced growth from real
   non-convergence.
@@ -8210,31 +8082,37 @@ evidence. It is not an active implementation contract.
   scoping and isolation claims only for resources whose creation pattern it
   defines; resources the toolchain creates and needs to operate are out of
   scope and stated as such.
-- **Effort:** small to medium; the directive ships at
+- **Effort:** small; the directive ships at
   `integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
   for resources the plan creates". Remaining: a Gate 2 prompt clause in
-  `plan-audit.md` plus an audit-report field listing the plan's declared
-  exceptions.
-- **Risks / fallout:** an exception list can hide a real gap; the list must be
-  explicit, each entry carrying its reason, and visible in the report.
+  `plan-audit.md`.
+- **Risks / fallout:** an exception list can hide a real gap; the plan states
+  each exception in its own prose with its reason, so the exception is visible
+  in the plan the audit reads.
 - **Dependencies:** none.
-- **Outcome:** an infrastructure plan lists its out-of-scope toolchain
-  resources with a reason each, and the audit judges isolation, scoping and
-  least-privilege claims only against resources outside that list.
-- **In scope:** the directives text; the detail-grounded audit prompt; the
-  completeness report's rendering of declared exceptions.
+- **Outcome:** the detail-grounded audit prompt tells the auditor to judge
+  isolation, scoping and least-privilege claims only against resources the plan
+  creates, and to treat toolchain resources the plan names as exceptions (with
+  their stated reason) as out of scope.
+- **In scope:** the detail-grounded audit prompt clause (`plan-audit.md`); the
+  directives text already ships.
 - **Out of scope / Non-goals:** deciding which resources a given toolchain
-  creates; relaxing checks on resources the plan does define.
-- **Allowed behavior changes:** findings against a declared exception are
-  reported as informational, not blocking.
+  creates; relaxing checks on resources the plan does define; a new
+  completeness-report field for declared exceptions and demoting findings
+  against them to informational (deliberately not taken, cut 2026-11-14: the
+  machinery outgrows a prompt clause; if recorded exceptions are wanted, route
+  them through #490 dispositions).
+- **Allowed behavior changes:** the audit prompt gains the clause; no change to
+  finding severity or blocking rules.
 - **Allowed reorganization:** none.
-- **Verification:** a fixture plan declaring the stock bootstrap roles as an
-  exception produces no blocking finding for them, and a fixture claiming
-  isolation over an undeclared toolchain resource still does.
-- **Stop / defer:** stop if a declared exception covers a resource the plan's
+- **Verification:** the prompt-content test names the clause (resources the
+  plan creates; exceptions stated in plan prose); the full suite passes. Effect
+  on audit output is not measurable from one test; record it on the next
+  infrastructure plan audited.
+- **Stop / defer:** stop if a stated exception covers a resource the plan's
   own code creates.
-- **Approach:** plan-tool directives plus audit prompt.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
+- **Approach:** audit prompt clause; the directive already ships.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
   **Principle:** `converge-on-correct-plan`.
 - **Quality:** `precision` — removes defects that no plan edit can close.
 - **Integration-side use:** the same rule belongs in Integration's own audit and review
@@ -8243,18 +8121,17 @@ evidence. It is not an active implementation contract.
   `docs/technology-shapes/` (CDK first); plan-tool consumption of such an
   index is a follow-up to this entry.
 
-**#488 — Route a failed `run` step's stated reason to roadmap feedback, and list failure receipts never routed anywhere**
+**#488 — Route a failed `run` step's stated reason to roadmap feedback**
 
 - **What:** a `run` step that stops on an upstream gap now records why, in a
   `model_failure_receipt` whose sidecar holds the executor's final reply
   (`reason: no-edits-applied`, shipped 2026-10-13). Nothing carries that reason
-  to the roadmap feedback ledger, where an upstream gap belongs, and nothing
-  shows which receipts were never acted on.
+  to the roadmap feedback ledger, where an upstream gap belongs.
 - **Why:** the gap goes back to the roadmap only if someone notices the receipt
   and retypes it as `roadmap --submit-feedback`. AI-DLC's construction loop
   treats this as a first-class move: a failure jumps back to the stage that owns
-  the gap as a logged event, and recovery checks for a failure logged but never
-  routed (`aidlc-workflows` `core/aidlc-common/protocols/stage-protocol-recovery.md`).
+  the gap as a logged event (`aidlc-workflows`
+  `core/aidlc-common/protocols/stage-protocol-recovery.md`).
 - **Evidence:** Integration, 2026-10-11 to 10-13: 22 declined `run` attempts across 12
   steps in four plans; every captured executor reason was a missing upstream
   contract or a blocked prerequisite, each routed back by hand. Record:
@@ -8268,22 +8145,22 @@ evidence. It is not an active implementation contract.
 - **Dependencies:** none in plan-tool. Integration `BACKLOG.md` #5 (show the owner why a
   step stopped) is the consumer and lands first.
 - **Outcome:** an operator turns one failure receipt into one open roadmap
-  feedback item that names the receipt it came from, and can list the failure
-  receipts no feedback item names.
-- **In scope:** a `roadmap` feedback-submission path that takes a run id and step
-  as the item's source reference; the listing of unrouted receipts (`plan-tool
-  runs` or a `roadmap` read); the feedback item's source field; tests.
-- **Out of scope / Non-goals:** choosing the roadmap target automatically;
+  feedback item that names the receipt it came from, by passing a run id and
+  step to `--submit-feedback` with an operator-supplied roadmap and target.
+- **In scope:** `roadmap --submit-feedback` accepting a run id and step as the
+  item's source reference; the feedback item's source field; tests.
+- **Out of scope / Non-goals:** listing receipts never routed anywhere
+  (deliberately not taken now, cut 2026-11-14: defer until an operator asks);
+  choosing the roadmap target automatically;
   deciding whether the executor was right to stop; retrying the step; routing to
   anything other than the roadmap ledger; changing candidate proposal or
   approval.
-- **Allowed behavior changes:** a new submission form and a new read; a
-  feedback item may carry a source reference.
+- **Allowed behavior changes:** a new submission form; a feedback item may
+  carry a source reference.
 - **Allowed reorganization:** none.
 - **Verification:** a fixture run with a `no-edits-applied` receipt, submitted
   against a named roadmap target, produces an `open` item whose source names the
-  run and step; the unrouted listing shows the receipt before submission and
-  not after; the full suite passes.
+  run and step; the full suite passes.
 - **Stop / defer:** if binding a receipt to a roadmap needs plan provenance in
   plan frontmatter, file that as its own entry and ship with an operator-supplied
   roadmap slug and target.
@@ -8436,28 +8313,32 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
-**#509 — Configure the consuming repository Git hosting provider and remote**
+**#509 — Have the skill router detect the Git hosting provider from the remote and confirm it with the user**
 
-- **Route:** plan · **Readiness:** ready · **Tier:** architect.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** medium.
-- **Outcome:** A driving session selects GitHub or Bitbucket for the consuming
-  repository through a defined configuration reader and verifies its PR target.
-- **In scope:** Automatic detection from the selected remote; explicit provider override
-  for custom hosts; configured remote with origin as the default;
-  repository/default-branch resolution; gh/bkt target verification and ambiguous-target
-  handling.
-- **Out of scope / Non-goals:** A hosting plugin framework, automatic publishing,
-  history rewriting, or coupling provider choice to Jira/team policy.
-- **Allowed behavior changes:** Introduce the smallest repository configuration and
-  assistant-facing reader needed for provider selection; preserve explicit publication
-  authorization.
+- **Effort:** small.
+- **Outcome:** The skill router tells a driving session to detect GitHub or
+  Bitbucket from the selected remote's URL and confirm the provider and PR target
+  with the user before using `gh` or `bkt`.
+- **In scope:** Router guidance text only: read the remote (origin by default, or
+  the one the user names), infer the provider from its host, confirm with the user
+  when the host is custom or ambiguous, and check CLI help before backend
+  lifecycle commands.
+- **Out of scope / Non-goals:** A configuration reader, a repository
+  configuration key, or code-side provider verification (deliberately not taken,
+  cut 2026-11-14: the driving session already uses `gh`/`bkt` and can confirm
+  with the user; a reader plus verification is a plan for work the session does
+  anyway); a hosting plugin framework, automatic publishing, history rewriting,
+  or coupling provider choice to Jira/team policy.
+- **Allowed behavior changes:** Router guidance text only; preserve explicit
+  publication authorization. No runtime change.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
-- **Verification:** Cover GitHub/Bitbucket SSH and HTTPS remotes, explicit custom hosts,
-  alternate remotes, ambiguous inputs and mismatched CLI context with hermetic tests.
-  Inspect CLI help before backend lifecycle commands.
+- **Verification:** The router text names the detect-then-confirm steps for GitHub
+  and Bitbucket SSH and HTTPS remotes, custom hosts and alternate remotes; the
+  existing router guards pass.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -8507,31 +8388,33 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
-**#512 — Explain backend and model choice with cost and evidence**
+**#512 — Explain backend, model, precedence and effort choice**
 
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-installed-skill`.
 - **Effort:** small–medium.
 - **Outcome:** Users can choose a backend/model and understand recommendations,
-  configuration precedence, reasoning effort and cost limits.
+  configuration precedence, reasoning effort and where to find current prices.
 - **In scope:** One authoritative explanation, linked from onboarding and routers:
   driving assistant versus subprocess backend versus model; Sol for Codex stages and
   Opus creation/Sonnet subsequent Claude work; explicit flags versus inherited defaults;
-  reasoning-effort/token consumption and API versus subscription billing; date and
-  source price comparisons.
+  reasoning-effort/token consumption and API versus subscription billing; links to
+  the providers' pricing pages for current prices.
 - **Out of scope / Non-goals:** Automatic model routing, a pricing service, a benchmark
-  framework, or claims of equal quality/task cost from equal token prices.
+  framework, or claims of equal quality/task cost from equal token prices; dated
+  price comparisons (deliberately not taken, cut 2026-11-14: they go stale and
+  need re-verification on every release, so the doc links the pricing pages
+  instead).
 - **Allowed behavior changes:** Documentation only; reconcile stale Terra
   recommendations without changing runtime defaults. Explain why creation errors
   compound and distinguish measured evidence from owner-selected recommendations.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Check claims against backend resolution and current official
-  provider documentation. Pricing baseline verified 2026-10-19: standard GPT-6.1 Sol and
-  Sonnet 5.5 each list $2 input/$10 output per million tokens; reverify before
-  publication. Sources: https://developers.openai.com/api/docs/models/gpt-6.1-sol and
-  https://platform.claude.com/docs/en/models/sonnet-5-5/overview .
+  provider documentation. Pricing pages linked: https://developers.openai.com/api/docs/models/gpt-6.1-sol and
+  https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; the explanation
+  states no price figure.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -8647,21 +8530,21 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Dependencies:** #389 (promoted to IPPT-7), the hard-coded `install-skill --integration` list (`choices=("claude", "codex", "cursor")` in `plan_tool/cli/skill_cmd.py`). Do it first or as the first backend's step, so later backends need no edit there.
 - **Origin:** 2026-11-06, an estimate of what supporting other common CLIs would take.
 
-**#527 — The four public `demo/*` branches still show the needs-updating notice instead of current demo checkpoints**
+**#527 — Decide whether to delete the four public `demo/*` branches that still show the needs-updating notice**
 
-- **What:** `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` exist on both Bitbucket and GitHub (kept by owner decision, 2026-10-21) and every one points at the shared "mark preserved demo checkpoints as needing update" commit (2026-10-21). The maintained walkthroughs (`docs/demos/planning-demo.md`, `docs/how-to/roadmap-demo.md`) describe the seed, plan, detail and Jira stages, but no remote ref shows the current stage contents.
-- **Route:** direct · **Readiness:** decision-needed (which captured material each checkpoint holds, and the authorization to replace remote refs) · **Tier:** architect.
+- **What:** `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` exist on both Bitbucket and GitHub (kept by owner decision, 2026-10-21) and every one points at the shared "mark preserved demo checkpoints as needing update" commit (2026-10-21). The maintained walkthroughs (`docs/demos/planning-demo.md`, `docs/how-to/roadmap-demo.md`) describe the seed, plan, detail and Jira stages, and carry the demo, so the branches may no longer earn their upkeep.
+- **Route:** direct · **Readiness:** decision-needed (the owner decides delete versus keep) · **Tier:** architect.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-public-release`.
-- **Effort:** small to medium; mostly review and read-back, with no code change.
-- **Risks / fallout:** a remote ref replacement is hard to undo and is visible to every user; it needs exact-tip leases and private recovery bundles of both hosts' prior refs, as the sanitized-root replacement (2026-10-21) used.
-- **Outcome:** each of the four `demo/*` branches on both hosts presents deliberately chosen, current stage content, read back from both hosts after the update.
-- **In scope:** the four branch names on Bitbucket and GitHub, in these steps: (1) review the current implementation changes and the completed-plan evidence for the demo scenario; (2) choose the captured material for each checkpoint deliberately, separating captured output from authored reading samples; (3) recheck the local checkpoint refs, stage differences, private recovery bundles, and the old remote tips before proposing replacements; (4) obtain separate review and authorization for the remote update, then read both hosts back.
-- **Out of scope / Non-goals:** `main`, tags, repository visibility, and organization transfer (the release workflow in `docs/RELEASING.md` owns them); a fresh TTRPG roadmap run or browser interaction; renaming or removing a checkpoint branch; code, CLI, or skill changes; pushing any ref without the separate authorization in step 4.
-- **Allowed behavior changes:** remote `demo/*` ref contents only.
+- **Effort:** small; a decision, then at most a reviewed ref deletion on two hosts.
+- **Risks / fallout:** a remote ref deletion is hard to undo and visible to every user; it needs private recovery bundles of both hosts' prior refs, as the sanitized-root replacement (2026-10-21) used.
+- **Outcome:** a recorded owner decision on whether to delete the four `demo/*` branches. If deleted, the branches are gone from both hosts, read back from both. If kept, a separate entry holds the content refresh.
+- **In scope:** asking the owner; if the answer is delete, a reviewed deletion of the four branch names on Bitbucket and GitHub after private recovery bundles of the old tips are made and verified, with separate authorization for the remote update, then read-back from both hosts.
+- **Out of scope / Non-goals:** curating or refreshing checkpoint content (deliberately not taken before the delete decision, cut 2026-11-14: refreshing four refs on two hosts is a careful operational job, and the walkthrough docs already carry the demo); `main`, tags, repository visibility, and organization transfer (the release workflow in `docs/RELEASING.md` owns them); a fresh TTRPG roadmap run or browser interaction; code, CLI, or skill changes; pushing or deleting any ref without the separate authorization above.
+- **Allowed behavior changes:** remote `demo/*` refs may be deleted.
 - **Allowed reorganization:** none.
-- **Verification:** `git ls-remote` on both hosts shows the four branch names at the authorized tips, the tips match between hosts, and the private recovery bundles still verify.
-- **Stop / defer:** stop if a recovery bundle is missing or fails verification; file any defect found in the demo guides separately.
+- **Verification:** the owner's decision is recorded here; if deleted, `git ls-remote` on both hosts shows none of the four branch names and the private recovery bundles still verify.
+- **Stop / defer:** stop if a recovery bundle is missing or fails verification; if the owner keeps the branches, file the refresh as its own entry rather than expanding this one.
 - **Dependencies:** none; independent of #514 and #515.
 - **Approach:** direct; ref updates are a reviewed operational action, not a code change.
 - **Origin:** 2026-10-21 public-release preparation; the refresh was deferred when the checkpoints were marked as needing update.
@@ -8703,23 +8586,23 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Approach:** direct.
 - **Origin:** 2026-11-13 triage of the live documentation after the temporary handoff files were retired.
 
-**#530 — Developer documentation readability review stops after the front-door batches, and no fresh-reader check covers the four reader journeys**
+**#530 — Fix the developer-documentation stumbles that the fresh-reader walkthrough in #515 finds**
 
-- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped, but the section-by-section readability audit of the live developer documents covers only the high-traffic sections, and no reader outside the authors has walked the four journeys end to end from the documents alone. The audit's open batches are the contributor drive-or-review workflow (`CONTRIBUTING.md`), the module-ownership subsystem paragraphs (`docs/ARCHITECTURE.md`), default/optional/exception matrices for `docs/ITERATION.md` and `docs/GATES.md`, and the `docs/TRACKING.md` lifecycle (normal flow first, direct-versus-plan boundary and scope contract in linked subsections). The four journeys are install and begin, run or review a plan safely, change `plan-tool` itself, and find ownership, tracking, and escalation routes. #510 covers the first-task walkthrough for one of them.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped. The section-by-section readability audit of the remaining live developer documents (`CONTRIBUTING.md` drive-or-review workflow, `docs/ARCHITECTURE.md` subsystem paragraphs, `docs/ITERATION.md` and `docs/GATES.md` matrices, the `docs/TRACKING.md` lifecycle) judges an unobservable property section by section, so it is not run as a batch. The four reader journeys (install and begin, run or review a plan safely, change `plan-tool` itself, find ownership, tracking, and escalation routes) are checked by a fresh reader instead: #515 verifies the first journey in a fresh repository, and #510 covers the first-task walkthrough.
+- **Route:** direct · **Readiness:** blocked-on #515 · **Tier:** experienced.
 - **Principle:** write-for-the-human.
-- **Effort:** large in total; each batch is small to medium (one document or closely related group, reshape only where a mapping, state matrix, or ordered flow reads as dense prose).
-- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact. A long paragraph is a review signal, not a defect: `keep` is a valid verdict.
-- **Outcome:** each batch above has a recorded `keep`, `reshape`, `relocate`, or `clarify` verdict per section with its fact fence, and one cross-document walkthrough by a reader with no prior context confirms that the four journeys expose their normal path, exceptions, and next action, with links, terminology, and authority boundaries in agreement.
-- **In scope:** the live developer-facing documents named above plus `README.md`, `docs/reference/commands.md`, `docs/how-to/common-workflows.md`, and the glossary; one fresh-context walkthrough after the batches, recording each place the reader cannot find the normal path, an exception, an owner, or a next action; fixes for material findings.
-- **Out of scope / Non-goals:** the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
+- **Effort:** small to medium; one fix batch per place a reader stumbled.
+- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact.
+- **Outcome:** each place the fresh-reader walkthrough recorded as blocking a reader (normal path, an exception, an owner, or a next action not findable) is fixed or filed, with links, terminology, and authority boundaries in agreement.
+- **In scope:** the live developer-facing documents a recorded stumble names; the fix for that stumble only.
+- **Out of scope / Non-goals:** the remaining batch-by-batch readability audit (deliberately not taken, cut 2026-11-14: it grades an unobservable property; only observed stumbles are fixed); a separate walkthrough (the fresh-reader walk belongs to #515); the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
 - **Allowed behavior changes:** none to the CLI or generated output; documentation structure and wording only.
-- **Allowed reorganization:** only the smallest relocation a reshape needs, naming the ownership boundary it fixes; no document moves for tidiness.
-- **Verification:** every command, path, anchor, state condition, and ordering rule named in a reshaped section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass; the walkthrough record names no unresolved finding.
-- **Stop / defer:** a defect or product gap that a reshape exposes becomes its own entry; a reshape that would change a contract stops and is filed instead.
-- **Dependencies:** none; the walkthrough runs after the batches it covers.
-- **Approach:** direct, one reviewable batch per document group, each with the session-directed review loop.
-- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13 for the batches and the walkthrough that remain.
+- **Allowed reorganization:** only the smallest relocation a fix needs, naming the ownership boundary it fixes; no document moves for tidiness.
+- **Verification:** every command, path, anchor, state condition, and ordering rule named in a fixed section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass.
+- **Stop / defer:** a defect or product gap that a fix exposes becomes its own entry; a fix that would change a contract stops and is filed instead. If #515's walkthrough records no stumble, close with "no action".
+- **Dependencies:** #515 (supplies the recorded stumbles).
+- **Approach:** direct, one reviewable batch per recorded stumble group, each with the session-directed review loop.
+- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13, narrowed 2026-11-14.
 
 ## Adding a new entry
 
