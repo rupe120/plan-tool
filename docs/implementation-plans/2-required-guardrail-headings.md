@@ -51,10 +51,8 @@ steps:
   change_type: feature
   description: 'Make `scope-out` and `reground` write all three guardrail headings
     into the seeds they render. `scope_out.render_carved_seed`, `scope_out.render_carved_region_seed`
-    and `reground.render_rebaseline_seed` copy each heading''s body verbatim from
-    the source plan. When the source plan has no such heading, they write `_(TODO)_`
-    under it. Add a small block helper in `plan_tool/scope_fence.py`, next to `source_references_block`,
-    so the three renderers share the copy-or-`_(TODO)_` rule. The printed next steps
+    and `reground.render_rebaseline_seed` copy each heading''s body verbatim from the source plan only when the step 1 predicate accepts that heading in the source (exactly one, non-empty, not a placeholder, with `None` accepted). In every other source state (absent, empty, duplicated, or `_(TODO)_`) they write `_(TODO)_` under it, and the next step lists it as unfilled, never as inherited. Add a small block helper in `plan_tool/scope_fence.py`, next to `source_references_block`,
+    so every seed writer (these three and step 3''s `annotate`) shares the one copy-or-`_(TODO)_` rule. The printed next steps
     change in two places: `plan_tool/cli/scope_out_cmd.py:render_scope_out_result`,
     and the re-baseline notice in `plan_tool/reground.py`. They name each inherited
     heading as one to review before `create`, because a parent''s fence can be wrong
@@ -63,9 +61,7 @@ steps:
     path stay exactly as they are: scope-out narrowing the source plan and archiving
     carved detail files, the seed-file writes, and reground''s mark-done. Only the
     text of the seed changes. Tests in `tests/test_scope_out.py`, `tests/test_reground.py`
-    and `tests/cli/test_scope_out_cmd.py` cover three things: a source plan with guardrails
-    is copied verbatim, a `None` body included; a source plan without them gets `_(TODO)_`;
-    and the next-step text names the headings.'
+    and `tests/cli/test_scope_out_cmd.py` cover three things: a source plan with guardrails is copied verbatim, a `None` body included; a source plan whose heading is absent, empty, duplicated or `_(TODO)_` gets `_(TODO)_`; and the next-step text names each heading as inherited or unfilled.'
 - id: 3
   intent: Annotate's forward seeds pass the new check without a new model call, and
     the fence comes from the source rather than being made up.
@@ -84,8 +80,7 @@ steps:
   depends_on_notes:
     2: the shared copy-or-_(TODO)_ guardrail block helper in scope_fence.py
   description: 'Make `annotate` write all three guardrail headings into its carryover
-    seed. When the source document has a guardrail heading, `annotate_render.render_create_seed`
-    copies it verbatim through the step 2 block helper. When the source has none,
+    seed. When the source plan or document has a guardrail heading the step 1 predicate accepts, `annotate_render.render_create_seed` copies it verbatim through the step 2 block helper, under the same source-state rule. When it has no accepted heading,
     the existing single `annotate` call also returns the missing guardrail bodies,
     which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation`
     in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing
@@ -122,14 +117,12 @@ steps:
     put `None` where the row sets no fence. `roadmap_gates.validate_draft_seed_content`
     calls the step 1 predicate and returns one violation per offending heading. That
     makes a draft missing a heading consume an attempt in `materialize_plan_seed`''s
-    existing retry loop, with the violation message as the correction. The operator
-    still reviews the draft at `--accept-seed`. The destructive operations stay as
+    existing retry loop, with the violation message as the correction. The operator still reviews the draft at `--accept-seed`. The same gate also runs on `--accept-seed`, on seed promotion and in `roadmap_seed_manifest` classification, so a draft materialized before this change and lacking the headings is reported malformed there; its one stated route is `--refresh-seeds`, which re-materializes it with the headings, and the refusal message names that route. The destructive operations stay as
     they are: the draft-seed write and the sidecar that commits last, so an interrupted
     write is still detectable. Tests: gate cases in `tests/test_roadmap_gates.py`
     for missing, duplicated, empty, `_(TODO)_` and `None` headings; in `tests/test_roadmap.py`,
     a retry on a missing heading, plus the existing canned seed replies updated to
-    carry the headings; and a prompt-containment test that the template names all
-    three headings.'
+    carry the headings; a prompt-containment test that the template names all three headings; and an existing-draft case in which a pre-change draft without the headings is classified malformed, its refusal names `--refresh-seeds`, and a refresh clears it.'
 - id: 5
   intent: Live seeds still work after the refusal turns on, so the change breaks no
     current input.
@@ -143,7 +136,7 @@ steps:
   depends_on_notes:
     1: the predicate used to confirm every swept seed passes
   description: Add the three guardrail headings by hand to every live seed in `docs/implementation-plans/plan-seeds/`
-    and `plan-seeds/` that lacks one. 28 of the 31 seeds lack `## Scope guardrails`.
+    and `plan-seeds/` that lacks one; the step 1 predicate, run over both directories, defines which seeds lack a heading.
     Write each body from that seed's own content (its scope fence, Out of scope, Allowed
     reorganization), and write `None` where the seed states no such boundary. Do not
     add new scope, and leave every existing section's text unchanged. Archived seeds
@@ -272,11 +265,12 @@ command for the operator.
   | Tool | Source of the guardrail content |
   | --- | --- |
   | `roadmap --materialize` / `--refresh-seeds` | `prompts/roadmap-seed.md` requires the three sections in the draft, written from the accepted roadmap's plan row, with `None` where the row sets no fence. A draft missing one fails the same check. The operator reviews it at `--accept-seed`. |
-  | `annotate` | The source plan's guardrail sections, copied verbatim when it has them; otherwise the existing `annotate` call writes them, stating only fences the source supports (an exclusion or boundary it already implies) and adding no scope, mechanism or requirement. |
-  | `scope-out`, `reground` | The source plan's guardrail sections, copied verbatim. |
+  | `annotate` | The source plan or document's guardrail sections, copied verbatim when the step 1 rule accepts them; otherwise the existing `annotate` call writes them, stating only fences the source supports (an exclusion or boundary it already implies) and adding no scope, mechanism or requirement. |
+  | `scope-out`, `reground` | The source plan's guardrail sections, copied verbatim when the step 1 rule accepts them. |
 
-  A deterministic renderer whose source plan carries no guardrail heading (a
-  plan that predates this change) writes `_(TODO)_` under it, which `create`
+  A seed writer whose source carries no guardrail heading the rule accepts
+  (absent, empty, duplicated or `_(TODO)_`, as in a plan that predates this
+  change) writes `_(TODO)_` under it, which `create`
   refuses, and its printed next step says to fill the heading in. This is the
   only case left to a hand edit, because filling it would need a model call the
   renderer does not make.
@@ -344,7 +338,9 @@ See the `steps:` block in the frontmatter.
 
 - **Breaking existing seeds:** every live seed and every on-disk tool-written
   seed without the headings stops working. The tool changes and the sweep land
-  before the refusal.
+  before the refusal. A roadmap draft materialized before the change is reported
+  malformed at accept, promotion and classification; `--refresh-seeds` is its
+  stated route, and the refusal names it.
 - **A wrong inherited fence:** a carved seed can inherit a guardrail that
   contradicts its own scope. The printed next step asks for review; the tool
   does not try to judge it.
