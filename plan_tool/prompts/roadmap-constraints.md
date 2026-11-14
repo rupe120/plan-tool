@@ -39,11 +39,10 @@ stage has only a few attempts to spend.
 Work from those two texts alone. **Do not read the repository** — no file reads,
 no searches. Do not invent scope the brief does not imply.
 
-${smallest_proof_boundary_header} Rank and constrain only the
-concrete path and observable result selected by the domain artifact. Do not
-add a quality commitment, hosting shape, or decision for later roles,
-workflows, integrations, operating modes, or generalized mechanisms merely
-because they would make a later product more complete.
+${smallest_proof_boundary_header} Rank and constrain every requirement the
+brief states, as the domain artifact models it. Do not add a quality commitment, hosting shape, or
+decision for later roles, workflows, integrations, operating modes, or
+generalized mechanisms the brief does not ask for.
 
 ${smallest_proof_boundary_footer}
 

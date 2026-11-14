@@ -638,6 +638,29 @@ any bound feedback item authorizes a stack-row add; the callout is display only
 and never a defect class or an approval gate. Hand enrollment is deliberately
 excluded from the callout.
 
+### #533 — Roadmap requirements stay; the smallest proof governs how they are met
+
+Shipped 2026-11-14. Settled owner rule, do not re-open: the brief's stated
+requirements are the roadmap's requirements, and the smallest-proof rule applies
+to how each is met and to refusing unrequested work, never to narrowing a stated
+requirement unless the brief or the owner directs it. The shared header
+`roadmap-smallest-proof-boundary-header.md` carries the rule to stages 1–4. Stage
+1 keeps a requirement it reads as optional modeled and records a `pending`
+decision whose chosen option keeps it; stage 4 gives a plan row (`cross-cutting`
+when no component owns it) to any requirement the brief states that no upstream
+artifact carries, and prefers several small, independently verifiable plans
+without a count target. Work a stated requirement needs in order to be met
+(integration, delivery, deployment) counts as part of it. Deliberately not done:
+a revision-prompt guard, since the revision prompts are not given the brief, and
+a `pending` decision at stages 2–3 for an upstream omission, since it has no row
+to anchor to. `roadmap-seed.md` deliberately keeps its own paragraph,
+scoped to its plan row, instead of the shared header: the seed model drafts one
+row and never sees the brief, so a brief-level rule there would invite pulling
+sibling rows' scope into the seed. The cause was
+Loom's stage 1 cutting the brief-required repository browser
+(`docs/evidence/roadmap-run-measurements.md` §8). #534 measures the effect; #535
+owns the separate question of stage-authored `settled` decisions.
+
 ## Closed decisions
 
 ### #363 (authored-artifact upgrade route) — a release rule, not the roadmap #363 renumbered to #384

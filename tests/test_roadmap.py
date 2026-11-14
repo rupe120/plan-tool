@@ -1918,7 +1918,7 @@ class TestPlansPromptTemplate:
         assert "observed runtime or deployment evidence when the source outcome requires it" in text
         assert "drafting-only or benchmark execution restriction does not replace eventual completion evidence with document review" in text
         assert "stay within the smallest proof boundary above" in text
-        assert "do not add proof for capabilities outside the requested outcome" in text
+        assert "do not add proof for capabilities the brief does not ask for" in text
 
     @pytest.mark.parametrize("key", PLANS_ROW_KEYS)
     def test_plans_prompt_names_every_plans_row_key(self, key: str) -> None:
@@ -1980,10 +1980,78 @@ class TestPlansPromptTemplate:
         footer = (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_FOOTER_FILENAME).read_text(
             encoding="utf-8"
         )
-        assert "smallest end-to-end proof" in header
-        assert "eventual product capability" in header
+        flat_header = " ".join(header.split())
+        assert "The brief's stated requirements are this roadmap's requirements" in flat_header
+        assert "unless the brief or an owner decision narrows it" in flat_header
+        assert "The smallest proof governs how those requirements are met" in flat_header
+        assert "central outcome" not in flat_header
         assert "Stay at the roadmap altitude" in footer
         assert "`create` and `detail`" in footer
+
+    def test_every_stage_prompt_renders_the_requirements_stay_rule(self) -> None:
+        """Owner rule, 2026-11-14 (#533, docs/history/backlog-decisions.md): the brief's requirements stay;
+        the smallest proof limits how they are met, never which ones are kept."""
+        domain, constraints, components = (
+            _predecessor(_domain()),
+            _predecessor(_constraints()),
+            _predecessor(_components()),
+        )
+        def render(stage: RoadmapStage, *upstream: Any) -> str:
+            return roadmap._render_stage_prompt(
+                stage, slug=SLUG, brief=BRIEF, upstream=upstream
+            )
+
+        rendered = {
+            "domain": render(_domain_stage()),
+            "constraints": render(_constraints_stage(), domain),
+            "components": render(_components_stage(), domain, constraints),
+            "plans": render(_plans_stage(), domain, constraints, components),
+        }
+
+        for name, text in rendered.items():
+            flat = _flattened(text)
+            assert "the brief's stated requirements are this roadmap's requirements" in flat, name
+            assert "cannot be true without it" not in flat, name
+            assert "central outcome" not in flat, name
+            assert "central path" not in flat, name
+
+    def test_downstream_stages_take_requirements_from_the_brief(self) -> None:
+        """A stage-1 omission must not carry forward silently (the Loom path)."""
+        for text in (_constraints_prompt_text(), _components_prompt_text(), _plans_prompt_text()):
+            assert "every requirement the brief states" in _flattened(text)
+
+    def test_plans_prompt_gives_an_omitted_requirement_a_plan_row(self) -> None:
+        flat = _flattened(_plans_prompt_text())
+
+        assert "a requirement that no upstream artifact carries, give it a plan row anyway" in flat
+        assert "`cross-cutting` when no component owns it" in flat
+
+    def test_header_counts_the_work_a_requirement_needs_as_part_of_it(self) -> None:
+        """Delivery work was lost in Loom because nothing owned it; the boundary
+        must not read as refusing it."""
+        flat = _flattened(
+            (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_HEADER_FILENAME).read_text(
+                encoding="utf-8"
+            )
+        )
+
+        assert "work a stated requirement needs in order to be met" in flat
+        assert "is part of meeting it" in flat
+
+    def test_domain_prompt_keeps_an_optional_looking_requirement_modeled(self) -> None:
+        flat = _flattened(_domain_prompt_text())
+
+        assert "do not leave out or narrow a stated requirement" in flat
+        assert "a `pending` decision whose chosen option keeps it" in flat
+
+    def test_plans_prompt_prefers_small_plans_without_a_count_target(self) -> None:
+        flat = _flattened(_plans_prompt_text())
+
+        assert "prefer several small plans" in flat
+        assert "not a target plan count" in flat
+        # The preference must not displace the existing limits on division.
+        assert "do not impose a target plan count" in flat
+        assert "create a separate plan for every shared concern" in flat
 
 
 class TestPlansPromptExample:
@@ -6469,12 +6537,18 @@ class TestSeedPromptTemplate:
         )
 
     def test_seed_prompt_keeps_the_proof_and_roadmap_altitude(self) -> None:
+        """The seed model drafts one row and never sees the brief, so its
+        requirement source is the row, not the shared brief-level header."""
         text = _flattened(_seed_prompt_text())
 
-        assert "smallest end-to-end proof" in text
-        assert "eventual capability" in text
+        assert "this seed's requirements are the plan row's `intent`" in text
+        assert "narrow one only where the row's `non_goals` or an accepted decision does" in text
+        assert "leave sibling rows' scope to their own seeds" in text
+        assert "the smallest proof governs how they are met" in text
         assert "stay at the roadmap altitude" in text
         assert "for `create` and `detail` to ground later" in text
+        assert "smallest_proof_boundary" not in text
+        assert "cannot be true without it" not in text
 
     def test_seed_prompt_invites_repository_inspection(self) -> None:
         text = _seed_prompt_text()

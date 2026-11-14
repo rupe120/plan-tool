@@ -52,11 +52,11 @@ discharger.
 Work from those three texts alone. **Do not read the repository** — no file
 reads, no searches. Do not invent scope the brief does not imply.
 
-${smallest_proof_boundary_header} Name only the ownership,
-patterns, and stores the selected concrete path and observable result need.
-Do not add components for later roles, workflows, integrations, operating
-modes, or generalized mechanisms merely because they would make a later
-product more complete.
+${smallest_proof_boundary_header} Name the ownership, patterns, and stores
+that every requirement the brief states, and every constraint, needs, and no
+more. Do not add
+components for later roles, workflows, integrations, operating modes, or
+generalized mechanisms the brief does not ask for.
 
 ${smallest_proof_boundary_footer}
 

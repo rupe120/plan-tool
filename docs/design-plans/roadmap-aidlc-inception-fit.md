@@ -444,9 +444,9 @@ Eight changes, each tied to a framework convention and expressed in
   - A project whose upstream supplies no typed box, such as one with only a
     hand-written brief, gets an empty frame. `roadmap` then behaves as it
     does today, with the brief as content for the authoring stages.
-  - The smallest-proof boundary takes its central outcome from the frame,
-    citing the confirmed answer behind it, instead of asking each stage to
-    find it in a brief.
+  - The smallest-proof boundary takes the requirements it keeps from the frame,
+    citing the confirmed answer behind each, instead of asking each stage to
+    find them in a brief.
   - Seed drafting copies into each seed the frame items its plan row cites,
     so `create`, `detail`, and `run` inherit the box through the seed.
 - **Translation into existing concepts:** the box also lives in the

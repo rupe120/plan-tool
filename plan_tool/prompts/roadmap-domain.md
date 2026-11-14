@@ -20,11 +20,15 @@ stage that goes looking is slower and less reproducible for nothing. Do not
 invent scope the brief does not imply: model what it describes, at the altitude
 it describes it.
 
-${smallest_proof_boundary_header} Select one concrete path and an
-observable result from the brief. Keep an entity, rule, workflow, or decision
-only when that result cannot be true without it. Do not model later roles,
-workflows, integrations, operating modes, or generalized mechanisms merely
-because they would make a later product more complete.
+${smallest_proof_boundary_header} Model every entity, rule, workflow, and
+decision the brief's requirements need, each as simply as its requirement
+allows. Do not leave out or narrow a stated requirement because the brief's
+main workflow could finish without it. When the brief seems to leave one
+optional, keep it modeled and record a `pending` decision whose chosen option
+keeps it: the owner settles it to keep the requirement, or narrows it through
+feedback on this artifact. Do not model
+later roles, workflows, integrations, operating modes, or generalized mechanisms
+the brief does not ask for.
 
 ${smallest_proof_boundary_footer}
 

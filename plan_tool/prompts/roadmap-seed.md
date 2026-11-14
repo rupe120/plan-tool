@@ -119,10 +119,14 @@ Describe the requested plan row's scope only. Preserve discharged constraints,
 the accepted plan ordering, and every non-goal even when repository inspection
 offers a tempting adjacent change.
 
-The roadmap row is one part of the roadmap's smallest end-to-end proof, not an
-opening to build its eventual capability. Do not turn a nearby role, workflow,
-integration, operating mode, or generalized mechanism into seed scope merely
-because it would make a later product more complete. Stay at the roadmap
-altitude: preserve the outcome, boundaries, and ordered handoff; leave source
-files, APIs, storage schemas, class or method layout, algorithms, and test
-mechanics for `create` and `detail` to ground later.
+This seed's requirements are the plan row's `intent` and the parts of the
+accepted artifacts that row covers: its components and the entities,
+constraints, and decisions they own. Keep all of them, and narrow one only where
+the row's `non_goals` or an accepted decision does; leave sibling rows' scope to
+their own seeds. The smallest proof governs how they are met: put an abstraction,
+record, boundary, or configuration surface into the seed only when one of those
+requirements cannot be met without it. Do not turn a nearby role, workflow,
+integration, operating mode, or generalized mechanism into seed scope. Stay at
+the roadmap altitude: preserve the outcome, boundaries, and ordered handoff;
+leave source files, APIs, storage schemas, class or method layout, algorithms,
+and test mechanics for `create` and `detail` to ground later.
