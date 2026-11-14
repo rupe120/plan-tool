@@ -508,6 +508,6 @@ without an owner having answered it.
 ownership gap at stage 3 for work stage 2 already stated, and the owner-specific
 infrastructure choices could not have come from these inputs at all. Stage 4
 was not where any of the four first went missing. The stage 1 finding led to the
-owner's settled rule in BACKLOG #533: the brief's requirements stay the
+owner's settled rule recorded under #533 in `docs/history/backlog-decisions.md`: the brief's requirements stay the
 requirements, and the smallest-proof rule applies to how they are achieved.
 The model runs of #534 are not yet recorded here.

@@ -9,8 +9,7 @@ move only an admitted `open` request to `awaiting-review`.
 For every non-deterministic update, make the smallest truthful response that is
 proportional to the selected reviewer request and the target's recorded role.
 When the target has one, use its declared plan intent. The request does not
-authorize an eventual capability merely because it would be useful; a
-requirement the brief states is never an eventual capability. Keep the
+authorize an eventual capability merely because it would be useful. Keep the
 selected artifact at its own altitude: clarify its outcome, tradeoff,
 ownership, or ordering only when the issued authority permits it;
 do not introduce source files, APIs, storage schemas, class or method layout,

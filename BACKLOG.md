@@ -638,7 +638,7 @@ working straight down the tiers.
       (build, deploy, environment), then assign every item to exactly one plan;
       `--from-stage 4`. No new gate code;
     - *baseline-1* — the prompts as they were before #533 shipped (a throwaway
-      branch at its parent commit), from the brief (all four stages), once; the
+      branch at `ae498e16a`, the last `main` commit without it), from the brief (all four stages), once; the
       first stored version is the second sample;
     - *R* — the shipped #533 prompts (requirements stay; smallest proof governs
       how; the stage 4 small-plan preference), from the brief;
@@ -731,7 +731,9 @@ working straight down the tiers.
      an operator settles it. Simple, but every option point becomes owner work.
   4. **Keep the design and record the limit.** #533's requirements-stay rule
      (shipped 2026-11-14) removed the prompt wording that produced this cut, and
-     stage 1 now records a `pending` decision instead of dropping a requirement; the residual risk is
+     stage 1 now keeps a requirement it reads as optional and records it
+     `pending`. A model that narrows anyway can still write `settled`; that is
+     the residual risk this option accepts; the residual risk is
      documented.
 - **Deliberately not an option:** judging from a decision's wording whether it
   narrows the brief or should have been `pending`. That is a content judgment

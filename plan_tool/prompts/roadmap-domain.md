@@ -25,7 +25,8 @@ decision the brief's requirements need, each as simply as its requirement
 allows. Do not leave out or narrow a stated requirement because the brief's
 main workflow could finish without it. When the brief seems to leave one
 optional, keep it modeled and record a `pending` decision whose chosen option
-keeps it, so the owner can choose to narrow it. Do not model
+keeps it: the owner settles it to keep the requirement, or narrows it through
+feedback on this artifact. Do not model
 later roles, workflows, integrations, operating modes, or generalized mechanisms
 the brief does not ask for.
 

@@ -1989,7 +1989,7 @@ class TestPlansPromptTemplate:
         assert "`create` and `detail`" in footer
 
     def test_every_stage_prompt_renders_the_requirements_stay_rule(self) -> None:
-        """Owner rule, 2026-11-14 (BACKLOG #533): the brief's requirements stay;
+        """Owner rule, 2026-11-14 (#533, docs/history/backlog-decisions.md): the brief's requirements stay;
         the smallest proof limits how they are met, never which ones are kept."""
         domain, constraints, components = (
             _predecessor(_domain()),
@@ -2018,9 +2018,25 @@ class TestPlansPromptTemplate:
     def test_downstream_stages_take_requirements_from_the_brief(self) -> None:
         """A stage-1 omission must not carry forward silently (the Loom path)."""
         for text in (_constraints_prompt_text(), _components_prompt_text(), _plans_prompt_text()):
-            flat = _flattened(text)
-            assert "every requirement the brief states" in flat
-            assert "do not follow the omission" in flat
+            assert "every requirement the brief states" in _flattened(text)
+
+    def test_plans_prompt_gives_an_omitted_requirement_a_plan_row(self) -> None:
+        flat = _flattened(_plans_prompt_text())
+
+        assert "a requirement that no upstream artifact carries, give it a plan row anyway" in flat
+        assert "`cross-cutting` when no component owns it" in flat
+
+    def test_header_counts_the_work_a_requirement_needs_as_part_of_it(self) -> None:
+        """Delivery work was lost in Loom because nothing owned it; the boundary
+        must not read as refusing it."""
+        flat = _flattened(
+            (prompts_dir() / roadmap.SMALLEST_PROOF_BOUNDARY_HEADER_FILENAME).read_text(
+                encoding="utf-8"
+            )
+        )
+
+        assert "work a stated requirement needs in order to be met" in flat
+        assert "is part of meeting it" in flat
 
     def test_domain_prompt_keeps_an_optional_looking_requirement_modeled(self) -> None:
         flat = _flattened(_domain_prompt_text())
@@ -2036,11 +2052,6 @@ class TestPlansPromptTemplate:
         # The preference must not displace the existing limits on division.
         assert "do not impose a target plan count" in flat
         assert "create a separate plan for every shared concern" in flat
-
-    def test_revision_prompts_never_treat_a_stated_requirement_as_eventual(self) -> None:
-        for name in (roadmap.REVISION_PROMPT_FILENAME, "roadmap-revision-update-judgment.md"):
-            flat = _flattened((prompts_dir() / name).read_text(encoding="utf-8"))
-            assert "a requirement the brief states is never an eventual capability" in flat, name
 
 
 class TestPlansPromptExample:
@@ -6531,7 +6542,8 @@ class TestSeedPromptTemplate:
         text = _flattened(_seed_prompt_text())
 
         assert "this seed's requirements are the plan row's `intent`" in text
-        assert "do not narrow one unless an accepted decision does" in text
+        assert "narrow one only where the row's `non_goals` or an accepted decision does" in text
+        assert "leave sibling rows' scope to their own seeds" in text
         assert "the smallest proof governs how they are met" in text
         assert "stay at the roadmap altitude" in text
         assert "for `create` and `detail` to ground later" in text

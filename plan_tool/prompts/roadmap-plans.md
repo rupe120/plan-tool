@@ -42,7 +42,7 @@ reads, no searches. Do not invent scope the brief does not imply.
 
 ${smallest_proof_boundary_header} The plan rows collectively deliver every
 requirement the brief states, as the upstream artifacts carry it, each through
-the simplest route that meets it. When the brief states a requirement the artifact below leaves out, do not follow the omission: record a `pending` decision that names the missing requirement for the owner. Each plan's `non_goals` must name the nearby eventual capability it
+the simplest route that meets it. When the brief states a requirement that no upstream artifact carries, give it a plan row anyway — `cross-cutting` when no component owns it — and say in the narrative that the upstream artifacts left it out. Each plan's `non_goals` must name the nearby eventual capability it
 deliberately leaves for later. Do not add later roles, workflows, integrations,
 operating modes, or generalized mechanisms the brief does not ask for. Prefer
 several small plans, each with its own verifiable result, over one broad plan
