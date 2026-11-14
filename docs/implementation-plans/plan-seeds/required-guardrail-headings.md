@@ -57,7 +57,7 @@ command for the operator.
   | Tool | Source of the guardrail content |
   | --- | --- |
   | `roadmap --materialize` / `--refresh-seeds` | `prompts/roadmap-seed.md` requires the three sections in the draft, written from the accepted roadmap's plan row, with `None` where the row sets no fence. A draft missing one fails the same check. The operator reviews it at `--accept-seed`. |
-  | `annotate` | The source plan's guardrail sections, copied verbatim when it has them; otherwise the existing `annotate` call writes them from the source and its judgment. |
+  | `annotate` | The source plan's guardrail sections, copied verbatim when it has them; otherwise the existing `annotate` call writes them, stating only fences the source supports (an exclusion or boundary it already implies) and adding no scope, mechanism or requirement. |
   | `scope-out`, `reground` | The source plan's guardrail sections, copied verbatim. |
 
   A deterministic renderer whose source plan carries no guardrail heading (a
@@ -65,6 +65,10 @@ command for the operator.
   refuses, and its printed next step says to fill the heading in. This is the
   only case left to a hand edit, because filling it would need a model call the
   renderer does not make.
+- **`annotate`'s guardrail instruction is prompt guidance only.** It carries
+  the proportionality rule `synthesize-body.md` applies to plan bodies, in one
+  line in `prompts/annotate.md`; whether a written fence is proportionate is not
+  checked, since that is a judgment of content.
 - **Inherited guardrails are reviewed, not trusted.** A carved or rebaselined
   seed's inherited fence can be wrong for the narrower plan (a parent's guardrail
   may exclude the very region carved out). The tool's printed next step names

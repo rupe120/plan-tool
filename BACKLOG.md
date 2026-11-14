@@ -495,7 +495,9 @@ working straight down the tiers.
     already carries it); the four seed-writing tools populating all three
     headings (`roadmap --materialize` from its prompt; `annotate`, `scope-out`
     and `reground` by copying the source plan's guardrails, with `annotate`'s
-    existing call writing them when the source has none, and a deterministic
+    existing call writing them when the source has none, told in
+    `prompts/annotate.md` to state only fences the source supports and to add no
+    scope, mechanism or requirement, and a deterministic
     renderer writing `_(TODO)_` when its source plan has none); the live seeds
     in both seed directories, populated by hand; `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence",
