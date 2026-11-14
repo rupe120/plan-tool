@@ -572,6 +572,182 @@ working straight down the tiers.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design and its
   Gate 1 rounds. Cut to a D-only label 2026-11-14.
 
+**#533 — `roadmap` seed materialization lacks the smallest-proof necessity test, and stage 4 does not prefer several small plans over one broad one**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **What:** two prompt changes so a roadmap breaks into a broad array of small,
+  independently verifiable plans whose seeds carry only what the proof needs.
+  (1) `prompts/roadmap-seed.md` writes each draft seed but does not receive the
+  shared smallest-proof boundary that stages 1–4 get
+  (`roadmap-smallest-proof-boundary-header.md` / `-footer.md`, substituted in
+  `roadmap.py` at the `smallest_proof_boundary_header` variable); it carries its
+  own shorter paragraph (`roadmap-seed.md`, "The roadmap row is one part of the
+  roadmap's smallest end-to-end proof…") with no necessity test. `create`
+  preserves a seed's scope as its fence, so a design widened at
+  materialization is carried forward unchallenged. (2) `prompts/roadmap-plans.md`
+  (stage 4) already keeps a plan only when the proof needs it, splits "overly
+  broad scopes into bounded plan rows" and expects several plans per component
+  where needed, but states no preference between one broad plan and several
+  small ones inside the proof.
+- **Evidence:** read from the prompts at HEAD on 2026-11-14. No measured roadmap
+  run shows over-broad plans or over-scoped seeds; this is an owner direction
+  (Origin), not a measured defect.
+- **Effort:** small. Two prompt files and `_render_seed_materialize_prompt`'s
+  variables; no schema or gate change.
+- **Risks / fallout:** a granularity bias can tip into one plan per concern,
+  which `roadmap-plans.md` already forbids ("do not … create a separate plan for
+  every shared concern"); the new line must keep that and the no-target-count
+  rule. Prompt-assembly tests that pin `roadmap-seed.md`'s rendered text change.
+- **Dependencies:** none. Independent of #532, which also edits `roadmap-seed.md`
+  (guardrail headings); whichever lands second rebases its prompt edit.
+- **Scope contract:**
+  - **Outcome:** the seed-materialization prompt carries the shared
+    smallest-proof boundary plus a necessity test for seed scope, and the stage
+    4 prompt states a preference for several small, independently verifiable
+    plans over one broad plan within the proof.
+  - **In scope:** `prompts/roadmap-seed.md` (receive the shared header and
+    footer in place of its own paragraph, plus one necessity line: scope stays
+    in the seed only when the row's result cannot be true without it, and each
+    added abstraction, record or configuration surface needs a current
+    requirement that fails without it); `_render_seed_materialize_prompt`'s
+    substitution; `prompts/roadmap-plans.md` (one preference line: within the
+    proof, prefer several small plans, each with its own verifiable result, over
+    one broad plan, and split where a part can ship and be verified on its
+    own); the prompt-assembly tests.
+  - **Out of scope / Non-goals:** deliberately no target or minimum plan count,
+    no plan-size cap, and no gate, finding or exit-code change on plan or seed
+    size, since "small enough" is a judgment of content. No change to stages
+    1–3, to `create`'s `synthesize-body.md`, or to the roadmap artifact schema.
+  - **Allowed behavior changes:** the two prompts' text, so generated roadmaps
+    and draft seeds may differ.
+  - **Allowed reorganization:** `roadmap-seed.md`'s own smallest-proof
+    paragraph is replaced by the shared header and footer, because two copies
+    of one rule drift.
+  - **Verification:** the rendered seed prompt contains the shared header,
+    footer and necessity line; the rendered stage 4 prompt contains the
+    preference line and still contains the no-target-count and
+    no-plan-per-shared-concern rules (assert keys, not prose). Optionally,
+    re-run a recorded brief and record the plan count as n=1 provenance in
+    `docs/evidence/roadmap-run-measurements.md`; it gates nothing.
+  - **Stop / defer:** if the preference produces fragmented plans on a real
+    run, record it as evidence and file the correction; do not add a count rule.
+- **Origin:** 2026-11-14, owner, after a review found the roadmap seed prompt
+  lacked the necessity test plan creation applies: "we should also include this
+  in the roadmap to plan/seed breakdown to encourage a broad array of smaller
+  plans."
+
+**#534 — Experiment: from Loom's original brief and artifacts, can the roadmap produce the plans a human later had to add?**
+
+- **Labels:** Route `direct`
+  · Readiness `ready`
+  · Tier `experienced`
+  · Principle `converge-on-correct-plan`
+- **What:** a bounded experiment on Loom's `loom-aidlc-mvp` roadmap to choose
+  between the fixes for a thin plan list, before building any of them. The
+  plan list is the weak point of the roadmap workflow: it tends to mirror the
+  component list, and nothing checks it for completeness below "every
+  component is on some plan" (`roadmap_gates.check_component_plan_coverage`).
+  **The cause may not be in stage 4.** Stage 4 can only divide work that
+  stages 1–3 surfaced: a concern no component owns (delivery, infrastructure,
+  environments) has no plan to land on, a constraint stage 2 never states
+  gives stage 4 no reason to plan for it, and the brief's own enumeration
+  shapes the row counts downstream. The experiment therefore locates the
+  stage where the missing work first drops out, and the fix may touch the
+  brief guidance, `roadmap-domain.md`, `roadmap-constraints.md`,
+  `roadmap-components.md`, `roadmap-plans.md` or `roadmap-seed.md`.
+- **Evidence (Loom at `44c22cc`, read 2026-11-14):**
+  - `loom-aidlc-mvp`'s first stored version (`9590a8964b…`) derived **5 plans
+    from 5 components**, all `keep`. The accepted head (`c7743c56d7…`, recorded
+    in `.roadmap-versions/accepted-head.json`) has **9 plans from the same 5
+    components**, after 21 versions of reviewer feedback. The four plans a
+    human had to add are `repository-browse-and-reference`,
+    `cdk-infrastructure-and-environments`, `static-spa-delivery` and
+    `bitbucket-deployment-pipelines`. All nine were then created in Loom; seven
+    are completed.
+  - Across Loom's seven roadmap lineages, plans per component run 5/5, 5/6, 7/9,
+    9/7, 7/6, 11/7 and 5/5 (lineage folders' `04-roadmap.md`); `split` is rare.
+  - Loom's handoffs record a related finding: "an enumeration in the brief
+    becomes a row count in the roadmap"
+    (`loom/handoffs/2026-09-08-roadmap-exercise-reframe.md`).
+  - The added plans are mostly delivery and infrastructure work that no
+    component owned, so component coverage could not have caught them.
+- **The experiment:**
+  - **Input:** `loom-aidlc-mvp`'s source brief and the stage 1–3 artifacts of
+    its first stored version, copied into a throwaway repository under this
+    clone's `.tmp/`. Never run against Loom's own files and never write to
+    them. Using the first version's inputs keeps the reviewer's later feedback
+    out of the input.
+  - **Reference list:** the accepted head's nine plans. Recall is how many of
+    them a run produces a matching plan for, matched by hand and recorded with
+    the reasoning. Extra plans are listed separately for the owner to judge as
+    useful or noise.
+  - **Arms**, each run twice from the same input with `--from-stage 4`, each
+    from its own throwaway plan-tool branch carrying only that arm's prompt
+    edit:
+    - *baseline* — the current `roadmap-plans.md`, measuring run-to-run spread;
+    - *A* — #533's stage 4 change, plus one line saying the necessity test caps
+      total scope, not the number of plans;
+    - *B* — a prompt-only work inventory: stage 4 first lists each flow hop,
+      store, constraint discharge, producer/consumer handoff and delivery
+      concern (build, deploy, environment) from the artifacts, then assigns
+      every item to exactly one plan. No new gate code;
+    - *upstream* — run only if the trace below shows the missing work is
+      absent before stage 4: the smallest prompt change at the stage where it
+      drops out (for example, `roadmap-components.md` naming an owner for
+      delivery and environment work), re-run from that stage with `--from-stage
+      N` and the baseline stage 4 prompt, twice.
+  - **Trace first:** before the arms run, read the first version's brief and
+    stage 1–3 artifacts for each of the four plans the human added, and record
+    the earliest stage where its work appears (or that it never does). This
+    costs no model calls and decides whether the *upstream* arm runs.
+  - **Recorded per run:** plan count, disposition mix, recall against the
+    reference with each match, extra plans, attempts, prompt bytes, wall time
+    and cost (§6 of `docs/evidence/roadmap-run-measurements.md` cost about
+    $2.73 per stage 4 run, so the six stage 4 runs cost roughly $15–20; an
+    *upstream* run re-runs more stages and costs more).
+  - **Decision the result feeds:** if A recovers the reference list, ship #533
+    with A's line and stop. If B recovers materially more than A, file the
+    work-inventory design (an inventory artifact plus an every-item-owned gate)
+    as a `plan` route at `architect` tier. If the *upstream* arm recovers what
+    the stage 4 arms cannot, file the change at the stage the trace named,
+    which may be the brief guidance rather than a prompt. The fixes can
+    combine; each is filed as its own entry.
+- **Effort:** small to medium. Copying artifacts, two prompt edits on throwaway
+  branches, six stage 4 runs, and one evidence section.
+- **Risks / fallout:** n=2 per arm on one roadmap is provenance, not proof, and
+  gates nothing. Hand-matching recall is a judgment, so each match is written
+  down. The head's nine plans are one reviewer's answer, not ground truth.
+- **Dependencies:** none. Feeds #533 (hold its merge until arm A is read) and
+  any work-inventory entry filed after it.
+- **Scope contract:**
+  - **Outcome:** a dated section in `docs/evidence/roadmap-run-measurements.md`
+    recording the stage where each missing plan's work first drops out, plan
+    count and recall against the reference list for each run of every arm, and
+    the decision it supports.
+  - **In scope:** the throwaway input copy, the no-model trace across the
+    brief and stages 1–3, the stage 4 prompt variants and the conditional
+    *upstream* variant on throwaway branches, their runs, and the evidence
+    section.
+  - **Out of scope / Non-goals:** deliberately no merged prompt change (#533
+    carries that, and upstream changes get their own entries), no new gate,
+    inventory artifact, schema change or stage split (splitting stage 4 into
+    several calls is considered only if every arm fails), no prompt-override flag added to plan-tool, no
+    write to Loom, and no change to Loom's roadmap or plans.
+  - **Allowed behavior changes:** none in shipped code.
+  - **Allowed reorganization:** none.
+  - **Verification:** the evidence section lists, per run, the command, the
+    arm's prompt diff, the counts, and each recall match with its reason.
+  - **Stop / defer:** a defect met while running (a gate, a parse failure, a
+    resume problem) is filed in BUG_BACKLOG.md and the experiment continues if
+    it can.
+- **Origin:** 2026-11-14, owner: "I feel like the list of plans in the roadmap
+  is a tripping point and a weak spot in the overall workflow right now," and
+  "create a backlog item to setup an experiment based on the loom artifacts to
+  attempt to build a more comprehensive list of plans."
+
 **#502 — A refused `create` prints a stable reason token an external driver can read**
 
 - **Labels:** Route `direct`
