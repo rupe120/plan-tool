@@ -131,7 +131,7 @@ not required to exit this arc's original job.
 
 The original #377/#378 lane (including the former #379) changes guidance content and installer
 plumbing only; it does not change CLI runtime behavior. The public onboarding
-extension below permits only #509’s bounded hosting-configuration reader. It does not add a seed-generating command (#377's own Non-goals),
+extension below adds no runtime change (#509 is router guidance only). It does not add a seed-generating command (#377's own Non-goals),
 a lint or gate on unrecorded discoveries (#378's), an automated backlog
 staleness sweep (the former #379's), or a `.plan-tool/project.json` tracker-location key
 (#378's, absent evidence the ask-once fallback falls short). It does not
@@ -141,13 +141,13 @@ already settled (one shared reference, not three).
 ## Public onboarding extension
 
 Choose #508 for portable guidance versus local team policy, #509 for consuming
-repository hosting configuration, #511 for installation/refresh clarity, and
+repository hosting-provider guidance in the router, #511 for installation/refresh clarity, and
 #512 for model choice and rationale. The recipe-consistency prerequisite is
 satisfied (skill-router repair). #377 remains the owner of
 seed-authoring support; #378 retains tracker convention discovery and
-stale-entry handling. #509 is a bounded extension of this arc into runtime
-configuration, limited to giving the installed session a verified hosting target;
-it does not authorize a general hosting framework.
+stale-entry handling. #509 is router guidance telling the installed session to
+detect the hosting provider from the remote and confirm it with the user; it adds
+no configuration surface and does not authorize a hosting framework.
 
 Public-content sanitization (#513) and distribution/history decisions (#514)
 remain separate release prerequisites. README walkthrough #510 and fresh-user

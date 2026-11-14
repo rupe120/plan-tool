@@ -7484,60 +7484,42 @@ evidence. It is not an active implementation contract.
 - **Origin:** `roadmap-versioned-from-birth` code review 1, 2026-10-06; producer-less
   stage-loop names added from code review 2, 2026-10-06.
 
-**#453 — Scope the first-run resume directory by plans directory, and stop `INDEX.md` from naming a stale accepted head after a failed refresh**
+**#453 — Stop `INDEX.md` from naming a stale accepted head after a failed refresh**
 
-- **What:** two derived-state scoping gaps from the version-only stage run.
-  (a) The resume directory is `.plan-tool/runs/<slug>/roadmap-stage-resume/`,
-  keyed by (repo root, slug) in `roadmap_stage_resume.resume_dir_path`, while the
-  accepted head and the writer guard are keyed by plans directory. Two plans
-  directories (`--plans-dir` or `PLAN_TOOL_PLANS_DIR`) in one repo that share a
-  slug share one resume directory: `_require_no_accepted_head` deletes it beside
-  plans dir A's head although plans dir B's aborted run holds paid stages in it,
-  and a first run against B reuses stages an aborted run against A held when the
-  brief text matches. `brief.digest` records only the brief digest, and the
-  writer lock does not span the two plans directories.
-  (b) `refresh_roadmap_index` warns and returns when `collect_index_rows` raises
-  `RoadmapVersionError` (one unreadable `version.json`, `candidate-evidence.json`,
-  terminal resolution, or admission file), so the previous `INDEX.md` stays on
-  disk after a promotion and still labels the old version `accepted head`.
-- **Why:** (a) a destructive cleanup and a reuse check act on state they cannot
-  show belongs to the current plans directory; (b) a file generated for people
-  can name the wrong head with only a transient stderr line as the signal.
-- **Verified:** by reading `roadmap_stage_resume.py` (`resume_dir_path`,
-  `delete_resume`, `write_brief_digest`), `roadmap.py` (`_require_no_accepted_head`,
-  `_run_roadmap`, `refresh_roadmap_index`, `load_accepted_head(plans_dir=...)`),
-  and `roadmap_index.py` (`collect_index_rows`, `write_roadmap_index`). No
-  program was run for (a) or (b); a reproducing test is the first step of the fix.
-- **Effort:** small — (a) one scoping decision and its tests; (b) one degrade
-  rule and its tests.
-- **Approach:** `direct`; the scoping choice for (a) is a design decision to
-  settle first: a plans-dir digest in the directory path, or the resolved plans
-  dir recorded beside `brief.digest` and a mismatch treated like a digest
-  mismatch. For (b): unlink `INDEX.md`, rewrite it with a one-line could-not-refresh
-  body, or degrade per version in `collect_index_rows` (list an unreadable
-  version with status `unreadable`).
+- **What:** `refresh_roadmap_index` warns and returns when `collect_index_rows`
+  raises `RoadmapVersionError` (one unreadable `version.json`,
+  `candidate-evidence.json`, terminal resolution, or admission file), so the
+  previous `INDEX.md` stays on disk after a promotion and still labels the old
+  version `accepted head`.
+- **Why:** a file generated for people can name the wrong head with only a
+  transient stderr line as the signal.
+- **Verified:** by reading `roadmap.py` (`refresh_roadmap_index`) and
+  `roadmap_index.py` (`collect_index_rows`, `write_roadmap_index`). No program
+  was run; a reproducing test is the first step of the fix.
+- **Effort:** small — one degrade rule and its tests.
+- **Approach:** `direct`; on a refresh failure, rewrite `INDEX.md` with a
+  one-line could-not-refresh body naming the failure, so the file never names a
+  superseded head as current.
 - **Dependencies:** none; independent of the BUG_BACKLOG.md ROADMAP entry
   "A publication journal left by a crash blocks most roadmap writers until a
   stage run, and a non-root journal beside a head can only be removed by hand".
-- **Outcome:** a resume directory is only deleted or reused by the plans directory
-  that wrote it, and a refresh failure never leaves an `INDEX.md` that names a
+- **Outcome:** a refresh failure never leaves an `INDEX.md` that names a
   superseded accepted head without saying it is stale.
-- **In scope:** `roadmap_stage_resume.py`, its call sites in `roadmap.py`,
-  `roadmap_index.py`, `refresh_roadmap_index`, and the tests and docs
-  (`ROADMAP_FORMAT.md`, `docs/how-to/roadmap.md` § 3) that pin them.
+- **In scope:** `refresh_roadmap_index`, `roadmap_index.py`, and the tests and
+  docs (`ROADMAP_FORMAT.md`, `docs/how-to/roadmap.md` § 3) that pin them.
 - **Out of scope / Non-goals:** changing the head, journal, or version-store
-  formats; a cross-plans-dir lock; resuming across plans directories.
-- **Allowed behavior changes:** the resume path (or its recorded owner) changes;
-  a refresh failure rewrites or removes `INDEX.md`.
+  formats; per-version degrade in `collect_index_rows` (deliberately not taken:
+  the could-not-refresh body is the smaller change); scoping the first-run
+  resume directory by plans directory (deliberately not taken, cut 2026-11-14:
+  it needs two plans directories sharing a slug in one repo, which no run has
+  produced; revisit only if one is observed); a cross-plans-dir lock.
+- **Allowed behavior changes:** a refresh failure rewrites `INDEX.md`.
 - **Allowed reorganization:** none.
-- **Verification:** a test with two plans directories sharing a slug (one with a
-  head, one holding stages) showing the held stages survive the head refusal and
-  are not reused across directories; a test with one unreadable historic record
-  after a promotion showing `INDEX.md` does not name the old head as current; the
-  full suite passes.
-- **Stop / defer:** if scoping the directory needs a migration for existing
-  held stages, discard them (they cost only regeneration) and record that here.
-- **Route:** `direct` · **Readiness:** `decision-needed` · **Tier:** `experienced`.
+- **Verification:** a test with one unreadable historic record after a
+  promotion showing `INDEX.md` does not name the old head as current; the full
+  suite passes.
+- **Stop / defer:** none beyond the fence above.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
   **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** `roadmap-versioned-from-birth` code review 4, 2026-10-06.
@@ -7590,25 +7572,22 @@ evidence. It is not an active implementation contract.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` run, 2026-10-06.
 
-**#455 — Give a failed `run` step's retry the complete failure list, and decide whether the run gets one bounded repair attempt**
+**#455 — Give a failed `run` step's retry the complete failure list**
 
-- **What:** (a) the failure note a retry sees keeps a short pytest tail. In step 3
+- **What:** the failure note a retry sees keeps a short pytest tail. In step 3
   attempt 2, 3 of the first 6 failures were not visible to the model, and the step
   needed manual repair. A stale tail also persists in `status_note` after the step
-  later advances. (b) The run halts after one failed suite gate with no in-run
-  repair attempt: it halted at steps 3 through 9, and steps 4, 5, 7, 8, and 9 were
-  small mechanical fixes (a comment, an import, a helper, snapshot helpers,
-  fixtures) that each cost a manual round trip and a WIP commit.
-- **Absorbs #88 (merged 2026-11-14):** a `run` step whose `claude` call
-  succeeded but whose post-call test-authoring or drift gate failed re-spends
-  the whole call on re-run. The remedy is to re-evaluate the post-call gates
-  against the tree already on disk without a new call, which is the
-  bounded-repair question in part (b); the call's output is tree edits already
-  on disk, so memoizing it is the wrong frame. Acceptance: a post-gate failure
-  re-runs without a new model call when inputs are unchanged. Reuse
-  `checkpoint.py` only if the re-evaluation needs saved state. Resume is
-  otherwise already durable per `claude` call in `detail` and
-  `completeness-audit`; no second stage ledger.
+  later advances.
+- **Absorbs #88 (merged 2026-11-14), parked:** a `run` step whose `claude`
+  call succeeded but whose post-call test-authoring or drift gate failed
+  re-spends the whole call on re-run. The remedy is to re-evaluate the
+  post-call gates against the tree already on disk without a new call; the
+  call's output is tree edits already on disk, so memoizing it is the wrong
+  frame. Acceptance: a post-gate failure re-runs without a new model call when
+  inputs are unchanged. Reuse `checkpoint.py` only if the re-evaluation needs
+  saved state. Resume is otherwise already durable per `claude` call in
+  `detail` and `completeness-audit`; no second stage ledger. This remains
+  open and is parked with the bounded-repair attempt (see Parked below).
 - **Why:** a retry that cannot see the failures it must fix cannot fix them, and a
   halt costs a human turn for failures the model could repair when shown the
   full list.
@@ -7626,35 +7605,41 @@ evidence. It is not an active implementation contract.
   `run --accept` (shipped 2026-10-10) closes. Second instance: `roadmap-stack-propagation` step 1, observed
   2026-10-08. After `.tmp/roadmap-stack-propagation.run.log` failed on one test,
   the re-run (`run-step1-retry2.log`, 48 s) modified no declared file.
-- **Effort:** small for (a); medium for (b), which interacts with the attempt
-  limits and with the no-re-spend rule absorbed from #88 (a repair attempt must not
-  re-spend an already-successful call).
-- **Approach:** (a) `direct`: carry the failed test ids with one error line each
-  (`pytest -rf` summary) and clear the note when the step advances. (b) decide
-  first: a bounded repair attempt that passes the full failure list back, or keep
-  halting and rely on (a).
+- **Effort:** small.
+- **Approach:** `direct`: carry the failed test ids with one error line each
+  (`pytest -rf` summary) into the retry prompt and clear the note when the step
+  advances.
+- **Parked (split from this entry, cut 2026-11-14):** an in-run bounded
+  repair attempt. The run halts after one failed suite gate: it halted at steps
+  3 through 9, and steps 4, 5, 7, 8, and 9 were small mechanical fixes (a
+  comment, an import, a helper, snapshot helpers, fixtures) that each cost a
+  manual round trip and a WIP commit. Whether to add the attempt is decided
+  after this entry ships and its effect on retries is observed; it interacts
+  with the attempt limits and with the no-re-spend rule absorbed from #88. It
+  needs its own entry with an id when taken up; this paragraph is its
+  placeholder.
 - **Dependencies:** #87 (same gate family).
 - **Outcome:** a retry sees every failed test id from the previous gate with a
-  one-line error; (b) has a recorded decision. A step whose call succeeded but
-  whose post-call gate failed re-evaluates that gate against the tree on disk
-  without a new model call (absorbed from #88).
-- **In scope:** failure-note construction, `status_note` lifecycle, the decision
-  on (b), the post-gate re-evaluation without a new call, and their tests.
-- **Out of scope / Non-goals:** raising the attempt limit by default; changing
-  what the gate checks; unattended retry loops without a bound.
+  one-line error, and a stale note does not outlive the step's advance.
+- **In scope:** failure-note construction, rendering the ids into the retry
+  prompt, `status_note` lifecycle, and their tests.
+- **Out of scope / Non-goals:** the in-run bounded repair attempt and the
+  post-gate re-evaluation absorbed from #88 (deliberately not in this slice:
+  both wait on this slice's observed effect; see Parked); raising the attempt
+  limit by default; changing what the gate checks; unattended retry loops
+  without a bound.
 - **Allowed behavior changes:** failure notes get longer; a stale note is cleared.
 - **Allowed reorganization:** none.
 - **Verification:** a test with more failures than the old tail holds, showing all
   ids reach the retry prompt; a test showing the note is cleared on advance; the
   full suite passes.
-- **Stop / defer:** if (b) needs a new run state machine, file it separately and
-  ship (a) alone. Shipping (a) alone leaves the post-gate re-evaluation
-  absorbed from #88 open here; the entry is not done until it ships or is
-  recorded as declined. Before building it, state how the test-authoring
+- **Stop / defer:** the parked repair attempt and the #88 re-evaluation stay
+  open after this slice ships; the entry's removal waits until they ship or are
+  recorded as declined. Before building them, state how the test-authoring
   gate's pre-call baseline survives a tree the first attempt already dirtied
   (#87's known limit).
-- **Route:** `direct` for (a); `plan` if (b) is taken · **Readiness:**
-  `decision-needed` (on (b)) · **Tier:** `experienced`. **Principle:** `untriaged`.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
+  **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-run-gates`.
 - **Origin:** `roadmap-versioned-from-birth` run, 2026-10-06.
 
@@ -8008,99 +7993,107 @@ evidence. It is not an active implementation contract.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** deferred follow-up from the model-aware prompt-budget code review (2026-10-09).
 
-**#477 — Give `BUG_BACKLOG.md` entries stable ids so code and tests cite them by id instead of by title**
+**#477 — Fix the stale and bare `BUG_BACKLOG` citations in code**
 
 - **What:** `docs/TRACKING.md:771-772` says "`BUG_BACKLOG.md` entries are
-  titled headings with no id", and `tests/test_backlog_ids.py` deliberately
-  skips that file. Code therefore cites bugs by title or not at all: there
-  are 21 `BUG_BACKLOG` mentions under `plan_tool/`, four of them a bare
-  "See BUG_BACKLOG." with no title (`create.py:12022`,
-  `data_contract.py:643`, `review.py:1837`, `review.py:1862`). Two title citations no longer
-  resolve, and only git history says why: `tests/test_launcher.py:2853`
+  titled headings with no id", so code cites bugs by title or not at all. Of
+  21 `BUG_BACKLOG` mentions under `plan_tool/`, seven are a bare
+  "See BUG_BACKLOG." with no title (`create.py:12024`, `data_contract.py:643`,
+  `review.py:1837`, `review.py:1862`, `detail.py:1542`, `detail.py:2041`,
+  `cli/completeness_phases.py:2278`). Two title citations no longer resolve,
+  and only git history says why: `tests/test_launcher.py:2853`
   cites "`run` advances a step whose `creates:`…", an entry removed when the
   bug was fixed (`4fc168027`); `completeness_report.py:1502` cites "The
   persisted report withholds ``suggested_action``", fixed in `72de18d29`,
-  a title no backlog file has ever carried. Both are stale citations of
-  fixed bugs, to be cleaned up with the rest. A title is not a stable
-  reference, because titles change and fixed entries are deleted.
-- **Outcome:** each `BUG_BACKLOG.md` entry carries a stable id with its own
-  prefix (for example `B-N`), code and tests cite that id, and the id guard
-  covers it.
-- **In scope:** ids on the live bug entries, the TRACKING.md rule,
-  extending `tests/test_backlog_ids.py`, and rewriting the existing
-  citations under `plan_tool/` and `tests/`.
-- **Out of scope / Non-goals:** checking that a cited id is still live
-  (removed entries stay cited from history, as in `BACKLOG.md`), and
-  renumbering `BACKLOG.md`.
-- **Verification:** the id test fails on a duplicate bug id, and no
-  `BUG_BACKLOG "<title>"` citation remains under `plan_tool/` or `tests/`.
-- **Stop / defer:** stop if promotion stubs (`docs/TRACKING.md` §
-  "Promotion stubs") need a different id form; decide that before
-  numbering.
+  a title no backlog file has ever carried.
+- **Outcome:** no bare or stale `BUG_BACKLOG` citation remains under
+  `plan_tool/` or `tests/`.
+- **In scope:** the two stale and seven bare citations: name the live entry's
+  title, or delete the citation when the entry is gone or the comment stands
+  alone.
+- **Out of scope / Non-goals:** stable bug ids (`B-N`), extending
+  `tests/test_backlog_ids.py` to `BUG_BACKLOG.md`, and the TRACKING.md rule
+  change (deliberately not taken, cut 2026-11-14: nine citations cost minutes
+  to fix; adopt ids only if bug citations from code keep rotting after this
+  cleanup); checking that a cited title is still live; renumbering
+  `BACKLOG.md`.
+- **Verification:** a grep shows no bare "See BUG_BACKLOG." and neither stale
+  title under `plan_tool/` or `tests/`.
+- **Stop / defer:** if a citation names a title that exists in
+  `BUG_BACKLOG.md`, keep it.
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
 
-**#478 — Separate tracking guidance from the catalog and split the backlog catalog by area**
+**#478 — Prune delivered, closed and no-action backlog entries, then re-measure before splitting the catalog**
 
 - **What:** `BACKLOG.md` is about 13,500 lines, `docs/TRACKING.md` is 1,107, and
-  `BUG_BACKLOG.md` is 2,155. Guidance (rules, recipes, label tables) is
-  mixed in with the catalog, so a reader or a session loads most of a file
-  to find one entry or one rule, and duplicated guidance drifts (the TRACKING.md recipe skipped the bare-plan audit until 2026-10-10).
-- **Outcome:** a decision on whether to split. If yes, guidance lives only
-  in TRACKING.md and the directives, and the catalog is split by area (for
-  example by arc assignment) with an index. Ids, the id test, and
-  promotion stubs keep working across the split.
-- **In scope:** the decision, and the split once it is approved.
-- **Out of scope / Non-goals:** the entry format and the labels (#476,
-  #477).
-- **Verification:** the id test sees every split file, and every existing
-  `BACKLOG.md#…` link still resolves or is rewritten.
+  `BUG_BACKLOG.md` is 2,155. A reader or a session loads most of a file to find
+  one entry or one rule, and duplicated guidance drifts (the TRACKING.md recipe
+  skipped the bare-plan audit until 2026-10-10). A value review of one range of
+  the catalog found about 18 entries that are delivered, closed, no-action, or
+  self-admitted low value; splitting the file by area would carry them along.
+- **Outcome:** the delivered, closed, no-action and self-admitted-low-value
+  entries are removed under `docs/TRACKING.md`'s removal rules, and the
+  catalog's size and lookup cost are re-measured afterwards. A split decision
+  waits on that measurement.
+- **In scope:** the pruning, and the re-measurement (line counts, and whether
+  sessions still fail to find entries or rules: missed duplicates, misapplied
+  recipes).
+- **Out of scope / Non-goals:** splitting the catalog by area now (deliberately
+  not taken, cut 2026-11-14: a split preserves the bloat; reconsider only if
+  the re-measurement still shows a cost); moving guidance out of the catalog;
+  the entry format and the labels (#476, #477).
+- **Verification:** the id test and the readability guard pass after the
+  pruning; every removed id's citations elsewhere resolve to a closed or
+  stub record or are rewritten.
 - **Stop / defer:** stop if the readability guard
-  (`tests/test_backlog_readability.py`) or external Jira links depend on a
-  single file.
-- **Route:** plan · **Readiness:** decision-needed · **Tier:** architect.
-- **Evidence gate:** before splitting, measure whether sessions currently
-  fail to find entries or rules (missed duplicates, misapplied recipes).
-  Closing with "no action" is a valid outcome.
+  (`tests/test_backlog_readability.py`) or external Jira links depend on an
+  entry slated for removal. If the re-measurement shows no remaining cost,
+  close with "no action".
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Status:** not started.
 - **Origin:** tracking-process review, 2026-10-10.
 
-**#484 — Mark each completeness finding that a plan edit since the previous audit introduced, so fix-induced scope growth is visible**
+**#484 — Mark each finding the `edit_drift` advisory attributes to the previous apply, and count them**
 
-- **What:** the audit reports findings without lineage, so a finding against
-  surface the previous round's fix added reads the same as a defect in what
-  the plan always promised. A loop can then chase a widening scope while each
-  round looks like new evidence of an unsound plan.
+- **What:** the `edit_drift` advisory (`convergence_diagnosis.py`,
+  `classify_edit_drift`) says only that a strict majority of new findings match
+  the prior-apply set. The report does not say which findings those are, so a
+  finding against surface the previous round's fix added reads the same as a
+  defect in what the plan always promised.
 - **Evidence:** a Integration fix added a deployment-role construct to
   `cdk-infrastructure-and-environments`. The next round produced 8 new HIGH
   findings across that plan and `bitbucket-deployment-pipelines`, all on the
   new construct (Integration reports under
   `plan-details/<plan>/reports/20261010-*-completeness.md`).
-- **Effort:** medium; the previous audit's committed snapshot is already the
-  re-audit baseline, so the work is a diff-to-finding attribution and its
-  rendering.
-- **Risks / fallout:** attribution from a text diff to a finding is a
-  judgment; a wrong "fix-induced" mark could teach operators to dismiss a
-  real defect.
+- **Effort:** small to medium; `classify_edit_drift` already builds the
+  window-local prior-apply set, so the work is exposing its matches per finding
+  and rendering them.
+- **Risks / fallout:** the match is a judgment; a wrong mark could teach
+  operators to dismiss a real defect.
 - **Dependencies:** none.
-- **Outcome:** a re-audit's report marks each finding whose cited plan
-  region changed since the previous audit's snapshot, and states the count of
-  marked findings beside the total.
-- **In scope:** the completeness report and its JSON sidecar; the console
-  summary line.
-- **Out of scope / Non-goals:** suppressing, demoting, or excluding a marked
-  finding from the blocking set; changing the stopping rule (#125).
-- **Allowed behavior changes:** the new mark and count only.
+- **Outcome:** `EditDriftAdvisory` carries the matched findings, and the
+  `edit_drift` rendering (`_edit_drift_lines`) marks each one and states the
+  count of marked findings beside the total.
+- **In scope:** `classify_edit_drift`, `EditDriftAdvisory`,
+  `_edit_drift_lines`, and their tests.
+- **Out of scope / Non-goals:** a separate attribution rule or a plan-snapshot
+  diff-to-finding mapping (deliberately not taken, cut 2026-11-14: it overlaps
+  the shipped `edit_drift` match); a new completeness-report field; marking
+  when the advisory does not fire; suppressing, demoting, or excluding a marked
+  finding from the blocking set; changing the stopping rule (#125) or any
+  continuation or exit behavior (`edit_drift` stays recommend-only).
+- **Allowed behavior changes:** the per-finding mark and count in the existing
+  advisory output only.
 - **Allowed reorganization:** none.
-- **Verification:** a fixture with two audits around an edit that adds one
-  section asserts that findings citing the new section are marked and others
-  are not.
-- **Stop / defer:** stop if a finding's cited region cannot be located in the
-  plan text without inferring from prose; surface that rather than guess.
-- **Approach:** plan-tool; it adds an audit report field and an attribution
-  rule.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
+- **Verification:** a fixture where `classify_edit_drift` fires asserts the
+  advisory lists exactly the matched findings and the rendering marks them and
+  gives the count; an unmatched finding is not marked.
+- **Stop / defer:** stop if a match cannot be tied to a finding without
+  inferring from prose; surface that rather than guess.
+- **Approach:** direct; extend the existing advisory.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
   **Principle:** `converge-on-correct-plan`.
 - **Quality:** `convergence` — separates fix-induced growth from real
   non-convergence.
@@ -8151,31 +8144,37 @@ evidence. It is not an active implementation contract.
   scoping and isolation claims only for resources whose creation pattern it
   defines; resources the toolchain creates and needs to operate are out of
   scope and stated as such.
-- **Effort:** small to medium; the directive ships at
+- **Effort:** small; the directive ships at
   `integrations/shared/DIRECTIVES.md` § "Infrastructure plans: claim scope only
   for resources the plan creates". Remaining: a Gate 2 prompt clause in
-  `plan-audit.md` plus an audit-report field listing the plan's declared
-  exceptions.
-- **Risks / fallout:** an exception list can hide a real gap; the list must be
-  explicit, each entry carrying its reason, and visible in the report.
+  `plan-audit.md`.
+- **Risks / fallout:** an exception list can hide a real gap; the plan states
+  each exception in its own prose with its reason, so the exception is visible
+  in the plan the audit reads.
 - **Dependencies:** none.
-- **Outcome:** an infrastructure plan lists its out-of-scope toolchain
-  resources with a reason each, and the audit judges isolation, scoping and
-  least-privilege claims only against resources outside that list.
-- **In scope:** the directives text; the detail-grounded audit prompt; the
-  completeness report's rendering of declared exceptions.
+- **Outcome:** the detail-grounded audit prompt tells the auditor to judge
+  isolation, scoping and least-privilege claims only against resources the plan
+  creates, and to treat toolchain resources the plan names as exceptions (with
+  their stated reason) as out of scope.
+- **In scope:** the detail-grounded audit prompt clause (`plan-audit.md`); the
+  directives text already ships.
 - **Out of scope / Non-goals:** deciding which resources a given toolchain
-  creates; relaxing checks on resources the plan does define.
-- **Allowed behavior changes:** findings against a declared exception are
-  reported as informational, not blocking.
+  creates; relaxing checks on resources the plan does define; a new
+  completeness-report field for declared exceptions and demoting findings
+  against them to informational (deliberately not taken, cut 2026-11-14: the
+  machinery outgrows a prompt clause; if recorded exceptions are wanted, route
+  them through #490 dispositions).
+- **Allowed behavior changes:** the audit prompt gains the clause; no change to
+  finding severity or blocking rules.
 - **Allowed reorganization:** none.
-- **Verification:** a fixture plan declaring the stock bootstrap roles as an
-  exception produces no blocking finding for them, and a fixture claiming
-  isolation over an undeclared toolchain resource still does.
-- **Stop / defer:** stop if a declared exception covers a resource the plan's
+- **Verification:** the prompt-content test names the clause (resources the
+  plan creates; exceptions stated in plan prose); the full suite passes. Effect
+  on audit output is not measurable from one test; record it on the next
+  infrastructure plan audited.
+- **Stop / defer:** stop if a stated exception covers a resource the plan's
   own code creates.
-- **Approach:** plan-tool directives plus audit prompt.
-- **Route:** plan · **Readiness:** ready · **Tier:** experienced.
+- **Approach:** audit prompt clause; the directive already ships.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
   **Principle:** `converge-on-correct-plan`.
 - **Quality:** `precision` — removes defects that no plan edit can close.
 - **Integration-side use:** the same rule belongs in Integration's own audit and review
@@ -8184,18 +8183,17 @@ evidence. It is not an active implementation contract.
   `docs/technology-shapes/` (CDK first); plan-tool consumption of such an
   index is a follow-up to this entry.
 
-**#488 — Route a failed `run` step's stated reason to roadmap feedback, and list failure receipts never routed anywhere**
+**#488 — Route a failed `run` step's stated reason to roadmap feedback**
 
 - **What:** a `run` step that stops on an upstream gap now records why, in a
   `model_failure_receipt` whose sidecar holds the executor's final reply
   (`reason: no-edits-applied`, shipped 2026-10-13). Nothing carries that reason
-  to the roadmap feedback ledger, where an upstream gap belongs, and nothing
-  shows which receipts were never acted on.
+  to the roadmap feedback ledger, where an upstream gap belongs.
 - **Why:** the gap goes back to the roadmap only if someone notices the receipt
   and retypes it as `roadmap --submit-feedback`. AI-DLC's construction loop
   treats this as a first-class move: a failure jumps back to the stage that owns
-  the gap as a logged event, and recovery checks for a failure logged but never
-  routed (`aidlc-workflows` `core/aidlc-common/protocols/stage-protocol-recovery.md`).
+  the gap as a logged event (`aidlc-workflows`
+  `core/aidlc-common/protocols/stage-protocol-recovery.md`).
 - **Evidence:** Integration, 2026-10-11 to 10-13: 22 declined `run` attempts across 12
   steps in four plans; every captured executor reason was a missing upstream
   contract or a blocked prerequisite, each routed back by hand. Record:
@@ -8209,22 +8207,22 @@ evidence. It is not an active implementation contract.
 - **Dependencies:** none in plan-tool. Integration `BACKLOG.md` #5 (show the owner why a
   step stopped) is the consumer and lands first.
 - **Outcome:** an operator turns one failure receipt into one open roadmap
-  feedback item that names the receipt it came from, and can list the failure
-  receipts no feedback item names.
-- **In scope:** a `roadmap` feedback-submission path that takes a run id and step
-  as the item's source reference; the listing of unrouted receipts (`plan-tool
-  runs` or a `roadmap` read); the feedback item's source field; tests.
-- **Out of scope / Non-goals:** choosing the roadmap target automatically;
+  feedback item that names the receipt it came from, by passing a run id and
+  step to `--submit-feedback` with an operator-supplied roadmap and target.
+- **In scope:** `roadmap --submit-feedback` accepting a run id and step as the
+  item's source reference; the feedback item's source field; tests.
+- **Out of scope / Non-goals:** listing receipts never routed anywhere
+  (deliberately not taken now, cut 2026-11-14: defer until an operator asks);
+  choosing the roadmap target automatically;
   deciding whether the executor was right to stop; retrying the step; routing to
   anything other than the roadmap ledger; changing candidate proposal or
   approval.
-- **Allowed behavior changes:** a new submission form and a new read; a
-  feedback item may carry a source reference.
+- **Allowed behavior changes:** a new submission form; a feedback item may
+  carry a source reference.
 - **Allowed reorganization:** none.
 - **Verification:** a fixture run with a `no-edits-applied` receipt, submitted
   against a named roadmap target, produces an `open` item whose source names the
-  run and step; the unrouted listing shows the receipt before submission and
-  not after; the full suite passes.
+  run and step; the full suite passes.
 - **Stop / defer:** if binding a receipt to a roadmap needs plan provenance in
   plan frontmatter, file that as its own entry and ship with an operator-supplied
   roadmap slug and target.
@@ -8377,28 +8375,32 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
-**#509 — Configure the consuming repository Git hosting provider and remote**
+**#509 — Have the skill router detect the Git hosting provider from the remote and confirm it with the user**
 
-- **Route:** plan · **Readiness:** ready · **Tier:** architect.
+- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-installed-skill`.
-- **Effort:** medium.
-- **Outcome:** A driving session selects GitHub or Bitbucket for the consuming
-  repository through a defined configuration reader and verifies its PR target.
-- **In scope:** Automatic detection from the selected remote; explicit provider override
-  for custom hosts; configured remote with origin as the default;
-  repository/default-branch resolution; gh/bkt target verification and ambiguous-target
-  handling.
-- **Out of scope / Non-goals:** A hosting plugin framework, automatic publishing,
-  history rewriting, or coupling provider choice to Jira/team policy.
-- **Allowed behavior changes:** Introduce the smallest repository configuration and
-  assistant-facing reader needed for provider selection; preserve explicit publication
-  authorization.
+- **Effort:** small.
+- **Outcome:** The skill router tells a driving session to detect GitHub or
+  Bitbucket from the selected remote's URL and confirm the provider and PR target
+  with the user before using `gh` or `bkt`.
+- **In scope:** Router guidance text only: read the remote (origin by default, or
+  the one the user names), infer the provider from its host, confirm with the user
+  when the host is custom or ambiguous, and check CLI help before backend
+  lifecycle commands.
+- **Out of scope / Non-goals:** A configuration reader, a repository
+  configuration key, or code-side provider verification (deliberately not taken,
+  cut 2026-11-14: the driving session already uses `gh`/`bkt` and can confirm
+  with the user; a reader plus verification is a plan for work the session does
+  anyway); a hosting plugin framework, automatic publishing, history rewriting,
+  or coupling provider choice to Jira/team policy.
+- **Allowed behavior changes:** Router guidance text only; preserve explicit
+  publication authorization. No runtime change.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
-- **Verification:** Cover GitHub/Bitbucket SSH and HTTPS remotes, explicit custom hosts,
-  alternate remotes, ambiguous inputs and mismatched CLI context with hermetic tests.
-  Inspect CLI help before backend lifecycle commands.
+- **Verification:** The router text names the detect-then-confirm steps for GitHub
+  and Bitbucket SSH and HTTPS remotes, custom hosts and alternate remotes; the
+  existing router guards pass.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -8448,31 +8450,33 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
-**#512 — Explain backend and model choice with cost and evidence**
+**#512 — Explain backend, model, precedence and effort choice**
 
 - **Route:** direct · **Readiness:** ready · **Tier:** experienced.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-installed-skill`.
 - **Effort:** small–medium.
 - **Outcome:** Users can choose a backend/model and understand recommendations,
-  configuration precedence, reasoning effort and cost limits.
+  configuration precedence, reasoning effort and where to find current prices.
 - **In scope:** One authoritative explanation, linked from onboarding and routers:
   driving assistant versus subprocess backend versus model; Sol for Codex stages and
   Opus creation/Sonnet subsequent Claude work; explicit flags versus inherited defaults;
-  reasoning-effort/token consumption and API versus subscription billing; date and
-  source price comparisons.
+  reasoning-effort/token consumption and API versus subscription billing; links to
+  the providers' pricing pages for current prices.
 - **Out of scope / Non-goals:** Automatic model routing, a pricing service, a benchmark
-  framework, or claims of equal quality/task cost from equal token prices.
+  framework, or claims of equal quality/task cost from equal token prices; dated
+  price comparisons (deliberately not taken, cut 2026-11-14: they go stale and
+  need re-verification on every release, so the doc links the pricing pages
+  instead).
 - **Allowed behavior changes:** Documentation only; reconcile stale Terra
   recommendations without changing runtime defaults. Explain why creation errors
   compound and distinguish measured evidence from owner-selected recommendations.
 - **Allowed reorganization:** only the smallest relocation needed for this outcome; no
   unrelated restructuring.
 - **Verification:** Check claims against backend resolution and current official
-  provider documentation. Pricing baseline verified 2026-10-19: standard GPT-6.1 Sol and
-  Sonnet 5.5 each list $2 input/$10 output per million tokens; reverify before
-  publication. Sources: https://developers.openai.com/api/docs/models/gpt-6.1-sol and
-  https://platform.claude.com/docs/en/models/sonnet-5-5/overview .
+  provider documentation. Pricing pages linked: https://developers.openai.com/api/docs/models/gpt-6.1-sol and
+  https://platform.claude.com/docs/en/models/sonnet-5-5/overview ; the explanation
+  states no price figure.
 - **Stop / defer:** file adjacent work separately; resolve missing owner decisions
   before dependent implementation.
 
@@ -8588,21 +8592,21 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Dependencies:** #389 (promoted to IPPT-7), the hard-coded `install-skill --integration` list (`choices=("claude", "codex", "cursor")` in `plan_tool/cli/skill_cmd.py`). Do it first or as the first backend's step, so later backends need no edit there.
 - **Origin:** 2026-11-06, an estimate of what supporting other common CLIs would take.
 
-**#527 — The four public `demo/*` branches still show the needs-updating notice instead of current demo checkpoints**
+**#527 — Decide whether to delete the four public `demo/*` branches that still show the needs-updating notice**
 
-- **What:** `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` exist on both Bitbucket and GitHub (kept by owner decision, 2026-10-21) and every one points at the shared "mark preserved demo checkpoints as needing update" commit (2026-10-21). The maintained walkthroughs (`docs/demos/planning-demo.md`, `docs/how-to/roadmap-demo.md`) describe the seed, plan, detail and Jira stages, but no remote ref shows the current stage contents.
-- **Route:** direct · **Readiness:** decision-needed (which captured material each checkpoint holds, and the authorization to replace remote refs) · **Tier:** architect.
+- **What:** `demo/1-seed`, `demo/2-plan`, `demo/3-detail` and `demo/4-jira` exist on both Bitbucket and GitHub (kept by owner decision, 2026-10-21) and every one points at the shared "mark preserved demo checkpoints as needing update" commit (2026-10-21). The maintained walkthroughs (`docs/demos/planning-demo.md`, `docs/how-to/roadmap-demo.md`) describe the seed, plan, detail and Jira stages, and carry the demo, so the branches may no longer earn their upkeep.
+- **Route:** direct · **Readiness:** decision-needed (the owner decides delete versus keep) · **Tier:** architect.
 - **Principle:** write-for-the-human.
 - **Arc assignment:** `backlog-arc-public-release`.
-- **Effort:** small to medium; mostly review and read-back, with no code change.
-- **Risks / fallout:** a remote ref replacement is hard to undo and is visible to every user; it needs exact-tip leases and private recovery bundles of both hosts' prior refs, as the sanitized-root replacement (2026-10-21) used.
-- **Outcome:** each of the four `demo/*` branches on both hosts presents deliberately chosen, current stage content, read back from both hosts after the update.
-- **In scope:** the four branch names on Bitbucket and GitHub, in these steps: (1) review the current implementation changes and the completed-plan evidence for the demo scenario; (2) choose the captured material for each checkpoint deliberately, separating captured output from authored reading samples; (3) recheck the local checkpoint refs, stage differences, private recovery bundles, and the old remote tips before proposing replacements; (4) obtain separate review and authorization for the remote update, then read both hosts back.
-- **Out of scope / Non-goals:** `main`, tags, repository visibility, and organization transfer (the release workflow in `docs/RELEASING.md` owns them); a fresh TTRPG roadmap run or browser interaction; renaming or removing a checkpoint branch; code, CLI, or skill changes; pushing any ref without the separate authorization in step 4.
-- **Allowed behavior changes:** remote `demo/*` ref contents only.
+- **Effort:** small; a decision, then at most a reviewed ref deletion on two hosts.
+- **Risks / fallout:** a remote ref deletion is hard to undo and visible to every user; it needs private recovery bundles of both hosts' prior refs, as the sanitized-root replacement (2026-10-21) used.
+- **Outcome:** a recorded owner decision on whether to delete the four `demo/*` branches. If deleted, the branches are gone from both hosts, read back from both. If kept, a separate entry holds the content refresh.
+- **In scope:** asking the owner; if the answer is delete, a reviewed deletion of the four branch names on Bitbucket and GitHub after private recovery bundles of the old tips are made and verified, with separate authorization for the remote update, then read-back from both hosts.
+- **Out of scope / Non-goals:** curating or refreshing checkpoint content (deliberately not taken before the delete decision, cut 2026-11-14: refreshing four refs on two hosts is a careful operational job, and the walkthrough docs already carry the demo); `main`, tags, repository visibility, and organization transfer (the release workflow in `docs/RELEASING.md` owns them); a fresh TTRPG roadmap run or browser interaction; code, CLI, or skill changes; pushing or deleting any ref without the separate authorization above.
+- **Allowed behavior changes:** remote `demo/*` refs may be deleted.
 - **Allowed reorganization:** none.
-- **Verification:** `git ls-remote` on both hosts shows the four branch names at the authorized tips, the tips match between hosts, and the private recovery bundles still verify.
-- **Stop / defer:** stop if a recovery bundle is missing or fails verification; file any defect found in the demo guides separately.
+- **Verification:** the owner's decision is recorded here; if deleted, `git ls-remote` on both hosts shows none of the four branch names and the private recovery bundles still verify.
+- **Stop / defer:** stop if a recovery bundle is missing or fails verification; if the owner keeps the branches, file the refresh as its own entry rather than expanding this one.
 - **Dependencies:** none; independent of #514 and #515.
 - **Approach:** direct; ref updates are a reviewed operational action, not a code change.
 - **Origin:** 2026-10-21 public-release preparation; the refresh was deferred when the checkpoints were marked as needing update.
@@ -8644,23 +8648,23 @@ their lanes; `backlog-arc-public-release` coordinates the release sequence.
 - **Approach:** direct.
 - **Origin:** 2026-11-13 triage of the live documentation after the temporary handoff files were retired.
 
-**#530 — Developer documentation readability review stops after the front-door batches, and no fresh-reader check covers the four reader journeys**
+**#530 — Fix the developer-documentation stumbles that the fresh-reader walkthrough in #515 finds**
 
-- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped, but the section-by-section readability audit of the live developer documents covers only the high-traffic sections, and no reader outside the authors has walked the four journeys end to end from the documents alone. The audit's open batches are the contributor drive-or-review workflow (`CONTRIBUTING.md`), the module-ownership subsystem paragraphs (`docs/ARCHITECTURE.md`), default/optional/exception matrices for `docs/ITERATION.md` and `docs/GATES.md`, and the `docs/TRACKING.md` lifecycle (normal flow first, direct-versus-plan boundary and scope contract in linked subsections). The four journeys are install and begin, run or review a plan safely, change `plan-tool` itself, and find ownership, tracking, and escalation routes. #510 covers the first-task walkthrough for one of them.
-- **Route:** direct · **Readiness:** ready · **Tier:** experienced.
+- **What:** the scan-first standard (`docs/reference/documentation-style.md`) and the task-first layers (`docs/README.md`, `CONTRIBUTING.md` § "New contributor path") shipped. The section-by-section readability audit of the remaining live developer documents (`CONTRIBUTING.md` drive-or-review workflow, `docs/ARCHITECTURE.md` subsystem paragraphs, `docs/ITERATION.md` and `docs/GATES.md` matrices, the `docs/TRACKING.md` lifecycle) judges an unobservable property section by section, so it is not run as a batch. The four reader journeys (install and begin, run or review a plan safely, change `plan-tool` itself, find ownership, tracking, and escalation routes) are checked by a fresh reader instead: #515 verifies the first journey in a fresh repository, and #510 covers the first-task walkthrough.
+- **Route:** direct · **Readiness:** blocked-on #515 · **Tier:** experienced.
 - **Principle:** write-for-the-human.
-- **Effort:** large in total; each batch is small to medium (one document or closely related group, reshape only where a mapping, state matrix, or ordered flow reads as dense prose).
-- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact. A long paragraph is a review signal, not a defect: `keep` is a valid verdict.
-- **Outcome:** each batch above has a recorded `keep`, `reshape`, `relocate`, or `clarify` verdict per section with its fact fence, and one cross-document walkthrough by a reader with no prior context confirms that the four journeys expose their normal path, exceptions, and next action, with links, terminology, and authority boundaries in agreement.
-- **In scope:** the live developer-facing documents named above plus `README.md`, `docs/reference/commands.md`, `docs/how-to/common-workflows.md`, and the glossary; one fresh-context walkthrough after the batches, recording each place the reader cannot find the normal path, an exception, an owner, or a next action; fixes for material findings.
-- **Out of scope / Non-goals:** the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
+- **Effort:** small to medium; one fix batch per place a reader stumbled.
+- **Risks / fallout:** test-pinned wording in `tests/test_roadmap_format.py` and sibling documentation guards; link churn on moved anchors; a reshape that drops a fact.
+- **Outcome:** each place the fresh-reader walkthrough recorded as blocking a reader (normal path, an exception, an owner, or a next action not findable) is fixed or filed, with links, terminology, and authority boundaries in agreement.
+- **In scope:** the live developer-facing documents a recorded stumble names; the fix for that stumble only.
+- **Out of scope / Non-goals:** the remaining batch-by-batch readability audit (deliberately not taken, cut 2026-11-14: it grades an unobservable property; only observed stumbles are fixed); a separate walkthrough (the fresh-reader walk belongs to #515); the first-task walkthrough and skill-first onboarding (#510); a link-resolution check (#529); generated run-grade plan-detail prose; archived plans, saved reports, and immutable evidence; a word-count gate, a long-prose checker, or any tooling that judges readability (the style guide deliberately has none); a pull-request checklist item; new pipeline rules or product behavior.
 - **Allowed behavior changes:** none to the CLI or generated output; documentation structure and wording only.
-- **Allowed reorganization:** only the smallest relocation a reshape needs, naming the ownership boundary it fixes; no document moves for tidiness.
-- **Verification:** every command, path, anchor, state condition, and ordering rule named in a reshaped section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass; the walkthrough record names no unresolved finding.
-- **Stop / defer:** a defect or product gap that a reshape exposes becomes its own entry; a reshape that would change a contract stops and is filed instead.
-- **Dependencies:** none; the walkthrough runs after the batches it covers.
-- **Approach:** direct, one reviewable batch per document group, each with the session-directed review loop.
-- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13 for the batches and the walkthrough that remain.
+- **Allowed reorganization:** only the smallest relocation a fix needs, naming the ownership boundary it fixes; no document moves for tidiness.
+- **Verification:** every command, path, anchor, state condition, and ordering rule named in a fixed section survives (checked by enumerating them before and after); `uv run pytest tests/test_roadmap_format.py -q` and the documentation guards pass.
+- **Stop / defer:** a defect or product gap that a fix exposes becomes its own entry; a fix that would change a contract stops and is filed instead. If #515's walkthrough records no stumble, close with "no action".
+- **Dependencies:** #515 (supplies the recorded stumbles).
+- **Approach:** direct, one reviewable batch per recorded stumble group, each with the session-directed review loop.
+- **Origin:** the 2026-09 readability audit of the live developer documentation, whose first batches shipped; filed 2026-11-13, narrowed 2026-11-14.
 
 ## Adding a new entry
 

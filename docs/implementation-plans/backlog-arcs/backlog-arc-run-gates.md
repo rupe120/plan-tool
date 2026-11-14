@@ -22,8 +22,8 @@ routed by `backlog-arc-roadmap`).
 
 - **#454** — run prompt: run the touched tests, check remaining uses of every
   deleted or renamed symbol, sweep tests and docs that pin the old behavior.
-- **#455** — the retry gets the complete failure list; decide whether a failed
-  gate gets one bounded in-run repair attempt.
+- **#455** — the retry gets the complete failure list; the bounded in-run
+  repair attempt is parked until that ships.
 - **#457** — re-run only the failed tests once before the suite gate fails the
   step.
 - **#458** — advisory list of detail-named test identifiers no test file contains.
@@ -48,9 +48,9 @@ push automatically; push only when the user explicitly requests it.
 ## Ordered route
 
 1. **#454.** `ready`, `direct`, and independent: a prompt change.
-2. **#455 (a), then its decision (b).** The failure-list change is `direct`; the
-   repair-attempt decision uses the gate re-evaluation absorbed from #88 so a repair does not re-spend
-   a successful call.
+2. **#455.** The failure-list change is `direct`. The parked repair attempt
+   uses the gate re-evaluation absorbed from #88 so a repair does not re-spend
+   a successful call; decide it after the failure list ships.
 3. **#459** — a decision on its own; independent of the rest.
 4. **#457 and #458 wait on their gates** (a second non-reproducing gate failure;
    a measured false-positive rate). Do not build either before its evidence exists.
