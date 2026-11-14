@@ -4,7 +4,7 @@
 
 This file is the execution guide for what an unattended driver can read from
 `plan-tool` without inferring it: the result of `create` and `detail`, a
-refused `create`, a plan's gate verdict, each finding's triage label, and a
+refused `create`'s reason, a plan's gate verdict, each finding's triage label, and a
 run's usage totals. It routes #499 and #502, filed
 2026-10-19 from the design of Integration's Construction batch driver. `BACKLOG.md`
 owns each item; this file owns only their working order. The two items are
@@ -21,9 +21,10 @@ path a sibling roadmap plan creates.
 
 ## Details
 
-- **#499** — the audit's own altitude label and carried-to-detail flag per
-  finding; the first slice covers D only.
-- **#502** — a record for a `create` refused before its slug resolves.
+- **#499** — the audit's own detail-level (D) label per bare-stage finding,
+  built only after a label-agreement measurement; it lands with #192's
+  finding-record version bump.
+- **#502** — a stable stderr reason token for a `create` refused before its slug resolves.
 
 ## Choose this arc when
 
@@ -40,8 +41,9 @@ push automatically; push only when the user explicitly requests it.
 
 ## Ordered route
 
-1. **#499 and #502** are `decision-needed`. Settle who owns the altitude label
-   (#499) and where a pre-slug refusal records itself (#502) before building.
+1. **#499** is `decision-needed`. Settle who owns the D label and measure
+   its pass-to-pass agreement before building.
+2. **#502** is `ready`: print the closed reason token on each pre-slug refusal.
 
 ## Decision gates
 
@@ -51,7 +53,7 @@ push automatically; push only when the user explicitly requests it.
   gated on.
 - **One definition of "converged".** `gate-status` reuses the existing audit
   `--json` field definitions; it never defines a second one.
-- **Persisted fields need `architect`-tier review**: #502 changes `DATA_CONTRACT.md`.
+- **Persisted fields need `architect`-tier review**: #499's sidecar version bump changes `DATA_CONTRACT.md`.
 
 ## Exit and handoff
 
