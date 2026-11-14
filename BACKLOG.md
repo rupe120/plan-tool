@@ -4656,86 +4656,6 @@ implementation contract.
   not to judge whether the generated plan preserves or delivers their intent.
 - **Status:** not started; architect decision required before implementation.
 
-**#307 — Consolidate the duplicated "is this source current for its evidence
-version" predicate `roadmap-canonical-source-identity` left scattered
-(landed 2026-08-23; two genuine sites merged, four investigated and kept
-separate)**
-
-- **What:** `roadmap-canonical-source-identity`'s post-ship `/code-review`
-  hotfix loop (seven rounds, 2026-08-21/23) repeatedly found the same
-  underlying pattern at different sites: independent, hand-written
-  reimplementations of "does this receipt/analysis still match its admitted
-  baseline identity for its schema version." Three of the seven rounds'
-  confirmed correctness regressions were direct consequences of this
-  duplication: round 3's `_preflight_is_canonical` applied the wrong
-  (version-1) rule to a version-2 snapshot; round 5's admission/consumption
-  mismatch existed because two independently-coded predicates disagreed
-  about "an admitted v2 source"; round 7 found the same dispatch logic had
-  also dropped fail-closed behavior for an unsupported version at one site.
-- **Landed:** `admitted_source_is_current(*, schema_version, recorded_digest,
-  recorded_identity, current_digest, current_identity)` in
-  `plan_tool/roadmap_source_identity.py` (commit `cbdd9a9e`), with a direct
-  characterization test (`test_admitted_source_is_current_dispatches_by_
-  schema_version`), replacing the identical hand-rolled dispatch at exactly
-  two sites that shared its precise shape (compare a **recorded** digest/
-  identity against a **freshly admitted** one, dispatched by version):
-  - `plan_tool/roadmap_escalation_run.py`'s `current_escalation_receipt`
-    freshness classification.
-  - `plan_tool/roadmap_impact_analysis.py`'s `_receipt_matches_captured_artifact`
-    (kept its pre-existing `canonical_source_identity is None` guard, which
-    the shared function's contract doesn't need to know about — an
-    `EscalationReceipt`'s own model validator already makes that state
-    unreachable for a well-formed v2 receipt, but the call site's defensive
-    check was cheap to preserve as-is).
-  Full suite green throughout (`uv run pytest tests/ -q -n auto`), no
-  behavior change — verified by running the existing test suite at each
-  site immediately after its conversion, before moving to the next.
-- **Do NOT merge (investigated and kept separate, each for a different
-  mechanical reason — not the same predicate wearing different clothes):**
-  - **`admit_versioned_artifact_source`** (`roadmap_escalation_selection.py`)
-    — this is the **admission** step (derive an identity from a freshly
-    parsed artifact), not a comparison against a previously recorded one.
-    Different phase of the pipeline; nothing to compare yet.
-  - **`snapshot_artifacts_match_captured_text`**
-    (`roadmap_impact_snapshot.py`) — checks **self-consistency of one
-    persisted snapshot** (do its own recorded `artifact_texts`/`artifacts`
-    fields, when re-derived, match its own recorded `canonical_source_
-    identities`), not "recorded value A vs. currently observed value B."
-    The v2 branch's `canonical_source_identity(baseline_record(...)) !=
-    identity` check is superficially close to the shared predicate's shape,
-    but forcing it through `admitted_source_is_current` would mean passing
-    unused v1 parameters into a call already known to be v2 — obscuring a
-    plain `!=` behind a version-dispatching function that dispatches
-    nothing, at a real readability cost for near-zero duplication removed.
-  - **`_preflight_is_canonical`** (`roadmap_structural_revision_run.py`) —
-    its v2 branch compares **parsed-artifact and text equality**
-    (`snapshot.artifacts[selected_index] == preflight.selected_artifact`),
-    not digest/identity equality, then delegates the rest to
-    `snapshot_artifacts_match_captured_text` (already consolidated,
-    see above). No genuine duplicate of the shared predicate's shape here.
-  - **`current_impact_analysis`'s v1 branch** (`roadmap_impact_run.py`) —
-    compares full canonical-JSON byte rendering
-    (`render_impact_analysis(candidate) != data`), not a digest/identity
-    field. Already shares its v2 logic via `version2_analysis_matches`
-    (consolidated before this entry existed); its v1 branch's shape doesn't
-    match the digest-vs-identity predicate either.
-- **Why this matters for anyone re-opening this entry:** a duplicate-looking
-  `!=`/`==` at a version-dispatch site is not sufficient evidence to route
-  it through `admitted_source_is_current` — check whether the two sides
-  being compared are actually "a recorded value" and "a freshly admitted
-  value" for the same evidence record, the way the two landed sites are.
-  Self-consistency checks, admission derivation, and full-byte-render
-  comparison are a different shape even when they also branch on
-  `schema_version`.
-- **Already consolidated before this entry existed** (do not re-flag):
-  `version2_analysis_matches`, `is_supported_evidence_schema_version`,
-  `canonical_source_identity_for_stage`, `_canonical_source_identity_fields`,
-  `admit_baseline_backed_source`/`_pending_generation_touches_baseline`.
-- **Origin:** 2026-08-22, found while auditing whether the hotfix loop was
-  addressing the concept behind its recurring findings or only their
-  individual sites. Closed 2026-08-23 after the genuine duplication was
-  extracted and the rest was verified, not assumed, to be a different shape.
-
 **#296 — Bound (or at least backstop) `render_detail_prompt`'s uncapped `prior_body_block`**
 
 - **What:** every content-bearing block `render_detail_prompt` assembles
@@ -9256,7 +9176,7 @@ longer describes current work. It is retained only as dated carve-out context.
   `.claude/*` runtime-state patterns currently live only in machine-local
   git config, not in any tracked file.
 
-**#316 — Shared confidence-tag rendering helper (consolidate ~31 hand-authored call sites)**
+**#316 — Shared confidence-tag rendering helper (consolidate the remaining ~25 hand-authored call sites)**
 
 - **What:** `plan_tool/review.py`'s `confidence_label`/`confidence_value` are
   the only shared primitives for rendering a `Recommendation.confidence`
@@ -11112,7 +11032,7 @@ longer describes current work. It is retained only as dated carve-out context.
   direction. It sits outside that plan's range and breaks nothing.
 - **Status:** not started.
 
-**#427 — `roadmap-versioned-feedback-revision-chain` step details cite 96 test names that do not exist**
+**#427 — `roadmap-versioned-feedback-revision-chain` step details cite 117 test names that do not exist**
 
 - **What:** the eleven step detail files under
   `docs/implementation-plans/archive/plan-details/roadmap-versioned-feedback-revision-chain.3/`
@@ -11152,8 +11072,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** 2026-09-23, closing `roadmap-versioned-feedback-revision-chain`; the
   review's coverage note.
-
-**#426 — Following 13 links in `RUNBOOK.md` and two dated handoffs lands on a missing file, because the docs they name were renamed or deleted** → promoted to IPPT-4 (2026-09-24)
 
 **#433 — Expose truthful terminal progress for ledger-batch candidate proposals**
 
@@ -11342,7 +11260,8 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Risks / fallout:** widening the comparison's evidence contract changes a
   read-only surface other code reads (`ROADMAP_FORMAT.md` documents its outcome
   vocabulary), and the comparison route must stay read-only.
-- **Dependencies:** IPPT-18 lands first, so the stored correction operation exists.
+- **Dependencies:** IPPT-18's stored correction operation exists (archived plan
+  `2-candidate-prose-correction`).
 - **Outcome:** the comparison shows each correction as a labeled before-and-after
   record, with the raw patch unchanged.
 - **In scope:** `plan_tool/roadmap_compare.py`, `roadmap_compare_run.py`,
@@ -11359,7 +11278,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Stop / defer:** if the evidence contract needs a version bump, stop and file
   that as its own entry.
 - **Approach:** `direct`.
-- **Route:** `direct` · **Readiness:** `blocked-on IPPT-18` · **Tier:**
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:**
   `experienced` (a CLI-adjacent evidence contract across modules).
   **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
@@ -11389,8 +11308,9 @@ longer describes current work. It is retained only as dated carve-out context.
   it would change ingest behavior and conflicts with "evidence only"; a check
   that decides whether a justification is *good* is a semantic check and is out
   of bounds (`CLAUDE.md` § "Validating a semantic property you cannot observe").
-- **Dependencies:** IPPT-18 and IPPT-19 land first. IPPT-19's computed-evidence
-  function is where the basis check would plug in.
+- **Dependencies:** IPPT-18 and IPPT-19 have landed (archived plans
+  `2-candidate-prose-correction` and `2-candidate-narrative-review-evidence`).
+  IPPT-19's computed-evidence function is where the basis check would plug in.
 - **Outcome:** a response may carry its basis; the reviewer sees when it is
   missing or cites something that does not exist; nothing is refused for it.
 - **In scope:** the optional response field and its additive parse, the prompt
@@ -11408,7 +11328,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Stop / defer:** if the response record cannot gain an optional field without
   a schema version bump, stop and file that as its own entry.
 - **Approach:** `plan-tool`.
-- **Route:** `plan` · **Readiness:** `blocked-on IPPT-19` · **Tier:**
+- **Route:** `plan` · **Readiness:** `ready` · **Tier:**
   `experienced` (a prompt and an additive persisted field within existing
   contracts). **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
