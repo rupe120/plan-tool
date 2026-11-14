@@ -368,7 +368,7 @@ competes for the next session?"
 | **Next (idle plans)** | `lessons-reuse-instrumentation` (9) · `jira-sweep-deterministic` (9) · `deferred-scan-digest` (11) + `deferred-select-promote` (9) | Authored; execute or explicitly park — don't re-author beside them |
 | **Ready seeds** | `premise-ledger` · `audit-shape-saturation-and-provenance` · `audit-shape-advisory-generic-walk` · `walk-advisory-chat-mode` · `completeness-output-quality` · `audit-finding-staleness-classification` · `feature-health-2-attribution-and-ledger` · `lessons-store-restructure` | Keep; `create` only when that lane is the pick. Two more seeds sit on disk but are **blocked**, not ready — `jira-sweep-verify-code-truth` and `deferred-findings-digest`, each on the plan it cites |
 | **Blocked** | `detail-verbosity-compact-summary` on a run-grade re-baseline · `deferred-findings-digest` on `deferred-scan-digest` · `jira-sweep-verify-code-truth` on `jira-sweep-deterministic` | A blocked seed on disk is not ready work. |
-| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #391, #523, #524 · Deferred without the label: #216 (`quality-bench-01`; one disposable observation, only when a named A/B question needs it), `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
+| **Parked / defer** | Every entry labelled Readiness `parked` carries an `Unpark when:` line; list them with `grep -n 'Unpark when:' BACKLOG.md`. By area — roadmap: #208 (`roadmap-05`, unauthored until a named framework need), #242, #294, #329, #338, #349, #353, #362, #383, #409, #417, #437, #439, #462, #468, #489, #528 · run, audit and convergence machinery: #71, #81, #98, #105, #111, #119, #163, #173, #210, #264, #267, #268, #278, #301, #302, #303, #313, #322, #336, #355, #386, #457, #504 · lessons: #193, #194, #381 · other: #107, #114, #177, #185, #216 (`quality-bench-01`), #391, #523, #524 · Deferred without the label: `security-check-command` (10 steps, open design issues in-plan), and the Bucket D consolidation #79–#80. | A parked entry is not ready work; its `Unpark when:` line is the only thing that moves it. #353 waits for the narrow normalized-artifact collision correction to stabilize and for explicit selection; #79's claims need re-verification before any merge |
 
 **Authored plans** (manifest; every plan below is `status: planning`):
 
@@ -2412,6 +2412,8 @@ working straight down the tiers.
 **#216 — A quality benchmark for plan-tool's own output, floors first** *(anchor entry for the `quality-bench-NN-*` seed group)*
 
 - **Labels:** Route `plan` · Readiness `parked` · Tier `architect`
+- **Unpark when:** a concrete current-model A/B question needs the one disposable
+  observation.
 - **What:** one disposable observation of each metric's own rerun spread,
   run **only when a concrete "did change X help?" question exists** that the
   spread would let someone answer. A corpus replay that stores artifacts and
@@ -5642,7 +5644,7 @@ working straight down the tiers.
 - **Status:** not started.
 **#201 — One-time scripted cleanup of the redundant detail-level `archive/` directories #200 retires**
 
-- **Labels:** Route `direct` · Readiness `ready` · Tier `experienced`
+- **Labels:** Route `direct` · Readiness `blocked-on #200` · Tier `experienced`
 - **What:** remove, in this repo, the per-detail `archive/` directories under
   `docs/implementation-plans/` whose contents are fully recoverable from the
   version history. #200 stops *writing* them and deliberately leaves existing
