@@ -77,7 +77,7 @@ Store project choices in `<repo-root>/.plan-tool/backends.json`:
       "model": "gpt-6.1-sol",
       "commands": {
         "create": {"model": "gpt-6.1-sol"},
-        "detail": {"model": "gpt-5.6-terra"}
+        "detail": {"model": "gpt-6.1-sol"}
       },
       "extra_batch_argv": [],
       "extra_streaming_argv": []
@@ -133,12 +133,11 @@ plan-tool completeness-audit my-feature --iterate --commit -y < /dev/null
 plan-tool detail my-feature --commit -y < /dev/null
 ```
 
-Without selection flags, `create` uses Codex with `gpt-6.1-sol`; `detail` uses
-Codex with `gpt-5.6-terra`. Nested calls retain their outer command's choice.
-The model ids illustrate distinct command defaults; choose available models
-for your account. Complete the detail-grounded audit before implementation.
+Without selection flags, `create` and `detail` use Codex with `gpt-6.1-sol`.
+Nested calls retain their outer command's choice. The per-command entries show
+where a different model would go; choose available models for your account. Complete the detail-grounded audit before implementation.
 `plan-tool --backend codex detail my-feature --commit -y < /dev/null` retains
-the configured detail model; adding global `--model gpt-6.1-sol` overrides it.
+the configured detail model; adding global `--model <model>` overrides it.
 These commands demonstrate configuration delivery, not model quality.
 
 ## Rate-limit recovery
