@@ -13,7 +13,7 @@ This directory's own upkeep: scope fence, owner decisions and open items. Each s
 | Field | Value |
 | --- | --- |
 | Opened | 2026-11-13 |
-| Branch | `docs/handoff-cleanup` |
+| Branch | `docs/handoff-undated-names` |
 | Disposition | Open: release-cluster decision pending. The review loop was stopped by the owner after pass 4 (not converged; findings had turned to this branch's own wording) |
 
 Route: docs hygiene only. No code, plan, or backlog-entry semantics change.

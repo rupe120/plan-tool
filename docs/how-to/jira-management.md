@@ -1,7 +1,7 @@
 # Manage the Jira board and promote backlog work
 
-How the project lead promotes `BACKLOG.md` and `BUG_BACKLOG.md` entries to Jira
-project `IPPT` and runs the recurring triage loop. The policy lives in
+How the project lead promotes `BACKLOG.md` and `BUG_BACKLOG.md` entries to the Jira
+project configured in `.claude/local/project-context.json` and runs the recurring triage loop. The policy lives in
 [`docs/TRACKING.md` § "Jira board"](../TRACKING.md#jira-board), which keeps the board
 deliberately thin: labels carry classification and comments carry nuance. This page does
 not repeat that rationale.
