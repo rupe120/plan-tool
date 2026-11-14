@@ -250,8 +250,3 @@ def parse_carried_decisions(brief: str, *, brief_path: Path) -> CarriedDecisions
 def digest_decoded_text(text: str) -> str:
     """Return the SHA-256 of UTF-8 bytes re-encoded from decoded text."""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
-
-
-def read_brief_text(brief_path: Path) -> str:
-    """Read a concept brief through the roadmap's UTF-8 text contract."""
-    return Path(brief_path).read_text(encoding="utf-8")

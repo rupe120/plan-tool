@@ -2286,8 +2286,8 @@ def _read_first_run_brief(
     """The brief's exact bytes and their text under the roadmap's text contract.
 
     One read feeds both, so the stored ``brief.md`` and the text the stages
-    judge cannot differ; the text applies :func:`read_brief_text`'s
-    universal-newline translation.
+    judge cannot differ; the text applies universal-newline translation
+    (the roadmap's decoded-text contract).
     """
     if brief_path is None:
         if run_logger is not None:
