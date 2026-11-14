@@ -2080,46 +2080,6 @@ evidence. It is not an active implementation contract.
 - **Status:** seed authored, blocked on #142 executing first (per the
   operator-workflow arc's ordered route).
 
-**#155 — Harden the purity-cache below-floor (#144) reuse heuristic and success-gate against their documented edge cases**
-
-- **What:** the shipped purity-findings-cache (#145) below-floor reuse
-  (`completeness_phases._grade_purity_cache_miss`) and the write success-gate
-  (`detail._response_reached_findings`) are deliberately **best-effort
-  heuristics** — the plan's `## Deferred` and `## Risks` already document that
-  they can serve a stale "pure" verdict on edge cases (the cache trades away the
-  incidental re-roll of a non-deterministic judgment). Two completeness-audit
-  rounds and two `/code-review` rounds kept surfacing new *facets* of that same
-  heuristic imperfection; the concrete, cheap ones were fixed inline, and the
-  residual facets are gathered here rather than chased with ever-more heuristic
-  complexity:
-  - **Below-floor magnitude is scoped to `## Implementation` + `## Tests`** — a
-    substantive edit confined to `## Why`/`## Summary`/`## Files`/`## Acceptance`
-    moves `detail_hash` (→ miss) but scores ~0% and reuses. Documented accepted
-    window (the purity verdict tracks what the step *implements/tests*); revisit
-    if a real case shows a prose-only reframe changing the verdict.
-  - **Success-gate can be fooled by an echoing/reordering reply** — `## Findings`
-    (the last required section) is the completion signal; a reply that echoes the
-    prompt headers or truncates oddly could read as succeeded. Harden with an
-    end-of-text anchor or a structured-envelope contract.
-  - **Proportional floor** — partially hardened already (an absolute
-    `PURITY_REUSE_ABS_FLOOR` companion now bounds the large-step case); revisit
-    the constant against real audit history if it proves mis-sized.
-- **Why deferred:** these are the low-yield tail of an intrinsically non-
-  deterministic judgment being cached; the *core* exact-hit cache is sound, and
-  the worst case is a re-used stale verdict on a narrow edge (same class as the
-  documented verdict-nondeterminism tradeoff), never corruption. A durable fix
-  is either a sampled/TTL forced re-check (bounding staleness in time) or a
-  structured purity-only response contract (bounding the success-gate) — a
-  design decision, hence its own item.
-- **Approach:** `plan-tool` — its own scoping; touches `completeness_phases.py`
-  (grading), `detail.py` (`_response_reached_findings`, `_impl_tests_section_text`),
-  and possibly `prompts/detail-quality.md`.
-- **Quality:** `audit-coverage` — the failure mode is a silently under-checked
-  step, so calibrate any change against real audit history.
-- **Origin:** 2026-07-19 — purity-findings-cache (#145) post-run reconcile +
-  `/code-review` tail; the recurring-heuristic-edge escape-hatch (stop patching,
-  file the structural hardening).
-
 **#190 — Refuse `reconcile-plan` on steps an execution already implemented**
 
 - **What:** `reconcile-plan` is code-canonical — it treats the code on disk as
@@ -3742,8 +3702,8 @@ evidence. It is not an active implementation contract.
   compatibility), `plan_tool/cli/authoring.py`, `plan_tool/prompts/detail.md` +
   `detail-quality.md`, `DETAIL_FORMAT.md`, `docs/how-to/pipeline/detail.md`, CLI-reference
   regen, and `tests/test_detail.py`. **Out of scope:** the retired Jira-grade
-  lane, an interactive detail wizard (the discarded #49), #133
-  purity-prompt size, and auto-rewriting historical detail files.
+  lane, an interactive detail wizard (the discarded #49), purity-prompt
+  size (the discarded #133), and auto-rewriting historical detail files.
 - **Status:** a WIP plan `docs/implementation-plans/2-detail-verbosity-compact-summary.md`
   (status `planning`, 6 steps) is authored for this; its detail bundle is
   **incomplete** (steps 1–3 detailed, 4–6 pending) and it is
@@ -4982,33 +4942,6 @@ evidence. It is not an active implementation contract.
   `_plans_block`'s consolidation). **Value:** closes the same defect class
   round 4/5 of the ER-diagram code-review loop fixed for entity references,
   for every other reference kind this file renders.
-
-**#133 — Speed up the completeness-audit phase-1 per-step purity check (large prompt, ~130–255s/step)**
-
-- **What:** the per-step mixed-refactor purity check sends a ~140 KB prompt
-  per step and takes ~130–255s to return — over 6–7 steps, ~15–25 min of
-  phase-1 wall-clock before the conceptual passes even start.
-- **Re-triage 2026-08-20 — do not start this on #210's behalf.** The pass
-  is now off by default (`--purity` opts in), so it no longer lengthens an
-  ordinary audit, which was this entry's entire motivation. #210 is
-  passive observation only and may conclude the pass should be cut
-  outright — it has reported zero findings across 90 saved reports. Do not
-  construct a dedicated audit to settle #210 or optimize this pass;
-  revisit only if independently justified `--purity` audits produce
-  evidence that the pass should be kept.
-- **Levers, if revisited (measure before cutting):** trim the prompt
-  (`render_detail_quality_prompt` likely carries more context than the
-  judgment needs); cache/opt-in reuse across fingerprint-stable runs (the
-  finding is advisory, never blocks). Parallelizing the independent
-  per-step calls is **discouraged per CLAUDE.md's anti-parallelism
-  directive** — prefer the other two levers first.
-- **Dependencies:** none (the related synthesis-caching and shorter-round-trip
-  ideas, #43 and #124, are discarded).
-- **Approach:** `decision first` — profile before choosing trim vs. cache.
-- **Origin:** 2026-07-16 — diagnosed while making the purity check
-  hang-resilient; the hang was fixed separately, this is the residual
-  slowness.
-- **Status:** not started, paused pending #210.
 
 **#270 — `CliBackend.batch_output` is set by every backend but never read**
 
