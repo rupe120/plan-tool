@@ -565,17 +565,25 @@ working straight down the tiers.
   in the roadmap to plan/seed breakdown to encourage a broad array of smaller
   plans."
 
-**#534 — Experiment: from Loom's original stage 1–3 artifacts, can stage 4 produce the plans a human later had to add?**
+**#534 — Experiment: from Loom's original brief and artifacts, can the roadmap produce the plans a human later had to add?**
 
 - **Labels:** Route `direct`
   · Readiness `ready`
   · Tier `experienced`
   · Principle `converge-on-correct-plan`
 - **What:** a bounded experiment on Loom's `loom-aidlc-mvp` roadmap to choose
-  between the fixes for a thin stage 4 plan list, before building any of them.
-  The plan list is the weak point of the roadmap workflow: it tends to mirror
-  the component list, and nothing checks it for completeness below
-  "every component is on some plan" (`roadmap_gates.check_component_plan_coverage`).
+  between the fixes for a thin plan list, before building any of them. The
+  plan list is the weak point of the roadmap workflow: it tends to mirror the
+  component list, and nothing checks it for completeness below "every
+  component is on some plan" (`roadmap_gates.check_component_plan_coverage`).
+  **The cause may not be in stage 4.** Stage 4 can only divide work that
+  stages 1–3 surfaced: a concern no component owns (delivery, infrastructure,
+  environments) has no plan to land on, a constraint stage 2 never states
+  gives stage 4 no reason to plan for it, and the brief's own enumeration
+  shapes the row counts downstream. The experiment therefore locates the
+  stage where the missing work first drops out, and the fix may touch the
+  brief guidance, `roadmap-domain.md`, `roadmap-constraints.md`,
+  `roadmap-components.md`, `roadmap-plans.md` or `roadmap-seed.md`.
 - **Evidence (Loom at `44c22cc`, read 2026-11-14):**
   - `loom-aidlc-mvp`'s first stored version (`9590a8964b…`) derived **5 plans
     from 5 components**, all `keep`. The accepted head (`c7743c56d7…`, recorded
@@ -611,18 +619,28 @@ working straight down the tiers.
     - *B* — a prompt-only work inventory: stage 4 first lists each flow hop,
       store, constraint discharge, producer/consumer handoff and delivery
       concern (build, deploy, environment) from the artifacts, then assigns
-      every item to exactly one plan. No new gate code.
+      every item to exactly one plan. No new gate code;
+    - *upstream* — run only if the trace below shows the missing work is
+      absent before stage 4: the smallest prompt change at the stage where it
+      drops out (for example, `roadmap-components.md` naming an owner for
+      delivery and environment work), re-run from that stage with `--from-stage
+      N` and the baseline stage 4 prompt, twice.
+  - **Trace first:** before the arms run, read the first version's brief and
+    stage 1–3 artifacts for each of the four plans the human added, and record
+    the earliest stage where its work appears (or that it never does). This
+    costs no model calls and decides whether the *upstream* arm runs.
   - **Recorded per run:** plan count, disposition mix, recall against the
     reference with each match, extra plans, attempts, prompt bytes, wall time
     and cost (§6 of `docs/evidence/roadmap-run-measurements.md` cost about
-    $2.73 per stage 4 run, so six runs cost roughly $15–20).
+    $2.73 per stage 4 run, so the six stage 4 runs cost roughly $15–20; an
+    *upstream* run re-runs more stages and costs more).
   - **Decision the result feeds:** if A recovers the reference list, ship #533
     with A's line and stop. If B recovers materially more than A, file the
     work-inventory design (an inventory artifact plus an every-item-owned gate)
-    as a `plan` route at `architect` tier. If neither recovers the delivery
-    plans, check whether the stage 1–3 inputs mention delivery at all before
-    blaming stage 4: that is an input finding, and it goes to the brief and
-    constraints stages instead.
+    as a `plan` route at `architect` tier. If the *upstream* arm recovers what
+    the stage 4 arms cannot, file the change at the stage the trace named,
+    which may be the brief guidance rather than a prompt. The fixes can
+    combine; each is filed as its own entry.
 - **Effort:** small to medium. Copying artifacts, two prompt edits on throwaway
   branches, six stage 4 runs, and one evidence section.
 - **Risks / fallout:** n=2 per arm on one roadmap is provenance, not proof, and
@@ -632,14 +650,17 @@ working straight down the tiers.
   any work-inventory entry filed after it.
 - **Scope contract:**
   - **Outcome:** a dated section in `docs/evidence/roadmap-run-measurements.md`
-    recording plan count and recall against the reference list for each run of
-    the three arms, and the decision it supports.
-  - **In scope:** the throwaway input copy, the two prompt variants on
-    throwaway branches, the six runs, and the evidence section.
+    recording the stage where each missing plan's work first drops out, plan
+    count and recall against the reference list for each run of every arm, and
+    the decision it supports.
+  - **In scope:** the throwaway input copy, the no-model trace across the
+    brief and stages 1–3, the stage 4 prompt variants and the conditional
+    *upstream* variant on throwaway branches, their runs, and the evidence
+    section.
   - **Out of scope / Non-goals:** deliberately no merged prompt change (#533
-    carries that), no new gate, inventory artifact, schema change or stage
-    split (option C, splitting stage 4 into several calls, is only considered
-    if A and B both fail), no prompt-override flag added to plan-tool, no
+    carries that, and upstream changes get their own entries), no new gate,
+    inventory artifact, schema change or stage split (splitting stage 4 into
+    several calls is considered only if every arm fails), no prompt-override flag added to plan-tool, no
     write to Loom, and no change to Loom's roadmap or plans.
   - **Allowed behavior changes:** none in shipped code.
   - **Allowed reorganization:** none.
