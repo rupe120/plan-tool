@@ -186,6 +186,8 @@ The list, its options, and dependencies live in
 
 ## Where the full detail lives
 
+- [`docs/reference/contracts/aidlc-seam.md`](../reference/contracts/aidlc-seam.md) — the seam contract: the
+  three owners, how source material is treated, and source admission.
 - [`docs/design-plans/roadmap-aidlc-inception-fit.md`](../design-plans/roadmap-aidlc-inception-fit.md) — the full design,
   settled decisions, and open choices (this page's primary source).
 - `docs/evidence/roadmap-aidlc-intake-comparison-20260916.md` — the

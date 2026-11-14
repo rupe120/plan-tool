@@ -30,16 +30,13 @@ Route: docs hygiene only. No code, plan, or backlog-entry semantics change.
 - Two superseded roadmap pickups and the dated consolidation handoff are retired.
 - All handoffs are named by concept; the dated prefixes were dropped 2026-11-13. Durable
   content moved out: the AI-DLC fit design to `docs/design-plans/`, the Jira procedure
-  to `docs/how-to/jira-management.md`. One local-only note
+  to `docs/how-to/jira-management.md`, the AI-DLC seam contract to
+  `docs/reference/contracts/aidlc-seam.md`. One local-only note
   (`2026-10-16-token-ledger-logging-gaps-reverted-attempt.md`, excluded by
   `.git/info/exclude`) is untracked, unrenamed and unindexed on purpose.
 
 ## Still open
 
-- **Seam contract:** `roadmap-aidlc-integration-delivery.md` § "Seam contract" and the
-  orchestration-side fence in `integration-seam-resume-order.md` are not yet in a durable
-  document; move them to `docs/integrations/aidlc-integration.md` before either handoff is
-  retired.
 
 - **Release cluster (2026-10-19 to 10-23, about 15 files):** retire or keep as the record
   behind the release tags. Owner decision needed. The release pickup owns the next action
