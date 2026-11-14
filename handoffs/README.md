@@ -183,7 +183,7 @@ its arc documents, not here; the successor-slug rule lives in
 
 ## Review ledgers
 
-Closure labels follow § "Retention". A ledger is compressed 2026-09-29 unless its entry says otherwise; each entry says `compressed 2026-11-13` or `not compressed` where that differs.
+Closure labels follow § "Retention". Every table row states its compression state (`compressed 2026-09-29`, `compressed 2026-11-13` or `not compressed`); bulleted entries below state it or are not compressed.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
@@ -210,18 +210,18 @@ Closure labels follow § "Retention". A ledger is compressed 2026-09-29 unless i
 | [`run` no-edits-applied block](2026-10-13-no-edits-applied-code-review.md) | Converged after 6 rounds; not compressed | #456 |
 | [Gate-status review](2026-10-19-gate-status-code-review.md) | Converged after two Claude Code passes; not compressed | #500 |
 | [Completeness-apply retirement](2026-11-04-completeness-apply-retirement-implementation.md) | Low-yield convergence; merged through PRs #162–164; compressed 2026-11-13 | #369, #519, #520 retain their independent owners |
-| [Completed maintenance](2026-11-05-completed-maintenance-code-review.md) | Converged; merged through PRs #165–167 and #169 | Deferred stability bugs, nested-function citations, and run-ID collision in `BUG_BACKLOG.md` |
+| [Completed maintenance](2026-11-05-completed-maintenance-code-review.md) | Converged; merged through PRs #165–167 and #169; not compressed | Deferred stability bugs, nested-function citations, and run-ID collision in `BUG_BACKLOG.md` |
 | [`BACKLOG.md` id guard](2026-09-23-backlog-id-guard-code-review.md) | All in-diff findings fixed or declined | Finding E, the wider broken-link count (#426); not compressed |
-| [Roadmap brief-source drift](2026-09-12-roadmap-brief-source-drift-code-review.md) | Converged 2026-09-14 (10 rounds, 55 findings) | `BUG_BACKLOG.md` external-replacement risk (F26); closed route-local record and #367 |
-| [Roadmap concept comparison](2026-09-21-roadmap-concept-comparison-code-review.md) | **Stopped by the owner** 2026-09-21, 11 rounds | #406–#422 |
-| [Unpushed `main`](2026-09-21-unpushed-main-code-review.md) | Converged after 4 rounds | R2-1 tracked in `BUG_BACKLOG.md`; R4-8 `pending` (unfiled) |
-| [Roadmap model-failure receipts](2026-09-22-roadmap-model-failure-receipts-code-review.md) | Converged, loop stopped | One `BUG_BACKLOG.md` entry |
-| [Versioned feedback revision chain](2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md) | Converged, low-yield | #395, #427–#429 and `BUG_BACKLOG.md` |
-| [Structural feedback approval](2026-09-23-roadmap-structural-feedback-approval-code-review.md) | **Closed by owner decision** 2026-09-24 | Owner direction: run-log coverage for approve, reject, discard, promote, tracked as #434; cites #423, #429, #430 |
-| [Stack-aware approval](2026-09-24-roadmap-stack-aware-approval-code-review.md) | Converged 2026-09-25 | Cites #428, #429, #431 and `BUG_BACKLOG.md` |
-| [Detail deferrals-envelope repair](2026-09-25-detail-deferrals-envelope-repair-code-review.md) | Converged 2026-09-25 | Source `BUG_BACKLOG.md` entry removed at `8491289f` |
-| [Candidate envelope diagnostics](2026-09-26-roadmap-candidate-envelope-diagnostics-code-review.md) | Converged, low-yield, 2026-09-27 | `BUG_BACKLOG.md` entry for P1.3/P2.2 |
-| [Candidate anchor/gate correction](2026-09-27-candidate-anchor-gate-correction-code-review.md) | Converged, low-yield, after 8 passes | #431, #432 |
+| [Roadmap brief-source drift](2026-09-12-roadmap-brief-source-drift-code-review.md) | Converged 2026-09-14 (10 rounds, 55 findings); compressed 2026-09-29 | `BUG_BACKLOG.md` external-replacement risk (F26); closed route-local record and #367 |
+| [Roadmap concept comparison](2026-09-21-roadmap-concept-comparison-code-review.md) | **Stopped by the owner** 2026-09-21, 11 rounds; compressed 2026-09-29 | #406–#422 |
+| [Unpushed `main`](2026-09-21-unpushed-main-code-review.md) | Converged after 4 rounds; compressed 2026-09-29 | R2-1 tracked in `BUG_BACKLOG.md`; R4-8 `pending` (unfiled) |
+| [Roadmap model-failure receipts](2026-09-22-roadmap-model-failure-receipts-code-review.md) | Converged, loop stopped; compressed 2026-09-29 | One `BUG_BACKLOG.md` entry |
+| [Versioned feedback revision chain](2026-09-23-roadmap-versioned-feedback-revision-chain-code-review.md) | Converged, low-yield; compressed 2026-09-29 | #395, #427–#429 and `BUG_BACKLOG.md` |
+| [Structural feedback approval](2026-09-23-roadmap-structural-feedback-approval-code-review.md) | **Closed by owner decision** 2026-09-24; compressed 2026-09-29 | Owner direction: run-log coverage for approve, reject, discard, promote, tracked as #434; cites #423, #429, #430 |
+| [Stack-aware approval](2026-09-24-roadmap-stack-aware-approval-code-review.md) | Converged 2026-09-25; compressed 2026-09-29 | Cites #428, #429, #431 and `BUG_BACKLOG.md` |
+| [Detail deferrals-envelope repair](2026-09-25-detail-deferrals-envelope-repair-code-review.md) | Converged 2026-09-25; compressed 2026-09-29 | Source `BUG_BACKLOG.md` entry removed at `8491289f` |
+| [Candidate envelope diagnostics](2026-09-26-roadmap-candidate-envelope-diagnostics-code-review.md) | Converged, low-yield, 2026-09-27; compressed 2026-09-29 | `BUG_BACKLOG.md` entry for P1.3/P2.2 |
+| [Candidate anchor/gate correction](2026-09-27-candidate-anchor-gate-correction-code-review.md) | Converged, low-yield, after 8 passes; compressed 2026-09-29 | #431, #432 |
 | [Roadmap stack propagation](2026-10-08-roadmap-stack-propagation-code-review.md) | Converged 2026-10-08, four passes (3 and 4 consecutive and clean); compressed 2026-11-13 | #463, #464, one `BUG_BACKLOG.md` entry; its pickup section lists the next session's work (the audit replay, #461's last audit, the directives branch's pull request) |
 
 ## Known dangling citations

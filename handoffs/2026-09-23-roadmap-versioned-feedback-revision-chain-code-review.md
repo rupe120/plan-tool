@@ -15,7 +15,7 @@
 
 ## Settled decisions (hand these to any reviewer)
 
-*Compression note (2026-09-29): this ledger had no original settled-decisions list; the list below was assembled from its own declined and refuted findings.*
+*Compression note (added 2026-11-13; the ledger was compressed 2026-09-29): this ledger had no original settled-decisions list; the list below was assembled from its own declined and refuted findings.*
 
 Decided by the user during plan authoring; a finding contradicting one is invalid unless the decision itself is reopened.
 

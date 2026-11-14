@@ -16,7 +16,7 @@ this file records what remains to clean and the owner decisions that fence it.
 - **Outcome:** every file here is indexed in `README.md` with a live purpose, or retired
   with its durable content moved to its canonical home.
 - **In scope:** `handoffs/*.md` and the `README.md` index.
-- **Verification per retirement:** grep each retired filename across tracked files; hits may remain only in frozen reports and receipts, and each such path is named in README § "Known dangling citations". The broken-relative-link count must not rise.
+- **Verification per retirement:** grep each retired filename across tracked files; hits may remain only in frozen reports and receipts, and each such path is named in README § "Known dangling citations". The broken-relative-link count must not rise. Baseline 2026-11-13 over `handoffs/*.md` (links resolved in a checkout of `origin/main`): 1 dead target; after this branch: 1. Both are the `]($f)` placeholder inside README's own check command, not a real link.
 - **Out of scope (deliberately not touched):** frozen plans, plan details and saved
   `reports/` under `docs/implementation-plans/` and `docs/evidence/*.json` receipts,
   which pin their text and cite handoffs by path; rewriting any ledger finding or
@@ -48,9 +48,12 @@ Compression omissions, kept so a later reader does not restore them:
 | `run-iteration-guidance`, `plan-body-newline-preservation` | nothing | No id, hash or backlog reference was dropped |
 | `completeness-apply-retirement` | `#74`, `#139`, `#176` | Dated-provenance references in a verified-clean list, with no disposition |
 | `roadmap-context-ceiling` | Integration candidate id `c886d0f2` | Not a commit; the finding line describes the case |
-| `roadmap-versioned-from-birth` | the word "deferred" | Dispositions that read "deferred, tracked as #NNN" are recorded `tracked #NNN` (the README's closed set has no "deferred"); the backlog ids are unchanged |
+| `roadmap-versioned-from-birth` | the word "deferred" in finding dispositions | Finding 10 now reads "fixed in part, tracked in part (#447)" and the others read `tracked #NNN`, because the README's closed set has no "deferred"; the backlog ids are unchanged. The prose "Loop conclusion" keeps "Remaining deferrals" as a section title |
 | `step-description-alias` | nothing (report directory restored) | The saved reconcile reports' directory is named in the summary table |
 | `prompt-budget-model-window` | 9-character forms `0c06447a1`, `203d575b4`, `bcb89a6af`, `e058d8be6`, `f17befcf4` | Each survives in its 8-character form |
+
+Manual index check, 2026-11-13: with the "Known dangling citations" section excluded, every
+file other than `README.md` still has a link in a list or table (script, not eyeball).
 
 ## Still open
 
