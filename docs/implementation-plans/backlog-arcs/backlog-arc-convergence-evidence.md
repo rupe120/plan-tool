@@ -64,13 +64,10 @@ Do not push automatically; push only when the user explicitly requests it.
    ledger is a visibility prerequisite, not admission evidence. Incomplete,
    malformed, stale, copied, or incompatible evidence must fail closed to the
    #247 ledger rather than produce a comparison.
-7. #256 remains deferred unless a labelled corpus shows that the mandatory
-   manual identifier-and-vocabulary sweep lacks a deterministic locator and
-   bounded candidates improve complete class sweeps. Its only possible first
-   cut is advisory candidates, not a per-pass call or persisted inference.
-8. #260 is parked. Re-open reporting only for a preserved, concrete misleading
-   output with a named reader action and focused fixture; do not recreate a
-   renderer umbrella.
+7. #256 (automatic analogous-site sweeps) and #260 (stage-bar reporting
+   polish) are discarded; see `docs/history/backlog-decisions.md`. Reporting
+   work reopens only as a fresh entry for a preserved, concrete misleading
+   output with a named reader action and focused fixture.
 9. **Delivered 2026-09-01:** `Recommendation.restated_property` ships as an
    inline addition to `plan_tool/prompts/plan-audit.md`'s "Property coverage
    versus delivery mechanisms" rule, not the separate downstream pass
@@ -90,12 +87,10 @@ Do not push automatically; push only when the user explicitly requests it.
    that fence-recognizer was itself a positional regex, defeated five
    distinct ways (unclosed/nested/tilde/indented/CRLF fences); fixed by
    reusing `plan_tool/jira_grade.py`'s existing correct fence scanner
-   instead of a third from-scratch regex. #357 (judged bare-gap classifier consuming
-   this field) is unblocked but remains an investigation, not a seed: name
-   the closed vocabulary, false-positive mode, and a refuting fixture first,
-   per this arc's Evidence requirements and
-   `docs/explanations/nondeterministic-plan-design.md`'s Rule 3 ("climb the determinism
-   ladder before adding a judge").
+   instead of a third from-scratch regex. A judged bare-gap classifier consuming
+   this field (#357) is discarded: it adds a second model judgement with no
+   binary observable (`docs/explanations/nondeterministic-plan-design.md`'s
+   Rule 3, "climb the determinism ladder before adding a judge").
 10. **Withdrawn 2026-09-15 (owner-confirmed):** `orchestrator-owned-convergence-eval`
     did not earn implementation. 25 bare-plan audits across 2026-09-14/15
     never converged — the scope moved under the audit four times (four
@@ -115,9 +110,8 @@ Do not push automatically; push only when the user explicitly requests it.
     retired as moot; their former IDs do not identify current backlog work.
     #376 shipped in 1.2.0 (2026-11-05): `completeness-apply`, `direct-run`,
     and `direct-jira` were removed and conceptual findings are applied by
-    judged edits in the driving session. #369 stays live for the remaining
-    `apply_finding` authority inventory, decoupled from the evaluator's
-    evidence gate.
+    judged edits in the driving session. The remaining `apply_finding` authority
+    inventory (#369) is discarded; no decision consumes it.
 11. **#490 is `ready`.** Record an operator's decision on an audit finding
     (`declined`, `accepted-risk`, `reopened`, each with a reason) and show it
     to the next audit, so a settled finding is not re-reported as new while

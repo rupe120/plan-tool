@@ -76,7 +76,7 @@ backlog item.
 
 ## References
 
-- `BACKLOG.md` #314 — evidence-gathering scope and stop condition for this
+- #314 (discarded; see `docs/history/backlog-decisions.md`) — evidence-gathering scope and stop condition for this
   advisory-effectiveness decision.
 - `plan-seeds/archive/risk-profile-escalation-options.20260826.md` — dated
   design reference that supplies candidate properties without committing one.

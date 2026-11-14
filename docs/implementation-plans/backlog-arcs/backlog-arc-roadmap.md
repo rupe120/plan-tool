@@ -317,16 +317,16 @@ derived plans need, rather than how to publish or revise a roadmap artifact.
 The [Integration evidence record](../../evidence/integration-roadmap-to-plan-handoff.md)
 identifies the observed gaps and the limits of the pilot results.
 
-BACKLOG **#492 owns the single staged arc**, including each stage's deliverable,
-tool state and follow-on seed placeholders. This section routes to that entry;
-it does not duplicate its scope contracts or create another backlog owner.
+#492 owned the single staged arc and closed 2026-10-15 with `use-existing`;
+its record is in `docs/history/backlog-decisions.md`. This section routes the
+remaining items; it does not create another backlog owner.
 
 | Work | Route and prerequisite |
 | --- | --- |
-| #492 composition-handoff investigation | Start here; evidence-gated architect work. A use-existing/no-action result is valid. |
-| #493 selected shared-context delivery | Wait for #492's explicit input/consumer/compatibility decision; no implementation seed yet. |
+| #492 composition-handoff investigation | Closed 2026-10-15: `use-existing` for `create`, `detail` and `completeness-audit`. |
+| #493 selected shared-context delivery | Discarded: #492 recorded `no-action`. Re-file only on a separately demonstrated delivery need. |
 | #462 advisory cross-plan conflict report | Keep its existing scope and evidence gate. Preferred after the context decision for this subroute; it remains independently eligible when its own gate is met. |
-| #494 recorded-prerequisite view | Wait for its distinct operator need and input contract; not a new readiness authority or scheduler policy. |
+| #494 recorded-prerequisite view | Discarded: #492 recorded `no-action`. Re-file only on a distinct status-reporting need. |
 | #490 finding dispositions | Consult its convergence-evidence arc; do not duplicate its store or transfer ownership. |
 | #485 roadmap departures | Resolve its authority decision before relying on departure semantics; a pending feedback id alone does not approve a roadmap change. |
 | #484 fix-induced finding marks | Independent reporting work; not a prerequisite or a hidden expansion of shared-context delivery. |

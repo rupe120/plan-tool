@@ -859,7 +859,7 @@ this one was wrong in the direction that breaks things. #81 was scoped down to t
 *incidental* sub-blocks (drift guards, triage-halt, banner) only, leaving the
 divergent per-iteration body duplicated as Lesson 12 prescribes.
 
-**Tooling this pass:** BACKLOG #82 proposes formalizing the freeform threshold
+**Tooling this pass:** BACKLOG #82 (since discarded) proposed formalizing the freeform threshold
 markers into a structured, greppable annotation with a no-Claude threshold check
 (fires when a stated call-site count crosses) plus a telemetry kind (#72) that
 accumulates candidates over time — turning this manual recipe into a tool

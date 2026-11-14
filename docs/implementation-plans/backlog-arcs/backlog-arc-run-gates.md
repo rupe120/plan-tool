@@ -15,8 +15,7 @@ outcome and failure receipt) shipped 2026-10-13; both left this arc.
 
 Adjacent items that stay routed elsewhere and are not owned here: #87 (the
 test-authoring gate's baseline; it also records the two causes seen in this
-run), #88 (memoizing a `run` step's `claude` call), #108 (durable per-step
-run marker), and #488 (routing a failed step's receipt to roadmap feedback,
+run), #88 (memoizing a `run` step's `claude` call), and #488 (routing a failed step's receipt to roadmap feedback,
 routed by `backlog-arc-roadmap`).
 
 ## Details

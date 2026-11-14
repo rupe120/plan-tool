@@ -26,10 +26,6 @@ push automatically; push only when the user explicitly requests it.
 ## Ordered route
 
 1. **#66** — contract-trace audit mode.
-2. **#97** — symbol-aware prompt excerpts replacing head-only 4 KB (mission
-   P3 "grounded in live code"). Run its excerpt-strategy spike before the
-   build — this item is investigation-first, not implementation-ready as
-   written.
 
 ## Exit and handoff
 
@@ -37,12 +33,12 @@ This tier is clear — proceed to the remaining idle plans (see `BACKLOG.md`'s
 Now/Next/Blocked/Parked board, "Next (idle plans)" row, for the current list
 — it is a working, frequently-refreshed list and is not duplicated here to
 avoid drift), then to
-[tier T4](backlog-arc-tier-t4.md) once #66 and #97 are each resolved or
+[tier T4](backlog-arc-tier-t4.md) once #66 is resolved or
 explicitly deferred with a stated reason in `BACKLOG.md`.
 
 ## Out of scope
 
-This file does not carry #66's or #97's implementation content — read each
+This file does not carry #66's implementation content — read the
 item's full `BACKLOG.md` entry before acting. It does not widen to cover
 unrelated verifiability/grounding work
 that has not been tier-tagged T3 in `BACKLOG.md`.

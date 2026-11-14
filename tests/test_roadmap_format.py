@@ -435,7 +435,7 @@ def test_data_contract_documents_no_retired_source_record_events() -> None:
 def test_roadmap_arc_router_includes_all_untiered_roadmap_items() -> None:
     """Keep every untiered roadmap-arc item visible from the backlog router."""
     backlog = " ".join(_BACKLOG.read_text(encoding="utf-8").split())
-    assert "#208, #366, the structured-upstream group #383–#384, and #385" in backlog
+    assert "#208, the structured-upstream group #383–#384, and #385" in backlog
 
 
 def _immutable_candidate_version_reference_block(doc: str) -> str:

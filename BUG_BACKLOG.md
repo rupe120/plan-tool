@@ -104,7 +104,7 @@ Durable re-open conditions for retired items are recorded in
   the shared run-log layer, then migrate each producer deliberately. It must
   preserve the existing no-raw-JSONL rule, make a missing or failed sidecar
   capture explicit, and keep an optional diagnostic-write failure from
-  changing the command's real outcome. Reconcile BACKLOG #217 and #332 rather
+  changing the command's real outcome. Reconcile BACKLOG #332 and the discarded #217 (`docs/history/backlog-decisions.md`) rather
   than creating parallel raw-response storage.
 - **Roadmap slice shipped 2026-09-21:** fresh stage authoring (`_run_stage`),
   bounded stage feedback (`_run_bounded_stage_feedback`), and local
@@ -128,7 +128,7 @@ Durable re-open conditions for retired items are recorded in
   the completed roadmap class from claiming a cross-command migration.
 - **Not this effort:** exception classification, CLI return-code policy,
   terminal status vocabulary, template-read normalization, and interrupt
-  lifecycle behavior. Interrupt lifecycle behavior remains in BACKLOG #339.
+  lifecycle behavior. Interrupt lifecycle behavior is not tracked (the discarded #339, see `docs/history/backlog-decisions.md`).
 - **Approach:** `plan-tool` — this is a cross-command persistence and
   observability contract, not a safe opportunistic refactor. Start only after
   Seed Ingestion Routing's current create work has completed its route,

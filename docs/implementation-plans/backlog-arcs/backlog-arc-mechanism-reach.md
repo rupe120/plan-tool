@@ -18,10 +18,9 @@ identified it.
 
 ## Delivery cadence
 
-Treat the remaining #336 and #335 entries as plan-tool work. Commit before
+Treat the remaining #336 entry as plan-tool work. Commit before
 every command. #334's authoring contract and fixtures are complete; #336 can
-preserve an excluded shared semantic change as a manual handoff, then #335
-adds the audit lens. A manual handoff or recommendation remains a decision
+preserve an excluded shared semantic change as a manual handoff. A manual handoff or recommendation remains a decision
 surface: it never
 authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 
@@ -33,12 +32,11 @@ authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 2. Execute **#336**. It preserves a split-create `defer` as
    an operator-visible handoff for separately intentional work, without
    creating that work automatically.
-3. Execute **#335** after #336. Its lens may inspect an explicitly
-   selected broad contract, but it must not infer a mechanism from a bare plan
-   or treat local use of a shared structure as a defect.
-4. When #335 identifies a genuine shared semantic change, create a separate
+3. When a genuine shared semantic change is identified, create a separate
    backlog item and plan for that contract. The focused vertical plan does not
    absorb the shared change; #336's manual handoff names the separate work.
+   (The audit lens that would have identified it, #335, is discarded; see
+   `docs/history/backlog-decisions.md`.)
 
 ## Decision gates
 
@@ -60,9 +58,7 @@ authorizes a rewrite, a scope expansion, or a shared-mechanism change.
 ## Exit and handoff
 
 This arc finishes when #336 preserves an excluded shared semantic change as a
-manual handoff and #335
-surfaces only explicit, unjustified shared semantic commitments as manual
-decisions. A required shared change leaves this arc as one separately scoped
+manual handoff. A required shared change leaves this arc as one separately scoped
 backlog item; an unchanged or bounded owner choice needs no follow-up arc.
 
 ## Out of scope
