@@ -337,9 +337,15 @@ retain their boundaries.
 collection lookup to `roadmap_artifacts.stage_row_collections` rather than
 hand-maintaining a second isinstance dispatch (that function's own docstring
 warns two such copies would drift), but keeps its own fail-closed `TypeError`
-guard for an unsupported artifact type rather than relying on
-`stage_row_collections`'s permissive fallback, which has none (the `--compare` hardening entry in `BUG_BACKLOG.md` tracks closing that gap at
-the source for every caller, not just this one).
+guard for an unsupported artifact type, so the comparison does not depend on the
+shared dispatch's guard (`design_row_collections` also refuses an unsupported
+type with a `TypeError`, for every caller).
+
+`run_roadmap_comparison` refuses a snapshot whose row ids collide, using the
+stage gates' `check_duplicate_row_ids`, because the diff keys rows by id and
+would otherwise drop one of two rows that share one. A published version has
+passed that gate, so the refusal fires only for a version a tool without the
+gate wrote.
 
 `roadmap_compare.py:_stripped_for_comparison` ignores a REFERENCE field's
 `entity_id` only where `roadmap_relations.py:_row_relation_specs` treats it
