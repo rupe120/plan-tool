@@ -104,21 +104,14 @@ to the stage except being pasted into the brief (#383). Questions the upstream
 engine already asked and a human already answered are re-derived here and land
 as `pending` guesses (#384). And a control plane presenting `plan-tool`
 alongside another engine has this engine's run log but no state projection to
-render between runs (#385). The brief record now binds its path and decoded-text
-baseline: changed or legacy content refuses before roadmap work until an
-operator deliberately accepts current text at the same path. Acceptance replaces
-only that baseline; it does not re-ground artifacts, feedback, or seeds. #383
+render between runs (#385). #383
 and #384 widen what a stage may *read*; they grant no new write authority, and
-the gates remain the only publication authority. The delivered stage-run
-source-admission boundary converges under independent review on 2026-09-14.
-The closed route-local brief-drift record closes the three non-stage policies: analysis creation and immutable
-root enrollment refuse changed or legacy briefs redacted with status `1`, impact
-inspection remains log-free with successful no-route status `0`, and structural
-rewrite preserves evaluator admission and guarded recovery before its redacted
-refusal. #367 closes the separate stage-run operator-intent decision:
-`--confirm-brief-rebind` is required with the recorded `--from-existing` path
-to accept changed or legacy content, while matching and initial runs retain
-ordinary behavior and no non-stage route receives the flag.
+the gates remain the only publication authority. Brief-drift admission
+(`source.json` baselines, `--confirm-brief-rebind`, and the route-local
+non-stage policies) shipped 2026-09-14 to 2026-09-16 and was removed
+2026-11-05 by `roadmap-versioned-from-birth`: a stage run now refuses once an
+accepted head exists, and a changed product definition goes through feedback
+and candidate review or a successor lineage.
 
 ### Canonical Plan-tool delivery gate
 
@@ -275,26 +268,19 @@ detail.
    only when a named framework-specific roadmap need requires a checkable
    coverage contract. It must remain one ordered stage, not an opportunistic
    rewrite of the completed positions.
-7. **Closed (2026-09-14).** Source admission records a decoded-text digest on
-   `source.json`'s first write and refuses changed or legacy content before
-   roadmap work. An operator may accept current text only at the same recorded
-   path, replacing the source baseline without re-grounding artifacts. Semantic
-   changes remain owning-artifact feedback or a successor lineage. Its
-   independent review converged.
-8. **Closed (2026-09-14).** The route-local brief-drift record gives each
-   non-stage route a tested,
-   route-local changed-brief and legacy-brief policy. Analysis creation and
-   immutable-root enrollment refuse redacted with status `1`; log-free impact
-   inspection returns status `0` with no route or workflow; structural rewrite
-   preserves evaluator admission and guarded recovery before its refusal. None
-   gains stage-run rebind or lifecycle authority.
-9. **Closed (2026-09-16).** #367 requires
-   `--confirm-brief-rebind` with the recorded `--from-existing` path before a
-   changed or legacy stage-run brief can replace its source baseline. It keeps
-   matching and initial behavior unchanged, rejects the flag on non-stage
-   routes, and grants no artifact or broader source authority. Three complete
-   reconcile sweeps and two final independent Sonnet 5 reviews find no live
-   logic/property failure after the final production fix.
+7. **Superseded (2026-11-05).** Source admission (a decoded-text digest on
+   `source.json`'s first write, refusing changed or legacy content) shipped
+   2026-09-14 and was removed by `roadmap-versioned-from-birth`. A stage run
+   refuses once an accepted head exists. Semantic changes remain
+   owning-artifact feedback or a successor lineage.
+8. **Superseded (2026-11-05).** The route-local brief-drift policies for
+   analysis creation, immutable-root enrollment, impact inspection, and
+   structural rewrite shipped 2026-09-14 and were removed with their routes by
+   `roadmap-versioned-from-birth`.
+9. **Superseded (2026-11-05).** #367 (`--confirm-brief-rebind` before a
+   changed or legacy stage-run brief replaces its source baseline) shipped
+   2026-09-16 and was removed by `roadmap-versioned-from-birth`; the flag no
+   longer exists.
 10. **#384 review-converged; #383 remains held.** #384 carries settled
    upstream decisions in as gated `settled` `decisions` rows; #383 generalizes
    to per-stage supplements with declared `grounding`/`judgment` roles. They

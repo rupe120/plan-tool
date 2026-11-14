@@ -959,12 +959,14 @@ def test_doc_states_absent_stack_is_not_recorded_and_empty_stack_is_recorded(
     assert parse_constraints_artifact(emptied).stack == ()
 
 
-def test_backlog_461_stays_plan_authored_until_full_shipment() -> None:
-    """Removal of #461 belongs to full shipment; update this test when that lands."""
+def test_backlog_461_is_a_closed_record_once_shipped() -> None:
+    """#461 shipped (PR #46, 2026-10-09); it stays a closed record, not a live entry."""
     backlog = _BACKLOG.read_text(encoding="utf-8")
     heading = next(
-        (line for line in backlog.splitlines() if line.startswith("**#461 ")), None
+        (line for line in backlog.splitlines() if "#461:" in line and line.startswith("**Closed")),
+        None,
     )
-    assert heading is not None and "PLAN-AUTHORED" in heading, heading
+    assert heading is not None, "#461 must read as a closed record"
+    assert not any(line.startswith("**#461 ") for line in backlog.splitlines())
     assert (_REPO_ROOT / "docs/implementation-plans/archive/2-roadmap-stack-layer.md").is_file()
     assert (_REPO_ROOT / "plan-seeds/archive/roadmap-stack-layer.replaced.md").is_file()
