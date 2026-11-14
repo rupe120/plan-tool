@@ -6379,40 +6379,6 @@ separate)**
   between plan/roadmap concepts, not an external data-contract standard.
 - **Status:** not started; needs a design pass before it's buildable.
 
-**#310 — Decide whether `roadmap_reader_guard` should cover the recorded-brief path**
-
-- **What:** `roadmap_reader_guard` / `roadmap_writer_guard` flock only
-  `.roadmap-<slug>.writer.lock`, which coordinates against another roadmap
-  *writer*. The recorded brief text (`read_brief_text`, consumed by
-  `capture_roadmap_impact_snapshot` via `_capture_recorded_brief_digests`) is
-  read from a `repo_root`-relative path that lives outside `roadmap_dir` and
-  is never covered by that lock. Nothing currently defends against the brief
-  file being mutated by something other than a roadmap writer while a reader
-  guard is held.
-- **Why not fixed on the spot:** surfaced by `/code-review` while landing
-  BACKLOG #309's `snapshot_cache` addition to `current_impact_analysis`
-  (2026-08-24) — the review's framing was that caching widens the staleness
-  window from "per-record read time" to "the first record's read time reused
-  for the rest of the call." That framing is contestable rather than settled:
-  giving every record in one CLI view call a **consistent** snapshot of
-  roadmap state as of the start of the call is arguably the *more* correct
-  behavior (closer to snapshot-isolation semantics) than re-reading fresh
-  per record, which could already show different records different states
-  within one logical view call. Either resolution — widen the lock, or decide
-  the current guard's scope (roadmap-writer coordination, not arbitrary
-  filesystem mutation of every consumed source) is intentional and sufficient
-  — is a real decision, not a proportional fix to make inside a residual
-  code-quality cleanup entry.
-- **Effort:** small to investigate (read `roadmap_reader_guard` and every
-  brief-consuming call site, decide the intended contract); a fix, if one is
-  warranted, is a separate follow-up sized by that decision.
-- **Approach:** `direct` (investigation) — decide the contract, document it
-  or extend the lock; no plan-tool plan needed to reach a decision.
-- **Dependencies:** none.
-- **Origin:** 2026-08-24, `/code-review 917fecc4..HEAD high` on BACKLOG
-  #309's landed fixes.
-- **Status:** not started.
-
 **#311 — Two remaining pre-existing efficiency gaps noticed while landing BACKLOG #309's caching fix**
 
 - **What:** a second `/code-review 917fecc4..HEAD high` round (2026-08-24,
@@ -7769,52 +7735,27 @@ separate)**
   deterministic iterate-loop action gates separately; this item adds
   the end-to-end leak check across all surfaces.
 
-**#79 — Extract the *verified* duplicated leaf helpers (measured, not eyeballed — most of the original list turned out not to be duplication)**
+**#79 — Finish the lenient JSON-envelope slice; the measured do-not-merge list stays (most of the original duplicate-helper list turned out not to be duplication)**
 
 - **Principle:** `none` — consolidation; its claims need re-verifying before any merge.
-- **What:** Extract only the helpers proven identical by an AST pass that
-  normalizes away docstrings, function names, and argument names. Measured
-  2026-08-02 over `plan_tool/` (~91k lines): the whole package holds **6
-  exact-duplicate function groups / 7 redundant copies**. This entry ships
-  that set and **documents the rest as deliberately separate**, because the
-  earlier version of this entry mandated at least three merges that are wrong.
-- **Extract (verified pure duplication):**
-  - **Durable atomic write** — `_atomic_write_text` is byte-identical in
-    `grounding.py:67`, `purity_cache.py:111`, `review_persistence.py:90`
-    (`NamedTemporaryFile` → `write` → `flush` → `fsync` → `os.replace`).
-    Extract **one** stdlib-only leaf for these three.
-  - ~~UTC timestamp~~ — **withdrawn 2026-08-02, see the do-not-merge list.**
-    The four bodies are identical, and merging them is still the wrong call.
-  - **Repo-relative path display** — three identical pairs:
-    `cli/console.py:26` `_short_path` ↔ `create.py:883` `_display_path`;
-    `cli/console.py:222` `_repo_rel` ↔ `cli/inspect.py:396` `_display_path`;
-    and `review.py:1369` `_repo_relative_posix` ↔ `review.py:6401`
-    `_repo_relative_display` (**same file** — the cheapest fix in the repo).
-  - **Working-tree dirty check** — `cli/gitcommit.py:23 working_tree_dirty`
-    ↔ `cli/run_cmd.py:563 _working_tree_dirty`.
-  - **Small pairs** — `launcher.py:485` ↔ `shell.py:259`
-    `_can_prompt_on_rate_limit`; `run_log.py:894` ↔ `run_log.py:948` `_sink`
-    (same file); `progress.py:110` ↔ `progress.py:164` `notice` (same file);
-    `foundational_logic.py:205 _soft_str` ↔ `jira.py:750
-    _optional_stripped_str`.
-  - **Lenient JSON-envelope slice** — 10 sites across 6 files in **two**
-    bracket shapes: object `find("{")…rfind("}")` (`lessons.py` ×2,
-    `create.py` ×2, `foundational_logic.py`) and array `find("[")`
-    (`create.py` ×2, `gates.py:272`, `annotate.py:430`, `jira.py:1214`). Down
-    from the 20 sites this entry once claimed. These are statement blocks
-    inside larger parse functions, not standalone functions, so the AST pass
-    does not see them — verify each by hand before folding, and parameterize
-    the bracket rather than minting two helpers.
-    **2026-08-20:** the bracket-parameterized helper landed as
-    `plan_tool/response_contract.py:JsonResponseContract` (built for a
-    different, broader purpose — pairing a prompt's format instructions
-    with its parser — not specifically to close this entry) and was wired
-    into 3 of the 10 sites: `foundational_logic.py`, `gates.py:272`, and
-    `annotate.py:430`. The remaining 7 — `lessons.py` ×2, `create.py` ×4
-    (2 object, 2 array — `create.py` was mid-migration onto the same
-    contract as of this note, so recheck before assuming these are still
-    local), and `jira.py:1214` — are still local slicing. Migrating them
-    onto `JsonResponseContract` is the natural way to finish this bullet.
+- **What:** an AST pass that normalizes away docstrings, function names, and
+  argument names found, on 2026-08-02 over `plan_tool/` (~91k lines), 6
+  exact-duplicate function groups / 7 redundant copies, and showed that most of
+  this entry's original list was not duplication. Every one of those groups
+  has since been merged or removed: `tests/test_duplication.py` holds a zero
+  baseline, with one allowlisted pair filed as #273. What remains is the
+  lenient JSON-envelope slice below, and the do-not-merge list, which
+  `tests/test_duplication.py` cites.
+- **Remaining extract — lenient JSON-envelope slice (4 local sites):** object
+  `find("{")…rfind("}")` at `create.py:4417`, `lessons.py:782` and
+  `lessons.py:1479`, and array `find("[")…rfind("]")` at `jira.py:883`. These are
+  statement blocks inside larger parse functions, not standalone functions, so
+  the AST pass does not see them: verify each by hand before folding.
+  `plan_tool/response_contract.py:JsonResponseContract` is the bracket-
+  parameterized helper that already serves `foundational_logic.py`, `gates.py`
+  and `annotate.py`; migrating these four onto it finishes the slice.
+  `intent_proposal.py:174` scans for the matching bracket instead and is a
+  different shape, so it stays out.
 - **Do NOT merge (measured, with the reason each stays separate):**
   - **`fileio.atomic_write_text` and `lessons._atomic_write_text` are *not*
     the same helper as the trio above — they are three different durability
@@ -7904,18 +7845,14 @@ separate)**
   both import `plan_tool.review` (and `lessons` also `checkpoint`/`shell`) at
   module level, so neither is a stdlib-only leaf. Keep `--iterate`/`--no-iterate` and
   per-command help-text variants out of scope (those vary intentionally).
-- **Effort:** small — ~180 redundant lines total; one helper per commit. The
-  three same-file pairs are minutes each.
-- **Risks:** low **for the extract list**, because identity is machine-verified
-  rather than eyeballed. The risk this entry now guards against is the
-  opposite one: merging a look-alike. Re-run the AST check before folding
-  anything not listed above. Direct change → audit → fix → re-audit with
+- **Effort:** small — four call sites, one concern per commit.
+- **Risks:** low **for the four JSON-envelope sites**, which are checked by
+  hand. The risk this entry guards against is the opposite one: merging a
+  look-alike. Re-run the AST check before folding anything not listed above. Direct change → audit → fix → re-audit with
   affected tests each round (CLAUDE.md).
-- **Approach:** direct. The extract list is mechanical — extract the leaf,
-  migrate call sites, one concern per commit. Two items carry a real decision
-  and should land last or not at all: folding `cli/console._atomic_write` into
-  the trio (which cleanup posture wins) and the JSON-envelope slice (whether
-  one bracket-parameterized helper beats 10 explicit sites).
+- **Approach:** direct. Migrate the four sites onto `JsonResponseContract`, one
+  concern per commit; check per site that `JsonResponseContract` accepts the
+  input each site accepts today, and leave a site local if it does not.
 
 **#80 — Consolidate duplicated argparse parent parsers into `parser.py`**
 
@@ -9237,76 +9174,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** 2026-08-08, found in BACKLOG #253's own round-3 bare-plan audit;
   self-flagged `[out-of-scope-deferred]` by that audit and split out rather
   than absorbed.
-- **Status:** not started.
-
-**#280 — Verify and resolve the `completeness-cli-layering` code-review duplication candidates (remaining saved-audit candidate)**
-
-- **What:** Verify the remaining saved-audit lookup comparison between
-  `cli/completeness_phases.py` and `cli/data_contract_cmd.py`. The application
-  walk, source-rank, repeated-parse, and application-only resolution candidates
-  have no surviving target. Re-derive any duplication before consolidating.
-- **Checklist — each resolves to "consolidated, with a test proving the
-  preserved difference" or "documented as intentionally distinct, closed":**
-  1. **`completeness_phases.py` vs. `data_contract_cmd.py`.** Two
-     suspected overlaps: sidecar load/target resolution with divergent
-     error handling (swallow-to-`{}` vs. raise `ReviewLoadError`), and
-     "find the newest current, qualified saved audit" scan logic.
-- **Effort:** small per item to investigate/confirm; medium per item if a
-  real consolidation follows.
-- **Approach:** `direct` — investigation-first per item; no plan-tool plan
-  needed.
-- **Origin:** 2026-08-15, `/code-review high` rounds 4–6 on
-  `completeness-cli-layering`.
-- **Status:** not started.
-
-**#284 — Verify and resolve the 2026-08-17 roadmap escalation/impact code-review consolidation candidates (4 findings)**
-
-- **What:** a 2026-08-17 code review of the roadmap escalation/impact
-  modules flagged 4 candidate consolidations/optimizations, none yet
-  investigated or decided.
-- **Checklist — each resolves to a landed change (with contract tests) or a
-  documented "stays separate/deferred" decision:**
-  1. **Shared lifecycle owner for the receipt and impact runners?**
-     `roadmap_escalation_run.py` and `roadmap_impact_run.py` each own a
-     similarly shaped lifecycle (start a run log, append a redacted
-     preflight, persist one terminal event, generic cleanup, preserve a
-     result when cleanup is interrupted) but differ in event payloads,
-     publication admission, and terminal vocabularies. A parallel `run_end`
-     interruption bug the review found is already fixed separately; only
-     the consolidation decision remains. Risk: a generic helper can leak
-     receipt-only fields into impact events or homogenize intentionally
-     different telemetry-failure behavior.
-  2. **Strict JSON decoder consolidation?** Receipt, impact-analysis,
-     revision, and concept-tree paths each reject malformed JSON with local
-     helpers — derive an AST-normalized comparison of error-type,
-     float-policy, trailing-content, and persisted-contract differences
-     before sharing anything. **2026-08-20 update:** `concept_tree.py`'s
-     *emit* path already moved onto the unrelated shared
-     `response_contract.py:JsonResponseContract`, and that migration
-     initially dropped duplicate-JSON-key rejection — caught in code
-     review, fixed by threading an `object_pairs_hook` through
-     (`tests/test_concept_tree.py::TestParseEmittedConcepts`), a live
-     instance of exactly the risk this item names. `concept_tree.py`'s
-     on-disk `load_concepts` decoder is still local. When this runs, decide
-     whether the remaining three roadmap decoders should fold onto
-     `JsonResponseContract` too, rather than treating the emit path as
-     still up for grabs.
-  3. **Optimize impact-closure traversal/inspection?** Measure first — an
-     adjacency index for closure traversal and per-view reuse of
-     snapshot/classification work are only worth building if a reproducible
-     large-graph/multi-analysis benchmark shows a material cost. Must
-     preserve deterministic ordering, the current-state guarantee, and the
-     existing capture/recheck boundary and lock-free empty-evidence scan —
-     none of those may be removed as "deduplication."
-  4. **Collapse `RoadmapImpactSnapshot`'s parallel tuples?** Parsed
-     artifacts, captured text, and source digests are kept as aligned
-     tuples; decide whether one per-artifact value can own that alignment
-     without losing the independent evidence that proves a parsed artifact
-     still matches captured bytes.
-- **Approach:** `plan-tool` per item — each is a genuine design decision,
-  not a mechanical dedup.
-- **Origin:** 2026-08-17 code review of the roadmap escalation/impact
-  modules.
 - **Status:** not started.
 
 **#318 — Audit `.gitignore` correctness and consolidate ignore-rule management onto a single tracked location**
@@ -13136,6 +13003,32 @@ longer describes current work. It is retained only as dated carve-out context.
 
 ---
 
+
+**#531 — `roadmap_reader_guard` and `read_brief_text` have no production caller**
+
+- **What:** `plan_tool/roadmap_revision_publish.py:roadmap_reader_guard` (with
+  its helper `_acquire_reader_lock`) and `plan_tool/roadmap_source.py:
+  read_brief_text` are referenced only by tests
+  (`tests/test_roadmap_revision_publish.py`, `tests/test_roadmap_source.py`).
+  A grep over `plan_tool/` on 2026-11-14 finds one hit for `reader_guard` (the
+  definition) and one for `read_brief_text(` (the definition). Their consumer,
+  the impact-snapshot capture path, no longer exists, so the question a former
+  entry (#310) asked — whether the guard should cover the recorded-brief path —
+  has no live subject.
+- **Outcome:** an owner decision, applied: delete both helpers with their tests,
+  or keep them as the sanctioned primitives for a named future read-only
+  roadmap view and say so in their docstrings.
+- **In scope:** the two helpers, `_acquire_reader_lock` if it becomes unused,
+  and their tests.
+- **Out of scope / Non-goals:** `roadmap_writer_guard`, the writer lock file,
+  and any new reader that would need the guard.
+- **Allowed behavior changes:** none for any shipped command.
+- **Allowed reorganization:** none.
+- **Verification:** `grep -rn "reader_guard\|read_brief_text" plan_tool` shows
+  only the retained definitions (or none); the full suite passes.
+- **Stop / defer:** keep both if a roadmap reader is planned within the arc.
+- **Route:** direct · **Readiness:** decision-needed · **Tier:** experienced.
+- **Origin:** backlog reconciliation, 2026-11-14, while closing #310.
 
 ---
 
