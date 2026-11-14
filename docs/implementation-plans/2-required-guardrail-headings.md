@@ -50,6 +50,7 @@ steps:
   - tests/cli/test_scope_out_cmd.py
   complexity: medium
   change_type: feature
+  detail: docs/implementation-plans/plan-details/required-guardrail-headings/02-make-scope-out-reground-write-all-three.md
   description: 'Make `scope-out` and `reground` write all three guardrail headings
     into the seeds they render. `scope_out.render_carved_seed`, `scope_out.render_carved_region_seed`
     and `reground.render_rebaseline_seed` copy each heading''s body verbatim from
