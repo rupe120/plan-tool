@@ -851,6 +851,34 @@ Durable re-open conditions for retired items are recorded in
 - **Origin:** 2026-07-31, caught mid-run; moved from BACKLOG #209, 2026-11-14.
   Lands before any widening of `--commit` to more verbs (BACKLOG #89).
 
+### A `create --iterate` re-proposal that reuses a done or current step's id for a different step drops the executed step from the plan, and a reworded title resets a finished step
+
+- **Severity:** RISK
+- **Files:** `plan_tool/create.py:_preserve_on_disk_step_fields` and
+  `_is_same_step` (the identity rule), and the merge in the iterate loop that
+  reads `existing_by_id`; the step-removal guard beside it.
+- **Symptom:** step ids are positional and the re-proposal runs from scratch, so
+  identity is "same id and same title". Two cases follow. (1) A re-proposal that
+  gives a `done` or `current` step's id to a different step replaces it: the
+  executed step is no longer in the plan and the loop only warns, because two
+  steps cannot share one id and the id-absent guard that keeps such steps does
+  not apply. (2) A re-proposal that rewords a step's title (case, punctuation, a
+  synonym) is read as a different step, so a finished step goes back to
+  `pending` and a later `run` repeats it. Both need a plan whose steps have
+  already run when `create --iterate` re-proposes them, which is rare.
+- **Fix:** decide what identifies a step. The choices are a stable step id the
+  re-proposal must keep, a refusal to merge when it would replace a `current` or
+  `done` step, or the current title heuristic with its limits recorded.
+  Deliberately not done: normalizing titles (a synonym cannot be normalized), or
+  renumbering the executed step under a new id (its `depends_on` references
+  would then point at different steps).
+- **Approach:** `plan-tool` — a decision about a persisted identity, taken
+  across `schema.py`, `create`, `run` and the manifest.
+- **Route:** plan · **Readiness:** decision-needed · **Tier:** architect.
+- **Origin:** 2026-11-14, review of the fix for the status carry-over bug (the
+  former BUG_BACKLOG entry on `create --iterate` carrying `status` onto a
+  different step).
+
 ## MINOR
 
 ### `_append_added_row_prose` copies its artifacts mapping even though its sole caller hands it an already-fresh, about-to-be-reassigned dict
