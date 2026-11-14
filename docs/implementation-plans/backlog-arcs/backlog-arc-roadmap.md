@@ -328,7 +328,7 @@ remaining items; it does not create another backlog owner.
 | #462 advisory cross-plan conflict report | Keep its existing scope and evidence gate. Preferred after the context decision for this subroute; it remains independently eligible when its own gate is met. |
 | #494 recorded-prerequisite view | Discarded: #492 recorded `no-action`. Re-file only on a distinct status-reporting need. |
 | #490 finding dispositions | Consult its convergence-evidence arc; do not duplicate its store or transfer ownership. |
-| #485 roadmap departures | Resolve its authority decision before relying on departure semantics; a pending feedback id alone does not approve a roadmap change. |
+| #485 roadmap departures (merged into #490) | Resolve its authority decision in #490 before relying on departure semantics; a pending feedback id alone does not approve a roadmap change. |
 | #484 fix-induced finding marks | Independent reporting work; not a prerequisite or a hidden expansion of shared-context delivery. |
 
 Do not bulk-author future implementation plans from unresolved design choices.
