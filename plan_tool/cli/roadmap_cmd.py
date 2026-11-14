@@ -635,18 +635,16 @@ def _selector_free_revise_feedback_selected(args: argparse.Namespace) -> bool:
     return bool(occurrences) and all(value is True for value in occurrences)
 
 
-# Options this module reads through ``_option_occurrences`` whose parser default
-# is not ``None``; a test pins each against the parser.
-_OPTION_PARSER_DEFAULTS: dict[str, object] = {"comparison_output": "cards"}
+_COMPARISON_OUTPUT_DEFAULT = "cards"
+# Options read through ``_option_occurrences`` whose parser default is not
+# ``None``; a test fails when the parser gains another.
+_OPTION_PARSER_DEFAULTS: dict[str, object] = {"comparison_output": _COMPARISON_OUTPUT_DEFAULT}
 
 
 def _option_occurrences(args: argparse.Namespace, name: str) -> tuple[object, ...]:
     """Read one option's parser history, with a direct-call fallback.
 
-    The fallback counts a value equal to the option's parser default as not
-    supplied, so an option that defaults to something other than ``None`` (such
-    as ``--comparison-output``) reports no occurrence when the flag was absent.
-    A parser-recorded occurrence always counts, even when it equals the default.
+    The fallback treats the option's parser default as not supplied.
     """
     occurrences = tuple(getattr(args, f"_{name}_occurrences", ()))
     if occurrences:
@@ -2604,7 +2602,7 @@ def register(subparsers) -> dict[str, Handler]:
         "--comparison-output",
         action=_TrackExclusiveOption,
         choices=["cards", "patch", "json"],
-        default="cards",
+        default=_COMPARISON_OUTPUT_DEFAULT,
         help=(
             "comparison presentation: cards (default), complete Git patch, "
             "or deterministic JSON; valid only with --compare."

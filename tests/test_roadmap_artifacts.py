@@ -1762,10 +1762,9 @@ def test_stage_artifact_mutations_append_only_matching_plan_ordering_and_removal
 
 
 def test_row_collections_refuse_an_object_that_is_not_a_roadmap_artifact() -> None:
-    """The last branch used to be reached by anything that was not a domain,
-    constraints or components artifact, so a foreign object either raised an
-    ``AttributeError`` or, if it happened to carry ``plans``, silently produced
-    rows. Only a plans artifact may reach it."""
+    """Only a plans artifact reaches the last branch, so a foreign object fails
+    closed for every caller instead of raising ``AttributeError`` or, if it
+    carries ``plans``, silently producing rows."""
     with pytest.raises(TypeError, match="unsupported type object"):
         design_row_collections(object())  # type: ignore[arg-type]
     with pytest.raises(TypeError, match="unsupported type object"):

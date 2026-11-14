@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
+from collections import Counter
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -134,15 +136,10 @@ def run_roadmap_comparison(
 
 
 def _refuse_duplicate_row_ids(snapshot: RoadmapComparisonSnapshot, label: str) -> None:
-    """Refuse a snapshot that holds two rows with one id in the same collection.
+    """Refuse a snapshot with a repeated id inside one collection (or ordering).
 
-    The diff keys rows by id within each collection, and an ordering entry by its
-    plan id. Two rows sharing a key collapse on the after side and pair a stale
-    value with the wrong row on the before side, with no trace. Parsing keeps
-    duplicates so the stage gate can report them, and a published version has
-    passed that gate, so this fires only on a version a tool without the gate
-    wrote. A collision across collections or files is not refused here: the diff
-    never merges those keys.
+    See docs/ARCHITECTURE.md's "Read-only snapshot comparison" for why this is
+    scoped to what the diff keys.
     """
     duplicates: list[str] = []
     for artifact_key, artifact in snapshot.parsed_artifacts.items():
@@ -153,14 +150,16 @@ def _refuse_duplicate_row_ids(snapshot: RoadmapComparisonSnapshot, label: str) -
         if isinstance(artifact, PlansArtifact):
             keyed["ordering"] = [entry.plan_id for entry in artifact.ordering]
         for row_type, ids in keyed.items():
-            for row_id in dict.fromkeys(ids):
-                if ids.count(row_id) > 1:
+            for row_id, count in Counter(ids).items():
+                if count > 1:
                     duplicates.append(
-                        f"{artifact_key} holds more than one {row_type} entry with id {row_id!r}"
+                        f"{artifact_key} holds more than one {row_type} entry "
+                        f"with id {json.dumps(row_id)}"
                     )
     if duplicates:
         raise RoadmapComparisonRunError(
-            f"the {label} snapshot cannot be compared: " + "; ".join(duplicates)
+            f"the {label} snapshot ({snapshot.version_id}) cannot be compared: "
+            + "; ".join(duplicates)
         )
 
 

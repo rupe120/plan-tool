@@ -7823,9 +7823,8 @@ def test_option_occurrences_counts_a_value_equal_to_the_parser_default_as_absent
     overrides: dict[str, object], expected: tuple[object, ...]
 ) -> None:
     """``--comparison-output`` defaults to ``"cards"``, not ``None``, so the
-    fallback used to report a supplied ``("cards",)`` for a flag that was never
-    typed. The helper now knows the default; an explicit occurrence the parser
-    recorded still counts."""
+    fallback reports no occurrence for a flag that was never typed, while an
+    occurrence the parser recorded counts even when it equals the default."""
     args = argparse.Namespace(comparison_output="cards")
     for key, value in overrides.items():
         setattr(args, key, value)
@@ -7834,11 +7833,21 @@ def test_option_occurrences_counts_a_value_equal_to_the_parser_default_as_absent
 
 
 def test_option_parser_defaults_table_matches_the_parser() -> None:
-    """The table the helper reads must agree with what the parser sets, or an
-    option's absence would be misread."""
+    """The table the helper reads agrees with the parser in both directions: each
+    entry is the parser's default, and no other option has a non-``None``,
+    non-boolean default the helper would misread as supplied."""
     args = _parse("roadmap", "my-roadmap")
     for name, default in roadmap_cmd._OPTION_PARSER_DEFAULTS.items():
         assert getattr(args, name) == default, name
+    defaults = {
+        name: value
+        for name, value in vars(args).items()
+        if not name.startswith("_") and value is not None and not isinstance(value, bool)
+    }
+    positional = {"slug", "command", "func"}
+    assert {k: v for k, v in defaults.items() if k not in positional} == (
+        roadmap_cmd._OPTION_PARSER_DEFAULTS
+    )
 
 
 def test_comparison_companion_option_without_compare_names_the_missing_flag(

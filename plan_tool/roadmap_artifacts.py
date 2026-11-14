@@ -1033,6 +1033,8 @@ def design_row_collections(artifact: RoadmapArtifact) -> dict[str, tuple[DesignR
     the first time an artifact gains a collection — the same hazard
     :func:`roadmap_gates.design_row_ids` documents for its own, differently
     shaped (id-only, singular-label) sibling table.
+
+    Raises ``TypeError`` for an unsupported artifact type; every caller relies on that.
     """
     if isinstance(artifact, DomainArtifact):
         return {

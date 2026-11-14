@@ -120,8 +120,8 @@ def test_a_duplicate_row_id_on_either_side_refuses_instead_of_dropping_a_row(
 ) -> None:
     """The diff keys rows by id, so two rows sharing one would silently collapse
     on the after side and pair a stale value with the wrong row on the before
-    side. A published version has passed the duplicate-id gate, so this is a
-    refusal for a version a tool without the gate wrote, never a silent result."""
+    side; a published version has passed the duplicate-id gate, so this refuses a
+    version a tool without the gate wrote."""
     dup = _duplicate_id_entities()
     base = _prepared(_artifact_bytes(entities=dup if side == "base" else ()))
     target = _prepared(
@@ -132,8 +132,8 @@ def test_a_duplicate_row_id_on_either_side_refuses_instead_of_dropping_a_row(
 
     with pytest.raises(
         roadmap_compare_run.RoadmapComparisonRunError,
-        match=rf"the {side} snapshot cannot be compared: "
-        r"domain holds more than one entities entry with id 'shared'",
+        match=rf"the {side} snapshot \(.*\) cannot be compared: "
+        r"domain holds more than one entities entry with id \"shared\"",
     ):
         roadmap_compare_run.run_roadmap_comparison(
             plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
@@ -157,7 +157,7 @@ def test_a_duplicate_ordering_plan_id_refuses_too(tmp_path: Path) -> None:
 
     with pytest.raises(
         roadmap_compare_run.RoadmapComparisonRunError,
-        match=r"the target snapshot cannot be compared: plans holds more than one ordering entry with id 'first'",
+        match=r"the target snapshot \(.*\) cannot be compared: plans holds more than one ordering entry with id \"first\"",
     ):
         roadmap_compare_run.run_roadmap_comparison(
             plans_dir=tmp_path / "plans", slug=SLUG, target_version_id=target.record.version_id
