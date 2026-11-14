@@ -157,6 +157,7 @@ steps:
   - 1
   depends_on_notes:
     1: the predicate used to confirm every swept seed passes
+  detail: docs/implementation-plans/plan-details/required-guardrail-headings/05-three-guardrail-headings-hand-every.md
   description: Add the three guardrail headings by hand to every live seed in `docs/implementation-plans/plan-seeds/`
     and `plan-seeds/` that lacks one; the step 1 predicate, run over both directories,
     defines which seeds lack a heading. Write each body from that seed's own content
