@@ -45,7 +45,8 @@ Both the `create --from-existing` intake and the roadmap draft gate must refuse 
     - Call `_fenced_code_spans(...)` once.
     - Call `extract_h2_section_occurrences(stripped, strip_fenced_code=True, fenced_spans=scan.spans)`.
     - For each required title, look up `occurrences.get(title.lower(), [])`.
-    - Flag the heading unless there is exactly one occurrence, its body is non-empty, and `_is_placeholder_section(body)` is false.
+    - Flag the heading unless there is exactly one occurrence and that body passes the single-body rule below.
+- **The single-body rule, defined once.** Add a second pure function beside it, named something like `is_acceptable_guardrail_body(body: str) -> bool`. It is the one definition of an acceptable guardrail body: non-empty after stripping, `_is_placeholder_section(body)` false, and no line-starting H2 outside fenced code (checked with `extract_h2_section_occurrences` and `_fenced_code_spans` over the body, not a new matcher). The seed-level function above calls it for each heading's single occurrence; step 2's helper calls it for a source body and for a model-written body. No other site restates the rule.
   - Use the existing scanner. Do not write a second fence recognizer.
 - **No raising, no I/O.**
   - The function must not call `reject_unmatched_create_fence`. That check is create-specific and lives in `plan_tool/create.py`, which this leaf cannot import.
@@ -77,6 +78,7 @@ All cases go in `tests/test_scope_fence.py`, in a new class (for example `TestMi
 - `test_none_body_passes_the_presence_check` — a body of exactly `None` is accepted. This is deliberate: the plan wants an explicit `None` to be a valid answer.
 - `test_none_na_and_lowercase_none_are_outside_the_placeholder_pattern` — `_is_placeholder_section` returns false for `None`, `N/A` and `none`. This pins the carve-out so nobody widens `_SECTION_PLACEHOLDER_RE` and breaks the explicit-`None` rule.
 - `test_render_scope_fence_carries_a_none_guardrail_body_verbatim` — a plan whose `## Audit guardrails` body is `None` renders `## Audit guardrails` followed by `None`. Put it beside the existing `TestRenderScopeFence` cases (or in the new class). It proves a `None` body survives into the prompt.
+- `test_single_body_rule_rejects_empty_placeholder_and_embedded_h2` — `is_acceptable_guardrail_body` is false for an empty body, a `_(TODO)_` body, and a body containing a line-starting `## ` heading; true for `None` and for a body whose `## ` appears only inside fenced code.
 - `test_check_is_pure_and_does_not_write` — the call leaves a `tmp_path` seed file's bytes unchanged, and the function takes text, not a path.
 
 ### Tests for this step
@@ -87,6 +89,7 @@ The tests above are the full roster. Every one must be green before this step is
 
 - `missing_required_guardrail_headings` returns an empty tuple for a seed that has all three headings, each once, outside fenced code, with a non-empty body that is not a `_(TODO)_`-style placeholder.
 - It returns every offending heading, in constant order, for a missing, duplicated, empty or placeholder heading.
+- `is_acceptable_guardrail_body` is the only definition of an acceptable body, and the seed-level check uses it.
 - A body of `None` passes, and `_is_placeholder_section("None")`, `("N/A")` and `("none")` are all false.
 - `render_scope_fence` output contains a `None` guardrail body verbatim.
 - `_SECTION_PLACEHOLDER_RE`, `_is_placeholder_section` and `GUARDRAIL_BODY_SECTIONS` are unchanged. `git diff` shows only additions to `plan_tool/scope_fence.py`.

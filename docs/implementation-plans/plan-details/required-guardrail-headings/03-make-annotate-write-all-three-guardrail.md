@@ -57,7 +57,7 @@ This step makes the carryover seed from `annotate` carry `## Scope guardrails`, 
   - A response with more than one guardrails element is not an error. Merge them, or keep the first. Pick one and pin it with a test.
 - **Rendering order of authority.**
   - **Inherited first.** If the source has a heading step 1's rule accepts, copy it verbatim and ignore any model body for that heading.
-  - **Model-written next.** Otherwise use the model's body for that heading only if step 2's helper accepts it under the per-heading rule: non-empty, not a `TODO`-form placeholder, and no line-starting `## ` heading outside a fence. This step passes the bodies to the helper and does not re-check them.
+  - **Model-written next.** Otherwise use the model's body for that heading only if step 1's `is_acceptable_guardrail_body` accepts it, through step 2's helper. This step passes the bodies to the helper and does not re-check them. The decision is per heading, so a source with some accepted headings has those inherited and the model is consulted only for the rest.
   - **`_(TODO)_` last.** Otherwise write `_(TODO)_`.
   - The inherited case must win over the model even when the model body differs. The source is the authority, and the model must not overwrite a fence the operator wrote.
 - **A model body of `None`.** `None` is a valid body. It must pass through unchanged and must not be treated as a placeholder or as missing. Do not add `None` or `N/A` to any placeholder pattern.
@@ -92,6 +92,7 @@ All tests use canned responses through the `invoker=` seam. None spawns a real b
   - `test_missing_guardrail_bodies_render_todo_for_all_three_headings` — an annotation with no guardrail data writes `_(TODO)_` under each heading.
   - `test_seed_carries_all_three_headings_exactly_once` — each heading appears once, in the fixed order, outside any fence.
   - `test_duplicated_or_placeholder_source_heading_is_not_inherited` — a source heading step 1 rejects falls back to the model body or `_(TODO)_`, so the seed does not copy a bad heading.
+  - `test_mixed_source_inherits_its_accepted_heading_and_takes_model_bodies_for_the_rest` — a source carrying only `## Scope guardrails` keeps that body verbatim, and the other two take model bodies or `_(TODO)_`.
   - `test_partial_model_response_fills_only_the_headings_it_supplies` — a response with one or two bodies fills those headings and writes `_(TODO)_` under the rest.
   - `test_unusable_model_body_is_not_written` — an empty, `TODO`-form, or `## `-containing model body gives `_(TODO)_` for that heading, and the seed still carries each heading exactly once.
   - `test_existing_seed_sections_unchanged_by_guardrail_headings` — carryover scope, done-context, references and provenance render as before.

@@ -93,11 +93,10 @@ steps:
   description: 'Make `annotate` write all three guardrail headings into its carryover
     seed. When the source plan or document has a guardrail heading the step 1 predicate
     accepts, `annotate_render.render_create_seed` copies it verbatim through the step
-    2 block helper, under the same source-state rule. When it has no accepted heading,
-    the existing single `annotate` call also returns the missing guardrail bodies,
+    2 block helper, under the same source-state rule. For each heading the source lacks an accepted body for, the existing single `annotate` call also returns that heading''s body (the decision is per heading, and a model body never replaces an inherited one),
     which takes an additive extension of `_ANNOTATE_RESPONSE_CONTRACT` and `PlanAnnotation`
     in `plan_tool/annotate.py`. Existing section-verdict parsing and the existing
-    response stay valid unchanged. Each model-written body is used only when the step 2 helper accepts it under step 1''s rule (non-empty, not a placeholder, no line-starting H2); a missing or unusable body renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`:
+    response stay valid unchanged. Each model-written body is used only when step 1''s single-body rule accepts it, through the step 2 helper; a missing or unusable body renders `_(TODO)_` rather than failing the annotation. Add one line to `plan_tool/prompts/annotate.md`:
     write only fences the source already implies, use `None` when it implies none,
     and add no scope, mechanism or requirement. That line carries the proportionality
     rule from `synthesize-body.md`. The printed result in `plan_tool/cli/annotate_cmd.py`
@@ -289,7 +288,7 @@ command for the operator.
   | Tool | Source of the guardrail content |
   | --- | --- |
   | `roadmap --materialize` / `--refresh-seeds` | `prompts/roadmap-seed.md` requires the three sections in the draft, written from the accepted roadmap's plan row, with `None` where the row sets no fence. A draft missing one fails the same check. The operator reviews it at `--accept-seed`. |
-  | `annotate` | The source plan or document's guardrail sections, copied verbatim when the step 1 rule accepts them; otherwise the existing `annotate` call writes them, stating only fences the source supports (an exclusion or boundary it already implies) and adding no scope, mechanism or requirement. |
+  | `annotate` | The source plan or document's guardrail sections, copied verbatim per heading when the step 1 rule accepts it; for each heading the source lacks, the existing `annotate` call writes it, stating only fences the source supports (an exclusion or boundary it already implies) and adding no scope, mechanism or requirement. |
   | `scope-out`, `reground` | The source plan's guardrail sections, copied verbatim when the step 1 rule accepts them. |
 
   A seed writer whose source carries no guardrail heading the rule accepts
