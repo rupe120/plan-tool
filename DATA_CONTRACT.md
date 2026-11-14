@@ -50,10 +50,16 @@ run-grade detail artifact hit a reader or writer refusal ships an
 operator-invocable upgrade route for the affected class in that same release.
 The route preflights reader and writer compatibility before every affected
 mutating command's first state change, and tests prove upgrade-and-rerun leaves
-no partial state. Version 1 exposes the raw plan and detail upgrade entry points
-as library APIs only, because it newly refuses no previously supported
-representation. Upgrade-on-read, a general migration engine and multi-hop
-conversion are deliberately not part of this rule.
+no partial state. The version-1 format exposes the raw plan and detail upgrade entry points as
+library APIs only, because it newly refuses no previously supported
+representation. A format change triggers the rule when a real legacy fixture of
+an existing live artifact class now reaches a reader or writer refusal; the
+release proves, per affected class, refusal before any preflight mutation, an
+explicit upgrade, and a clean rerun. A break that cannot name which live
+artifact class it refuses does not ship until it can. Roadmap staged artifacts
+are outside this rule; their lifecycle is owned by `ROADMAP_FORMAT.md`.
+Upgrade-on-read, a general migration engine and multi-hop conversion are
+deliberately not part of this rule.
 
 ## Authored-artifact format versions
 

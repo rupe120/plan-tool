@@ -640,7 +640,7 @@ excluded from the callout.
 
 ## Closed decisions
 
-### #363 — The raw-upgrade operator route is a release rule
+### #363 (authored-artifact upgrade route) — a release rule, not the roadmap #363 renumbered to #384
 
 Moved 2026-11-14 to `DATA_CONTRACT.md` § "Version-evolution policy", where the next format bump meets it. The first format release that refuses a previously supported live plan or detail artifact ships an operator-invocable upgrade route in that same release; version 1 refuses nothing new, so no route ships now. It was never work with its own deliverable, so no backlog entry remains.
 

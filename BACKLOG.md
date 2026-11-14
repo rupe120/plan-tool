@@ -532,7 +532,7 @@ working straight down the tiers.
     line with its closed reason, and a successful `create` is unchanged.
   - **Stop / defer:** if a driver needs the record after the process has
     exited, file a persisted-record entry then; do not build it here.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `standard`.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
 - **Principle:** `deterministic-non-determinism`.
 - **Origin:** 2026-10-19, Integration `construction-batch-driver` design §2.2.
 
@@ -3549,10 +3549,12 @@ evidence. It is not an active implementation contract.
 - **Optional, demoted — the `--summary` review surface (phase A).** A read-only
   `plan-tool detail <name> --summary` that prints one compact review card per
   step from existing detail files (spending no Claude, always exiting 0) is
-  optional and not part of this entry's outcome. It is the plan's P5 only: it
-  renders from whatever sections a file has, so it does not depend on the
-  compact schema and does not block it. Take it only if the compact schema has
-  shipped and an operator still wants cards.
+  optional and not part of this entry's outcome. It renders from whatever
+  sections a file has, so it does not depend on the compact schema and does not
+  block it. The WIP plan still lists it as step 1 ("Phase A — ship first"), so
+  the re-baseline this entry's Status requires also removes that step and
+  wording from the plan; until then, do not run the plan as written. Take the
+  cards only if the compact schema has shipped and an operator still wants them.
 - **Why:** `_REQUIRED_H2_TOKENS` hard-requires seven sections, so even a
   one-line change authors ~70 lines and denser steps land at ~120–170; ToC is
   ceremony, Why duplicates Summary, and Implementation inflates into call-site
@@ -5008,7 +5010,8 @@ evidence. It is not an active implementation contract.
   flag), medium overall.
 - **Approach:** `plan-tool` (a flag + commit-unit decision per verb) or `direct`
   one verb at a time.
-- **Dependencies:** land BUG_BACKLOG #209 first (`commit_all` stages with a bare
+- **Dependencies:** land the BUG_BACKLOG.md entry "`--commit` stages the whole working tree with
+  `git add -A` ..." first (`commit_all` stages with a bare
   `git add -A`; extending `--commit` to more verbs would spread its
   over-staging hazard). Complements the `run --commit` mandate and [#87](#c-investigations--decision-making).
 - **Origin:** 2026-07-05 — user, after `create` had to be hand-committed while
@@ -5892,13 +5895,14 @@ evidence. It is not an active implementation contract.
 - **Status:** deferred 2026-08-20; no live bug, retained for the next
   intentional coverage-format change.
 
-**#302 — Pin `on_nonsuccess` notification with a table-driven test over the rate-limit loop's nine arms**
+**#302 — Pin `on_nonsuccess` notification with a table-driven test over every arm of the rate-limit loop**
 
-- **What:** `run_with_rate_limit_recovery` invokes `on_nonsuccess` at nine
-  separate exits. Add one table-driven test that asserts the callback count and
-  both retry booleans for each arm.
-- **Why:** a future recovery arm could otherwise omit the notification or give
-  it the wrong retry state, losing quota-drift telemetry. The test pins that
+- **What:** `run_with_rate_limit_recovery` reaches `on_nonsuccess` through one
+  local helper, `_notify_nonsuccess`, called from each exit arm. Add one
+  table-driven test that asserts the callback count and both retry booleans for
+  every arm.
+- **Why:** a future recovery arm could otherwise omit its `_notify_nonsuccess`
+  call or give it the wrong retry state, losing quota-drift telemetry. The test pins that
   property: a new arm that skips the callback fails it.
 - **Effort:** small — one focused test over existing arms.
 - **Risks / fallout:** low; the loop is not edited.
@@ -5919,7 +5923,9 @@ evidence. It is not an active implementation contract.
   - **Allowed reorganization:** none.
   - **Verification:** the table covers every existing terminal and re-invoking
     arm, asserting callback count and both retry booleans; deleting the
-    callback call from any one arm turns the test red.
+    `_notify_nonsuccess` call from any one arm turns the test red, and the
+    table's arms are checked against the loop's exits so a new arm without a
+    row fails.
   - **Stop / defer:** if the table exposes an arm whose behavior is wrong,
     that becomes a separate decision rather than an incidental fix.
 - **Approach:** `direct` — a test over shipped behavior, no design choice.
@@ -6914,7 +6920,7 @@ evidence. It is not an active implementation contract.
 - **Stop / defer:** an unclear promoted-version case is settled by the plan's
   definition above; anything wider becomes a separate entry.
 - **Approach:** `direct` — one pure function and one rendering site.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `standard` — a
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced` — a
   read-only derived label with no persisted state.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Renumbered:** filed as #425 on this branch on 2026-09-23 and cited that way in its commit history; renumbered to #428 on merging `main`, which had already allocated #425.
@@ -7029,7 +7035,7 @@ evidence. It is not an active implementation contract.
   adding a second status channel. A request for lifecycle status, real backend
   liveness, or job control is separate work.
 - **Approach:** `direct` — a small stderr hook over existing events.
-- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `standard`.
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:** `experienced`.
 - **Arc assignment:** `backlog-arc-roadmap`.
 - **Origin:** Integration ledger-batch candidate acceptance attempts on 2026-09-28;
   narrowed 2026-11-14 from a full lifecycle reporter.
