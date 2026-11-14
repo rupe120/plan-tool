@@ -7565,9 +7565,9 @@ separate)**
   or another non-`KeyboardInterrupt` `BaseException` triggers it too, so the
   eventual fix should cover `BaseException` in general, not just the one
   named type.
-- **Still open — "stopped" after a successful write:** three windows
-  (`_write_brief_source`'s block, the post-`"wrote"` window, and the
-  post-`"re-gated without write"` window) can report "stopped" after the
+- **Still open — "stopped" after a successful write:** two windows (the
+  post-`"wrote"` window and the post-`"re-gated without write"` window; the
+  brief-source window was removed 2026-11-05 with `_write_brief_source`) can report "stopped" after the
   stage's real outcome is already known and reported — the guard's own
   docstring now says "stopped" means the *run* didn't confirm, not that
   nothing happened, but a status vocabulary that can say "published, but
@@ -10372,7 +10372,7 @@ longer describes current work. It is retained only as dated carve-out context.
   plan's shipped implementation (`e77ebfa5..HEAD`).
 - **Status:** not started; low priority.
 
-**#421 — `--compare`'s companion-mode rejection list is only tested for 2 of ~9 sibling modes**
+**#421 — `--compare`'s companion-mode rejection list is only tested for 1 of ~8 sibling modes**
 
 - **What:** `_roadmap_comparison_has_conflict` hand-enumerates roughly 9
   sibling mode-presence predicates (`_has_receipt_creation`,
@@ -10380,8 +10380,8 @@ longer describes current work. It is retained only as dated carve-out context.
   `_has_candidate_lifecycle_action`, `_broad_mode_companions_present`,
   etc.) that `--compare` must reject as companions. The guarantee is
   correct today (verified by reading the function), but
-  `tests/cli/test_roadmap_cmd.py` only exercises 2 of the ~9 groups
-  (`apply`, `confirm_brief_rebind`) against `--compare` — a future new
+  `tests/cli/test_roadmap_cmd.py` only exercises 1 of the ~8 groups
+  (`apply` only; the `confirm_brief_rebind` group was removed 2026-11-05) against `--compare` — a future new
   roadmap mode added without a matching entry in this enumeration, or a
   reordering of `cmd_roadmap`'s dispatch relative to the `has_comparison`
   check, would have no test catching the regression.
