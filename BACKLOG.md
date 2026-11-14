@@ -485,9 +485,9 @@ working straight down the tiers.
     missing any of the three guardrail headings or carrying one that is
     duplicated, empty or a placeholder, and accepts a heading whose body is an
     explicit `None`.
-  - **In scope:** the file-backed intake check; how an explicit `None` renders
-    into the plan and downstream fence (an explicit empty fence, not an absent
-    one); `annotate`'s and `roadmap` stage 4's seed writers emitting all three
+  - **In scope:** the file-backed intake check; a test that an explicit `None`
+    survives verbatim into the plan and downstream fence (the fence renderer
+    already carries it); `annotate`'s and `roadmap` stage 4's seed writers emitting all three
     headings; the live seeds in both seed directories; `SEED_FORMAT.md`,
     `PLAN_FORMAT.md` § "Scope fence" and
     `docs/how-to/pipeline/create-from-existing.md`.
@@ -503,8 +503,8 @@ working straight down the tiers.
   - **Allowed reorganization:** none.
   - **Verification:** a seed missing any one heading is refused with no model
     call, naming the heading; a duplicated, empty or `TODO` heading is refused;
-    a `None` heading is accepted and the plan records the fence as explicitly
-    empty; `annotate` and `roadmap` seeds pass the new check; every live seed
+    a `None` heading is accepted and appears verbatim in the plan and the
+    downstream fence; `annotate` and `roadmap` seeds pass the new check; every live seed
     passes it.
   - **Stop / defer:** a seed producer that cannot state a fence without a new
     model judgment emits `None` and files the follow-up; it does not invent
