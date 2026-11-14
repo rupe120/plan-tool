@@ -11073,8 +11073,6 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Origin:** 2026-09-23, closing `roadmap-versioned-feedback-revision-chain`; the
   review's coverage note.
 
-**#426 — Following 13 links in `RUNBOOK.md` and two dated handoffs lands on a missing file, because the docs they name were renamed or deleted** → promoted to IPPT-4 (2026-09-24)
-
 **#433 — Expose truthful terminal progress for ledger-batch candidate proposals**
 
 - **What:** make `plan-tool roadmap <slug> --propose-candidate` report concise
