@@ -1144,7 +1144,7 @@ Each entry below was folded into the entry named, which now carries its scope in
 | #88 | #455 | Re-evaluate post-call gates against the tree on disk instead of re-spending the `run` call. Memoizing the call's output is dropped as the wrong frame. |
 | #151 | #210 | Over-requested purity-path grounding is decided only after #210 decides keep or cut; a narrow purity-only mode applies only if the pass is kept. |
 | #379 | #378 | The closing rule with its safeguards: verify first, citation sweep, surface instead of changing a parked or decision-needed entry, tracker-only commit, and the #337 and #315 incidents. |
-| #360 | #355 | The duplicate interruption-log write falls out of any `RunLogWriter` best-effort contract; no standalone helper. |
+| #360 | #355 | The duplicate interruption-log write is removed if #355's `RunLogWriter` best-effort contract covers it, otherwise recorded there as accepted; no standalone helper. |
 | #342 | #349 | One design question: whether the status callback and the run logger are one seam. |
 | #300 | #79 | The two heading regexes migrate with the JSON slice; `_REDIRECT_HEADING_RE` keeps its blank-line anchoring. |
 | #257, #258 | #259 | One change renders the existing `depends_on_notes` entry in grounding, the Jira story body and the detail prompt. |

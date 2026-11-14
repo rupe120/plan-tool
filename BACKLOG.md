@@ -3316,29 +3316,30 @@ evidence. It is not an active implementation contract.
   when a session may remove a record another author wrote. When a session
   observes that a tracker entry other than the plan's own source entry is
   already satisfied, partly satisfied, superseded, or based on a false
-  premise, these defaults apply (confirm or revise before implementation): (1)
-  incidental only: entries the session's work touched or its searches
-  returned, never a proactive staleness sweep; (2) verify first against the
-  entry's Outcome and Verification (a bug's Symptom) at HEAD, citing the
-  satisfying commit or anchor, and annotate instead of closing if checking
-  needs a new run, measurement or model call; (3) addressed: close by the host
-  convention (a more specific rule in the entry or its plan wins); partial:
-  narrow to the verified remainder and cite what shipped; superseded or false
-  premise: close with a dated reason; uncertain: add a dated evidence note;
-  (4) citation sweep before closing: search tracked docs for the id and the
-  entry's title vocabulary (roll-up boards, arc and runbook docs, seeds,
-  plans) and update or explicitly keep each hit; (5) surface instead of
-  changing when the entry is `decision-needed` or `parked`, or records a user
-  decision not to reopen; (6) commit separately (tracker-only) and list each
-  entry changed with its disposition and evidence. Measured failures behind
-  it: over-deletion (`5042c3ba` restored #337 after a closure applied the
-  general remove-when-shipped convention) and a dangling citation (a step
-  deleted #315 and checked only `BACKLOG.md`, missing an arc-doc citation).
-  Resemblance is not closure: four of five claimed duplicate helpers in #79
-  were wrong. If a host's closure convention cannot be discovered generically,
-  default to a dated evidence note and surfacing. Escalate to a fuller plan if
-  the user wants per-entry confirmation before any closure (which also changes
-  this entry's authority line).
+  premise, these closing defaults C1–C6 apply, separate from this entry's own
+  defaults (confirm or revise before implementation): (C1) incidental only:
+  entries the session's work touched or its searches returned, never a
+  proactive staleness sweep; (C2) verify first against the entry's Outcome and
+  Verification (a bug's Symptom) at HEAD, citing the satisfying commit or
+  anchor, and annotate instead of closing if checking needs a new run,
+  measurement or model call; (C3) addressed: close by the host convention (a
+  more specific rule in the entry or its plan wins); partial: narrow to the
+  verified remainder and cite what shipped; superseded or false premise: close
+  with a dated reason; uncertain: add a dated evidence note; (C4) citation
+  sweep before closing: search tracked docs for the id and the entry's title
+  vocabulary (roll-up boards, arc and runbook docs, seeds, plans) and update
+  or explicitly keep each hit; (C5) surface instead of changing when the entry
+  is `decision-needed` or `parked`, or records a user decision not to reopen;
+  (C6) commit separately (tracker-only) and list each entry changed with its
+  disposition and evidence. Measured failures behind it: over-deletion
+  (`5042c3ba` restored #337 after a closure applied the general
+  remove-when-shipped convention) and a dangling citation (a step deleted #315
+  and checked only `BACKLOG.md`, missing an arc-doc citation). Resemblance is
+  not closure: four of five claimed duplicate helpers in #79 were wrong. If a
+  host's closure convention cannot be discovered generically, default to a
+  dated evidence note and surfacing. Escalate to a fuller plan if the user
+  wants per-entry confirmation before any closure (which also changes this
+  entry's authority line).
 - **Why:** the practice works where its rules are loaded, and the installed
   skills carry almost none of them to any other repo. Verified 2026-09-16:
   - **Installed guidance.** `integrations/codex/SKILL.md` never mentions a
@@ -4282,6 +4283,11 @@ evidence. It is not an active implementation contract.
   satisfy the audit, (2) reuse the purity subset from `detail`'s fully
   consumed authoring call, (3) a narrow purity-only mode built from step
   metadata and `## Implementation` / `## Tests`, with no repo-wide grounding.
+  Do not weaken `detail`'s authoring call: its repo-wide grounding is
+  intentional, and a declared-files cache key cannot stand in for it. Out of
+  scope: parallel purity fan-out and payload-size work (#38). The work is
+  scheduled only if this decision keeps the pass, and then as its own entry
+  with a scope contract and acceptance test.
 - **Measurement, 2026-07-31:** across 90 saved completeness reports, no
   `granularity-split`/`detail-purity` finding anchor appears — not one. But
   the zero can't be read as "the corpus is clean": `purity_scan` events
@@ -4696,6 +4702,10 @@ evidence. It is not an active implementation contract.
   `_interrupted_result`. If a best-effort write contract is settled on
   `RunLogWriter`, both call sites use it and the duplicate falls out; each
   caller keeps constructing its own result type. No standalone helper.
+  Acceptance for this part: a second `KeyboardInterrupt` during
+  `run_interrupted` still lets each caller return its interrupted result; if
+  the chosen contract leaves the raw methods in place, the duplicate suppress
+  in the two call sites is recorded here as accepted or removed.
 - **Why deferred:** one live gap is now known (the pre-`try` `phase_start`
   calls in the candidate flows) rather than only a future-enforcement
   risk, but it is a narrow-window, best-effort-diagnostics path — not the
@@ -5292,14 +5302,20 @@ evidence. It is not an active implementation contract.
   both import `plan_tool.review` (and `lessons` also `checkpoint`/`shell`) at
   module level, so neither is a stdlib-only leaf. Keep `--iterate`/`--no-iterate` and
   per-command help-text variants out of scope (those vary intentionally).
-- **Effort:** small — four call sites, one concern per commit.
+- **Effort:** small — four JSON-envelope call sites plus the two heading
+  regexes absorbed from #300, one concern per commit.
 - **Risks:** low **for the four JSON-envelope sites**, which are checked by
-  hand. The risk this entry guards against is the opposite one: merging a
+  hand; the two heading regexes are not: `_VALIDATION_RE` is MULTILINE-anchored
+  and `_REDIRECT_HEADING_RE` is blank-line anchored, so check each one's exact
+  anchoring and case behavior before swapping it onto a shared contract, and
+  make no behavior change (leave a regex local if the contract cannot match it
+  identically). The risk this entry guards against is the opposite one: merging a
   look-alike. Re-run the AST check before folding anything not listed above. Direct change → audit → fix → re-audit with
   affected tests each round (CLAUDE.md).
 - **Approach:** direct. Migrate the four sites onto `JsonResponseContract`, one
   concern per commit; check per site that `JsonResponseContract` accepts the
-  input each site accepts today, and leave a site local if it does not.
+  input each site accepts today, and leave a site local if it does not. The
+  same rule applies to the two heading regexes.
 
 **#80 — Consolidate duplicated argparse parent parsers into `parser.py`**
 
@@ -6091,7 +6107,7 @@ evidence. It is not an active implementation contract.
 - **Status:** deferred 2026-08-21; #247's delivered ledger is a prerequisite
   for visibility, not proof that comparison is safe.
 
-**#259 — Render a `depends_on` edge's consumption note in the run-grade `detail`-authoring prompt**
+**#259 — Render a `depends_on` edge's consumption note in the detail-authoring prompt, the bridging-edge grounding block and the Jira story body**
 
 - **What:** `detail.py:render_detail_prompt` renders a step's `depends_on` as a
   bare comma list (`step_depends_on`) in the prompt that asks Claude to write
@@ -6109,7 +6125,8 @@ evidence. It is not an active implementation contract.
   in the pipeline (body-synthesis grounding, absorbed from #257) and in the Jira
   export (absorbed from #258).
 - **Effort:** small — thread each edge's `depends_on_notes` text into the
-  run-grade dependency block.
+  run-grade dependency block, the bridging-edge grounding block and the Jira
+  story body.
 - **Dependencies:** builds on shipped `depends_on_notes`.
 - **Scope contract:**
   - **Outcome:** the detail-authoring prompt's dependency block, the
@@ -6121,9 +6138,12 @@ evidence. It is not an active implementation contract.
     tests.
   - **Out of scope / Non-goals:** any check on note content; changing what
     `depends_on` ids are listed.
-  - **Allowed behavior changes:** the rendered prompt's dependency block gains
-    optional note text per edge.
-  - **Allowed reorganization:** none.
+  - **Allowed behavior changes:** the rendered prompt's dependency block and
+    the bridging-edge grounding block gain optional note text per edge; the
+    exported Jira story body gains the same note, and stays valid under
+    `JIRA_FORMAT.md` and `jira --lint`.
+  - **Allowed reorganization:** none beyond carrying note text on
+    `_BridgingDependencyEdge`.
   - **Verification:** a step whose antecedent has a note renders it in the
     detail prompt, the bridging-edge grounding block and the Jira story body;
     one without renders exactly as today in each.
@@ -7754,7 +7774,11 @@ evidence. It is not an active implementation contract.
   ids reach the retry prompt; a test showing the note is cleared on advance; the
   full suite passes.
 - **Stop / defer:** if (b) needs a new run state machine, file it separately and
-  ship (a) alone.
+  ship (a) alone. Shipping (a) alone leaves the post-gate re-evaluation
+  absorbed from #88 open here; the entry is not done until it ships or is
+  recorded as declined. Before building it, state how the test-authoring
+  gate's pre-call baseline survives a tree the first attempt already dirtied
+  (#87's known limit).
 - **Route:** `direct` for (a); `plan` if (b) is taken · **Readiness:**
   `decision-needed` (on (b)) · **Tier:** `experienced`. **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-run-gates`.
@@ -7810,7 +7834,7 @@ evidence. It is not an active implementation contract.
   34/24, 6: 34/8, 7: 22/10, 8: 29/19, 9: 17/17, 10: 16/2, 11: 9/4). A missing
   name is a claim to check, not proof the behavior is untested, and a defined
   name does not prove the test asserts what the detail says. Spot-check only
-  steps 2, 3 and 10 (0–2 defined) for genuinely uncovered behavior. Do not
+  steps 2, 3, 4 and 10 (0–2 defined) for genuinely uncovered behavior. Do not
   rewrite the archived plan's detail files; nobody reconciles a closed plan.
 - **Why:** the information is already in front of the tool (the detail names the
   cases, the tree holds the tests). Delivering it costs one scan.
@@ -8439,7 +8463,9 @@ evidence. It is not an active implementation contract.
   the finding classes in scope, file that and stop. If the departure authority
   question cannot be settled, ship the other dispositions and keep `departure`
   out.
-- **Route:** `plan` · **Readiness:** `ready` · **Tier:** `experienced`.
+- **Route:** `plan` · **Readiness:** `ready` (dispositions); `decision-needed`
+  (the `departure` kind, absorbed from #485) · **Tier:** `experienced`;
+  `architect` for `departure`, which changes an approval contract.
   **Principle:** `converge-on-correct-plan`.
 - **Arc assignment:** `backlog-arc-convergence-evidence`.
 - **Origin:** comparison with `aidlc-workflows`' feedback model, 2026-10-13.

@@ -110,7 +110,7 @@ requests it.
   states this in its own Non-goals; the shipped #371 introduced none either).
 - **#378's capture rule stays incidental, never a proactive sweep** (its own
   default 1), and **the staleness rule absorbed from #379 stays the same** (its own
-  default 1) — neither becomes a background job that grooms the backlog on its own.
+  closing default C1) — neither becomes a background job that grooms the backlog on its own.
 
 ## Exit and handoff
 
