@@ -460,3 +460,54 @@ in both conceptual passes. The audit prompt needed no change on this evidence.
 The result supports `ROADMAP_FORMAT.md` § "Stack section" naming the plan audit as
 the contradiction check; it does not show a hit rate, and the tool itself never
 judges the contradiction.
+
+## 8. Where Loom's missing plans dropped out, 2026-11-14 (BACKLOG #534, trace)
+
+A read-only trace, **no model calls**, of the four plans a reviewer added to
+Loom's `loom-aidlc-mvp` roadmap between its first stored version (`9590a8964b…`,
+5 plans from 5 components, all `keep`) and its accepted head (`c7743c56d7…`,
+9 plans from the same 5 components, after 21 versions). Both versions share one
+brief (digest `0086ebf8…`). Loom was read at `44c22cc`; nothing in Loom was
+written. For each added plan, the first version's brief and stage 1–3
+artifacts were searched for its work, and the earliest stage where that work
+disappears is recorded.
+
+| Added plan | In the inputs? | Where it dropped out |
+| --- | --- | --- |
+| `repository-browse-and-reference` | **Required by the brief**: a feature bullet and the brief's Scope Fence ("In scope: … read-only repository tree and file references") | **Stage 1**, by `decision-exclude-repo-browsing`: browsing is "not a condition for" the central outcome. The smallest-proof wording removed a stated requirement. |
+| `cdk-infrastructure-and-environments` | Generic work only: stage 2's `hosting-compute`, `hosting-topology` (two deployable units) and `constraint-single-environment` | **Stage 3**: no component owns deploying the units, so the component-coverage gate passes with nothing to deploy. The CDK, environment-array and dev-account specifics are in no input; they are owner requirements added 2026-10-09 (feedback ledger). |
+| `static-spa-delivery` | Generic work only: the UI is one of stage 2's two deployable units | **Stage 3**, as above. The S3/CloudFront shape is in no input; it is a later owner deployment decision. |
+| `bitbucket-deployment-pipelines` | **No** | Never present: an owner requirement added 2026-10-09. |
+
+**How the repository decision was made.** Loom's records, read 2026-11-14:
+
+- **Ideation, 2026-09-11:** the approval-handoff questions asked whether the
+  mockups reflect the product foundation, naming the "read-only repository
+  tree"; the owner answered yes (`approval-handoff-questions.md` Q4).
+- **First roadmap root (`c10b86e…`, before the 2026-09-17 rollback):** stage 1
+  authored `decision-exclude-repo-browsing` with status `settled`. It was never
+  `pending`, so the roadmap never put it to the owner as a question. The one
+  owner-answered roadmap decision in September was `decision-runtime-granularity`
+  (pending, then settled through feedback and the 2026-09-21 settlement).
+- **2026-09-17 to 2026-10-01:** the owner accepted revisions whose domain
+  artifact carried the settled exclusion.
+- **2026-10-01:** owner feedback `fb-domain-repository-context` (against
+  `cf8d38f08d…`) asked to model the repository experience and "sweep
+  decision-exclude-repo-browsing", with three sibling items for constraints,
+  components and plans; Loom commit `08edd0c` "roadmap: add repository
+  experience".
+- **Not checkable:** this machine keeps Claude Code transcripts only from
+  2026-10-02, so a September chat question about the browser cannot be
+  confirmed or ruled out.
+
+A model-authored `settled` decision is protected by the settled-decision gate
+until feedback reopens it, so a cut made this way stays cut across revisions
+without an owner having answered it.
+
+**Reading.** One of the four losses is a prompt defect at stage 1, two are an
+ownership gap at stage 3 for work stage 2 already stated, and the owner-specific
+infrastructure choices could not have come from these inputs at all. Stage 4
+was not where any of the four first went missing. The stage 1 finding led to the
+owner's settled rule in BACKLOG #533: the brief's requirements stay the
+requirements, and the smallest-proof rule applies to how they are achieved.
+The model runs of #534 are not yet recorded here.
