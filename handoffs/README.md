@@ -66,8 +66,10 @@ branch, and hand the updated settled-decision list to the next reviewer.
 - Every file in this directory except `README.md` is linked from at least one section
   below, and every link resolves. Check with
   `for f in *.md; do [ $f = README.md ] || grep -qF "]($f)" README.md || echo "NOT INDEXED: $f"; done; grep -oE '\]\(([^)#]+\.md)' README.md | sed 's/](//' | sort -u | while read l; do [ -e "$l" ] || echo "DEAD: $l"; done`;
-  empty output means both hold. A section that routes to a file listed in another
-  section (the release pickup) may link it twice; the check does not count sections.
+  empty output means both hold. Run it from `handoffs/`. It does not count sections: a link anywhere in this
+  file, including "Known dangling citations", counts as indexed, so check that each
+  file also has its own entry in a list or table. A section that routes to a file
+  listed in another section (the release pickup) may link it twice.
 
 ## Release preparation
 
@@ -75,7 +77,7 @@ Use the [selection record](../docs/evidence/public-release-content-snapshot.md)
 for content decisions, reference ownership and retained conclusions. Use the
 [verification receipt](../docs/evidence/public-release-content-snapshot-verification-20261020.md)
 for exact candidate identity, environment and measured results. The
-[release pickup](2026-10-19-public-onboarding-and-release.md) owns the next action. [Sanitized publication](2026-10-21-sanitized-publication.md) records the completed 2026-10-21 publication.
+[release pickup](2026-10-19-public-onboarding-and-release.md) owns the next action.
 Keep decisions and finding explanations in their maintained owners when
 compressing or retiring a handoff.
 
@@ -127,6 +129,7 @@ its arc documents, not here; the successor-slug rule lives in
   — plan review pickup for IPPT-10: the plan pull request and architect review
   before `run`.
 
+- [Sanitized release publication](2026-10-21-sanitized-publication.md) — completed 2026-10-21 publication record; kept because the release pickup and the demo refresh cite it as the owner of exact publication identity. Retire with the release cluster.
 - [Roadmap base-plan business-logic loop](2026-10-16-roadmap-business-logic-base-plan-loop.md) — owner decisions (stop at base plans, business-logic focus, `gpt-6.1-sol`) and the Integration benchmark loop.
 - [Roadmap plan derivation implementation](2026-10-16-roadmap-plan-derivation-implementation.md) — execution checkpoint and evidence for the derivation plan.
 
@@ -180,7 +183,7 @@ its arc documents, not here; the successor-slug rule lives in
 
 ## Review ledgers
 
-Closure labels follow § "Retention". Compressed 2026-09-29 unless noted; the ledgers named in the next sentence were compressed 2026-11-13. Prompt-budget model window, roadmap context ceiling, roadmap stack layer, roadmap stack propagation, roadmap versioned-from-birth, completeness-apply retirement, and the 2026-10-22 ledgers (committed test authorship, scope-out rollback ownership, seed default placement, step description alias, run iteration guidance, plan body newline preservation) are compressed; every other file in the ledger list and the table keeps its full text unless its entry says otherwise.
+Closure labels follow § "Retention". A ledger is compressed 2026-09-29 unless its entry says otherwise; each entry says `compressed 2026-11-13` or `not compressed` where that differs.
 
 | Ledger | Closed | Backlog references |
 | --- | --- | --- |
@@ -261,20 +264,20 @@ Closure labels are those each file records. None of these is compressed unless i
 
 - [Public-release snapshot execution review](2026-10-20-public-release-content-snapshot-execution-review.md) — six-step local result, two clean review passes and remaining #513 limits.
 
-- [New-seed default placement](2026-10-22-seed-default-location-code-review.md) — nested defaults, retained existing seeds, compatibility tests and Claude review dispositions.
+- [New-seed default placement](2026-10-22-seed-default-location-code-review.md) — nested defaults, retained existing seeds, compatibility tests and Claude review dispositions. Compressed 2026-11-13.
 - [Iteration route documentation repair](2026-10-22-iteration-guide-routes-code-review.md) — source-backed defaults, supported flags and reconciliation guidance.
 
-- [Run iteration guidance accuracy](2026-10-22-run-iteration-guidance-code-review.md) — protected policy, help and warning text align with shipped behavior.
+- [Run iteration guidance accuracy](2026-10-22-run-iteration-guidance-code-review.md) — protected policy, help and warning text align with shipped behavior. Compressed 2026-11-13.
 
-- [Step description alias implementation](2026-10-22-step-description-alias-code-review.md) — four green steps, clean reconciliation and two independent Claude Code logic reviews; source plan PR #139.
+- [Step description alias implementation](2026-10-22-step-description-alias-code-review.md) — four green steps, clean reconciliation and two independent Claude Code logic reviews; source plan PR #139. Compressed 2026-11-13.
 
-- [Committed test authorship gate](2026-10-22-committed-test-authorship-code-review.md) — committed test evidence, preserved dirty-path exclusions, ancestry/decoder regressions and actual Claude Code review dispositions.
+- [Committed test authorship gate](2026-10-22-committed-test-authorship-code-review.md) — committed test evidence, preserved dirty-path exclusions, ancestry/decoder regressions and actual Claude Code review dispositions. Compressed 2026-11-13.
 
 - [Step description diagnostics](2026-10-22-step-description-diagnostics-code-review.md) — preferred/legacy field advice, unchanged validation and two independent clean Claude Code reviews; feature-container wording remains separately tracked.
 
-- [Plan body newline preservation](2026-10-22-plan-body-newline-preservation-code-review.md) — raw concept-sync snapshots, exact scope-out restoration, compatibility regressions and two final clean Claude Code reviews.
+- [Plan body newline preservation](2026-10-22-plan-body-newline-preservation-code-review.md) — raw concept-sync snapshots, exact scope-out restoration, compatibility regressions and two final clean Claude Code reviews. Compressed 2026-11-13.
 
-- [Scope-out rollback ownership](2026-10-22-scope-out-rollback-ownership-code-review.md) — exact publication receipts, concurrent-edit preservation, durable writes and two final independent clean Claude Code reviews.
+- [Scope-out rollback ownership](2026-10-22-scope-out-rollback-ownership-code-review.md) — exact publication receipts, concurrent-edit preservation, durable writes and two final independent clean Claude Code reviews. Compressed 2026-11-13.
 
 - [Concept-sync H1 boundaries](2026-10-22-concept-sync-h1-boundaries-code-review.md) — shared reader/writer section boundaries, raw unowned-content regressions and two independent clean Claude Code reviews.
 

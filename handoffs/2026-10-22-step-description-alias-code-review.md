@@ -6,7 +6,7 @@
 | Branch | `feat/step-description-alias` |
 | Scope | BACKLOG #517, four approved steps; plan-canonical reconciliation and review tail |
 | Execution | All four steps green and committed (Codex / gpt-6.1-sol, `-y`, `--commit`) |
-| Reviews | Three `reconcile-code --all --no-walk --no-reuse -y` sweeps; two Claude Code `/code-review` passes (built-in skill, high effort, Sonnet 5.5), reports `.tmp/step-description-alias.review-N.md` |
+| Reviews | Three `reconcile-code --all --no-walk --no-reuse -y` sweeps; two Claude Code `/code-review` passes (built-in skill, high effort, Sonnet 5.5), reports `.tmp/step-description-alias.review-N.md`; saved reconcile reports (nine `*-run-reconcile.json`, 2026-10-22, three per sweep, `20261022-145151` through `20261022-150003`) in `docs/implementation-plans/archive/plan-details/step-description-alias/reports/` |
 | Closure | **Logic convergence confirmed** (two independent consecutive passes against ranges containing the latest logic change `06ee36b41`); low documentation tail, not a completely clean all-prose audit |
 | Checks | Last complete suite 14,996 passed, 67 skipped; `git diff --check` clean |
 

@@ -20,6 +20,8 @@ This is a new ledger, not a continuation of
 
 ## Settled decisions (hand to the next reviewer)
 
+*Compression note (2026-09-29): this ledger had no original settled-decisions list; the list below was assembled from its own declined and refuted findings.*
+
 - The receipt's `ValueError` guards in `RunLogWriter.model_failure_receipt()`
   are invariant assertions and stay uncaught; "best-effort" in the plan docs
   scopes to the sidecar file write only.

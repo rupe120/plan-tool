@@ -23,6 +23,8 @@ terminal-disposition/lifecycle machinery (`roadmap.py`, `roadmap_cmd.py`,
 
 ## Settled decisions (hand to the next reviewer)
 
+*Compression note (2026-09-29): this ledger had no original settled-decisions list; the list below was assembled from its own declined and refuted findings.*
+
 - Materialize exception tracking uses the `materialize_disposition_emitted`
   tag on the exception object (`d795b3f6`), accessed via
   `_materialize_disposition_emitted` / `_mark_materialize_disposition_emitted`
