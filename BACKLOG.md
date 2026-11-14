@@ -9256,7 +9256,7 @@ longer describes current work. It is retained only as dated carve-out context.
   `.claude/*` runtime-state patterns currently live only in machine-local
   git config, not in any tracked file.
 
-**#316 — Shared confidence-tag rendering helper (consolidate ~31 hand-authored call sites)**
+**#316 — Shared confidence-tag rendering helper (consolidate the remaining ~25 hand-authored call sites)**
 
 - **What:** `plan_tool/review.py`'s `confidence_label`/`confidence_value` are
   the only shared primitives for rendering a `Recommendation.confidence`
@@ -11112,7 +11112,7 @@ longer describes current work. It is retained only as dated carve-out context.
   direction. It sits outside that plan's range and breaks nothing.
 - **Status:** not started.
 
-**#427 — `roadmap-versioned-feedback-revision-chain` step details cite 96 test names that do not exist**
+**#427 — `roadmap-versioned-feedback-revision-chain` step details cite 117 test names that do not exist**
 
 - **What:** the eleven step detail files under
   `docs/implementation-plans/archive/plan-details/roadmap-versioned-feedback-revision-chain.3/`
@@ -11342,7 +11342,8 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Risks / fallout:** widening the comparison's evidence contract changes a
   read-only surface other code reads (`ROADMAP_FORMAT.md` documents its outcome
   vocabulary), and the comparison route must stay read-only.
-- **Dependencies:** IPPT-18 lands first, so the stored correction operation exists.
+- **Dependencies:** IPPT-18's stored correction operation exists (archived plan
+  `2-candidate-prose-correction`).
 - **Outcome:** the comparison shows each correction as a labeled before-and-after
   record, with the raw patch unchanged.
 - **In scope:** `plan_tool/roadmap_compare.py`, `roadmap_compare_run.py`,
@@ -11359,7 +11360,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Stop / defer:** if the evidence contract needs a version bump, stop and file
   that as its own entry.
 - **Approach:** `direct`.
-- **Route:** `direct` · **Readiness:** `blocked-on IPPT-18` · **Tier:**
+- **Route:** `direct` · **Readiness:** `ready` · **Tier:**
   `experienced` (a CLI-adjacent evidence contract across modules).
   **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
@@ -11389,8 +11390,9 @@ longer describes current work. It is retained only as dated carve-out context.
   it would change ingest behavior and conflicts with "evidence only"; a check
   that decides whether a justification is *good* is a semantic check and is out
   of bounds (`CLAUDE.md` § "Validating a semantic property you cannot observe").
-- **Dependencies:** IPPT-18 and IPPT-19 land first. IPPT-19's computed-evidence
-  function is where the basis check would plug in.
+- **Dependencies:** IPPT-18 and IPPT-19 have landed (archived plans
+  `2-candidate-prose-correction` and `2-candidate-narrative-review-evidence`).
+  IPPT-19's computed-evidence function is where the basis check would plug in.
 - **Outcome:** a response may carry its basis; the reviewer sees when it is
   missing or cites something that does not exist; nothing is refused for it.
 - **In scope:** the optional response field and its additive parse, the prompt
@@ -11408,7 +11410,7 @@ longer describes current work. It is retained only as dated carve-out context.
 - **Stop / defer:** if the response record cannot gain an optional field without
   a schema version bump, stop and file that as its own entry.
 - **Approach:** `plan-tool`.
-- **Route:** `plan` · **Readiness:** `blocked-on IPPT-19` · **Tier:**
+- **Route:** `plan` · **Readiness:** `ready` · **Tier:**
   `experienced` (a prompt and an additive persisted field within existing
   contracts). **Principle:** `untriaged`.
 - **Arc assignment:** `backlog-arc-roadmap`.
