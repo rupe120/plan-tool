@@ -2148,3 +2148,21 @@ not include them.
 - **Fix:** accept the flag after the subcommand too, or print a one-line hint naming the correct position in the error.
 - **Route:** direct · **Readiness:** ready · **Tier:** beginner.
 - **Origin:** an external consuming application's plan runs, 2026-10-13; carried here when its runbook was removed, 2026-11-05.
+
+### `docs/ARCHITECTURE.md` omits the project `default_backend` from the backend precedence
+
+- **Severity:** MINOR
+- **Files:** `docs/ARCHITECTURE.md` (§ "Backend abstraction"); the correct order is in `docs/BACKENDS.md` (five-row priority table).
+- **Symptom:** the architecture page gives the precedence as explicit `--backend` flag → recognized `--model` family → `PLAN_TOOL_BACKEND` → `claude`, so a reader concludes a committed project `default_backend` has no effect. `docs/BACKENDS.md` ranks it fourth, ahead of `claude`.
+- **Fix:** add the project `default_backend` between `PLAN_TOOL_BACKEND` and `claude`, or replace the inline chain with a pointer to the `docs/BACKENDS.md` table.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** documentation inventory of the project-model-selection record, 2026-11-13.
+
+### `integrations/shared/DIRECTIVES.md` omits `root` from the commands that need no backend flag
+
+- **Severity:** MINOR
+- **Files:** `integrations/shared/DIRECTIVES.md` (the "Deterministic commands" sentence); `plan_tool/cli/app.py` (the project-selection preflight exemption names `list`, `root`, `status` and `validate`).
+- **Symptom:** the directive lists `list`, `status` and `validate` as the commands that need neither `--backend` nor `--model`. `root` is exempt from the same preflight in code, so an assistant following the directive passes a flag to `root` that it does not need.
+- **Fix:** add `root` to the directive's list. Any change to this file reaches every consuming repo, so keep the edit to that one word.
+- **Route:** direct · **Readiness:** ready · **Tier:** beginner.
+- **Origin:** documentation inventory of the project-model-selection record, 2026-11-13.
