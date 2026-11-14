@@ -622,8 +622,12 @@ working straight down the tiers.
   read-only repository tree and file references because they were "not a
   condition for" the central outcome, although the brief lists the feature and
   its Scope Fence says "In scope: … read-only repository tree and file
-  references". A reviewer had to restore it as the
-  `repository-browse-and-reference` plan. Trace: #534.
+  references". Stage 1 authored the decision as `settled`, never `pending`,
+  so it was never put to the owner as a question; the owner had affirmed the
+  repository tree at ideation (2026-09-11) and restored it through roadmap
+  feedback on 2026-10-01 (`fb-domain-repository-context`), which became the
+  `repository-browse-and-reference` plan. Trace and history: #534 and
+  `docs/evidence/roadmap-run-measurements.md` §8.
 - **Effort:** small to medium. Wording in one shared header, five prompts, two
   docs, `_render_seed_materialize_prompt`'s variables, and the prompt-assembly
   tests; no schema or gate change.

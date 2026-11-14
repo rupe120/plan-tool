@@ -479,6 +479,31 @@ disappears is recorded.
 | `static-spa-delivery` | Generic work only: the UI is one of stage 2's two deployable units | **Stage 3**, as above. The S3/CloudFront shape is in no input; it is a later owner deployment decision. |
 | `bitbucket-deployment-pipelines` | **No** | Never present: an owner requirement added 2026-10-09. |
 
+**How the repository decision was made.** Loom's records, read 2026-11-14:
+
+- **Ideation, 2026-09-11:** the approval-handoff questions asked whether the
+  mockups reflect the product foundation, naming the "read-only repository
+  tree"; the owner answered yes (`approval-handoff-questions.md` Q4).
+- **First roadmap root (`c10b86e…`, before the 2026-09-17 rollback):** stage 1
+  authored `decision-exclude-repo-browsing` with status `settled`. It was never
+  `pending`, so the roadmap never put it to the owner as a question. The one
+  owner-answered roadmap decision in September was `decision-runtime-granularity`
+  (pending, then settled through feedback and the 2026-09-21 settlement).
+- **2026-09-17 to 2026-10-01:** the owner accepted revisions whose domain
+  artifact carried the settled exclusion.
+- **2026-10-01:** owner feedback `fb-domain-repository-context` (against
+  `cf8d38f08d…`) asked to model the repository experience and "sweep
+  decision-exclude-repo-browsing", with three sibling items for constraints,
+  components and plans; Loom commit `08edd0c` "roadmap: add repository
+  experience".
+- **Not checkable:** this machine keeps Claude Code transcripts only from
+  2026-10-02, so a September chat question about the browser cannot be
+  confirmed or ruled out.
+
+A model-authored `settled` decision is protected by the settled-decision gate
+until feedback reopens it, so a cut made this way stays cut across revisions
+without an owner having answered it.
+
 **Reading.** One of the four losses is a prompt defect at stage 1, two are an
 ownership gap at stage 3 for work stage 2 already stated, and the owner-specific
 infrastructure choices could not have come from these inputs at all. Stage 4
